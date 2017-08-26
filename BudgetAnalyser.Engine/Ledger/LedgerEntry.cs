@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Used for persistence only.  Don't use during Reconciliation.
         /// </summary>
         /// <param name="newTransaction"></param>
-        internal void AddTransaction([NotNull] LedgerTransaction newTransaction)
+        internal void AddTransactionForPersistenceOnly([NotNull] LedgerTransaction newTransaction)
         {
             if (newTransaction == null)
             {
@@ -110,12 +110,26 @@ namespace BudgetAnalyser.Engine.Ledger
             this.isNew = false;
         }
 
+        internal void RecalculateClosingBalance(LedgerBook ledgerBook)
+        {
+            // Recalc balance based on opening balance and transactions.
+            var previousLine = ledgerBook.Reconciliations.Skip(1).FirstOrDefault();
+            var openingBalance = LedgerEntryLine.FindPreviousEntryClosingBalance(previousLine, LedgerBucket);
+            RecalculateClosingBalance(openingBalance);
+        }
+
+        internal void RecalculateClosingBalance(decimal openingBalance)
+        {
+            // Recalc balance based on opening balance and transactions.
+            Balance = openingBalance + Transactions.Sum(t => t.Amount);
+        }
+
         internal void RemoveTransaction(Guid transactionId)
         {
             if (!this.isNew)
             {
                 throw new InvalidOperationException(
-                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                                                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
             var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
@@ -129,28 +143,20 @@ namespace BudgetAnalyser.Engine.Ledger
 
         /// <summary>
         ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions.
-        ///     <see cref="AddTransaction" /> must not be called in conjunction with this.
+        ///     <see cref="AddTransactionForPersistenceOnly" /> must not be called in conjunction with this.
         ///     This is used for reconciliation only.
         ///     Also performs some automated actions:
         ///     + Transfers to Surplus any remaining amount for Spent Monthly Buckets.
         ///     + Transfers from Surplus any overdrawn amount for Spent Monthly Buckets.
         /// </summary>
         /// <param name="newTransactions">The list of new transactions for this entry. This includes the monthly budgeted amount.</param>
-        /// <param name="reconciliationDate">
-        ///     The reconciliation date - this is used to give automatically created transactions a
-        ///     date.
-        /// </param>
-        internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions,
-                                                       DateTime reconciliationDate)
+        internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions)
         {
-            if (this.transactions.Any())
-            {
-                throw new InvalidOperationException("Code Error: You cannot call Set-Transactions-For-Reconciliation on an existing entry that already has transactions.");
-            }
+            // I dont want to do this here anymore.  More transactions can be added as a result of applying other behaviours.
+            // Its been moved to an IReconciliationBehaviour object.
+            // LedgerBucket.ApplyReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
 
-            LedgerBucket.ApplyReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
             this.transactions = newTransactions.OrderBy(t => t.Date).ToList();
-            Balance += NetAmount;
         }
 
         internal void Unlock()
@@ -170,14 +176,14 @@ namespace BudgetAnalyser.Engine.Ledger
             if (LedgerBucket.BudgetBucket == null)
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                    "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
+                                                "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
                 result = false;
             }
 
             if (openingBalance + Transactions.Sum(t => t.Amount) != Balance)
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                    "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
+                                                "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
                 result = false;
             }
 

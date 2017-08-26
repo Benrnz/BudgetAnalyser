@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public override void ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
+        public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
                                                           decimal openingBalance)
         {
             if (transactions == null)
@@ -53,7 +53,10 @@ namespace BudgetAnalyser.Engine.Ledger
             if (zeroingTransaction != null)
             {
                 transactions.Add(zeroingTransaction);
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>

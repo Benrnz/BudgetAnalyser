@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Rees.UnitTestUtilities;
 

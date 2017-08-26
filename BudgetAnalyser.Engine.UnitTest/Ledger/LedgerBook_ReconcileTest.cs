@@ -5,11 +5,11 @@ using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
@@ -17,42 +17,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
     [TestClass]
     public class LedgerBook_ReconcileTest
     {
-        private static readonly BankBalance[] NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
+        private static readonly BankBalance[] NextReconcileBankBalance = { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
         private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
         private LedgerBook subject;
         private BudgetModel testDataBudget;
         private StatementModel testDataStatement;
         private IEnumerable<ToDoTask> testDataToDoList;
-
-        [TestMethod]
-        public void Reconcile_ShouldCreateBalanceAdjustmentOf150_GivenSavingsMonthlyBudgetAmountsSumTo150()
-        {
-            // 95 Car Mtc Monthly budget
-            // 55 Hair cut monthly budget
-            // ===
-            // 150 Balance Adjustment expected in Savings
-            // Power 175 goes in Chq
-            this.subject = new LedgerBookBuilder()
-                .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.CarMtcBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
-                .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.HairBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
-                .IncludeLedger(LedgerBookTestData.PowerLedger)
-                .Build();
-
-            Act();
-
-            this.subject.Output(true);
-            var resultRecon = this.subject.Reconciliations.First();
-
-            Assert.AreEqual(150M, resultRecon.BankBalanceAdjustments.Single(b => b.BankAccount == LedgerBookTestData.SavingsAccount).Amount);
-            Assert.AreEqual(-150M, resultRecon.BankBalanceAdjustments.Single(b => b.BankAccount == LedgerBookTestData.ChequeAccount).Amount);
-        }
-
-        [TestMethod]
-        public void CompareObjectMotherTestData1ToBuilderTestData1()
-        {
-            var book = new LedgerBookBuilder().TestData1().Build();
-            book.Output(true);
-        }
 
         [TestMethod]
         public void AddLedger_ShouldAddToLedgersCollection_GivenTestData1()
@@ -66,9 +36,16 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void AddLedger_ShouldBeIncludedInNextReconcile_GivenTestData1()
         {
             this.subject.AddLedger(LedgerBookTestData.RatesLedger);
-            ReconciliationResult result = Act();
+            var result = Act();
 
             Assert.IsTrue(result.Reconciliation.Entries.Any(e => e.LedgerBucket == LedgerBookTestData.RatesLedger));
+        }
+
+        [TestMethod]
+        public void CompareObjectMotherTestData1ToBuilderTestData1()
+        {
+            var book = new LedgerBookBuilder().TestData1().Build();
+            book.Output(true);
         }
 
         [TestMethod]
@@ -95,9 +72,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             Debug.Assert(statementTransactions.Count() == 2);
 
             ActOnTestData5(this.testDataStatement);
-            LedgerEntry previousMonthLine =
+            var previousMonthLine =
                 this.subject.Reconciliations.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket);
-            BudgetCreditLedgerTransaction previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
+            var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
 
             // Assert last month's ledger transaction has been linked to the credit 16/8/13
             Assert.AreEqual(statementTransactions.Single(t => t.Amount > 0).Id, previousLedgerTxn.Id);
@@ -127,12 +104,35 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             // Two transactions should be removed as they are automatched to the previous month.
             ActOnTestData5();
-            LedgerEntry previousMonthLine =
+            var previousMonthLine =
                 this.subject.Reconciliations.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket);
-            BudgetCreditLedgerTransaction previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
+            var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
 
             Console.WriteLine(previousLedgerTxn.AutoMatchingReference);
             Assert.AreNotEqual("agkT9kC", previousLedgerTxn.AutoMatchingReference);
+        }
+
+        [TestMethod]
+        public void Reconcile_ShouldCreateBalanceAdjustmentOf150_GivenSavingsMonthlyBudgetAmountsSumTo150()
+        {
+            // 95 Car Mtc Monthly budget
+            // 55 Hair cut monthly budget
+            // ===
+            // 150 Balance Adjustment expected in Savings
+            // Power 175 goes in Chq
+            this.subject = new LedgerBookBuilder()
+                .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.CarMtcBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
+                .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.HairBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
+                .IncludeLedger(LedgerBookTestData.PowerLedger)
+                .Build();
+
+            Act();
+
+            this.subject.Output(true);
+            var resultRecon = this.subject.Reconciliations.First();
+
+            Assert.AreEqual(150M, resultRecon.BankBalanceAdjustments.Single(b => b.BankAccount == LedgerBookTestData.SavingsAccount).Amount);
+            Assert.AreEqual(-150M, resultRecon.BankBalanceAdjustments.Single(b => b.BankAccount == LedgerBookTestData.ChequeAccount).Amount);
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void Reconcile_ShouldInsertLastestInFront_GivenTestData1()
         {
-            ReconciliationResult result = Act();
+            var result = Act();
             Assert.AreEqual(this.subject.Reconciliations.First(), result.Reconciliation);
         }
 
@@ -167,7 +167,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             // Modify a InsHome payment transaction, originally coming out of the Savings account where the ledger is stored, to the Cheque account.
             this.testDataStatement = StatementModelTestData.TestData5();
-            Transaction insHomePayment = this.testDataStatement.AllTransactions.Single(t => t.BudgetBucket == StatementModelTestData.InsHomeBucket && t.Amount == -1000M);
+            var insHomePayment = this.testDataStatement.AllTransactions.Single(t => t.BudgetBucket == StatementModelTestData.InsHomeBucket && t.Amount == -1000M);
             insHomePayment.Account = StatementModelTestData.ChequeAccount;
 
             ActOnTestData5(this.testDataStatement);
@@ -180,7 +180,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void Reconcile_ShouldResultIn1678_GivenTestData1()
         {
-            ReconciliationResult result = Act();
+            var result = Act();
             this.subject.Output(true);
             Assert.AreEqual(1555.50M, result.Reconciliation.CalculatedSurplus);
         }
@@ -191,6 +191,48 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             Act();
 
             Assert.AreEqual(4, this.subject.Reconciliations.Count());
+        }
+
+        [TestMethod]
+        public void Reconcile_WithPaymentFromWrongAccountShouldCreateBalanceAdjustment_GivenTestData5()
+        {
+            this.testDataBudget.Output();
+            this.subject = LedgerBookTestData.TestData5();
+            var testTransaction = this.testDataStatement.AllTransactions.Last();
+            testTransaction.BudgetBucket = LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket;
+            testTransaction.Account = StatementModelTestData.ChequeAccount;
+            this.testDataStatement.Output(DateTime.MinValue);
+            this.subject.Output();
+
+            var reconResult = Act(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1000M) });
+            this.subject.Output(true);
+
+            var savingsBal = reconResult.Reconciliation.BankBalances.Single(b => b.Account == LedgerBookTestData.SavingsAccount).Balance
+                             + reconResult.Reconciliation.BankBalanceAdjustments.Where(b => b.BankAccount == LedgerBookTestData.SavingsAccount).Sum(b => b.Amount);
+            var chqBal = reconResult.Reconciliation.BankBalances.Single(b => b.Account == LedgerBookTestData.ChequeAccount).Balance
+                         + reconResult.Reconciliation.BankBalanceAdjustments.Where(b => b.BankAccount == LedgerBookTestData.ChequeAccount).Sum(b => b.Amount);
+
+            Assert.AreEqual(650M, savingsBal, "Savings should be decreased because savings still has the funds and needs to payback the Cheque account."); 
+            Assert.AreEqual(2200.50M, chqBal, "Chq should be increased after it has been paid back from savings.");
+            Assert.AreEqual(0M, reconResult.Reconciliation.TotalBalanceAdjustments);
+        }
+
+        [TestMethod]
+        public void Reconcile_WithPaymentFromWrongAccountShouldUpdateLedgerBalance_GivenTestData5()
+        {
+            this.testDataBudget = BudgetModelTestData.CreateTestData5();
+            this.subject = LedgerBookTestData.TestData5();
+            var testTransaction = this.testDataStatement.AllTransactions.Last();
+            testTransaction.BudgetBucket = LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket;
+            testTransaction.Account = StatementModelTestData.ChequeAccount;
+            testTransaction.Amount = -1250;
+            this.testDataStatement.Output(DateTime.MinValue);
+            this.subject.Output();
+
+            var reconResult = Act(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1000M) });
+            this.subject.Output(true);
+
+            Assert.AreEqual(300M, reconResult.Reconciliation.Entries.Single(e => e.LedgerBucket == LedgerBookTestData.HouseInsLedgerSavingsAccount).Balance);
         }
 
         [TestMethod]
@@ -207,16 +249,16 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             List<Transaction> additionalTransactions = this.testDataStatement.AllTransactions.ToList();
 
             additionalTransactions.Add(
-                new Transaction
-                {
-                    Account = additionalTransactions.First().Account,
-                    Amount = -264M,
-                    BudgetBucket = additionalTransactions.First(t => t.BudgetBucket.Code == TestDataConstants.HairBucketCode).BudgetBucket,
-                    Date = new DateTime(2013, 09, 13)
-                });
+                                       new Transaction
+                                       {
+                                           Account = additionalTransactions.First().Account,
+                                           Amount = -264M,
+                                           BudgetBucket = additionalTransactions.First(t => t.BudgetBucket.Code == TestDataConstants.HairBucketCode).BudgetBucket,
+                                           Date = new DateTime(2013, 09, 13)
+                                       });
             this.testDataStatement.LoadTransactions(additionalTransactions);
 
-            ReconciliationResult result = Act();
+            var result = Act();
             this.subject.Output(true);
 
             Assert.AreEqual(55M, result.Reconciliation.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).Balance);
@@ -227,7 +269,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void Reconcile_WithStatementShouldHave2HairTransactions_GivenTestData1()
         {
             this.subject.Output();
-            ReconciliationResult result = Act();
+            var result = Act();
             Assert.AreEqual(2, result.Reconciliation.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).Transactions.Count());
         }
 
@@ -235,7 +277,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void Reconcile_WithStatementShouldHave3PowerTransactions_GivenTestData1()
         {
             this.subject.Output();
-            ReconciliationResult result = Act();
+            var result = Act();
             this.subject.Output(true);
             Assert.AreEqual(3, result.Reconciliation.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode).Transactions.Count());
         }
@@ -243,7 +285,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void Reconcile_WithStatementShouldHaveSurplus1613_GivenTestData1()
         {
-            ReconciliationResult result = Act();
+            var result = Act();
             this.subject.Output(true);
             Assert.AreEqual(1555.50M, result.Reconciliation.CalculatedSurplus);
         }
@@ -251,7 +293,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void Reconcile_WithStatementSpentMonthlyLedgerShouldSupplementShortfall_GivenTestData1()
         {
-            ReconciliationResult result = Act();
+            var result = Act();
             this.subject.Output(true);
             Assert.AreEqual(0M, result.Reconciliation.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
         }
@@ -259,7 +301,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void Reconcile_WithStatementWithBalanceAdjustment599ShouldHaveSurplus1014_GivenTestData1()
         {
-            ReconciliationResult result = Act();
+            var result = Act();
             result.Reconciliation.BalanceAdjustment(-599M, "Visa pmt not yet in statement", new ChequeAccount("Chq"));
             this.subject.Output(true);
             Assert.AreEqual(956.50M, result.Reconciliation.CalculatedSurplus);
@@ -301,15 +343,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             Console.WriteLine("==================== TODO LIST ===========================");
             Console.WriteLine("Type       Generated  Reference  Amount     Description");
-            foreach (ToDoTask task in this.testDataToDoList)
+            foreach (var task in this.testDataToDoList)
             {
                 Console.WriteLine(
-                    "{0} {1} {2} {3} {4}",
-                    task.GetType().Name.PadRight(10).Truncate(10),
-                    task.SystemGenerated.ToString().PadRight(10),
-                    (task as TransferTask)?.Reference?.PadRight(10).Truncate(10) ?? "          ",
-                    (task as TransferTask)?.Amount.ToString("C").PadRight(10).Truncate(10) ?? "          ",
-                    task.Description);
+                                  "{0} {1} {2} {3} {4}",
+                                  task.GetType().Name.PadRight(10).Truncate(10),
+                                  task.SystemGenerated.ToString().PadRight(10),
+                                  (task as TransferTask)?.Reference?.PadRight(10).Truncate(10) ?? "          ",
+                                  (task as TransferTask)?.Amount.ToString("C").PadRight(10).Truncate(10) ?? "          ",
+                                  task.Description);
             }
         }
     }

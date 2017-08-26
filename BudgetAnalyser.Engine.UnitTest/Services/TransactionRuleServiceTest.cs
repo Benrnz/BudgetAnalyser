@@ -22,11 +22,22 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         private TransactionRuleService subject;
 
         [TestMethod]
+        public void CreateNewRule_ShouldNotCreateDuplicates()
+        {
+            this.mockRuleFactory.Setup(m => m.CreateNewRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), It.IsAny<bool>()))
+                .Returns(new MatchingRule(this.mockBucketRepo) { And = true, BucketCode = TestDataConstants.CarMtcBucketCode, Description = "Test Description" });
+
+            var newRule = this.subject.CreateNewRule(" ", " ", new string[] { }, null, null, true);
+
+            Assert.AreEqual(1, this.subject.MatchingRules.Count());
+        }
+
+        [TestMethod]
         public void CreateNewSingleUseRule_ShouldAddRuleToRulesCollection()
         {
             ArrangeForCreateNewRule();
 
-            SingleUseMatchingRule result = this.subject.CreateNewSingleUseRule("Foo", "Bar", new[] { "Spock", "Kirk" }, "NCC-1701", 1701, true);
+            var result = this.subject.CreateNewSingleUseRule("Foo", "Bar", new[] { "Spock", "Kirk" }, "NCC-1701", 1701, true);
 
             Assert.IsTrue(this.subject.MatchingRules.Any(r => r == result));
         }
@@ -36,7 +47,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         {
             ArrangeForCreateNewRule();
 
-            SingleUseMatchingRule result = this.subject.CreateNewSingleUseRule("Foo", "Bar", new[] { "Spock", "Kirk" }, "NCC-1701", 1701, true);
+            var result = this.subject.CreateNewSingleUseRule("Foo", "Bar", new[] { "Spock", "Kirk" }, "NCC-1701", 1701, true);
 
             Assert.IsNotNull(result);
             this.mockRuleFactory.Verify();
@@ -64,24 +75,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             };
 
             this.mockMatchMaker.Setup(m => m.Match(testTransactions, testMatchingRules)).Returns(true);
+            this.mockBucketRepo.GetOrCreateNew(TestDataConstants.PowerBucketCode, () => new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Foo"));
+            this.mockBucketRepo.GetOrCreateNew(TestDataConstants.PhoneBucketCode, () => new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Foo"));
             PrivateAccessor.InvokeMethod(this.subject, "InitialiseTheRulesCollections", testMatchingRules);
             PrivateAccessor.SetField<TransactionRuleService>(this.subject, "rulesStorageKey", "lksjgjklshgjkls");
 
-            bool success = this.subject.Match(testTransactions);
+            var success = this.subject.Match(testTransactions);
 
             Assert.IsTrue(success);
             Assert.IsFalse(this.subject.MatchingRules.Any(r => r is SingleUseMatchingRule));
-        }
-
-        [TestMethod]
-        public void CreateNewRule_ShouldNotCreateDuplicates()
-        {
-            this.mockRuleFactory.Setup(m => m.CreateNewRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), It.IsAny<bool>()))
-                .Returns(new MatchingRule(this.mockBucketRepo) { And = true, BucketCode = TestDataConstants.CarMtcBucketCode, Description = "Test Description" });
-
-            var newRule = this.subject.CreateNewRule(" ", " ", new string[] { }, null, null, true);
-
-            Assert.AreEqual(1, this.subject.MatchingRules.Count());
         }
 
         [TestInitialize]
@@ -93,13 +95,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.mockBucketRepo = new BucketBucketRepoAlwaysFind();
 
             this.subject = new TransactionRuleService(
-                this.mockRuleRepo.Object, 
-                new FakeLogger(), 
-                this.mockMatchMaker.Object, 
-                this.mockRuleFactory.Object, 
-                new FakeEnvironmentFolders(),
-                new FakeMonitorableDependencies());
-            
+                                                      this.mockRuleRepo.Object,
+                                                      new FakeLogger(),
+                                                      this.mockMatchMaker.Object,
+                                                      this.mockRuleFactory.Object,
+                                                      new FakeEnvironmentFolders(),
+                                                      new FakeMonitorableDependencies(),
+                                                      this.mockBucketRepo);
+
             PrivateAccessor.SetField(this.subject, "rulesStorageKey", "Any storage key value");
         }
 

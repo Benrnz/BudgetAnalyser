@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData

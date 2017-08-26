@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
     /// <summary>
     ///     The result of a Month End Reconciliation.

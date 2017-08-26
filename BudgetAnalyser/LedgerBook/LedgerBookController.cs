@@ -408,7 +408,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnTransferFundsRequested(object sender, EventArgs eventArgs)
         {
             this.uiContext.TransferFundsController.TransferFundsRequested -= OnTransferFundsRequested;
-            this.reconService.TransferFunds(ViewModel.NewLedgerLine, this.uiContext.TransferFundsController.TransferFundsDto);
+            this.reconService.TransferFunds(ViewModel.LedgerBook, ViewModel.NewLedgerLine, this.uiContext.TransferFundsController.TransferFundsDto);
             RaiseLedgerBookUpdated();
             FileOperations.ReconciliationChangesWillNeedToBeSaved();
         }

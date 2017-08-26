@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
     /// <summary>
     ///     This class is responsible for validating that changes were made during a reconciliation that did not alter the

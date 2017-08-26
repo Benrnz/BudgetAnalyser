@@ -21,10 +21,10 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
-        public override void ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
+        public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
                                                           decimal openingBalance)
         {
-            // Nothing special to do here for Surplus.
+            return false;
         }
 
         /// <summary>

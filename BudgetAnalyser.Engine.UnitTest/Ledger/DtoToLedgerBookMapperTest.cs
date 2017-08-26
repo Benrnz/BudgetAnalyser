@@ -4,6 +4,7 @@ using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -50,10 +51,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 
         [TestMethod]
         [Description("A test designed to break when new propperties are added to the LedgerBook. This is a trigger to update the mappers.")]
-        public void NumberOfLedgerBookPropertiesShouldBe5()
+        public void NumberOfLedgerBookPropertiesShouldBe6()
         {
             int domainProperties = typeof(LedgerBook).CountProperties();
-            Assert.AreEqual(5, domainProperties);
+            Assert.AreEqual(6, domainProperties);
         }
 
         [TestMethod]

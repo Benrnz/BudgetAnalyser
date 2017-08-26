@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Ledger
             if (this.bankBalancesList.None())
             {
                 throw new ArgumentException("There are no bank balances in the collection provided.",
-                    nameof(bankBalances));
+                                            nameof(bankBalances));
             }
         }
 
@@ -101,8 +101,8 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public IEnumerable<LedgerEntry> Entries
         {
-            get { return this.entries; }
-            private set { this.entries = value.ToList(); }
+            get => this.entries;
+            private set => this.entries = value.ToList();
         }
 
         /// <summary>
@@ -134,15 +134,15 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 IEnumerable<BankBalance> adjustedBalances =
                     BankBalances.Select(
-                        b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
+                                        b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
                 IEnumerable<BankBalance> results = Entries.GroupBy(
-                    e => e.LedgerBucket.StoredInAccount,
-                    (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
+                                                                   e => e.LedgerBucket.StoredInAccount,
+                                                                   (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
                 return
                     adjustedBalances.Select(
-                        a =>
-                            new BankBalance(a.Account,
-                                a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
+                                            a =>
+                                                new BankBalance(a.Account,
+                                                                a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
             }
         }
 
@@ -161,8 +161,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (!IsNew)
             {
-                throw new InvalidOperationException(
-                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
             if (adjustment == 0)
@@ -186,8 +185,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (!IsNew)
             {
-                throw new InvalidOperationException(
-                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
             var txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);

@@ -3,9 +3,9 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
-    internal interface IReconciliationManager
+    internal interface IReconciliationCreationManager
     {
         /// <summary>
         ///     Creates a new LedgerEntryLine for a <see cref="LedgerBook" /> to begin reconciliation.
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Performs a funds transfer for the given ledger entry line.
         /// </summary>
-        void TransferFunds([NotNull] TransferFundsCommand transferDetails, [NotNull] LedgerEntryLine ledgerEntryLine);
+        void TransferFunds([NotNull] LedgerBook ledgerBook, [NotNull] TransferFundsCommand transferDetails, [NotNull] LedgerEntryLine ledgerEntryLine);
 
         /// <summary>
         ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Ledger.Reconciliation;
+using BudgetAnalyser.Engine.Mobile;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
@@ -105,6 +107,11 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         partial void ToModelPostprocessing(LedgerBookDto dto, ref LedgerBook model)
         {
             InitialiseAndValidateLedgerBook(dto, model);
+        }
+
+        partial void ToDtoPreprocessing(LedgerBook model)
+        {
+            if (model.MobileSettings == null) model.MobileSettings = new MobileStorageSettings();
         }
     }
 
@@ -258,7 +265,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             var transactionMapper = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
             foreach (var txn in dto.Transactions)
             {
-                model.AddTransaction(transactionMapper.ToModel(txn));
+                model.AddTransactionForPersistenceOnly(transactionMapper.ToModel(txn));
             }
         }
     }

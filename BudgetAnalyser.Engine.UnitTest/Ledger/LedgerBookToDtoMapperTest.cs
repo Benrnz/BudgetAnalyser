@@ -2,6 +2,7 @@
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -155,10 +156,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 
         [TestMethod]
         [Description("A test designed to break when new propperties are added to the LedgerBookDto. This is a trigger to update the mappers.")]
-        public void NumberOfDataLedgerBookPropertiesShouldBe6()
+        public void NumberOfDataLedgerBookPropertiesShouldBe7()
         {
             int dataProperties = typeof(LedgerBookDto).CountProperties();
-            Assert.AreEqual(6, dataProperties);
+            Assert.AreEqual(7, dataProperties);
         }
 
         [TestMethod]

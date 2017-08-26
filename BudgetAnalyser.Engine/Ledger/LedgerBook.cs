@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Mobile;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
@@ -32,11 +33,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal LedgerBook([NotNull] IReconciliationBuilder reconciliationBuilder)
         {
-            if (reconciliationBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(reconciliationBuilder));
-            }
-            this.reconciliationBuilder = reconciliationBuilder;
+            this.reconciliationBuilder = reconciliationBuilder ?? throw new ArgumentNullException(nameof(reconciliationBuilder));
             this.reconciliationBuilder.LedgerBook = this;
             this.reconciliations = new List<LedgerEntryLine>();
         }
@@ -48,7 +45,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public IEnumerable<LedgerBucket> Ledgers
         {
-            get { return this.ledgersColumns; }
+            get => this.ledgersColumns;
             internal set { this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList(); }
         }
 
@@ -110,7 +107,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 if (previous != null && line.Date <= previous.Date)
                 {
                     validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                        "Duplicate and or out of sequence dates exist in the reconciliations for this Ledger Book.");
+                                                    "Duplicate and or out of sequence dates exist in the reconciliations for this Ledger Book.");
                     return false;
                 }
 
@@ -188,7 +185,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             throw new InvalidOperationException(
-                "You cannot change the account in a ledger that is not in the Ledgers collection.");
+                                                "You cannot change the account in a ledger that is not in the Ledgers collection.");
         }
 
         internal void SetReconciliations(List<LedgerEntryLine> lines)

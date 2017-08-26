@@ -3,6 +3,7 @@ using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
@@ -38,7 +39,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Modified = new DateTime(2011, 12, 4),
                 StorageKey = @"C:\TestLedgerBook.xml"
             };
-            LedgerEntryLine result = this.subject.UnlockMostRecentLine();
+            var result = this.subject.UnlockMostRecentLine();
 
             Assert.IsNull(result);
         }
@@ -46,8 +47,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UnlockMostRecentLineShouldReturnMostRecentLine()
         {
-            LedgerEntryLine result = this.subject.UnlockMostRecentLine();
-            LedgerEntryLine expectedLine = this.subject.Reconciliations.OrderByDescending(e => e.Date).First();
+            var result = this.subject.UnlockMostRecentLine();
+            var expectedLine = this.subject.Reconciliations.OrderByDescending(e => e.Date).First();
 
             Assert.AreSame(expectedLine, result);
         }
@@ -55,7 +56,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UnlockMostRecentLineShouldUnlockMostRecentLine()
         {
-            LedgerEntryLine result = this.subject.UnlockMostRecentLine();
+            var result = this.subject.UnlockMostRecentLine();
 
             Assert.IsTrue(result.IsNew);
         }
@@ -63,7 +64,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UsingTestData1_AddAdjustment_Output()
         {
-            ReconciliationResult result = Act(this.subject, this.testDataBudget);
+            var result = Act(this.subject, this.testDataBudget);
             result.Reconciliation.BalanceAdjustment(101M, "foo dar far", new ChequeAccount("Chq"));
 
             this.subject.Output();
@@ -72,7 +73,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UsingTestData1_AddAdjustment_ShouldAddToAdjustmentCollection()
         {
-            ReconciliationResult result = Act(this.subject, this.testDataBudget);
+            var result = Act(this.subject, this.testDataBudget);
             result.Reconciliation.BalanceAdjustment(101M, "foo dar far", new ChequeAccount("Chq"));
 
             Assert.AreEqual(1, result.Reconciliation.BankBalanceAdjustments.Count());
@@ -81,7 +82,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UsingTestData1_AddAdjustment_ShouldAffectLedgerBalance()
         {
-            ReconciliationResult result = Act(this.subject, this.testDataBudget);
+            var result = Act(this.subject, this.testDataBudget);
             result.Reconciliation.BalanceAdjustment(-101M, "foo dar far", new ChequeAccount("Chq"));
 
             Assert.AreEqual(1749.50M, result.Reconciliation.LedgerBalance);
@@ -90,10 +91,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UsingTestData1_AddTransactionShouldEffectEntryBalance()
         {
-            ReconciliationResult entryLine = Act(this.subject, this.testDataBudget);
+            var entryLine = Act(this.subject, this.testDataBudget);
             var newTransaction = new CreditLedgerTransaction { Amount = -100 };
-            LedgerEntry entry = entryLine.Reconciliation.Entries.First();
-            entry.AddTransaction(newTransaction);
+            var entry = entryLine.Reconciliation.Entries.First();
+            entry.AddTransactionForPersistenceOnly(newTransaction);
 
             this.subject.Output();
             Assert.AreEqual(20, entry.Balance);
@@ -102,49 +103,50 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UsingTestData1_AddTransactionShouldEffectEntryNetAmount()
         {
-            ReconciliationResult entryLine = Act(this.subject, this.testDataBudget);
+            var entryLine = Act(this.subject, this.testDataBudget);
             var newTransaction = new CreditLedgerTransaction { Amount = -100 };
-            LedgerEntry entry = entryLine.Reconciliation.Entries.First();
-            entry.AddTransaction(newTransaction);
+            var entry = entryLine.Reconciliation.Entries.First();
+            entry.AddTransactionForPersistenceOnly(newTransaction);
 
             Assert.AreEqual(-100, entry.NetAmount);
         }
 
         [TestMethod]
-        public void UsingTestData1_RemoveTransactionShouldEffectEntryBalance()
+        public void UsingTestData1_RemoveTransactionShouldNOTEffectEntryBalance()
         {
-            ReconciliationResult entryLine = Act(this.subject, this.testDataBudget);
-            LedgerEntry entry = entryLine.Reconciliation.Entries.First();
+            var entryLine = Act(this.subject, this.testDataBudget);
+            var entry = entryLine.Reconciliation.Entries.First();
             entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
-            Assert.AreEqual(175M, entry.Balance);
+            // The balance cannot be simply set inside the Ledger Line, it must be recalc'ed at the ledger book level.
+            Assert.AreEqual(120M, entry.Balance);
         }
 
         [TestMethod]
         public void UsingTestData1_RemoveTransactionShouldEffectEntryNetAmount()
         {
-            ReconciliationResult entryLine = Act(this.subject, this.testDataBudget);
-            LedgerEntry entry = entryLine.Reconciliation.Entries.First();
+            var entryLine = Act(this.subject, this.testDataBudget);
+            var entry = entryLine.Reconciliation.Entries.First();
             entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
             Assert.AreEqual(55M, entry.NetAmount);
         }
 
         [TestMethod]
-        public void UsingTestData1_RemoveTransactionShouldGiveSurplus1623()
+        public void UsingTestData1_RemoveTransactionShouldGiveSurplus1555()
         {
-            ReconciliationResult entryLine = Act(this.subject, this.testDataBudget);
-            LedgerEntry entry = entryLine.Reconciliation.Entries.First();
+            var entryLine = Act(this.subject, this.testDataBudget);
+            var entry = entryLine.Reconciliation.Entries.First();
             entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
-            this.subject.Output(true);
-            Assert.AreEqual(1500.50M, entryLine.Reconciliation.CalculatedSurplus);
+            // The balance of a ledger cannot simply be calculated inside the ledger line. It must be recalc'ed at the ledger book level.
+            Assert.AreEqual(1555.50M, entryLine.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
         public void UsingTestData1_UpdateRemarks_ShouldSetRemarks()
         {
-            ReconciliationResult result = Act(this.subject, this.testDataBudget);
+            var result = Act(this.subject, this.testDataBudget);
             result.Reconciliation.UpdateRemarks("Foo bar");
 
             Assert.AreEqual("Foo bar", result.Reconciliation.Remarks);
@@ -153,7 +155,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UsingTestData2_Output()
         {
-            LedgerBook book = LedgerBookTestData.TestData2();
+            var book = LedgerBookTestData.TestData2();
             book.Output();
         }
 
