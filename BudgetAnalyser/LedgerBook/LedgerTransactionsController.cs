@@ -318,7 +318,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private decimal RetrieveOpeningBalance()
         {
-            Engine.Ledger.LedgerBook book = this.ledgerService.LedgerBook;
+            var book = this.ledgerService.LedgerBook;
             bool found = false;
             IEnumerable<LedgerEntryLine> remainingRecons = book.Reconciliations.SkipWhile(r =>
             {
@@ -367,7 +367,7 @@ namespace BudgetAnalyser.LedgerBook
             try
             {
                 Debug.Assert(this.entryLine != null);
-                LedgerTransaction newTransaction = this.reconService.CreateLedgerTransaction(this.entryLine, LedgerEntry, NewTransactionAmount, NewTransactionNarrative);
+                var newTransaction = this.reconService.CreateLedgerTransaction(this.ledgerService.LedgerBook, this.entryLine, LedgerEntry, NewTransactionAmount, NewTransactionNarrative);
                 ShownTransactions.Add(newTransaction);
             }
             catch (ArgumentException)

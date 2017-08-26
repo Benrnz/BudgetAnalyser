@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private IBudgetBucketRepository bucketRepo;
         private Mock<IReconciliationConsistency> mockReconciliationConsistency;
         private Mock<ITransactionRuleService> mockRuleService;
-        private ReconciliationManager subject;
+        private ReconciliationCreationManager subject;
         private IBudgetCurrencyContext testDataBudgetContext;
         private BudgetCollection testDataBudgets;
 
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 })
                 .Build();
             this.testDataToDoList = new List<ToDoTask>();
-            this.subject = new ReconciliationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, new FakeLogger());
+            this.subject = new ReconciliationCreationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, new FakeLogger());
 
             this.testDataLedgerBook = LedgerBookTestData.TestData5(() => new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object));
 

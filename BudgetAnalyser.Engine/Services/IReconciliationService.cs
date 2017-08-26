@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Creates a new ledger transaction in the given Ledger. The Ledger Entry must exist in the current Ledger Book.
         /// </summary>
-        LedgerTransaction CreateLedgerTransaction([NotNull] LedgerEntryLine reconciliation,
+        LedgerTransaction CreateLedgerTransaction([NotNull] LedgerBook ledgerBook, [NotNull] LedgerEntryLine reconciliation,
                                                   [NotNull] LedgerEntry ledgerEntry, decimal amount, [NotNull] string narrative);
 
         /// <summary>
@@ -77,12 +77,13 @@ namespace BudgetAnalyser.Engine.Services
         ///     unlocked.
         ///     This is usually used during reconciliation.
         /// </summary>
+        /// <param name="ledgerBook">The parent ledger book.</param>
         /// <param name="reconciliation">
         ///     The reconciliation line that this transfer will be created in.  A transfer can only occur
         ///     between two ledgers in the same reconciliation.
         /// </param>
         /// <param name="transferDetails">The details of the requested transfer.</param>
-        void TransferFunds([NotNull] LedgerEntryLine reconciliation, [NotNull] TransferFundsCommand transferDetails);
+        void TransferFunds([NotNull] LedgerBook ledgerBook, [NotNull] LedgerEntryLine reconciliation, [NotNull] TransferFundsCommand transferDetails);
 
         /// <summary>
         ///     Unlocks the current month after it has been saved and locked.

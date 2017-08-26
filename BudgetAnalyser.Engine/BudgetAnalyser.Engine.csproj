@@ -187,7 +187,7 @@
     <Compile Include="Ledger\ILedgerBookRepository.cs" />
     <Compile Include="Ledger\Reconciliation\IReconciliationBuilder.cs" />
     <Compile Include="Ledger\Reconciliation\IReconciliationConsistency.cs" />
-    <Compile Include="Ledger\Reconciliation\IReconciliationManager.cs" />
+    <Compile Include="Ledger\Reconciliation\IReconciliationCreationManager.cs" />
     <Compile Include="Ledger\LedgerBook.cs" />
     <Compile Include="Ledger\LedgerBookFactory.cs" />
     <Compile Include="Ledger\LedgerBucket.cs" />
@@ -198,7 +198,7 @@
     <Compile Include="Ledger\Reconciliation\ReconciliationBuilder.cs" />
     <Compile Include="Ledger\Reconciliation\ReconciliationConsistency.cs" />
     <Compile Include="Ledger\Reconciliation\ReconciliationConsistencyChecker.cs" />
-    <Compile Include="Ledger\Reconciliation\ReconciliationManager.cs" />
+    <Compile Include="Ledger\Reconciliation\ReconciliationCreationManager.cs" />
     <Compile Include="Ledger\Reconciliation\ReconciliationResult.cs" />
     <Compile Include="Ledger\SavedUpForLedger.cs" />
     <Compile Include="Ledger\SpentMonthlyLedger.cs" />

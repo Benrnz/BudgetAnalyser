@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private Mock<IReconciliationConsistency> mockReconciliationConsistency;
         private Mock<ITransactionRuleService> mockRuleService;
         private LedgerBucket phNetChqLedger;
-        private ReconciliationManager subject;
+        private ReconciliationCreationManager subject;
         private LedgerBucket surplusChqLedger;
         private LedgerEntryLine testDataEntryLine;
         private LedgerBook testDataLedgerBook;
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             this.mockBucketRepo = new Mock<IBudgetBucketRepository>();
             this.mockRuleService = new Mock<ITransactionRuleService>();
             this.mockReconciliationConsistency = new Mock<IReconciliationConsistency>();
-            this.subject = new ReconciliationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, new FakeLogger());
+            this.subject = new ReconciliationCreationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, new FakeLogger());
 
             this.testDataLedgerBook = LedgerBookTestData.TestData5(() => new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object));
             this.testDataEntryLine = this.testDataLedgerBook.Reconciliations.First();
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(transferFundsData.ToLedger.BudgetBucket.Code, null, new[] { "FooTest12345" }, null, 200, true))
                 .Returns(new SingleUseMatchingRule(this.mockBucketRepo.Object));
 
-            this.subject.TransferFunds(transferFundsData, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferFundsData, this.testDataEntryLine);
 
             this.mockRuleService.VerifyAll();
         }
@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                                     + this.testDataEntryLine.BankBalanceAdjustments
                                         .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
                                         .Sum(a => a.Amount);
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
             decimal afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
                                    + this.testDataEntryLine.BankBalanceAdjustments
                                        .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
@@ -102,7 +102,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             };
 
             decimal beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
             decimal afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
 
             Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             };
 
             decimal beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
             decimal afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
 
             Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
@@ -138,7 +138,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             };
 
             decimal beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
             decimal afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
 
             Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
@@ -159,7 +159,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                                     + this.testDataEntryLine.BankBalanceAdjustments
                                         .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
                                         .Sum(a => a.Amount);
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
             decimal afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
                                    + this.testDataEntryLine.BankBalanceAdjustments
                                        .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
@@ -180,7 +180,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             };
 
             decimal beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.insHomeSavLedger).Balance;
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
             decimal afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.insHomeSavLedger).Balance;
 
             Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
@@ -204,7 +204,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 .Returns(new SingleUseMatchingRule(this.mockBucketRepo.Object))
                 .Callback(() => success = false);
 
-            this.subject.TransferFunds(transferFundsData, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferFundsData, this.testDataEntryLine);
 
             Assert.IsTrue(success);
         }
@@ -225,7 +225,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                                     + this.testDataEntryLine.BankBalanceAdjustments
                                         .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
                                         .Sum(a => a.Amount);
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
             decimal afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
                                    + this.testDataEntryLine.BankBalanceAdjustments
                                        .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
@@ -249,7 +249,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                                     + this.testDataEntryLine.BankBalanceAdjustments
                                         .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
                                         .Sum(a => a.Amount);
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
             decimal afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
                                    + this.testDataEntryLine.BankBalanceAdjustments
                                        .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
@@ -263,7 +263,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [ExpectedException(typeof(InvalidOperationException))]
         public void TransferFunds_ShouldThrow_GivenInvalidTransferDetails()
         {
-            this.subject.TransferFunds(new TransferFundsCommand(), new LedgerEntryLine());
+            this.subject.TransferFunds(this.testDataLedgerBook, new TransferFundsCommand(), new LedgerEntryLine());
             Assert.Fail();
         }
 
@@ -271,7 +271,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [ExpectedException(typeof(ArgumentNullException))]
         public void TransferFunds_ShouldThrow_GivenNullLedgerEntryLine()
         {
-            this.subject.TransferFunds(new TransferFundsCommand(), null);
+            this.subject.TransferFunds(this.testDataLedgerBook, new TransferFundsCommand(), null);
             Assert.Fail();
         }
 
@@ -279,7 +279,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [ExpectedException(typeof(ArgumentNullException))]
         public void TransferFunds_ShouldThrow_GivenNullTransferDetails()
         {
-            this.subject.TransferFunds(null, new LedgerEntryLine());
+            this.subject.TransferFunds(this.testDataLedgerBook, null, new LedgerEntryLine());
             Assert.Fail();
         }
     }

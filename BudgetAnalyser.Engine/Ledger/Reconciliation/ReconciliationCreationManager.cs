@@ -14,14 +14,14 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
     [AutoRegisterWithIoC]
-    internal class ReconciliationManager : IReconciliationManager
+    internal class ReconciliationCreationManager : IReconciliationCreationManager
     {
         private readonly ILogger logger;
         private readonly IReconciliationConsistency reconciliationConsistency;
         private readonly ITransactionRuleService transactionRuleService;
         private ICollection<string> validationMessages = new Collection<string>();
 
-        public ReconciliationManager([NotNull] ITransactionRuleService transactionRuleService,
+        public ReconciliationCreationManager([NotNull] ITransactionRuleService transactionRuleService,
                                      [NotNull] IReconciliationConsistency reconciliationConsistency,
                                      [NotNull] ILogger logger)
         {
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         /// <summary>
         ///     Performs a funds transfer for the given ledger entry line.
         /// </summary>
-        public void TransferFunds(TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
+        public void TransferFunds(LedgerBook ledgerBook, TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
         {
             if (transferDetails == null)
             {
@@ -138,11 +138,10 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 
             if (!transferDetails.IsValid())
             {
-                throw new InvalidOperationException(
-                    "Code Error: The transfer command is in an invalid state, this should be resolved in the UI.");
+                throw new InvalidOperationException("Code Error: The transfer command is in an invalid state, this should be resolved in the UI.");
             }
 
-            PerformBankTransfer(transferDetails, ledgerEntryLine);
+            PerformBankTransfer(ledgerBook, transferDetails, ledgerEntryLine);
         }
 
         /// <summary>
@@ -210,7 +209,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
             }
         }
 
-        private void PerformBankTransfer(TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
+        private void PerformBankTransfer(LedgerBook ledgerBook, TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
         {
             var sourceTransaction = new CreditLedgerTransaction
             {
@@ -250,20 +249,25 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                     true);
             }
 
+
             // No need for a source transaction for surplus ledger.
             if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
             {
                 var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
-                // TODO this needs to change
-                ledgerEntry.AddTransactionForPersistenceOnly(sourceTransaction);
+                var replacementTxns = ledgerEntry.Transactions.ToList();
+                replacementTxns.Add(sourceTransaction);
+                ledgerEntry.SetTransactionsForReconciliation(replacementTxns);
+                ledgerEntry.RecalculateClosingBalance(ledgerBook);
             }
 
             // No need for a destination transaction for surplus ledger.
             if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
             {
                 var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
-                // TODO this needs to change
-                ledgerEntry.AddTransactionForPersistenceOnly(destinationTransaction);
+                var replacementTxns = ledgerEntry.Transactions.ToList();
+                replacementTxns.Add(destinationTransaction);
+                ledgerEntry.SetTransactionsForReconciliation(replacementTxns);
+                ledgerEntry.RecalculateClosingBalance(ledgerBook);
             }
         }
 

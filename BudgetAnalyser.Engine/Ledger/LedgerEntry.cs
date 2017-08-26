@@ -110,6 +110,20 @@ namespace BudgetAnalyser.Engine.Ledger
             this.isNew = false;
         }
 
+        internal void RecalculateClosingBalance(LedgerBook ledgerBook)
+        {
+            // Recalc balance based on opening balance and transactions.
+            var previousLine = ledgerBook.Reconciliations.Skip(1).FirstOrDefault();
+            var openingBalance = LedgerEntryLine.FindPreviousEntryClosingBalance(previousLine, LedgerBucket);
+            RecalculateClosingBalance(openingBalance);
+        }
+
+        internal void RecalculateClosingBalance(decimal openingBalance)
+        {
+            // Recalc balance based on opening balance and transactions.
+            Balance = openingBalance + Transactions.Sum(t => t.Amount);
+        }
+
         internal void RemoveTransaction(Guid transactionId)
         {
             if (!this.isNew)

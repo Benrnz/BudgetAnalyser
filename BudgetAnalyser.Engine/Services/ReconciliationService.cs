@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,9 +16,9 @@ namespace BudgetAnalyser.Engine.Services
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class ReconciliationService : IReconciliationService, ISupportsModelPersistence
     {
-        private readonly IReconciliationManager reconciliationManager;
+        private readonly IReconciliationCreationManager reconciliationManager;
 
-        public ReconciliationService([NotNull] IReconciliationManager reconciliationManager)
+        public ReconciliationService([NotNull] IReconciliationCreationManager reconciliationManager)
         {
             if (reconciliationManager == null)
             {
@@ -87,7 +88,7 @@ namespace BudgetAnalyser.Engine.Services
             return adjustmentTransaction;
         }
 
-        public LedgerTransaction CreateLedgerTransaction(LedgerEntryLine reconciliation, LedgerEntry ledgerEntry,
+        public LedgerTransaction CreateLedgerTransaction(LedgerBook ledgerBook, LedgerEntryLine reconciliation, LedgerEntry ledgerEntry,
                                                          decimal amount, string narrative)
         {
             if (reconciliation == null)
@@ -109,8 +110,11 @@ namespace BudgetAnalyser.Engine.Services
             newTransaction.WithAmount(amount).WithNarrative(narrative);
             newTransaction.Date = reconciliation.Date;
 
-            // TODO this needs to change
-            ledgerEntry.AddTransactionForPersistenceOnly(newTransaction);
+            // ledgerEntry.AddTransactionForPersistenceOnly(newTransaction);
+            List<LedgerTransaction> replacementTxns = ledgerEntry.Transactions.ToList();
+            replacementTxns.Add(newTransaction);
+            ledgerEntry.SetTransactionsForReconciliation(replacementTxns);
+            ledgerEntry.RecalculateClosingBalance(ledgerBook);
             return newTransaction;
         }
 
@@ -123,7 +127,7 @@ namespace BudgetAnalyser.Engine.Services
             params BankBalance[] balances)
         {
             var reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate,
-                budgetContext, statement, ignoreWarnings, balances);
+                                                                                budgetContext, statement, ignoreWarnings, balances);
             ReconciliationToDoList.Clear();
             reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);
             return reconResult.Reconciliation;
@@ -143,10 +147,7 @@ namespace BudgetAnalyser.Engine.Services
 
             ledgerEntry.RemoveTransaction(transactionId);
 
-            // Recalc balance based on opening balance and transactions.
-            var previousLine = ledgerBook.Reconciliations.Skip(1).FirstOrDefault();
-            var openingBalance = LedgerEntryLine.FindPreviousEntryClosingBalance(previousLine, ledgerEntry.LedgerBucket);
-            ledgerEntry.Balance = openingBalance + ledgerEntry.Transactions.Sum(t => t.Amount);
+            ledgerEntry.RecalculateClosingBalance(ledgerBook);
         }
 
         /// <summary>
@@ -154,20 +155,20 @@ namespace BudgetAnalyser.Engine.Services
         ///     unlocked.
         ///     This is usually used during reconciliation.
         /// </summary>
+        /// <param name="ledgerBook">The parent ledger book.</param>
         /// <param name="reconciliation">
         ///     The reconciliation line that this transfer will be created in.  A transfer can only occur
         ///     between two ledgers in the same reconciliation.
         /// </param>
         /// <param name="transferDetails">The details of the requested transfer.</param>
-        public void TransferFunds(LedgerEntryLine reconciliation, TransferFundsCommand transferDetails)
+        public void TransferFunds(LedgerBook ledgerBook, LedgerEntryLine reconciliation, TransferFundsCommand transferDetails)
         {
             if (reconciliation == null)
             {
-                throw new ArgumentNullException(nameof(reconciliation),
-                    "There are no reconciliations. Transfer funds can only be used on the most recent reconciliation.");
+                throw new ArgumentNullException(nameof(reconciliation), "There are no reconciliations. Transfer funds can only be used on the most recent reconciliation.");
             }
 
-            this.reconciliationManager.TransferFunds(transferDetails, reconciliation);
+            this.reconciliationManager.TransferFunds(ledgerBook, transferDetails, reconciliation);
         }
 
         public LedgerEntryLine UnlockCurrentMonth(LedgerBook ledgerBook)
