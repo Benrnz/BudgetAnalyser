@@ -219,15 +219,12 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 if (!IsValidCode(projectBucket.Code))
                 {
-                    throw new ArgumentException(
-                        "Unable to remove the fixed project bucket, it does not appear to exist in the bucket repository.");
+                    throw new ArgumentException("Unable to remove the fixed project bucket, it does not appear to exist in the bucket repository.");
                 }
 
                 if (!this.lookupTable.Remove(projectBucket.Code))
                 {
-                    throw new InvalidOperationException(
-                        "Unable to remove the fixed project bucket, removal from the internal dictionary failed. " +
-                        projectBucket.Code);
+                    throw new InvalidOperationException("Unable to remove the fixed project bucket, removal from the internal dictionary failed. " + projectBucket.Code);
                 }
             }
         }
@@ -262,8 +259,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Determines whether [contains key internal] [the specified code].
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0",
-            Justification = "Already validated upstream")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Already validated upstream")]
         protected bool ContainsKeyInternal(string code)
         {
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());
@@ -276,8 +272,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             SurplusBucket = new SurplusBucket();
             AddBucket(SurplusBucket);
-            AddBucket(new PayCreditCardBucket(PayCreditCardBucket.PayCreditCardCode,
-                "A special bucket to allocate internal transfers."));
+            AddBucket(new PayCreditCardBucket(PayCreditCardBucket.PayCreditCardCode, "A special bucket to allocate internal transfers."));
         }
     }
 }
