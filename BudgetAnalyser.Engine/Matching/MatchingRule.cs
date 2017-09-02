@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public decimal? Amount
         {
-            get { return this.doNotUseAmount; }
+            get => this.doNotUseAmount;
             set
             {
                 this.doNotUseAmount = value == 0 ? null : value;
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public bool And
         {
-            get { return this.doNotUseAnd; }
+            get => this.doNotUseAnd;
             set
             {
                 this.doNotUseAnd = value;
@@ -122,7 +122,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public string Description
         {
-            get { return this.doNotUseDescription; }
+            get => this.doNotUseDescription;
             set
             {
                 this.doNotUseDescription = value;
@@ -140,7 +140,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public DateTime? LastMatch
         {
-            get { return this.doNotUseLastMatch; }
+            get => this.doNotUseLastMatch;
             internal set
             {
                 this.doNotUseLastMatch = value;
@@ -153,7 +153,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public int MatchCount
         {
-            get { return this.doNotUseMatchCount; }
+            get => this.doNotUseMatchCount;
             internal set
             {
                 this.doNotUseMatchCount = value;
@@ -167,7 +167,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public string Reference1
         {
-            get { return this.doNotUseReference1; }
+            get => this.doNotUseReference1;
 
             set
             {
@@ -182,7 +182,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public string Reference2
         {
-            get { return this.doNotUseReference2; }
+            get => this.doNotUseReference2;
 
             set
             {
@@ -197,7 +197,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public string Reference3
         {
-            get { return this.doNotUseReference3; }
+            get => this.doNotUseReference3;
 
             set
             {
@@ -217,7 +217,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public string TransactionType
         {
-            get { return this.doNotUseTransactionType; }
+            get => this.doNotUseTransactionType;
             set
             {
                 this.doNotUseTransactionType = value;
@@ -298,14 +298,14 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             var matchesMade = 0;
-            var maxMatches = 0;
+            var totalComparisons = 0;
             if (!string.IsNullOrWhiteSpace(Description))
             {
                 if (transaction.Description == Description)
                 {
                     matchesMade++;
                 }
-                maxMatches++;
+                totalComparisons++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference1))
@@ -314,7 +314,7 @@ namespace BudgetAnalyser.Engine.Matching
                 {
                     matchesMade++;
                 }
-                maxMatches++;
+                totalComparisons++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference2))
@@ -323,7 +323,7 @@ namespace BudgetAnalyser.Engine.Matching
                 {
                     matchesMade++;
                 }
-                maxMatches++;
+                totalComparisons++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference3))
@@ -332,7 +332,7 @@ namespace BudgetAnalyser.Engine.Matching
                 {
                     matchesMade++;
                 }
-                maxMatches++;
+                totalComparisons++;
             }
 
             if (!string.IsNullOrWhiteSpace(TransactionType))
@@ -341,7 +341,7 @@ namespace BudgetAnalyser.Engine.Matching
                 {
                     matchesMade++;
                 }
-                maxMatches++;
+                totalComparisons++;
             }
 
             if (Amount != null)
@@ -350,10 +350,10 @@ namespace BudgetAnalyser.Engine.Matching
                 {
                     matchesMade++;
                 }
-                maxMatches++;
+                totalComparisons++;
             }
 
-            var matched = And ? matchesMade == maxMatches : matchesMade >= 1;
+            var matched = And ? matchesMade == totalComparisons : matchesMade >= 1;
             if (matched)
             {
                 LastMatch = DateTime.Now;
@@ -388,7 +388,7 @@ namespace BudgetAnalyser.Engine.Matching
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "{0}({1} {2} {3})", GetType().Name, Bucket.Code,
-                Description ?? Reference1 ?? Reference2 ?? Reference3, Amount);
+                                 Description ?? Reference1 ?? Reference2 ?? Reference3, Amount);
         }
 
         /// <summary>

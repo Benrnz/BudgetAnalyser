@@ -146,14 +146,13 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         {
             if (!this.newReconciliationLine.IsNew)
             {
-                throw new InvalidOperationException(
-                                                    "Cannot add a new entry to an existing Ledger Line, only new Ledger Lines can have new entries added.");
+                throw new InvalidOperationException("Cannot add a new entry to an existing Ledger Line, only new Ledger Lines can have new entries added.");
             }
 
             var reconciliationDate = this.newReconciliationLine.Date;
             // Date filter must include the start date, which goes back to and includes the previous ledger date up to the date of this ledger line, but excludes this ledger date.
             // For example if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
-            // 20/Jan (inclusive) and 19/Feb (inclusive).
+            // 20/Jan (inclusive) and 19/Feb (inclusive) but not including anything for the 20th of Feb.
             List<Transaction> filteredStatementTransactions = statement?.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList() ?? new List<Transaction>();
 
             IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(LedgerBook);
