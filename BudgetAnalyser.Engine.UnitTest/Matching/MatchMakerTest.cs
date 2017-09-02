@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,16 +14,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
     [TestClass]
     public class MatchmakerTest
     {
+        private IEnumerable<MatchingRule> allRules;
         private Mock<IBudgetBucketRepository> mockBudgetBucketRepo;
-
-        private IEnumerable<MatchingRule> AllRules { get; set; }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowIfLoggerIsNull()
-        {
-            new Matchmaker(null, this.mockBudgetBucketRepo.Object);
-        }
+        private IList<Transaction> testDataTransactions;
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -33,27 +26,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         }
 
         [TestMethod]
-        public void MatchShouldReturnFalseIfNoMatchesAreMade()
-        {
-            Matchmaker subject = Arrange();
-            bool result = subject.Match(StatementModelTestData.TestData2().AllTransactions, AllRules);
-            Assert.IsFalse(result);
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void MatchShouldThrowIfGivenNullRulesList()
+        public void CtorShouldThrowIfLoggerIsNull()
         {
-            Matchmaker subject = Arrange();
-            subject.Match(StatementModelTestData.TestData2().AllTransactions, null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void MatchShouldThrowIfGivenNullTransactionList()
-        {
-            Matchmaker subject = Arrange();
-            subject.Match(null, AllRules);
+            new Matchmaker(null, this.mockBudgetBucketRepo.Object);
         }
 
         [TestMethod]
@@ -61,7 +37,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         {
             this.mockBudgetBucketRepo.Setup(m => m.IsValidCode("Foo")).Returns(true);
             this.mockBudgetBucketRepo.Setup(m => m.GetByCode("Foo")).Returns(new SpentMonthlyExpenseBucket("FOO", "Foo"));
-            var transactions = StatementModelTestData.TestData2().AllTransactions;
+            IList<Transaction> transactions = this.testDataTransactions;
             transactions.First().Reference1 = "Foo";
             var subject = Arrange();
 
@@ -69,13 +45,127 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
             Assert.IsTrue(result);
         }
 
+        [TestMethod]
+        public void MatchShouldPreferMatchFromReferenceOverRules()
+        {
+            this.mockBudgetBucketRepo.Setup(m => m.IsValidCode("Foo")).Returns(true);
+            this.mockBudgetBucketRepo.Setup(m => m.GetByCode("Foo")).Returns(new SpentMonthlyExpenseBucket("FOO", "Foo"));
+            IList<Transaction> transactions = this.testDataTransactions;
+            var firstTxn = transactions.First();
+            firstTxn.Reference1 = "Foo";
+            List<MatchingRule> rules = this.allRules.ToList();
+            var firstRule = rules.First();
+            firstRule.BucketCode = "FOO";
+            firstRule.MatchCount = 0;
+            firstRule.Reference1 = "Foo";
+            firstRule.And = false;
+            var subject = Arrange();
+
+            var result = subject.Match(transactions, rules);
+            Assert.IsTrue(result);
+            Assert.AreEqual(0, firstRule.MatchCount);
+        }
+
+        [TestMethod]
+        public void MatchShouldReturnFalseIfNoMatchesAreMade()
+        {
+            var subject = Arrange();
+            var result = subject.Match(this.testDataTransactions, this.allRules);
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void MatchShouldReturnTrueIfRuleMatchesDescription()
+        {
+            // Customise first rule in list to match something in transaction test data.
+            var firstRule = this.allRules.First();
+            firstRule.Description = "Engery Online Electricity";
+            firstRule.MatchCount = 0;
+            firstRule.And = false; // Using OR
+
+            var subject = Arrange();
+            
+            var result = subject.Match(this.testDataTransactions, this.allRules);
+            Assert.IsTrue(result);
+            Assert.AreEqual(2, firstRule.MatchCount);
+        }
+
+        [TestMethod]
+        public void MatchShouldReturnTrueIfRuleMatchesReference1()
+        {
+            // Customise first rule in list to match something in transaction test data.
+            var firstRule = this.allRules.First();
+            firstRule.Reference1 = "12334458989";
+            firstRule.MatchCount = 0;
+            firstRule.And = false; // Using OR
+
+            var subject = Arrange();
+
+            var result = subject.Match(this.testDataTransactions, this.allRules);
+            Assert.IsTrue(result);
+            Assert.AreEqual(2, firstRule.MatchCount);
+        }
+
+        [TestMethod]
+        public void MatchShouldReturnTrueIfRuleMatchesAmount()
+        {
+            // Customise first rule in list to match something in transaction test data.
+            var firstRule = this.allRules.First();
+            firstRule.Amount = -95.15M;
+            firstRule.MatchCount = 0;
+            firstRule.And = false; // Using OR
+
+            var subject = Arrange();
+
+            var result = subject.Match(this.testDataTransactions, this.allRules);
+            Assert.IsTrue(result);
+            Assert.AreEqual(1, firstRule.MatchCount);
+        }
+
+        [TestMethod]
+        public void MatchShouldReturnTrueIfRuleMatchesAmountAndDescription()
+        {
+            // Customise first rule in list to match something in transaction test data.
+            var firstRule = this.allRules.First();
+            firstRule.Amount = -95.15M;
+            firstRule.Description = "Engery Online Electricity";
+            firstRule.Reference1 = null;
+            firstRule.Reference2 = null;
+            firstRule.Reference3 = null;
+            firstRule.TransactionType = null;
+            firstRule.MatchCount = 0;
+            firstRule.And = true; // Using AND
+
+            var subject = Arrange();
+
+            var result = subject.Match(this.testDataTransactions, this.allRules);
+            Assert.IsTrue(result);
+            Assert.AreEqual(1, firstRule.MatchCount);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void MatchShouldThrowIfGivenNullRulesList()
+        {
+            var subject = Arrange();
+            subject.Match(this.testDataTransactions, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void MatchShouldThrowIfGivenNullTransactionList()
+        {
+            var subject = Arrange();
+            subject.Match(null, this.allRules);
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
             MatchingRulesTestDataGenerated.BucketRepo = new BucketBucketRepoAlwaysFind();
             MatchingRulesTestDataGenerated.BucketRepo.Initialise(null);
-            AllRules = MatchingRulesTestDataGenerated.TestData1();
-
+            this.allRules = MatchingRulesTestDataGenerated.TestData1();
+            this.testDataTransactions = StatementModelTestData.TestData2().WithNullBudgetBuckets().AllTransactions.ToList();
             this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
         }
 

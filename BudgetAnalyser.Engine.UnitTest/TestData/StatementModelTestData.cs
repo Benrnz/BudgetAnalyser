@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
@@ -112,6 +113,15 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             IEnumerable<Transaction> transactions = CreateTransactions5();
             statement.LoadTransactions(transactions);
             return statement;
+        }
+
+        public static StatementModel WithNullBudgetBuckets(this StatementModel instance)
+        {
+            foreach (var txn in instance.AllTransactions)
+            {
+                PrivateAccessor.SetField(txn, "budgetBucket", null);
+            }
+            return instance;
         }
 
         private static IEnumerable<Transaction> CreateTransactions1()

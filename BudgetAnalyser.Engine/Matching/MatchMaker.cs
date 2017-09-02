@@ -11,8 +11,9 @@ namespace BudgetAnalyser.Engine.Matching
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class Matchmaker : IMatchmaker
     {
-        private readonly ILogger logger;
+        private const string LogPrefix = "Matchmaker:";
         private readonly IBudgetBucketRepository bucketRepo;
+        private readonly ILogger logger;
 
         public Matchmaker([NotNull] ILogger logger, [NotNull] IBudgetBucketRepository bucketRepo)
         {
@@ -33,21 +34,23 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             var matchesOccured = false;
-            this.logger.LogInfo(l => l.Format("Matchmaker: Matching operation started."));
+            this.logger.LogInfo(l => l.Format("{0} Matching operation started.", LogPrefix));
             Parallel.ForEach(
-                transactions,
-                transaction =>
-                {
-                    matchesOccured = AutoMatchBasedOnReference(transaction);
+                             transactions,
+                             transaction =>
+                             {
+                                 bool thisMatch;
+                                 thisMatch = AutoMatchBasedOnReference(transaction);
 
-                    // If automatched based on user provided reference number.
-                    if (!matchesOccured)
-                    {
-                        matchesOccured = MatchToRules(rules, transaction);
-                    }
-                });
+                                 // If automatched based on user provided reference number.
+                                 if (!thisMatch)
+                                 {
+                                     thisMatch = MatchToRules(rules, transaction);
+                                 }
+                                 matchesOccured |= thisMatch;
+                             });
 
-            this.logger.LogInfo(l => l.Format("Matchmaker: Matching operation finished."));
+            this.logger.LogInfo(l => l.Format("{0} Matching operation finished.", LogPrefix));
             return matchesOccured;
         }
 
@@ -59,19 +62,19 @@ namespace BudgetAnalyser.Engine.Matching
 
             if (reference1 != null && this.bucketRepo.IsValidCode(reference1))
             {
-                this.logger.LogInfo(l => l.Format("Transaction '{0}' automatched by reference '{1}'", transaction.Id, reference1));
+                this.logger.LogInfo(l => l.Format("{0} Transaction '{1}' automatched by reference '{2}'", LogPrefix, transaction.Id, reference1));
                 transaction.BudgetBucket = this.bucketRepo.GetByCode(reference1);
                 return true;
             }
             if (reference2 != null && this.bucketRepo.IsValidCode(reference2))
             {
-                this.logger.LogInfo(l => l.Format("Transaction '{0}' automatched by reference '{1}'", transaction.Id, reference2));
+                this.logger.LogInfo(l => l.Format("{0} Transaction '{1}' automatched by reference '{2}'", LogPrefix, transaction.Id, reference2));
                 transaction.BudgetBucket = this.bucketRepo.GetByCode(reference2);
                 return true;
             }
             if (reference3 != null && this.bucketRepo.IsValidCode(reference3))
             {
-                this.logger.LogInfo(l => l.Format("Transaction '{0}' automatched by reference '{1}'", transaction.Id, reference3));
+                this.logger.LogInfo(l => l.Format("{0} Transaction '{1}' automatched by reference '{2}'", LogPrefix, transaction.Id, reference3));
                 transaction.BudgetBucket = this.bucketRepo.GetByCode(reference3);
                 return true;
             }
@@ -81,7 +84,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         private bool MatchToRules(IEnumerable<MatchingRule> rules, Transaction transaction)
         {
-            bool matchesOccured = false;
+            var matchesOccured = false;
             if (transaction.BudgetBucket?.Code == null)
             {
                 foreach (var rule in rules.ToList())
@@ -94,7 +97,8 @@ namespace BudgetAnalyser.Engine.Matching
                         this.logger.LogInfo(
                                             l =>
                                                 l.Format(
-                                                         "Matchmaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}",
+                                                         "{0} Transaction Matched: {1} {2:C} {3} {4} RuleId:{5}",
+                                                         LogPrefix,
                                                          loggedTransaction.Date,
                                                          loggedTransaction.Amount,
                                                          loggedTransaction.Description.Truncate(15, true),
