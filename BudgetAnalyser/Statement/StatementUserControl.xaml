@@ -248,7 +248,8 @@
                      MinWidth="120"
                      MouseDoubleClick="OnTransactionListBoxDoubleClick"
                      SelectedItem="{Binding ViewModel.SelectedRow}"
-                     SelectionMode="Single">
+                     SelectionMode="Single"
+                     VirtualizingPanel.IsVirtualizing="False">
                 <ListBox.Visibility>
                     <MultiBinding Converter="{StaticResource Converter.MultiBoolToVisibility}">
                         <MultiBinding.Bindings>
