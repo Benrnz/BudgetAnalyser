@@ -215,7 +215,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (CreateMode)
             {
-                return SelectedBankAccount != null && BankBalance > 0;
+                return SelectedBankAccount != null;
             }
 
             if (!Editable)
@@ -228,7 +228,7 @@ namespace BudgetAnalyser.LedgerBook
                 return true;
             }
 
-            return SelectedBankAccount != null && BankBalance > 0;
+            return SelectedBankAccount != null;
         }
 
         private void OnAddBankBalanceCommandExecuted()
