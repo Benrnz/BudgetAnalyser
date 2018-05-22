@@ -42,15 +42,22 @@ namespace BudgetAnalyser.Engine
             var holidays = new Dictionary<DateTime, string>();
             foreach (var holidayTemplate in HolidayTemplates)
             {
-                var proposedDate = holidayTemplate.CalculateDate(start, end);
-
-                if (holidays.ContainsKey(proposedDate))
+                try
                 {
-                    holidays.Add(proposedDate.AddDays(1), holidayTemplate.Name);
+                    var proposedDate = holidayTemplate.CalculateDate(start, end);
+                    if (holidays.ContainsKey(proposedDate))
+                    {
+                        holidays.Add(proposedDate.AddDays(1), holidayTemplate.Name);
+                    }
+                    else
+                    {
+                        holidays.Add(proposedDate, holidayTemplate.Name);
+                    }
                 }
-                else
+                catch (InvalidOperationException ex)
                 {
-                    holidays.Add(proposedDate, holidayTemplate.Name);
+                    // Can occur if a holiday template implementation fails to report back its exact holiday date. (Bug that could be fixed)
+                    System.Diagnostics.Debug.WriteLine(ex);
                 }
             }
 
