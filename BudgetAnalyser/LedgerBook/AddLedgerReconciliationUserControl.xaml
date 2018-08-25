@@ -28,6 +28,8 @@
             <TextBox x:Name="BankBalance"
                      GotFocus="OnBankBalanceGotFocus"
                      PreviewMouseUp="OnBankBalanceMouseUp"
+                     KeyDown="OnBankBalanceKeyDown"
+                     KeyUp="OnBankBalanceKeyUp"
                      Text="{Binding BankBalance, StringFormat=N, UpdateSourceTrigger=PropertyChanged}"
                      Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <ComboBox ItemsSource="{Binding BankAccounts}"
