@@ -255,7 +255,15 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            this.ledgerService.TrackNewBudgetBucket(expenseBucket, e.StoreInThisAccount);
+            var newBucket = this.ledgerService.TrackNewBudgetBucket(expenseBucket, e.StoreInThisAccount);
+            if (newBucket == null)
+            {
+                this.uiContext.UserPrompts.MessageBox.Show("Leader Bucket is already tracked in the LedgerBook. If its not shown, there are no transactions for that bucket yet.", "LedgerBook");
+            }
+            else
+            {
+                this.uiContext.UserPrompts.MessageBox.Show("Ledger Bucket added successfully to the LedgerBook. It will be tracked and shown only when there are new transactions added for that Bucket.", "LedgerBook");
+            }
         }
 
         private void OnAddNewReconciliationCommandExecuted()
