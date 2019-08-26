@@ -228,11 +228,14 @@ namespace BudgetAnalyser.Engine.Services
             // Save the main application repository first.
             await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
 
-            // Save all remaining service's data in parallel.
-            await this.databaseDependents
-                .Where(service => this.dirtyData[service.DataType])
-                .Select(async service => await Task.Run(async () => await service.SaveAsync(this.budgetAnalyserDatabase)))
-                .ContinueWhenAllTasksComplete();
+            // Save all remaining service's data.
+            foreach(var service in this.databaseDependents.Where(s => this.dirtyData[s.DataType]))
+            {
+                await service.SaveAsync(this.budgetAnalyserDatabase);
+            }
+            //await this.databaseDependents
+            //    .Where(service => this.dirtyData[service.DataType])
+            //    .Select(service => await service.SaveAsync(this.budgetAnalyserDatabase));
 
             ClearDirtyDataFlags();
             this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
