@@ -16,6 +16,8 @@ namespace BudgetAnalyser
         private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly DemoFileHelper demoFileHelper;
         private readonly IUiContext uiContext;
+        private object syncRoot = new object();
+        private bool isSaving = false;
 
         public PersistenceOperations(
             [NotNull] IApplicationDatabaseService applicationDatabaseService,
@@ -89,12 +91,29 @@ namespace BudgetAnalyser
 
         public async void OnSaveDatabaseCommandExecute()
         {
-            if (!this.applicationDatabaseService.HasUnsavedChanges)
+            // This is to stop excessive clicking on the save button crashing the app due to locked file from many threads trying to save at the same time.  
+            if (this.isSaving) return;
+            lock (syncRoot)
             {
-                return;
+                if (this.isSaving) return;
+                this.isSaving = true;
             }
 
-            await SaveDatabase();
+            try
+            {
+                if (!this.applicationDatabaseService.HasUnsavedChanges)
+                {
+                    return;
+                }
+
+                await SaveDatabase();
+            } finally
+            {
+                lock (syncRoot)
+                {
+                    this.isSaving = false;
+                }
+            }
         }
 
         public void OnValidateModelsCommandExecute()
