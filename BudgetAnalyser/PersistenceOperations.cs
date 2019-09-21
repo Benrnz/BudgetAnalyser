@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
@@ -13,33 +14,21 @@ namespace BudgetAnalyser
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class PersistenceOperations
     {
+        private static SemaphoreSlim OneSaveAtATime = new SemaphoreSlim(1, 1);
+
         private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly DemoFileHelper demoFileHelper;
         private readonly IUiContext uiContext;
-
+        private DateTime lastSave = DateTime.Now;
+        
         public PersistenceOperations(
             [NotNull] IApplicationDatabaseService applicationDatabaseService,
             [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] IUiContext uiContext)
         {
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
-            }
-
-            if (demoFileHelper == null)
-            {
-                throw new ArgumentNullException(nameof(demoFileHelper));
-            }
-
-            if (uiContext == null)
-            {
-                throw new ArgumentNullException(nameof(uiContext));
-            }
-
-            this.uiContext = uiContext;
-            this.applicationDatabaseService = applicationDatabaseService;
-            this.demoFileHelper = demoFileHelper;
+            this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+            this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
+            this.demoFileHelper = demoFileHelper ?? throw new ArgumentNullException(nameof(demoFileHelper));
 
             this.uiContext.Messenger.Register<PasswordSetMessage>(this, OnPasswordSetMessageReceived);
         }
@@ -89,12 +78,19 @@ namespace BudgetAnalyser
 
         public async void OnSaveDatabaseCommandExecute()
         {
-            if (!this.applicationDatabaseService.HasUnsavedChanges)
+            // This is to stop excessive clicking on the save button crashing the app due to locked file from many threads trying to save at the same time.  
+            await OneSaveAtATime.WaitAsync();
+            try
             {
-                return;
+                if (!this.applicationDatabaseService.HasUnsavedChanges) return;
+                if (DateTime.Now.Subtract(this.lastSave).TotalSeconds < 5) return;  // No need to save repeatedly.
+                await SaveDatabase();
+                this.lastSave = DateTime.Now;
             }
-
-            await SaveDatabase();
+            finally
+            {
+                OneSaveAtATime.Release();
+            }
         }
 
         public void OnValidateModelsCommandExecute()
