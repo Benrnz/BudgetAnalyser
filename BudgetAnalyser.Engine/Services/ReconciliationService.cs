@@ -190,7 +190,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (remarks == null)
             {
-                throw new ArgumentNullException(nameof(remarks));
+                remarks = string.Empty;
             }
 
             entryLine.UpdateRemarks(remarks);

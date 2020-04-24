@@ -173,13 +173,24 @@ namespace BudgetAnalyser.Engine.Statement
 
         private decimal FetchAmount(string[] array, NamedTransaction transaction)
         {
-            var amount = this.importUtilities.FetchDecimal(array, AmountIndex);
-            if (transaction.IsDebit)
+            try
             {
-                amount *= -1;
-            }
+                if (array[AmountIndex].IsNothing())
+                {
+                    return 0;
+                }
+                var amount = this.importUtilities.FetchDecimal(array, AmountIndex);
+                if (transaction.IsDebit)
+                {
+                    amount *= -1;
+                }
 
-            return amount;
+                return amount;
+            } catch (InvalidDataException ex)
+            {
+                this.logger.LogError(ex, l => l.Format("Unable to convert provided string to a decimal. Probable format change in bank file."));
+                throw ex;
+            }
         }
 
         private NamedTransaction FetchTransactionType(string[] array)
