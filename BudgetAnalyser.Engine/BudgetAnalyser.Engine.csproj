@@ -149,6 +149,7 @@
     <Compile Include="Services\EncryptionKeyNotProvidedException.cs" />
     <Compile Include="Services\MonitorableDependencies.cs" />
     <Compile Include="Services\TransactionConstants.cs" />
+    <Compile Include="Statement\WestpacAccountStatementImporterV1.cs" />
     <Compile Include="TimeSpanExtension.cs" />
     <Compile Include="ToDo.cs" />
     <Compile Include="DataFormatException.cs" />

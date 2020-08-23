@@ -192,6 +192,7 @@
     <Compile Include="Services\StatementModelTestHarness.cs" />
     <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Services\TransactionRuleServiceTest.cs" />
+    <Compile Include="Statement\WestpacAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Encryption\EncryptedLocalDiskReaderWriterTest.cs" />
     <Compile Include="Encryption\LocalDiskReaderWriterSelectorTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="TestData\WestpacChequeCsvTestData.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
     <Compile Include="TestData\BudgetAnalyserRawCsvTestDataV1.cs" />
@@ -227,6 +229,7 @@
     <Compile Include="TestData\StatementModelTestDataGenerator.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
     <Compile Include="TestData\TransactionSetDtoTestData.cs" />
+    <Compile Include="TestHarness\WestpacAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
@@ -261,6 +264,7 @@
     <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv" />
     <EmbeddedResource Include="TestData\AnzVisaCsvFileExportFormat.csv" />
     <EmbeddedResource Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
+    <None Include="TestData\WestpacChequeCsvFileExportFormat.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
