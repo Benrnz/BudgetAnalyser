@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ShouldIndicateFutureBudgetWhenOneIsGiven()
         {
-            var budget3 = new BudgetModel { EffectiveFrom = new DateTime(2020, 01, 30) };
+            var budget3 = new BudgetModel { EffectiveFrom = new DateTime(2025, 01, 30) };
             var subject = new BudgetCurrencyContext(
                 new BudgetCollection(
                     new[]

@@ -56,6 +56,20 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         }
 
         [TestMethod]
+        public async Task LoadShouldParseAGoodFileAndOutputIt()
+        {
+            var subject = Arrange();
+            subject.ReadLinesOverride = f => WestpacChequeCsvTestData.TestData1();
+            var result = await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
+
+            Console.WriteLine("Date       Type             Description    Amount    ");
+            foreach(var txn in result.AllTransactions)
+            {
+                Console.WriteLine($"{txn.Date:dd-MMM-yy} {txn.TransactionType.ToString().Truncate(10).PadRight(10)} {txn.Description.Truncate(12).PadRight(12)} {txn.Amount,10}");
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(UnexpectedIndexException))]
         public async Task LoadShouldThrowGivenBadData()
         {
@@ -79,7 +93,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task TatseTestShouldReturnFalseGivenABadFile()
         {
             var subject = Arrange();
-            Assert.Inconclusive("TODO");
+            // @"20/07/2020,25.26,""Acme Inc"",""DIRECT CREDIT"",""IFT012345667"",""IFT01234566"",""00444565652",
             subject.ReadTextChunkOverride = file => "lkjpoisjg809wutwuoipsahf98qyfg0w9ashgpiosxnhbvoiyxcu8o9ui9paso,spotiw93th98sh8,35345345,353453534521,lkhsldhlsk,shgjkshj,sgsjdgsd";
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
@@ -116,7 +130,6 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task TatseTestShouldReturnFalseGivenTheAnzChequeFormat()
         {
             var subject = Arrange();
-            Assert.Inconclusive("TODO");
             subject.ReadTextChunkOverride = file => "Payment,Acme Inc,Acme LLB Inc,Smith Vj,1671190,-23.40,19/06/2014,"; // Anz format given to Westpac parser
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);

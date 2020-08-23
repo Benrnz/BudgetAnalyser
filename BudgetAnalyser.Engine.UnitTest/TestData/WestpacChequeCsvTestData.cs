@@ -8,14 +8,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             return new List<string>
             {
-                "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge",
-                "Payment,Acme Inc,Acme LLB Inc,Smith Vj,1671190,-23.40,19/06/2014,",
-                "Salary,Payroll Ltd,Warner Bros,,Payroll,2000.00,19/06/2014,",
-                "Payment,Water Services,Smith B,33 Queen St,4112233-02,-46.96,18/06/2014,",
-                "Debit Transfer 1234-****-****-4321,june pmt -288.00,17/06/2014,", // Commas missing from this row
-                "Automatic Payment,Collage fund bank-00,bank-00,Jane,Uni,-100.00,16/06/2014,",
-                "Automatic Payment,General Savings,Min Savings,,,-20.00,16/06/2014,",
-                "Atm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,"
+                @"Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code",
+                @"20/07/2020,25.26,""Acme Inc"",""DIRECT CREDIT"",""IFT012345667"",""IFT01234566"",""00444565652",
+                @"20/07/2020,-12.50,""Java On Quay"",""EFTPOS TRANSACTION"",""20-16:10-941"",""************"",""7722 43533",
+                @"20/07/2020,-12.50,""Java On Quay"",""EFTPOS TRANSACTION"",""20-12:08-200"",""************"",""7722 34422",
+                @"21/07/2020 -11.22,""The Stick       17"",""DEBIT"",,""************"",""7722",  // Commas missing from this row
+                @"23/07/2020,109.16,""From 0296-0421989-00"",""DIRECT CREDIT"",""17:12-20714"",""Rego"",""Abc222",
+                @"23/07/2020,-24.00,""Java On Quay"",""EFTPOS TRANSACTION"",""23-12:53-978"",""************"",""7722 24323",
+                @"24/07/2020,-25.00,""Java On Quay"",""EFTPOS TRANSACTION"",""24-18:29-576"",""************"",""7722 34343",
             };
         }
 
@@ -23,14 +23,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             return new List<string>
             {
-                "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge",
-                "Payment,Acme Inc,Acme LLB Inc,Smith Vj,1671190,-23.40,19/06/2014,",
-                "Salary,Payroll Ltd,Warner Bros,,Payroll,2000.00,19/06/2014,",
-                "Payment,Water Services,Smith B,33 Queen St,4112233-02,-46.96,18/06/2014,",
-                "Debit Transfer,1234-****-****-4321,june pmt,,,-288.00,17/06/2014,",
-                "Automatic Payment,Collage fund bank-00,bank-00,Jane,Uni,-100.00,16/06/2014,",
-                "Automatic Payment,General Savings,Min Savings,,,-20.00,16/06/2014,",
-                "Atm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,"
+                @"Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code",
+                @"20/07/2020,25.26,""Acme Inc"",""DIRECT CREDIT"",""IFT012345667"",""IFT01234566"",""00444565652",
+                @"20/07/2020,-12.50,""Java On Quay"",""EFTPOS TRANSACTION"",""20-16:10-941"",""************"",""7722 43533",
+                @"20/07/2020,-12.50,""Java On Quay"",""EFTPOS TRANSACTION"",""20-12:08-200"",""************"",""7722 34422",
+                @"21/07/2020,-11.22,""The Stick       17"",""DEBIT"",,""************"",""7722",
+                @"23/07/2020,109.16,""From 0296-0421989-00"",""DIRECT CREDIT"",""17:12-20714"",""Rego"",""Abc222",
+                @"23/07/2020,-24.00,""Java On Quay"",""EFTPOS TRANSACTION"",""23-12:53-978"",""************"",""7722 24323",
+                @"24/07/2020,-25.00,""Java On Quay"",""EFTPOS TRANSACTION"",""24-18:29-576"",""************"",""7722 34343",
             };
         }
 
@@ -38,14 +38,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             return new List<string>
             {
-                "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge",
-                "Payment,Acme Inc,Acme LLB Inc,Smith Vj,1671190,-23.40,19/06/2014,",
-                "Salary,Payroll Ltd,Warner Bros,,Payroll,2000.00,19/06/2014,Extra data,More extra data",
-                "Payment,Water Services,Smith B,33 Queen St,4112233-02,-46.96,18/06/2014,",
-                "Debit Transfer,1234-****-****-4321,june pmt,,,-288.00,17/06/2014,",
-                "Automatic Payment,Collage fund bank-00,bank-00,Jane,Uni,-100.00,16/06/2014,",
-                "Automatic Payment,General Savings,Min Savings,,,-20.00,16/06/2014,",
-                "Atm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,"
+                @"Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code",
+                @"20/07/2020,25.26,""Acme Inc"",""DIRECT CREDIT"",""IFT012345667"",""IFT01234566"",""00444565652",
+                @"20/07/2020,-12.50,""Java On Quay"",""EFTPOS TRANSACTION"",""20-16:10-941"",""************"",""7722 43533",
+                @"20/07/2020,-12.50,""Java On Quay"",""EFTPOS TRANSACTION"",""20-12:08-200"",""************"",""7722 34422"",""more"",""data"",""here",
+                @"21/07/2020,-11.22,""The Stick       17"",""DEBIT"",,""************"",""7722",
+                @"23/07/2020,109.16,""From 0296-0421989-00"",""DIRECT CREDIT"",""17:12-20714"",""Rego"",""Abc222",
+                @"23/07/2020,-24.00,""Java On Quay"",""EFTPOS TRANSACTION"",""23-12:53-978"",""************"",""7722 24323",
+                @"24/07/2020,-25.00,""Java On Quay"",""EFTPOS TRANSACTION"",""24-18:29-576"",""************"",""7722 34343",
             };
         }
     }

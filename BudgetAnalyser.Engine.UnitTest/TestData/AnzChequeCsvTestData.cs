@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             {
                 "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge",
                 "Payment,Acme Inc,Acme LLB Inc,Smith Vj,1671190,-23.40,19/06/2014,",
-                "Salary,Payroll Ltd,Warner Bros,,Payroll,2000.00,19/06/2014,Extra data,More extra data",
+                "Salary,Payroll Ltd,Warner Bros,,Payroll,2000.00,19/06/2014,Extra data,More extra data",  // More columns here
                 "Payment,Water Services,Smith B,33 Queen St,4112233-02,-46.96,18/06/2014,",
                 "Debit Transfer,1234-****-****-4321,june pmt,,,-288.00,17/06/2014,",
                 "Automatic Payment,Collage fund bank-00,bank-00,Jane,Uni,-100.00,16/06/2014,",

@@ -14,13 +14,13 @@ namespace BudgetAnalyser.Engine.Statement
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class WestpacAccountStatementImporterV1 : IBankStatementImporter
     {
-        private const int TransactionTypeIndex = 0;
-        private const int DescriptionIndex = 1;
-        private const int Reference1Index = 2;
-        private const int Reference2Index = 3;
-        private const int Reference3Index = 4;
-        private const int AmountIndex = 5;
-        private const int DateIndex = 6;
+        private const int TransactionTypeIndex = 3;
+        private const int DescriptionIndex = 2;
+        private const int Reference1Index = 4;
+        private const int Reference2Index = 5;
+        private const int Reference3Index = 6;
+        private const int AmountIndex = 1;
+        private const int DateIndex = 0;
 
         private static readonly Dictionary<string, TransactionType> TransactionTypes = new Dictionary<string, TransactionType>();
 
@@ -190,13 +190,13 @@ namespace BudgetAnalyser.Engine.Statement
         private static bool VerifyColumnHeaderLine(string line)
         {
             var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
-            return string.CompareOrdinal(compareTo, "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge") == 0;
+            return string.CompareOrdinal(compareTo, "Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code") == 0;
         }
 
         private bool VerifyFirstDataLine(string line)
         {
             string[] split = line.Split(',');
-            var type = this.importUtilities.FetchString(split, 0);
+            var type = this.importUtilities.FetchString(split, TransactionTypeIndex);
             if (string.IsNullOrWhiteSpace(type))
             {
                 return false;
@@ -219,7 +219,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            if (split.Length != 9)
+            if (split.Length != 7)
             {
                 return false;
             }

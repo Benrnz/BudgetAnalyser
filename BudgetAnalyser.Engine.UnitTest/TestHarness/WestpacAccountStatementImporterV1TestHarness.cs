@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         {
             if (ReadTextChunkOverride == null)
             {
-                return Task.FromResult(@"Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code\r\n20/07/2020,-12.50,""Brew On Quay"",""EFTPOS TRANSACTION"",""20-16:10-941"",""************"",""7786 30941");
+                return Task.FromResult("Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code\r\n20/07/2020,-12.50,\"Brew On Quay\",\"EFTPOS TRANSACTION\",\"20-16:10-941\",\"************\",\"7786 30941\"");
             }
 
             return Task.FromResult(ReadTextChunkOverride(filePath));
