@@ -74,8 +74,7 @@
                             VerticalAlignment="Bottom" />
             <TextBlock Grid.Column="1"
                        Style="{StaticResource TextBlock.Paragraph}"
-                       Text="WARNING: Only ANZ Bank CSV Statement files are supported."
-                       VerticalAlignment="Bottom" />
+                       VerticalAlignment="Bottom" ><Run Text="WARNING: Only ANZ"/><Run Text=" &amp; Westpac"/><Run Text=" Bank CSV Statement files are supported."/></TextBlock>
         </Grid>
 
     </Grid>
