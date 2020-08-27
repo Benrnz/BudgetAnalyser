@@ -1,9 +1,11 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using Castle.Core.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -298,6 +300,19 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             Assert.IsInstanceOfType(result, typeof(string));
             Assert.AreNotEqual(string.Empty, result);
             Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public void FetchStringShouldRemoveQuotes()
+        {
+            var subject = CreateSubject();
+            var myData = new[] { "\"Test String\"","no quotes","-21.45" };
+            Console.WriteLine($"Input:");
+            myData.ForEach(x => Console.Write($"{x}, "));
+            var result1 = subject.FetchString(myData, 0);
+            Console.WriteLine();
+            Console.WriteLine($"{result1}");
+            Assert.AreEqual(-1, result1.IndexOf('"'));
         }
 
         private BankImportUtilities CreateSubject()

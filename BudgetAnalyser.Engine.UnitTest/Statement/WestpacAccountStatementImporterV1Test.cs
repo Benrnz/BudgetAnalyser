@@ -62,10 +62,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             subject.ReadLinesOverride = f => WestpacChequeCsvTestData.TestData1();
             var result = await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
 
-            Console.WriteLine("Date       Type             Description    Amount    ");
+            Console.WriteLine("Date        Type             Description    Amount    ");
             foreach(var txn in result.AllTransactions)
             {
-                Console.WriteLine($"{txn.Date:dd-MMM-yy} {txn.TransactionType.ToString().Truncate(10).PadRight(10)} {txn.Description.Truncate(12).PadRight(12)} {txn.Amount,10}");
+                Console.WriteLine($"{txn.Date:dd-MMM-yy} {txn.TransactionType,10} {txn.Description,12} {txn.Amount,10}");
             }
         }
 
