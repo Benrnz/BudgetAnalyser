@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
@@ -65,6 +66,11 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 "4123-****-****-5678,D,50.00,Mobil Queen        Auckland      Nz ,20/06/2014,20/06/2014,        ",
                 "4123-****-****-5678,C,50.00,Mobil Queen        Auckland      Nz ,20/06/2014,20/06/2014,        "
             };
+        }
+
+        internal static string FirstTwoLines1()
+        {
+            return "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge\r\n4323-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,,\r\n";
         }
     }
 }

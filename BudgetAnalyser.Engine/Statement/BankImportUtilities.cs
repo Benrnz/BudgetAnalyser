@@ -174,7 +174,14 @@ namespace BudgetAnalyser.Engine.Statement
                 ThrowIndexOutOfRangeException(array, index);
             }
 
-            return array[index].Trim();
+            var result = array[index].Trim();
+            var chars = result.ToCharArray();
+            if (chars.Length > 0 && chars[0] == '"')
+            {
+                return result.Replace("\"", string.Empty);
+            }
+
+            return result;
         }
 
         private static void ThrowIndexOutOfRangeException(string[] array, int index)
