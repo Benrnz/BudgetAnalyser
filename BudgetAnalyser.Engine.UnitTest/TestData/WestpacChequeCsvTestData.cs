@@ -4,6 +4,11 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     public static class WestpacChequeCsvTestData
     {
+        internal static string FirstTwoLines1()
+        {
+            return "Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code\r\n20/07/2020,-12.50,\"Brew On Quay\",\"EFTPOS TRANSACTION\",\"20-16:10-941\",\"************\",\"7786 30941\"";
+        }
+
         public static IEnumerable<string> BadTestData1()
         {
             return new List<string>

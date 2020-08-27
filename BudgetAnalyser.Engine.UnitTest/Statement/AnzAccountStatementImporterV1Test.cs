@@ -76,7 +76,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         }
 
         [TestMethod]
-        public async Task TatseTestShouldReturnFalseGivenABadFile()
+        public async Task TasteTestShouldReturnFalseGivenABadFile()
         {
             var subject = Arrange();
             subject.ReadTextChunkOverride = file => "lkjpoisjg809wutwuoipsahf98qyfg0w9ashgpiosxnhbvoiyxcu8o9ui9paso,spotiw93th98sh8,35345345,353453534521,lkhsldhlsk,shgjkshj,sgsjdgsd";
@@ -85,16 +85,16 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         }
 
         [TestMethod]
-        public async Task TatseTestShouldReturnFalseGivenAnEmptyTasteTestResponse()
+        public async Task TasteTestShouldReturnFalseGivenAnEmptyTasteTestResponse()
         {
             var subject = Arrange();
             subject.ReadTextChunkOverride = file => string.Empty;
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
-
+        
         [TestMethod]
-        public async Task TatseTestShouldReturnFalseGivenNullTasteTestResponse()
+        public async Task TasteTestShouldReturnFalseGivenNullTasteTestResponse()
         {
             var subject = Arrange();
             subject.ReadTextChunkOverride = file => null;
@@ -103,25 +103,25 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         }
 
         [TestMethod]
-        public async Task TatseTestShouldReturnFalseGivenTheVisaFormat()
+        public async Task TasteTestShouldReturnFalseGivenTheVisaFormat()
         {
             var subject = Arrange();
-            subject.ReadTextChunkOverride = file => "4367-****-****-1234,D,32.36,Z Quay Street          Auckland      Nz ,24/06/2014,25/06/2014,"; // Visa format given to Cheque parser
+            subject.ReadTextChunkOverride = file => AnzVisaCsvTestData.FirstTwoLines1(); // Visa format given to Cheque parser
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public async Task TatseTestShouldReturnFalseGivenTheWestpacFormat()
+        public async Task TasteTestShouldReturnFalseGivenTheWestpacFormat()
         {
             var subject = Arrange();
-            subject.ReadTextChunkOverride = file => @"20/07/2020,25.26,""Acme Inc"",""DIRECT CREDIT"",""IFT012345667"",""IFT01234566"",""00444565652"; 
+            subject.ReadTextChunkOverride = file => WestpacChequeCsvTestData.FirstTwoLines1(); 
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public async Task TatseTestShouldReturnTrueGivenAGoodFile()
+        public async Task TasteTestShouldReturnTrueGivenAGoodFile()
         {
             var subject = Arrange();
             var result = await subject.TasteTestAsync(@"transumm.CSV");

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
@@ -47,6 +48,11 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 "Automatic Payment,General Savings,Min Savings,,,-20.00,16/06/2014,",
                 "Atm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,"
             };
+        }
+
+        internal static string FirstTwoLines1()
+        {
+            return "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge\r\nAtm Debit, Anz  1234567 Queen St, Anz  S3A1234,Queen St, Anch  123456,-80.00,16 / 06 / 2014,,";
         }
     }
 }
