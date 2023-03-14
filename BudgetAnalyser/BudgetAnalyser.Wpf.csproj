@@ -808,7 +808,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
-      <Project>{733305f6-b587-45ee-ad4d-fd6dfef015ab}</Project>
+      <Project>{c0bab6f9-9a93-4155-976a-f75a9b309256}</Project>
       <Name>BudgetAnalyser.Engine</Name>
     </ProjectReference>
     <ProjectReference Include="..\BudgetAnalyser.Storage\BudgetAnalyser.Encryption.csproj">

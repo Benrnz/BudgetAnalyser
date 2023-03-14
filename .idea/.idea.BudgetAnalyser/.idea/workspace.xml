@@ -6,9 +6,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="198ca2ed-cdcd-4efd-ab95-c550dd284825" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BudgetAnalyser/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BudgetAnalyser/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine.UnitTest/DateTimeExtensionTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine.UnitTest/DateTimeExtensionTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine.UnitTest/BudgetAnalyser.Engine.UnitTest.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine.UnitTest/BudgetAnalyser.Engine.UnitTest.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/Budget/XamlOnDiskBudgetRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine/Budget/XamlOnDiskBudgetRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/BudgetAnalyser.Engine.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine/BudgetAnalyser.Engine.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/BudgetAnalyserLog4NetLogger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine/BudgetAnalyserLog4NetLogger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/Ledger/XamlOnDiskLedgerBookRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine/Ledger/XamlOnDiskLedgerBookRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/Matching/XamlOnDiskMatchingRuleRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine/Matching/XamlOnDiskMatchingRuleRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/Mobile/IMobileDataUploader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine/Mobile/IMobileDataUploader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/Persistence/XamlOnDiskApplicationDatabaseRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine/Persistence/XamlOnDiskApplicationDatabaseRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/Properties/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine/Properties/AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine/project.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Storage/BudgetAnalyser.Encryption.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Storage/BudgetAnalyser.Encryption.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Wpf.UnitTest/BudgetAnalyser.Wpf.UnitTest.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Wpf.UnitTest/BudgetAnalyser.Wpf.UnitTest.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.sln" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser/BudgetAnalyser.Wpf.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser/BudgetAnalyser.Wpf.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MapperGeneration/MapperGeneration.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/MapperGeneration/MapperGeneration.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +94,8 @@
       <workItem from="1678608756608" duration="186000" />
       <workItem from="1678781761118" duration="325000" />
       <workItem from="1678782168981" duration="298000" />
+      <workItem from="1678784345013" duration="151000" />
+      <workItem from="1678784968097" duration="903000" />
     </task>
     <servers />
   </component>
