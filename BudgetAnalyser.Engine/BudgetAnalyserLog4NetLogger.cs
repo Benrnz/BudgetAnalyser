@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 using log4net;
 using log4net.Config;
 using log4net.Core;

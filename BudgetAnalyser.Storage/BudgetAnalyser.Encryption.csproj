@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
-      <Project>{22e5fb3e-3044-4bda-88ff-619f83ec4e99}</Project>
+      <Project>{c0bab6f9-9a93-4155-976a-f75a9b309256}</Project>
       <Name>BudgetAnalyser.Engine</Name>
     </ProjectReference>
     <ProjectReference Include="..\MapperGeneration\MapperGeneration.csproj">

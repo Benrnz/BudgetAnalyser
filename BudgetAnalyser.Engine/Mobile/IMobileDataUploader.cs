@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Security;
+﻿using System.Security;
 using System.Threading.Tasks;
 
 namespace BudgetAnalyser.Engine.Mobile
