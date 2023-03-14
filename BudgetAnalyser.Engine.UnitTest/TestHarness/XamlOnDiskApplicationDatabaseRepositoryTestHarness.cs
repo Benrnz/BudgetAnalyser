@@ -1,10 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.UnitTest.Helper;
-using Portable.Xaml;
 using Rees.TangyFruitMapper;
 using Rees.UnitTestUtilities;
+using System.Xaml;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
