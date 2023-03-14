@@ -15,6 +15,9 @@ TestResults
 *.snk
 .vs
 *.lock.json
+*.iws
+workspace.xml
+tasks.xml
 
 # Build results
 [Dd]ebug/
