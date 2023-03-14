@@ -1,6 +1,8 @@
 ﻿using System;
 using BudgetAnalyser.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable InconsistentNaming
+// Method naming matches date rules, ie 1st not 1St as recommended.
 
 namespace BudgetAnalyser.Engine.UnitTest
 {

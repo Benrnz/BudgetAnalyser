@@ -6,7 +6,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="198ca2ed-cdcd-4efd-ab95-c550dd284825" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.sln.DotSettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BudgetAnalyser/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BudgetAnalyser/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BudgetAnalyser.Engine.UnitTest/DateTimeExtensionTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BudgetAnalyser.Engine.UnitTest/DateTimeExtensionTest.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +31,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;SolutionBuilderGeneralOptionsPage&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RiderMsTestUnitTestingPageId&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -77,6 +79,8 @@
       <updated>1678607261776</updated>
       <workItem from="1678607261778" duration="732000" />
       <workItem from="1678608756608" duration="186000" />
+      <workItem from="1678781761118" duration="325000" />
+      <workItem from="1678782168981" duration="298000" />
     </task>
     <servers />
   </component>
