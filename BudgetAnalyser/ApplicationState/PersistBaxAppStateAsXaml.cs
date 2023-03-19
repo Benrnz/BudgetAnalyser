@@ -16,7 +16,7 @@ namespace BudgetAnalyser.ApplicationState
     ///     An implmentation of <see cref="IPersistApplicationState" /> that saves the user meta-data as Xaml to a file on the
     ///     local disk.
     /// </summary>
-    public class PersistApplicationStateAsXaml : IPersistApplicationState
+    public class PersistBaxAppStateAsXaml : IPersistApplicationState
     {
         private const string FileName = "BudgetAnalyserAppState.xml";
         private readonly IUserMessageBox userMessageBox;
@@ -24,11 +24,11 @@ namespace BudgetAnalyser.ApplicationState
         private string doNotUseFullFileName;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="PersistApplicationStateAsXaml" /> class.
+        ///     Initializes a new instance of the <see cref="PersistBaxAppStateAsXaml" /> class.
         /// </summary>
         /// <param name="userMessageBox">A service to show the user a message box.</param>
         /// <exception cref="System.ArgumentNullException">userMessageBox cannot be null.</exception>
-        public PersistApplicationStateAsXaml([NotNull] IUserMessageBox userMessageBox)
+        public PersistBaxAppStateAsXaml([NotNull] IUserMessageBox userMessageBox)
         {
             if (userMessageBox == null)
             {

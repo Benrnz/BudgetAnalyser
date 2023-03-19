@@ -190,7 +190,7 @@
     <Compile Include="ApplicationState\ApplicationStateLoadFinishedMessage.cs" />
     <Compile Include="ApplicationState\ApplicationStateRequestedMessage.cs" />
     <Compile Include="ApplicationState\IPersistApplicationState.cs" />
-    <Compile Include="ApplicationState\PersistApplicationStateAsXaml.cs" />
+    <Compile Include="ApplicationState\PersistBaxAppStateAsXaml.cs" />
     <Compile Include="ApplicationState\WindowsWpfEnvironmentFolders.cs" />
     <Compile Include="BudgetAnalyserFeature.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
