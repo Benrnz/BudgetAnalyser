@@ -190,11 +190,14 @@ namespace BudgetAnalyser
                 foreach (PropertyInjectionDependencyRequirement requirement in requiredPropertyInjections)
                 {
                     // Some reasonably awkard Autofac usage here to allow testibility.  (Extension methods aren't easy to test)
-                    IComponentRegistration registration;
-                    bool success = container.ComponentRegistry.TryGetRegistration(new TypedService(requirement.DependencyRequired), out registration);
+                    ServiceRegistration registration;
+                    var typedService = new TypedService(requirement.DependencyRequired);
+                    bool success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out registration);
                     if (success)
                     {
-                        object dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
+                        var requestToResolve = new ResolveRequest(typedService, registration, Enumerable.Empty<Parameter>());
+                        //object dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
+                        var dependency = container.ResolveComponent(requestToResolve);
                         requirement.PropertyInjectionAssignment(dependency);
                     }
                 }
