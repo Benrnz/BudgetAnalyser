@@ -308,7 +308,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             var subject = CreateSubject();
             var myData = new[] { "\"Test String\"","no quotes","-21.45" };
             Console.WriteLine($"Input:");
-            myData.ForEach(x => Console.Write($"{x}, "));
+            Array.ForEach(myData, x => Console.Write($"{x}, "));
             var result1 = subject.FetchString(myData, 0);
             Console.WriteLine();
             Console.WriteLine($"{result1}");
