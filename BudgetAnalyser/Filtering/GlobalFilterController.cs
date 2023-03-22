@@ -9,7 +9,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using Rees.Wpf;
 using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
 using ApplicationStateLoadFinishedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadFinishedMessage;

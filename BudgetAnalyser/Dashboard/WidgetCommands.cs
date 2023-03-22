@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard
 {

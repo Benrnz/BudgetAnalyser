@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement

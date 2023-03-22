@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Matching

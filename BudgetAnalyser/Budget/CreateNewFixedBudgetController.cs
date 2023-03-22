@@ -4,7 +4,7 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget

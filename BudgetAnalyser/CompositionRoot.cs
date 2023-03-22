@@ -24,7 +24,7 @@ using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.RecentFiles;
 using Rees.Wpf.UserInteraction;
