@@ -7,7 +7,7 @@ using System.Linq;
 using System.Xaml;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Persistence;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using BadApplicationStateFileFormatException = Rees.Wpf.ApplicationState.BadApplicationStateFileFormatException;
 
 namespace BudgetAnalyser.ApplicationState

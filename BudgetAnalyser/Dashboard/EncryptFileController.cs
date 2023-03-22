@@ -2,12 +2,12 @@
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.Annotations;
 
 namespace BudgetAnalyser.Dashboard
 {

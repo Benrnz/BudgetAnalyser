@@ -6,7 +6,7 @@ using BudgetAnalyser.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Wpf.UnitTest.Statement
 {

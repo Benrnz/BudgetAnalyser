@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook

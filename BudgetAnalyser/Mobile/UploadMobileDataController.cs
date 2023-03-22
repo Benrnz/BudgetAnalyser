@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Security;
 using System.Threading.Tasks;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Mobile;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.Annotations;
 
 namespace BudgetAnalyser.Mobile
 {

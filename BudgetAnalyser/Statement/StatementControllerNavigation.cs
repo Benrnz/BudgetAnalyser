@@ -5,7 +5,7 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight.Messaging;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Statement
 {

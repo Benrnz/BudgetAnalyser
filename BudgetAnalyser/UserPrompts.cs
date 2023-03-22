@@ -1,7 +1,7 @@
 using System;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
-using Rees.UserInteraction.Contracts;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser
 {
