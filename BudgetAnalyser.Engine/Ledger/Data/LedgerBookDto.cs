@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Serialization;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
@@ -41,11 +42,13 @@ public class LedgerBookDto
     /// <summary>
     ///     Gets or sets the last modified date.
     /// </summary>
+    [XmlAttribute]
     public DateTime Modified { get; set; }
 
     /// <summary>
     ///     Gets or sets the ledger book name.
     /// </summary>
+    [XmlAttribute]
     public string Name { get; set; }
 
     /// <summary>

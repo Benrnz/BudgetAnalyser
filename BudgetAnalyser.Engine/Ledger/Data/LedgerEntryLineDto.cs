@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Serialization;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
@@ -42,6 +43,7 @@ public class LedgerEntryLineDto
     /// <summary>
     ///     Gets or sets the date of the reconciliation.
     /// </summary>
+    [XmlAttribute]
     public DateTime Date { get; set; }
 
     /// <summary>
