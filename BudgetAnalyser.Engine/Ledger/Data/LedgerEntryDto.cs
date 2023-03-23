@@ -2,45 +2,42 @@
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Ledger.Data
+namespace BudgetAnalyser.Engine.Ledger.Data;
+
+/// <summary>
+///     A Dto for <see cref="LedgerEntry" />.
+/// </summary>
+public class LedgerEntryDto
 {
     /// <summary>
-    ///     A Dto for <see cref="LedgerEntry" />.
+    ///     Initializes a new instance of the <see cref="LedgerEntryDto" /> class.
     /// </summary>
-    public class LedgerEntryDto
+    public LedgerEntryDto()
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="LedgerEntryDto" /> class.
-        /// </summary>
-        public LedgerEntryDto()
-        {
-            Transactions = new List<LedgerTransactionDto>();
-        }
-
-        /// <summary>
-        ///     The Balance of the Ledger as at the date in the parent LedgerLine
-        /// </summary>
-        public decimal Balance { get; set; }
-
-        /// <summary>
-        ///     The Budget Bucket being tracked.
-        ///     The LedgerBucketDto type was intentionally not used here, to prevent the same instance being used between ledger
-        ///     lines and the "next reconciliation" mapping at the LedgerBookDto level.
-        /// </summary>
-        public string BucketCode { get; set; }
-
-        /// <summary>
-        ///     The account in which the Ledger was stored in at the time of the month end reconciliation for this line.
-        /// </summary>
-        public string StoredInAccount { get; [UsedImplicitly] set; }
-
-        /// <summary>
-        ///     Gets or sets the transactions.
-        /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-            Justification = "Required for serialisation")]
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
-            Justification = "Required for serialisation")]
-        public List<LedgerTransactionDto> Transactions { get; set; }
+        Transactions = new List<LedgerTransactionDto>();
     }
+
+    /// <summary>
+    ///     The Balance of the Ledger as at the date in the parent LedgerLine
+    /// </summary>
+    public decimal Balance { get; set; }
+
+    /// <summary>
+    ///     The Budget Bucket being tracked.
+    ///     The LedgerBucketDto type was intentionally not used here, to prevent the same instance being used between ledger
+    ///     lines and the "next reconciliation" mapping at the LedgerBookDto level.
+    /// </summary>
+    public string BucketCode { get; set; }
+
+    /// <summary>
+    ///     The account in which the Ledger was stored in at the time of the month end reconciliation for this line.
+    /// </summary>
+    public string StoredInAccount { get; [UsedImplicitly] set; }
+
+    /// <summary>
+    ///     Gets or sets the transactions.
+    /// </summary>
+    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
+    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
+    public List<LedgerTransactionDto> Transactions { get; set; }
 }
