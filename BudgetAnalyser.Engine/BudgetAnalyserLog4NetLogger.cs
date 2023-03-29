@@ -90,72 +90,70 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
 
     public void LogError([NotNull] Func<ILogger, string> logEntryBuilder)
     {
-        if (logEntryBuilder == null)
-        {
-            throw new ArgumentNullException(nameof(logEntryBuilder));
-        }
-
-        if (this.disposed)
-        {
-            throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
-        }
-
         if (Log4NetLogger.IsErrorEnabled)
         {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(logEntryBuilder));
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
             SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder(this)));
         }
     }
 
     public void LogError(Exception ex, [NotNull] Func<ILogger, string> logEntryBuilder)
     {
-        if (logEntryBuilder == null)
-        {
-            throw new ArgumentNullException(nameof(logEntryBuilder));
-        }
-
-        if (this.disposed)
-        {
-            throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
-        }
-
         if (Log4NetLogger.IsErrorEnabled)
         {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(logEntryBuilder));
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
             SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder(this), ex));
         }
     }
 
     public void LogInfo([NotNull] Func<ILogger, string> logEntryBuilder)
     {
-        if (logEntryBuilder == null)
-        {
-            throw new ArgumentNullException(nameof(logEntryBuilder));
-        }
-
-        if (this.disposed)
-        {
-            throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
-        }
-
         if (Log4NetLogger.IsInfoEnabled)
         {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(logEntryBuilder));
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
+
             SynchroniseWithAlwaysLog(() => Log4NetLogger.Info(logEntryBuilder(this)));
         }
     }
 
     public void LogWarning([NotNull] Func<ILogger, string> logEntryBuilder)
     {
-        if (logEntryBuilder == null)
-        {
-            throw new ArgumentNullException(nameof(logEntryBuilder));
-        }
-
-        if (this.disposed)
-        {
-            throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
-        }
-
         if (Log4NetLogger.IsWarnEnabled)
         {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(logEntryBuilder));
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
+
             SynchroniseWithAlwaysLog(() => Log4NetLogger.Warn(logEntryBuilder(this)));
         }
     }
