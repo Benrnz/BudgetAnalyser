@@ -1,10 +1,16 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Budget.BudgetModelNameUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             MouseDoubleClick="OnMouseDoubleClick">
+             MouseDoubleClick="OnMouseDoubleClick"
+             Background="{StaticResource Brush.MainBackground}">
 
     <!-- DataContext must be BudgetCurrencyContext -->
     <StackPanel Orientation="Horizontal">
+        <Border Style="{StaticResource Badge.Border1}"
+                ToolTip="The pay cycle for this budget.">
+            <TextBlock Style="{StaticResource Badge.Text}"
+                       Text="{Binding BudgetCycle}" />
+        </Border>
         <Border Style="{StaticResource Badge.Border1}"
                 ToolTip="This budget is the current active budget for today."
                 Visibility="{Binding BudgetActive, Converter={StaticResource Converter.BoolToVis}}">
