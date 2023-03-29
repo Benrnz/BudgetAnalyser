@@ -120,6 +120,7 @@
     <Compile Include="DataFormatException.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="DebugLogger.cs" />
+    <Compile Include="DebugPlusLog4NetLogger.cs" />
     <Compile Include="DefaultIoCRegistrations.cs" />
     <Compile Include="DependencyRegistrationRequirement.cs" />
     <Compile Include="DuplicateNameException.cs" />

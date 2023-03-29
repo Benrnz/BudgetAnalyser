@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine;
 ///     This class is designed to be a long-lived single instance that is passed around. If mulitple instances are used
 ///     IDisposable should be implemented.
 /// </summary>
-[AutoRegisterWithIoC(SingleInstance = true)]
+[UsedImplicitly]
 public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
 {
     private readonly ReaderWriterLockSlim alwaysLogLock = new();
@@ -29,7 +29,7 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
         ConfigureLog4Net();
     }
 
-    protected virtual Level CurrentLogLevel
+    private Level CurrentLogLevel
     {
         get
         {
@@ -43,15 +43,15 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
         }
     }
 
-    protected ILog Log4NetLogger { get; set; }
+    private ILog Log4NetLogger { get; set; }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
-    public string Format(string formatTemplate, params object[] parameters)
+    public virtual string Format(string formatTemplate, params object[] parameters)
     {
         if (this.disposed)
         {
@@ -61,7 +61,7 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
         return string.Format(CultureInfo.CurrentCulture, formatTemplate, parameters);
     }
 
-    public void LogAlways([NotNull] Func<ILogger, string> logEntryBuilder)
+    public virtual void LogAlways([NotNull] Func<ILogger, string> logEntryBuilder)
     {
         if (logEntryBuilder == null)
         {
@@ -88,7 +88,7 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
         }
     }
 
-    public void LogError([NotNull] Func<ILogger, string> logEntryBuilder)
+    public virtual void LogError([NotNull] Func<ILogger, string> logEntryBuilder)
     {
         if (Log4NetLogger.IsErrorEnabled)
         {
@@ -101,11 +101,12 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
             {
                 throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
             }
+
             SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder(this)));
         }
     }
 
-    public void LogError(Exception ex, [NotNull] Func<ILogger, string> logEntryBuilder)
+    public virtual void LogError(Exception ex, [NotNull] Func<ILogger, string> logEntryBuilder)
     {
         if (Log4NetLogger.IsErrorEnabled)
         {
@@ -118,11 +119,12 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
             {
                 throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
             }
+
             SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder(this), ex));
         }
     }
 
-    public void LogInfo([NotNull] Func<ILogger, string> logEntryBuilder)
+    public virtual void LogInfo([NotNull] Func<ILogger, string> logEntryBuilder)
     {
         if (Log4NetLogger.IsInfoEnabled)
         {
@@ -140,7 +142,7 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
         }
     }
 
-    public void LogWarning([NotNull] Func<ILogger, string> logEntryBuilder)
+    public virtual void LogWarning([NotNull] Func<ILogger, string> logEntryBuilder)
     {
         if (Log4NetLogger.IsWarnEnabled)
         {
@@ -158,13 +160,13 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
         }
     }
 
-    protected virtual void ConfigureLog4Net()
+    private void ConfigureLog4Net()
     {
         Log4NetLogger = LogManager.GetLogger("Budget Analyser Diagnostic Log");
         XmlConfigurator.Configure();
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         this.disposed = true;
         if (disposing)
@@ -173,7 +175,7 @@ public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
         }
     }
 
-    protected virtual void SetLogLevelToAll()
+    private void SetLogLevelToAll()
     {
         var internalLogger = (Logger)Log4NetLogger.Logger;
         internalLogger.Level = internalLogger.Hierarchy.LevelMap["ALL"];

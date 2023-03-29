@@ -6,7 +6,6 @@ namespace BudgetAnalyser.Engine;
 /// <summary>
 ///     A logging implementation that simply outputs to the Debug stream <see cref="System.Diagnostics.Debug" />.
 /// </summary>
-[AutoRegisterWithIoC]
 public class DebugLogger : ILogger
 {
     /// <summary>
