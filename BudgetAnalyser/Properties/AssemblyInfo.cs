@@ -13,7 +13,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rees.biz")]
 [assembly: AssemblyProduct("BudgetAnalyser")]
-[assembly: AssemblyCopyright("Rees.biz Copyright ©  2013")]
+[assembly: AssemblyCopyright("Rees.biz Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -50,7 +50,7 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("2.01.0")]
-[assembly: AssemblyFileVersion("2.01.0")]
+[assembly: AssemblyVersion("2.2.0")]
+[assembly: AssemblyFileVersion("2.2.0")]
 [assembly: CLSCompliant(false)]
 [assembly: InternalsVisibleTo("BudgetAnalyser.Wpf.UnitTest")]
