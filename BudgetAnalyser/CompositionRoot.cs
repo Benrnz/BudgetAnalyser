@@ -123,6 +123,7 @@ namespace BudgetAnalyser
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.
+            builder.RegisterType<DebugPlusLog4NetLogger>().As<ILogger>().SingleInstance();
         }
 
         private void BuildApplicationObjectGraph(ContainerBuilder builder, params Assembly[] assemblies)
