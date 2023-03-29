@@ -15,6 +15,7 @@ public class DebugLogger : ILogger
     /// </summary>
     public string Format(string formatTemplate, params object[] parameters)
     {
+        if (!Debugger.IsAttached) return string.Empty;
         return string.Format(formatTemplate, parameters);
     }
 
@@ -23,7 +24,9 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogAlways(Func<ILogger, string> logEntryBuilder)
     {
-        Debug.WriteLine(ConstructLogEntry("ALWAYS", logEntryBuilder));
+        if (!Debugger.IsAttached) return;
+        var msg = ConstructLogEntry("ALWAYS", logEntryBuilder);
+        Debug.WriteLine(msg);
     }
 
     /// <summary>
@@ -31,6 +34,7 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogError(Func<ILogger, string> logEntryBuilder)
     {
+        if (!Debugger.IsAttached) return;
         Debug.WriteLine(ConstructLogEntry("ERROR", logEntryBuilder));
     }
 
@@ -39,6 +43,7 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogError(Exception ex, Func<ILogger, string> logEntryBuilder)
     {
+        if (!Debugger.IsAttached) return;
         if (ex == null)
         {
             throw new ArgumentNullException(nameof(ex));
@@ -58,6 +63,7 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogInfo(Func<ILogger, string> logEntryBuilder)
     {
+        if (!Debugger.IsAttached) return;
         if (logEntryBuilder == null)
         {
             throw new ArgumentNullException(nameof(logEntryBuilder));
@@ -71,11 +77,12 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogWarning(Func<ILogger, string> logEntryBuilder)
     {
+        if (!Debugger.IsAttached) return;
         Debug.WriteLine(ConstructLogEntry("WARN", logEntryBuilder));
     }
 
     private string ConstructLogEntry(string level, Func<ILogger, string> logEntryBuilder)
     {
-        return $"{DateTime.Now.ToString("yy-MM-dThh:mm:ss.ffff")} {level.PadRight(7)}{logEntryBuilder(this)}";
+        return $"{DateTime.Now:yy-MM-dThh:mm:ss.ffff} {level,-7}{logEntryBuilder(this)}";
     }
 }
