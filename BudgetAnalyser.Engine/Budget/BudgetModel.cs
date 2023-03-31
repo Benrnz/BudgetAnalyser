@@ -15,11 +15,11 @@ namespace BudgetAnalyser.Engine.Budget;
 /// </summary>
 public class BudgetModel : INotifyPropertyChanged
 {
+    private BudgetCycle doNotUseBudgetCycle;
     private DateTime doNotUseEffectiveFrom;
     private DateTime doNotUseLastModified;
     private string doNotUseLastModifiedComment;
     private string doNotUseName;
-    private string doNotUseBudgetCycle;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetModel" /> class.
@@ -31,13 +31,31 @@ public class BudgetModel : INotifyPropertyChanged
         this.doNotUseLastModified = DateTime.Now;
         // Set this here because the deserialisation process will reset if a value exists in the XML file. If not its better to have a date than min value.
         this.doNotUseEffectiveFrom = DateTime.Now;
-        this.doNotUseBudgetCycle = "Monthly";
+        this.doNotUseBudgetCycle = BudgetCycle.Monthly;
     }
 
     /// <summary>
     ///     The Property Changed event for public properties
     /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
+
+    /// <summary>
+    ///     Gets the pay cycle for this budget. Can only be set during budget creation.
+    /// </summary>
+    public BudgetCycle BudgetCycle
+    {
+        get => this.doNotUseBudgetCycle;
+        internal set
+        {
+            if (value == this.doNotUseBudgetCycle)
+            {
+                return;
+            }
+
+            this.doNotUseBudgetCycle = value;
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     ///     Gets or sets the effective from date.
@@ -117,24 +135,6 @@ public class BudgetModel : INotifyPropertyChanged
             }
 
             this.doNotUseName = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <summary>
-    ///     Gets the pay cycle for this budget. Can only be set during budget creation. 
-    /// </summary>
-    public string BudgetCycle
-    {
-        get => this.doNotUseBudgetCycle;
-        private set
-        {
-            if (value == this.doNotUseBudgetCycle)
-            {
-                return;
-            }
-            
-            this.doNotUseBudgetCycle = value;
             OnPropertyChanged();
         }
     }
