@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="sourceBudget">The source budget to clone from.</param>
         /// <param name="newBudgetEffectiveFrom">This date will be used as the new budget's effective date.</param>
+        /// <param name="budgetCycle">The period the new budget will cover.</param>
         /// <returns>The newly created budget.</returns>
         /// <exception cref="ArgumentNullException">Will be thrown if source budget is null.</exception>
         /// <exception cref="ValidationWarningException">Will be thrown if the source budget is in an invalid state.</exception>
@@ -35,7 +36,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     budget.
         /// </exception>
         /// <exception cref="ArgumentException">Will be thrown if the effective date is not a future date.</exception>
-        BudgetModel CloneBudgetModel([NotNull] BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom);
+        BudgetModel CloneBudgetModel([NotNull] BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom, BudgetCycle budgetCycle);
 
         /// <summary>
         ///     Updates the budget with the full collection of incomes and expenses.

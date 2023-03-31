@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.Services
         public ApplicationDataType DataType => ApplicationDataType.Budget;
         public int LoadSequence => 5;
 
-        public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
+        public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom, BudgetCycle budgetCycle)
         {
             if (sourceBudget == null)
             {
@@ -92,7 +92,8 @@ namespace BudgetAnalyser.Engine.Services
             var newBudget = new BudgetModel
             {
                 EffectiveFrom = newBudgetEffectiveFrom,
-                Name = string.Format(CultureInfo.CurrentCulture, "Copy of {0}", sourceBudget.Name)
+                Name = string.Format(CultureInfo.CurrentCulture, "Copy of {0}", sourceBudget.Name),
+                BudgetCycle = budgetCycle
             };
             newBudget.Update(CloneBudgetIncomes(sourceBudget), CloneBudgetExpenses(sourceBudget));
 

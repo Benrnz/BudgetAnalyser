@@ -259,7 +259,7 @@ public class BudgetController : ControllerBase, IShowableController
     {
         try
         {
-            var budget = this.maintenanceService.CloneBudgetModel(CurrentBudget.Model, NewBudgetController.EffectiveFrom);
+            var budget = this.maintenanceService.CloneBudgetModel(CurrentBudget.Model, NewBudgetController.EffectiveFrom, NewBudgetController.BudgetCycle);
             ShowOtherBudget(budget);
         }
         catch (ArgumentException ex)
