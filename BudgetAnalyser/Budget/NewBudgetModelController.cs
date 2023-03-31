@@ -3,91 +3,124 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
-namespace BudgetAnalyser.Budget
+namespace BudgetAnalyser.Budget;
+
+[AutoRegisterWithIoC(SingleInstance = true)]
+// ReSharper disable once ClassNeverInstantiated.Global
+public class NewBudgetModelController : ControllerBase, IShellDialogInteractivity
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
-    public class NewBudgetModelController : ControllerBase, IShellDialogInteractivity
+    private readonly IUserMessageBox messageBox;
+    private Guid dialogCorrelationId;
+    private BudgetCycle doNotUseBudgetCycle;
+
+    public NewBudgetModelController([NotNull] IUiContext uiContext)
     {
-        private readonly IUserMessageBox messageBox;
-        private Guid dialogCorrelationId;
-
-        public NewBudgetModelController([NotNull] IUiContext uiContext)
+        if (uiContext == null)
         {
-            if (uiContext == null)
-            {
-                throw new ArgumentNullException(nameof(uiContext));
-            }
-
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
-            this.messageBox = uiContext.UserPrompts.MessageBox;
-            BudgetCycle = "Monthly";
+            throw new ArgumentNullException(nameof(uiContext));
         }
 
-        public event EventHandler Ready;
+        MessengerInstance = uiContext.Messenger;
+        MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        this.messageBox = uiContext.UserPrompts.MessageBox;
+        BudgetCycle = BudgetCycle.Monthly;
+    }
 
-        /// <summary>
-        ///     Will be called to ascertain the availability of the button.
-        /// </summary>
-        public bool CanExecuteCancelButton => true;
+    public event EventHandler Ready;
 
-        /// <summary>
-        ///     Will be called to ascertain the availability of the button.
-        /// </summary>
-        public bool CanExecuteOkButton => false;
-
-        /// <summary>
-        ///     Will be called to ascertain the availability of the button.
-        /// </summary>
-        public bool CanExecuteSaveButton => EffectiveFrom > DateTime.Today;
-
-        /// <summary>
-        ///     Gets the pay cycle for this budget. Can only be set during budget creation. 
-        /// </summary>
-        public string BudgetCycle { get; set; }
-        
-        public DateTime EffectiveFrom { get; set; }
-
-        public void ShowDialog(DateTime defaultEffectiveDate)
+    /// <summary>
+    ///     Gets the pay cycle for this budget. Can only be set during budget creation.
+    /// </summary>
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+    public BudgetCycle BudgetCycle
+    {
+        get => this.doNotUseBudgetCycle;
+        set
         {
-            this.dialogCorrelationId = Guid.NewGuid();
-            EffectiveFrom = defaultEffectiveDate;
-
-            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, this, ShellDialogType.SaveCancel)
-            {
-                CorrelationId = this.dialogCorrelationId,
-                Title = "Create new Budget based on current",
-                HelpAvailable = true
-            };
-            MessengerInstance.Send(dialogRequest);
-        }
-
-        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
-        {
-            if (!message.IsItForMe(this.dialogCorrelationId))
+            if (value == this.doNotUseBudgetCycle)
             {
                 return;
             }
 
-            if (message.Response == ShellDialogButton.Help)
-            {
-                this.messageBox.Show("This will clone an existing budget, the currently shown budget, to a new budget that is future dated.  The budget must have an effective date in the future.");
-                return;
-            }
+            this.doNotUseBudgetCycle = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(FortnightlyChecked));
+            RaisePropertyChanged(nameof(MonthlyChecked));
+        }
+    }
 
-            EventHandler handler = Ready;
-            if (handler != null)
+    /// <summary>
+    ///     Will be called to ascertain the availability of the button.
+    /// </summary>
+    public bool CanExecuteCancelButton => true;
+
+    /// <summary>
+    ///     Will be called to ascertain the availability of the button.
+    /// </summary>
+    public bool CanExecuteOkButton => false;
+
+    /// <summary>
+    ///     Will be called to ascertain the availability of the button.
+    /// </summary>
+    public bool CanExecuteSaveButton => EffectiveFrom > DateTime.Today;
+
+    // ReSharper disable once MemberCanBePrivate.Global
+    public DateTime EffectiveFrom { get; set; }
+
+    // ReSharper disable once UnusedMember.Global
+    public bool FortnightlyChecked
+    {
+        get => BudgetCycle == BudgetCycle.Fortnightly;
+        set => BudgetCycle = value ? BudgetCycle.Fortnightly : BudgetCycle.Monthly;
+    }
+
+    // ReSharper disable once UnusedMember.Global
+    public bool MonthlyChecked
+    {
+        get => BudgetCycle == BudgetCycle.Monthly;
+        set => BudgetCycle = value ? BudgetCycle.Monthly : BudgetCycle.Fortnightly;
+    }
+
+    public void ShowDialog(DateTime defaultEffectiveDate)
+    {
+        this.dialogCorrelationId = Guid.NewGuid();
+        EffectiveFrom = defaultEffectiveDate;
+
+        var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, this, ShellDialogType.SaveCancel)
+        {
+            CorrelationId = this.dialogCorrelationId,
+            Title = "Create new Budget based on current",
+            HelpAvailable = true
+        };
+        MessengerInstance.Send(dialogRequest);
+    }
+
+    private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+    {
+        if (!message.IsItForMe(this.dialogCorrelationId))
+        {
+            return;
+        }
+
+        if (message.Response == ShellDialogButton.Help)
+        {
+            this.messageBox.Show("This will clone an existing budget, the currently shown budget, to a new budget that is future dated.  The budget must have an effective date in the future.");
+            return;
+        }
+
+        var handler = Ready;
+        if (handler != null)
+        {
+            if (message.Response == ShellDialogButton.Cancel)
             {
-                if (message.Response == ShellDialogButton.Cancel)
-                {
-                }
-                else
-                {
-                    handler(this, EventArgs.Empty);
-                }
+            }
+            else
+            {
+                handler(this, EventArgs.Empty);
             }
         }
     }

@@ -14,16 +14,32 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0"
-                    Grid.Row="0">
+                    Grid.Row="0"
+                    Margin="5">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Effective From Date (inclusive):" />
             <DatePicker SelectedDate="{Binding EffectiveFrom}" />
         </StackPanel>
         <StackPanel Grid.Column="0"
-                    Grid.Row="1">
+                    Grid.Row="1"
+                    Margin="5">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Pay Cycle for this Budget:" />
-            <TextBox Text="{Binding BudgetCycle}"/>
+            <RadioButton GroupName="BudgetCycle"
+                         IsChecked="{Binding MonthlyChecked}">
+                <RadioButton.Content>
+                    <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                               Text="Monthly" />
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton GroupName="BudgetCycle"
+                         IsChecked="{Binding FortnightlyChecked}">
+                <RadioButton.Content>
+                    <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                               Text="Fortnightly (2-weeks)" />
+                </RadioButton.Content>
+            </RadioButton>
+
         </StackPanel>
         <TextBlock Grid.Column="0"
                    Grid.Row="2"
