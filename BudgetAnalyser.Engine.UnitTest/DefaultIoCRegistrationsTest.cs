@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Engine.UnitTest
             {
                 return new List<Type>
                 {
+                    typeof(ILogger), // Logger is instantiated with a custom registration. 
                     typeof(IModelValidate), // Used to indicate support for standard validation.
                     typeof(IBankStatementImporter), // The implementations of this interface are discovered by reflection.
                     typeof(IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.

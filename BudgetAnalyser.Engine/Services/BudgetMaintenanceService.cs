@@ -31,30 +31,10 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         [NotNull] ILogger logger,
         [NotNull] MonitorableDependencies monitorableDependencies)
     {
-        if (budgetRepository == null)
-        {
-            throw new ArgumentNullException(nameof(budgetRepository));
-        }
-
-        if (bucketRepo == null)
-        {
-            throw new ArgumentNullException(nameof(bucketRepo));
-        }
-
-        if (logger == null)
-        {
-            throw new ArgumentNullException(nameof(logger));
-        }
-
-        if (monitorableDependencies == null)
-        {
-            throw new ArgumentNullException(nameof(monitorableDependencies));
-        }
-
-        this.budgetRepository = budgetRepository;
-        this.logger = logger;
-        this.monitorableDependencies = monitorableDependencies;
-        BudgetBucketRepository = bucketRepo;
+        this.budgetRepository = budgetRepository ?? throw new ArgumentNullException(nameof(budgetRepository));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
+        BudgetBucketRepository = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
         CreateNewBudgetCollection();
     }
 
