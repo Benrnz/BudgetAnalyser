@@ -43,11 +43,11 @@
                 <Button Style="{StaticResource Button.Round.Minus}"
                         Command="{Binding BackMonthCommand}"
                         CommandParameter="{Binding Criteria.EndDate}"
-                        ToolTip="Back a month" />
+                        ToolTip="Back a month/fortnight" />
                 <Button Style="{StaticResource Button.Round.Add}"
                         Command="{Binding AddMonthCommand}"
                         CommandParameter="{Binding Criteria.EndDate}"
-                        ToolTip="Forward a month" />
+                        ToolTip="Forward a month/fortnight" />
             </StackPanel>
             <StackPanel Grid.Column="2"
                         Grid.Row="1"
@@ -67,7 +67,7 @@
                        Style="{StaticResource TextBlock.Paragraph}"
                        Margin="2,2,0,2">
                 <Run>
-                    When choosing a date range, its best to begin your pay month so your pay day is the first day in the range.  For example: If you are paid on the 20th, start your month date range
+                    When choosing a date range, its best to begin your range so your pay day is the first day in the range.  For example: If you are paid monthly on the 20th, start your month date range
                     on the 20th and finish it on the 19th of the following month. Selecting one month will activate the dashboard widgets to monitor your spending through the month.
                     For reporting you can choose any date range you like.
                 </Run>

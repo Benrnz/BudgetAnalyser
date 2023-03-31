@@ -1,6 +1,7 @@
 using System;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
@@ -23,6 +24,7 @@ namespace BudgetAnalyser.Budget
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             this.messageBox = uiContext.UserPrompts.MessageBox;
+            BudgetCycle = "Monthly";
         }
 
         public event EventHandler Ready;
@@ -42,6 +44,11 @@ namespace BudgetAnalyser.Budget
         /// </summary>
         public bool CanExecuteSaveButton => EffectiveFrom > DateTime.Today;
 
+        /// <summary>
+        ///     Gets the pay cycle for this budget. Can only be set during budget creation. 
+        /// </summary>
+        public string BudgetCycle { get; set; }
+        
         public DateTime EffectiveFrom { get; set; }
 
         public void ShowDialog(DateTime defaultEffectiveDate)

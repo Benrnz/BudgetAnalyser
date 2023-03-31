@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <summary>
         ///     A constant for the monthly tracking section name
         /// </summary>
-        public const string MonthlyTrackingSectionName = "Monthly Tracking";
+        public const string MonthlyTrackingSectionName = "Tracking";
 
         /// <summary>
         ///     A constant for the overview section name
