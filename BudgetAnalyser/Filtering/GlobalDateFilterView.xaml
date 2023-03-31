@@ -43,11 +43,11 @@
                 <Button Style="{StaticResource Button.Round.Minus}"
                         Command="{Binding BackMonthCommand}"
                         CommandParameter="{Binding Criteria.EndDate}"
-                        ToolTip="Back a month" />
+                        ToolTip="Back a month/fortnight" />
                 <Button Style="{StaticResource Button.Round.Add}"
                         Command="{Binding AddMonthCommand}"
                         CommandParameter="{Binding Criteria.EndDate}"
-                        ToolTip="Forward a month" />
+                        ToolTip="Forward a month/fortnight" />
             </StackPanel>
             <StackPanel Grid.Column="2"
                         Grid.Row="1"

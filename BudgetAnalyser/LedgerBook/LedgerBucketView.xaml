@@ -59,6 +59,7 @@
                 <TextBlock Margin="10"
                            Style="{StaticResource TextBlock.Number}"
                            Text="{Binding MonthlyBudgetAmount, StringFormat=C}" />
+                <!-- TODO bind this to budget / ledger period -->
                 <TextBlock Margin="0,10,10,10"
                            Text=" per month." />
             </StackPanel>

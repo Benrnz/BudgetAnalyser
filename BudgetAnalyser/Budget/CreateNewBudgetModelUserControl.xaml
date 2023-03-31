@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0"
                     Grid.Row="0">
@@ -24,6 +25,10 @@
                        Text="Pay Cycle for this Budget:" />
             <TextBox />
         </StackPanel>
+        <TextBlock Grid.Column="0"
+                   Grid.Row="2"
+                   Style="{StaticResource TextBlock.Paragraph}"
+                   Text="Once set, pay cycle can't be changed." />
     </Grid>
 
 </UserControl>
