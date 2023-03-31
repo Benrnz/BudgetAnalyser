@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Budget.CreateNewBudgetModelUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="{StaticResource Brush.MainBackground}">
+             Background="{StaticResource Brush.DialogBackground}">
     <!-- DataContext: NewBudgetModelController -->
 
     <Grid FocusManager.FocusedElement="{Binding ElementName=CodeTextBox}">
@@ -23,7 +23,7 @@
                     Grid.Row="1">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Pay Cycle for this Budget:" />
-            <TextBox />
+            <TextBox Text="{Binding BudgetCycle}"/>
         </StackPanel>
         <TextBlock Grid.Column="0"
                    Grid.Row="2"

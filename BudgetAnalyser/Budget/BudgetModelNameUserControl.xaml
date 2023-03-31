@@ -9,7 +9,7 @@
         <Border Style="{StaticResource Badge.Border1}"
                 ToolTip="The pay cycle for this budget.">
             <TextBlock Style="{StaticResource Badge.Text}"
-                       Text="{Binding BudgetCycle}" />
+                       Text="{Binding Model.BudgetCycle}" />
         </Border>
         <Border Style="{StaticResource Badge.Border1}"
                 ToolTip="This budget is the current active budget for today."
