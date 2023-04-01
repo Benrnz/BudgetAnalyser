@@ -83,11 +83,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         }
 
         [TestMethod]
-        [Description("A test designed to break when new propperties are added to the BudgetModelDto. This is a trigger to update the mappers.")]
-        public void NumberOfDataBudgetModelPropertiesShouldBe5()
+        [Description("A test designed to break when new properties are added to the BudgetModelDto. This is a trigger to update the mappers.")]
+        public void NumberOfDataBudgetModelPropertiesShouldBe7()
         {
             int dataProperties = typeof(BudgetModelDto).CountProperties();
-            Assert.AreEqual(6, dataProperties);
+            Assert.AreEqual(7, dataProperties);
         }
 
         [TestInitialize]

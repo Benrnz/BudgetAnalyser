@@ -16,9 +16,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         public static readonly SavedUpForExpenseBucket HairBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Haircuts");
         public static readonly IncomeBudgetBucket IncomeBucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Salary");
         public static readonly SavedUpForExpenseBucket InsHomeBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Insurance Home");
-        public static readonly SpentMonthlyExpenseBucket PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone");
-        public static readonly SpentMonthlyExpenseBucket PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power");
-        public static readonly SpentMonthlyExpenseBucket RegoBucket = new SpentMonthlyExpenseBucket(TestDataConstants.RegoBucketCode, "Car registrations");
+        public static readonly SpentPerPeriodExpenseBucket PhoneBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone");
+        public static readonly SpentPerPeriodExpenseBucket PowerBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power");
+        public static readonly SpentPerPeriodExpenseBucket RegoBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.RegoBucketCode, "Car registrations");
         public static readonly SurplusBucket SurplusBucket = new SurplusBucket();
         public static readonly SavingsAccount SavingsAccount = new SavingsAccount(TestDataConstants.SavingsAccountName);
         public static readonly NamedTransaction TransactionType = new NamedTransaction("Bill Payment");

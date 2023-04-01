@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         public void MatchShouldMatchIfReferenceIsBucketCode()
         {
             this.mockBudgetBucketRepo.Setup(m => m.IsValidCode("Foo")).Returns(true);
-            this.mockBudgetBucketRepo.Setup(m => m.GetByCode("Foo")).Returns(new SpentMonthlyExpenseBucket("FOO", "Foo"));
+            this.mockBudgetBucketRepo.Setup(m => m.GetByCode("Foo")).Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
             IList<Transaction> transactions = this.testDataTransactions;
             transactions.First().Reference1 = "Foo";
             var subject = Arrange();
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         public void MatchShouldPreferMatchFromReferenceOverRules()
         {
             this.mockBudgetBucketRepo.Setup(m => m.IsValidCode("Foo")).Returns(true);
-            this.mockBudgetBucketRepo.Setup(m => m.GetByCode("Foo")).Returns(new SpentMonthlyExpenseBucket("FOO", "Foo"));
+            this.mockBudgetBucketRepo.Setup(m => m.GetByCode("Foo")).Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
             IList<Transaction> transactions = this.testDataTransactions;
             var firstTxn = transactions.First();
             firstTxn.Reference1 = "Foo";

@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 case BucketDtoType.SavingsCommitment:
                     return new SavingsCommitmentBucket();
                 case BucketDtoType.SpentMonthlyExpense:
-                    return new SpentMonthlyExpenseBucket();
+                    return new SpentPerPeriodExpenseBucket();
                 case BucketDtoType.FixedBudgetProject:
                     var f = (FixedBudgetBucketDto) dto;
                     return new FixedBudgetProjectBucket(f.Code, f.Description, f.FixedBudgetAmount, f.Created);
@@ -87,7 +87,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 return BucketDtoType.SavedUpForExpense;
             }
 
-            if (bucket is SpentMonthlyExpenseBucket)
+            if (bucket is SpentPerPeriodExpenseBucket)
             {
                 return BucketDtoType.SpentMonthlyExpense;
             }

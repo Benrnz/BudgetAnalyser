@@ -16,10 +16,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             ChequeAccount = StatementModelTestData.ChequeAccount;
             SavingsAccount = StatementModelTestData.SavingsAccount;
             RatesLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates "), StoredInAccount = ChequeAccount };
-            PowerLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power "), StoredInAccount = ChequeAccount };
-            PhoneLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
-            WaterLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
-            HouseInsLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            PowerLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power "), StoredInAccount = ChequeAccount };
+            PhoneLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            WaterLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            HouseInsLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
             HouseInsLedgerSavingsAccount = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = SavingsAccount };
             CarInsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar"), StoredInAccount = ChequeAccount };
             LifeInsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar"), StoredInAccount = ChequeAccount };

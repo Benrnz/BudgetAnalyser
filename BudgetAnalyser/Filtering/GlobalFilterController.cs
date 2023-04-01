@@ -61,10 +61,10 @@ namespace BudgetAnalyser.Filtering
         public string ActionButtonToolTip => "Apply filter and close.";
 
         [UsedImplicitly]
-        public ICommand AddMonthCommand => new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue);
+        public ICommand AddPeriodCommand => new RelayCommand<DateTime>(OnAddPeriodCommandExecute, d => d != DateTime.MinValue);
 
         [UsedImplicitly]
-        public ICommand BackMonthCommand => new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue);
+        public ICommand BackPeriodCommand => new RelayCommand<DateTime>(OnBackPeriodCommandExecute, d => d != DateTime.MinValue);
 
         [UsedImplicitly]
         public ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
@@ -115,8 +115,9 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Send(dialogRequest);
         }
 
-        private void OnAddMonthCommandExecute(DateTime date)
+        private void OnAddPeriodCommandExecute(DateTime date)
         {
+            // TODO this business logic should not be here.
             if (Criteria.BeginDate != null && date == Criteria.BeginDate)
             {
                 Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(1);
@@ -166,8 +167,9 @@ namespace BudgetAnalyser.Filtering
             message.PersistThisModel(filterState);
         }
 
-        private void OnBackMonthCommandExecute(DateTime date)
+        private void OnBackPeriodCommandExecute(DateTime date)
         {
+            // TODO this business logic should not be here.
             if (Criteria.BeginDate != null && date == Criteria.BeginDate)
             {
                 Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(-1);

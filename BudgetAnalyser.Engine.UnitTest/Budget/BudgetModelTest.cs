@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
             var expenses = new List<Expense>
             {
-                new Expense { Amount = 4444, Bucket = new SpentMonthlyExpenseBucket("Horse", "Shit") },
+                new Expense { Amount = 4444, Bucket = new SpentPerPeriodExpenseBucket("Horse", "Shit") },
                 new Expense { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") }
             };
 
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
             var expenses = new List<Expense>
             {
-                new Expense { Amount = 4444, Bucket = new SpentMonthlyExpenseBucket("Horse", "Shit") },
+                new Expense { Amount = 4444, Bucket = new SpentPerPeriodExpenseBucket("Horse", "Shit") },
                 new Expense { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") }
             };
 

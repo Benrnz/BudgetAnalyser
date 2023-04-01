@@ -75,8 +75,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             };
 
             this.mockMatchMaker.Setup(m => m.Match(testTransactions, testMatchingRules)).Returns(true);
-            this.mockBucketRepo.GetOrCreateNew(TestDataConstants.PowerBucketCode, () => new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Foo"));
-            this.mockBucketRepo.GetOrCreateNew(TestDataConstants.PhoneBucketCode, () => new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Foo"));
+            this.mockBucketRepo.GetOrCreateNew(TestDataConstants.PowerBucketCode, () => new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Foo"));
+            this.mockBucketRepo.GetOrCreateNew(TestDataConstants.PhoneBucketCode, () => new SpentPerPeriodExpenseBucket(TestDataConstants.PhoneBucketCode, "Foo"));
             PrivateAccessor.InvokeMethod(this.subject, "InitialiseTheRulesCollections", testMatchingRules);
             PrivateAccessor.SetField<TransactionRuleService>(this.subject, "rulesStorageKey", "lksjgjklshgjkls");
 

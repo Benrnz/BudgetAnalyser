@@ -183,6 +183,7 @@
     <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
     <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
+    <Compile Include="Services\BudgetMaintenanceServiceTest.cs" />
     <Compile Include="Services\StatementModelTestHarness.cs" />
     <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Services\TransactionRuleServiceTest.cs" />

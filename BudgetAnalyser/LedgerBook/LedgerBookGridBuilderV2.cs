@@ -109,7 +109,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private static Brush StripColour(LedgerBucket ledger)
         {
-            if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
+            if (ledger.BudgetBucket is SpentPerPeriodExpenseBucket)
             {
                 return ConverterHelper.SpentMonthlyBucketBrush;
             }
@@ -259,7 +259,7 @@ namespace BudgetAnalyser.LedgerBook
                 gridColumn = 0;
                 Border border = AddBorderToGridCell(grid, true, true, gridRow, gridColumn);
                 // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
-                Grid.SetRowSpan(border, ledger.BudgetBucket is SpentMonthlyExpenseBucket ? 1 : 2);
+                Grid.SetRowSpan(border, ledger.BudgetBucket is SpentPerPeriodExpenseBucket ? 1 : 2);
 
                 // Heading stripe to indicate SpentMonthly or SavedUpFor expenses.
                 var stripe = new Border
@@ -287,7 +287,7 @@ namespace BudgetAnalyser.LedgerBook
 
                 gridColumn++;
 
-                if (!(ledger.BudgetBucket is SpentMonthlyExpenseBucket))
+                if (!(ledger.BudgetBucket is SpentPerPeriodExpenseBucket))
                 {
                     Border border1 = AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
                     TextBlock ledgerTxnsHeading = AddContentToGrid(border1, "Txns", ref gridRow, gridColumn, HeadingStyle, "Transactions");
@@ -399,7 +399,7 @@ namespace BudgetAnalyser.LedgerBook
                         netAmount = entry.NetAmount;
                     }
 
-                    if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
+                    if (ledger.BudgetBucket is SpentPerPeriodExpenseBucket)
                     {
                         Border border = AddBorderToGridCell(grid, false, true, gridRow, gridColumn);
                         border.ToolTip = "This ledger has moved to another bank account.";
@@ -437,7 +437,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             foreach (LedgerBucket ledger in this.sortedLedgers)
             {
-                if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
+                if (ledger.BudgetBucket is SpentPerPeriodExpenseBucket)
                 {
                     // Spent Monthly ledgers only have a balance gridRow
                     grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });

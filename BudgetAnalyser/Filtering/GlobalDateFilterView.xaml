@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Filtering.GlobalDateFilterView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource Brush.DialogBackground}">
 
     <Grid x:Name="MainContainer">
             <Grid.RowDefinitions>
@@ -23,13 +24,13 @@
                         Orientation="Horizontal">
                 <DatePicker SelectedDate="{Binding Criteria.BeginDate, StringFormat=d}" />
                 <Button Style="{StaticResource Button.Round.Minus}"
-                        Command="{Binding BackMonthCommand}"
+                        Command="{Binding BackPeriodCommand}"
                         CommandParameter="{Binding Criteria.BeginDate}"
-                        ToolTip="Back a month" />
+                        ToolTip="Back one month/fortnight" />
                 <Button Style="{StaticResource Button.Round.Add}"
-                        Command="{Binding AddMonthCommand}"
+                        Command="{Binding AddPeriodCommand}"
                         CommandParameter="{Binding Criteria.BeginDate}"
-                        ToolTip="Forward a month" />
+                        ToolTip="Forward one month/fortnight" />
             </StackPanel>
             <TextBlock Grid.Row="1"
                        Text="End Date (inclusive)"
@@ -41,11 +42,11 @@
                         Orientation="Horizontal">
                 <DatePicker SelectedDate="{Binding Criteria.EndDate, StringFormat=d}" />
                 <Button Style="{StaticResource Button.Round.Minus}"
-                        Command="{Binding BackMonthCommand}"
+                        Command="{Binding BackPeriodCommand}"
                         CommandParameter="{Binding Criteria.EndDate}"
                         ToolTip="Back a month/fortnight" />
                 <Button Style="{StaticResource Button.Round.Add}"
-                        Command="{Binding AddMonthCommand}"
+                        Command="{Binding AddPeriodCommand}"
                         CommandParameter="{Binding Criteria.EndDate}"
                         ToolTip="Forward a month/fortnight" />
             </StackPanel>

@@ -57,7 +57,7 @@
       <FileName>Budget\ExpenseBucket.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BudgetAnalyser.Engine.Budget.SpentMonthlyExpenseBucket" Collapsed="true">
+  <Class Name="BudgetAnalyser.Engine.Budget.SpentPerPeriodExpenseBucket" Collapsed="true">
     <Position X="5.75" Y="9.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
