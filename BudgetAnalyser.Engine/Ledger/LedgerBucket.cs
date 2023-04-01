@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     A constant for the "supplement less than budget" text
         /// </summary>
-        protected const string SupplementLessThanBudgetText = "Automatically supplementing shortfall so balance is not less than monthly budget amount";
+        protected const string SupplementLessThanBudgetText = "Automatically supplementing shortfall so balance is not less than budget amount";
 
         /// <summary>
         ///     A constant for the "supplement overdrawn" text

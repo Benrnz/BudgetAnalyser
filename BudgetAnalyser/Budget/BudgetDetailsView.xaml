@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             Background="{StaticResource Brush.MainBackground}">
+             Background="{StaticResource Brush.DialogBackground}">
     <!-- DataContext must be BudgetCurrencyContext -->
 
     <Grid>
@@ -25,7 +25,7 @@
         </Grid>
 
         <StackPanel Grid.ColumnSpan="2">
-            <b:BudgetModelNameUserControl />
+            <b:BudgetModelNameUserControl Background="{StaticResource Brush.DialogBackground}" />
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding FileName}"
                        ToolTip="{Binding FileName}" />

@@ -115,6 +115,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
             return ledgerBook.Reconciliations.First().Date;
         }
 
+        // TODO fix this for fortnightly periods
         var startDateIncl = reconciliationDate.AddMonths(-1);
         return startDateIncl;
     }
@@ -153,9 +154,9 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
         var reconciliationDate = this.newReconciliationLine.Date;
         // Date filter must include the start date, which goes back to and includes the previous ledger date up to the date of this ledger line, but excludes this ledger date.
-        // For example if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
+        // For example for a monthly budget if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
         // 20/Jan (inclusive) and 19/Feb (inclusive) but not including anything for the 20th of Feb.
-
+        // Why? Because the new ledger entry is intended to show the starting balances for the new period, so you can plan for the upcoming period.
         List<Transaction> filteredStatementTransactions = statement?.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList() ?? new List<Transaction>();
 
         IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(LedgerBook);
@@ -291,14 +292,13 @@ internal class ReconciliationBuilder : IReconciliationBuilder
         foreach (var ledger in parentLedgerBook.Ledgers)
         {
             // Ledger Columns from a previous are not necessarily equal if the StoredInAccount has changed.
-            var previousEntry =
-                previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
+            var previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
 
             // Its important to use the ledger column value from the book level map, not from the previous entry. The user
             // could have moved the ledger to a different account and so, the ledger column value in the book level map will be different.
             if (previousEntry == null)
             {
-                // Indicates a new ledger column has been added to the book starting this month.
+                // Indicates a new ledger column has been added to the book starting this month/fortnight.
                 ledgersAndBalances.Add(new LedgerEntry { Balance = 0, LedgerBucket = ledger });
             }
             else

@@ -41,15 +41,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void TwoInstancesWithEquivelantBucketAndAccountAreEqual()
         {
-            var bucket1 = new SpentMonthlyExpenseBucket("Foo1", "Foo bar");
-            var bucket2 = new SpentMonthlyExpenseBucket("Foo1", "Foo bar");
+            var bucket1 = new SpentPerPeriodExpenseBucket("Foo1", "Foo bar");
+            var bucket2 = new SpentPerPeriodExpenseBucket("Foo1", "Foo bar");
 
-            var instance1 = new SpentMonthlyLedger
+            var instance1 = new SpentPerPeriodLedger
             {
                 BudgetBucket = bucket1,
                 StoredInAccount = StatementModelTestData.SavingsAccount
             };
-            var instance2 = new SpentMonthlyLedger
+            var instance2 = new SpentPerPeriodLedger
             {
                 BudgetBucket = bucket2,
                 StoredInAccount = StatementModelTestData.SavingsAccount

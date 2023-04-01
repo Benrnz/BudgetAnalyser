@@ -115,7 +115,7 @@
     <Compile Include="Budget\PayCreditCardBucket.cs" />
     <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
     <Compile Include="Budget\SavingsCommitmentBucket.cs" />
-    <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
+    <Compile Include="Budget\SpentPerPeriodExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
     <Compile Include="DataFormatException.cs" />
@@ -180,7 +180,7 @@
     <Compile Include="Ledger\Reconciliation\ReconciliationCreationManager.cs" />
     <Compile Include="Ledger\Reconciliation\ReconciliationResult.cs" />
     <Compile Include="Ledger\SavedUpForLedger.cs" />
-    <Compile Include="Ledger\SpentMonthlyLedger.cs" />
+    <Compile Include="Ledger\SpentPerPeriodLedger.cs" />
     <Compile Include="Ledger\SurplusLedger.cs" />
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />

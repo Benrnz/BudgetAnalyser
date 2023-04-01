@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             Assert.IsInstanceOfType(
                 Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.SpentMonthlyExpense }), 
-                typeof(SpentMonthlyExpenseBucket));
+                typeof(SpentPerPeriodExpenseBucket));
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void SerialiseTypeShouldReturnSpentMonthlyGivenSpentMonthlyBucket()
         {
-            Assert.AreEqual(BucketDtoType.SpentMonthlyExpense, Subject.SerialiseType(new SpentMonthlyExpenseBucket()));
+            Assert.AreEqual(BucketDtoType.SpentMonthlyExpense, Subject.SerialiseType(new SpentPerPeriodExpenseBucket()));
         }
 
         [TestMethod]

@@ -309,7 +309,7 @@
                                Text="New Spent Monthly Expense" />
                 </Button.Content>
                 <Button.CommandParameter>
-                    <budget:SpentMonthlyExpenseBucket />
+                    <budget:SpentPerPeriodExpenseBucket />
                 </Button.CommandParameter>
             </Button>
             <Button Background="{StaticResource Brush.BudgetBucket.Accumulated}"

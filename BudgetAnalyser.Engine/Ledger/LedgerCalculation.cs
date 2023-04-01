@@ -180,8 +180,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         /// <summary>
         ///     Finds any overspent ledgers for the month and returns the date and value the of the total overspend.  This
-        ///     resulting
-        ///     collection can then be used to subtract from Surplus.
+        ///     resulting collection can then be used to subtract from Surplus.
         ///     Overdrawn ledgers are supplemented from Surplus.
         ///     Negative values indicate overdrawn ledgers.
         /// </summary>
@@ -212,6 +211,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         return overSpendTransactions;
                     }
 
+                    // TODO THis logic won't work for fortnightly periods.
                     var endDate = beginDate.AddMonths(1);
                     var currentDate = beginDate;
                     Dictionary<BudgetBucket, decimal> runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerBucket.BudgetBucket,
@@ -307,6 +307,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return null;
             }
 
+            // TODO THis logic won't work for fortnightly periods.
             return LocateLedgerEntryLine(ledgerBook, beginDate, beginDate.AddMonths(1).AddDays(-1));
         }
 
@@ -325,6 +326,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private Dictionary<BudgetBucket, decimal> CalculateLedgersBalanceSummary(LedgerBook ledgerBook,
                                                                                  DateTime beginDate, StatementModel statement)
         {
+            // TODO fortnightly budget logic wont work here
             var endDate = beginDate.AddMonths(1).AddDays(-1);
             var currentLegderLine = LocateLedgerEntryLine(ledgerBook, beginDate, endDate);
             if (currentLegderLine == null)
@@ -367,6 +369,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     return builder.ToString();
                 });
 
+            // TODO fix this for fortnightly
             IEnumerable<Transaction> query = statement.Transactions
                 .Where(t => t.Date < beginDate.AddMonths(1))
                 .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));

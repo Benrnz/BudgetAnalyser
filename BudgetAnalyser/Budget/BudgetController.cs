@@ -247,6 +247,7 @@ public class BudgetController : ControllerBase, IShowableController
     private void OnAddNewBudgetCommandExecuted()
     {
         var proposedDate = CurrentBudget.Model.EffectiveFrom.AddMonths(1);
+        // TODO THis is weird logic to propose an effective date for the new budget
         while (proposedDate < DateTime.Today)
         {
             proposedDate = proposedDate.AddMonths(1);
@@ -281,9 +282,9 @@ public class BudgetController : ControllerBase, IShowableController
 
         // New buckets must be created because the one passed in, is a single command parameter instance to be used as a type indicator only.
         // If it was used, the same instance would overwritten each time an expense is created.
-        if (expense is SpentMonthlyExpenseBucket)
+        if (expense is SpentPerPeriodExpenseBucket)
         {
-            newExpense.Bucket = new SpentMonthlyExpenseBucket(string.Empty, string.Empty);
+            newExpense.Bucket = new SpentPerPeriodExpenseBucket(string.Empty, string.Empty);
         }
         else if (expense is SavedUpForExpenseBucket)
         {

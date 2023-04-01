@@ -274,7 +274,7 @@ namespace BudgetAnalyser.LedgerBook
                 if (message.Response == ShellDialogButton.Help)
                 {
                     this.messageBox.Show(
-                        "Use your actual pay day as the date, this signifies the closing of the previous month, and opening a new month on your pay day showing available funds in each ledger for the new month. The date used will also be used to select transactions from the statement to calculate the ledger balance. The date is set from the current date range filter (on the dashboard page), using the day after the end date. Transactions will be found by searching one month prior to the given date, excluding the given date. The transactions are used to show how the current ledger balance is calculated. The bank balance is the balance as at the date given, after your pay has been credited.");
+                        "Use your actual pay day as the date, this signifies the closing of the previous month, and opening a new month on your pay day showing available funds in each ledger for the new month/fortnight. The date used will also be used to select transactions from the statement to calculate the ledger balance. The date is set from the current date range filter (on the dashboard page), using the day after the end date. Transactions will be found by searching one month/fortnight prior to the given date, excluding the given date. The transactions are used to show how the current ledger balance is calculated. The bank balance is the balance as at the date given, after your pay has been credited.");
                     return;
                 }
                 if (message.Response == ShellDialogButton.Cancel)

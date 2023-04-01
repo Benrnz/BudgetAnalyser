@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Ledger
     ///     will be transfered to Surplus.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Ledger.LedgerBucket" />
-    public class SpentMonthlyLedger : LedgerBucket
+    public class SpentPerPeriodLedger : LedgerBucket
     {
         /// <summary>
         ///     A constant for the "remove excess and no budget amount" text
@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </exception>
         protected override void ValidateBucketSet(BudgetBucket bucket)
         {
-            if (bucket is SpentMonthlyExpenseBucket)
+            if (bucket is SpentPerPeriodExpenseBucket)
             {
                 return;
             }

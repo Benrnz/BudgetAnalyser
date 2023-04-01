@@ -55,12 +55,12 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     new Expense
                     {
                         Amount = 55M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
                     },
                     new Expense
                     {
                         Amount = 175M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
                     }
                 });
 
@@ -105,12 +105,12 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     new Expense
                     {
                         Amount = 65M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
                     },
                     new Expense
                     {
                         Amount = 185M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
                     }
                 });
 
@@ -162,12 +162,12 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     new Expense
                     {
                         Amount = 65M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
                     },
                     new Expense
                     {
                         Amount = 185M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
                     }
                 });
 

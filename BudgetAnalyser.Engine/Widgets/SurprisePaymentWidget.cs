@@ -11,6 +11,7 @@ namespace BudgetAnalyser.Engine.Widgets
     /// <summary>
     ///     A widget designed to show any month where there will be 5 weekly payments in one month, or 3 fortnightly payments
     ///     in one month.
+    ///     When using a fortnightly budget period this widget is irrelevant. 
     /// </summary>
     public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     {
@@ -136,6 +137,7 @@ namespace BudgetAnalyser.Engine.Widgets
             var currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
             var content = new StringBuilder();
             // Ignore start date in filter and force it to be one month prior to end date in filter.
+            // TODO won't work for fortnightly budgets
             var currentMonthTally = new NextOccurance
             {
                 StartDate = this.filter.EndDate.Value.AddDays(1).AddMonths(-1),
@@ -161,6 +163,7 @@ namespace BudgetAnalyser.Engine.Widgets
                         {
                             firstOccurance = currentMonthTally;
                         }
+                        // TODO Very monthly specific wont work for fortnightly
                         content.AppendFormat(CultureInfo.CurrentCulture, "{0}, ",
                             currentMonthTally.StartDate.ToString("MMMM"));
                         if (currentMonthTally.EndDate == this.filter.EndDate.Value ||
@@ -277,6 +280,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             public NextOccurance NextMonth(int day)
             {
+                // TODO not sure about this for fortnightly
                 var nextMonth = new NextOccurance { StartDate = StartDate.AddMonths(1), EndDate = EndDate.AddMonths(1) };
                 nextMonth.Tally(day);
                 return nextMonth;

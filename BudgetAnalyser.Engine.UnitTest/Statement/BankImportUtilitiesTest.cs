@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         {
             BankImportUtilities subject = CreateSubject();
             string[] testArray = CreateTestArray();
-            var expectedResult = new SpentMonthlyExpenseBucket("FUEL", "Fuel");
+            var expectedResult = new SpentPerPeriodExpenseBucket("FUEL", "Fuel");
             BucketRepositoryMock.Setup(m => m.GetByCode("FUEL")).Returns(expectedResult);
 
             BudgetBucket result = subject.FetchBudgetBucket(testArray, 2, BucketRepositoryMock.Object);

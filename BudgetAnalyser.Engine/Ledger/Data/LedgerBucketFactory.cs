@@ -46,9 +46,9 @@ internal class LedgerBucketFactory : ILedgerBucketFactory
             return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
         }
 
-        if (bucket is SpentMonthlyExpenseBucket)
+        if (bucket is SpentPerPeriodExpenseBucket)
         {
-            return new SpentMonthlyLedger { BudgetBucket = bucket, StoredInAccount = account };
+            return new SpentPerPeriodLedger { BudgetBucket = bucket, StoredInAccount = account };
         }
 
         if (bucket is SavingsCommitmentBucket)

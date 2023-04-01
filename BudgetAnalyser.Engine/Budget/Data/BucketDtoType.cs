@@ -5,8 +5,9 @@
     /// </summary>
     public enum BucketDtoType
     {
+        // TODO This is a problem.  This value is persisted into the Budget xaml file.
         /// <summary>
-        ///     A spent monthly expense bucket. <seealso cref="SpentMonthlyExpenseBucket" />
+        ///     A spent monthly expense bucket. <seealso cref="SpentPerPeriodExpenseBucket" />
         /// </summary>
         SpentMonthlyExpense,
 
