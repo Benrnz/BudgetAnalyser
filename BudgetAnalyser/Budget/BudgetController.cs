@@ -247,10 +247,11 @@ public class BudgetController : ControllerBase, IShowableController
     private void OnAddNewBudgetCommandExecuted()
     {
         var proposedDate = CurrentBudget.Model.EffectiveFrom.AddMonths(1);
-        // TODO THis is weird logic to propose an effective date for the new budget
-        while (proposedDate < DateTime.Today)
+
+        if (proposedDate < DateTime.Today)
         {
-            proposedDate = proposedDate.AddMonths(1);
+            var differenceInMonths = proposedDate.DurationInMonths(DateTime.Today);
+            proposedDate = proposedDate.AddMonths(differenceInMonths);
         }
 
         NewBudgetController.ShowDialog(proposedDate);
