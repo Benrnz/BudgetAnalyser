@@ -56,7 +56,10 @@ namespace BudgetAnalyser.LedgerBook
         public LedgerBucketHistoryAnalyser LedgerBucketHistoryAnalysis { get; private set; }
 
         [UsedImplicitly]
-        public decimal MonthlyBudgetAmount { get; private set; }
+        public decimal BudgetAmount { get; private set; }
+        
+        [UsedImplicitly]
+        public BudgetCycle BudgetCycle { get; private set; }
 
         public Account StoredInAccount { get; set; }
 
@@ -86,7 +89,8 @@ namespace BudgetAnalyser.LedgerBook
             BankAccounts = new ObservableCollection<Account>(this.accountRepo.ListCurrentlyUsedAccountTypes());
             BucketBeingTracked = ledgerBucket.BudgetBucket;
             StoredInAccount = ledgerBucket.StoredInAccount;
-            MonthlyBudgetAmount = budgetModel.Expenses.Single(e => e.Bucket == BucketBeingTracked).Amount;
+            BudgetAmount = budgetModel.Expenses.Single(e => e.Bucket == BucketBeingTracked).Amount;
+            BudgetCycle = budgetModel.BudgetCycle;
             this.correlationId = Guid.NewGuid();
 
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
@@ -143,7 +147,7 @@ namespace BudgetAnalyser.LedgerBook
         private void Reset()
         {
             this.ledger = null;
-            MonthlyBudgetAmount = 0;
+            BudgetAmount = 0;
             BankAccounts.Clear();
             StoredInAccount = null;
         }
