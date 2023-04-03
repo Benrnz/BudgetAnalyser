@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.ApplicationState;
+using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -13,6 +14,7 @@ using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
+
 // ReSharper disable ClassNeverInstantiated.Global
 // Ctor and publics used by bindings.
 
@@ -21,7 +23,7 @@ namespace BudgetAnalyser.Filtering;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 {
-    private readonly BudgetCurrencyContext currentBudget;
+    private BudgetModel currentBudget;
     private readonly IUserMessageBox userMessageBox;
     private Guid dialogCorrelationId;
     private string doNotUseAccountTypeSummary;
@@ -38,7 +40,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
         this.userMessageBox = uiContext.UserPrompts.MessageBox;
         this.doNotUseCriteria = new GlobalFilterCriteria();
-        this.currentBudget = uiContext.BudgetController.CurrentBudget;
+        this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model;
 
         MessengerInstance = uiContext.Messenger;
         MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
@@ -48,6 +50,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
         MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
+        MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
     }
 
     public string AccountTypeSummary
@@ -117,16 +120,26 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnAddPeriodCommandExecute(DateTime date)
     {
-        // TODO this business logic should not be here.
         if (Criteria.BeginDate != null && date == Criteria.BeginDate)
         {
-            Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(1);
-            return;
+            if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
+            {
+                Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(1);
+                return;
+            }
+
+            Criteria.BeginDate = Criteria.BeginDate.Value.AddDays(14);
         }
 
         if (Criteria.EndDate != null && date == Criteria.EndDate)
         {
-            Criteria.EndDate = Criteria.EndDate.Value.AddMonths(1);
+            if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
+            {
+                Criteria.EndDate = Criteria.EndDate.Value.AddMonths(1);
+                return;
+            }
+
+            Criteria.EndDate = Criteria.EndDate.Value.AddDays(14);
         }
     }
 
@@ -169,17 +182,32 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnBackPeriodCommandExecute(DateTime date)
     {
-        // TODO this business logic should not be here.
         if (Criteria.BeginDate != null && date == Criteria.BeginDate)
         {
-            Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(-1);
-            return;
+            if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
+            {
+                Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(-1);
+                return;
+            }
+
+            Criteria.BeginDate = Criteria.BeginDate.Value.AddDays(-14);
         }
 
         if (Criteria.EndDate != null && date == Criteria.EndDate)
         {
-            Criteria.EndDate = Criteria.EndDate.Value.AddMonths(-1);
+            if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
+            {
+                Criteria.EndDate = Criteria.EndDate.Value.AddMonths(-1);
+                return;
+            }
+
+            Criteria.EndDate = Criteria.EndDate.Value.AddDays(-14);
         }
+    }
+
+    private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
+    {
+        this.currentBudget = message.Budgets.CurrentActiveBudget;
     }
 
     private void OnClearCommandExecute()

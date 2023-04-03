@@ -23,18 +23,8 @@ namespace BudgetAnalyser.Engine.Budget
         /// </param>
         public BudgetCurrencyContext([NotNull] BudgetCollection budgets, [NotNull] BudgetModel budget)
         {
-            if (budgets == null)
-            {
-                throw new ArgumentNullException(nameof(budgets));
-            }
-
-            if (budget == null)
-            {
-                throw new ArgumentNullException(nameof(budget));
-            }
-
-            BudgetCollection = budgets;
-            Model = budget;
+            BudgetCollection = budgets ?? throw new ArgumentNullException(nameof(budgets));
+            Model = budget ?? throw new ArgumentNullException(nameof(budget));
 
             if (budgets.IndexOf(budget) < 0)
             {
