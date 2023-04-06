@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <summary>
         ///     Monthlies the budget amount.
         /// </summary>
-        protected override decimal MonthlyBudgetAmount()
+        protected override decimal LedgerBucketBalanceOrBudgetAmount()
         {
             return Budget.Model.Surplus;
         }

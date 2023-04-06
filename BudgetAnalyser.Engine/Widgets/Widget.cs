@@ -21,6 +21,11 @@ namespace BudgetAnalyser.Engine.Widgets
         protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
 
         /// <summary>
+        ///     A constant for displaying the error message: The designed for one fortnight only
+        /// </summary>
+        protected const string DesignedForOneFortnightOnly = "Reduce the date range to one fortnight to enable this widget.";
+        
+        /// <summary>
         ///     A constant for the standard widget style. (Blue)
         /// </summary>
         protected const string WidgetStandardStyle = "WidgetStandardStyle";
@@ -57,8 +62,7 @@ namespace BudgetAnalyser.Engine.Widgets
         ///     Constructs a new instance of the <see cref="Widget" /> class.
         ///     All widgets must have a parameterless constructor. This is the constructor that will be used to create all widgets.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Reviewed, ok here")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         protected Widget()
         {
             Name = GetType().Name;

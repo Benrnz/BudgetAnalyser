@@ -23,6 +23,7 @@ public class LedgerCalculation
     ///     A temporary cache with a short timeout to store results from <see cref="CalculateOverspentLedgers" />. This method
     ///     is called multiple times over a short period to build a burn down report.
     ///     I did consider using a MemoryCache here, but I don't like the fact it is IDisposable.
+    ///     Static to provide a cache for the same data possibly across instances. 
     /// </summary>
     private static readonly ConcurrentDictionary<string, object> CalculationsCache = new();
 
@@ -48,8 +49,6 @@ public class LedgerCalculation
     /// <summary>
     ///     Calculates the current month bucket spend.
     /// </summary>
-    /// <exception cref="System.ArgumentNullException">
-    /// </exception>
     public virtual decimal CalculateCurrentMonthBucketSpend(
         [NotNull] LedgerBook ledgerBook,
         [NotNull] GlobalFilterCriteria filter,
