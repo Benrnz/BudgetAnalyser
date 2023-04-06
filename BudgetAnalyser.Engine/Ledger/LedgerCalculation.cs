@@ -49,7 +49,7 @@ public class LedgerCalculation
     /// <summary>
     ///     Calculates the current month bucket spend.
     /// </summary>
-    public virtual decimal CalculateCurrentMonthBucketSpend(
+    public virtual decimal CalculateCurrentPeriodBucketSpend(
         [NotNull] LedgerBook ledgerBook,
         [NotNull] GlobalFilterCriteria filter,
         [NotNull] StatementModel statement,
@@ -76,13 +76,15 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(bucketCode));
         }
 
-        if (filter.BeginDate == null)
+        if (!filter.BeginDate.HasValue || !filter.EndDate.HasValue)
         {
             return 0;
         }
 
-        var entryLine = LocateApplicableLedgerLine(ledgerBook, filter);
-        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, statement, entryLine, bucketCode);
+        var inclBeginDate = filter.BeginDate.Value;
+        var inclEndDate = filter.EndDate.Value;
+        var entryLine = LocateLedgerEntryLine(ledgerBook, inclBeginDate, inclEndDate);
+        var transactionTotal = CalculateTransactionTotal(inclBeginDate, inclEndDate, statement, entryLine, bucketCode);
         return transactionTotal;
     }
 
@@ -114,12 +116,12 @@ public class LedgerCalculation
 
         var ledgers = new Dictionary<BudgetBucket, decimal>();
 
-        if (filter.Cleared || filter.BeginDate == null)
+        if (filter.Cleared || filter.BeginDate == default || filter.EndDate == null)
         {
             return ledgers;
         }
 
-        Dictionary<BudgetBucket, decimal> ledgersSummary = CalculateLedgersBalanceSummary(ledgerBook, filter.BeginDate.Value, statement);
+        Dictionary<BudgetBucket, decimal> ledgersSummary = CalculateLedgersBalanceSummary(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value, statement);
 
         // Check Surplus
         var surplusBalance = CalculateCurrentMonthSurplusBalance(ledgerBook, filter, statement);
@@ -151,7 +153,7 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(statement));
         }
 
-        if (filter.Cleared || filter.BeginDate == null)
+        if (filter.Cleared || filter.BeginDate == default || filter.EndDate == default)
         {
             return 0;
         }
@@ -163,13 +165,12 @@ public class LedgerCalculation
         }
 
         var beginningOfMonthBalance = entryLine.CalculatedSurplus;
-        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, statement, entryLine,
-                                                         SurplusBucket.SurplusCode);
+        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, statement, entryLine, SurplusBucket.SurplusCode);
 
         beginningOfMonthBalance += transactionTotal;
 
         // Find any ledgers that are overpsent and subtract them from the Surplus total.  This is actually what is happening when you overspend a ledger, it spills over and spend Surplus.
-        Dictionary<BudgetBucket, decimal> ledgersSummary = CalculateLedgersBalanceSummary(ledgerBook, filter.BeginDate.Value, statement);
+        Dictionary<BudgetBucket, decimal> ledgersSummary = CalculateLedgersBalanceSummary(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value, statement);
         beginningOfMonthBalance += ledgersSummary.Where(kvp => kvp.Value < 0).Sum(kvp => kvp.Value);
 
         return beginningOfMonthBalance;
@@ -237,8 +238,7 @@ public class LedgerCalculation
     ///     Locates the most recent <see cref="LedgerEntryLine" /> for the given date filter. Note that this will only return
     ///     the most recent line that fits the criteria.
     /// </summary>
-    public virtual decimal LocateApplicableLedgerBalance([NotNull] LedgerBook ledgerBook,
-                                                         [NotNull] GlobalFilterCriteria filter, string bucketCode)
+    public virtual decimal LocateApplicableLedgerBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, string bucketCode)
     {
         CheckCacheForCleanUp();
         if (ledgerBook == null)
@@ -317,11 +317,9 @@ public class LedgerCalculation
         return keyString;
     }
 
-    private Dictionary<BudgetBucket, decimal> CalculateLedgersBalanceSummary(LedgerBook ledgerBook, DateTime beginDate, StatementModel statement)
+    private Dictionary<BudgetBucket, decimal> CalculateLedgersBalanceSummary(LedgerBook ledgerBook, DateTime inclBeginDate, DateTime inclEndDate, StatementModel statement)
     {
-        // TODO fortnightly budget logic wont work here
-        var endDate = beginDate.AddMonths(1).AddDays(-1);
-        var currentLegderLine = LocateLedgerEntryLine(ledgerBook, beginDate, endDate);
+        var currentLegderLine = LocateLedgerEntryLine(ledgerBook, inclBeginDate, inclEndDate);
         if (currentLegderLine == null)
         {
             return new Dictionary<BudgetBucket, decimal>();
@@ -330,7 +328,7 @@ public class LedgerCalculation
         var ledgersSummary = new Dictionary<BudgetBucket, decimal>();
         foreach (var entry in currentLegderLine.Entries)
         {
-            var closingBalance = CalculateTransactionTotal(beginDate, statement, currentLegderLine, entry.LedgerBucket.BudgetBucket.Code);
+            var closingBalance = CalculateTransactionTotal(inclBeginDate, inclEndDate, statement, currentLegderLine, entry.LedgerBucket.BudgetBucket.Code);
             var balance = entry.Balance + closingBalance;
             ledgersSummary.Add(entry.LedgerBucket.BudgetBucket, balance);
         }
@@ -338,9 +336,9 @@ public class LedgerCalculation
         return ledgersSummary;
     }
 
-    private decimal CalculateTransactionTotal(DateTime beginDate, [NotNull] StatementModel statement, [CanBeNull] LedgerEntryLine entryLine, string bucketCode)
+    private decimal CalculateTransactionTotal(DateTime inclBeginDate, DateTime inclEndDate, [NotNull] StatementModel statement, [CanBeNull] LedgerEntryLine entryLine, string bucketCode)
     {
-        var key = BuildCacheKey(statement, entryLine, beginDate);
+        var key = BuildCacheKey(statement, entryLine, inclBeginDate);
         var autoMatchLedgerTransactions = (List<LedgerTransaction>)GetOrAddFromCache(key, () => ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList());
 
         this.logger.LogInfo(
@@ -355,9 +353,8 @@ public class LedgerCalculation
                                 return builder.ToString();
                             });
 
-        // TODO fix this for fortnightly
         IEnumerable<Transaction> query = statement.Transactions
-            .Where(t => t.Date < beginDate.AddMonths(1))
+            .Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate)
             .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
         if (bucketCode == SurplusBucket.SurplusCode)
         {
@@ -373,8 +370,7 @@ public class LedgerCalculation
                             _ =>
                             {
                                 var builder = new StringBuilder();
-                                builder.AppendLine(
-                                                   $"Statement Transactions found that are '{bucketCode}' and not 'Auto-Matching-Transactions':");
+                                builder.AppendLine($"Statement Transactions found that are '{bucketCode}' and not 'Auto-Matching-Transactions':");
                                 foreach (var txn in query)
                                 {
                                     builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Description}  {txn.Account}");
@@ -408,9 +404,9 @@ public class LedgerCalculation
         return CalculationsCache.GetOrAdd(cacheKey, _ => wrappedFactory());
     }
 
-    private static LedgerEntryLine LocateLedgerEntryLine(LedgerBook ledgerBook, DateTime begin, DateTime end)
+    private static LedgerEntryLine LocateLedgerEntryLine(LedgerBook ledgerBook, DateTime inclBegin, DateTime inclEnd)
     {
-        return ledgerBook.Reconciliations.FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= begin && ledgerEntryLine.Date <= end);
+        return ledgerBook.Reconciliations.FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= inclBegin && ledgerEntryLine.Date <= inclEnd);
     }
 
     private static void ProcessOverdrawnLedgers(

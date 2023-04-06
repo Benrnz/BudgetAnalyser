@@ -134,7 +134,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 
         if (Budget.Model.BudgetCycle == BudgetCycle.Fortnightly)
         {
-            if (Filter.BeginDate.Value.Subtract(Filter.EndDate.Value).Days != 14)
+            if (Filter.EndDate.Value.Subtract(Filter.BeginDate.Value).Days != 14)
             {
                 Enabled = false;
                 ToolTip = DesignedForOneFortnightOnly;
@@ -146,7 +146,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         var totalBudget = LedgerBucketBalanceOrBudgetAmount();
         Maximum = Convert.ToDouble(totalBudget);
 
-        var totalSpend = LedgerCalculation.CalculateCurrentMonthBucketSpend(LedgerBook, Filter, Statement, BucketCode);
+        var totalSpend = LedgerCalculation.CalculateCurrentPeriodBucketSpend(LedgerBook, Filter, Statement, BucketCode);
 
         var remainingBalance = totalBudget + totalSpend;
         if (remainingBalance < 0)
