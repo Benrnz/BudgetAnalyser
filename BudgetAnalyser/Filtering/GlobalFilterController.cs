@@ -40,7 +40,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
         this.userMessageBox = uiContext.UserPrompts.MessageBox;
         this.doNotUseCriteria = new GlobalFilterCriteria();
-        this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model;
+        this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 
         MessengerInstance = uiContext.Messenger;
         MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);

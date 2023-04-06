@@ -61,7 +61,7 @@
     <Position X="5.75" Y="9.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Budget\SpentMonthlyExpenseBucket.cs</FileName>
+      <FileName>Budget\SpentPeriodicallyExpense.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
