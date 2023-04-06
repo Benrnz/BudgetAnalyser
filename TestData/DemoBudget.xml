@@ -8,18 +8,18 @@
                        Type="SavedUpForExpense" />
       <BudgetBucketDto Active="True" Code="FEES" Description="Bank Fees" Type="SavedUpForExpense" />
       <BudgetBucketDto Active="True" Code="FOOD" Description="Groceries, staples, and necessities"
-                       Type="SpentMonthlyExpense" />
+                       Type="SpentPeriodicallyExpense" />
       <BudgetBucketDto Active="True" Code="GIFT" Description="Income from gifts and paybacks and tax refunds."
                        Type="Income" />
       <BudgetBucketDto Active="True" Code="INSHOME" Description="Home and Contents Insurance"
-                       Type="SpentMonthlyExpense" />
+                       Type="SpentPeriodicallyExpense" />
       <BudgetBucketDto Active="True" Code="PAYCC" Description="A special bucket to allocate internal transfers."
                        Type="PayCreditCard" />
-      <BudgetBucketDto Active="True" Code="RENT" Description="Rent for my bachelor pad" Type="SpentMonthlyExpense" />
+      <BudgetBucketDto Active="True" Code="RENT" Description="Rent for my bachelor pad" Type="SpentPeriodicallyExpense" />
       <BudgetBucketDto Active="True" Code="SALARY" Description="Salary from Lawn Mowing business" Type="Income" />
       <BudgetBucketDto Active="True" Code="SURPLUS"
                        Description="A special bucket to allocate against any discretionary spending." Type="Surplus" />
-      <BudgetBucketDto Active="True" Code="WATER" Description="Water Rates" Type="SpentMonthlyExpense" />
+      <BudgetBucketDto Active="True" Code="WATER" Description="Water Rates" Type="SpentPeriodicallyExpense" />
     </scg:List>
   </BudgetCollectionDto.Buckets>
   <BudgetCollectionDto.Budgets>

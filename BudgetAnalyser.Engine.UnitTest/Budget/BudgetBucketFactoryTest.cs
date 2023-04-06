@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public void BuildShouldCreateSpentMonthlyBucket()
         {
             Assert.IsInstanceOfType(
-                Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.SpentMonthlyExpense }), 
+                Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.SpentPeriodicallyExpense }), 
                 typeof(SpentPerPeriodExpenseBucket));
         }
 

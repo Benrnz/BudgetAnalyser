@@ -7,7 +7,7 @@
 
   <BudgetCollectionDto.Buckets>
     <scg:List x:TypeArguments="BudgetBucketDto" Capacity="1">
-      <BudgetBucketDto Code="POWER" Type="SpentMonthlyExpense" Description="Power and Utility" />
+      <BudgetBucketDto Code="POWER" Type="SpentPeriodicallyExpense" Description="Power and Utility" />
       <BudgetBucketDto Code="CAR MTC" Type="SavedUpForExpense" Description="Car maintenance" />
       <BudgetBucketDto Code="HAIRCUT" Type="SavedUpForExpense" Description="Hair cuts" />
       <BudgetBucketDto Code="INCOME" Type="Income" Description="Salary" />

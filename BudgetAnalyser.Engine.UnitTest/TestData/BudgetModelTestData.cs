@@ -11,9 +11,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             return new[]
             {
-                new BudgetBucketDto { Code = TestDataConstants.RentBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Rent for my bachelor pad" },
-                new BudgetBucketDto { Code = TestDataConstants.FoodBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Groceries, staples, and necessities" },
-                new BudgetBucketDto { Code = TestDataConstants.WaterBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Water Rates" },
+                new BudgetBucketDto { Code = TestDataConstants.RentBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Rent for my bachelor pad" },
+                new BudgetBucketDto { Code = TestDataConstants.FoodBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Groceries, staples, and necessities" },
+                new BudgetBucketDto { Code = TestDataConstants.WaterBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Water Rates" },
                 new BudgetBucketDto { Code = TestDataConstants.HairBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Haircuts" },
                 new BudgetBucketDto { Code = TestDataConstants.CarMtcBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Car Maintenance" },
                 new BudgetBucketDto { Code = TestDataConstants.PhoneBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Phone and Internet" },
