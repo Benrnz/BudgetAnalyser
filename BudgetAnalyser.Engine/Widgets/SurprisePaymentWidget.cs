@@ -9,16 +9,14 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Widgets;
 
 /// <summary>
-///     A widget designed to show any month where there will be 5 weekly payments in one month, or 3 fortnightly payments
-///     in one month.
+///     A widget designed to show any month where there will be 5 weekly payments in one month, or 3 fortnightly payments in one month.
 ///     When using a fortnightly budget period this widget is irrelevant.
 /// </summary>
 public class SurprisePaymentWidget : Widget, IUserDefinedWidget
 {
     private const int FortnightlyPaymentsInOneNormalMonth = 2;
 
-    private const string ToolTipPrefix =
-        "Given payments happen on the same day every week, this widget shows which months will require 5 weekly payments instead of 4, or 3 fortnightly payments instead of 2. (Does account for NZ public holidays.)\n";
+    private const string ToolTipPrefix = "Given payments happen on the same day every week, this widget shows which months will require 5 weekly payments instead of 4, or 3 fortnightly payments instead of 2. (Does account for NZ public holidays.)\n";
 
     private const int WeeklyPaymentsInOneNormalMonth = 4;
     private IBudgetBucketRepository bucketRepository;
@@ -34,7 +32,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     public SurprisePaymentWidget()
     {
         Category = WidgetGroup.OverviewSectionName;
-        Dependencies = new[] { typeof(IBudgetBucketRepository), typeof(GlobalFilterCriteria) };
+        Dependencies = new[] { typeof(IBudgetBucketRepository), typeof(GlobalFilterCriteria), typeof(BudgetCollection) };
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
         ToolTip = ToolTipPrefix;
         Size = WidgetSize.Medium;
@@ -116,19 +114,35 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
 
         this.bucketRepository = (IBudgetBucketRepository)input[0];
         this.filter = (GlobalFilterCriteria)input[1];
+        var budgetModel = ((BudgetCollection)input[2]).CurrentActiveBudget;
 
-        if (this.filter == null || this.filter.Cleared || this.filter.BeginDate == null || this.filter.BeginDate == DateTime.MinValue ||
-            this.filter.EndDate == null || this.filter.EndDate.Value == DateTime.MinValue || this.bucketRepository == null)
+        if (this.filter == null 
+            || this.filter.Cleared 
+            || this.filter.BeginDate == null 
+            || this.filter.BeginDate == DateTime.MinValue 
+            || this.filter.EndDate == null 
+            || this.filter.EndDate.Value == DateTime.MinValue 
+            || this.bucketRepository == null)
         {
             Enabled = false;
+            ToolTip = "The global filter dates are not set."; 
             return;
         }
-
+        
         if (!this.bucketRepository.IsValidCode(BucketCode))
         {
             Enabled = false;
             LargeNumber = string.Empty;
             ToolTip = string.Empty;
+            DetailedText = string.Empty;
+            return;
+        }
+
+        if (budgetModel.BudgetCycle == BudgetCycle.Fortnightly)
+        {
+            Enabled = false;
+            LargeNumber = string.Empty;
+            ToolTip = "This widget only supports monthly budgets, current budget is fortnightly.";
             DetailedText = string.Empty;
             return;
         }
@@ -152,10 +166,8 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
             }
             else
             {
-                this.diagLogger.LogInfo(
-                                        l =>
-                                            l.Format("    {0} {1}", currentMonthTally.StartDate.ToString("MMMM"),
-                                                     currentMonthTally.ConcatDates()));
+                var tally4Log = currentMonthTally;
+                this.diagLogger.LogInfo(l => l.Format("    {0} {1}", tally4Log.StartDate.ToString("MMMM"), tally4Log.ConcatDates()));
                 if (AbnormalNumberOfPayments(currentMonthTally.Dates.Count))
                 {
                     if (firstOccurance == null)
@@ -163,9 +175,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
                         firstOccurance = currentMonthTally;
                     }
 
-                    // TODO Very monthly specific wont work for fortnightly
-                    content.AppendFormat(CultureInfo.CurrentCulture, "{0}, ",
-                                         currentMonthTally.StartDate.ToString("MMMM"));
+                    content.AppendFormat(CultureInfo.CurrentCulture, "{0}, ", currentMonthTally.StartDate.ToString("MMMM"));
                     if (currentMonthTally.EndDate == this.filter.EndDate.Value ||
                         currentMonthTally.EndDate == this.filter.EndDate.Value.AddMonths(1))
                     {
@@ -182,8 +192,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         } while (currentDate.Date <= this.filter.EndDate.Value.AddYears(1));
 
         ColourStyleName = alert ? WidgetWarningStyle : WidgetStandardStyle;
-        DetailedText = string.Format(CultureInfo.CurrentCulture, "Monitoring {0} {1} bucket. {2}", Frequency,
-                                     BucketCode, content);
+        DetailedText = string.Format(CultureInfo.CurrentCulture, "Monitoring {0} {1} bucket. {2}", Frequency, BucketCode, content);
         if (firstOccurance == null)
         {
             LargeNumber = string.Empty;
@@ -192,13 +201,12 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         else
         {
             LargeNumber = firstOccurance.StartDate.ToString("MMMM");
-            ToolTip = ToolTipPrefix +
-                      string.Format(
-                                    CultureInfo.InvariantCulture,
-                                    "{0} to the {1} has payments on {2}",
-                                    firstOccurance.StartDate.ToString("d-MMM"),
-                                    firstOccurance.EndDate.ToString("d-MMM"),
-                                    firstOccurance.ConcatDates());
+            ToolTip = ToolTipPrefix + string.Format(
+                                                    CultureInfo.InvariantCulture,
+                                                    "{0} to the {1} has payments on {2}",
+                                                    firstOccurance.StartDate.ToString("d-MMM"),
+                                                    firstOccurance.EndDate.ToString("d-MMM"),
+                                                    firstOccurance.ConcatDates());
         }
     }
 
