@@ -84,6 +84,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 .Build();
         }
 
+        // [DataTestMethod]
+        // [DataRow(1, 1, 2)]
+        // [DataRow(2, 2, 4)]
+        // [DataRow(3, 3, 6)]
+        // [DataRow(0, 0, 1)]
         [TestMethod]
         public void CalculateCurrentMonthLedgerBalances_ShouldNotCountAutomatchTransactions_GivenAutoMatchTransactions()
         {
