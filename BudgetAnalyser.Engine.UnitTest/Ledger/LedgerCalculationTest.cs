@@ -87,8 +87,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void CalculateCurrentMonthLedgerBalances_ShouldNotCountAutomatchTransactions_GivenAutoMatchTransactions()
         {
+            var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
             var result = Subject.CalculateCurrentPeriodLedgerBalances(
-                CreateLedgerBookTestData(), 
+                ledgerLine, 
                 new GlobalFilterCriteria
                 {
                     BeginDate = new DateTime(2015, 10, 20),

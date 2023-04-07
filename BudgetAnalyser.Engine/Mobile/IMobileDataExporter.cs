@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine.Mobile
         ///     Create the export object
         /// </summary>
         /// <returns>An object containing the summarised data.</returns>
-        SummarisedLedgerMobileData CreateExportObject(StatementModel transactions, BudgetModel currentBudget, LedgerBook ledger, GlobalFilterCriteria filter);
+        SummarisedLedgerMobileData CreateExportObject(StatementModel transactions, BudgetModel currentBudget, LedgerBook ledgerBook, GlobalFilterCriteria filter);
 
         /// <summary>
         ///     Save a copy of the data export file locally.

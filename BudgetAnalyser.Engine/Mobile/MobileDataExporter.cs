@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Mobile
         public SummarisedLedgerMobileData CreateExportObject(
             [NotNull] StatementModel transactions,
             [NotNull] BudgetModel currentBudget,
-            [NotNull] LedgerBook ledger,
+            [NotNull] LedgerBook ledgerBook,
             [NotNull] GlobalFilterCriteria filter)
         {
             if (transactions == null)
@@ -53,15 +53,15 @@ namespace BudgetAnalyser.Engine.Mobile
             {
                 throw new ArgumentNullException(nameof(currentBudget));
             }
-            if (ledger == null)
+            if (ledgerBook == null)
             {
-                throw new ArgumentNullException(nameof(ledger));
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
             if (filter == null)
             {
                 throw new ArgumentNullException(nameof(filter));
             }
-            if (filter.BeginDate == null)
+            if (filter.BeginDate == null || filter.EndDate == null)
             {
                 return null;
             }
@@ -74,14 +74,15 @@ namespace BudgetAnalyser.Engine.Mobile
                 StartOfMonth = filter.BeginDate.Value
             };
 
-            var latestRecon = this.calculator.LocateApplicableLedgerLine(ledger, filter);
+            var latestRecon = this.calculator.LocateApplicableLedgerLine(ledgerBook, filter);
             if (latestRecon == null)
             {
                 return null;
             }
 
             var ledgerList = new List<SummarisedLedgerBucket>();
-            IDictionary<BudgetBucket, decimal> currentBalances = this.calculator.CalculateCurrentPeriodLedgerBalances(ledger, filter, transactions);
+            var ledgerLine = this.calculator.LocateApplicableLedgerLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
+            IDictionary<BudgetBucket, decimal> currentBalances = this.calculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, transactions);
             foreach (var entry in latestRecon.Entries)
             {
                 ledgerList.Add(new SummarisedLedgerBucket

@@ -46,19 +46,19 @@ public class LedgerCalculation
     }
 
     /// <summary>
-    ///     Calculates the current month ledger balances.
+    ///     Calculates the current period ledger balances. Period is set by the two dates. In theory other periods are possible.
     /// </summary>
     /// <exception cref="System.ArgumentNullException">
     /// </exception>
     public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentPeriodLedgerBalances(
-        [NotNull] LedgerBook ledgerBook,
+        [NotNull] LedgerEntryLine ledgerLine,
         [NotNull] GlobalFilterCriteria filter,
         [NotNull] StatementModel statement)
     {
         CheckCacheForCleanUp();
-        if (ledgerBook == null)
+        if (ledgerLine == null)
         {
-            throw new ArgumentNullException(nameof(ledgerBook));
+            throw new ArgumentNullException(nameof(ledgerLine));
         }
 
         if (filter == null)
@@ -78,32 +78,27 @@ public class LedgerCalculation
             return ledgers;
         }
 
-        var ledgerLine = LocateLedgerEntryLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
-        if (ledgerLine == null)
-        {
-            return ledgers;
-        }
-
         ledgers = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
 
         // Check Surplus
-        var surplusBalance = CalculateCurrentPeriodSurplusBalance(ledgerBook, filter, statement);
+        var surplusBalance = CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statement);
         ledgers.Add(new SurplusBucket(), surplusBalance);
 
         return ledgers;
     }
 
     /// <summary>
-    ///     Calculates the current month surplus balance.
+    ///     Calculates the current period surplus balance.  In theory other periods are possible.
     /// </summary>
-    /// <exception cref="System.ArgumentNullException">
-    /// </exception>
-    public virtual decimal CalculateCurrentPeriodSurplusBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
+    public virtual decimal CalculateCurrentPeriodSurplusBalance(
+        [NotNull] LedgerEntryLine ledgerLine, 
+        [NotNull] GlobalFilterCriteria filter, 
+        [NotNull] StatementModel statement)
     {
         CheckCacheForCleanUp();
-        if (ledgerBook == null)
+        if (ledgerLine == null)
         {
-            throw new ArgumentNullException(nameof(ledgerBook));
+            throw new ArgumentNullException(nameof(ledgerLine));
         }
 
         if (filter == null)
@@ -121,26 +116,20 @@ public class LedgerCalculation
             return 0;
         }
 
-        var ledgerLine = LocateLedgerEntryLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
-        if (ledgerLine == null)
-        {
-            return 0;
-        }
-
-        var beginningOfMonthBalance = ledgerLine.CalculatedSurplus;
+        var balance = ledgerLine.CalculatedSurplus;
         var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, statement, ledgerLine, SurplusBucket.SurplusCode);
 
-        beginningOfMonthBalance += transactionTotal;
+        balance += transactionTotal;
 
         // Find any ledgers that are overpsent and subtract them from the Surplus total.  This is actually what is happening when you overspend a ledger, it spills over and spend Surplus.
         Dictionary<BudgetBucket, decimal> ledgersSummary = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
-        beginningOfMonthBalance += ledgersSummary.Where(kvp => kvp.Value < 0).Sum(kvp => kvp.Value);
+        balance += ledgersSummary.Where(kvp => kvp.Value < 0).Sum(kvp => kvp.Value);
 
-        return beginningOfMonthBalance;
+        return balance;
     }
 
     /// <summary>
-    ///     Calculates the current month bucket spend.
+    ///     Calculates the current period bucket spend.  In theory other periods are possible.
     /// </summary>
     public virtual decimal CalculateCurrentPeriodBucketSpend(
         [NotNull] LedgerEntryLine ledgerLine,
@@ -179,9 +168,8 @@ public class LedgerCalculation
     }
 
     /// <summary>
-    ///     Finds any overspent ledgers for the month and returns the date and value the of the total overspend.  This
-    ///     resulting collection can then be used to subtract from Surplus.
-    ///     Overdrawn ledgers are supplemented from Surplus.
+    ///     Finds any overspent ledgers for the period and returns the date and value the of the total overspend.  This
+    ///     resulting collection can then be used to offset overdrawn balances from Surplus. (Not done here).
     ///     Negative values indicate overdrawn ledgers.
     /// </summary>
     public virtual IEnumerable<ReportTransaction> CalculateOverSpentLedgers([NotNull] StatementModel statement, [NotNull] LedgerEntryLine ledgerLine, DateTime inclBeginDate, DateTime inclEndDate)
