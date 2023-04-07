@@ -592,6 +592,103 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         }
 
         /// <summary>
+        ///     A Test LedgerBook with data populated for August 2013, data is arranged in Fortnightly periods.
+        ///     Also includes some debit transactions. There are multiple Bank Balances for the latest entry, and the Home
+        ///     Insurance bucket in a different account.
+        /// </summary>
+        public static LedgerBook TestData6(Func<LedgerBook> ctor = null)
+        {
+            LedgerBook book;
+            if (ctor != null)
+            {
+                book = ctor();
+            }
+            else
+            {
+                book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()));
+            }
+            book.Name = "Test Data 6 Book";
+            book.Modified = new DateTime(2013, 08, 15);
+            book.StorageKey = "C:\\FakeFolder\\book6.xml";
+
+            var list = new List<LedgerEntryLine>
+            {
+                CreateLine(
+                    new DateTime(2013, 8, 1),
+                    new[] { new BankBalance(ChequeAccount, 2800), new BankBalance(SavingsAccount, 300) },
+                    "Lorem ipsum")
+                    .SetEntriesForTesting(
+                        new List<LedgerEntry>
+                        {
+                            CreateLedgerEntry(HouseInsLedgerSavingsAccount).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 300M, Narrative = "Budgeted amount", AutoMatchingReference = "IbEMWG7" }
+                                }),
+                            CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
+                                }),
+                            CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
+                                }),
+                            CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones" }
+                                })
+                        })
+            };
+
+            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            LedgerEntry previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
+
+            list.Add(
+                CreateLine(
+                    new DateTime(2013, 8, 15),
+                    new[] { new BankBalance(ChequeAccount, 4000), new BankBalance(SavingsAccount, 600) },
+                    "dolor amet set").SetEntriesForTesting(
+                        new List<LedgerEntry>
+                        {
+                            CreateLedgerEntry(HouseInsLedgerSavingsAccount, previousInsEntry.Balance).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 300M, Narrative = "Budgeted amount", AutoMatchingReference = "9+1R06x" }
+                                }),
+                            CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
+                                }),
+                            CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" }
+                                }),
+                            CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -66.43M, Narrative = "Pay phones" }
+                                })
+                        }));
+
+            book.SetReconciliations(list);
+
+            Finalise(book);
+            return book;
+        }
+
+        /// <summary>
         ///     Makes sure that the IsNew property on LedgerBook EntryLines is not set to true, as it will be when they are newly
         ///     created.
         ///     Also ensures the StoredInAccount property for each ledger is set.

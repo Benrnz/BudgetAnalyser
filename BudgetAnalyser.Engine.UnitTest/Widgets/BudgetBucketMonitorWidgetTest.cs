@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
                         Account = StatementModelTestData.SavingsAccount,
                         Amount = -100M,
                         BudgetBucket = StatementModelTestData.InsHomeBucket,
-                        Date = new DateTime(2015, 10, 19),
+                        Date = new DateTime(2015, 11, 19),
                         Reference1 = "automatchref12",
                     })
                 .AppendTransaction(
@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
                         Account = StatementModelTestData.ChequeAccount,
                         Amount = 100M,
                         BudgetBucket = StatementModelTestData.PhoneBucket,
-                        Date = new DateTime(2015, 10, 19),
+                        Date = new DateTime(2015, 11, 19),
                         Reference1 = "automatchref12",
                     })
                 .AppendTransaction(
@@ -104,7 +104,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
                         Account = StatementModelTestData.SavingsAccount,
                         Amount = -10M,
                         BudgetBucket = StatementModelTestData.InsHomeBucket,
-                        Date = new DateTime(2015, 10, 1),
+                        Date = new DateTime(2015, 11, 1),
                         Reference1 = "Foo"
                     })
                 .AppendTransaction(
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
                         Account = StatementModelTestData.ChequeAccount,
                         Amount = -20M,
                         BudgetBucket = StatementModelTestData.PhoneBucket,
-                        Date = new DateTime(2015, 10, 1),
+                        Date = new DateTime(2015, 11, 1),
                         Reference1 = "Foo"
                     })
                 .Build();

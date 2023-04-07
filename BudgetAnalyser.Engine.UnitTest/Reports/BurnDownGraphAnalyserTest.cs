@@ -121,12 +121,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
 
         private void Act()
         {
+            var beginDate = new DateTime(2013, 07, 15);
+            var endDate = beginDate.AddMonths(1).AddDays(-1);
             Result = Subject.Analyse(
                 StatementModel,
                 Budget,
                 new BudgetBucket[] { StatementModelTestData.PhoneBucket, StatementModelTestData.PowerBucket, new SurplusBucket() },
                 LedgerBook,
-                new DateTime(2013, 07, 15));
+                beginDate,
+                endDate);
         }
     }
 }

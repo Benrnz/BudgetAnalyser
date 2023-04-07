@@ -35,9 +35,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                     entryBuilder =>
                     {
                         entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
-                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); });
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Soo", new DateTime(2015, 10, 20), "automatchref12"); })
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-60, "Soo1", new DateTime(2015, 10, 20)); });
                         entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
-                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); });
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); })
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-70, "Foo1", new DateTime(2015, 10, 20)); });
                     })
                 .Build();
         }
@@ -51,7 +53,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                         Account = StatementModelTestData.SavingsAccount,
                         Amount = -100M,
                         BudgetBucket = StatementModelTestData.InsHomeBucket,
-                        Date = new DateTime(2015, 10, 19),
+                        Date = new DateTime(2015, 11, 19),
                         Reference1 = "automatchref12",
                     })
                 .AppendTransaction(
@@ -60,7 +62,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                         Account = StatementModelTestData.ChequeAccount,
                         Amount = 100M,
                         BudgetBucket = StatementModelTestData.PhoneBucket,
-                        Date = new DateTime(2015, 10, 19),
+                        Date = new DateTime(2015, 11, 19),
                         Reference1 = "automatchref12",
                     })
                 .AppendTransaction(
@@ -69,7 +71,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                         Account = StatementModelTestData.SavingsAccount,
                         Amount = -10M,
                         BudgetBucket = StatementModelTestData.InsHomeBucket,
-                        Date = new DateTime(2015, 10, 1),
+                        Date = new DateTime(2015, 11, 1),
                         Reference1 = "Foo"
                     })
                 .AppendTransaction(
@@ -78,7 +80,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                         Account = StatementModelTestData.ChequeAccount,
                         Amount = -20M,
                         BudgetBucket = StatementModelTestData.PhoneBucket,
-                        Date = new DateTime(2015, 10, 1),
+                        Date = new DateTime(2015, 11, 1),
                         Reference1 = "Foo"
                     })
                 .Build();
@@ -87,8 +89,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void CalculateCurrentMonthLedgerBalances_ShouldNotCountAutomatchTransactions_GivenAutoMatchTransactions()
         {
-            var result = Subject.CalculateCurrentMonthLedgerBalances(
-                CreateLedgerBookTestData(), 
+            var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
+            var result = Subject.CalculateCurrentPeriodLedgerBalances(
+                ledgerLine, 
                 new GlobalFilterCriteria
                 {
                     BeginDate = new DateTime(2015, 10, 20),
@@ -96,22 +99,44 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 }, 
                 CreateStatementTestData());
 
-            Assert.AreEqual(90M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
+            Assert.AreEqual(20M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
+        }
+
+        [TestMethod]
+        public void CalculateCurrentFortnightLedgerBalances_ShouldNotCountAutomatchTransactions_GivenAutoMatchTransactions()
+        {
+            var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
+            var result = Subject.CalculateCurrentPeriodLedgerBalances(
+                                                                      ledgerLine, 
+                                                                      new GlobalFilterCriteria
+                                                                      {
+                                                                          BeginDate = new DateTime(2015, 11, 01),
+                                                                          EndDate = new DateTime(2015, 11, 15)
+                                                                      }, 
+                                                                      CreateStatementTestData());
+
+            Assert.AreEqual(120M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
         }
 
         [TestMethod]
         public void CalculateOverSpentLedgersShouldReturnEmptyGivenNoLedgerLineForGivenDate()
         {
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverspentLedgers(StatementModelTestData.TestData1(), TestData, new DateTime(2014, 07, 01));
-            Assert.IsTrue(result.Count() == 0);
+            var beginDate = new DateTime(2014, 07, 01);
+            var endDate = beginDate.AddMonths(1).AddDays(-1);
+            var ledgerLine = TestData.Reconciliations.First();
+            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData1(), ledgerLine, beginDate, endDate);
+            Assert.IsFalse(result.Any());
         }
 
         [TestMethod]
         public void CalculateOverSpentLedgersShouldReturnEmptyGivenNoLedgersWereOverdrawn()
         {
             TestData.Output(true);
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverspentLedgers(StatementModelTestData.TestData3(), TestData, new DateTime(2013, 08, 15));
-            foreach (ReportTransaction txn in result)
+            var beginDate = new DateTime(2013, 08, 15);
+            var endDate = beginDate.AddMonths(1).AddDays(-1);
+            var ledgerLine = TestData.Reconciliations.First();
+            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData3(), ledgerLine, beginDate, endDate);
+            foreach (var txn in result)
             {
                 Console.WriteLine("{0} {1} {2}", txn.Date, txn.Narrative, txn.Amount);
             }
@@ -123,8 +148,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void CalculateOverSpentLedgersShouldReturnOverdrawnTransactionsGivenStatementTransactionsSpendMoreThanLedgerBalance()
         {
             TestData.Output(true);
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverspentLedgers(StatementModelTestData.TestData2(), TestData, new DateTime(2013, 08, 15));
-            foreach (ReportTransaction txn in result)
+            var beginDate = new DateTime(2013, 08, 15);
+            var endDate = beginDate.AddMonths(1).AddDays(-1);
+            var ledgerLine = TestData.Reconciliations.First();
+            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData2(), ledgerLine, beginDate, endDate);
+            foreach (var txn in result)
             {
                 Console.WriteLine("{0} {1} {2}", txn.Date, txn.Narrative, txn.Amount);
             }
@@ -136,7 +164,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [ExpectedException(typeof(ArgumentNullException))]
         public void CalculateOverSpentLedgersShouldThrowGivenNullLedger()
         {
-            Subject.CalculateOverspentLedgers(StatementModelTestData.TestData1(), null, new DateTime(2014, 07, 01));
+            var beginDate = new DateTime(2014, 07, 01);
+            var endDate = beginDate.AddMonths(1).AddDays(-1);
+            Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData1(), null, beginDate, endDate);
             Assert.Fail();
         }
 
@@ -144,14 +174,18 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [ExpectedException(typeof(ArgumentNullException))]
         public void CalculateOverSpentLedgersShouldThrowGivenNullStatement()
         {
-            Subject.CalculateOverspentLedgers(null, TestData, new DateTime(2014, 07, 01));
+            var beginDate = new DateTime(2014, 07, 01);
+            var endDate = beginDate.AddMonths(1).AddDays(-1);
+            var ledgerLine = TestData.Reconciliations.First();
+
+            Subject.CalculateOverSpentLedgers(null, ledgerLine, beginDate, endDate);
             Assert.Fail();
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            Subject = new LedgerCalculation();
+            Subject = new LedgerCalculation(new DebugLogger());
             TestData = LedgerBookTestData.TestData1();
         }
 
@@ -171,6 +205,22 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             decimal result = Subject.LocateApplicableLedgerBalance(TestData, filter, StatementModelTestData.PhoneBucket.Code);
             TestData.Output();
             Assert.AreEqual(64.71M, result);
+        }
+
+        [TestMethod]
+        public void CalculateCurrentPeriodSurplusBalance_UsingFortnightlyData_ShouldReturn3777()
+        {
+            var statementModel = StatementModelTestData.TestData1();
+            var filter = new GlobalFilterCriteria()
+            {
+                BeginDate = new DateTime(2013, 8, 15),
+                EndDate = new DateTime(2013, 8, 29)
+            };
+            var ledgerLine = LedgerBookTestData.TestData6().Reconciliations.OrderByDescending(l => l.Date).First();
+            
+            var result = Subject.CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statementModel);
+            
+            Assert.AreEqual(3777.56M, result);
         }
     }
 }

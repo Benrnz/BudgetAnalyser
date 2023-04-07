@@ -13,13 +13,14 @@ namespace BudgetAnalyser.Engine.Reports
         /// <summary>
         ///     Initializes a new instance of the <see cref="BurnDownCharts" /> class.
         /// </summary>
-        /// <param name="beginDate">The begin date.</param>
+        /// <param name="beginDate">The begin date (inclusive).</param>
+        /// <param name="endDate">The end date (inclusive).</param>
         /// <param name="dateRangeDescription">The date range description.</param>
         /// <param name="listOfCharts">The list of charts.</param>
-        public BurnDownCharts(DateTime beginDate, string dateRangeDescription,
-                              IEnumerable<BurnDownChartAnalyserResult> listOfCharts)
+        public BurnDownCharts(DateTime beginDate, DateTime endDate, string dateRangeDescription, IEnumerable<BurnDownChartAnalyserResult> listOfCharts)
         {
             BeginDate = beginDate;
+            EndDate = endDate;
             DateRangeDescription = dateRangeDescription;
             Charts = listOfCharts;
         }
@@ -28,6 +29,11 @@ namespace BudgetAnalyser.Engine.Reports
         ///     Gets the begin date for this chart.
         /// </summary>
         public DateTime BeginDate { get; private set; }
+
+        /// <summary>
+        ///     Gets the end date for this chart.
+        /// </summary>
+        public DateTime EndDate { get; private set; }
 
         /// <summary>
         ///     Gets a list of compiled result objects ready for binding in the UI.
