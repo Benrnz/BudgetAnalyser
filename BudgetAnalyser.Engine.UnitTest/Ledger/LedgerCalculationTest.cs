@@ -87,7 +87,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void CalculateCurrentMonthLedgerBalances_ShouldNotCountAutomatchTransactions_GivenAutoMatchTransactions()
         {
-            var result = Subject.CalculateCurrentMonthLedgerBalances(
+            var result = Subject.CalculateCurrentPeriodLedgerBalances(
                 CreateLedgerBookTestData(), 
                 new GlobalFilterCriteria
                 {
@@ -102,7 +102,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void CalculateOverSpentLedgersShouldReturnEmptyGivenNoLedgerLineForGivenDate()
         {
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverspentLedgers(StatementModelTestData.TestData1(), TestData, new DateTime(2014, 07, 01));
+            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData1(), TestData, new DateTime(2014, 07, 01));
             Assert.IsTrue(result.Count() == 0);
         }
 
@@ -110,7 +110,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void CalculateOverSpentLedgersShouldReturnEmptyGivenNoLedgersWereOverdrawn()
         {
             TestData.Output(true);
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverspentLedgers(StatementModelTestData.TestData3(), TestData, new DateTime(2013, 08, 15));
+            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData3(), TestData, new DateTime(2013, 08, 15));
             foreach (ReportTransaction txn in result)
             {
                 Console.WriteLine("{0} {1} {2}", txn.Date, txn.Narrative, txn.Amount);
@@ -123,7 +123,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void CalculateOverSpentLedgersShouldReturnOverdrawnTransactionsGivenStatementTransactionsSpendMoreThanLedgerBalance()
         {
             TestData.Output(true);
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverspentLedgers(StatementModelTestData.TestData2(), TestData, new DateTime(2013, 08, 15));
+            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData2(), TestData, new DateTime(2013, 08, 15));
             foreach (ReportTransaction txn in result)
             {
                 Console.WriteLine("{0} {1} {2}", txn.Date, txn.Narrative, txn.Amount);
@@ -136,7 +136,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [ExpectedException(typeof(ArgumentNullException))]
         public void CalculateOverSpentLedgersShouldThrowGivenNullLedger()
         {
-            Subject.CalculateOverspentLedgers(StatementModelTestData.TestData1(), null, new DateTime(2014, 07, 01));
+            Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData1(), null, new DateTime(2014, 07, 01));
             Assert.Fail();
         }
 
@@ -144,7 +144,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [ExpectedException(typeof(ArgumentNullException))]
         public void CalculateOverSpentLedgersShouldThrowGivenNullStatement()
         {
-            Subject.CalculateOverspentLedgers(null, TestData, new DateTime(2014, 07, 01));
+            Subject.CalculateOverSpentLedgers(null, TestData, new DateTime(2014, 07, 01));
             Assert.Fail();
         }
 

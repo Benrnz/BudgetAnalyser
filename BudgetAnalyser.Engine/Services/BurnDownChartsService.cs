@@ -20,24 +20,9 @@ namespace BudgetAnalyser.Engine.Services
                                      [NotNull] BurnDownChartsBuilder chartsBuilder,
                                      [NotNull] IBurnDownChartAnalyser chartAnalyser)
         {
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-
-            if (chartsBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(chartsBuilder));
-            }
-
-            if (chartAnalyser == null)
-            {
-                throw new ArgumentNullException(nameof(chartAnalyser));
-            }
-
-            this.bucketRepository = bucketRepository;
-            this.chartsBuilder = chartsBuilder;
-            this.chartAnalyser = chartAnalyser;
+            this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
+            this.chartsBuilder = chartsBuilder ?? throw new ArgumentNullException(nameof(chartsBuilder));
+            this.chartAnalyser = chartAnalyser ?? throw new ArgumentNullException(nameof(chartAnalyser));
         }
 
         public IEnumerable<BudgetBucket> AvailableBucketsForBurnDownCharts()
@@ -70,11 +55,12 @@ namespace BudgetAnalyser.Engine.Services
             BudgetModel budgetModel,
             IEnumerable<BudgetBucket> buckets,
             LedgerBook ledgerBookModel,
-            DateTime beginDate,
+            DateTime inclBeginDate,
+            DateTime inclEndDate,
             string chartTitle)
         {
             List<BudgetBucket> bucketsList = buckets.ToList();
-            var result = this.chartAnalyser.Analyse(statementModel, budgetModel, bucketsList, ledgerBookModel, beginDate);
+            var result = this.chartAnalyser.Analyse(statementModel, budgetModel, bucketsList, ledgerBookModel, inclBeginDate, inclEndDate);
             result.ChartTitle = chartTitle;
             var persistChart = new CustomAggregateBurnDownGraph
             {

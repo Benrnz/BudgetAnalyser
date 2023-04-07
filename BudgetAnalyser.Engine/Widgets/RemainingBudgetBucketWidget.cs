@@ -146,7 +146,8 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         var totalBudget = LedgerBucketBalanceOrBudgetAmount();
         Maximum = Convert.ToDouble(totalBudget);
 
-        var totalSpend = LedgerCalculation.CalculateCurrentPeriodBucketSpend(LedgerBook, Filter, Statement, BucketCode);
+        var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
+        var totalSpend = LedgerCalculation.CalculateCurrentPeriodBucketSpend(ledgerLine, Filter, Statement, BucketCode);
 
         var remainingBalance = totalBudget + totalSpend;
         if (remainingBalance < 0)

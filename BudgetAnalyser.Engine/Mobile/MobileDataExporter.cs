@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.Mobile
             }
 
             var ledgerList = new List<SummarisedLedgerBucket>();
-            IDictionary<BudgetBucket, decimal> currentBalances = this.calculator.CalculateCurrentMonthLedgerBalances(ledger, filter, transactions);
+            IDictionary<BudgetBucket, decimal> currentBalances = this.calculator.CalculateCurrentPeriodLedgerBalances(ledger, filter, transactions);
             foreach (var entry in latestRecon.Entries)
             {
                 ledgerList.Add(new SummarisedLedgerBucket

@@ -87,7 +87,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            IDictionary<BudgetBucket, decimal> overspendingSummary = ledgerCalculator.CalculateCurrentMonthLedgerBalances(ledgerBook, filter, statement);
+            IDictionary<BudgetBucket, decimal> overspendingSummary = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerBook, filter, statement);
             var warnings = overspendingSummary.Count(s => s.Value < -Tolerance);
 
             // Check other budget buckets that are not represented in the ledger book.

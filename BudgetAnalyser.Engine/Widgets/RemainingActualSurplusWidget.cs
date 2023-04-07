@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Enabled = true;
             var openingBalance = CalculateOpeningBalance();
-            var remainingBalance = this.ledgerCalculator.CalculateCurrentMonthSurplusBalance(this.ledgerBook,
+            var remainingBalance = this.ledgerCalculator.CalculateCurrentPeriodSurplusBalance(this.ledgerBook,
                 this.filter, this.statement);
 
             Maximum = Convert.ToDouble(openingBalance);
