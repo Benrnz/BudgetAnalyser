@@ -35,9 +35,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                     entryBuilder =>
                     {
                         entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
-                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); });
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Soo", new DateTime(2015, 10, 20), "automatchref12"); })
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-60, "Soo1", new DateTime(2015, 10, 20)); });
                         entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
-                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); });
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); })
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-70, "Foo1", new DateTime(2015, 10, 20)); });
                     })
                 .Build();
         }
@@ -97,7 +99,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 }, 
                 CreateStatementTestData());
 
-            Assert.AreEqual(90M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
+            Assert.AreEqual(20M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
         }
 
         [TestMethod]
@@ -167,7 +169,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            Subject = new LedgerCalculation();
+            Subject = new LedgerCalculation(new DebugLogger());
             TestData = LedgerBookTestData.TestData1();
         }
 

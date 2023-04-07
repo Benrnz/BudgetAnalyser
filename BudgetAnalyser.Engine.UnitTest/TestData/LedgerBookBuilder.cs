@@ -273,12 +273,13 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             public IEnumerable<LedgerTransaction> Transactions => this.ledgerTransactions;
 
-            public LedgerEntryTestDataBuilder AppendTransactions(Action<TransactionTestDataBuilder> transactionsCreator)
+            public SpecificLedgerEntryTestDataBuilder AppendTransactions(Action<TransactionTestDataBuilder> transactionsCreator)
             {
+                //SpecificLedgerEntryTestDataBuilder
                 var txnBuilder = new TransactionTestDataBuilder();
                 transactionsCreator(txnBuilder);
                 this.ledgerTransactions = txnBuilder.Transactions.ToList();
-                return this.entryBuilder;
+                return this;
             }
 
             public LedgerEntryTestDataBuilder HasNoTransactions()
