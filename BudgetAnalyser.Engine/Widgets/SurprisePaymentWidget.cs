@@ -114,7 +114,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
 
         this.bucketRepository = (IBudgetBucketRepository)input[0];
         this.filter = (GlobalFilterCriteria)input[1];
-        var budgetModel = ((BudgetCollection)input[2]).CurrentActiveBudget;
+        var budgetCollection = ((BudgetCollection)input[2]);
 
         if (this.filter == null 
             || this.filter.Cleared 
@@ -128,6 +128,15 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
             ToolTip = "The global filter dates are not set."; 
             return;
         }
+
+        if (budgetCollection == null)
+        {
+            Enabled = false;
+            ToolTip = "The budget collection is empty or null."; 
+            return;
+        }
+
+        var budgetModel = budgetCollection.CurrentActiveBudget;
         
         if (!this.bucketRepository.IsValidCode(BucketCode))
         {
