@@ -103,6 +103,22 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void CalculateCurrentFortnightLedgerBalances_ShouldNotCountAutomatchTransactions_GivenAutoMatchTransactions()
+        {
+            var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
+            var result = Subject.CalculateCurrentPeriodLedgerBalances(
+                                                                      ledgerLine, 
+                                                                      new GlobalFilterCriteria
+                                                                      {
+                                                                          BeginDate = new DateTime(2015, 11, 01),
+                                                                          EndDate = new DateTime(2015, 11, 15)
+                                                                      }, 
+                                                                      CreateStatementTestData());
+
+            Assert.AreEqual(120M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
+        }
+
+        [TestMethod]
         public void CalculateOverSpentLedgersShouldReturnEmptyGivenNoLedgerLineForGivenDate()
         {
             var beginDate = new DateTime(2014, 07, 01);
@@ -189,6 +205,22 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             decimal result = Subject.LocateApplicableLedgerBalance(TestData, filter, StatementModelTestData.PhoneBucket.Code);
             TestData.Output();
             Assert.AreEqual(64.71M, result);
+        }
+
+        [TestMethod]
+        public void CalculateCurrentPeriodSurplusBalance_UsingFortnightlyData_ShouldReturn3777()
+        {
+            var statementModel = StatementModelTestData.TestData1();
+            var filter = new GlobalFilterCriteria()
+            {
+                BeginDate = new DateTime(2013, 8, 15),
+                EndDate = new DateTime(2013, 8, 29)
+            };
+            var ledgerLine = LedgerBookTestData.TestData6().Reconciliations.OrderByDescending(l => l.Date).First();
+            
+            var result = Subject.CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statementModel);
+            
+            Assert.AreEqual(3777.56M, result);
         }
     }
 }
