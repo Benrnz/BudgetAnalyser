@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             { WidgetGroup.OverviewSectionName, 1 },
             { WidgetGroup.GlobalFilterSectionName, 2 },
-            { WidgetGroup.MonthlyTrackingSectionName, 3 },
+            { WidgetGroup.PeriodicTrackingSectionName, 3 },
             { WidgetGroup.ProjectsSectionName, 4 }
         };
 
@@ -33,18 +33,8 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         public WidgetService([NotNull] IWidgetRepository widgetRepo, [NotNull] ILogger logger)
         {
-            if (widgetRepo == null)
-            {
-                throw new ArgumentNullException(nameof(widgetRepo));
-            }
-
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
-            this.widgetRepo = widgetRepo;
-            this.logger = logger;
+            this.widgetRepo = widgetRepo ?? throw new ArgumentNullException(nameof(widgetRepo));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
@@ -59,8 +49,7 @@ namespace BudgetAnalyser.Engine.Services
                 foreach (var widgetState in storedStates)
                 {
                     var stateClone = widgetState;
-                    var multiInstanceState = widgetState as MultiInstanceWidgetState;
-                    if (multiInstanceState != null)
+                    if (widgetState is MultiInstanceWidgetState multiInstanceState)
                     {
                         CreateMultiInstanceWidget(multiInstanceState);
                     }

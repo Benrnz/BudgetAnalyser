@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         ///     Thrown when the supplied dates are invalid or not consistent with the
         ///     <paramref name="ledgerBook" />.
         /// </exception>
-        ReconciliationResult MonthEndReconciliation(
+        ReconciliationResult PeriodEndReconciliation(
             [NotNull] LedgerBook ledgerBook,
             DateTime reconciliationDate,
             [NotNull] IBudgetCurrencyContext budgetContext,

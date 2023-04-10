@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public RemainingActualSurplusWidget()
         {
-            Category = WidgetGroup.MonthlyTrackingSectionName;
+            Category = WidgetGroup.PeriodicTrackingSectionName;
             DetailedText = "Bank Surplus";
             Name = "Surplus A";
             Dependencies = new[]

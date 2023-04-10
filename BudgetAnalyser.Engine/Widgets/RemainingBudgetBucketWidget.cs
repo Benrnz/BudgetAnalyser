@@ -23,7 +23,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     /// </summary>
     protected RemainingBudgetBucketWidget()
     {
-        Category = WidgetGroup.MonthlyTrackingSectionName;
+        Category = WidgetGroup.PeriodicTrackingSectionName;
         Dependencies = new[]
         {
             typeof(IBudgetCurrencyContext),

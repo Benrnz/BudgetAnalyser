@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Engine.Services
             bool ignoreWarnings,
             params BankBalance[] balances)
         {
-            var reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate,
+            var reconResult = this.reconciliationManager.PeriodEndReconciliation(ledgerBook, reconciliationDate,
                                                                                 budgetContext, statement, ignoreWarnings, balances);
             ReconciliationToDoList.Clear();
             reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);

@@ -22,12 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         /// <exception cref="System.ArgumentNullException"></exception>
         public ReconciliationConsistencyChecker([NotNull] LedgerBook book)
         {
-            if (book == null)
-            {
-                throw new ArgumentNullException(nameof(book));
-            }
-
-            this.ledgerBook = book;
+            this.ledgerBook = book ?? throw new ArgumentNullException(nameof(book));
             this.check1 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
         }
 
@@ -38,18 +33,14 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         ///     Code Error: The previous dated entries have changed, this is not
         ///     allowed. Data is corrupt.
         /// </exception>
-        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations",
-            Justification = "Allowed here, using syntax only")]
-        [SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly",
-            Justification = "Not required here, using syntax only")]
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Allowed here, using syntax only")]
+        [SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly", Justification = "Not required here, using syntax only")]
         public void Dispose()
         {
-            this.check2 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) -
-                          this.ledgerBook.Reconciliations.First().CalculatedSurplus;
+            this.check2 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) - this.ledgerBook.Reconciliations.First().CalculatedSurplus;
             if (this.check1 != this.check2)
             {
-                throw new CorruptedLedgerBookException(
-                    "Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.");
+                throw new CorruptedLedgerBookException("Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.");
             }
         }
     }

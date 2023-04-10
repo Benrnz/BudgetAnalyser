@@ -238,7 +238,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 ledgerBookTestHarness.ReconcileOverride = () => new ReconciliationResult { Reconciliation = new LedgerEntryLine(ReconcileDate, this.currentBankBalances), Tasks = this.testDataToDoList };
             }
 
-            this.subject.MonthEndReconciliation(
+            this.subject.PeriodEndReconciliation(
                 this.testDataLedgerBook,
                 reconciliationDate ?? ReconcileDate,
                 this.testDataBudgetContext,

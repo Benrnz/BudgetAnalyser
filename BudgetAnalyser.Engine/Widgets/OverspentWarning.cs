@@ -25,11 +25,10 @@ public class OverspentWarning : Widget
     /// </summary>
     public OverspentWarning()
     {
-        Category = WidgetGroup.MonthlyTrackingSectionName;
+        Category = WidgetGroup.PeriodicTrackingSectionName;
         Dependencies = new[]
         {
-            typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria),
-            typeof(LedgerBook), typeof(LedgerCalculation)
+            typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation)
         };
         DetailedText = "Overspent";
         ImageResourceName = null;
@@ -52,7 +51,6 @@ public class OverspentWarning : Widget
     /// <summary>
     ///     Updates the widget with new input.
     /// </summary>
-    /// <exception cref="System.ArgumentNullException"></exception>
     public override void Update([NotNull] params object[] input)
     {
         if (input == null)
@@ -72,37 +70,41 @@ public class OverspentWarning : Widget
         var ledgerBook = (LedgerBook)input[3];
         var ledgerCalculator = (LedgerCalculation)input[4];
 
-        if (budget == null || ledgerBook == null || statement == null || filter == null || filter.Cleared ||
-            filter.BeginDate == null || filter.EndDate == null)
+        if (budget == null
+            || ledgerBook == null
+            || statement == null
+            || filter == null
+            || filter.Cleared
+            || filter.BeginDate == null
+            || filter.EndDate == null)
         {
             Enabled = false;
+            ToolTip = "LedgerBook, Statement, or Filter are not set/loaded.";
             return;
         }
 
-        if (filter.BeginDate.Value.DurationInMonths(filter.EndDate.Value) != 1)
+        if (!ValidatePeriod(budget, filter.BeginDate.Value, filter.EndDate.Value))
         {
             Enabled = false;
-            ToolTip = DesignedForOneMonthOnly;
             return;
         }
 
         Enabled = true;
         var ledgerLine = ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
-        IDictionary<BudgetBucket, decimal> overspendingSummary = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, statement);
-        var warnings = overspendingSummary.Count(s => s.Value < -Tolerance);
+        IDictionary<BudgetBucket, decimal> currentLedgerBalances = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, statement);
+        var warnings = currentLedgerBalances.Count(balance => balance.Value < -Tolerance);
 
         // Check other budget buckets that are not represented in the ledger book.
-        warnings += SearchForOtherNonLedgerBookOverspentBuckets(statement, filter, budget, overspendingSummary);
+        warnings += SearchForOtherNonLedgerBookOverspentBuckets(statement, filter.BeginDate.Value, filter.EndDate.Value, budget, currentLedgerBalances);
 
         if (warnings > 0)
         {
             LargeNumber = warnings.ToString(CultureInfo.CurrentCulture);
             var builder = new StringBuilder();
-            OverSpentSummary = overspendingSummary.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key);
+            OverSpentSummary = currentLedgerBalances.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key);
             foreach (KeyValuePair<BudgetBucket, decimal> ledger in OverSpentSummary)
             {
-                builder.AppendFormat(CultureInfo.CurrentCulture, "{0} is overspent by {1:C}", ledger.Key,
-                                     ledger.Value);
+                builder.AppendFormat(CultureInfo.CurrentCulture, "{0} is overspent by {1:C}", ledger.Key, ledger.Value);
                 builder.AppendLine();
             }
 
@@ -112,31 +114,29 @@ public class OverspentWarning : Widget
         else
         {
             LargeNumber = "0";
-            ToolTip = "No overspent ledgers for the month beginning " +
-                      filter.BeginDate.Value.ToString("d", CultureInfo.CurrentCulture);
+            ToolTip = "No overspent ledgers for the period beginning " + filter.BeginDate.Value.ToString("d", CultureInfo.CurrentCulture);
             ColourStyleName = WidgetStandardStyle;
         }
     }
 
     private int SearchForOtherNonLedgerBookOverspentBuckets(
         StatementModel statement,
-        GlobalFilterCriteria filter,
+        DateTime inclBeginDate,
+        DateTime inclEndDate,
         IBudgetCurrencyContext budget,
-        IDictionary<BudgetBucket, decimal> overspendingSummary)
+        IDictionary<BudgetBucket, decimal> currentLedgerBalances)
     {
         var warnings = 0;
-        // TODO fix this for fortnightly
-        List<Transaction> transactions = statement.Transactions.Where(t => t.Date < filter.BeginDate?.Date.AddMonths(1)).ToList();
+        List<Transaction> transactions = statement.Transactions.Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate).ToList();
         foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
         {
-            if (overspendingSummary.ContainsKey(expense.Bucket))
+            if (currentLedgerBalances.ContainsKey(expense.Bucket))
             {
                 continue;
             }
 
-            var bucketBalance = expense.Amount +
-                                transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
-            overspendingSummary.Add(expense.Bucket, bucketBalance);
+            var bucketBalance = expense.Amount + transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
+            currentLedgerBalances.Add(expense.Bucket, bucketBalance);
             if (bucketBalance < -Tolerance)
             {
                 warnings++;
@@ -144,5 +144,25 @@ public class OverspentWarning : Widget
         }
 
         return warnings;
+    }
+
+    private bool ValidatePeriod(IBudgetCurrencyContext currentBudget, DateTime inclBeginDate, DateTime inclEndDate)
+    {
+        bool valid;
+        switch (currentBudget.Model.BudgetCycle)
+        {
+            case BudgetCycle.Monthly:
+                var months = inclBeginDate.DurationInMonths(inclEndDate);
+                valid = months == 1;
+                ToolTip = valid ? string.Empty : DesignedForOneMonthOnly;
+                return valid;
+            case BudgetCycle.Fortnightly:
+                var days = inclEndDate.Subtract(inclBeginDate).Days;
+                valid = days == 14;
+                ToolTip = valid ? string.Empty : DesignedForOneFortnightOnly;
+                return valid;
+            default:
+                throw new NotSupportedException("Invalid Budget Period detected: " + currentBudget.Model.BudgetCycle);
+        }
     }
 }
