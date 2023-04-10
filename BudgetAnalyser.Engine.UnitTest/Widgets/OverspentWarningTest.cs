@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
             LedgerBook = new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object);
             SetLedgerBalancesFakeDataSomeOverspentBuckets();
 
-            Subject = new OverspentWarning();
+            Subject = new OverspentWarning(new FakeLogger());
             Act();
         }
 
