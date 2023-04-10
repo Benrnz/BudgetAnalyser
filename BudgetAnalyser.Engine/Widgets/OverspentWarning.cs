@@ -107,7 +107,7 @@ public class OverspentWarning : Widget
         this.logger.LogInfo(l =>
         {
             var builder = new StringBuilder();
-            overspendingSummary.Select(ledger => l.Format("{0} {1}", ledger.Key, ledger.Value))
+            currentLedgerBalances.Select(ledger => l.Format("{0} {1}", ledger.Key, ledger.Value))
                 .ToList()
                 .ForEach(x => builder.AppendLine(x));
 
