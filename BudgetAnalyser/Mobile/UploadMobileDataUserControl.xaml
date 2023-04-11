@@ -33,6 +33,9 @@
                    Text="Access Key Secret" />
         <TextBox Grid.Row="2"
                  Grid.Column="1"
+                 HorizontalAlignment="Left"
+                 MaxWidth="50"
+                 Width="50"
                  Text="{Binding AccessKeySecret}" />
 
         <TextBlock Grid.Row="3"
