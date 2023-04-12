@@ -21,36 +21,17 @@ namespace BudgetAnalyser.Engine.Ledger
     internal class XamlOnDiskLedgerBookRepository : ILedgerBookRepository
     {
         private readonly BankImportUtilities importUtilities;
-        private readonly ILedgerBookFactory ledgerBookFactory;
         private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper;
         private readonly IReaderWriterSelector readerWriterSelector;
 
         public XamlOnDiskLedgerBookRepository(
             [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper,
             [NotNull] BankImportUtilities importUtilities,
-            [NotNull] ILedgerBookFactory ledgerBookFactory,
             [NotNull] IReaderWriterSelector readerWriterSelector)
         {
-            if (mapper == null)
-            {
-                throw new ArgumentNullException(nameof(mapper));
-            }
-
-            if (importUtilities == null)
-            {
-                throw new ArgumentNullException(nameof(importUtilities));
-            }
-
-            if (ledgerBookFactory == null)
-            {
-                throw new ArgumentNullException(nameof(ledgerBookFactory));
-            }
-            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
-
-            this.mapper = mapper;
-            this.importUtilities = importUtilities;
-            this.ledgerBookFactory = ledgerBookFactory;
-            this.readerWriterSelector = readerWriterSelector;
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
+            this.readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
         }
 
         public async Task<LedgerBook> CreateNewAndSaveAsync(string storageKey)
@@ -60,10 +41,12 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var book = this.ledgerBookFactory.CreateNew();
-            book.Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ');
-            book.StorageKey = storageKey;
-            book.Modified = DateTime.Now;
+            var book = new LedgerBook
+            {
+                Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' '),
+                StorageKey = storageKey,
+                Modified = DateTime.Now
+            };
 
             await SaveAsync(book, storageKey, false);
             return await LoadAsync(storageKey, false);

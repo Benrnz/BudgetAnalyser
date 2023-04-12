@@ -155,10 +155,8 @@
     <Compile Include="Ledger\Data\ToDoCollectionToDtoMapper.cs" />
     <Compile Include="Ledger\Data\ToDoCollectionToDtoMapper.generated.cs" />
     <Compile Include="Ledger\Data\ToDoTaskDto.cs" />
-    <Compile Include="Ledger\ILedgerBookFactory.cs" />
     <Compile Include="Ledger\ILedgerBookRepository.cs" />
     <Compile Include="Ledger\LedgerBook.cs" />
-    <Compile Include="Ledger\LedgerBookFactory.cs" />
     <Compile Include="Ledger\LedgerBucket.cs" />
     <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="Ledger\LedgerEntry.cs" />

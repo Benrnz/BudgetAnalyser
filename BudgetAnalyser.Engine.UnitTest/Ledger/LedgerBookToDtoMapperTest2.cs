@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var accountRepo = new InMemoryAccountTypeRepository();
             var bucketRepo = new BucketBucketRepoAlwaysFind();
-            var subject = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new Mock<IReconciliationBuilder>().Object);
+            var subject = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
             Result = subject.ToDto(TestData);
         }
     }

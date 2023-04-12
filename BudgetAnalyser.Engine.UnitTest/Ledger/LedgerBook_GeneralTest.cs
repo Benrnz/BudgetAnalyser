@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void UnlockMostRecentLineShouldNotThrowIfBookIsEmpty()
         {
-            this.subject = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            this.subject = new LedgerBook()
             {
                 Name = "Foo",
                 Modified = new DateTime(2011, 12, 4),
@@ -159,9 +159,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             book.Output();
         }
 
-        private ReconciliationResult Act(LedgerBook book, BudgetModel budget)
+        private void Act(LedgerBook book, ReconciliationResult recon)
         {
-            return book.Reconcile(NextReconcileDate, budget, this.testDataStatement, NextReconcileBankBalance);
+            book.Reconcile(recon);
         }
     }
 }

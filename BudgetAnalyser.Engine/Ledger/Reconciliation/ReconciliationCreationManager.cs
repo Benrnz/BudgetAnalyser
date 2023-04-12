@@ -13,10 +13,11 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 
-/// <inheritdoc cref="IReconciliationCreationManager"/>
+/// <inheritdoc cref="IReconciliationCreationManager" />
 [AutoRegisterWithIoC]
 internal class ReconciliationCreationManager : IReconciliationCreationManager
 {
+    private readonly IReconciliationBuilder builder;
     private readonly ILogger logger;
     private readonly IReconciliationConsistency reconciliationConsistency;
     private readonly ITransactionRuleService transactionRuleService;
@@ -24,14 +25,16 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
 
     public ReconciliationCreationManager([NotNull] ITransactionRuleService transactionRuleService,
                                          [NotNull] IReconciliationConsistency reconciliationConsistency,
+                                         [NotNull] IReconciliationBuilder builder,
                                          [NotNull] ILogger logger)
     {
         this.transactionRuleService = transactionRuleService ?? throw new ArgumentNullException(nameof(transactionRuleService));
         this.reconciliationConsistency = reconciliationConsistency ?? throw new ArgumentNullException(nameof(reconciliationConsistency));
+        this.builder = builder ?? throw new ArgumentNullException(nameof(builder));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    /// <inheritdoc cref="IReconciliationCreationManager.PeriodEndReconciliation"/>
+    /// <inheritdoc cref="IReconciliationCreationManager.PeriodEndReconciliation" />
     public ReconciliationResult PeriodEndReconciliation(
         LedgerBook ledgerBook,
         DateTime reconciliationDate,
@@ -86,26 +89,34 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
         }
 
         ReconciliationResult recon;
-        using (this.reconciliationConsistency.EnsureConsistency(ledgerBook))
+        try
         {
-            recon = ledgerBook.Reconcile(reconciliationDate, budgetContext.Model, statement, currentBankBalances);
+            using (this.reconciliationConsistency.EnsureConsistency(ledgerBook))
+            {
+                this.builder.LedgerBook = ledgerBook;
+                recon = this.builder.CreateNewMonthlyReconciliation(reconciliationDate, budgetContext.Model, statement, currentBankBalances);
+                ledgerBook.Reconcile(recon);
+            }
+            if (recon == null)
+            {
+                throw new NullReferenceException("Unexpected error: Reconciliation failed to create.");
+            }
+        }
+        finally
+        {
+            this.builder.LedgerBook = null;
         }
 
         // Create new single use matching rules - if needed to ensure transfers are assigned a bucket easily without user intervention.
         foreach (var task in recon.Tasks)
         {
-            this.logger.LogInfo(
-                                l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
-            var transferTask = task as TransferTask;
-            if (transferTask != null && transferTask.SystemGenerated && transferTask.Reference.IsSomething())
+            this.logger.LogInfo(l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
+            if (task is TransferTask { SystemGenerated: true } transferTask && transferTask.Reference.IsSomething())
             {
-                this.logger.LogInfo(
-                                    l =>
-                                        l.Format(
-                                                 "TRANSFER-TASK detected- creating new single use rule. SystemGenerated:{1} Reference:{2}",
-                                                 task.Description, task.SystemGenerated, transferTask.Reference));
-                this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null,
-                                                                   new[] { transferTask.Reference }, null, null, true);
+                this.logger.LogInfo(l =>
+                                        l.Format("TRANSFER-TASK detected- creating new single use rule. SystemGenerated:{1} Reference:{2}", task.Description, task.SystemGenerated,
+                                                 transferTask.Reference));
+                this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null, new[] { transferTask.Reference }, null, null, true);
             }
         }
 

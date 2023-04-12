@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData1()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = "Test Data 1 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -165,7 +165,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData2()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = "Test Data 2 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -270,7 +270,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData3()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = "Smith Budget 2014",
                 Modified = new DateTime(2013, 12, 22),
@@ -359,7 +359,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData4()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = "Test Data 4 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -471,7 +471,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             }
             else
             {
-                book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()));
+                book = new LedgerBook();
             }
             book.Name = "Test Data 5 Book";
             book.Modified = new DateTime(2013, 12, 16);
@@ -605,7 +605,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             }
             else
             {
-                book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()));
+                book = new LedgerBook();
             }
             book.Name = "Test Data 6 Book";
             book.Modified = new DateTime(2013, 08, 15);

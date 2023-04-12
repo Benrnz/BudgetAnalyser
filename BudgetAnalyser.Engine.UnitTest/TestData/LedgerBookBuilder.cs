@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
         public LedgerBook Build()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = Name,
                 Modified = Modified,
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
         public LedgerBookTestHarness BuildTestHarness(IReconciliationBuilder reconciliationBuilder)
         {
-            var book = new LedgerBookTestHarness(reconciliationBuilder)
+            var book = new LedgerBookTestHarness()
             {
                 Name = Name,
                 Modified = Modified,

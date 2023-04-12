@@ -232,7 +232,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             var accountRepo = new InMemoryAccountTypeRepository();
-            var mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new Mock<IReconciliationBuilder>().Object);
+            var mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
             return mapper.ToModel(TestData);
         }
     }

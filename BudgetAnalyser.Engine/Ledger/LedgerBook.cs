@@ -4,10 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Mobile;
-using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger;
@@ -18,22 +16,14 @@ namespace BudgetAnalyser.Engine.Ledger;
 /// <seealso cref="BudgetAnalyser.Engine.IModelValidate" />
 public class LedgerBook : IModelValidate
 {
-    private readonly IReconciliationBuilder reconciliationBuilder;
     private List<LedgerBucket> ledgersColumns = new();
     private List<LedgerEntryLine> reconciliations;
-
-    internal LedgerBook() : this(new ReconciliationBuilder(new NullLogger()))
-    {
-        throw new NotSupportedException("This constructor is only used for producing mappers by reflection.");
-    }
 
     /// <summary>
     ///     Constructs a new instance of the <see cref="LedgerBook" /> class.  The Persistence system calls this constructor, not the IoC system.
     /// </summary>
-    internal LedgerBook([NotNull] IReconciliationBuilder reconciliationBuilder)
+    internal LedgerBook()
     {
-        this.reconciliationBuilder = reconciliationBuilder ?? throw new ArgumentNullException(nameof(reconciliationBuilder));
-        this.reconciliationBuilder.LedgerBook = this;
         this.reconciliations = new List<LedgerEntryLine>();
     }
 
@@ -143,23 +133,11 @@ public class LedgerBook : IModelValidate
     }
 
     /// <summary>
-    ///     Creates a new LedgerEntryLine for this <see cref="LedgerBook" />.
+    ///     Adds a newly created reconciliation into the LedgerBook.  Reconciliations are created with <see cref="ReconciliationCreationManager"/>.
     /// </summary>
-    /// <param name="reconciliationDate">
-    ///     The startDate for the <see cref="LedgerEntryLine" />. This is usually the previous Month's "Reconciliation-Date", as this month's reconciliation starts with this date and includes
-    ///     transactions from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting reconciliation which is the end date for the period.
-    /// </param>
-    /// <param name="budget">The current budget.</param>
-    /// <param name="statement">The currently loaded statement.</param>
-    /// <param name="currentBankBalances">The bank balances as at the reconciliation date to include in this new single line of the ledger book.</param>
-    internal virtual ReconciliationResult Reconcile(DateTime reconciliationDate,
-                                                    BudgetModel budget,
-                                                    StatementModel statement,
-                                                    params BankBalance[] currentBankBalances)
+    internal virtual void Reconcile(ReconciliationResult reconciliation)
     {
-        var newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget, statement, currentBankBalances);
-        this.reconciliations.Insert(0, newRecon.Reconciliation);
-        return newRecon;
+        this.reconciliations.Insert(0, reconciliation.Reconciliation);
     }
 
     /// <summary>

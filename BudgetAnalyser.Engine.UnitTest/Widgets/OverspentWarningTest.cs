@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
             Statement = StatementModelTestData.TestData2A();
 
             // Mocking out the Calculator means we dont need the LedgerBook
-            LedgerBook = new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object);
+            LedgerBook = new LedgerBookTestHarness();
             SetLedgerBalancesFakeDataSomeOverspentBuckets();
 
             Subject = new OverspentWarning(new FakeLogger());

@@ -316,9 +316,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
 
-        private ReconciliationResult Act(DateTime? reconciliationDate = null, BankBalance[] bankBalances = null)
+        private void Act(ReconciliationResult recon)
         {
-            return this.subject.Reconcile(reconciliationDate ?? ReconcileDate, this.testDataBudget, this.testDataStatement, bankBalances ?? NextReconcileBankBalance);
+            this.subject.Reconcile(recon);
         }
 
         private void ActOnTestData5(StatementModel statementModelTestData = null)
@@ -331,8 +331,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             this.testDataStatement.Output(ReconcileDate.AddMonths(-1));
             this.subject.Output(true);
 
-            var result = Act(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) });
-            this.testDataToDoList = result.Tasks.ToList();
+            Act(newRecon);
 
             Console.WriteLine();
             Console.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
