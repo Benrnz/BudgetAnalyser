@@ -30,17 +30,17 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private ReconciliationCreationManager subject;
         private IBudgetCurrencyContext testDataBudgetContext;
         private BudgetCollection testDataBudgets;
-
         private LedgerBook testDataLedgerBook;
         private StatementModel testDataStatement;
         private IList<ToDoTask> testDataToDoList;
         private IEnumerable<BankBalance> currentBankBalances;
+        private ReconciliationResult testDataReconResult;
 
         [TestMethod]
         public void MonthEndReconciliation_ShouldCreateSingleUseMatchingRulesForTransferToDos()
         {
-            // Artifically create a transfer to do task when the reconciliation method is invoked on the LedgerBook.
-            // Remember: the subject here is the LedgerService not the LedgerBook.
+            // Artificially create a transfer to do task when the reconciliation method is invoked on the LedgerBook.
+            // Remember: the subject here is the ReconciliationCreationManager not the LedgerBook.
             ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = recon =>
             {
                 this.testDataToDoList.Add(
@@ -50,14 +50,17 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                         Amount = 12.22M,
                         BucketCode = StatementModelTestData.CarMtcBucket.Code
                     });
-                //return new ReconciliationResult { Reconciliation = new LedgerEntryLine(ReconcileDate, this.currentBankBalances), Tasks = this.testDataToDoList };
+                recon.Tasks = this.testDataToDoList ;
             };
 
             // Expect a call to the Rule service to create the single use rule for the transfer.
             this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), true))
                 .Returns(new SingleUseMatchingRule(this.bucketRepo));
 
-            Act();
+            this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(ReconcileDate, this.testDataBudgets.CurrentActiveBudget, this.testDataStatement, It.IsAny<BankBalance[]>()))
+                .Returns(this.testDataReconResult);
+            
+            ActPeriodEndReconciliation();
 
             // Ensure the rule service was called with the appropriate parameters.
             this.mockRuleService.VerifyAll();
@@ -85,6 +88,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 })
                 .Build();
             this.testDataToDoList = new List<ToDoTask>();
+            this.testDataReconResult = new ReconciliationResult { Tasks = this.testDataToDoList };
             this.subject = new ReconciliationCreationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, this.mockReconciliationBuilder.Object, new FakeLogger());
 
             this.testDataLedgerBook = LedgerBookTestData.TestData5(() => new LedgerBookTestHarness());
@@ -96,7 +100,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [ExpectedException(typeof(InvalidOperationException))]
         public void Reconcile_ShouldThrow_GivenInvalidLedgerBook()
         {
-            Act(new DateTime(2012, 02, 20));
+            ActPeriodEndReconciliation(new DateTime(2012, 02, 20));
         }
 
         [TestMethod]
@@ -105,7 +109,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             this.testDataStatement = new StatementModel(new FakeLogger()) { StorageKey = "C:\\Foo.xml" };
             try
             {
-                Act(new DateTime(2013, 10, 15));
+                ActPeriodEndReconciliation(new DateTime(2013, 10, 15));
             }
             catch (ValidationWarningException ex)
             {
@@ -130,7 +134,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 .Build();
             try
             {
-                Act();
+                ActPeriodEndReconciliation();
             }
             catch (ValidationWarningException ex)
             {
@@ -143,24 +147,27 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void Reconcile_ShouldNotThrow_GivenTestData1AndUnclassifiedTransactionsOutsideReconPeriod()
         {
+            var reconDate = new DateTime(2013, 9, 15);
+            this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(reconDate, this.testDataBudgets.CurrentActiveBudget, this.testDataStatement, It.IsAny<BankBalance[]>()))
+                .Returns(this.testDataReconResult);
             Transaction aTransaction = this.testDataStatement.AllTransactions.First();
             PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
 
-            Act(new DateTime(2013, 9, 15));
+            ActPeriodEndReconciliation(reconDate);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void Reconcile_ShouldThrow_GivenTestData1WithDateEqualToExistingLine()
         {
-            Act(new DateTime(2013, 08, 15));
+            ActPeriodEndReconciliation(new DateTime(2013, 08, 15));
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void Reconcile_ShouldThrow_GivenTestData1WithDateLessThanExistingLine()
         {
-            Act(new DateTime(2013, 07, 15));
+            ActPeriodEndReconciliation(new DateTime(2013, 07, 15));
         }
 
         [TestMethod]
@@ -210,7 +217,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 .Build();
             try
             {
-                Act();
+                ActPeriodEndReconciliation();
             }
             catch (ValidationWarningException ex)
             {
@@ -230,11 +237,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             Assert.Fail();
         }
 
-        private void Act(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null, bool ignoreWarnings = false)
+        private ReconciliationResult ActPeriodEndReconciliation(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null, bool ignoreWarnings = false)
         {
             this.currentBankBalances = bankBalances ?? NextReconcileBankBalance;
 
-            this.subject.PeriodEndReconciliation(
+            return this.subject.PeriodEndReconciliation(
                 this.testDataLedgerBook,
                 reconciliationDate ?? ReconcileDate,
                 this.testDataBudgetContext,
@@ -254,7 +261,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             this.testDataStatement.Output(ReconcileDate.AddMonths(-1));
             this.testDataLedgerBook.Output(true);
 
-            Act(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) },
+            ActPeriodEndReconciliation(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) },
                 ignoreWarnings: ignoreWarnings);
 
             Console.WriteLine();
