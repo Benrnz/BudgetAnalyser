@@ -94,6 +94,8 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             using (this.reconciliationConsistency.EnsureConsistency(ledgerBook))
             {
                 this.builder.LedgerBook = ledgerBook;
+                // BUG budgetContext.Model may not be the right budget to use fot the closingDateExclusive. Use BudgetCollection instead or pass it in.
+                // TODO Should really call budgetContext.BudgetActive to make sure before starting reconciliation?
                 recon = this.builder.CreateNewMonthlyReconciliation(closingDateExclusive, budgetContext.Model, statement, currentBankBalances);
                 ledgerBook.Reconcile(recon);
             }
