@@ -9,24 +9,15 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     A single entry on a <see cref="BudgetBucket" /> for a date (which comes from the <see cref="LedgerEntryLine" />).
-    ///     This
-    ///     instance can contain one or
-    ///     more <see cref="LedgerTransaction" />s defining all movements for this <see cref="Budget.BudgetBucket" /> for this
-    ///     date.
-    ///     Possible transactions
-    ///     include budgeted 'saved up for expenses' credited into this <see cref="BudgetBucket" /> and all statement
-    ///     transactions
-    ///     that are debitted to this
-    ///     budget bucket ledger.
+    ///     A single entry on a <see cref="BudgetBucket" /> for a date (which comes from the <see cref="LedgerEntryLine" />). This instance can contain one or more <see cref="LedgerTransaction" />s
+    ///     defining all movements for this <see cref="Budget.BudgetBucket" /> for this date. Possible transactions include budgeted 'saved up for expenses' credited into this
+    ///     <see cref="BudgetBucket" /> and all statement transactions that are debitted to this budget bucket ledger.
     /// </summary>
     public class LedgerEntry
     {
         /// <summary>
-        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
-        ///     loading from file.  An entry can be 'unlocked', this allows editing of this entry after it has been saved and
-        ///     reloaded. Only the most recent entries for a <see cref="LedgerEntryLine" /> can be unlocked.
-        ///     This variable is intentionally not persisted.
+        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from loading from file.  An entry can be 'unlocked', this allows editing of
+        ///     this entry after it has been saved and reloaded. Only the most recent entries for a <see cref="LedgerEntryLine" /> can be unlocked. This variable is intentionally not persisted.
         /// </summary>
         private bool isNew;
 
@@ -43,23 +34,20 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Used when adding a new entry for a new reconciliation.
         /// </summary>
-        internal LedgerEntry(bool isNew)
-            : this()
+        internal LedgerEntry(bool isNew) : this()
         {
             this.isNew = isNew;
         }
 
         /// <summary>
-        ///     The balance of the ledger as at the date after the transactions are applied in the parent
-        ///     <see cref="LedgerEntryLine" />.
+        ///     The balance of the ledger as at the date after the transactions are applied in the parent <see cref="LedgerEntryLine" />.
         /// </summary>
         public decimal Balance { get; internal set; }
 
         /// <summary>
-        ///     The Ledger Column instance that tracks which <see cref="BudgetBucket" /> is being tracked by this Ledger.
-        ///     This will also designate which Bank Account the ledger funds are stored.
-        ///     Note that this may be different to the master mapping in <see cref="LedgerBook.Ledgers" />. This is because this
-        ///     instance shows which account stored the funds at the date in the parent <see cref="LedgerEntryLine" />.
+        ///     The Ledger Column instance that tracks which <see cref="BudgetBucket" /> is being tracked by this Ledger. This will also designate which Bank Account the ledger funds are stored.
+        ///     Note that this may be different to the master mapping in <see cref="LedgerBook.Ledgers" />. This is because this instance shows which account stored the funds at the date in the
+        ///     parent <see cref="LedgerEntryLine" />.
         /// </summary>
         public LedgerBucket LedgerBucket { get; internal set; }
 
@@ -98,8 +86,7 @@ namespace BudgetAnalyser.Engine.Ledger
             this.transactions.Add(newTransaction);
             var newBalance = Balance + newTransaction.Amount;
             Balance = newBalance > 0 ? newBalance : 0;
-            var balanceAdjustmentTransaction = newTransaction as BankBalanceAdjustmentTransaction;
-            if (balanceAdjustmentTransaction != null)
+            if (newTransaction is BankBalanceAdjustmentTransaction balanceAdjustmentTransaction)
             {
                 balanceAdjustmentTransaction.BankAccount = LedgerBucket.StoredInAccount;
             }
@@ -128,8 +115,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (!this.isNew)
             {
-                throw new InvalidOperationException(
-                                                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
             var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
@@ -142,20 +128,11 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions.
-        ///     <see cref="AddTransactionForPersistenceOnly" /> must not be called in conjunction with this.
-        ///     This is used for reconciliation only.
-        ///     Also performs some automated actions:
-        ///     + Transfers to Surplus any remaining amount for Spent Monthly Buckets.
-        ///     + Transfers from Surplus any overdrawn amount for Spent Monthly Buckets.
+        ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions. <see cref="AddTransactionForPersistenceOnly" /> must not be called in conjunction with this.
         /// </summary>
-        /// <param name="newTransactions">The list of new transactions for this entry. This includes the monthly budgeted amount.</param>
+        /// <param name="newTransactions">The list of new transactions for this entry. This includes the period budgeted amount.</param>
         internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions)
         {
-            // I dont want to do this here anymore.  More transactions can be added as a result of applying other behaviours.
-            // Its been moved to an IReconciliationBehaviour object.
-            // LedgerBucket.ApplyReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
-
             this.transactions = newTransactions.OrderBy(t => t.Date).ToList();
         }
 

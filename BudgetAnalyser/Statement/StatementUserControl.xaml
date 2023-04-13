@@ -189,7 +189,7 @@
             </Border>
             <Border Background="{StaticResource Brush.NeutralNumberBackground}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The total numnber of months the currently displayed transaction span.">
+                    ToolTip="The total number of months the currently displayed transaction span.">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="Months: " />

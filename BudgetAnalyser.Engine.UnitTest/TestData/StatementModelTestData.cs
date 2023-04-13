@@ -60,6 +60,26 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// <summary>
         ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
         ///     Includes income transactions.
+        ///     Same as TestData2 but with another transaction for PhNet in August.
+        /// </summary>
+        public static StatementModel TestData2A()
+        {
+            var statement = new StatementModel(new FakeLogger())
+            {
+                StorageKey = @"C:\TestData2\Foo2Statement.csv",
+                LastImport = new DateTime(2013, 08, 15)
+            };
+
+            IList<Transaction> transactions = CreateTransactions2().ToList();
+            var modTransaction = transactions.Single(t => t.Date == new DateTime(2013, 07, 16) && t.BudgetBucket == PhoneBucket);
+            modTransaction.Date = new DateTime(2013, 08, 16);
+            statement.LoadTransactions(transactions);
+            return statement;
+        }
+
+        /// <summary>
+        ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
+        ///     Includes income transactions.
         ///     Adjusted for use with LedgerCalculator - No ledgers will be overdrawn when using LedgerBook TestData 1.
         /// </summary>
         public static StatementModel TestData3()

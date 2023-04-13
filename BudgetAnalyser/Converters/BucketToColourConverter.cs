@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Converters
 
             if (value is SpentPerPeriodExpenseBucket)
             {
-                return ConverterHelper.SpentMonthlyBucketBrush;
+                return ConverterHelper.SpentPeriodicallyBucketBrush;
             }
 
             if (value is SavedUpForExpenseBucket)

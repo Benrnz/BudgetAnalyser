@@ -232,7 +232,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var accountRepo = new InMemoryAccountTypeRepository();
             var bucketRepo = new BucketBucketRepoAlwaysFind();
-            this.mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new Mock<IReconciliationBuilder>().Object);
+            this.mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
             this.mockReaderWriterSelector = new Mock<IReaderWriterSelector>();
             this.mockReaderWriter = new Mock<IFileReaderWriter>();
             this.mockReaderWriterSelector.Setup(m => m.SelectReaderWriter(It.IsAny<bool>())).Returns(this.mockReaderWriter.Object);

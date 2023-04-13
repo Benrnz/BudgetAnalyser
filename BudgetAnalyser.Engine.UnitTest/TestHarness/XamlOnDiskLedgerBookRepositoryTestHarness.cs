@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
     {
         public XamlOnDiskLedgerBookRepositoryTestHarness(
             [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper,
-            IReaderWriterSelector selector) : base(mapper, new BankImportUtilitiesTestHarness(), new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger())), selector)
+            IReaderWriterSelector selector) : base(mapper, new BankImportUtilitiesTestHarness(), selector)
         {
             LoadXamlFromDiskFromEmbeddedResources = true;
         }

@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         ///     Creates a new LedgerEntryLine for a <see cref="LedgerBook" /> to begin reconciliation.
         /// </summary>
         /// <param name="ledgerBook">The ledger book that this reconciliation belongs to</param>
-        /// <param name="reconciliationDate">
+        /// <param name="closingDateExclusive">
         ///     The startDate for the <see cref="LedgerEntryLine" />. This is usually the previous Month's "Reconciliation-Date",
         ///     as this month's reconciliation starts with this date and includes transactions
         ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting
@@ -36,9 +36,9 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         ///     Thrown when the supplied dates are invalid or not consistent with the
         ///     <paramref name="ledgerBook" />.
         /// </exception>
-        ReconciliationResult MonthEndReconciliation(
+        ReconciliationResult PeriodEndReconciliation(
             [NotNull] LedgerBook ledgerBook,
-            DateTime reconciliationDate,
+            DateTime closingDateExclusive,
             [NotNull] IBudgetCurrencyContext budgetContext,
             [NotNull] StatementModel statement,
             bool ignoreWarnings,

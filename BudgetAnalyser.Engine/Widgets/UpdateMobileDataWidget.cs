@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public UpdateMobileDataWidget()
         {
-            Category = WidgetGroup.MonthlyTrackingSectionName;
+            Category = WidgetGroup.PeriodicTrackingSectionName;
             Dependencies = new[] { typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection), typeof(GlobalFilterCriteria) };
             DetailedText = WidgetLabel;
             Sequence = 10;
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public StatementModel StatementModel { get; private set; }
 
-        private bool lockActive = false;
+        private bool lockActive;
 
         /// <summary>
         /// This method is used to disable the widget while upload is active.

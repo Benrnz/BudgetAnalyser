@@ -13,16 +13,15 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         ///     Constructs a new instance of the <see cref="LedgerBook" /> class.  The Persistence system calls this constructor,
         ///     not the IoC system.
         /// </summary>
-        public LedgerBookTestHarness([NotNull] IReconciliationBuilder reconciliationBuilder)
-            : base(reconciliationBuilder)
+        public LedgerBookTestHarness()
         {
         }
 
-        public Func<ReconciliationResult> ReconcileOverride { get; set; }
+        public Action<ReconciliationResult> ReconcileOverride { get; set; }
 
-        internal override ReconciliationResult Reconcile(DateTime reconciliationDate, BudgetModel budget, StatementModel statement, params BankBalance[] currentBankBalances)
+        internal override void Reconcile(ReconciliationResult newRecon)
         {
-            return ReconcileOverride?.Invoke();
+            ReconcileOverride?.Invoke(newRecon);
         }
     }
 }

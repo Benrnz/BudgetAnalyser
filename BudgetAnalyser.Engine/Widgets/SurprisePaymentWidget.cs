@@ -299,7 +299,6 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
 
         public NextOccurance NextMonth(int day)
         {
-            // TODO not sure about this for fortnightly
             var nextMonth = new NextOccurance { StartDate = StartDate.AddMonths(1), EndDate = EndDate.AddMonths(1) };
             nextMonth.Tally(day);
             return nextMonth;
