@@ -96,9 +96,11 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
                 this.builder.LedgerBook = ledgerBook;
                 // BUG budgetContext.Model may not be the right budget to use fot the closingDateExclusive. Use BudgetCollection instead or pass it in.
                 // TODO Should really call budgetContext.BudgetActive to make sure before starting reconciliation?
+                // TODO The reconciliation date is probably the wrong date to use to find the applicable budget. Recon date is the day after the close off date of the period.
                 recon = this.builder.CreateNewMonthlyReconciliation(closingDateExclusive, budgetContext.Model, statement, currentBankBalances);
                 ledgerBook.Reconcile(recon);
             }
+
             if (recon == null)
             {
                 throw new NullReferenceException("Unexpected error: Reconciliation failed to create.");
@@ -293,7 +295,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
 
         var startDate = ReconciliationBuilder.CalculateBeginDateForReconciliationPeriod(ledgerBook, reconciliationDate, periodType);
 
-        ValidateDates(ledgerBook, startDate, reconciliationDate, statement);
+        ValidateDates(ledgerBook, startDate, reconciliationDate, statement, periodType);
 
         ValidateAgainstUncategorisedTransactions(startDate, reconciliationDate, statement);
 
@@ -372,29 +374,40 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-    private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate, StatementModel statement)
+    private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate, StatementModel statement, BudgetCycle periodType)
     {
-        var recentEntry = ledgerBook.Reconciliations.FirstOrDefault();
-        if (recentEntry != null)
+        var previousEntry = ledgerBook.Reconciliations.FirstOrDefault();
+        if (previousEntry != null)
         {
-            if (reconciliationDate <= recentEntry.Date)
+            if (reconciliationDate <= previousEntry.Date)
             {
-                throw new InvalidOperationException("The start Date entered is before the previous ledger entry.");
+                throw new InvalidOperationException("The reconciliation date entered is before the previous ledger entry.");
             }
 
-            if (recentEntry.Date.AddDays(7 * 4) > reconciliationDate)
+            switch (periodType)
             {
-                throw new InvalidOperationException(
-                                                    "The start Date entered is not at least 4 weeks after the previous reconciliation. ");
-            }
+                case BudgetCycle.Monthly:
+                    if (previousEntry.Date.AddDays(7 * 4) > reconciliationDate)
+                    {
+                        throw new InvalidOperationException("The reconciliation date entered is not at least 4 weeks after the previous reconciliation. ");
+                    }
 
-            if (recentEntry.Date.Day != reconciliationDate.Day)
-            {
-                throw new ValidationWarningException(
-                                                     $"The reconciliation Date chosen, {reconciliationDate}, isn't the same day of the month as the previous entry {recentEntry.Date}. Not required, but ideally reconciliations should be evenly spaced.")
-                {
-                    Source = "4"
-                };
+                    if (previousEntry.Date.Day != reconciliationDate.Day)
+                    {
+                        throw new ValidationWarningException($"The reconciliation date chosen, {reconciliationDate}, isn't the same day of the month as the previous entry {previousEntry.Date}. Not required, but ideally reconciliations should be evenly spaced.")
+                        {
+                            Source = "4"
+                        };
+                    }
+
+                    break;
+                
+                case BudgetCycle.Fortnightly:
+                    if (reconciliationDate.Subtract(previousEntry.Date).Days != 14)
+                    {
+                        throw new InvalidOperationException("The reconciliation date entered is not 2 weeks after the previous reconciliation. ");
+                    }
+                    break;
             }
         }
 
