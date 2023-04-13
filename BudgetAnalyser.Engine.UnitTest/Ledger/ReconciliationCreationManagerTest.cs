@@ -36,7 +36,7 @@ public class ReconciliationCreationManagerTest
     private IList<ToDoTask> testDataToDoList;
 
     [TestMethod]
-    public void MonthEndReconciliation_ShouldCreateSingleUseMatchingRulesForTransferToDos()
+    public void Reconcile_ShouldCreateSingleUseMatchingRulesForTransferToDos()
     {
         // Artificially create a transfer to do task when the reconciliation method is invoked on the LedgerBook.
         // Remember: the subject here is the ReconciliationCreationManager not the LedgerBook.
@@ -78,7 +78,23 @@ public class ReconciliationCreationManagerTest
         LedgerBookTestData.TestData5().Output(true);
     }
 
-    // TODO Need a test that ensures the new LedgerEntryLine is added to the LedgerBook.
+    [TestMethod]
+    public void Reconcile_ShouldAddLedgerEntryLineToLedgerBook()
+    {
+        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetContext.Model, this.testDataStatement, It.IsAny<BankBalance[]>()))
+            .Returns(this.testDataReconResult);
+        var count = this.testDataLedgerBook.Reconciliations.Count();
+        bool reconcileCalled = false;
+        ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = _ =>
+        {
+            // record the fact Reconcile was called.
+            reconcileCalled = true;
+        };
+        
+        var result = ActPeriodEndReconciliation();
+        
+        Assert.IsTrue(reconcileCalled);
+    }
 
     [TestMethod]
     public void Reconcile_ShouldNotThrow_GivenTestData1AndUnclassifiedTransactionsOutsideReconPeriod()

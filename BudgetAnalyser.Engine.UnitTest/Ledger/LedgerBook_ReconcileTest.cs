@@ -51,7 +51,7 @@ public class LedgerBook_ReconcileTest
     public void Reconcile_ShouldInsertLastestInFront_GivenTestData1()
     {
         Act();
-        Assert.AreEqual(this.subject.Reconciliations.First(), this.testDataReconResult.Reconciliation);
+        Assert.AreEqual(this.testDataReconResult.Reconciliation, this.subject.Reconciliations.First());
     }
 
 
