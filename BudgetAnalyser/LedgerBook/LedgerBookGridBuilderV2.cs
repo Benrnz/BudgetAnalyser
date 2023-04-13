@@ -34,7 +34,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private const string SurplusBackground = "Brush.TileBackgroundAlternate";
     private const string SurplusTextBrush = "Brush.CreditBackground1";
     private readonly ICommand showBankBalancesCommand;
-    private readonly ICommand showHideMonthsCommand;
+    private readonly ICommand showHidePeriodsCommand;
     private readonly ICommand showLedgerBucketDetailsCommand;
     private readonly ICommand showRemarksCommand;
     private readonly ICommand showSurplusBalancesCommand;
@@ -48,14 +48,14 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         ICommand showTransactionsCommand,
         ICommand showBankBalancesCommand,
         ICommand showRemarksCommand,
-        ICommand showHideMonthsCommand,
+        ICommand showHidePeriodsCommand,
         ICommand showSurplusBalancesCommand,
         ICommand showLedgerBucketDetailsCommand)
     {
         this.showTransactionsCommand = showTransactionsCommand;
         this.showBankBalancesCommand = showBankBalancesCommand;
         this.showRemarksCommand = showRemarksCommand;
-        this.showHideMonthsCommand = showHideMonthsCommand;
+        this.showHidePeriodsCommand = showHidePeriodsCommand;
         this.showSurplusBalancesCommand = showSurplusBalancesCommand;
         this.showLedgerBucketDetailsCommand = showLedgerBucketDetailsCommand;
     }
@@ -148,19 +148,19 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         return gridRow;
     }
 
-    private void AddGridColumns(Grid grid, int numberOfMonthsToShow)
+    private void AddGridColumns(Grid grid, int numberOfPeriodsToShow)
     {
-        if (numberOfMonthsToShow < 1)
+        if (numberOfPeriodsToShow < 1)
         {
-            numberOfMonthsToShow = 1;
+            numberOfPeriodsToShow = 1;
         }
 
-        if (numberOfMonthsToShow > this.ledgerBook.Reconciliations.Count())
+        if (numberOfPeriodsToShow > this.ledgerBook.Reconciliations.Count())
         {
-            numberOfMonthsToShow = this.ledgerBook.Reconciliations.Count();
+            numberOfPeriodsToShow = this.ledgerBook.Reconciliations.Count();
         }
 
-        for (var index = 0; index < numberOfMonthsToShow + 2; index++)
+        for (var index = 0; index < numberOfPeriodsToShow + 2; index++)
         {
             // + 2 because we need 2 columns for the headings
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -219,10 +219,10 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
 
             gridColumn = 0;
             var border = AddBorderToGridCell(grid, true, true, gridRow, gridColumn);
-            // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
+            // SpentPeriodically Ledgers do not show the transaction total (NetAmount) because its always the same.
             Grid.SetRowSpan(border, ledger.BudgetBucket is SpentPerPeriodExpenseBucket ? 1 : 2);
 
-            // Heading stripe to indicate SpentMonthly or SavedUpFor expenses.
+            // Heading stripe to indicate SpentPeriodically or SavedUpFor expenses.
             var stripe = new Border
             {
                 BorderThickness = new Thickness(6, 0, 0, 0),
@@ -279,16 +279,16 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         return textBlock;
     }
 
-    private void AddLedgerEntryLinesVertically(Grid grid, int numberOfMonthsToShow)
+    private void AddLedgerEntryLinesVertically(Grid grid, int numberOfPeriodsToShow)
     {
         var gridColumn = 2; //because the first two columns are headings
-        var monthNumber = 0;
+        var periodNumber = 0;
 
         // Loop thru all Reconciliations from most recent to oldest adding cells to the grid vertically. 
         foreach (var line in this.ledgerBook.Reconciliations)
         {
             var gridRow = 0;
-            if (++monthNumber > numberOfMonthsToShow)
+            if (++periodNumber > numberOfPeriodsToShow)
             {
                 break;
             }
@@ -400,7 +400,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         {
             if (ledger.BudgetBucket is SpentPerPeriodExpenseBucket)
             {
-                // Spent Monthly ledgers only have a balance gridRow
+                // Spent Periodically ledgers only have a balance gridRow
                 grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             }
             else
@@ -411,7 +411,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         }
     }
 
-    private void AddShowMoreLessColumnsButtons(Grid grid, int numberOfMonthsToShow)
+    private void AddShowMoreLessColumnsButtons(Grid grid, int numberOfPeriodsToShow)
     {
         grid.ColumnDefinitions.Add(new ColumnDefinition());
 
@@ -421,7 +421,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
             RenderTransform = new ScaleTransform(0.5, 0.5),
             ToolTip = "Show column",
             CommandParameter = 1,
-            Command = this.showHideMonthsCommand
+            Command = this.showHidePeriodsCommand
         };
 
         var lessButton = new Button
@@ -430,7 +430,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
             RenderTransform = new ScaleTransform(0.5, 0.5),
             ToolTip = "Hide column",
             CommandParameter = -1,
-            Command = this.showHideMonthsCommand
+            Command = this.showHidePeriodsCommand
         };
 
         var panel = new StackPanel
@@ -442,7 +442,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         panel.Children.Add(lessButton);
         panel.Children.Add(moreButton);
         grid.Children.Add(panel);
-        Grid.SetColumn(panel, numberOfMonthsToShow + 3);
+        Grid.SetColumn(panel, numberOfPeriodsToShow + 3);
     }
 
     private int AddSurplusCell(Grid grid, int gridRow, int gridColumn, LedgerEntryLine line)
@@ -502,7 +502,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
                              individualLedgerBalances);
     }
 
-    private void DynamicallyCreateLedgerBookGrid(int numberOfMonthsToShow)
+    private void DynamicallyCreateLedgerBookGrid(int numberOfPeriodsToShow)
     {
         if (this.ledgerBook == null)
         {
@@ -534,12 +534,12 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         this.sortedLedgers.Select(l => l.StoredInAccount).Distinct().ToList().ForEach(x => grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }));
 
         this.contentPresenter.Content = grid;
-        AddGridColumns(grid, numberOfMonthsToShow);
+        AddGridColumns(grid, numberOfPeriodsToShow);
 
         AddHeadingColumnContent(grid);
-        AddLedgerEntryLinesVertically(grid, numberOfMonthsToShow);
+        AddLedgerEntryLinesVertically(grid, numberOfPeriodsToShow);
 
-        AddShowMoreLessColumnsButtons(grid, numberOfMonthsToShow);
+        AddShowMoreLessColumnsButtons(grid, numberOfPeriodsToShow);
     }
 
     private object FindResource(string resourceName)
