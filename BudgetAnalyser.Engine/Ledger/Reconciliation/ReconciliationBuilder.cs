@@ -63,6 +63,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
         try
         {
+            // TODO Why does this.newReconciliationLine need to be a field?
             this.newReconciliationLine = new LedgerEntryLine(reconciliationClosingDateExclusive, bankBalances);
             AddNew(budget, statement, CalculateBeginDateForReconciliationPeriod(LedgerBook, reconciliationClosingDateExclusive, budget.BudgetCycle));
             return new ReconciliationResult { Reconciliation = this.newReconciliationLine, Tasks = this.toDoList };
