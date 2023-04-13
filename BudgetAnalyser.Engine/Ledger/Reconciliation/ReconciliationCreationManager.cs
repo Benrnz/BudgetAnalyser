@@ -405,7 +405,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
                 case BudgetCycle.Fortnightly:
                     if (reconciliationDate.Subtract(previousEntry.Date).Days != 14)
                     {
-                        throw new InvalidOperationException("The reconciliation date entered is not 2 weeks after the previous reconciliation. ");
+                        throw new ValidationWarningException("The reconciliation date entered is not 2 weeks after the previous reconciliation. ") { Source = "6" };
                     }
                     break;
             }
