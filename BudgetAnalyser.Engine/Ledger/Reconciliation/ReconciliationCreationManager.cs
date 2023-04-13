@@ -37,7 +37,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
     /// <inheritdoc cref="IReconciliationCreationManager.PeriodEndReconciliation" />
     public ReconciliationResult PeriodEndReconciliation(
         LedgerBook ledgerBook,
-        DateTime reconciliationDate,
+        DateTime closingDateExclusive,
         IBudgetCurrencyContext budgetContext,
         StatementModel statement,
         bool ignoreWarnings,
@@ -78,7 +78,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
 
         try
         {
-            PreReconciliationValidation(ledgerBook, reconciliationDate, statement, budgetContext.Model.BudgetCycle);
+            PreReconciliationValidation(ledgerBook, closingDateExclusive, statement, budgetContext.Model.BudgetCycle);
         }
         catch (ValidationWarningException ex)
         {
@@ -94,7 +94,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             using (this.reconciliationConsistency.EnsureConsistency(ledgerBook))
             {
                 this.builder.LedgerBook = ledgerBook;
-                recon = this.builder.CreateNewMonthlyReconciliation(reconciliationDate, budgetContext.Model, statement, currentBankBalances);
+                recon = this.builder.CreateNewMonthlyReconciliation(closingDateExclusive, budgetContext.Model, statement, currentBankBalances);
                 ledgerBook.Reconcile(recon);
             }
             if (recon == null)

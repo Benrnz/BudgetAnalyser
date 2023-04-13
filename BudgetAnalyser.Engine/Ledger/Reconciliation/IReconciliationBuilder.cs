@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         /// </summary>
         /// <returns>A newly created and populated <see cref="LedgerEntryLine" />.</returns>
         ReconciliationResult CreateNewMonthlyReconciliation(
-            DateTime reconciliationDateExclusive,
+            DateTime reconciliationClosingDateExclusive,
             [NotNull] BudgetModel budget,
             [NotNull] StatementModel statement,
             [NotNull] params BankBalance[] bankBalances);

@@ -27,15 +27,16 @@ internal class ReconciliationBuilder : IReconciliationBuilder
     ///     This is effectively stage 2 of the Reconciliation process. It builds the contents of the new ledger line based on budget and statement input.
     ///     First stage is <see cref="ReconciliationCreationManager.PeriodEndReconciliation"/>.
     /// </summary>
-    /// <param name="reconciliationDateExclusive">
-    ///     The date for the reconciliation. This is typically pay date, and is the beginning date of the new period. Also one day after the global filter end date. Used to select transactions
-    ///     from the statement.
+    /// <param name="reconciliationClosingDateExclusive">
+    ///     The closing date for the reconciliation. This is typically pay date, and is the beginning date of the new period. It will be one day after the global filter end date. Used to select
+    ///     transactions from the statement up until this date. For example if your monthly pay date is the 20th, then on the 20th of July your global filter will be 20-June to 19-July. And closing
+    ///     off this period with a reconciliation will mean a date of 20-July will be passed into this method.
     /// </param>
     /// <param name="budget">The current applicable budget</param>
     /// <param name="statement">The current period statement.</param>
     /// <param name="bankBalances">A list of bank balances for the reconciliation, one for each account. (Excluding credit cards). </param>
     public ReconciliationResult CreateNewMonthlyReconciliation(
-        DateTime reconciliationDateExclusive,
+        DateTime reconciliationClosingDateExclusive,
         BudgetModel budget,
         StatementModel statement,
         params BankBalance[] bankBalances)
@@ -62,8 +63,8 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
         try
         {
-            this.newReconciliationLine = new LedgerEntryLine(reconciliationDateExclusive, bankBalances);
-            AddNew(budget, statement, CalculateBeginDateForReconciliationPeriod(LedgerBook, reconciliationDateExclusive, budget.BudgetCycle));
+            this.newReconciliationLine = new LedgerEntryLine(reconciliationClosingDateExclusive, bankBalances);
+            AddNew(budget, statement, CalculateBeginDateForReconciliationPeriod(LedgerBook, reconciliationClosingDateExclusive, budget.BudgetCycle));
             return new ReconciliationResult { Reconciliation = this.newReconciliationLine, Tasks = this.toDoList };
         }
         finally
