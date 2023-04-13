@@ -75,6 +75,13 @@ namespace BudgetAnalyser.Engine.Widgets
             Enabled = true;
             var openingBalance = CalculateOpeningBalance();
             var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter.BeginDate.Value, this.filter.EndDate.Value);
+            if (ledgerLine == null)
+            {
+                ToolTip = "No ledger entries can be found in the date range.";
+                Enabled = false;
+                return;
+            }
+            
             var remainingBalance = this.ledgerCalculator.CalculateCurrentPeriodSurplusBalance(ledgerLine, this.filter, this.statement);
 
             Maximum = Convert.ToDouble(openingBalance);
