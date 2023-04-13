@@ -172,7 +172,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         MessengerInstance.Send(requestFilterMessage);
         Date = requestFilterMessage.Criteria.EndDate?.AddDays(1) ?? DateTime.Today;
 
-        ShowDialogCommon("New Monthly Reconciliation");
+        ShowDialogCommon("Closing Period Reconciliation");
     }
 
     /// <summary>

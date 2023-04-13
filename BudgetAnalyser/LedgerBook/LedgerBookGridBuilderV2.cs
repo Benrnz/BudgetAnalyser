@@ -69,7 +69,7 @@ namespace BudgetAnalyser.LedgerBook
             Engine.Ledger.LedgerBook currentLedgerBook,
             ResourceDictionary viewResources,
             ContentPresenter contentPanel,
-            int numberOfMonthsToShow)
+            int numberOfPeriodsToShow)
         {
             if (viewResources == null)
             {
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.LedgerBook
             this.ledgerBook = currentLedgerBook;
             this.localResources = viewResources;
             this.contentPresenter = contentPanel;
-            DynamicallyCreateLedgerBookGrid(numberOfMonthsToShow);
+            DynamicallyCreateLedgerBookGrid(numberOfPeriodsToShow);
         }
 
         private static string BuildToolTipForBankBalance(LedgerEntryLine line)
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (ledger.BudgetBucket is SpentPerPeriodExpenseBucket)
             {
-                return ConverterHelper.SpentMonthlyBucketBrush;
+                return ConverterHelper.SpentPeriodicallyBucketBrush;
             }
 
             if (ledger.BudgetBucket is SavedUpForExpenseBucket)

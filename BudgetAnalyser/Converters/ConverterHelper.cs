@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Converters
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush SlightDebitBrush = Application.Current.Resources[SlightDebit] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush SpentMonthlyBucketBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush SpentPeriodicallyBucketBrush =
             Application.Current.Resources[SpentMonthlyBucket] as Brush;
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush TileBackgroundBrush =
