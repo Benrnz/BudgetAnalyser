@@ -425,7 +425,9 @@ namespace BudgetAnalyser.Engine.Services
 
             var additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
             var combinedModel = StatementModel.Merge(additionalModel);
-            IEnumerable<IGrouping<int, Transaction>> duplicates = combinedModel.ValidateAgainstDuplicates();
+            var  minDate = additionalModel.AllTransactions.Min(t => t.Date);
+            var maxDate = additionalModel.AllTransactions.Max(t => t.Date);
+            IEnumerable<IGrouping<int, Transaction>> duplicates = combinedModel.ValidateAgainstDuplicates(minDate, maxDate).ToList();
             if (duplicates.Count() == additionalModel.AllTransactions.Count())
             {
                 throw new TransactionsAlreadyImportedException();
