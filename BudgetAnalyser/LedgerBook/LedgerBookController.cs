@@ -154,7 +154,8 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     private bool CanExecuteNewReconciliationCommand()
     {
-        return ViewModel.CurrentBudget != null && ViewModel.CurrentStatement != null && ViewModel.LedgerBook != null;
+        // Decided not to validate budget here, budget for dates is a more complicated decision / validation for the engine.
+        return ViewModel.CurrentStatement != null && ViewModel.LedgerBook != null;
     }
 
     private bool CanExecuteShowRemarksCommand(LedgerEntryLine parameter)
@@ -177,10 +178,11 @@ public class LedgerBookController : ControllerBase, IShowableController
     {
         try
         {
-            ViewModel.NewLedgerLine = this.reconService.PeriodEndReconciliation(
-                                                                                ViewModel.LedgerBook,
-                                                                                this.uiContext.AddLedgerReconciliationController.Date,
-                                                                                ViewModel.CurrentBudget,
+            var reconciliationDate = this.uiContext.AddLedgerReconciliationController.Date;
+            var budgetCollection = this.uiContext.BudgetController.Budgets;
+            ViewModel.NewLedgerLine = this.reconService.PeriodEndReconciliation(ViewModel.LedgerBook,
+                                                                                reconciliationDate,
+                                                                                budgetCollection,
                                                                                 ViewModel.CurrentStatement,
                                                                                 ignoreWarnings,
                                                                                 this.uiContext.AddLedgerReconciliationController.BankBalances.Cast<BankBalance>().ToArray());
@@ -275,12 +277,14 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
     {
+        // CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
+        // CurrentBudget should only be used for UI purposes such as an indication of current budgeted amount for something etc. 
         if (message.ActiveBudget == null)
         {
             ViewModel.CurrentBudget = null;
             return;
         }
-
+        
         if (message.ActiveBudget.BudgetActive)
         {
             ViewModel.CurrentBudget = message.ActiveBudget;

@@ -118,15 +118,14 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
         return newTransaction;
     }
 
-    public LedgerEntryLine PeriodEndReconciliation(
-        LedgerBook ledgerBook,
-        DateTime reconciliationDate,
-        IBudgetCurrencyContext budgetContext,
-        StatementModel statement,
-        bool ignoreWarnings,
-        params BankBalance[] balances)
+    public LedgerEntryLine PeriodEndReconciliation(LedgerBook ledgerBook,
+                                                   DateTime reconciliationDate,
+                                                   BudgetCollection budgetCollection,
+                                                   StatementModel statement,
+                                                   bool ignoreWarnings,
+                                                   params BankBalance[] balances)
     {
-        var reconResult = this.reconciliationManager.PeriodEndReconciliation(ledgerBook, reconciliationDate, budgetContext, statement, ignoreWarnings, balances);
+        var reconResult = this.reconciliationManager.PeriodEndReconciliation(ledgerBook, reconciliationDate, budgetCollection, statement, ignoreWarnings, balances);
         ReconciliationToDoList.Clear();
         reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);
         return reconResult.Reconciliation;

@@ -105,7 +105,7 @@
                     Visibility="{Binding ViewModel.NoBudgetLoaded, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock Text="No Budget"
                            Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                           ToolTip="Warning! No budget is loaded, therefore adding a reconciliation will not auto credit ledgers with budgeted amounts." />
+                           ToolTip="Warning! No budget is loaded for the current date, reconciliation might still be possible, but check you have a budget for the reconciliation date before attempting a reconciliation." />
             </Border>
         </StackPanel>
 
