@@ -46,20 +46,22 @@ public interface IReconciliationService
     ///     The startDate for the <see cref="LedgerEntryLine" />. This is usually the previous Month's "Reconciliation-Date", as this month's reconciliation starts with this date and includes
     ///     transactions from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting reconciliation which is the end date for the period.
     /// </param>
-    /// <param name="budgetContext">The current budget context.</param>
-    /// <param name="statement">The currently loaded statement.</param>
+    /// <param name="budgetCollection">The collection of budgets. The Reconciliation engine classes will make a decision which budget to choose.</param>
+    /// <param name="statement">
+    ///     The currently loaded statement. Global filter will not be used to select transactions from the statement. Selection is made based on
+    ///     <paramref name="reconciliationDate"/>.
+    /// </param>
     /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
     /// <param name="balances">
     ///     The bank balances as at the <paramref name="reconciliationDate" /> to include in this new single line of the ledger book.
     /// </param>
     /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
-    LedgerEntryLine PeriodEndReconciliation(
-        [NotNull] LedgerBook ledgerBook,
-        DateTime reconciliationDate,
-        [NotNull] IBudgetCurrencyContext budgetContext,
-        [NotNull] StatementModel statement,
-        bool ignoreWarnings,
-        [NotNull] params BankBalance[] balances);
+    LedgerEntryLine PeriodEndReconciliation([NotNull] LedgerBook ledgerBook,
+                                            DateTime reconciliationDate,
+                                            [NotNull] BudgetCollection budgetCollection,
+                                            [NotNull] StatementModel statement,
+                                            bool ignoreWarnings,
+                                            [NotNull] params BankBalance[] balances);
 
     /// <summary>
     ///     Removes the transaction from the specified Ledger Entry.

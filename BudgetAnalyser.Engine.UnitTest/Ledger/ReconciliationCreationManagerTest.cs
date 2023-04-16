@@ -29,7 +29,8 @@ public class ReconciliationCreationManagerTest
     private Mock<IReconciliationConsistency> mockReconciliationConsistency;
     private Mock<ITransactionRuleService> mockRuleService;
     private ReconciliationCreationManager subject;
-    private IBudgetCurrencyContext testDataBudgetContext;
+    private BudgetCollection testDataBudgetCollection;
+    private BudgetModel testDataBudgetModel;
     private LedgerBook testDataLedgerBook;
     private ReconciliationResult testDataReconResult;
     private StatementModel testDataStatement;
@@ -56,7 +57,7 @@ public class ReconciliationCreationManagerTest
         this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), true))
             .Returns(new SingleUseMatchingRule(this.bucketRepo));
 
-        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetContext.Model, this.testDataStatement, It.IsAny<BankBalance[]>()))
+        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
             .Returns(this.testDataReconResult);
 
         ActPeriodEndReconciliation();
@@ -81,7 +82,7 @@ public class ReconciliationCreationManagerTest
     [TestMethod]
     public void Reconcile_ShouldAddLedgerEntryLineToLedgerBook()
     {
-        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetContext.Model, this.testDataStatement, It.IsAny<BankBalance[]>()))
+        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
             .Returns(this.testDataReconResult);
         var count = this.testDataLedgerBook.Reconciliations.Count();
         bool reconcileCalled = false;
@@ -99,7 +100,7 @@ public class ReconciliationCreationManagerTest
     [TestMethod]
     public void Reconcile_ShouldNotThrow_GivenTestData1AndUnclassifiedTransactionsOutsideReconPeriod()
     {
-        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetContext.Model, this.testDataStatement, It.IsAny<BankBalance[]>()))
+        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
             .Returns(this.testDataReconResult);
         var aTransaction = this.testDataStatement.AllTransactions.First();
         PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
@@ -111,7 +112,21 @@ public class ReconciliationCreationManagerTest
     [ExpectedException(typeof(InvalidOperationException))]
     public void Reconcile_ShouldThrow_GivenInvalidLedgerBook()
     {
-        ActPeriodEndReconciliation(new DateTime(2012, 02, 20));
+        var myTestDate = new DateTime(2012, 2, 20);
+        
+        // Make sure there is a valid budget to isolate the invalid ledger book test
+        var budget = this.testDataBudgetCollection.OrderBy(b => b.EffectiveFrom).First();
+        budget.EffectiveFrom = myTestDate.AddDays(-1);
+        
+        ActPeriodEndReconciliation(myTestDate);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void Reconcile_ShouldThrow_GivenNoEffectiveBudget()
+    {
+        var myTestDate = new DateTime(2012, 2, 20);
+        ActPeriodEndReconciliation(myTestDate);
     }
 
     [TestMethod]
@@ -255,14 +270,14 @@ public class ReconciliationCreationManagerTest
     }
 
     [TestInitialize]
-    public void TestIntialise()
+    public void TestInitialise()
     {
         this.mockRuleService = new Mock<ITransactionRuleService>(MockBehavior.Strict);
         this.mockReconciliationBuilder = new Mock<IReconciliationBuilder>();
         this.mockReconciliationConsistency = new Mock<IReconciliationConsistency>();
         this.bucketRepo = new BucketBucketRepoAlwaysFind();
-        var budgetCollection = BudgetModelTestData.CreateCollectionWith1And2();
-        this.testDataBudgetContext = new BudgetCurrencyContext(budgetCollection, budgetCollection.CurrentActiveBudget);
+        this.testDataBudgetCollection = BudgetModelTestData.CreateCollectionWith1And2();
+        this.testDataBudgetModel = this.testDataBudgetCollection.ForDate(TestDataReconcileDate);
         this.testDataStatement = new StatementModelBuilder()
             .TestData5()
             .AppendTransaction(new Transaction
@@ -299,7 +314,7 @@ public class ReconciliationCreationManagerTest
 
         var result = this.subject.PeriodEndReconciliation(this.testDataLedgerBook,
                                                           reconciliationDate ?? TestDataReconcileDate,
-                                                          this.testDataBudgetContext,
+                                                          this.testDataBudgetCollection,
                                                           this.testDataStatement,
                                                           ignoreWarnings,
                                                           this.currentBankBalances.ToArray());
@@ -311,8 +326,8 @@ public class ReconciliationCreationManagerTest
 
     private ReconciliationResult ActPeriodEndReconciliationOnTestData5(StatementModel statementModelTestData = null, bool ignoreWarnings = false)
     {
-        var budgetCollection = BudgetModelTestData.CreateCollectionWith5();
-        this.testDataBudgetContext = new BudgetCurrencyContext(budgetCollection, budgetCollection.CurrentActiveBudget);
+        this.testDataBudgetCollection = BudgetModelTestData.CreateCollectionWith5();
+        this.testDataBudgetModel = this.testDataBudgetCollection.ForDate(TestDataReconcileDate);
         this.testDataStatement = statementModelTestData ?? StatementModelTestData.TestData5();
 
         Console.WriteLine("********************** BEFORE RUNNING RECONCILIATION *******************************");
