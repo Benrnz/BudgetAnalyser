@@ -124,7 +124,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 
         if (Budget.Model.BudgetCycle == BudgetCycle.Monthly)
         {
-            if (Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value) != 1)
+            if (Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value) > 1)
             {
                 Enabled = false;
                 ToolTip = DesignedForOneMonthOnly;
@@ -134,7 +134,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 
         if (Budget.Model.BudgetCycle == BudgetCycle.Fortnightly)
         {
-            if (Filter.EndDate.Value.Subtract(Filter.BeginDate.Value).Days != 14)
+            if (Filter.EndDate.Value.Subtract(Filter.BeginDate.Value).Days > 14)
             {
                 Enabled = false;
                 ToolTip = DesignedForOneFortnightOnly;

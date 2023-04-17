@@ -56,7 +56,6 @@ internal class LedgerBucketFactory : ILedgerBucketFactory
             return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
         }
 
-        throw new NotSupportedException(
-                                        $"Unsupported budget bucket {bucketCode} with type {bucket.GetType().Name}, found in ledger book");
+        throw new NotSupportedException($"Unsupported budget bucket {bucketCode} with type {bucket.GetType().Name}, found in ledger book");
     }
 }
