@@ -73,9 +73,10 @@ internal partial class Mapper_LedgerBookDto_LedgerBook
         {
             foreach (var entry in line.Entries)
             {
-                // Ensure the ledger bucker is the same instance as listed in the book.Legders;
-                entry.LedgerBucket = GetOrAddFromCache(entry.LedgerBucket, true);
-                if (entry.LedgerBucket.StoredInAccount == null)
+                // Ensure the ledger bucket is the same instance as listed in the book.Ledgers;
+                // If its not found thats ok, this means its a old ledger no longer declared in the LedgerBook and is archived and hidden.
+                entry.LedgerBucket = GetOrAddFromCache(entry.LedgerBucket, false);
+                if (entry.LedgerBucket != null && entry.LedgerBucket.StoredInAccount == null)
                 {
                     entry.LedgerBucket.StoredInAccount = this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
                 }
