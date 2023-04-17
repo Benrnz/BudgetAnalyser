@@ -16,10 +16,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             ChequeAccount = StatementModelTestData.ChequeAccount;
             SavingsAccount = StatementModelTestData.SavingsAccount;
             RatesLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates "), StoredInAccount = ChequeAccount };
-            PowerLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power "), StoredInAccount = ChequeAccount };
-            PhoneLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
-            WaterLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
-            HouseInsLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            PowerLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power "), StoredInAccount = ChequeAccount };
+            PhoneLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            WaterLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            HouseInsLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
             HouseInsLedgerSavingsAccount = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = SavingsAccount };
             CarInsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar"), StoredInAccount = ChequeAccount };
             LifeInsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar"), StoredInAccount = ChequeAccount };
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData1()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = "Test Data 1 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -165,7 +165,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData2()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = "Test Data 2 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -270,7 +270,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData3()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = "Smith Budget 2014",
                 Modified = new DateTime(2013, 12, 22),
@@ -359,7 +359,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData4()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = "Test Data 4 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -471,7 +471,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             }
             else
             {
-                book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()));
+                book = new LedgerBook();
             }
             book.Name = "Test Data 5 Book";
             book.Modified = new DateTime(2013, 12, 16);
@@ -584,6 +584,103 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     });
             line.BalanceAdjustment(-550, "Credit card payment yet to go out.", ChequeAccount);
             list.Add(line);
+
+            book.SetReconciliations(list);
+
+            Finalise(book);
+            return book;
+        }
+
+        /// <summary>
+        ///     A Test LedgerBook with data populated for August 2013, data is arranged in Fortnightly periods.
+        ///     Also includes some debit transactions. There are multiple Bank Balances for the latest entry, and the Home
+        ///     Insurance bucket in a different account.
+        /// </summary>
+        public static LedgerBook TestData6(Func<LedgerBook> ctor = null)
+        {
+            LedgerBook book;
+            if (ctor != null)
+            {
+                book = ctor();
+            }
+            else
+            {
+                book = new LedgerBook();
+            }
+            book.Name = "Test Data 6 Book";
+            book.Modified = new DateTime(2013, 08, 15);
+            book.StorageKey = "C:\\FakeFolder\\book6.xml";
+
+            var list = new List<LedgerEntryLine>
+            {
+                CreateLine(
+                    new DateTime(2013, 8, 1),
+                    new[] { new BankBalance(ChequeAccount, 2800), new BankBalance(SavingsAccount, 300) },
+                    "Lorem ipsum")
+                    .SetEntriesForTesting(
+                        new List<LedgerEntry>
+                        {
+                            CreateLedgerEntry(HouseInsLedgerSavingsAccount).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 300M, Narrative = "Budgeted amount", AutoMatchingReference = "IbEMWG7" }
+                                }),
+                            CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
+                                }),
+                            CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
+                                }),
+                            CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones" }
+                                })
+                        })
+            };
+
+            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            LedgerEntry previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
+
+            list.Add(
+                CreateLine(
+                    new DateTime(2013, 8, 15),
+                    new[] { new BankBalance(ChequeAccount, 4000), new BankBalance(SavingsAccount, 600) },
+                    "dolor amet set").SetEntriesForTesting(
+                        new List<LedgerEntry>
+                        {
+                            CreateLedgerEntry(HouseInsLedgerSavingsAccount, previousInsEntry.Balance).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 300M, Narrative = "Budgeted amount", AutoMatchingReference = "9+1R06x" }
+                                }),
+                            CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
+                                }),
+                            CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" }
+                                }),
+                            CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                                new List<LedgerTransaction>
+                                {
+                                    new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
+                                    new CreditLedgerTransaction { Amount = -66.43M, Narrative = "Pay phones" }
+                                })
+                        }));
 
             book.SetReconciliations(list);
 

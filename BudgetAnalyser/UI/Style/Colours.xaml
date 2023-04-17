@@ -144,11 +144,11 @@
     </Color>
 
     <Color x:Key="Colour.Popup.Background">
-        #FF002600
+        #253236
     </Color>
 
     <Color x:Key="Colour.SecondaryBackground">
-        #253236
+        #303030
     </Color>
 
     <Color x:Key="Colour.SelectedItem">

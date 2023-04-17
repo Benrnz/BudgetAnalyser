@@ -16,9 +16,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         public static readonly SavedUpForExpenseBucket HairBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Haircuts");
         public static readonly IncomeBudgetBucket IncomeBucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Salary");
         public static readonly SavedUpForExpenseBucket InsHomeBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Insurance Home");
-        public static readonly SpentMonthlyExpenseBucket PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone");
-        public static readonly SpentMonthlyExpenseBucket PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power");
-        public static readonly SpentMonthlyExpenseBucket RegoBucket = new SpentMonthlyExpenseBucket(TestDataConstants.RegoBucketCode, "Car registrations");
+        public static readonly SpentPerPeriodExpenseBucket PhoneBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone");
+        public static readonly SpentPerPeriodExpenseBucket PowerBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power");
+        public static readonly SpentPerPeriodExpenseBucket RegoBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.RegoBucketCode, "Car registrations");
         public static readonly SurplusBucket SurplusBucket = new SurplusBucket();
         public static readonly SavingsAccount SavingsAccount = new SavingsAccount(TestDataConstants.SavingsAccountName);
         public static readonly NamedTransaction TransactionType = new NamedTransaction("Bill Payment");
@@ -53,6 +53,26 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             };
 
             IEnumerable<Transaction> transactions = CreateTransactions2();
+            statement.LoadTransactions(transactions);
+            return statement;
+        }
+
+        /// <summary>
+        ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
+        ///     Includes income transactions.
+        ///     Same as TestData2 but with another transaction for PhNet in August.
+        /// </summary>
+        public static StatementModel TestData2A()
+        {
+            var statement = new StatementModel(new FakeLogger())
+            {
+                StorageKey = @"C:\TestData2\Foo2Statement.csv",
+                LastImport = new DateTime(2013, 08, 15)
+            };
+
+            IList<Transaction> transactions = CreateTransactions2().ToList();
+            var modTransaction = transactions.Single(t => t.Date == new DateTime(2013, 07, 16) && t.BudgetBucket == PhoneBucket);
+            modTransaction.Date = new DateTime(2013, 08, 16);
             statement.LoadTransactions(transactions);
             return statement;
         }

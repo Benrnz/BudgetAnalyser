@@ -21,7 +21,7 @@ namespace BudgetAnalyser.LedgerBook
         private void DynamicallyCreateLedgerBookGrid()
         {
             ILedgerBookGridBuilder builder = Controller.GridBuilder();
-            builder.BuildGrid(Controller.ViewModel.LedgerBook, Resources, this.LedgerBookPanel, Controller.NumberOfMonthsToShow);
+            builder.BuildGrid(Controller.ViewModel.LedgerBook, Resources, this.LedgerBookPanel, Controller.NumberOfPeriodsToShow);
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

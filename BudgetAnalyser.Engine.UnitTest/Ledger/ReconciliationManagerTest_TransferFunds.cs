@@ -20,21 +20,23 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private Mock<IBudgetBucketRepository> mockBucketRepo;
         private Mock<IReconciliationConsistency> mockReconciliationConsistency;
         private Mock<ITransactionRuleService> mockRuleService;
+        private Mock<IReconciliationBuilder> mockReconciliationBuilder;
         private LedgerBucket phNetChqLedger;
         private ReconciliationCreationManager subject;
         private LedgerBucket surplusChqLedger;
         private LedgerEntryLine testDataEntryLine;
         private LedgerBook testDataLedgerBook;
-
+        
         [TestInitialize]
-        public void TestIntialise()
+        public void TestInitialise()
         {
             this.mockBucketRepo = new Mock<IBudgetBucketRepository>();
             this.mockRuleService = new Mock<ITransactionRuleService>();
             this.mockReconciliationConsistency = new Mock<IReconciliationConsistency>();
-            this.subject = new ReconciliationCreationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, new FakeLogger());
+            this.mockReconciliationBuilder = new Mock<IReconciliationBuilder>();
+            this.subject = new ReconciliationCreationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, this.mockReconciliationBuilder.Object, new FakeLogger());
 
-            this.testDataLedgerBook = LedgerBookTestData.TestData5(() => new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object));
+            this.testDataLedgerBook = LedgerBookTestData.TestData5(() => new LedgerBookTestHarness());
             this.testDataEntryLine = this.testDataLedgerBook.Reconciliations.First();
             this.testDataEntryLine.Unlock();
 

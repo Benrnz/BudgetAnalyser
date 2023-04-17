@@ -56,7 +56,10 @@ namespace BudgetAnalyser.LedgerBook
         public LedgerBucketHistoryAnalyser LedgerBucketHistoryAnalysis { get; private set; }
 
         [UsedImplicitly]
-        public decimal MonthlyBudgetAmount { get; private set; }
+        public decimal BudgetAmount { get; private set; }
+        
+        [UsedImplicitly]
+        public BudgetCycle BudgetCycle { get; private set; }
 
         public Account StoredInAccount { get; set; }
 
@@ -86,7 +89,8 @@ namespace BudgetAnalyser.LedgerBook
             BankAccounts = new ObservableCollection<Account>(this.accountRepo.ListCurrentlyUsedAccountTypes());
             BucketBeingTracked = ledgerBucket.BudgetBucket;
             StoredInAccount = ledgerBucket.StoredInAccount;
-            MonthlyBudgetAmount = budgetModel.Expenses.Single(e => e.Bucket == BucketBeingTracked).Amount;
+            BudgetAmount = budgetModel.Expenses.Single(e => e.Bucket == BucketBeingTracked).Amount;
+            BudgetCycle = budgetModel.BudgetCycle;
             this.correlationId = Guid.NewGuid();
 
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
@@ -119,7 +123,7 @@ namespace BudgetAnalyser.LedgerBook
             if (message.Response == ShellDialogButton.Help)
             {
                 this.messageBox.Show(
-                    "Ledgers within the Ledger Book track the actual bank balance over time of a single Bucket.  This is especially useful for budget items that you need to save up for. For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly Buckets. Even though they are always spent down to zero each month, (like rent or mortgage payments), sometimes its useful to have an extra payment, for when there are five weekly payments in a month instead of four.");
+                    "Ledgers within the Ledger Book track the actual bank balance over time of a single Bucket.  This is especially useful for budget items that you need to save up for. For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly/Fortnightly Buckets. Even though they are always spent down to zero each month, (like rent or mortgage payments), sometimes its useful to have an extra payment, for when there are five weekly payments in a month instead of four.");
                 return;
             }
 
@@ -143,7 +147,7 @@ namespace BudgetAnalyser.LedgerBook
         private void Reset()
         {
             this.ledger = null;
-            MonthlyBudgetAmount = 0;
+            BudgetAmount = 0;
             BankAccounts.Clear();
             StoredInAccount = null;
         }

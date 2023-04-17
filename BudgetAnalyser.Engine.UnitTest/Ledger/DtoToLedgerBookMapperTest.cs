@@ -4,11 +4,9 @@ using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
@@ -232,7 +230,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             var accountRepo = new InMemoryAccountTypeRepository();
-            var mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new Mock<IReconciliationBuilder>().Object);
+            var mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
             return mapper.ToModel(TestData);
         }
     }

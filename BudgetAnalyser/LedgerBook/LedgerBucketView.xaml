@@ -58,9 +58,9 @@
                         Orientation="Horizontal">
                 <TextBlock Margin="10"
                            Style="{StaticResource TextBlock.Number}"
-                           Text="{Binding MonthlyBudgetAmount, StringFormat=C}" />
+                           Text="{Binding BudgetAmount, StringFormat=C}" />
                 <TextBlock Margin="0,10,10,10"
-                           Text=" per month." />
+                           Text="{Binding BudgetCycle}" />
             </StackPanel>
             <TextBlock Grid.Column="1"
                        Grid.Row="1"

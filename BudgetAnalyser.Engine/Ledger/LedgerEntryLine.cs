@@ -17,11 +17,9 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class LedgerEntryLine
     {
-        private List<BankBalanceAdjustmentTransaction> bankBalanceAdjustments =
-            new List<BankBalanceAdjustmentTransaction>();
-
+        private List<BankBalanceAdjustmentTransaction> bankBalanceAdjustments = new();
         private List<BankBalance> bankBalancesList;
-        private List<LedgerEntry> entries = new List<LedgerEntry>();
+        private List<LedgerEntry> entries = new();
 
         /// <summary>
         ///     Constructs a new instance of <see cref="LedgerEntryLine" />.
@@ -65,8 +63,8 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public IEnumerable<BankBalanceAdjustmentTransaction> BankBalanceAdjustments
         {
-            get { return this.bankBalanceAdjustments; }
-            [UsedImplicitly] private set { this.bankBalanceAdjustments = value.ToList(); }
+            get => this.bankBalanceAdjustments;
+            [UsedImplicitly] private set => this.bankBalanceAdjustments = value.ToList();
         }
 
         /// <summary>
@@ -75,8 +73,8 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public IEnumerable<BankBalance> BankBalances
         {
-            get { return this.bankBalancesList; }
-            [UsedImplicitly] private set { this.bankBalancesList = value.ToList(); }
+            get => this.bankBalancesList;
+            [UsedImplicitly] private set => this.bankBalancesList = value.ToList();
         }
 
         /// <summary>
@@ -125,7 +123,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public string Remarks { get; internal set; }
 
         /// <summary>
-        ///     The individual surplus balance in each bank account being tracked by the Legder book.  These will add up to the
+        ///     The individual surplus balance in each bank account being tracked by the Ledger book.  These will add up to the
         ///     <see cref="CalculatedSurplus" />.
         /// </summary>
         public IEnumerable<BankBalance> SurplusBalances
@@ -156,8 +154,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public decimal TotalBankBalance => this.bankBalancesList.Sum(b => b.Balance);
 
-        internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative,
-                                                                    Account account)
+        internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative, Account account)
         {
             if (!IsNew)
             {
@@ -195,8 +192,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        internal static decimal FindPreviousEntryClosingBalance([CanBeNull] LedgerEntryLine previousLine,
-                                                                [NotNull] LedgerBucket ledgerBucket)
+        internal static decimal FindPreviousEntryClosingBalance([CanBeNull] LedgerEntryLine previousLine, [NotNull] LedgerBucket ledgerBucket)
         {
             if (ledgerBucket == null)
             {
@@ -223,7 +219,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         /// <summary>
         ///     Sets the <see cref="LedgerEntry" /> list for this reconciliation. Used when building a new reconciliation and
-        ///     populating a new <see cref="LedgerEntryLine" />.
+        ///     populating a new <see cref="LedgerEntryLine" />. Persistence uses private setter on <see cref="LedgerEntryLine.Entries"/>.
         /// </summary>
         internal void SetNewLedgerEntries(IEnumerable<LedgerEntry> ledgerEntries)
         {

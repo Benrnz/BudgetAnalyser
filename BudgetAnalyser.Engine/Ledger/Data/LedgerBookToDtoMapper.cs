@@ -16,46 +16,18 @@ internal partial class Mapper_LedgerBookDto_LedgerBook
     private readonly ILedgerBucketFactory bucketFactory;
     private readonly IBudgetBucketRepository bucketRepo;
     private readonly Dictionary<string, LedgerBucket> cachedLedgers = new();
-    private readonly IReconciliationBuilder reconciliationBuilder;
     private readonly ILedgerTransactionFactory transactionFactory;
 
     public Mapper_LedgerBookDto_LedgerBook(
         [NotNull] IBudgetBucketRepository bucketRepo,
         [NotNull] IAccountTypeRepository accountTypeRepo,
         [NotNull] ILedgerBucketFactory bucketFactory,
-        [NotNull] ILedgerTransactionFactory transactionFactory,
-        [NotNull] IReconciliationBuilder reconciliationBuilder)
+        [NotNull] ILedgerTransactionFactory transactionFactory)
     {
-        if (bucketRepo == null)
-        {
-            throw new ArgumentNullException(nameof(bucketRepo));
-        }
-
-        if (accountTypeRepo == null)
-        {
-            throw new ArgumentNullException(nameof(accountTypeRepo));
-        }
-
-        if (bucketFactory == null)
-        {
-            throw new ArgumentNullException(nameof(bucketFactory));
-        }
-
-        if (transactionFactory == null)
-        {
-            throw new ArgumentNullException(nameof(transactionFactory));
-        }
-
-        if (reconciliationBuilder == null)
-        {
-            throw new ArgumentNullException(nameof(reconciliationBuilder));
-        }
-
-        this.bucketRepo = bucketRepo;
-        this.accountTypeRepo = accountTypeRepo;
-        this.bucketFactory = bucketFactory;
-        this.transactionFactory = transactionFactory;
-        this.reconciliationBuilder = reconciliationBuilder;
+        this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
+        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
+        this.bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
+        this.transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
     }
 
     // ReSharper disable once UnusedParameter.Local - This argument is used to optionally detect elements not in array.
@@ -101,9 +73,10 @@ internal partial class Mapper_LedgerBookDto_LedgerBook
         {
             foreach (var entry in line.Entries)
             {
-                // Ensure the ledger bucker is the same instance as listed in the book.Legders;
-                entry.LedgerBucket = GetOrAddFromCache(entry.LedgerBucket, true);
-                if (entry.LedgerBucket.StoredInAccount == null)
+                // Ensure the ledger bucket is the same instance as listed in the book.Ledgers;
+                // If its not found thats ok, this means its a old ledger no longer declared in the LedgerBook and is archived and hidden.
+                entry.LedgerBucket = GetOrAddFromCache(entry.LedgerBucket, false);
+                if (entry.LedgerBucket != null && entry.LedgerBucket.StoredInAccount == null)
                 {
                     entry.LedgerBucket.StoredInAccount = this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
                 }
@@ -120,8 +93,7 @@ internal partial class Mapper_LedgerBookDto_LedgerBook
     // ReSharper disable once RedundantAssignment
     partial void ModelFactory(LedgerBookDto dto, ref LedgerBook model)
     {
-        // TODO Seems odd that a mapper requires the ReconciliationBuilder, either need a factory or better yet move the reconciliation code out of the LedgerBook class.
-        model = new LedgerBook(this.reconciliationBuilder);
+        model = new LedgerBook();
     }
 
     partial void ToDtoPreprocessing(LedgerBook model)
@@ -147,24 +119,9 @@ internal partial class Mapper_LedgerBucketDto_LedgerBucket
 
     public Mapper_LedgerBucketDto_LedgerBucket([NotNull] IBudgetBucketRepository bucketRepo, [NotNull] IAccountTypeRepository accountTypeRepo, [NotNull] ILedgerBucketFactory bucketFactory)
     {
-        if (bucketRepo == null)
-        {
-            throw new ArgumentNullException(nameof(bucketRepo));
-        }
-
-        if (accountTypeRepo == null)
-        {
-            throw new ArgumentNullException(nameof(accountTypeRepo));
-        }
-
-        if (bucketFactory == null)
-        {
-            throw new ArgumentNullException(nameof(bucketFactory));
-        }
-
-        this.bucketRepo = bucketRepo;
-        this.accountTypeRepo = accountTypeRepo;
-        this.bucketFactory = bucketFactory;
+        this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
+        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
+        this.bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
     }
 
     // ReSharper disable once RedundantAssignment
@@ -198,24 +155,9 @@ internal partial class Mapper_LedgerEntryLineDto_LedgerEntryLine
         [NotNull] ILedgerBucketFactory bucketFactory,
         [NotNull] ILedgerTransactionFactory transactionFactory)
     {
-        if (accountTypeRepo == null)
-        {
-            throw new ArgumentNullException(nameof(accountTypeRepo));
-        }
-
-        if (bucketFactory == null)
-        {
-            throw new ArgumentNullException(nameof(bucketFactory));
-        }
-
-        if (transactionFactory == null)
-        {
-            throw new ArgumentNullException(nameof(transactionFactory));
-        }
-
-        this.accountTypeRepo = accountTypeRepo;
-        this.bucketFactory = bucketFactory;
-        this.transactionFactory = transactionFactory;
+        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
+        this.bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
+        this.transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
     }
 
     partial void ToDtoPostprocessing(ref LedgerEntryLineDto dto, LedgerEntryLine model)
@@ -236,12 +178,7 @@ internal partial class Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransact
 
     public Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransaction([NotNull] IAccountTypeRepository accountTypeRepo)
     {
-        if (accountTypeRepo == null)
-        {
-            throw new ArgumentNullException(nameof(accountTypeRepo));
-        }
-
-        this.accountTypeRepo = accountTypeRepo;
+        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
     }
 
     partial void ToDtoPostprocessing(ref LedgerTransactionDto dto, BankBalanceAdjustmentTransaction model)
@@ -263,12 +200,7 @@ internal partial class Mapper_BankBalanceDto_BankBalance
 
     public Mapper_BankBalanceDto_BankBalance([NotNull] IAccountTypeRepository accountTypeRepo)
     {
-        if (accountTypeRepo == null)
-        {
-            throw new ArgumentNullException(nameof(accountTypeRepo));
-        }
-
-        this.accountTypeRepo = accountTypeRepo;
+        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
     }
 
     // ReSharper disable once RedundantAssignment
@@ -295,24 +227,9 @@ internal partial class Mapper_LedgerEntryDto_LedgerEntry
         [NotNull] ILedgerTransactionFactory transactionFactory,
         [NotNull] IAccountTypeRepository accountTypeRepo)
     {
-        if (bucketFactory == null)
-        {
-            throw new ArgumentNullException(nameof(bucketFactory));
-        }
-
-        if (transactionFactory == null)
-        {
-            throw new ArgumentNullException(nameof(transactionFactory));
-        }
-
-        if (accountTypeRepo == null)
-        {
-            throw new ArgumentNullException(nameof(accountTypeRepo));
-        }
-
-        this.bucketFactory = bucketFactory;
-        this.transactionFactory = transactionFactory;
-        this.accountTypeRepo = accountTypeRepo;
+        this.bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
+        this.transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
+        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
     }
 
     partial void ToDtoPostprocessing(ref LedgerEntryDto dto, LedgerEntry model)
@@ -345,18 +262,8 @@ internal partial class Mapper_LedgerTransactionDto_LedgerTransaction
 
     public Mapper_LedgerTransactionDto_LedgerTransaction([NotNull] ILedgerTransactionFactory transactionFactory, [NotNull] IAccountTypeRepository accountTypeRepo)
     {
-        if (transactionFactory == null)
-        {
-            throw new ArgumentNullException(nameof(transactionFactory));
-        }
-
-        if (accountTypeRepo == null)
-        {
-            throw new ArgumentNullException(nameof(accountTypeRepo));
-        }
-
-        this.transactionFactory = transactionFactory;
-        this.accountTypeRepo = accountTypeRepo;
+        this.transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
+        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
     }
 
     // ReSharper disable once RedundantAssignment
@@ -369,8 +276,7 @@ internal partial class Mapper_LedgerTransactionDto_LedgerTransaction
     {
         dto.TransactionType = model.GetType().FullName;
         // Inheritance could be better handled.
-        var bankBalanceTransaction = model as BankBalanceAdjustmentTransaction;
-        if (bankBalanceTransaction != null)
+        if (model is BankBalanceAdjustmentTransaction bankBalanceTransaction)
         {
             dto.Account = bankBalanceTransaction.BankAccount.Name;
         }
@@ -379,10 +285,9 @@ internal partial class Mapper_LedgerTransactionDto_LedgerTransaction
     partial void ToModelPostprocessing(LedgerTransactionDto dto, ref LedgerTransaction model)
     {
         // Inheritance could be better handled.
-        var balanaceTransaction = model as BankBalanceAdjustmentTransaction;
-        if (balanaceTransaction != null)
+        if (model is BankBalanceAdjustmentTransaction balanceTransaction)
         {
-            balanaceTransaction.BankAccount = this.accountTypeRepo.GetByKey(dto.Account);
+            balanceTransaction.BankAccount = this.accountTypeRepo.GetByKey(dto.Account);
         }
     }
 }

@@ -58,9 +58,8 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                            !(t.BudgetBucket is PayCreditCardBucket)))
             {
                 adjustmentsMade = true;
-                NewReconLine.BalanceAdjustment(
-                                               -futureTransaction.Amount,
-                                               "Remove future transaction for " + futureTransaction.Date.ToString("d"),
+                NewReconLine.BalanceAdjustment(-futureTransaction.Amount,
+                                               $"Remove future transaction for {futureTransaction.Date:d} {futureTransaction.Description}",
                                                futureTransaction.Account);
             }
 

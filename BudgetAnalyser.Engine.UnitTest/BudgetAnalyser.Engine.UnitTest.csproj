@@ -151,9 +151,11 @@
     <Compile Include="Ledger\LedgerCalculationTest.cs" />
     <Compile Include="Ledger\LedgerEntryLineTest.cs" />
     <Compile Include="Ledger\LedgerEntryLineToDtoMapperTest.cs" />
+    <Compile Include="Ledger\LedgerEntryTest.cs" />
     <Compile Include="Ledger\LedgerEntryToDtoMapperTest.cs" />
     <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
-    <Compile Include="Ledger\ReconciliationManagerTest_Reconcile.cs" />
+    <Compile Include="Ledger\ReconciliationBuilderTest.cs" />
+    <Compile Include="Ledger\ReconciliationCreationManagerTest.cs" />
     <Compile Include="Ledger\ReconciliationManagerTest_TransferFunds.cs" />
     <Compile Include="Ledger\SavedUpForLedgerReconciliationBehaviourTest.cs" />
     <Compile Include="Ledger\SpentMonthlyLedgerReconciliationBehaviourTest.cs" />
@@ -183,6 +185,7 @@
     <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
     <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
+    <Compile Include="Services\BudgetMaintenanceServiceTest.cs" />
     <Compile Include="Services\StatementModelTestHarness.cs" />
     <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Services\TransactionRuleServiceTest.cs" />

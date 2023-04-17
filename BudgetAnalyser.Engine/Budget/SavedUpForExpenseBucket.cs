@@ -1,7 +1,7 @@
 ﻿namespace BudgetAnalyser.Engine.Budget
 {
     /// <summary>
-    ///     A saved up for expense bucket.  This kind of bucket will accumulate funds from month to month if not spent
+    ///     A saved up for expense bucket.  This kind of bucket will accumulate funds from period to the next period (month/fortnight) if not spent
     ///     completely each month.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Budget.BillToPayExpenseBucket" />

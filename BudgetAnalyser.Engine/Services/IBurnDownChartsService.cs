@@ -27,8 +27,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="ledgerBookModel">The current ledger book model.</param>
         /// <param name="criteria">The global filter criteria.</param>
         /// <returns>An object that contains all compiled information for the charts including the chart data itself.</returns>
-        BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel,
-                                      [NotNull] GlobalFilterCriteria criteria);
+        BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel, [NotNull] GlobalFilterCriteria criteria);
 
         /// <summary>
         ///     Creates a new custom aggregate chart that combines multiple bucket spending information into one burn down chart.
@@ -37,7 +36,8 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="budgetModel">The current budget model.</param>
         /// <param name="buckets">The current buckets.</param>
         /// <param name="ledgerBookModel">The current ledger book model.</param>
-        /// <param name="beginDate">The begin date.</param>
+        /// <param name="inclBeginDate">The begin date inclusive.</param>
+        /// <param name="inclEndDate">The end date inclusive.</param>
         /// <param name="chartTitle">The chart title.</param>
         /// <returns>An object that contains data for a single chart, the new one just created.</returns>
         BurnDownChartAnalyserResult CreateNewCustomAggregateChart(
@@ -45,7 +45,8 @@ namespace BudgetAnalyser.Engine.Services
             BudgetModel budgetModel,
             IEnumerable<BudgetBucket> buckets,
             LedgerBook ledgerBookModel,
-            DateTime beginDate,
+            DateTime inclBeginDate,
+            DateTime inclEndDate,
             string chartTitle);
 
         /// <summary>

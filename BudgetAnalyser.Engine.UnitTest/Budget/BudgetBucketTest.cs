@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void Comparable_PhoneBucketIsEqualToAnotherInstance()
         {
-            SpentMonthlyExpenseBucket phoneBucket = StatementModelTestData.PhoneBucket;
+            SpentPerPeriodExpenseBucket phoneBucket = StatementModelTestData.PhoneBucket;
             BudgetBucket phooneBucket2 = Arrange(TestDataConstants.PhoneBucketCode, "Foo");
 
             Assert.IsTrue(phoneBucket.CompareTo(phooneBucket2) == 0);
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public void Comparable_PhoneBucketIsGreaterThanHair()
         {
             var hairBucket = StatementModelTestData.HairBucket;
-            SpentMonthlyExpenseBucket phoneBucket = StatementModelTestData.PhoneBucket;
+            SpentPerPeriodExpenseBucket phoneBucket = StatementModelTestData.PhoneBucket;
 
             Assert.IsTrue(phoneBucket.CompareTo(hairBucket) > 0);
         }

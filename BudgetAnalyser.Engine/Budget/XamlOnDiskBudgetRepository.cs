@@ -32,21 +32,9 @@ namespace BudgetAnalyser.Engine.Budget
             [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper,
             [NotNull] IReaderWriterSelector readerWriterSelector)
         {
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-
-            if (mapper == null)
-            {
-                throw new ArgumentNullException(nameof(mapper));
-            }
-
-            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
-
-            this.budgetBucketRepository = bucketRepository;
-            this.mapper = mapper;
-            this.readerWriterSelector = readerWriterSelector;
+            this.budgetBucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
         }
 
         /// <summary>

@@ -24,10 +24,17 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        /// <summary>
+        ///     Is only referring to finding a budget based on DateTime.Today!  Do not use for reconciliation purposes or validation. Delegate down to the engine. 
+        /// </summary>
         public bool NoBudgetLoaded => CurrentBudget == null;
         public bool NoLedgerBookLoaded => LedgerBook == null;
         public bool NoStatementLoaded => CurrentStatement == null;
 
+        /// <summary>
+        ///     CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
+        ///     CurrentBudget should only be used for UI purposes such as an indication of current budgeted amount for something etc. 
+        /// </summary>
         internal IBudgetCurrencyContext CurrentBudget
         {
             get { return this.doNotUseCurrentBudget; }
@@ -50,8 +57,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         /// <summary>
-        ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null
-        ///     it also indicates the ledger row can be edited.
+        ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null it also indicates the ledger row can be edited.
         /// </summary>
         public LedgerEntryLine NewLedgerLine
         {

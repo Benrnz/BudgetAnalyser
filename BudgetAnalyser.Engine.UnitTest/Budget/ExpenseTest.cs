@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
         private Expense CreateSubject()
         {
-            return new Expense { Amount = 0.01M, Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo Bar") };
+            return new Expense { Amount = 0.01M, Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo Bar") };
         }
     }
 }

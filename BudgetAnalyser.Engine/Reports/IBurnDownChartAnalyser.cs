@@ -19,6 +19,7 @@ namespace BudgetAnalyser.Engine.Reports
             BudgetModel budgetModel,
             IEnumerable<BudgetBucket> bucketsSubset,
             LedgerBook ledgerBook,
-            DateTime beginDate);
+            DateTime inclBeginDate,
+            DateTime inclEndDate);
     }
 }

@@ -11,10 +11,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         private BudgetBucketFactory Subject { get; set; }
 
         [TestMethod]
-        public void BucketDtoTypeEnumHas6SupportedValues()
+        public void BucketDtoTypeEnumHas8SupportedValues()
         {
             // If this test fails you may need to consider adding code to the BudgetBucketFactory class.
-            Assert.AreEqual(7, Enum.GetNames(typeof(BucketDtoType)).Length);
+            Assert.AreEqual(8, Enum.GetNames(typeof(BucketDtoType)).Length);
         }
 
         [TestMethod]
@@ -66,8 +66,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public void BuildShouldCreateSpentMonthlyBucket()
         {
             Assert.IsInstanceOfType(
-                Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.SpentMonthlyExpense }), 
-                typeof(SpentMonthlyExpenseBucket));
+                Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.SpentPeriodicallyExpense }), 
+                typeof(SpentPerPeriodExpenseBucket));
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void SerialiseTypeShouldReturnSpentMonthlyGivenSpentMonthlyBucket()
         {
-            Assert.AreEqual(BucketDtoType.SpentMonthlyExpense, Subject.SerialiseType(new SpentMonthlyExpenseBucket()));
+            Assert.AreEqual(BucketDtoType.SpentPeriodicallyExpense, Subject.SerialiseType(new SpentPerPeriodExpenseBucket()));
         }
 
         [TestMethod]

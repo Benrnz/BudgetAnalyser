@@ -11,16 +11,16 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             return new[]
             {
-                new BudgetBucketDto { Code = TestDataConstants.RentBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Rent for my bachelor pad" },
-                new BudgetBucketDto { Code = TestDataConstants.FoodBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Groceries, staples, and necessities" },
-                new BudgetBucketDto { Code = TestDataConstants.WaterBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Water Rates" },
+                new BudgetBucketDto { Code = TestDataConstants.RentBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Rent for my bachelor pad" },
+                new BudgetBucketDto { Code = TestDataConstants.FoodBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Groceries, staples, and necessities" },
+                new BudgetBucketDto { Code = TestDataConstants.WaterBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Water Rates" },
                 new BudgetBucketDto { Code = TestDataConstants.HairBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Haircuts" },
                 new BudgetBucketDto { Code = TestDataConstants.CarMtcBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Car Maintenance" },
                 new BudgetBucketDto { Code = TestDataConstants.PhoneBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Phone and Internet" },
                 new BudgetBucketDto { Code = TestDataConstants.IncomeBucketCode, Type = BucketDtoType.Income, Description = "Salary from Lawn Mowing business" }
             };
         }
-
+       
         public static BudgetCollection CreateCollectionWith1And2()
         {
             var collection = new BudgetCollection(
@@ -31,6 +31,11 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 });
             collection.StorageKey = @"C:\Temp\Foo.xaml";
             return collection;
+        }
+
+        public static BudgetCollection CreateCollectionWith5()
+        {
+            return new BudgetCollection(new[] { BudgetModelTestData.CreateTestData5() });
         }
 
         /// <summary>
@@ -55,12 +60,12 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     new Expense
                     {
                         Amount = 55M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
                     },
                     new Expense
                     {
                         Amount = 175M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
                     }
                 });
 
@@ -105,12 +110,12 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     new Expense
                     {
                         Amount = 65M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
                     },
                     new Expense
                     {
                         Amount = 185M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
                     }
                 });
 
@@ -162,12 +167,12 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     new Expense
                     {
                         Amount = 65M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
                     },
                     new Expense
                     {
                         Amount = 185M,
-                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                        Bucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
                     }
                 });
 

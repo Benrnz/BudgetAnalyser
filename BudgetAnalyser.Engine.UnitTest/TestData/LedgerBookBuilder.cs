@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
         public LedgerBook Build()
         {
-            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook()
             {
                 Name = Name,
                 Modified = Modified,
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
         public LedgerBookTestHarness BuildTestHarness(IReconciliationBuilder reconciliationBuilder)
         {
-            var book = new LedgerBookTestHarness(reconciliationBuilder)
+            var book = new LedgerBookTestHarness()
             {
                 Name = Name,
                 Modified = Modified,
@@ -273,12 +273,13 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             public IEnumerable<LedgerTransaction> Transactions => this.ledgerTransactions;
 
-            public LedgerEntryTestDataBuilder AppendTransactions(Action<TransactionTestDataBuilder> transactionsCreator)
+            public SpecificLedgerEntryTestDataBuilder AppendTransactions(Action<TransactionTestDataBuilder> transactionsCreator)
             {
+                //SpecificLedgerEntryTestDataBuilder
                 var txnBuilder = new TransactionTestDataBuilder();
                 transactionsCreator(txnBuilder);
                 this.ledgerTransactions = txnBuilder.Transactions.ToList();
-                return this.entryBuilder;
+                return this;
             }
 
             public LedgerEntryTestDataBuilder HasNoTransactions()

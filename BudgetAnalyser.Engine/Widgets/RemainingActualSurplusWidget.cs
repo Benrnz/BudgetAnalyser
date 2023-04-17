@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public RemainingActualSurplusWidget()
         {
-            Category = WidgetGroup.MonthlyTrackingSectionName;
+            Category = WidgetGroup.PeriodicTrackingSectionName;
             DetailedText = "Bank Surplus";
             Name = "Surplus A";
             Dependencies = new[]
@@ -54,8 +54,12 @@ namespace BudgetAnalyser.Engine.Widgets
             this.ledgerBook = (LedgerBook) input[2];
             this.ledgerCalculator = (LedgerCalculation) input[3];
 
-            if (this.ledgerBook == null || this.statement == null || this.filter == null || this.filter.Cleared ||
-                this.filter.BeginDate == null || this.filter.EndDate == null)
+            if (this.ledgerBook == null 
+                || this.statement == null 
+                || this.filter == null 
+                || this.filter.Cleared 
+                || this.filter.BeginDate == null 
+                || this.filter.EndDate == null)
             {
                 Enabled = false;
                 return;
@@ -70,8 +74,15 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Enabled = true;
             var openingBalance = CalculateOpeningBalance();
-            var remainingBalance = this.ledgerCalculator.CalculateCurrentMonthSurplusBalance(this.ledgerBook,
-                this.filter, this.statement);
+            var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter.BeginDate.Value, this.filter.EndDate.Value);
+            if (ledgerLine == null)
+            {
+                ToolTip = "No ledger entries can be found in the date range.";
+                Enabled = false;
+                return;
+            }
+            
+            var remainingBalance = this.ledgerCalculator.CalculateCurrentPeriodSurplusBalance(ledgerLine, this.filter, this.statement);
 
             Maximum = Convert.ToDouble(openingBalance);
             Value = Convert.ToDouble(remainingBalance);

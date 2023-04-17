@@ -114,7 +114,7 @@ namespace BudgetAnalyser.Budget
             if (message.Response == ShellDialogButton.Help)
             {
                 this.messageBox.Show(
-                    "Using this feature you can create a special temporary budget bucket with a fixed total budget amount.  There is no monthly budget contribution, just a fixed total. This allows tracking of a specific project against a budget, and will show a bar chart as the budget gets lower.  Transactions must be tagged with the bucket code using the bucket code in the Transactions view.  All tagged transactions are still considered as surplus (in fact this new bucket will inherit from the Surplus bucket).");
+                    "Using this feature you can create a special temporary budget bucket with a fixed total budget amount.  There is no budget contribution, just a fixed total. This allows tracking of a specific project against a budget, and will show a bar chart as the budget gets lower.  Transactions must be tagged with the bucket code using the bucket code in the Transactions view.  All tagged transactions are still considered as surplus (in fact this new bucket will inherit from the Surplus bucket).");
                 return;
             }
 

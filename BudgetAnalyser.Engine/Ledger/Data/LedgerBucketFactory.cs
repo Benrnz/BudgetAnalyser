@@ -46,9 +46,9 @@ internal class LedgerBucketFactory : ILedgerBucketFactory
             return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
         }
 
-        if (bucket is SpentMonthlyExpenseBucket)
+        if (bucket is SpentPerPeriodExpenseBucket)
         {
-            return new SpentMonthlyLedger { BudgetBucket = bucket, StoredInAccount = account };
+            return new SpentPerPeriodLedger { BudgetBucket = bucket, StoredInAccount = account };
         }
 
         if (bucket is SavingsCommitmentBucket)
@@ -56,7 +56,6 @@ internal class LedgerBucketFactory : ILedgerBucketFactory
             return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
         }
 
-        throw new NotSupportedException(
-                                        $"Unsupported budget bucket {bucketCode} with type {bucket.GetType().Name}, found in ledger book");
+        throw new NotSupportedException($"Unsupported budget bucket {bucketCode} with type {bucket.GetType().Name}, found in ledger book");
     }
 }

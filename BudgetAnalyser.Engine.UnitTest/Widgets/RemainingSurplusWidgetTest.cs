@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
         {
             this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
-
+            // Begin Date 20/10/2015 EndDate 19/11/2015
             // Starting Surplus is: 1175.00
             // Total Surplus transactions are: -835.69
             // Resulting Balance = 339.31

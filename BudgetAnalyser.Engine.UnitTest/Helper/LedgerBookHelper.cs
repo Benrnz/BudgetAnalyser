@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
             }
         }
 
-        public static void Output(this LedgerEntryLine line, Dictionary<BudgetBucket, int> ledgerOrder, bool outputTransactions = false, bool outputHeader = false)
+        public static void Output(this LedgerEntryLine line, IDictionary<BudgetBucket, int> ledgerOrder, bool outputTransactions = false, bool outputHeader = false)
         {
             if (outputHeader)
             {

@@ -28,13 +28,13 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         [TestInitialize]
         public void TestInitialise()
         {
-            Statement = StatementModelTestData.TestData2();
+            Statement = StatementModelTestData.TestData2A();
 
             // Mocking out the Calculator means we dont need the LedgerBook
-            LedgerBook = new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object);
+            LedgerBook = new LedgerBookTestHarness();
             SetLedgerBalancesFakeDataSomeOverspentBuckets();
 
-            Subject = new OverspentWarning();
+            Subject = new OverspentWarning(new FakeLogger());
             Act();
         }
 
@@ -102,11 +102,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         {
             var expenseListFake = new List<Expense>
             {
-                new Expense { Bucket = StatementModelTestData.CarMtcBucket, Amount = 90 }, // Overspent by $1
-                new Expense { Bucket = StatementModelTestData.HairBucket, Amount = 55 },
-                new Expense { Bucket = StatementModelTestData.PhoneBucket, Amount = 65 }, // Overpsent 3.29
-                new Expense { Bucket = StatementModelTestData.PowerBucket, Amount = 100 },
-                new Expense { Bucket = StatementModelTestData.RegoBucket, Amount = 20 }
+                new() { Bucket = StatementModelTestData.CarMtcBucket, Amount = 90 }, // Overspent by $1
+                new() { Bucket = StatementModelTestData.HairBucket, Amount = 55 },
+                new() { Bucket = StatementModelTestData.PhoneBucket, Amount = 65 }, // Overpsent 3.29
+                new() { Bucket = StatementModelTestData.PowerBucket, Amount = 100 },
+                new() { Bucket = StatementModelTestData.RegoBucket, Amount = 20 }
             };
             var modelMock = new Mock<BudgetModel>();
             modelMock.Setup(m => m.Expenses).Returns(expenseListFake);
@@ -116,7 +116,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
 
             // Mocking out the Calculator means we dont need the LedgerBook
             var ledgerCalculatorMock = new Mock<LedgerCalculation>();
-            ledgerCalculatorMock.Setup(m => m.CalculateCurrentMonthLedgerBalances(It.IsAny<LedgerBook>(), It.IsAny<GlobalFilterCriteria>(), It.IsAny<StatementModel>())).Returns(LedgerBalancesFake);
+            ledgerCalculatorMock.Setup(m => m.CalculateCurrentPeriodLedgerBalances(
+                                                                                   It.IsAny<LedgerEntryLine>(), 
+                                                                                   It.IsAny<GlobalFilterCriteria>(), 
+                                                                                   It.IsAny<StatementModel>())).Returns(LedgerBalancesFake);
             LedgerCalculator = ledgerCalculatorMock.Object;
 
             Subject.Update(Statement, BudgetCurrencyContext, Filter, LedgerBook, LedgerCalculator);

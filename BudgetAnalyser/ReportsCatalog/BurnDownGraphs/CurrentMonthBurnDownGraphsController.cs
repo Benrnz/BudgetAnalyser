@@ -23,7 +23,8 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
     {
         private readonly AddUserDefinedBurnDownController addUserDefinedBurnDownController;
         private readonly IBurnDownChartsService chartsService;
-        private DateTime beginDate;
+        private DateTime inclBeginDate;
+        private DateTime inclEndDate;
         private BudgetModel budget;
         private string doNotUseDateRangeDescription;
         private BucketBurnDownController doNotUseSelectedChart;
@@ -35,23 +36,13 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             [NotNull] UiContext uiContext,
             [NotNull] IBurnDownChartsService chartsService)
         {
-            if (addUserDefinedBurnDownController == null)
-            {
-                throw new ArgumentNullException(nameof(addUserDefinedBurnDownController));
-            }
-
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (chartsService == null)
-            {
-                throw new ArgumentNullException(nameof(chartsService));
-            }
-
-            this.addUserDefinedBurnDownController = addUserDefinedBurnDownController;
-            this.chartsService = chartsService;
+            this.addUserDefinedBurnDownController = addUserDefinedBurnDownController ?? throw new ArgumentNullException(nameof(addUserDefinedBurnDownController));
+            this.chartsService = chartsService ?? throw new ArgumentNullException(nameof(chartsService));
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
@@ -123,7 +114,8 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             this.ledgerBook = ledgerBookModel;
 
             BurnDownCharts results = this.chartsService.BuildAllCharts(statementModel, this.budget, this.ledgerBook, criteria);
-            this.beginDate = results.BeginDate;
+            this.inclBeginDate = results.BeginDate;
+            this.inclEndDate = results.EndDate;
             DateRangeDescription = results.DateRangeDescription;
             ChartControllers = new BindingList<BucketBurnDownController>(results.Charts.Select(BuildBucketBurnDownController).ToList());
 
@@ -150,7 +142,8 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
                 this.budget,
                 buckets,
                 this.ledgerBook,
-                this.beginDate,
+                this.inclBeginDate,
+                this.inclEndDate,
                 this.addUserDefinedBurnDownController.ChartTitle);
             BucketBurnDownController newChart = BuildBucketBurnDownController(result);
             ChartControllers.Insert(0, newChart);

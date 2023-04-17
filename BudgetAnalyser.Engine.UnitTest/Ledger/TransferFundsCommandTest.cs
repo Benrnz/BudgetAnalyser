@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new SpentMonthlyLedger()
+                FromLedger = new SpentPerPeriodLedger()
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new SpentMonthlyLedger
+                FromLedger = new SpentPerPeriodLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -117,7 +117,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new SpentMonthlyLedger
+                FromLedger = new SpentPerPeriodLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -155,7 +155,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new SpentMonthlyLedger
+                FromLedger = new SpentPerPeriodLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -177,7 +177,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new SpentMonthlyLedger
+                FromLedger = new SpentPerPeriodLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -221,7 +221,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new SpentMonthlyLedger
+                FromLedger = new SpentPerPeriodLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -243,7 +243,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new SpentMonthlyLedger
+                FromLedger = new SpentPerPeriodLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -265,7 +265,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new SpentMonthlyLedger
+                FromLedger = new SpentPerPeriodLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount

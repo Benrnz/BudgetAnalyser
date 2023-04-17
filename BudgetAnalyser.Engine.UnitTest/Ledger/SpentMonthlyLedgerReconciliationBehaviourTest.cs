@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private const decimal OpeningBalance = 125M;
         private DateTime reconciliationDate;
         private LedgerEntry subject;
-        private SpentMonthlyLedger subject2;
+        private SpentPerPeriodLedger subject2;
 
         [TestMethod]
         public void ShouldSupplementToBudgetAmount_GivenNetDifferenceOfZeroAndClosingBalanceIsLessThanBudgetAmount()
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.reconciliationDate = new DateTime(2013, 9, 20);
 
-            this.subject2 = new SpentMonthlyLedger
+            this.subject2 = new SpentPerPeriodLedger
             {
                 BudgetBucket = StatementModelTestData.PowerBucket,
                 StoredInAccount = StatementModelTestData.ChequeAccount

@@ -309,7 +309,7 @@
                                Text="New Spent Monthly Expense" />
                 </Button.Content>
                 <Button.CommandParameter>
-                    <budget:SpentMonthlyExpenseBucket />
+                    <budget:SpentPerPeriodExpenseBucket />
                 </Button.CommandParameter>
             </Button>
             <Button Background="{StaticResource Brush.BudgetBucket.Accumulated}"
@@ -341,7 +341,7 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <TextBlock Style="{StaticResource TotalStyle}"
-                       Text="Total Monthly Income" />
+                       Text="Total Period Income" />
             <TextBlock Style="{StaticResource TotalStyle}"
                        Text="{Binding IncomeTotal, StringFormat=C}" />
         </StackPanel>
@@ -350,7 +350,7 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <TextBlock Style="{StaticResource TotalStyle}"
-                       Text="Total Monthly Expenses" />
+                       Text="Total Period Expenses" />
             <TextBlock Style="{StaticResource TotalStyle}"
                        Text="{Binding ExpenseTotal, StringFormat=C}" />
         </StackPanel>
@@ -361,7 +361,7 @@
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
             <TextBlock Style="{StaticResource TotalStyle}"
-                       Text="Total Monthly Surplus" />
+                       Text="Total Period Surplus" />
             <TextBlock Style="{StaticResource TotalStyle}"
                        Text="{Binding Surplus, StringFormat=C}" />
         </StackPanel>

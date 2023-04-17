@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine
                 }
                 catch (InvalidOperationException ex)
                 {
-                    // Can occur if a holiday template implementation fails to report back its exact holiday date. (Bug that could be fixed)
+                    // Can occur if a holiday template implementation fails to report back its exact holiday date. (Could be fixed)
                     System.Diagnostics.Debug.WriteLine(ex);
                 }
             }

@@ -30,6 +30,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             model.LastModifiedComment = lastModifiedComment5;
             var name6 = dto.Name;
             model.Name = name6;
+            model.BudgetCycle = dto.BudgetCycle;
             ToModelPostprocessing(dto, ref model);
             return model;
         } // End ToModel Method
@@ -47,6 +48,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             dto.LastModifiedComment = lastModifiedComment11;
             var name12 = model.Name;
             dto.Name = name12;
+            dto.BudgetCycle = model.BudgetCycle;
             ToDtoPostprocessing(ref dto, model);
             return dto;
         } // End ToDto Method

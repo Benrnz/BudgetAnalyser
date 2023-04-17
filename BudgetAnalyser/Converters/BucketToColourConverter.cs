@@ -20,9 +20,9 @@ namespace BudgetAnalyser.Converters
                 return ConverterHelper.TileBackgroundAlternateBrush;
             }
 
-            if (value is SpentMonthlyExpenseBucket)
+            if (value is SpentPerPeriodExpenseBucket)
             {
-                return ConverterHelper.SpentMonthlyBucketBrush;
+                return ConverterHelper.SpentPeriodicallyBucketBrush;
             }
 
             if (value is SavedUpForExpenseBucket)
