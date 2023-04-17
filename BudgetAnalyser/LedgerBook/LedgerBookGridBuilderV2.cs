@@ -511,8 +511,9 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         }
 
         // Sort ledgers so that the ledgers in the same bank account are grouped together
-        // this.sortedLedgers = this.ledgerBook.Ledgers.OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code).ToList();
-        this.sortedLedgers = this.ledgerBook.Reconciliations.SelectMany(line => line.Entries).Select(e => e.LedgerBucket)
+        //this.sortedLedgers = this.ledgerBook.Reconciliations.SelectMany(line => line.Entries).Select(e => e.LedgerBucket)
+        // Not doing it this way anymore. I want the ledgers that are not declared in the LedgerBook to not be shown, these are old ledgers no longer used.
+        this.sortedLedgers = this.ledgerBook.Ledgers
             .OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code)
             .Distinct()
             .ToList();
