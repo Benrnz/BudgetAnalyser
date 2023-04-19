@@ -94,7 +94,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
             ColourStyleName = this.standardStyle;
         }
 
-        ToolTip = string.Format(CultureInfo.CurrentCulture, "Remaining Surplus for period is {0:C} of {1:C}", remainingBalance, openingBalance);
+        ToolTip = $"Remaining Surplus for period is {remainingBalance:C} of {openingBalance:C} {remainingBalance/openingBalance:P}";
     }
 
     private decimal CalculateOpeningBalance()

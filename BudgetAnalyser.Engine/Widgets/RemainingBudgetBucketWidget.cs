@@ -156,7 +156,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
 
         Value = Convert.ToDouble(remainingBalance);
-        ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance);
+        ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance, remainingBalance/totalBudget);
 
         if (remainingBalance < 0.2M * totalBudget)
         {
