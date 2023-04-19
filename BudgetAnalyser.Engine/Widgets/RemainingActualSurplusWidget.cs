@@ -26,8 +26,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         Category = WidgetGroup.PeriodicTrackingSectionName;
         DetailedText = "Bank Surplus";
         Name = "Surplus A";
-        Dependencies = new[]
-            { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
+        Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
         this.standardStyle = "WidgetStandardStyle3";
     }
 
@@ -95,8 +94,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
             ColourStyleName = this.standardStyle;
         }
 
-        ToolTip = string.Format(CultureInfo.CurrentCulture, "Remaining Surplus for period is {0:C} of {1:C}",
-                                remainingBalance, openingBalance);
+        ToolTip = string.Format(CultureInfo.CurrentCulture, "Remaining Surplus for period is {0:C} of {1:C}", remainingBalance, openingBalance);
     }
 
     private decimal CalculateOpeningBalance()
