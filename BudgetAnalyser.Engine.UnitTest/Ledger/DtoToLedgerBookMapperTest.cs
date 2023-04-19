@@ -93,12 +93,25 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ShouldThrow_GivenLedgerBucketListIsEmptyInDto()
+        public void ShouldRepopulateLedgerCollectionFromReconciliations_GivenDtoContainsNoLedgers()
         {
             TestData.Ledgers.Clear();
-            ArrangeAndAct();
-            Assert.Fail();
+            var model = ArrangeAndAct();
+            
+            // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the 
+            // reconciliations and this will be persisted next save.
+            Assert.AreEqual(3, model.Ledgers.Count());
+        }
+
+        [TestMethod]
+        public void ShouldIgnoreAndContinueIfLedgerIsNotDeclared_GivenOneLedgerBucketIsMissing()
+        {
+            TestData.Ledgers.RemoveAt(0);
+            var model = ArrangeAndAct();
+            
+            // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the 
+            // reconciliations and this will be persisted next save.
+            Assert.AreEqual(2, model.Ledgers.Count());
         }
 
         [TestMethod]
