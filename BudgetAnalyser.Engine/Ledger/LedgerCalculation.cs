@@ -48,8 +48,7 @@ public class LedgerCalculation
     /// <summary>
     ///     Calculates the current period ledger balances. Period is set by the two dates. In theory other periods are possible.
     /// </summary>
-    /// <exception cref="System.ArgumentNullException">
-    /// </exception>
+    /// <exception cref="System.ArgumentNullException"></exception>
     public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentPeriodLedgerBalances(
         [NotNull] LedgerEntryLine ledgerLine,
         [NotNull] GlobalFilterCriteria filter,
@@ -90,10 +89,7 @@ public class LedgerCalculation
     /// <summary>
     ///     Calculates the current period surplus balance.  In theory other periods are possible.
     /// </summary>
-    public virtual decimal CalculateCurrentPeriodSurplusBalance(
-        [NotNull] LedgerEntryLine ledgerLine, 
-        [NotNull] GlobalFilterCriteria filter, 
-        [NotNull] StatementModel statement)
+    public virtual decimal CalculateCurrentPeriodSurplusBalance([NotNull] LedgerEntryLine ledgerLine, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
     {
         CheckCacheForCleanUp();
         if (ledgerLine == null)
@@ -117,6 +113,7 @@ public class LedgerCalculation
         }
 
         var balance = ledgerLine.CalculatedSurplus;
+        // This includes transactions coded as SURPLUS and any bucket that is a Savings commitment.  A Savings commitment is a target budgeted amount that should be transferred to a savings account.
         var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, statement, ledgerLine, SurplusBucket.SurplusCode);
 
         balance += transactionTotal;
@@ -327,8 +324,8 @@ public class LedgerCalculation
 
         if (bucketCode == SurplusBucket.SurplusCode)
         {
-            // This is to allow inclusion of special Surplus bucket subclasses. (IE: Special Project Surplus buckets)
-            transactions = transactions.Where(t => t.BudgetBucket is SurplusBucket);
+            // Special processing for the special Surplus bucket. This is to allow inclusion of special projects that are Surplus subclasses. Also Savings commitment buckets which come out of surplus.
+            transactions = transactions.Where(t => t.BudgetBucket is SurplusBucket or SavingsCommitmentBucket);
         }
         else
         {

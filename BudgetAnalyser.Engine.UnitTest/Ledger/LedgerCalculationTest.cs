@@ -46,44 +46,74 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 
         private static StatementModel CreateStatementTestData()
         {
+            return CreateStatementBuilder().Build();
+        }
+
+        private static StatementModelBuilder CreateStatementBuilder()
+        {
             return new StatementModelBuilder()
                 .AppendTransaction(
-                    new Transaction
-                    {
-                        Account = StatementModelTestData.SavingsAccount,
-                        Amount = -100M,
-                        BudgetBucket = StatementModelTestData.InsHomeBucket,
-                        Date = new DateTime(2015, 11, 19),
-                        Reference1 = "automatchref12",
-                    })
+                                   new Transaction
+                                   {
+                                       Account = StatementModelTestData.SavingsAccount,
+                                       Amount = -100M,
+                                       BudgetBucket = StatementModelTestData.InsHomeBucket,
+                                       Date = new DateTime(2015, 11, 19),
+                                       Reference1 = "automatchref12",
+                                   })
                 .AppendTransaction(
-                    new Transaction
-                    {
-                        Account = StatementModelTestData.ChequeAccount,
-                        Amount = 100M,
-                        BudgetBucket = StatementModelTestData.PhoneBucket,
-                        Date = new DateTime(2015, 11, 19),
-                        Reference1 = "automatchref12",
-                    })
+                                   new Transaction
+                                   {
+                                       Account = StatementModelTestData.ChequeAccount,
+                                       Amount = 100M,
+                                       BudgetBucket = StatementModelTestData.PhoneBucket,
+                                       Date = new DateTime(2015, 11, 19),
+                                       Reference1 = "automatchref12",
+                                   })
                 .AppendTransaction(
-                    new Transaction
-                    {
-                        Account = StatementModelTestData.SavingsAccount,
-                        Amount = -10M,
-                        BudgetBucket = StatementModelTestData.InsHomeBucket,
-                        Date = new DateTime(2015, 11, 1),
-                        Reference1 = "Foo"
-                    })
+                                   new Transaction
+                                   {
+                                       Account = StatementModelTestData.SavingsAccount,
+                                       Amount = -10M,
+                                       BudgetBucket = StatementModelTestData.InsHomeBucket,
+                                       Date = new DateTime(2015, 11, 1),
+                                       Reference1 = "Foo"
+                                   })
                 .AppendTransaction(
-                    new Transaction
-                    {
-                        Account = StatementModelTestData.ChequeAccount,
-                        Amount = -20M,
-                        BudgetBucket = StatementModelTestData.PhoneBucket,
-                        Date = new DateTime(2015, 11, 1),
-                        Reference1 = "Foo"
-                    })
+                                   new Transaction
+                                   {
+                                       Account = StatementModelTestData.ChequeAccount,
+                                       Amount = -20M,
+                                       BudgetBucket = StatementModelTestData.PhoneBucket,
+                                       Date = new DateTime(2015, 11, 1),
+                                       Reference1 = "Foo"
+                                   });
+        }
+
+        [TestMethod]
+        public void CalculateCurrentPeriodSurplusBalance_ShouldCountSavingsTransactionsAsSurplusTransactions()
+        {
+            var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
+            var statement = CreateStatementBuilder().AppendTransaction(
+                                                                       new Transaction
+                                                                       {
+                                                                           Account = StatementModelTestData.ChequeAccount,
+                                                                           Amount = -100M,
+                                                                           BudgetBucket = StatementModelTestData.SavingsBucket,
+                                                                           Date = new DateTime(2015, 11, 2),
+                                                                           Reference1 = "Yee har"
+                                                                       })
                 .Build();
+            var result = Subject.CalculateCurrentPeriodSurplusBalance(
+                                                                      ledgerLine, 
+                                                                      new GlobalFilterCriteria
+                                                                      {
+                                                                          BeginDate = new DateTime(2015, 10, 20),
+                                                                          EndDate = new DateTime(2015, 11, 19)
+                                                                      }, 
+                                                                      statement);
+
+            Assert.AreEqual(2770M, result);
         }
 
         [TestMethod]

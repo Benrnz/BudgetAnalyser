@@ -34,7 +34,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
             typeof(LedgerCalculation)
         };
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
-        RemainingBudgetToolTip = "Remaining Balance for period is {0:C}";
+        RemainingBudgetToolTip = "Remaining Balance for period is {0:C} {1:P}";
         this.standardStyle = "WidgetStandardStyle3";
         BucketCode = "<NOT SET>";
     }
@@ -156,7 +156,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
 
         Value = Convert.ToDouble(remainingBalance);
-        ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance);
+        ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance, remainingBalance/totalBudget);
 
         if (remainingBalance < 0.2M * totalBudget)
         {

@@ -1,7 +1,7 @@
 ﻿namespace BudgetAnalyser.Engine.Budget
 {
     /// <summary>
-    ///     A savings commitment bucket.  This bucket represents a commitment to save a certain amount each month/fortnight.
+    ///     A savings commitment bucket.  This budget item represents a target savings amount to save a certain amount each month/fortnight.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Budget.ExpenseBucket" />
     public class SavingsCommitmentBucket : ExpenseBucket
