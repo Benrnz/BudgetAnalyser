@@ -19,8 +19,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public BudgetBucketMonitorWidget()
         {
-            this.disabledToolTip =
-                "Either a Statement, Budget, or a Filter are not present, or the Bucket Code is not valid, remaining budget cannot be calculated.";
+            this.disabledToolTip =  "Either a Statement, Budget, or a Filter are not present, or the Bucket Code is not valid, remaining budget cannot be calculated.";
         }
 
         /// <summary>
