@@ -34,7 +34,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
             typeof(LedgerCalculation)
         };
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
-        RemainingBudgetToolTip = "Remaining Balance for period is {0:C} {1:P}";
+        RemainingBudgetToolTip = "Remaining Balance for period is {0:C} {1:P0}";
         this.standardStyle = "WidgetStandardStyle3";
         BucketCode = "<NOT SET>";
     }

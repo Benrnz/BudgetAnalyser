@@ -94,7 +94,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
             ColourStyleName = this.standardStyle;
         }
 
-        ToolTip = $"Remaining Surplus for period is {remainingBalance:C} of {openingBalance:C} {remainingBalance/openingBalance:P}";
+        ToolTip = $"Remaining Surplus for period is {remainingBalance:C} of {openingBalance:C} {remainingBalance/openingBalance:P0}";
     }
 
     private decimal CalculateOpeningBalance()
