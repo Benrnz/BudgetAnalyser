@@ -20,27 +20,27 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private static LedgerBook CreateLedgerBookTestData()
         {
             return new LedgerBookBuilder
-            {
-                StorageKey = "BudgetBucketMonitorWidgetTest.xml",
-                Modified = new DateTime(2015, 11, 23),
-                Name = "Smith Budget 2015"
-            }
+                {
+                    StorageKey = "BudgetBucketMonitorWidgetTest.xml",
+                    Modified = new DateTime(2015, 11, 23),
+                    Name = "Smith Budget 2015"
+                }
                 .IncludeLedger(LedgerBookTestData.PhoneLedger, 50M)
                 .IncludeLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount, 200M)
                 .AppendReconciliation(
-                    new DateTime(2015, 10, 20),
-                    new BankBalance(LedgerBookTestData.ChequeAccount, 2000M),
-                    new BankBalance(LedgerBookTestData.SavingsAccount, 1000M))
+                                      new DateTime(2015, 10, 20),
+                                      new BankBalance(LedgerBookTestData.ChequeAccount, 2000M),
+                                      new BankBalance(LedgerBookTestData.SavingsAccount, 1000M))
                 .WithReconciliationEntries(
-                    entryBuilder =>
-                    {
-                        entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
-                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Soo", new DateTime(2015, 10, 20), "automatchref12"); })
-                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-60, "Soo1", new DateTime(2015, 10, 20)); });
-                        entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
-                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); })
-                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-70, "Foo1", new DateTime(2015, 10, 20)); });
-                    })
+                                           entryBuilder =>
+                                           {
+                                               entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
+                                                   .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Soo", new DateTime(2015, 10, 20), "automatchref12"); })
+                                                   .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-60, "Soo1", new DateTime(2015, 10, 20)); });
+                                               entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
+                                                   .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); })
+                                                   .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-70, "Foo1", new DateTime(2015, 10, 20)); });
+                                           })
                 .Build();
         }
 
@@ -105,15 +105,106 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                                                                        })
                 .Build();
             var result = Subject.CalculateCurrentPeriodSurplusBalance(
-                                                                      ledgerLine, 
+                                                                      ledgerLine,
                                                                       new GlobalFilterCriteria
                                                                       {
                                                                           BeginDate = new DateTime(2015, 10, 20),
                                                                           EndDate = new DateTime(2015, 11, 19)
-                                                                      }, 
+                                                                      },
                                                                       statement);
 
             Assert.AreEqual(2770M, result);
+        }
+
+        [TestMethod]
+        public void CalculateCurrentPeriodSurplusBalance_ShouldCountPayCCTransactionsAsSurplusTransactions()
+        {
+            var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
+            var statement = CreateStatementBuilder().AppendTransaction(
+                                                                       new Transaction
+                                                                       {
+                                                                           Account = StatementModelTestData.ChequeAccount,
+                                                                           Amount = -100M,
+                                                                           BudgetBucket = StatementModelTestData.PayCreditCard,
+                                                                           Date = new DateTime(2015, 11, 2),
+                                                                           Reference1 = "Pay credit card debit from surplus"
+                                                                       })
+                .Build();
+            var result = Subject.CalculateCurrentPeriodSurplusBalance(
+                                                                      ledgerLine,
+                                                                      new GlobalFilterCriteria
+                                                                      {
+                                                                          BeginDate = new DateTime(2015, 10, 20),
+                                                                          EndDate = new DateTime(2015, 11, 19)
+                                                                      },
+                                                                      statement);
+
+            Assert.AreEqual(2770M, result);
+        }
+
+        [TestMethod]
+        public void CalculateCurrentPeriodSurplusBalance_ShouldNotCountPositivePayCCOrSavingsTransactions()
+        {
+            var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
+            var statement = CreateStatementBuilder().AppendTransaction(new Transaction
+                {
+                    Account = StatementModelTestData.ChequeAccount,
+                    Amount = -100M,
+                    BudgetBucket = StatementModelTestData.PayCreditCard,
+                    Date = new DateTime(2015, 11, 2),
+                    Reference1 = "Pay credit card debit from surplus"
+                })
+                .AppendTransaction(new Transaction
+                {
+                    Account = StatementModelTestData.VisaAccount,
+                    Amount = 100M,
+                    BudgetBucket = StatementModelTestData.PayCreditCard,
+                    Date = new DateTime(2015, 11, 2),
+                    Reference1 = "Credit Visa account with payment"
+                })
+                .AppendTransaction(new Transaction
+                {
+                    Account = StatementModelTestData.ChequeAccount,
+                    Amount = -50M,
+                    BudgetBucket = StatementModelTestData.SurplusBucket,
+                    Date = new DateTime(2015, 11, 3),
+                    Reference1 = "Buy something cool with spare funds"
+                })
+                .AppendTransaction(new Transaction
+                {
+                    Account = StatementModelTestData.ChequeAccount,
+                    Amount = 30M,
+                    BudgetBucket = StatementModelTestData.SurplusBucket,
+                    Date = new DateTime(2015, 11, 3),
+                    Reference1 = "Refund"
+                })
+                .AppendTransaction(new Transaction
+                {
+                    Account = StatementModelTestData.ChequeAccount,
+                    Amount = -20M,
+                    BudgetBucket = StatementModelTestData.SavingsBucket,
+                    Date = new DateTime(2015, 11, 4),
+                    Reference1 = "Save for a rainy day"
+                })
+                .AppendTransaction(new Transaction
+                {
+                    Account = StatementModelTestData.ChequeAccount,
+                    Amount = 20M,
+                    BudgetBucket = StatementModelTestData.SavingsBucket,
+                    Date = new DateTime(2015, 11, 4),
+                    Reference1 = "Credits to savings shouldn't affect surplus balance"
+                })
+                .Build();
+            var result = Subject.CalculateCurrentPeriodSurplusBalance(
+                  ledgerLine, 
+                  new GlobalFilterCriteria
+                  {
+                      BeginDate = new DateTime(2015, 10, 20),
+                      EndDate = new DateTime(2015, 11, 19)
+                  },
+                  statement);
+
+            Assert.AreEqual(2730M, result);
         }
 
         [TestMethod]
@@ -121,13 +212,13 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
             var result = Subject.CalculateCurrentPeriodLedgerBalances(
-                ledgerLine, 
-                new GlobalFilterCriteria
-                {
-                    BeginDate = new DateTime(2015, 10, 20),
-                    EndDate = new DateTime(2015, 11, 19)
-                }, 
-                CreateStatementTestData());
+                                                                      ledgerLine,
+                                                                      new GlobalFilterCriteria
+                                                                      {
+                                                                          BeginDate = new DateTime(2015, 10, 20),
+                                                                          EndDate = new DateTime(2015, 11, 19)
+                                                                      },
+                                                                      CreateStatementTestData());
 
             Assert.AreEqual(20M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
         }
@@ -137,12 +228,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
             var result = Subject.CalculateCurrentPeriodLedgerBalances(
-                                                                      ledgerLine, 
+                                                                      ledgerLine,
                                                                       new GlobalFilterCriteria
                                                                       {
                                                                           BeginDate = new DateTime(2015, 11, 01),
                                                                           EndDate = new DateTime(2015, 11, 15)
-                                                                      }, 
+                                                                      },
                                                                       CreateStatementTestData());
 
             Assert.AreEqual(120M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
@@ -247,9 +338,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 EndDate = new DateTime(2013, 8, 29)
             };
             var ledgerLine = LedgerBookTestData.TestData6().Reconciliations.OrderByDescending(l => l.Date).First();
-            
+
             var result = Subject.CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statementModel);
-            
+
             Assert.AreEqual(3777.56M, result);
         }
     }

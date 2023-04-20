@@ -19,6 +19,7 @@
         public const string HairBucketCode = "HAIRCUT";
         public const string IncomeBucketCode = "INCOME";
         public const string InsuranceHomeBucketCode = "INSHOME";
+        public const string PayCreditCardBucketCode = "PAYCC";
         public const string PhoneBucketCode = "PHNET";
         public const string PowerBucketCode = "POWER";
         public const string RatesBucketCode = "RATES";

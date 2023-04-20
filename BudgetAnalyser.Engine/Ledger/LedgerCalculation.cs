@@ -280,15 +280,15 @@ public class LedgerCalculation
         {
             return null;
         }
-        
+
         if (inclEndDate == default || inclEndDate.Value == DateTime.MinValue)
         {
             return null;
         }
-        
+
         return LocateLedgerEntryLine(ledgerBook, inclBeginDate.Value, inclEndDate.Value);
     }
-    
+
     private static string BuildCacheKey(object dependency1, object dependency2, DateTime dependentDate)
     {
         long key;
@@ -324,26 +324,30 @@ public class LedgerCalculation
 
         if (bucketCode == SurplusBucket.SurplusCode)
         {
-            // Special processing for the special Surplus bucket. This is to allow inclusion of special projects that are Surplus subclasses. Also Savings commitment buckets which come out of surplus.
-            transactions = transactions.Where(t => t.BudgetBucket is SurplusBucket or SavingsCommitmentBucket);
+            // Special processing for the special Surplus bucket. This is to allow inclusion of special projects that are Surplus subclasses. t.BudgetBucket is SurplusBucket and its subclasses.
+            // Also Savings Commitment buckets which are paid out of surplus. Also PayCC transactions which are paid out of Surplus.
+            // In addition credits to SAV and PAYCC should not increase the Surplus balance. These funds have been moved to another ledger.
+            // TODO I think the SAVINGS bucket should be deleted. It should just simply be a SavedUpForBucket.
+            transactions = transactions.Where(t => t.BudgetBucket is SurplusBucket or SavingsCommitmentBucket or PayCreditCardBucket)
+                .Where(t => !(t.BudgetBucket is SavingsCommitmentBucket) || t.Amount < 0)
+                .Where(t => !(t.BudgetBucket is PayCreditCardBucket) || t.Amount < 0);
         }
         else
         {
             transactions = transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == bucketCode);
         }
 
-        this.logger.LogInfo(
-                            _ =>
-                            {
-                                var builder = new StringBuilder();
-                                builder.AppendLine($"Statement Transactions found that are '{bucketCode}' and not 'Auto-Matching-Transactions':");
-                                foreach (var txn in transactions)
-                                {
-                                    builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Description}  {txn.Account}");
-                                }
+        this.logger.LogInfo(_ =>
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine($"Statement Transactions found that are '{bucketCode}' and not 'Auto-Matching-Transactions':");
+            foreach (var txn in transactions)
+            {
+                builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Description}  {txn.Account}");
+            }
 
-                                return builder.ToString();
-                            });
+            return builder.ToString();
+        });
         var transactionTotal = transactions.Sum(txn => txn.Amount);
         this.logger.LogInfo(l => l.Format("Total Transactions {0:F2}", transactionTotal));
         return transactionTotal;
