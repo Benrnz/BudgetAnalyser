@@ -114,7 +114,6 @@
     <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
     <Compile Include="Budget\PayCreditCardBucket.cs" />
     <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
-    <Compile Include="Budget\SavingsCommitmentBucket.cs" />
     <Compile Include="Budget\SpentPerPeriodExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
@@ -332,7 +331,6 @@
     <Compile Include="Widgets\RemainingBudgetBucketWidget.cs" />
     <Compile Include="Widgets\RemainingSurplusWidget.cs" />
     <Compile Include="Widgets\SaveWidget.cs" />
-    <Compile Include="Widgets\SavingsGoalWidget.cs" />
     <Compile Include="Widgets\SurprisePaymentWidget.cs" />
     <Compile Include="Widgets\SurprisePaymentWidgetPersistentState.cs" />
     <Compile Include="Widgets\TimedUpdateCounterWidget.cs" />

@@ -17,8 +17,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var controller = e.OldValue as BudgetController;
-            if (controller != null)
+            if (e.OldValue is BudgetController controller)
             {
                 if (controller.Expenses != null)
                 {

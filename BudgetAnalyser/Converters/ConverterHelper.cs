@@ -15,7 +15,6 @@ namespace BudgetAnalyser.Converters
         private const string IncomeBucket = "Brush.BudgetBucket.Income";
         private const string NeutralNumberBackground = "Brush.NeutralNumberBackground";
         private const string NotSoBadDebit = "Brush.NotSoBadDebit";
-        private const string SavingsCommitmentBucket = "Brush.BudgetBucket.SavingsCommittment";
         private const string SecondaryBackground = "Brush.SecondaryBackground";
         private const string SlightDebit = "Brush.SlightDebit";
         private const string SpentMonthlyBucket = "Brush.BudgetBucket.SpentMonthly";
@@ -45,9 +44,6 @@ namespace BudgetAnalyser.Converters
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush NotSoBadDebitBrush =
             Application.Current.Resources[NotSoBadDebit] as Brush;
-
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush SavingsCommitmentBucketBrush =
-            Application.Current.Resources[SavingsCommitmentBucket] as Brush;
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush SecondaryBackgroundBrush =
             Application.Current.Resources[SecondaryBackground] as Brush;

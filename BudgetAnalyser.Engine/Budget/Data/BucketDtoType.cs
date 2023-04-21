@@ -33,7 +33,8 @@ public enum BucketDtoType
     Income,
 
     /// <summary>
-    ///     A savings commitment bucket. <seealso cref="SavingsCommitmentBucket" />
+    ///     A savings commitment bucket. 
+    ///     OBSOLETE DO NOT USE THIS. Use SavedUpForExpenseBucket instead.
     /// </summary>
     SavingsCommitment,
 

@@ -291,10 +291,6 @@ public class BudgetController : ControllerBase, IShowableController
         {
             newExpense.Bucket = new SavedUpForExpenseBucket(string.Empty, string.Empty);
         }
-        else if (expense is SavingsCommitmentBucket)
-        {
-            newExpense.Bucket = new SavingsCommitmentBucket(string.Empty, string.Empty);
-        }
         else
         {
             throw new InvalidCastException("Invalid type passed to Add New Expense: " + expense);

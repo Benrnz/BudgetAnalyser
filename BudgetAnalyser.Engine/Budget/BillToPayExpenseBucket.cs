@@ -5,6 +5,7 @@
     ///     used to classify transactions.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Budget.ExpenseBucket" />
+    // TODO This class is not adding any value
     public abstract class BillToPayExpenseBucket : ExpenseBucket
     {
         /// <summary>

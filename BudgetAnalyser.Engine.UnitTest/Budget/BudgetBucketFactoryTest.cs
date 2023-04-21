@@ -54,15 +54,6 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         }
 
         [TestMethod]
-        public void BuildShouldCreateSavingsCommittmentBucket()
-        {
-            Assert.IsInstanceOfType(
-                Subject.BuildModel(
-                    new BudgetBucketDto { Type = BucketDtoType.SavingsCommitment }), 
-                typeof(SavingsCommitmentBucket));
-        }
-
-        [TestMethod]
         public void BuildShouldCreateSpentMonthlyBucket()
         {
             Assert.IsInstanceOfType(
@@ -102,12 +93,6 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public void SerialiseTypeShouldReturnSavedUpForGivenSavedUpForBucket()
         {
             Assert.AreEqual(BucketDtoType.SavedUpForExpense, Subject.SerialiseType(new SavedUpForExpenseBucket()));
-        }
-
-        [TestMethod]
-        public void SerialiseTypeShouldReturnSavingsCommittmentGivenSavingsCommittmentBucket()
-        {
-            Assert.AreEqual(BucketDtoType.SavingsCommitment, Subject.SerialiseType(new SavingsCommitmentBucket()));
         }
 
         [TestMethod]

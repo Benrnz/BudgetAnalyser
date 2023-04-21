@@ -3,6 +3,9 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data;
 
+/// <summary>
+///     Converts DTO's to models, and vice versa.
+/// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class BudgetBucketFactory : IBudgetBucketFactory
 {
@@ -21,11 +24,12 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
             case BucketDtoType.Surplus:
                 throw new NotSupportedException("You may not create multiple instances of the Pay Credit Card or Surplus buckets.");
             case BucketDtoType.SavedUpForExpense:
-                return new SavedUpForExpenseBucket();
             case BucketDtoType.SavingsCommitment:
-                return new SavingsCommitmentBucket();
+                // Keeping SavingsCommitment here for converting old files, it is an obsolete bucket type not to be used.
+                return new SavedUpForExpenseBucket();
             case BucketDtoType.SpentPeriodicallyExpense:
             case BucketDtoType.SpentMonthlyExpense:
+                // Keeping SpentMonthlyExpense here for converting old files, it is an obsolete bucket type not to be used.
                 return new SpentPerPeriodExpenseBucket();
             case BucketDtoType.FixedBudgetProject:
                 var f = (FixedBudgetBucketDto)dto;
@@ -95,11 +99,6 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
         {
             // Note that BucketDtoType.SpentMonthlyExpense is obsolete, if it was set to this during deserialisation, this will auto convert from here.
             return BucketDtoType.SpentPeriodicallyExpense;
-        }
-
-        if (bucket is SavingsCommitmentBucket)
-        {
-            return BucketDtoType.SavingsCommitment;
         }
 
         throw new NotSupportedException("Unsupported bucket type detected: " + bucket.GetType().FullName);

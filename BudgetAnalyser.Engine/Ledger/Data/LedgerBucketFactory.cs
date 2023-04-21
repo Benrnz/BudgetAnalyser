@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
 /// <summary>
-///     A factory to create <see cref="LedgerBucket" />s from minimaly persisted storage data.
+///     A factory to create <see cref="LedgerBucket" />s from minimally persisted storage data.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Ledger.Data.ILedgerBucketFactory" />
 [AutoRegisterWithIoC]
@@ -18,18 +18,8 @@ internal class LedgerBucketFactory : ILedgerBucketFactory
     public LedgerBucketFactory([NotNull] IBudgetBucketRepository bucketRepo,
                                [NotNull] IAccountTypeRepository accountRepo)
     {
-        if (bucketRepo == null)
-        {
-            throw new ArgumentNullException(nameof(bucketRepo));
-        }
-
-        if (accountRepo == null)
-        {
-            throw new ArgumentNullException(nameof(accountRepo));
-        }
-
-        this.bucketRepo = bucketRepo;
-        this.accountRepo = accountRepo;
+        this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
+        this.accountRepo = accountRepo ?? throw new ArgumentNullException(nameof(accountRepo));
     }
 
     public LedgerBucket Build(string bucketCode, string accountName)
@@ -49,11 +39,6 @@ internal class LedgerBucketFactory : ILedgerBucketFactory
         if (bucket is SpentPerPeriodExpenseBucket)
         {
             return new SpentPerPeriodLedger { BudgetBucket = bucket, StoredInAccount = account };
-        }
-
-        if (bucket is SavingsCommitmentBucket)
-        {
-            return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
         }
 
         throw new NotSupportedException($"Unsupported budget bucket {bucketCode} with type {bucket.GetType().Name}, found in ledger book");
