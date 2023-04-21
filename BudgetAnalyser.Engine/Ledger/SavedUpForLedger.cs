@@ -63,7 +63,7 @@ public class SavedUpForLedger : LedgerBucket
     ///     Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between <see cref="BudgetBucket" />s and <see cref="LedgerBucket" />s.
     /// </summary>
     /// <exception cref="System.NotSupportedException">
-    ///     Invalid budget bucket used, only Saved-Up-For-Expense-Buckets or Savings-Commitment-Buckets can be used with an instance of Saved-Up-For-Ledger.
+    ///     Invalid budget bucket used, only Saved-Up-For-Expense-Buckets can be used with an instance of Saved-Up-For-Ledger.
     /// </exception>
     protected override void ValidateBucketSet(BudgetBucket bucket)
     {
@@ -72,11 +72,6 @@ public class SavedUpForLedger : LedgerBucket
             return;
         }
 
-        if (bucket is SavingsCommitmentBucket)
-        {
-            return;
-        }
-
-        throw new NotSupportedException("Invalid budget bucket used, only Saved-Up-For-Expense-Buckets or Savings-Commitment-Buckets can be used with an instance of Saved-Up-For-Ledger.");
+        throw new NotSupportedException("Invalid budget bucket used, only Saved-Up-For-Expense-Buckets can be used with an instance of Saved-Up-For-Ledger.");
     }
 }

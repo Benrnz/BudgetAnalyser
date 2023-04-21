@@ -61,9 +61,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     }
 
     /// <summary>
-    ///     This is drawn programatically because the dimensions of the ledger book grid are two-dimensional and dynamic.
-    ///     Unknown number
-    ///     of columns and many rows. ListView and DataGrid dont work well.
+    ///     This is drawn programatically because the dimensions of the ledger book grid are two-dimensional and dynamic. Unknown number of columns and many rows. ListView and DataGrid dont work well.
     /// </summary>
     public void BuildGrid(
         Engine.Ledger.LedgerBook currentLedgerBook,
@@ -71,19 +69,9 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         ContentPresenter contentPanel,
         int numberOfPeriodsToShow)
     {
-        if (viewResources == null)
-        {
-            throw new ArgumentNullException(nameof(viewResources));
-        }
-
-        if (contentPanel == null)
-        {
-            throw new ArgumentNullException(nameof(contentPanel));
-        }
-
         this.ledgerBook = currentLedgerBook;
-        this.localResources = viewResources;
-        this.contentPresenter = contentPanel;
+        this.localResources = viewResources ?? throw new ArgumentNullException(nameof(viewResources));
+        this.contentPresenter = contentPanel ?? throw new ArgumentNullException(nameof(contentPanel));
         DynamicallyCreateLedgerBookGrid(numberOfPeriodsToShow);
     }
 
@@ -135,7 +123,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         }
         else
         {
-            throw new ArgumentException(nameof(parent) + " is not a Panel nor a Decorator", nameof(parent));
+            throw new ArgumentException($"{nameof(parent)} is not a Panel nor a Decorator", nameof(parent));
         }
 
         return textBlock;
@@ -532,7 +520,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         // Remarks
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         // Bank account heading lines
-        this.sortedLedgers.Select(l => l.StoredInAccount).Distinct().ToList().ForEach(x => grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }));
+        this.sortedLedgers.Select(l => l.StoredInAccount).Distinct().ToList().ForEach(_ => grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }));
 
         this.contentPresenter.Content = grid;
         AddGridColumns(grid, numberOfPeriodsToShow);
@@ -564,11 +552,6 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         if (ledger.BudgetBucket is SavedUpForExpenseBucket)
         {
             return ConverterHelper.AccumulatedBucketBrush;
-        }
-
-        if (ledger.BudgetBucket is SavingsCommitmentBucket)
-        {
-            return ConverterHelper.SavingsCommitmentBucketBrush;
         }
 
         return ConverterHelper.TileBackgroundBrush;

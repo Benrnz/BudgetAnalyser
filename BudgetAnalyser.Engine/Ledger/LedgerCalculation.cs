@@ -113,7 +113,8 @@ public class LedgerCalculation
         }
 
         var balance = ledgerLine.CalculatedSurplus;
-        // This includes transactions coded as SURPLUS and any bucket that is a Savings commitment.  A Savings commitment is a target budgeted amount that should be transferred to a savings account.
+        // This includes transactions coded as SURPLUS. 
+        // This used to include Savings Commitment bucket transaction, a SavedUpForExpenseBucket should be used instead.
         var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, statement, ledgerLine, SurplusBucket.SurplusCode);
 
         balance += transactionTotal;
@@ -325,11 +326,9 @@ public class LedgerCalculation
         if (bucketCode == SurplusBucket.SurplusCode)
         {
             // Special processing for the special Surplus bucket. This is to allow inclusion of special projects that are Surplus subclasses. t.BudgetBucket is SurplusBucket and its subclasses.
-            // Also Savings Commitment buckets which are paid out of surplus. Also PayCC transactions which are paid out of Surplus.
-            // In addition credits to SAV and PAYCC should not increase the Surplus balance. These funds have been moved to another ledger.
-            // TODO I think the SAVINGS bucket should be deleted. It should just simply be a SavedUpForBucket.
-            transactions = transactions.Where(t => t.BudgetBucket is SurplusBucket or SavingsCommitmentBucket or PayCreditCardBucket)
-                .Where(t => !(t.BudgetBucket is SavingsCommitmentBucket) || t.Amount < 0)
+            // Also PayCC transactions which are paid out of Surplus.
+            // In addition credits to PAYCC should not increase the Surplus balance. These funds have been moved to another ledger.
+            transactions = transactions.Where(t => t.BudgetBucket is SurplusBucket or PayCreditCardBucket)
                 .Where(t => !(t.BudgetBucket is PayCreditCardBucket) || t.Amount < 0);
         }
         else

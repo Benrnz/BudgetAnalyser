@@ -323,17 +323,6 @@
                     <budget:SavedUpForExpenseBucket />
                 </Button.CommandParameter>
             </Button>
-            <Button Background="{StaticResource Brush.BudgetBucket.SavingsCommittment}"
-                    Command="{Binding AddNewExpenseCommand}"
-                    Style="{StaticResource BudgetButton}">
-                <Button.Content>
-                    <TextBlock FontSize="12"
-                               Text="New Savings Commitment" />
-                </Button.Content>
-                <Button.CommandParameter>
-                    <budget:SavingsCommitmentBucket />
-                </Button.CommandParameter>
-            </Button>
         </StackPanel>
         <!-- Totals Row 1 -->
         <StackPanel Grid.Row="3"

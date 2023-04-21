@@ -19,8 +19,8 @@ public static class StatementModelTestData
     public static readonly SpentPerPeriodExpenseBucket PhoneBucket = new(TestDataConstants.PhoneBucketCode, "Phone");
     public static readonly SpentPerPeriodExpenseBucket PowerBucket = new(TestDataConstants.PowerBucketCode, "Power");
     public static readonly SpentPerPeriodExpenseBucket RegoBucket = new(TestDataConstants.RegoBucketCode, "Car registrations");
-    public static readonly SavingsCommitmentBucket SavingsBucket = new(TestDataConstants.SavingsBucketCode, "Savings Commitment");
     public static readonly PayCreditCardBucket PayCreditCard = new(TestDataConstants.PayCreditCardBucketCode, "Pay Credit Card");
+    public static readonly SavedUpForExpenseBucket SavingsBucket = new(TestDataConstants.SavingsBucketCode, "Savings bucket");
     public static readonly SurplusBucket SurplusBucket = new();
     public static readonly SavingsAccount SavingsAccount = new(TestDataConstants.SavingsAccountName);
     public static readonly NamedTransaction TransactionType = new("Bill Payment");
