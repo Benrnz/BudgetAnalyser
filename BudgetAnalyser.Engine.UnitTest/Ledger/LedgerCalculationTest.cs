@@ -91,8 +91,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void CalculateCurrentPeriodSurplusBalance_ShouldCountSavingsTransactionsAsSurplusTransactions()
+        public void CalculateCurrentPeriodSurplusBalance_ShouldNotCountSavingsTransactionsAsSurplusTransactions()
         {
+            // There used to be a special bucket "SavingsCommitmentBucket" that was a special bucket type. When a debit was coded against this bucket it was thought of as debiting Surplus.
+            // Now this is simply treated as a SavedUpForExpenseBucket like any other ledger. Debits will remove funds from this LedgerBucket and credit another bucket somewhere else.
             var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
             var statement = CreateStatementBuilder().AppendTransaction(
                                                                        new Transaction
@@ -113,7 +115,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                                                                       },
                                                                       statement);
 
-            Assert.AreEqual(2770M, result);
+            Assert.AreEqual(2870M, result);
         }
 
         [TestMethod]
@@ -143,7 +145,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void CalculateCurrentPeriodSurplusBalance_ShouldNotCountPositivePayCCOrSavingsTransactions()
+        public void CalculateCurrentPeriodSurplusBalance_ShouldNotCountPositivePayCCTransactions()
         {
             var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
             var statement = CreateStatementBuilder().AppendTransaction(new Transaction
@@ -204,7 +206,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                   },
                   statement);
 
-            Assert.AreEqual(2730M, result);
+            Assert.AreEqual(2750M, result);
         }
 
         [TestMethod]
