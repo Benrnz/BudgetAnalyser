@@ -19,7 +19,7 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     /// </summary>
     public BudgetBucketMonitorWidget()
     {
-        this.disabledToolTip = "Either a Statement, Budget, or a Filter are not present, or the Bucket Code is not valid, remaining budget cannot be calculated.";
+        this.disabledToolTip = "Either a Statement or Budget are not present, or the Bucket Code is not valid, or the filtered date range doesn't match the budget period remaining budget cannot be calculated.";
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     /// <summary>
     ///     Updates the widget values with updated input.
     /// </summary>
-    public override void Update([NotNull] params object[] input)
+    public override void Update(params object[] input)
     {
         base.Update(input);
         DetailedText = BucketCode;

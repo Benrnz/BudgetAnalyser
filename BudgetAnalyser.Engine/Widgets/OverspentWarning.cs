@@ -92,11 +92,12 @@ public class OverspentWarning : Widget
             return;
         }
 
-        if (!ValidatePeriod(budget, filter.BeginDate.Value, filter.EndDate.Value))
+        if (!RemainingBudgetBucketWidget.ValidatePeriod(budget.Model.BudgetCycle, filter.BeginDate.Value, filter.EndDate.Value, out var validationMessage))
         {
-            this.logger.LogInfo(l => 
+            this.logger.LogInfo(l =>
                                     l.Format("Difference in months between begin and end != 1 month. BeginDate: {0}, EndDate: {1}", filter.BeginDate.Value, filter.EndDate.Value));
             Enabled = false;
+            ToolTip = validationMessage;
             return;
         }
 
@@ -121,7 +122,7 @@ public class OverspentWarning : Widget
 
         if (warnings > 0)
         {
-            this.logger.LogInfo(l=> l.Format("{0} total warnings found, updating UI.", warnings));
+            this.logger.LogInfo(l => l.Format("{0} total warnings found, updating UI.", warnings));
             LargeNumber = warnings.ToString(CultureInfo.CurrentCulture);
             var builder = new StringBuilder();
             OverSpentSummary = currentLedgerBalances.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key);
@@ -173,25 +174,5 @@ public class OverspentWarning : Widget
 
         this.logger.LogInfo(l => l.Format("{0} warnings found for non-LedgerBook buckets.", warnings));
         return warnings;
-    }
-
-    private bool ValidatePeriod(IBudgetCurrencyContext currentBudget, DateTime inclBeginDate, DateTime inclEndDate)
-    {
-        bool valid;
-        switch (currentBudget.Model.BudgetCycle)
-        {
-            case BudgetCycle.Monthly:
-                var months = inclBeginDate.DurationInMonths(inclEndDate);
-                valid = months == 1;
-                ToolTip = valid ? string.Empty : DesignedForOneMonthOnly;
-                return valid;
-            case BudgetCycle.Fortnightly:
-                var days = inclEndDate.Subtract(inclBeginDate).Days;
-                valid = days == 14;
-                ToolTip = valid ? string.Empty : DesignedForOneFortnightOnly;
-                return valid;
-            default:
-                throw new NotSupportedException("Invalid Budget Period detected: " + currentBudget.Model.BudgetCycle);
-        }
     }
 }
