@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
@@ -17,6 +18,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
     private LedgerBook ledgerBook;
     private LedgerCalculation ledgerCalculator;
     private StatementModel statement;
+    private IBudgetCurrencyContext budget;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RemainingActualSurplusWidget" /> class.
@@ -26,7 +28,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         Category = WidgetGroup.PeriodicTrackingSectionName;
         DetailedText = "Bank Surplus";
         Name = "Surplus A";
-        Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
+        Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation), typeof(IBudgetCurrencyContext) };
         this.standardStyle = "WidgetStandardStyle3";
     }
 
@@ -51,8 +53,10 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         this.filter = (GlobalFilterCriteria)input[1];
         this.ledgerBook = (LedgerBook)input[2];
         this.ledgerCalculator = (LedgerCalculation)input[3];
+        this.budget = (IBudgetCurrencyContext)input[4];
 
         if (this.ledgerBook == null
+            || this.budget == null
             || this.statement == null
             || this.filter == null
             || this.filter.Cleared
@@ -63,9 +67,10 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
             return;
         }
 
-        if (this.filter.BeginDate.Value.DurationInMonths(this.filter.EndDate.Value) != 1)
+        if (!RemainingBudgetBucketWidget.ValidatePeriod(this.budget.Model.BudgetCycle, this.filter.BeginDate.Value, this.filter.EndDate.Value, out var validationMessage))
         {
-            ToolTip = DesignedForOneMonthOnly;
+            // Fortnightly will calculate to 1 here as well, so this is a valid test.
+            ToolTip = validationMessage;
             Enabled = false;
             return;
         }
