@@ -122,24 +122,11 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
             return;
         }
 
-        if (Budget.Model.BudgetCycle == BudgetCycle.Monthly)
+        if (!ValidatePeriod(Budget.Model.BudgetCycle, Filter.BeginDate.Value, Filter.EndDate.Value, out var validationMessage))
         {
-            if (Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value) > 1)
-            {
-                Enabled = false;
-                ToolTip = DesignedForOneMonthOnly;
-                return;
-            }
-        }
-
-        if (Budget.Model.BudgetCycle == BudgetCycle.Fortnightly)
-        {
-            if (Filter.EndDate.Value.Subtract(Filter.BeginDate.Value).Days > 14)
-            {
-                Enabled = false;
-                ToolTip = DesignedForOneFortnightOnly;
-                return;
-            }
+            ToolTip = validationMessage;
+            Enabled = false;
+            return;
         }
 
         Enabled = true;
@@ -156,7 +143,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
 
         Value = Convert.ToDouble(remainingBalance);
-        ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance, remainingBalance/totalBudget);
+        ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance, remainingBalance / totalBudget);
 
         if (remainingBalance < 0.2M * totalBudget)
         {
@@ -184,5 +171,29 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
 
         return ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
+    }
+
+    internal static bool ValidatePeriod(BudgetCycle budgetCycle, DateTime inclBeginDate, DateTime inclEndDate, out string validationMessage)
+    {
+        if (budgetCycle == BudgetCycle.Monthly)
+        {
+            if (inclBeginDate.DurationInMonths(inclEndDate) > 1)
+            {
+                validationMessage = DesignedForOneMonthOnly;
+                return false;
+            }
+        }
+
+        if (budgetCycle == BudgetCycle.Fortnightly)
+        {
+            if (inclEndDate.Subtract(inclBeginDate).Days > 14)
+            {
+                validationMessage = DesignedForOneFortnightOnly;
+                return false;
+            }
+        }
+
+        validationMessage = string.Empty;
+        return true;
     }
 }
