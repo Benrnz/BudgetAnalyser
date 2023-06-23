@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
@@ -218,6 +220,31 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             await subject.SaveAsync(model, "Foo.bar", false);
 
             Assert.Fail();
+        }
+
+        [TestMethod]
+        public async Task WrittenDataShouldAutomaticallyStripCommas()
+        {
+            var subject = Arrange();
+            var dto = BudgetAnalyserRawCsvTestDataV1.TransactionSetDtoTestData1();
+            dto.Transactions.Last().Reference3 = "corrupted,comma,data,for,csv";
+            using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream, Encoding.UTF8))
+            {
+                await subject.WriteToStreamTest(dto, writer);
+                stream.Position = 0;
+                using (var reader = new StreamReader(stream))
+                {
+                    int lineNumber = 0;
+                    while (!reader.EndOfStream)
+                    {
+                        lineNumber++;
+                        var line = reader.ReadLine();
+                        if (lineNumber == 1) continue;
+                        Assert.AreEqual(10, line.ToCharArray().Count(c => c == ','), $"Too many commas on line {lineNumber}: {line}");
+                    }
+                }
+            }
         }
 
         [TestInitialize]

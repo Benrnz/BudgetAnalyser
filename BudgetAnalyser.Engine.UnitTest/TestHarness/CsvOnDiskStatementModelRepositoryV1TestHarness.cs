@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.BankAccount;
@@ -52,6 +53,11 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
             }
 
             return Task.FromResult(ReadLinesOverride(fileName).Take(lines));
+        }
+
+        internal async Task WriteToStreamTest(TransactionSetDto dto, StreamWriter writer)
+        {
+            await this.WriteToStream(dto, writer);
         }
     }
 }
