@@ -127,52 +127,55 @@ namespace BudgetAnalyser.Engine.Statement
                         model.AllTransactions.Count()));
             }
 
-            var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-            using (var stream = writer.CreateWritableStream(storageKey)) 
+            var selector = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+            using (var stream = selector.CreateWritableStream(storageKey))
+            using (var streamWriter = new StreamWriter(stream))
             {
-                using (var streamWriter = new StreamWriter(stream))
-                {
-                    WriteHeader(streamWriter, transactionSet);
-
-                    foreach (var transaction in transactionSet.Transactions)
-                    {
-                        var line = new StringBuilder();
-                        line.Append(transaction.TransactionType);
-                        line.Append(",");
-
-                        line.Append(transaction.Description);
-                        line.Append(",");
-
-                        line.Append(transaction.Reference1);
-                        line.Append(",");
-
-                        line.Append(transaction.Reference2);
-                        line.Append(",");
-
-                        line.Append(transaction.Reference3);
-                        line.Append(",");
-
-                        line.Append(transaction.Amount);
-                        line.Append(",");
-
-                        line.Append(transaction.Date.ToString("O", CultureInfo.InvariantCulture));
-                        line.Append(",");
-
-                        line.Append(transaction.BudgetBucketCode);
-                        line.Append(",");
-
-                        line.Append(transaction.Account);
-                        line.Append(",");
-
-                        line.Append(transaction.Id);
-                        line.Append(",");
-
-                        await streamWriter.WriteLineAsync(line.ToString());
-                    }
-
-                    await streamWriter.FlushAsync();
-                }
+                await WriteToStream(transactionSet, streamWriter);
             }
+        }
+
+        protected async Task WriteToStream(TransactionSetDto transactionSet, StreamWriter writer)
+        {
+            WriteHeader(writer, transactionSet);
+
+            foreach (var transaction in transactionSet.Transactions)
+            {
+                var line = new StringBuilder();
+                line.Append(SanitiseString(transaction.TransactionType, nameof(transaction.TransactionType)));
+                line.Append(",");
+
+                line.Append(SanitiseString(transaction.Description, nameof(transaction.Description)));
+                line.Append(",");
+
+                line.Append(SanitiseString(transaction.Reference1, nameof(transaction.Reference1)));
+                line.Append(",");
+
+                line.Append(SanitiseString(transaction.Reference2, nameof(transaction.Reference2)));
+                line.Append(",");
+
+                line.Append(SanitiseString(transaction.Reference3, nameof(transaction.Reference3)));
+                line.Append(",");
+
+                line.Append(transaction.Amount);
+                line.Append(",");
+
+                line.Append(transaction.Date.ToString("O", CultureInfo.InvariantCulture));
+                line.Append(",");
+
+                line.Append(SanitiseString(transaction.BudgetBucketCode, nameof(transaction.BudgetBucketCode)));
+                line.Append(",");
+
+                line.Append(SanitiseString(transaction.Account, nameof(transaction.Account)));
+                line.Append(",");
+
+                line.Append(transaction.Id);
+                line.Append(",");
+
+                await writer.WriteLineAsync(line.ToString());
+            }
+
+            await writer.FlushAsync();
         }
 
         /// <summary>
@@ -180,7 +183,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, bool isEncrypted)
         {
-            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted); 
+            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             var allText = await reader.LoadFromDiskAsync(fileName);
             return allText.SplitLines();
         }
@@ -190,7 +193,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines, bool isEncrypted)
         {
-            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted); 
+            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             var textData = await reader.LoadFirstLinesFromDiskAsync(fileName, lines);
             string[] firstLines = textData.SplitLines(lines);
             return firstLines;
@@ -221,7 +224,7 @@ namespace BudgetAnalyser.Engine.Statement
                 txnCheckSum *= 397; // also prime 
                 foreach (var txn in setDto.Transactions)
                 {
-                    txnCheckSum += (long) txn.Amount * 100;
+                    txnCheckSum += (long)txn.Amount * 100;
                     txnCheckSum *= 829;
                 }
             }
@@ -341,6 +344,18 @@ namespace BudgetAnalyser.Engine.Statement
         private static void WriteHeader(StreamWriter writer, TransactionSetDto setDto)
         {
             writer.WriteLine("VersionHash,{0},TransactionCheckSum,{1},{2}", setDto.VersionHash, setDto.Checksum, setDto.LastImport.ToString("O", CultureInfo.InvariantCulture));
+        }
+
+        private string SanitiseString(string data, string property)
+        {
+            if (string.IsNullOrWhiteSpace(data)) return data;
+            var result = data.Replace(",", string.Empty);
+            if (result.Length != data.Length)
+            {
+                this.logger.LogWarning(l => l.Format("'{0}' contains commas, and they have been stripped out. [{1}] -> [{2}]", property, data, result));
+            }
+
+            return result;
         }
     }
 }
