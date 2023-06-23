@@ -137,19 +137,19 @@ namespace BudgetAnalyser.Engine.Statement
                     foreach (var transaction in transactionSet.Transactions)
                     {
                         var line = new StringBuilder();
-                        line.Append(transaction.TransactionType);
+                        line.Append(SanitiseString(transaction.TransactionType, nameof(transaction.TransactionType)));
                         line.Append(",");
 
-                        line.Append(transaction.Description);
+                        line.Append(SanitiseString(transaction.Description, nameof(transaction.Description)));
                         line.Append(",");
 
-                        line.Append(transaction.Reference1);
+                        line.Append(SanitiseString(transaction.Reference1, nameof(transaction.Reference1)));
                         line.Append(",");
 
-                        line.Append(transaction.Reference2);
+                        line.Append(SanitiseString(transaction.Reference2, nameof(transaction.Reference2)));
                         line.Append(",");
 
-                        line.Append(transaction.Reference3);
+                        line.Append(SanitiseString(transaction.Reference3, nameof(transaction.Reference3)));
                         line.Append(",");
 
                         line.Append(transaction.Amount);
@@ -158,10 +158,10 @@ namespace BudgetAnalyser.Engine.Statement
                         line.Append(transaction.Date.ToString("O", CultureInfo.InvariantCulture));
                         line.Append(",");
 
-                        line.Append(transaction.BudgetBucketCode);
+                        line.Append(SanitiseString(transaction.BudgetBucketCode, nameof(transaction.BudgetBucketCode)));
                         line.Append(",");
 
-                        line.Append(transaction.Account);
+                        line.Append(SanitiseString(transaction.Account, nameof(transaction.Account)));
                         line.Append(",");
 
                         line.Append(transaction.Id);
@@ -341,6 +341,17 @@ namespace BudgetAnalyser.Engine.Statement
         private static void WriteHeader(StreamWriter writer, TransactionSetDto setDto)
         {
             writer.WriteLine("VersionHash,{0},TransactionCheckSum,{1},{2}", setDto.VersionHash, setDto.Checksum, setDto.LastImport.ToString("O", CultureInfo.InvariantCulture));
+        }
+
+        private string SanitiseString(string data, string property)
+        {
+            var result = data?.Replace(",", string.Empty);
+            if (result.Length != data.Length)
+            {
+                this.logger.LogWarning(l => l.Format("'{0}' contains commas, and they have been stripped out. [{1}] -> [{2}]", property, data, result));
+            }
+
+            return result;
         }
     }
 }
