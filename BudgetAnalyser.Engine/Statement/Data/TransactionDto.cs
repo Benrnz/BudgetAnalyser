@@ -7,18 +7,10 @@ namespace BudgetAnalyser.Engine.Statement.Data
     /// </summary>
     public class TransactionDto
     {
-        private string budgetBucketCode;
-        private string account;
-        private string description;
-        private string reference1;
-        private string reference2;
-        private string reference3;
-        private string transactionType;
-
         /// <summary>
         ///     Gets or sets the account code.
         /// </summary>
-        public string Account { get => account; set => account = CleanString(value); }
+        public string Account { get; set; }
 
         /// <summary>
         ///     Gets or sets the transaction amount, debits are negative.
@@ -28,7 +20,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
         /// <summary>
         ///     Gets or sets the budget bucket code.
         /// </summary>
-        public string BudgetBucketCode { get => budgetBucketCode; set => budgetBucketCode = CleanString(value); }
+        public string BudgetBucketCode { get; set; }
 
         /// <summary>
         ///     Gets or sets the transaction date.
@@ -38,7 +30,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
         /// <summary>
         ///     Gets or sets the transaction description.
         /// </summary>
-        public string Description { get => description; set => description = CleanString(value); }
+        public string Description { get; set; }
 
         /// <summary>
         ///     The unique identifier for the transaction.  Ideally this should not be public settable, but this is used during
@@ -49,26 +41,21 @@ namespace BudgetAnalyser.Engine.Statement.Data
         /// <summary>
         ///     Gets or sets the transaction reference1.
         /// </summary>
-        public string Reference1 { get => reference1; set => reference1 = CleanString(value); }
+        public string Reference1 { get; set; }
 
         /// <summary>
         ///     Gets or sets the transaction reference2.
         /// </summary>
-        public string Reference2 { get => reference2; set => reference2 = CleanString(value); }
+        public string Reference2 { get; set; }
 
         /// <summary>
         ///     Gets or sets the transaction reference3.
         /// </summary>
-        public string Reference3 { get => reference3; set => reference3 = CleanString(value); }
+        public string Reference3 { get; set; }
 
         /// <summary>
         ///     Gets or sets the type code of the transaction.
         /// </summary>
-        public string TransactionType { get => transactionType; set => transactionType = CleanString(value); }
-
-        private string CleanString(string data)
-        {
-            return data?.Replace(",", string.Empty);
-        }
+        public string TransactionType { get; set; }
     }
 }
