@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Castle.Core.Logging;
 
 namespace BudgetAnalyser.Engine.UnitTest.Widgets
 {
@@ -21,6 +22,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         private LedgerCalculation ledgerCalculation;
         private StatementModel statementTestData;
         private RemainingActualSurplusWidget subject;
+        private BudgetCurrencyContext budgetCurrencyContextTestData;
 
         [TestMethod]
         public void OutputTestData()
@@ -65,12 +67,21 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
                             .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateTime(2015, 10, 20), "automatchref12"); });
                     })
                 .Build();
+
+            var budgets = BudgetModelTestData.CreateCollectionWith1And2();
+            var budget = budgets.ForDate(this.criteriaTestData.BeginDate.Value);
+            this.budgetCurrencyContextTestData = new BudgetCurrencyContext(budgets, budget);
         }
 
         [TestMethod]
         public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
         {
-            this.subject.Update(this.statementTestData, this.criteriaTestData, this.ledgerBookTestData, this.ledgerCalculation);
+            Console.WriteLine($"StartDate: {this.criteriaTestData.BeginDate}; EndDate: {this.criteriaTestData.EndDate}");
+            this.statementTestData.Output(this.criteriaTestData.BeginDate.Value);
+            this.ledgerBookTestData.Output(outputTransactions: true);
+            this.budgetCurrencyContextTestData.Model.Output();
+
+            this.subject.Update(this.statementTestData, this.criteriaTestData, this.ledgerBookTestData, this.ledgerCalculation, this.budgetCurrencyContextTestData, new DebugLogger());
 
             Assert.AreEqual(-2433.34, this.subject.Value);
         }
