@@ -314,6 +314,14 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         List<Account> accountsToShow = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
         BankAccounts = accountsToShow.OrderBy(a => a.Name);
         SelectedBankAccount = null;
+        if (CreateMode)
+        {
+            if (BankAccounts.Any())
+            {
+                SelectedBankAccount = BankAccounts.First(account => account.IsSalaryAccount);
+            }
+        }
+
         this.dialogCorrelationId = Guid.NewGuid();
         var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
         {
