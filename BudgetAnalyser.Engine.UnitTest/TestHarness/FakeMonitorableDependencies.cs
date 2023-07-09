@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         /// <summary>
         /// Initializes a new instance of the <see cref="MonitorableDependencies"/> class.
         /// </summary>
-        public FakeMonitorableDependencies() : base(new LedgerCalculation(new FakeLogger()))
+        public FakeMonitorableDependencies() : base(new LedgerCalculation(new FakeLogger()), new FakeLogger())
         {
         }
 

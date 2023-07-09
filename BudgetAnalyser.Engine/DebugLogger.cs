@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace BudgetAnalyser.Engine;
 
 /// <summary>
-///     A logging implementation that simply outputs to the Debug stream <see cref="System.Diagnostics.Debug" />.
+///     A logging implementation that simply outputs to the Debug stream <see cref="System.Diagnostics.Debug" />. Only if the debugger is attached, otherwise does nothing.
 /// </summary>
 public class DebugLogger : ILogger
 {

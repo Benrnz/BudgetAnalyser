@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Initializes a new instance of the <see cref="MonitorableDependencies" /> class.
         /// </summary>
-        public MonitorableDependencies(LedgerCalculation ledgerCalculator)
+        public MonitorableDependencies(LedgerCalculation ledgerCalculator, ILogger logger)
         {
             this.availableDependencies = new Dictionary<Type, object>
             {
@@ -35,7 +35,8 @@ namespace BudgetAnalyser.Engine.Services
                 [typeof(LedgerCalculation)] = ledgerCalculator,
                 [typeof(ApplicationDatabase)] = null,
                 [typeof(ITransactionRuleService)] = null,
-                [typeof(IApplicationDatabaseService)] = null
+                [typeof(IApplicationDatabaseService)] = null,
+                [typeof(ILogger)] = logger
             };
         }
 
