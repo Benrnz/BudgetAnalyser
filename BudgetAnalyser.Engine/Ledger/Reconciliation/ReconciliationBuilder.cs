@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -274,17 +275,23 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
     private static string ExtractNarrative(Transaction t)
     {
-        if (!string.IsNullOrWhiteSpace(t.Description))
-        {
-            return t.Description;
-        }
-
-        if (t.TransactionType != null)
+        var builder = new StringBuilder();
+        builder.Append(t.Description ?? "[No Description]");
+        builder.Append(FormatTransactionFragment(t.Reference1));
+        builder.Append(FormatTransactionFragment(t.Reference2));
+        builder.Append(FormatTransactionFragment(t.Reference3));
+        
+        if (builder.Length == 16 && t.TransactionType != null)
         {
             return t.TransactionType.ToString();
         }
 
-        return string.Empty;
+        return builder.ToString();
+    }
+
+    private static string FormatTransactionFragment(string fragment)
+    {
+        return fragment == null ? string.Empty : $"; {fragment}";
     }
 
     private static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry ledgerEntry, bool includeMatchedTransactions = false)

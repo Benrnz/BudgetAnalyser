@@ -78,9 +78,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
                                         tab,
                                         entry.LedgerBucket.BudgetBucket.Code.PadRight(6),
                                         transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
-                                        transaction.Narrative.Truncate(15),
                                         transaction.Id,
-                                        transaction.AutoMatchingReference);
+                                        transaction.AutoMatchingReference, 
+                                        transaction.Narrative.Truncate(30));
                     }
                 }
                 Debug.WriteLine("=================================================================================================================================");

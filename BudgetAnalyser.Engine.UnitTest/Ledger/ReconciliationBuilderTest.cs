@@ -11,6 +11,7 @@ using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 
@@ -25,6 +26,97 @@ public class ReconciliationBuilderTest
     private ReconciliationBuilder subject;
     private IBudgetCurrencyContext testDataBudgetContext;
     private StatementModel testDataStatement;
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseDescIfNotNull()
+    {
+        var txn = new Transaction
+        {
+            Description = "Test Description1",
+        };
+
+        string result = PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "ExtractNarrative", txn);
+
+        Assert.AreEqual("Test Description1", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseRef1IfNotNull()
+    {
+        var txn = new Transaction
+        {
+            Description = "Test Description1",
+            Reference1 = "Ref123",
+        };
+
+        string result = PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "ExtractNarrative", txn);
+
+        Assert.AreEqual("Test Description1; Ref123", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseRef2IfNotNull()
+    {
+        var txn = new Transaction
+        {
+            Description = "Test Description1",
+            Reference1 = "Ref123",
+            Reference2 = "Ref456",
+        };
+
+        string result = PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "ExtractNarrative", txn);
+
+        Assert.AreEqual("Test Description1; Ref123; Ref456", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseRef3IfNotNull()
+    {
+        var txn = new Transaction
+        {
+            Description = "Test Description1",
+            Reference1 = "Ref123",
+            Reference2 = "Ref456",
+            Reference3 = "Ref789",
+        };
+
+        string result = PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "ExtractNarrative", txn);
+
+        Assert.AreEqual("Test Description1; Ref123; Ref456; Ref789", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseNoDescriptionIfNull()
+    {
+        var txn = new Transaction
+        {
+            Description = null,
+            Reference1 = "Ref123",
+            Reference2 = "Ref456",
+            Reference3 = "Ref789",
+        };
+
+        string result = PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "ExtractNarrative", txn);
+
+        Assert.AreEqual("[No Description]; Ref123; Ref456; Ref789", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseTxnTypeIfEverythingIsNull()
+    {
+        var txn = new Transaction
+        {
+            Description = null,
+            Reference1 = null,
+            Reference2 = null,
+            Reference3 = null,
+            TransactionType = new NamedTransaction("Foo")
+        };
+
+        string result = PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "ExtractNarrative", txn);
+
+        Assert.AreEqual("Foo", result);
+    }
 
     [TestMethod]
     public void AddLedger_ShouldIncludeNewLedgerInNextReconcile_GivenTestData1()
