@@ -318,8 +318,8 @@ public class LedgerCalculation
     private decimal CalculateTransactionTotal(DateTime inclBeginDate, DateTime inclEndDate, StatementModel statement, LedgerEntryLine entryLine, string bucketCode)
     {
         IEnumerable<LedgerTransaction> autoMatchLedgerTransactions = GetAutoMatchingTransactions(statement, entryLine, inclBeginDate);
-
-        IEnumerable<Transaction> transactions = statement.Transactions
+        // This needs to query .AllTransactions, not just .Transactions, when changing the date range the statement may not have had its internal filter changed when this runs. 
+        IEnumerable<Transaction> transactions = statement.AllTransactions
             .Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate)
             .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
 

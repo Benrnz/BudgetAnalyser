@@ -19,7 +19,7 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     /// </summary>
     public BudgetBucketMonitorWidget()
     {
-        this.disabledToolTip = "Either a Statement or Budget are not present, or the Bucket Code is not valid, or the filtered date range doesn't match the budget period remaining budget cannot be calculated.";
+        this.disabledToolTip = "Either a Statement or Budget are not present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget cannot be calculated.";
     }
 
     /// <summary>

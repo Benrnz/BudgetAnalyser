@@ -101,8 +101,14 @@ public class OverspentWarning : Widget
             return;
         }
 
-        Enabled = true;
         var ledgerLine = ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
+        if (ledgerLine == null)
+        {
+            Enabled = false;
+            return;
+        }
+
+        Enabled = true;
         this.logger.LogInfo(l => l.Format("Using this LedgerEntryLine: {0}", ledgerLine?.Date));
         IDictionary<BudgetBucket, decimal> currentLedgerBalances = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, statement);
         this.logger.LogInfo(l =>
