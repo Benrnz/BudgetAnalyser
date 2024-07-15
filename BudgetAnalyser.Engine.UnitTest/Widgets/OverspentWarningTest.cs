@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.UnitTest.TestData;
@@ -19,6 +17,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
     {
         private IBudgetCurrencyContext BudgetCurrencyContext { get; set; }
         private GlobalFilterCriteria Filter => new GlobalFilterCriteria { BeginDate = new DateTime(2013, 08, 15), EndDate = new DateTime(2013, 09, 14) };
+
+        /// <summary>
+        /// Used in response to <see cref="LedgerCalculation.CalculateCurrentPeriodLedgerBalances"/>
+        /// </summary>
         private IDictionary<BudgetBucket, decimal> LedgerBalancesFake { get; set; }
         private LedgerBook LedgerBook { get; set; }
         private LedgerCalculation LedgerCalculator { get; set; }
@@ -117,10 +119,19 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
             // Mocking out the Calculator means we dont need the LedgerBook
             var ledgerCalculatorMock = new Mock<LedgerCalculation>();
             ledgerCalculatorMock.Setup(m => m.CalculateCurrentPeriodLedgerBalances(
-                                                                                   It.IsAny<LedgerEntryLine>(), 
-                                                                                   It.IsAny<GlobalFilterCriteria>(), 
+                                                                                   It.IsAny<LedgerEntryLine>(),
+                                                                                   It.IsAny<GlobalFilterCriteria>(),
                                                                                    It.IsAny<StatementModel>())).Returns(LedgerBalancesFake);
+
+            // Create a stubbed LedgerEntryLine to satisfy LocateApplicableLedgerLine.  This stub is passed into the mock calculator above. 
+            var ledgerReconLine = new LedgerEntryLine();
+            ledgerCalculatorMock.Setup(m => m.LocateApplicableLedgerLine(
+                It.IsAny<LedgerBook>(),
+                It.IsInRange<DateTime>(DateTime.MinValue, DateTime.MaxValue, Range.Inclusive),
+                It.IsInRange<DateTime>(DateTime.MinValue, DateTime.MaxValue, Range.Inclusive)))
+                .Returns(ledgerReconLine);
             LedgerCalculator = ledgerCalculatorMock.Object;
+
 
             Subject.Update(Statement, BudgetCurrencyContext, Filter, LedgerBook, LedgerCalculator);
         }
@@ -141,6 +152,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         {
             // Phone is intentionally missing from here, so testing fall back to budget can occur.
             // These are balances remaining after looking up the ledger balance and subtracting all spending transactions.
+            // LedgerBalancesFake is used in response to mock the response from <see cref="LedgerCalculation.CalculateCurrentPeriodLedgerBalances"/>.
+
             LedgerBalancesFake = new Dictionary<BudgetBucket, decimal>
             {
                 { StatementModelTestData.CarMtcBucket, 10 },
