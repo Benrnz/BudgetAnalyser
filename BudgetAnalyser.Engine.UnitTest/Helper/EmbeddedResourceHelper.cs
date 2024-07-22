@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using System.Xaml;
+using Portable.Xaml;
 using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Helper

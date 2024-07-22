@@ -1,8 +1,6 @@
-﻿using System;
-using System.Xaml;
-using BudgetAnalyser.Engine.Ledger.Data;
+﻿using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
