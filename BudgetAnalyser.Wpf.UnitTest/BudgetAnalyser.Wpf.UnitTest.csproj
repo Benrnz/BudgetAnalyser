@@ -157,17 +157,9 @@
       <Project>{17cfb549-81c7-4527-9f3e-5694d2b5b3fa}</Project>
       <Name>BudgetAnalyser.Encryption</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BudgetAnalyser\BudgetAnalyser.Wpf.csproj">
-      <Project>{3f2f3bc6-153d-4fd5-b819-6c456be2dc25}</Project>
-      <Name>BudgetAnalyser.Wpf</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MapperGeneration\MapperGeneration.csproj">
       <Project>{7fa4712a-2eec-4441-bedc-33f6def5e67e}</Project>
       <Name>MapperGeneration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rees.Wpf\Rees.Wpf.csproj">
-      <Project>{951f9589-1583-47a0-b636-baba34e447a3}</Project>
-      <Name>Rees.Wpf</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

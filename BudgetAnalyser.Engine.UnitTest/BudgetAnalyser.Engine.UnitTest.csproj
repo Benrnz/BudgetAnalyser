@@ -272,10 +272,6 @@
       <Project>{17cfb549-81c7-4527-9f3e-5694d2b5b3fa}</Project>
       <Name>BudgetAnalyser.Encryption</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MapperGeneration\MapperGeneration.csproj">
-      <Project>{7fa4712a-2eec-4441-bedc-33f6def5e67e}</Project>
-      <Name>MapperGeneration</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\TestData\DemoBudget.xml">

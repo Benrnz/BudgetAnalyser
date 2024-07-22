@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xaml;
+﻿using System.Diagnostics.CodeAnalysis;
+using Portable.Xaml;
 using BudgetAnalyser.Engine.Matching.Data;
 using JetBrains.Annotations;
 using Rees.TangyFruitMapper;
+using NotNull = JetBrains.Annotations.NotNullAttribute;
 
 namespace BudgetAnalyser.Engine.Matching
 {
