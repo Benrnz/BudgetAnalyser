@@ -96,6 +96,14 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BudgetAnalyser.Encryption, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\BudgetAnalyser.Encryption.dll</HintPath>
+    </Reference>
+    <Reference Include="BudgetAnalyser.Engine, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\BudgetAnalyser.Engine.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -740,16 +748,6 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
-      <Project>{c0bab6f9-9a93-4155-976a-f75a9b309256}</Project>
-      <Name>BudgetAnalyser.Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BudgetAnalyser.Storage\BudgetAnalyser.Encryption.csproj">
-      <Project>{17cfb549-81c7-4527-9f3e-5694d2b5b3fa}</Project>
-      <Name>BudgetAnalyser.Encryption</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="UI\Assets\PieChart.png" />
   </ItemGroup>
   <ItemGroup>
@@ -788,6 +786,12 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.2" />
     <PackageReference Include="System.Windows.Controls.DataVisualization.Toolkit" Version="4.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rees.Wpf\Rees.Wpf.csproj">
+      <Project>{951f9589-1583-47a0-b636-baba34e447a3}</Project>
+      <Name>Rees.Wpf</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
