@@ -10,6 +10,41 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestData\AnzChequeCsvFileExportFormat.csv" />
+    <None Remove="TestData\AnzVisaCsvFileExportFormat.csv" />
+    <None Remove="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
+    <None Remove="TestData\BudgetCollectionTestData.xml" />
+    <None Remove="TestData\MatchingRulesTestData.xml" />
+    <None Remove="TestData\WestpacChequeCsvFileExportFormat.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\TestData\BudgetModel.xml" Link="TestData\BudgetModel.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\TestData\DemoBudget.xml" Link="TestData\DemoBudget.xml" />
+    <EmbeddedResource Include="..\TestData\DemoLedgerBook.xml" Link="TestData\DemoLedgerBook.xml" />
+    <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml" Link="TestData\DemoMatchingRules.xml" />
+    <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml" Link="TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv" />
+    <EmbeddedResource Include="TestData\AnzVisaCsvFileExportFormat.csv" />
+    <EmbeddedResource Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
+    <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml" />
+    <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />
+    <EmbeddedResource Include="TestData\WestpacChequeCsvFileExportFormat.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax" Link="TestData\BudgetAnalyserDemo.bax" />
+    <EmbeddedResource Include="..\TestData\DemoTransactions.csv" Link="TestData\DemoTransactions.csv" />
+    <EmbeddedResource Include="..\TestData\DuplicateTxnTest.csv" Link="TestData\DuplicateTxnTest.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
