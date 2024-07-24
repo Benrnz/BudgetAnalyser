@@ -143,11 +143,6 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             var upperCode = code.ToUpperInvariant();
-            if (ContainsKeyInternal(upperCode))
-            {
-                return this.lookupTable[upperCode];
-            }
-
             lock (this.syncRoot)
             {
                 if (ContainsKeyInternal(upperCode))
