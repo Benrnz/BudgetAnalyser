@@ -1,0 +1,654 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ConfuzzleCore</name>
+    </assembly>
+    <members>
+        <member name="T:ConfuzzleCore.CipherFactory`2">
+            <summary>
+                A factory for creating cryptographic algorithms.
+            </summary>
+            <typeparam name="TCipher">The type of symmetric encryption algorithm to create.</typeparam>
+            <typeparam name="THash">The type of hash algorithm to create.</typeparam>
+        </member>
+        <member name="P:ConfuzzleCore.CipherFactory`2.Default">
+            <summary>
+                Gets a default instance of the factory.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CipherFactory`2.CreateCipher">
+            <summary>
+                Creates a new symmetric encryption algorithm.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CipherFactory`2.CreateHash">
+            <summary>
+                Creates a new hashing algorithm.
+            </summary>
+        </member>
+        <member name="T:ConfuzzleCore.CipherFactory">
+            <summary>
+                A factory for creating cryptographic algorithms, using sensible default algorithms.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CipherFactory.For``2">
+            <summary>
+                Creates a cipher factory for the specified algorithms.
+            </summary>
+            <typeparam name="TCipher">The type of symmetric encryption algorithm to create.</typeparam>
+            <typeparam name="THash">The type of hash algorithm to create.</typeparam>
+            <returns>A factory for the specified algorithms.</returns>
+        </member>
+        <member name="T:ConfuzzleCore.CipherStream">
+            <summary>
+                A filter stream that encrypts and decrypts data to/from an underlying stream.
+            </summary>
+            <remarks>
+                The encrypted data starts with a header that contains information necessary to perform the decryption.
+                The layout of the header is as follows:
+                * A 16-bit unsigned integer saying how much data is in the rest of the header.
+                * A 16-bit unsigned integer saying how long the nonce is.
+                * Variable length nonce.
+                * A 16-bit unsigned integer saying how long the password salt is.
+                * Variable length password salt.
+            </remarks>
+        </member>
+        <member name="F:ConfuzzleCore.CipherStream.HeaderOverhead">
+            <summary>
+                The number of bytes in the header that's used by the data length fields.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.#ctor(System.IO.Stream,ConfuzzleCore.KeyStretcher,ConfuzzleCore.ICipherFactory)">
+            <summary>
+                Creates a new <see cref="T:ConfuzzleCore.CipherStream" />.
+            </summary>
+            <param name="stream">The underlying stream for storing encrypted data.</param>
+            <param name="key">The key used to encrypt the data.</param>
+            <param name="cipherFactory">
+                A factory for creating cryptographic algorithms. If <c>null</c> is provided, a default factory will be
+                used.
+            </param>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.BlockLength">
+            <summary>
+                The length of cipher processing blocks in bytes.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.CanRead">
+            <summary>
+                Indicates whether the current stream supports reading.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.CanSeek">
+            <summary>
+                Indicates whether the current stream supports seeking.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.CanTimeout">
+            <summary>
+                Indicates whether the stream operations can timeout.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.CanWrite">
+            <summary>
+                Indicates whether the current stream supports writing.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.CipherFactory">
+            <summary>
+                The factory used to create cryptographic algorithms.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.Key">
+            <summary>
+                The key used during cryptographic transformations.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.Length">
+            <summary>
+                Gets the length of the plaintext data, in bytes.
+            </summary>
+            <remarks>
+                The length of the underlying stream will differ due to the presence of the cryptographic header.
+            </remarks>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.MaxNonceLength">
+            <summary>
+                The maximum length of the nonce in bytes.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.MinNonceLength">
+            <summary>
+                The minimum length of the nonce in bytes.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.Nonce">
+            <summary>
+                A random value used to ensure that each encrypted file has different ciphertext.
+            </summary>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.PasswordSalt">
+            <summary>
+                Any user-supplied data that should be saved with the stream.
+            </summary>
+            <remarks>
+                The password salt is stored in this field.
+            </remarks>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.Position">
+            <summary>
+                Gets or sets the current position in the plaintext data stream.
+            </summary>
+            <remarks>
+                The position the underlying stream will differ due to the presence of the cryptographic header.
+            </remarks>
+        </member>
+        <member name="P:ConfuzzleCore.CipherStream.Rng">
+            <summary>
+                A random number generator for creating nonces.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Create(System.IO.Stream,ConfuzzleCore.KeyStretcher,ConfuzzleCore.ICipherFactory,System.Byte[])">
+            <summary>
+                Creates a new <see cref="T:ConfuzzleCore.CipherStream" /> over a data stream.
+            </summary>
+            <param name="stream">The stream that will hold the encrypted data.</param>
+            <param name="key">The key used to encrypt the data.</param>
+            <param name="cipherFactory">
+                A factory for creating cryptographic algorithms. If <c>null</c> is provided, a default factory will be
+                used.
+            </param>
+            <param name="nonce">
+                A random value that helps prevent the same plaintext from being converted to the same ciphertext every
+                time. If <c>null</c> is provided, a new nonce will be generated.
+            </param>
+            <returns>
+                A <see cref="T:ConfuzzleCore.CipherStream" /> ready to encrypt data.
+            </returns>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Create(System.IO.Stream,System.String,ConfuzzleCore.ICipherFactory,System.Byte[],System.Byte[])">
+            <summary>
+                Creates a new <see cref="T:ConfuzzleCore.CipherStream" /> over a data stream.
+            </summary>
+            <param name="stream">The stream that will hold the encrypted data.</param>
+            <param name="password">The password used to encrypt the data.</param>
+            <param name="cipherFactory">
+                A factory for creating cryptographic algorithms. If <c>null</c> is provided, a default factory will be
+                used.
+            </param>
+            <param name="nonce">
+                A random value that helps prevent the same plaintext from being converted to the same ciphertext every
+                time. If <c>null</c> is passed, a new nonce will be generated.
+            </param>
+            <param name="salt">
+                A random value used when converting the password to a cryptographic key. If <c>null</c> is passed, a new
+                salt will be generated.
+            </param>
+            <returns>
+                A <see cref="T:ConfuzzleCore.CipherStream" /> ready to encrypt data.
+            </returns>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Flush">
+            <summary>
+                Clears all buffers for this stream and causes any buffered data to be written.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Open(System.IO.Stream,ConfuzzleCore.KeyStretcher,ConfuzzleCore.ICipherFactory)">
+            <summary>
+                Creates a <see cref="T:ConfuzzleCore.CipherStream" /> over encrypted data stored in a data stream.
+            </summary>
+            <param name="stream">The stream that contains encrypted data.</param>
+            <param name="key">The key used to encrypt the data.</param>
+            <param name="cipherFactory">
+                A factory for creating cryptographic algorithms. If <c>null</c> is provided, a default factory will be
+                used.
+            </param>
+            <returns>
+                A <see cref="T:ConfuzzleCore.CipherStream" /> ready to encrypt and decrypt data.
+            </returns>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Open(System.IO.Stream,System.String,ConfuzzleCore.ICipherFactory)">
+            <summary>
+                Creates a <see cref="T:ConfuzzleCore.CipherStream" /> over encrypted data stored in a data stream.
+            </summary>
+            <param name="stream">The stream that contains encrypted data.</param>
+            <param name="password">The password used to encrypt the data.</param>
+            <param name="cipherFactory">
+                A factory for creating cryptographic algorithms. If <c>null</c> is provided, a default factory will be
+                used.
+            </param>
+            <returns>
+                A <see cref="T:ConfuzzleCore.CipherStream" /> ready to encrypt and decrypt data.
+            </returns>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Reads a sequence of plaintext bytes from the current stream and advances the position within the stream
+                by the number of bytes read.
+            </summary>
+            <param name="buffer">
+                An array of bytes. When this method returns, the buffer contains the specified byte array with the
+                values between <paramref name="offset" /> and ( <paramref name="offset" /> + <paramref name="count" /> - 1)
+                replaced by the bytes read from the current source.
+            </param>
+            <param name="offset">
+                The zero-based byte offset in <paramref name="buffer" /> at which to begin storing the data read from the
+                current stream.
+            </param>
+            <param name="count">
+                The maximum number of bytes to be read from the current stream.
+            </param>
+            <returns>
+                The total number of bytes read into the buffer. This can be less than the number of bytes requested if
+                that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+            </returns>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <summary>
+                Sets the position within the current plaintext data stream.
+            </summary>
+            <param name="offset">A byte offset relative to the <paramref name="origin" /> parameter.</param>
+            <param name="origin">
+                A value of type <see cref="T:System.IO.SeekOrigin" /> indicating the reference point used to obtain the new position.
+            </param>
+            <returns>The new position within the current stream.</returns>
+            <remarks>
+                The position the underlying stream will differ due to the presence of the cryptographic header.
+            </remarks>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.SetLength(System.Int64)">
+            <summary>
+                Sets the length of the current stream.
+            </summary>
+            <param name="value">The desired length of the plaintext data stream in bytes.</param>
+            <remarks>
+                The length of the underlying stream will differ due to the presence of the cryptographic header.
+            </remarks>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Writes a sequence of bytes to the current stream and advances the current position within this stream by
+                the number of bytes written.
+            </summary>
+            <param name="buffer">
+                An array of bytes.
+            </param>
+            <paramref name="count//">
+                bytes from <paramref name="buffer" /> to
+                the current stream.
+            </paramref>
+            <param name="offset">
+                The zero-based byte offset in <paramref name="buffer" /> at which to begin copying bytes to the current
+                stream.
+            </param>
+            <param name="count">The number of bytes to be written to the current stream.</param>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.Dispose(System.Boolean)">
+            <summary>
+                Releases the unmanaged resources used by the Stream and optionally releases the managed resources.
+            </summary>
+            <param name="disposing">
+                If <c>true</c>, managed resources should be released in addition to unmanaged resources.
+            </param>
+        </member>
+        <member name="M:ConfuzzleCore.CipherStream.LoadParameters">
+            <summary>
+                Loads existing cryptographic parameters from the underlying stream.
+            </summary>
+        </member>
+        <member name="T:ConfuzzleCore.CompleteDecryptExpression">
+            <summary>
+                A fluent syntax class that shows the user the next required step is to select the output destination.
+                This class contains previously captured data.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CompleteDecryptExpression.IntoFile(System.String)">
+            <summary>
+                Write the decrypted data into a new file.  If the new file already exists it is overwritten.
+                This method is asynchronous.
+            </summary>
+            <param name="fileName">
+                A full path and file name to the file you wish to write the decrypted data. If the file exists
+                it is overwritten.
+            </param>
+        </member>
+        <member name="M:ConfuzzleCore.CompleteDecryptExpression.IntoString">
+            <summary>
+                Write the decrypted data contents into a string.
+                This method is asynchronous.
+            </summary>
+            <returns>A UTF8 encoded text string.</returns>
+        </member>
+        <member name="T:ConfuzzleCore.CompleteEncryptExpression">
+            <summary>
+                A fluent syntax class that shows the user the next required step is to select the output destination.
+                This class contains previously captured data.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CompleteEncryptExpression.IntoByteArray">
+            <summary>
+                Writes the encrypted data into a byte array.
+            </summary>
+            <returns>A encrypted set of bytes.</returns>
+        </member>
+        <member name="M:ConfuzzleCore.CompleteEncryptExpression.IntoFile(System.String)">
+            <summary>
+                Writes the encrypted data into a new file. If the file exists it is overwritten.
+            </summary>
+            <param name="fileName">
+                A full path and file name to the file you wish to write the encrypted data. If the file exists
+                it is overwritten.
+            </param>
+        </member>
+        <member name="T:ConfuzzleCore.CtrModeTransform">
+            <summary>
+                Handles the encryption and decryption of data using AES CTR mode transformation.
+            </summary>
+            <remarks>
+                AES CTR mode works differently to most encryption methods. Rather than encrypting the data directly, CTR
+                mode encrypts blocks of data containing a nonce and a counter value. The encrypted block is then XOR'd with
+                the data to encrypt or decrypt it.
+                The biggest benefit of CTR mode is that the encrypted data does not need to be processed sequentially. This
+                allows for random access, and for blocks to be potentially decrypted in parallel.
+            </remarks>
+        </member>
+        <member name="F:ConfuzzleCore.CtrModeTransform.PreferredTransformLength">
+            <summary>
+                The preferred size of the CTR transformation block, in bytes.
+            </summary>
+            <remarks>
+                After some performance tuning, it appears this is the optimum transform length.
+            </remarks>
+        </member>
+        <member name="M:ConfuzzleCore.CtrModeTransform.Transform(System.Int64,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Performs an in-place transformation of a block of data.
+            </summary>
+            <param name="fromPosition">
+                The position of the first byte of data to transform, relative to the start of the steam.
+            </param>
+            <param name="data">The data to be transformed.</param>
+            <param name="offset">The offset into the data at which to start transformation.</param>
+            <param name="length">The length of data to be transformed.</param>
+        </member>
+        <member name="M:ConfuzzleCore.CtrModeTransform.CreateIV">
+            <summary>
+                Creates an initialization vector for the symmetric block cipher.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.CtrModeTransform.FillCtrSeedBlock(System.ArraySegment{System.Byte},System.Int64)">
+            <summary>
+                Fills a CTR seed block with the nonce and CTR block number.
+            </summary>
+            <param name="block">
+                An array segment representing the CTR seed block to fill.
+            </param>
+            <param name="blockNumber">
+                A 1-based index of the CTR block from the start of the data.
+            </param>
+        </member>
+        <member name="M:ConfuzzleCore.CtrModeTransform.Initialize">
+            <summary>
+                Initializes the CTR mode transformation.
+            </summary>
+            <remarks>
+                This is designed as a late initialization, so that the stream has an opportunity to correctly set up the
+                key and nonce.
+            </remarks>
+        </member>
+        <member name="M:ConfuzzleCore.CtrModeTransform.PrepareTransform(System.Int64)">
+            <summary>
+                Prepares to transform a block of data starting at a given offset.
+            </summary>
+            <param name="fromPosition">The position of the first byte in the data to be transformed.</param>
+        </member>
+        <member name="M:ConfuzzleCore.ExtensionMethods.Fill``1(``0[],System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+                Completely fills an array with a sequence of values.
+            </summary>
+            <typeparam name="T">The type of value in the array.</typeparam>
+            <param name="array">The array to be filled.</param>
+            <param name="fillValues">A sequence of values to fill the array with.</param>
+            <remarks>
+                If <paramref name="fillValues" /> contains more values than the array will hold, any additional values
+                will be ignored.
+                If <paramref name="fillValues" /> contains fewer values than the array will hold, the fill values will be
+                repeated until the array is filled.
+            </remarks>
+        </member>
+        <member name="M:ConfuzzleCore.ExtensionMethods.ReadExact(System.IO.Stream,System.Int32)">
+            <summary>
+                Reads the specified number of bytes from a stream.
+            </summary>
+            <param name="stream">The stream to read from.</param>
+            <param name="length">The number of bytes to read.</param>
+            <returns>A byte array containing the read data.</returns>
+        </member>
+        <member name="M:ConfuzzleCore.ExtensionMethods.ReadUShort(System.IO.Stream)">
+            <summary>
+                Reads an unsigned short integer from the stream.
+            </summary>
+            <param name="stream">The stream to read from.</param>
+        </member>
+        <member name="M:ConfuzzleCore.ExtensionMethods.Write(System.IO.Stream,System.Byte[])">
+            <summary>
+                Writes an array of bytes to the stream.
+            </summary>
+            <param name="stream">The stream to write to.</param>
+            <param name="value">The bytes to write.</param>
+        </member>
+        <member name="M:ConfuzzleCore.ExtensionMethods.WriteUShort(System.IO.Stream,System.UInt16)">
+            <summary>
+                Writes an unsigned short integer to the stream.
+            </summary>
+            <param name="stream">The stream to write to.</param>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="T:ConfuzzleCore.Confuzzle">
+            <summary>
+                A convenience helper class that simplifies encrypting and decrypting files and strings.
+                All strings are treated with UTF8 encoding.
+                Prefer using <see cref="T:System.Security.SecureString" /> for passwords. This standard .NET class more securely handles passwords in
+                memory.
+                Prefer using file to file encryption and decryption over strings and byte arrays for large data sets.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.Confuzzle.DecryptBytes(System.Byte[])">
+            <summary>
+                Decrypt from a set of encrypted bytes. The byte array is expected to be a previously encrypted set of bytes using
+                one of the Encrypt overloads.
+                Warning: Using encryption with in memory constructs, such as a byte array, can be slow and inefficient for large
+                data sets.
+            </summary>
+            <param name="bytes">The byte array to decrypt.</param>
+        </member>
+        <member name="M:ConfuzzleCore.Confuzzle.DecryptFile(System.String)">
+            <summary>
+                Decrypt an existing encrypted file on the local disk.
+            </summary>
+            <param name="fileName">A full path and file name to the encrypted file. This file remains unchanged.</param>
+        </member>
+        <member name="M:ConfuzzleCore.Confuzzle.EncryptFile(System.String)">
+            <summary>
+                Encrypt an existing file on the local disk.
+            </summary>
+            <param name="fileName">A full path and file name to the file you wish to encrypt. This file remains unchanged.</param>
+        </member>
+        <member name="M:ConfuzzleCore.Confuzzle.EncryptString(System.String)">
+            <summary>
+                Encrypt a string.
+                Warning: Using encryption with in memory strings can be slow and inefficient for large strings.
+            </summary>
+            <param name="inputData">
+                The string to encrypt. This text will be UTF8 encoded to convert it to a byte array for
+                encryption.
+            </param>
+        </member>
+        <member name="T:ConfuzzleCore.ICipherFactory">
+            <summary>
+                A factory for creating cryptographic algorithms.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.ICipherFactory.CreateCipher">
+            <summary>
+                Creates a new symmetric encryption algorithm.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.ICipherFactory.CreateHash">
+            <summary>
+                Creates a new hashing algorithm.
+            </summary>
+        </member>
+        <member name="T:ConfuzzleCore.KeyStretcher">
+            <summary>
+                Stretches passwords into cryptographic keys using PBKDF2 (RFC 2898).
+            </summary>
+        </member>
+        <member name="F:ConfuzzleCore.KeyStretcher.DefaultIterationCount">
+            <summary>
+                The default number of iterations used during stretching.
+            </summary>
+        </member>
+        <member name="F:ConfuzzleCore.KeyStretcher.DefaultSaltSize">
+            <summary>
+                The default size of a password salt, in bytes.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.#ctor(System.String)">
+            <summary>
+                Stretches a password using a random salt and the default iteration count.
+            </summary>
+            <param name="password">The password to stretch.</param>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.#ctor(System.String,System.Int32)">
+            <summary>
+                Stretches a password using a random salt and the specified iteration count.
+            </summary>
+            <param name="password">The password to stretch.</param>
+            <param name="iterationCount">The number of iterations used during password stretching.</param>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.#ctor(System.String,System.Byte[])">
+            <summary>
+                Stretches a password using the specified salt and the default iteration count.
+            </summary>
+            <param name="password">The password to stretch.</param>
+            <param name="salt">The salt used during password stretching.</param>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.#ctor(System.String,System.Byte[],System.Int32)">
+            <summary>
+                Stretches a password using the specified salt and iteration count.
+            </summary>
+            <param name="password">The password to stretch.</param>
+            <param name="salt">The salt used during password stretching.</param>
+            <param name="iterationCount">The number of iterations used during password stretching.</param>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.#ctor(System.Byte[])">
+            <summary>
+                Stretches a password using a random salt and the default iteration count.
+            </summary>
+            <param name="password">The password to stretch.</param>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.#ctor(System.Byte[],System.Int32)">
+            <summary>
+                Stretches a password using a random salt and the specified iteration count.
+            </summary>
+            <param name="password">The password to stretch.</param>
+            <param name="iterationCount">The number of iterations used during password stretching.</param>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.#ctor(System.Byte[],System.Byte[])">
+            <summary>
+                Stretches a password using the specified salt and the default iteration count.
+            </summary>
+            <param name="password">The password to stretch.</param>
+            <param name="salt">The salt used during password stretching.</param>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.#ctor(System.Byte[],System.Byte[],System.Int32)">
+            <summary>
+                Stretches a password using the specified salt and iteration count.
+            </summary>
+            <param name="password">The password to stretch.</param>
+            <param name="salt">The salt used during password stretching.</param>
+            <param name="iterationCount">The number of iterations used during password stretching.</param>
+        </member>
+        <member name="P:ConfuzzleCore.KeyStretcher.Rng">
+            <summary>
+                A random number generator for creating random salts.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.GenerateSalt(System.Int32)">
+            <summary>
+                Generates a new random salt.
+            </summary>
+            <param name="saltLength">The length of the salt, in bytes.</param>
+            <returns>A new random salt.</returns>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.GetKeyBytes(System.Int32)">
+            <summary>
+                Gets a key of the specified size.
+            </summary>
+            <param name="keySizeBits">The size of the key in bits.</param>
+            <returns>A key of the specified size.</returns>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.GetKeyBytes(System.Security.Cryptography.SymmetricAlgorithm)">
+            <summary>
+                Gets a key suitable for the specified algorithm, which is no stronger than the specified size.
+            </summary>
+            <param name="algorithm">The algorithm to generate the key for.</param>
+            <returns>A key suitable for the specified algorithm.</returns>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.GetKeyBytes(System.Security.Cryptography.SymmetricAlgorithm,System.Int32)">
+            <summary>
+                Gets a key suitable for the specified algorithm, which is no stronger than the specified size.
+            </summary>
+            <param name="algorithm">The algorithm to generate the key for.</param>
+            <param name="maxKeySizeBits">The maximum key size in bits.</param>
+            <returns>A key suitable for the specified algorithm.</returns>
+        </member>
+        <member name="M:ConfuzzleCore.KeyStretcher.GetMaxKeySize(System.Security.Cryptography.KeySizes,System.Int32)">
+            <summary>
+                Gets the maximum key size that's no larger than a specified maximum.
+            </summary>
+            <param name="keySizes">A structure indicating valid key sizes.</param>
+            <param name="maxKeySizeBits">The maximum key size in bits.</param>
+            <returns>The maximum key size, or 0 if no suitable key size is available.</returns>
+        </member>
+        <member name="T:ConfuzzleCore.PasswordRequiredDecryptExpression">
+            <summary>
+                A fluent syntax class that shows the user the next required step is to specify a password.
+                This class contains previously captured data.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.PasswordRequiredDecryptExpression.WithPassword(System.String)">
+            <summary>
+                Set the password to use to decrypt the data. If the password is incorrect the output will be garbled; no exceptions
+                are thrown.
+                Prefer use of <see cref="T:System.Security.SecureString" /> where possible.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.PasswordRequiredDecryptExpression.WithPassword(System.Security.SecureString)">
+            <summary>
+                Set the password to use to decrypt the data. If the password is incorrect the output will be garbled; no exceptions
+                are thrown.
+            </summary>
+        </member>
+        <member name="T:ConfuzzleCore.PasswordRequiredEncryptExpression">
+            <summary>
+                A fluent syntax class that shows the user the next required step is to specify a password.
+                This class contains previously captured data.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.PasswordRequiredEncryptExpression.WithPassword(System.String)">
+            <summary>
+                Set the password to use to encrypt the data. If the password is incorrect the output will be garbled; no exceptions
+                are thrown.
+                Prefer use of <see cref="T:System.Security.SecureString" /> where possible.
+            </summary>
+        </member>
+        <member name="M:ConfuzzleCore.PasswordRequiredEncryptExpression.WithPassword(System.Security.SecureString)">
+            <summary>
+                Set the password to use to encrypt the data. If the password is incorrect the output will be garbled; no exceptions
+                are thrown.
+            </summary>
+        </member>
+    </members>
+</doc>
