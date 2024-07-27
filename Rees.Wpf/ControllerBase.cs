@@ -1,5 +1,5 @@
 ﻿using System.Windows.Threading;
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Rees.Wpf
 {
@@ -8,12 +8,8 @@ namespace Rees.Wpf
     ///     that
     ///     executes the constructor.
     /// </summary>
-    public class ControllerBase : ViewModelBase
+    public class ControllerBase : ObservableRecipient
     {
-        // ReSharper disable FieldCanBeMadeReadOnly.Local
-        // Required for testing
-        // ReSharper restore FieldCanBeMadeReadOnly.Local
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ControllerBase" /> class.
         /// </summary>
