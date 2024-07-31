@@ -33,8 +33,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj" />
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj" />
     <ProjectReference Include="..\Rees.Wpf\Rees.Wpf.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="JetBrains.Annotations" />
   </ItemGroup>
 
 </Project>
