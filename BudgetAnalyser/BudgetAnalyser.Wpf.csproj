@@ -9,6 +9,9 @@
     <RootNamespace>BudgetAnalyser</RootNamespace>
     <AssemblyVersion>4.0.0</AssemblyVersion>
     <FileVersion>4.0.0</FileVersion>
+    <StartupObject>BudgetAnalyser.App</StartupObject>
+    <AssemblyName>BudgetAnalyser</AssemblyName>
+    <ApplicationIcon>PieChart.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,11 +23,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="PieChart.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="8.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj" />
     <ProjectReference Include="..\Rees.Wpf\Rees.Wpf.csproj" />
   </ItemGroup>
 
