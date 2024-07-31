@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -50,10 +45,10 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException(nameof(persistenceOperations));
             }
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
+            Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
 
             this.statePersistence = statePersistence;
             this.persistenceOperations = persistenceOperations;
@@ -128,10 +123,10 @@ namespace BudgetAnalyser
             {
                 var sequenceCopy = sequence;
                 IEnumerable<IPersistentApplicationStateObject> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
-                MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
+                Messenger.Send(new ApplicationStateLoadedMessage(models));
             }
 
-            MessengerInstance.Send(new ApplicationStateLoadFinishedMessage());
+            Messenger.Send(new ApplicationStateLoadFinishedMessage());
         }
 
         public void NotifyOfWindowLocationChange(Point location)
@@ -167,7 +162,7 @@ namespace BudgetAnalyser
         public void SaveApplicationState()
         {
             var gatherDataMessage = new ApplicationStateRequestedMessage();
-            MessengerInstance.Send(gatherDataMessage);
+            Messenger.Send(gatherDataMessage);
             this.statePersistence.Persist(gatherDataMessage.PersistentData);
         }
 

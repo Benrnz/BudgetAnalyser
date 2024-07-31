@@ -1,13 +1,11 @@
-﻿using System;
-using System.Windows.Input;
-using BudgetAnalyser.Annotations;
+﻿using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
-using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard
@@ -16,8 +14,8 @@ namespace BudgetAnalyser.Dashboard
     public static class WidgetCommands
     {
         public static ICommand AddNewBucketMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewBucketMonitorWidgetCommandExecute);
-        public static ICommand AddNewFixedBudgetMonitorWidgetCommand => new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
-        public static ICommand AddNewSurprisePaymentMonitorWidgetCommand => new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute);
+        public static ICommand AddNewFixedBudgetMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
+        public static ICommand AddNewSurprisePaymentMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute);
 
         [PropertyInjection]
         public static ChooseBudgetBucketController ChooseBudgetBucketController { get; [UsedImplicitly] set; }
@@ -84,7 +82,7 @@ namespace BudgetAnalyser.Dashboard
 
         private static void OnWidgetCommandExecuted(Widget widget)
         {
-            MessengerInstance.Send(new WidgetActivatedMessage(widget));
+            Messenger.Send(new WidgetActivatedMessage(widget));
         }
 
         private static bool WidgetCommandCanExecute(Widget widget)

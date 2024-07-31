@@ -1,7 +1,6 @@
 ﻿using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 
 namespace BudgetAnalyser
 {

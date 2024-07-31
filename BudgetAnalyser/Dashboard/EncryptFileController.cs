@@ -1,8 +1,5 @@
-﻿using System;
-using System.Security;
-using System.Threading.Tasks;
+﻿using System.Security;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
@@ -34,9 +31,9 @@ namespace BudgetAnalyser.Dashboard
             this.questionService = uiContext.UserPrompts.YesNoBox;
             this.messageService = uiContext.UserPrompts.MessageBox;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDiaglogResponseMessageReceived);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDiaglogResponseMessageReceived);
         }
 
         /// <summary>
@@ -73,9 +70,9 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseDecryptFileMode = value;
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseEnterPasswordMode = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => EnterPasswordMode);
-                RaisePropertyChanged(() => EncryptFileMode);
+                OnPropertyChanged();
+                OnPropertyChanged(() => EnterPasswordMode);
+                OnPropertyChanged(() => EncryptFileMode);
             }
         }
 
@@ -87,9 +84,9 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseEncryptFileMode = value;
                 this.doNotUseEnterPasswordMode = !value;
                 this.doNotUseDecryptFileMode = !value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => EnterPasswordMode);
-                RaisePropertyChanged(() => DecryptFileMode);
+                OnPropertyChanged();
+                OnPropertyChanged(() => EnterPasswordMode);
+                OnPropertyChanged(() => DecryptFileMode);
             }
         }
 
@@ -101,9 +98,9 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseEnterPasswordMode = value;
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseDecryptFileMode = !value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => EncryptFileMode);
-                RaisePropertyChanged(() => DecryptFileMode);
+                OnPropertyChanged();
+                OnPropertyChanged(() => EncryptFileMode);
+                OnPropertyChanged(() => DecryptFileMode);
             }
         }
 
@@ -117,7 +114,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseHasUnsavedChanges = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -127,7 +124,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseIsEncrypted = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -137,7 +134,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseValidationMessage = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -164,7 +161,7 @@ namespace BudgetAnalyser.Dashboard
             FileName = appDbFileName;
             EnterPasswordText = "Please enter your password for ";
             ValidationMessage = validationMessage;
-            MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+            Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Enter Password"
@@ -242,7 +239,7 @@ namespace BudgetAnalyser.Dashboard
                 if (EnterPasswordMode)
                 {
                     this.appDbService.SetCredential(this.password);
-                    MessengerInstance.Send(new PasswordSetMessage { DatabaseStorageKey = FileName });
+                    Messenger.Send(new PasswordSetMessage { DatabaseStorageKey = FileName });
                     // Incorrect password is handled by calling code.
                 }
             }
@@ -278,7 +275,7 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+            Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Protect Data Files"

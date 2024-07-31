@@ -1,6 +1,4 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
@@ -33,8 +31,8 @@ namespace BudgetAnalyser.Budget
             }
 
             this.bucketRepository = bucketRepository;
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
@@ -47,7 +45,7 @@ namespace BudgetAnalyser.Budget
             set
             {
                 this.doNotUseAmount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -76,7 +74,7 @@ namespace BudgetAnalyser.Budget
             set
             {
                 this.doNotUseCode = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -87,7 +85,7 @@ namespace BudgetAnalyser.Budget
             set
             {
                 this.doNotUseDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -101,7 +99,7 @@ namespace BudgetAnalyser.Budget
                 Title = "Create new fixed budget project",
                 HelpAvailable = true
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
-using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Dashboard
@@ -69,7 +66,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseCorrelationId = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -85,7 +82,7 @@ namespace BudgetAnalyser.Dashboard
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -192,9 +189,9 @@ namespace BudgetAnalyser.Dashboard
         private void RegisterForMessengerNotifications(IMessenger messenger)
         {
             // Register for all dependent objects change messages.
-            MessengerInstance = messenger;
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            Messenger = messenger;
+            Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
+            Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
         }
     }
 }

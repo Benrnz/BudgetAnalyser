@@ -1,13 +1,10 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -52,7 +49,7 @@ namespace BudgetAnalyser.LedgerBook
                 Title = "Surplus Balances in all Accounts"
             };
 
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
     }
 }

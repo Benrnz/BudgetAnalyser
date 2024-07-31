@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security;
-using System.Threading.Tasks;
-using BudgetAnalyser.Annotations;
+﻿using System.Security;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Mobile;
@@ -56,12 +52,12 @@ namespace BudgetAnalyser.Mobile
             this.dataExporter = dataExporter;
             this.uploader = uploader;
             this.appDbService = appDbService;
-            MessengerInstance = uiContext.Messenger;
+            Messenger = uiContext.Messenger;
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
-            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogMessageReceived);
+            Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogMessageReceived);
         }
 
         public string AccessKeyId
@@ -70,7 +66,7 @@ namespace BudgetAnalyser.Mobile
             set
             {
                 this.doNotUseAccessKeyId = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -80,7 +76,7 @@ namespace BudgetAnalyser.Mobile
             set
             {
                 this.doNotUseAccessKeySecret = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -90,7 +86,7 @@ namespace BudgetAnalyser.Mobile
             set
             {
                 this.doNotUseAmazonRegion = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -174,7 +170,7 @@ namespace BudgetAnalyser.Mobile
                 AccessKeyId = this.widget.LedgerBook.MobileSettings.AccessKeyId;
                 AccessKeySecret = this.widget.LedgerBook.MobileSettings.AccessKeySecret;
                 AmazonRegion = this.widget.LedgerBook.MobileSettings.AmazonS3Region;
-                MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+                Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
                 {
                     CorrelationId = this.correlationId,
                     Title = "Upload Mobile Summary Data"

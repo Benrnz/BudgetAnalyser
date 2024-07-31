@@ -1,9 +1,7 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
@@ -38,7 +36,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             set
             {
                 this.doNotUseExpenseFilter = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 RefreshCollection();
             }
         }
@@ -50,7 +48,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             set
             {
                 this.doNotUseIncomeFilter = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 RefreshCollection();
             }
         }
@@ -68,7 +66,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             ExpenseFilter = true;
             IncomeFilter = false;
 
-            RaisePropertyChanged(() => Analysis);
+            OnPropertyChanged(nameof(Analysis));
             ICollectionView view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
             view.Filter = x =>
             {

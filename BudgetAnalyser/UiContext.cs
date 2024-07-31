@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
@@ -15,7 +11,7 @@ using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser

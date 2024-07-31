@@ -1,10 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Services;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace BudgetAnalyser.LedgerBook
 {
@@ -29,7 +27,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             this.applicationDatabaseService = applicationDatabaseService;
-            MessengerInstance = messenger;
+            Messenger = messenger;
 
             ViewModel = new LedgerBookViewModel();
         }
@@ -61,7 +59,7 @@ namespace BudgetAnalyser.LedgerBook
         public void Close()
         {
             ViewModel.LedgerBook = null;
-            MessengerInstance.Send(new LedgerBookReadyMessage(null));
+            Messenger.Send(new LedgerBookReadyMessage(null));
         }
 
         internal void ReconciliationChangesWillNeedToBeSaved()
@@ -74,7 +72,7 @@ namespace BudgetAnalyser.LedgerBook
         internal void SyncDataFromLedgerService()
         {
             ViewModel.LedgerBook = LedgerService.LedgerBook;
-            MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
+            Messenger.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
         }
 
         [NotifyPropertyChangedInvocator]

@@ -1,1 +1,1 @@
-﻿global using NotNull = JetBrains.Annotations.NotNullAttribute;
+﻿global using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;

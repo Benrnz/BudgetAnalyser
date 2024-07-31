@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -47,8 +43,8 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             throw new ArgumentNullException(nameof(accountTypeRepository));
         }
 
-        MessengerInstance = uiContext.Messenger;
-        MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        Messenger = uiContext.Messenger;
+        Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         this.messageBox = uiContext.UserPrompts.MessageBox;
     }
 
@@ -61,7 +57,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         private set
         {
             this.doNotUseAddBalanceVisibility = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -79,7 +75,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         private set
         {
             this.doNotUseBankAccounts = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -89,9 +85,9 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         set
         {
             this.doNotUseBankBalance = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(() => BankBalanceTotal);
-            RaisePropertyChanged(() => AdjustedBankBalanceTotal);
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(BankBalanceTotal));
+            OnPropertyChanged(nameof(AdjustedBankBalanceTotal));
         }
     }
 
@@ -123,7 +119,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         set
         {
             this.doNotUseDate = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -133,7 +129,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         private set
         {
             this.doNotUseEditable = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -152,7 +148,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         set
         {
             this.doNotUseSelectedBankAccount = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -169,7 +165,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         Editable = true;
 
         var requestFilterMessage = new RequestFilterMessage(this);
-        MessengerInstance.Send(requestFilterMessage);
+        Messenger.Send(requestFilterMessage);
         Date = requestFilterMessage.Criteria.EndDate?.AddDays(1) ?? DateTime.Today;
 
         ShowDialogCommon("Closing Period Reconciliation");
@@ -201,7 +197,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         BankBalances.Add(new BankBalanceViewModel(null, SelectedBankAccount, BankBalance));
         SelectedBankAccount = null;
         BankBalance = 0;
-        RaisePropertyChanged(() => HasRequiredBalances);
+        OnPropertyChanged(nameof(HasRequiredBalances));
     }
 
     private bool CanExecuteAddBankBalanceCommand()
@@ -250,9 +246,9 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         }
 
         BankBalances.Remove(bankBalance);
-        RaisePropertyChanged(() => BankBalanceTotal);
-        RaisePropertyChanged(() => AdjustedBankBalanceTotal);
-        RaisePropertyChanged(() => HasRequiredBalances);
+        OnPropertyChanged(nameof(BankBalanceTotal));
+        OnPropertyChanged(nameof(AdjustedBankBalanceTotal));
+        OnPropertyChanged(nameof(HasRequiredBalances));
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -330,6 +326,6 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             HelpAvailable = CreateMode
         };
 
-        MessengerInstance.Send(dialogRequest);
+        Messenger.Send(dialogRequest);
     }
 }

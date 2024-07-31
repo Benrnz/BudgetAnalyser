@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
@@ -43,8 +39,8 @@ namespace BudgetAnalyser.Budget
             this.accountRepo = accountRepo;
             BudgetBuckets = bucketRepository.Buckets.ToList();
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
         public event EventHandler<BudgetBucketChosenEventArgs> Chosen;
@@ -60,7 +56,7 @@ namespace BudgetAnalyser.Budget
             private set
             {
                 this.doNotUseBudgetBuckets = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -75,7 +71,7 @@ namespace BudgetAnalyser.Budget
             set
             {
                 this.doNotUseFilterDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -105,7 +101,7 @@ namespace BudgetAnalyser.Budget
                 CorrelationId = this.dialogCorrelationId,
                 Title = title
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

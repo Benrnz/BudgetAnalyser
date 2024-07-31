@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using BudgetAnalyser.Annotations;
 
 namespace BudgetAnalyser.LedgerBook
 {

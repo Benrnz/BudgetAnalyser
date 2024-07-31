@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using BudgetAnalyser.Annotations;
+﻿using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
@@ -43,7 +40,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseGraphMaximumValue = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -53,7 +50,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseGraphMinimumValue = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -63,7 +60,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseSelectedPlotPoint = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -73,7 +70,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseSelectedSeriesData = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -87,7 +84,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseToggleAll = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 ToggleAllLinesVisibility();
             }
         }

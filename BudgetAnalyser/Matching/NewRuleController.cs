@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
@@ -51,8 +47,8 @@ namespace BudgetAnalyser.Matching
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
         public event EventHandler RuleCreated;
@@ -66,9 +62,9 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseAndChecked = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 this.doNotUseOrChecked = !AndChecked;
-                RaisePropertyChanged(() => OrChecked);
+                OnPropertyChanged(() => OrChecked);
             }
         }
 
@@ -89,9 +85,9 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseOrChecked = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 this.doNotUseAndChecked = !OrChecked;
-                RaisePropertyChanged(() => AndChecked);
+                OnPropertyChanged(() => AndChecked);
             }
         }
 
@@ -162,7 +158,7 @@ namespace BudgetAnalyser.Matching
                 CorrelationId = this.shellDialogCorrelationId,
                 Title = Title
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnCriteriaValuePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -225,8 +221,8 @@ namespace BudgetAnalyser.Matching
             view.SortDescriptions.Add(new SortDescription(nameof(SimilarMatchedRule.SortOrder), ListSortDirection.Descending));
 
             SimilarRulesExist = !view.IsEmpty;
-            RaisePropertyChanged(() => SimilarRulesExist);
-            RaisePropertyChanged(() => SimilarRules);
+            OnPropertyChanged(() => SimilarRulesExist);
+            OnPropertyChanged(() => SimilarRules);
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules2: Rules.Count() = {0}", SimilarRules.Count()));
         }
     }

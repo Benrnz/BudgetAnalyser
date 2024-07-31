@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
+﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
@@ -31,7 +27,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.bucketRepo = bucketRepo;
-            MessengerInstance = uiContext.Messenger;
+            Messenger = uiContext.Messenger;
         }
 
         public IEnumerable<BudgetBucket> Buckets
@@ -40,7 +36,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseBuckets = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -66,7 +62,7 @@ namespace BudgetAnalyser.Statement
             this.originalBucket = Transaction.BudgetBucket;
             Buckets = this.bucketRepo.Buckets.Where(b => b.Active);
 
-            MessengerInstance.Send(
+            Messenger.Send(
                 new ShellDialogRequestMessage(
                     BudgetAnalyserFeature.Transactions,
                     this,

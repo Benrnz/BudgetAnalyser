@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -40,8 +37,8 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException(nameof(ledgerService));
             }
 
-            MessengerInstance = context.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger = context.Messenger;
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             this.accountRepo = accountRepo;
             this.ledgerService = ledgerService;
             this.messageBox = context.UserPrompts.MessageBox;
@@ -100,7 +97,7 @@ namespace BudgetAnalyser.LedgerBook
                 HelpAvailable = true
             };
 
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         protected virtual LedgerBucketHistoryAnalyser CreateBucketHistoryAnalyser()

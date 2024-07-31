@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
@@ -12,7 +9,7 @@ using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog
@@ -44,10 +41,10 @@ namespace BudgetAnalyser.ReportsCatalog
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             OverallPerformanceController = uiContext.OverallPerformanceController;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
-            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+            Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+            Messenger.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
         }
 
         [UsedImplicitly]
@@ -76,7 +73,7 @@ namespace BudgetAnalyser.ReportsCatalog
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -159,7 +156,7 @@ namespace BudgetAnalyser.ReportsCatalog
         private GlobalFilterCriteria RequestCurrentFilter()
         {
             var currentFilterMessage = new RequestFilterMessage(this);
-            MessengerInstance.Send(currentFilterMessage);
+            Messenger.Send(currentFilterMessage);
             return currentFilterMessage.Criteria;
         }
     }

@@ -1,11 +1,8 @@
-using System;
-using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -62,7 +59,7 @@ namespace BudgetAnalyser.Matching
                 {
                     this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
                 }
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
 using Autofac;
@@ -23,7 +20,7 @@ using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.RecentFiles;
@@ -123,7 +120,7 @@ namespace BudgetAnalyser
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.
-            builder.RegisterType<DebugPlusLog4NetLogger>().As<ILogger>().SingleInstance();
+            builder.RegisterType<DebugLogger>().As<ILogger>().SingleInstance();
         }
 
         private void BuildApplicationObjectGraph(ContainerBuilder builder, params Assembly[] assemblies)

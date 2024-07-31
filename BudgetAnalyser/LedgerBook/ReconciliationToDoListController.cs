@@ -1,11 +1,9 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -35,7 +33,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseAddingNewTask = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -52,7 +50,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewTaskDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -69,7 +67,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseSelectedTask = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -79,7 +77,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseTasks = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

@@ -1,9 +1,5 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -12,7 +8,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
 using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
@@ -56,12 +52,12 @@ namespace BudgetAnalyser.Statement
             this.uiContext = uiContext;
             this.transactionService = transactionService;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<FilterAppliedMessage>(this, OnGlobalDateFilterApplied);
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<FilterAppliedMessage>(this, OnGlobalDateFilterApplied);
+            Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
 
             this.transactionService.Closed += OnClosedNotificationReceived;
             this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -83,7 +79,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseBucketFilter = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
                 ViewModel.TriggerRefreshTotalsRow();
             }
@@ -121,7 +117,7 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -138,7 +134,7 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseTextFilter = string.IsNullOrEmpty(value) ? null : value;
 
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 ViewModel.Transactions = this.transactionService.FilterBySearchText(TextFilter);
                 ViewModel.TriggerRefreshTotalsRow();
             }
@@ -161,7 +157,7 @@ namespace BudgetAnalyser.Statement
 
         public void RegisterListener<T>(object listener, Action<T> handler)
         {
-            MessengerInstance.Register(listener, handler);
+            Messenger.Register(listener, handler);
         }
 
         private bool CanExecuteSortCommand()
@@ -293,7 +289,7 @@ namespace BudgetAnalyser.Statement
             ViewModel.Statement = this.transactionService.StatementModel;
             ViewModel.Transactions = new ObservableCollection<Transaction>(ViewModel.Statement.Transactions);
             ViewModel.TriggerRefreshTotalsRow();
-            RaisePropertyChanged(() => BucketFilter);
+            OnPropertyChanged(nameof(BucketFilter));
         }
 
         private async void OnMergeStatementCommandExecute()

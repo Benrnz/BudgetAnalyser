@@ -1,14 +1,11 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -56,7 +53,7 @@ namespace BudgetAnalyser.Matching
 
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             NewRuleController = uiContext.NewRuleController;
-            MessengerInstance = uiContext.Messenger;
+            Messenger = uiContext.Messenger;
 
             this.ruleService.Closed += OnClosedNotificationReceived;
             this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -88,8 +85,8 @@ namespace BudgetAnalyser.Matching
             private set
             {
                 this.doNotUseEditingRule = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => ShowReadOnlyRuleDetails);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
             }
         }
 
@@ -102,7 +99,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseFlatListBoxVisibility = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -112,7 +109,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseGroupByListBoxVisibility = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -126,9 +123,9 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseSelectedRule = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => ShowReadOnlyRuleDetails);
-                RaisePropertyChanged(() => AndOrText);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
+                OnPropertyChanged(nameof(AndOrText));
             }
         }
 
@@ -142,7 +139,7 @@ namespace BudgetAnalyser.Matching
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -162,7 +159,7 @@ namespace BudgetAnalyser.Matching
             {
                 string oldValue = this.doNotUseSortBy;
                 this.doNotUseSortBy = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 GroupByListBoxVisibility = false;
                 FlatListBoxVisibility = false;
                 switch (SortBy)
@@ -286,8 +283,8 @@ namespace BudgetAnalyser.Matching
             Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);
             RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(this.ruleService.MatchingRulesGroupedByBucket);
             SelectedRule = null;
-            RaisePropertyChanged(() => Rules);
-            RaisePropertyChanged(() => RulesGroupedByBucket);
+            OnPropertyChanged(nameof(Rules));
+            OnPropertyChanged(nameof(RulesGroupedByBucket));
         }
 
         private void OnNewRuleCreated(object sender, EventArgs eventArgs)
@@ -302,7 +299,7 @@ namespace BudgetAnalyser.Matching
         private void OnSavedNotificationReceived(object sender, EventArgs eventArgs)
         {
             EditingRule = false;
-            RaisePropertyChanged(() => AndOrText);
+            OnPropertyChanged(nameof(AndOrText));
         }
 
         private void OnSortCommandExecute(string sortBy)

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -11,7 +9,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -42,15 +40,15 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         this.doNotUseCriteria = new GlobalFilterCriteria();
         this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 
-        MessengerInstance = uiContext.Messenger;
-        MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-        MessengerInstance.Register<ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
-        MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-        MessengerInstance.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
-        MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-        MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
-        MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
-        MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+        Messenger = uiContext.Messenger;
+        Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+        Messenger.Register<ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
+        Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+        Messenger.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
+        Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+        Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        Messenger.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
+        Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
     }
 
     public string AccountTypeSummary
@@ -59,7 +57,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         private set
         {
             this.doNotUseAccountTypeSummary = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -82,7 +80,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         set
         {
             this.doNotUseCriteria = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
             UpdateSummaries();
         }
     }
@@ -93,7 +91,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         private set
         {
             this.doNotUseDateSummaryLine1 = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -103,7 +101,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         private set
         {
             this.doNotUseDateSummaryLine2 = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -115,7 +113,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             CorrelationId = this.dialogCorrelationId,
             Title = "Global Date Filter"
         };
-        MessengerInstance.Send(dialogRequest);
+        Messenger.Send(dialogRequest);
     }
 
     private void OnAddPeriodCommandExecute(DateTime date)
@@ -260,7 +258,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private void SendFilterAppliedMessage()
     {
         UpdateSummaries();
-        MessengerInstance.Send(new FilterAppliedMessage(this, Criteria));
+        Messenger.Send(new FilterAppliedMessage(this, Criteria));
     }
 
     private void UpdateSummaries()

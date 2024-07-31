@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
+﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -21,8 +17,8 @@ namespace BudgetAnalyser.LedgerBook
             {
                 throw new ArgumentNullException(nameof(messenger));
             }
-            MessengerInstance = messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger = messenger;
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
         public event EventHandler TransferFundsRequested;
@@ -63,7 +59,7 @@ namespace BudgetAnalyser.LedgerBook
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Transfer Funds"
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private bool IsOkToSave()

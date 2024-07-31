@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
+﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Statement
@@ -35,11 +32,11 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException(nameof(questionBox));
             }
 
-            MessengerInstance = messenger;
+            Messenger = messenger;
             this.controller = controller;
             this.questionBox = questionBox;
 
-            MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
+            Messenger.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }
 
         private IMessenger MessengerInstance { get; }
@@ -58,7 +55,7 @@ namespace BudgetAnalyser.Statement
 
                 GlobalFilterCriteria newCriteria;
                 var requestCurrentFilter = new RequestFilterMessage(this);
-                MessengerInstance.Send(requestCurrentFilter);
+                Messenger.Send(requestCurrentFilter);
 
                 if (foundTransaction.Date < requestCurrentFilter.Criteria.BeginDate)
                 {
@@ -69,7 +66,7 @@ namespace BudgetAnalyser.Statement
                     newCriteria = new GlobalFilterCriteria { BeginDate = requestCurrentFilter.Criteria.BeginDate, EndDate = foundTransaction.Date };
                 }
 
-                MessengerInstance.Send(new RequestFilterChangeMessage(this) { Criteria = newCriteria });
+                Messenger.Send(new RequestFilterChangeMessage(this) { Criteria = newCriteria });
 
                 return NavigateToVisibleTransaction(transactionId);
             }

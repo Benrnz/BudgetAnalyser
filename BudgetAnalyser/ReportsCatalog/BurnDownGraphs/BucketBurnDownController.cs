@@ -1,8 +1,5 @@
-using System;
-using System.Linq;
 using System.Windows.Media;
 using BudgetAnalyser.Converters;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Reports;
 using Rees.Wpf;
 
@@ -22,7 +19,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseBalanceLine = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -33,7 +30,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseTrendLine = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

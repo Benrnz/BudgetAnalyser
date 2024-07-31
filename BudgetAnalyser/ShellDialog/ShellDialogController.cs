@@ -1,8 +1,6 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using System.Windows.Threading;
-using BudgetAnalyser.Annotations;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.ShellDialog
@@ -37,7 +35,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseCancelButtonVisible = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -61,7 +59,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseContent = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -77,9 +75,9 @@ namespace BudgetAnalyser.ShellDialog
                 OkButtonVisible = DialogType == ShellDialogType.Ok || DialogType == ShellDialogType.OkCancel;
                 SaveButtonVisible = DialogType == ShellDialogType.SaveCancel;
                 CancelButtonVisible = DialogType != ShellDialogType.Ok;
-                RaisePropertyChanged(() => ActionToolTip);
-                RaisePropertyChanged(() => CloseToolTip);
-                RaisePropertyChanged();
+                OnPropertyChanged(nameof(ActionToolTip));
+                OnPropertyChanged(nameof(CloseToolTip));
+                OnPropertyChanged();
             }
         }
 
@@ -89,7 +87,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseHelpButtonVisible = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -99,8 +97,8 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseOkButtonVisible = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => OkIsCancel);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(OkIsCancel));
             }
         }
 
@@ -112,7 +110,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseSaveButtonVisible = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -122,7 +120,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseTitle = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -169,15 +167,15 @@ namespace BudgetAnalyser.ShellDialog
                             case ShellDialogButton.Save:
                                 if (!OkButtonVisible && commandType == ShellDialogButton.Ok) commandType = ShellDialogButton.Save;
                                 // Ok will be the default response if Enter is pressed, even when the Ok button is invisble.
-                                MessengerInstance.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
+                                Messenger.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
                                 break;
 
                             case ShellDialogButton.Cancel:
-                                MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Cancel) { CorrelationId = CorrelationId });
+                                Messenger.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Cancel) { CorrelationId = CorrelationId });
                                 break;
 
                             case ShellDialogButton.Help:
-                                MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Help) { CorrelationId = CorrelationId });
+                                Messenger.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Help) { CorrelationId = CorrelationId });
                                 // Don't close the dialog after this button click is processed.
                                 return;
 

@@ -1,5 +1,3 @@
-using System;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
@@ -23,8 +21,8 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        MessengerInstance = uiContext.Messenger;
-        MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        Messenger = uiContext.Messenger;
+        Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         this.messageBox = uiContext.UserPrompts.MessageBox;
         BudgetCycle = BudgetCycle.Monthly;
     }
@@ -47,9 +45,9 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             }
 
             this.doNotUseBudgetCycle = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(FortnightlyChecked));
-            RaisePropertyChanged(nameof(MonthlyChecked));
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(FortnightlyChecked));
+            OnPropertyChanged(nameof(MonthlyChecked));
         }
     }
 
@@ -96,7 +94,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             Title = "Create new Budget based on current",
             HelpAvailable = true
         };
-        MessengerInstance.Send(dialogRequest);
+        Messenger.Send(dialogRequest);
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 
 namespace BudgetAnalyser
@@ -43,9 +41,9 @@ namespace BudgetAnalyser
             }
 
             this.uiContext = uiContext;
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            Messenger.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }
 
         [UsedImplicitly]
@@ -57,7 +55,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseBudgetToggle = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -69,7 +67,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseDashboardToggle = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -82,7 +80,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseLedgerBookToggle = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -95,7 +93,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseReportsToggle = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -108,7 +106,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseTransactionsToggle = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

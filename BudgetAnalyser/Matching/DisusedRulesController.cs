@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
@@ -10,8 +6,8 @@ using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Matching
@@ -31,9 +27,9 @@ namespace BudgetAnalyser.Matching
             if (ruleService == null) throw new ArgumentNullException(nameof(ruleService));
             if (dbService == null) throw new ArgumentNullException(nameof(dbService));
 
-            MessengerInstance = messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
-            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            Messenger = messenger;
+            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
         }
 
         public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; }
@@ -74,7 +70,7 @@ namespace BudgetAnalyser.Matching
             var rules = DisusedMatchingRuleWidget.QueryRules(this.ruleService.MatchingRules);
             DisusedRules = new ObservableCollection<DisusedRuleViewModel>(rules.Select(r => new DisusedRuleViewModel { MatchingRule = r, RemoveCommand = RemoveRuleCommand }));
             this.removedRules = new List<MatchingRule>();
-            MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.Ok)
+            Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.Ok)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Disused Matching Rules"

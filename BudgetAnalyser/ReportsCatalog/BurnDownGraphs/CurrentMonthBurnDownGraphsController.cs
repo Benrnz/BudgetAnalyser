@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
 using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
 using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
@@ -44,9 +39,9 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             this.addUserDefinedBurnDownController = addUserDefinedBurnDownController ?? throw new ArgumentNullException(nameof(addUserDefinedBurnDownController));
             this.chartsService = chartsService ?? throw new ArgumentNullException(nameof(chartsService));
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            Messenger = uiContext.Messenger;
+            Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
         [UsedImplicitly]
@@ -60,7 +55,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseDateRangeDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -119,7 +114,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             DateRangeDescription = results.DateRangeDescription;
             ChartControllers = new BindingList<BucketBurnDownController>(results.Charts.Select(BuildBucketBurnDownController).ToList());
 
-            RaisePropertyChanged(() => ChartControllers);
+            OnPropertyChanged(nameof(ChartControllers));
         }
 
         protected virtual BucketBurnDownController BuildBucketBurnDownController(BurnDownChartAnalyserResult analysis)
