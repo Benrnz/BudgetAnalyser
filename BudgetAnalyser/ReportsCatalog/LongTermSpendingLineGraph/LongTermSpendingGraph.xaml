@@ -1,31 +1,9 @@
 ﻿<UserControl x:Class="BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph.LongTermSpendingGraph"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
-             xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
              xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
              IsVisibleChanged="OnIsVisibleChanged">
     <UserControl.Resources>
-
-        <Style x:Key="LegendStyle"
-               TargetType="{x:Type visualizationToolkit:Legend}">
-            <Setter Property="Margin"
-                    Value="15,0" />
-            <Setter Property="VerticalAlignment"
-                    Value="Center" />
-            <Setter Property="BorderBrush"
-                    Value="#FFDBDBDB" />
-            <Setter Property="Background">
-                <Setter.Value>
-                    <LinearGradientBrush EndPoint="0.442,0.005"
-                                         StartPoint="0.558,0.995">
-                        <GradientStop Color="{StaticResource Colour.SecondaryBackground}" />
-                        <GradientStop Color="{StaticResource Colour.MainBackground}"
-                                      Offset="1" />
-                    </LinearGradientBrush>
-                </Setter.Value>
-            </Setter>
-        </Style>
 
     </UserControl.Resources>
 
@@ -41,24 +19,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <chartingToolkit:Chart x:Name="Chart"
+        <!-- The chart is removed because the library it was based on is deprecated and has been taken down on Nuget. System.Windows.Controls.DataVisualization.Toolkit -->
+        <!--<chartingToolkit:Chart x:Name="Chart"
                                DataContextChanged="OnChartDataContextChanged"
                                HorizontalAlignment="Stretch"
                                Margin="5"
                                VerticalAlignment="Stretch"
                                LegendTitle="Budget Buckets"
                                LegendStyle="{StaticResource LegendStyle}">
-            <!--<chartingToolkit:LineSeries DependentValuePath="Amount"
-                                        IndependentValuePath="Month"
-                                        IsSelectionEnabled="True"
-                                        ItemsSource="{Binding SurplusLine.Plots}"
-                                        Title="{Binding SurplusLine.SeriesName}" />-->
-
-            <!--<chartingToolkit:LineSeries DependentValuePath="Amount"
-                                        IndependentValuePath="Month"
-                                        IsSelectionEnabled="True"
-                                        ItemsSource="{Binding FoodLine.Plots}"
-                                        Title="{Binding FoodLine.SeriesName}" />-->
 
             <chartingToolkit:Chart.Axes>
                 <chartingToolkit:CategoryAxis Orientation="X" />
@@ -67,7 +35,7 @@
                                             Maximum="{Binding GraphMaximumValue}" />
             </chartingToolkit:Chart.Axes>
 
-        </chartingToolkit:Chart>
+        </chartingToolkit:Chart>-->
 
         <StackPanel Grid.Row="1"
                     Grid.Column="0"
