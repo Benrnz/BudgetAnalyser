@@ -4,8 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 namespace BudgetAnalyser;
 
 /// <summary>
-///     A Galasoft <see cref="IMessenger" /> that is thread safe when registering listeners and unregistering.
-///     No locking occurs when sending.
+///     A <see cref="IMessenger" /> that is thread safe when registering listeners, sending and unregistering.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class ConcurrentMessenger : IMessenger
@@ -34,105 +33,89 @@ public class ConcurrentMessenger : IMessenger
     {
         lock (SyncRoot)
         {
-            this.defaultMessenger.Register(recipient, action);
+            this.defaultMessenger.Register(recipient, action, keepTargetAlive);
         }
 
-        this.logger.LogInfo(l => l.Format("IMessenger.Register {0} for Message: {1}", recipient, typeof(TMessage).Name));
+        this.logger.LogInfo(l => l.Format("IMessenger.Register recipient:{0} Message:{1}", recipient, typeof(TMessage).Name));
     }
 
-    public void Register<TMessage>(object recipient, object token, Action<TMessage> action, bool keepTargetAlive = false)
-    {
-        Register(recipient, action, keepTargetAlive);
-    }
-
-    public void Register<TMessage>(object recipient, object token, bool receiveDerivedMessagesToo, Action<TMessage> action, bool keepTargetAlive = false)
-    {
-        Register(recipient, action, keepTargetAlive);
-    }
-
-    public void Register<TMessage>(object recipient, bool receiveDerivedMessagesToo, Action<TMessage> action, bool keepTargetAlive = false)
-    {
-        Register(recipient, action, keepTargetAlive);
-    }
-
-    public void Send<TMessage>(TMessage message)
+    public bool IsRegistered<TMessage, TToken>(object recipient, TToken token) where TMessage : class where TToken : IEquatable<TToken>
     {
         lock (SyncRoot)
         {
-            this.defaultMessenger.Send(message);
+            return this.defaultMessenger.IsRegistered(recipient, token);
         }
-
-        this.logger.LogInfo(l => l.Format("IMessenger.Send {0}", message));
     }
 
-    public void Send<TMessage, TTarget>(TMessage message)
+    public void Register<TRecipient, TMessage, TToken>(TRecipient recipient, TToken token, MessageHandler<TRecipient, TMessage> handler) where TRecipient : class where TMessage : class where TToken : IEquatable<TToken>
     {
         lock (SyncRoot)
         {
-            this.defaultMessenger.Send<TMessage, TTarget>(message);
+            if (this.defaultMessenger.IsRegistered(recipient, token)) return;
+            this.defaultMessenger.Register(recipient, token, handler);
         }
 
-        this.logger.LogInfo(l => l.Format("IMessenger.Send {0} to target {1}", message, typeof(TTarget).FullName));
-    }
+        this.logger.LogInfo(l => l.Format("IMessenger.Register Token:{0} recipient:{1} Message:{2}", token, recipient, typeof(TMessage).Name));
+        }
 
-    public void Send<TMessage>(TMessage message, object token)
+    public void UnregisterAll(object recipient)
     {
         lock (SyncRoot)
         {
-            this.defaultMessenger.Send(message, token);
+            this.defaultMessenger.UnregisterAll(recipient);
         }
-
-        this.logger.LogInfo(l => l.Format("IMessenger.Send {0} with token {1}", message, token));
+        
+        this.logger.LogInfo(l => l.Format("IMessenger.UnregisterAll recipient:{0}", recipient));
     }
 
-    public void Unregister(object recipient)
+    public void UnregisterAll<TToken>(object recipient, TToken token) where TToken : IEquatable<TToken>
     {
         lock (SyncRoot)
         {
-            this.defaultMessenger.Unregister(recipient);
+            this.defaultMessenger.UnregisterAll(recipient, token);
         }
 
-        this.logger.LogInfo(l => l.Format("IMessenger.Unregister {0}", recipient));
+        this.logger.LogInfo(l => l.Format("IMessenger.UnregisterAll Token:{0} recipient:{1}", token, recipient));
     }
 
-    public void Unregister<TMessage>(object recipient)
+    public void Unregister<TMessage, TToken>(object recipient, TToken token) where TMessage : class where TToken : IEquatable<TToken>
     {
         lock (SyncRoot)
         {
-            this.defaultMessenger.Unregister(recipient);
+            if (!this.defaultMessenger.IsRegistered(recipient, token)) return;
+            this.defaultMessenger.Unregister<TMessage, TToken>(recipient, token);
         }
-
-        this.logger.LogInfo(l => l.Format("IMessenger.Unregister {0}", recipient));
     }
 
-    public void Unregister<TMessage>(object recipient, object token)
+    public TMessage Send<TMessage, TToken>(TMessage message, TToken token) where TMessage : class where TToken : IEquatable<TToken>
+    {
+        TMessage result;
+        lock (SyncRoot)
+        {
+            result = this.defaultMessenger.Send(message, token);
+        }
+
+        this.logger.LogInfo(l => l.Format("IMessenger.Send Token:{0} Message:{1} {2}", token, message, typeof(TMessage).Name));
+        return result;
+    }
+
+    public void Cleanup()
     {
         lock (SyncRoot)
         {
-            this.defaultMessenger.Unregister<TMessage>(recipient, token);
+            this.defaultMessenger.Cleanup();
         }
 
-        this.logger.LogInfo(l => l.Format("IMessenger.Unregister {0} with token {1}", recipient, token));
+        this.logger.LogInfo("IMessenger.Cleanup");
     }
 
-    public void Unregister<TMessage>(object recipient, Action<TMessage> action)
+    public void Reset()
     {
         lock (SyncRoot)
         {
-            this.defaultMessenger.Unregister(recipient, action);
+            this.defaultMessenger.Reset();
         }
 
-        this.logger.LogInfo(l => l.Format("IMessenger.Unregister {0}", recipient));
+        this.logger.LogInfo("IMessenger.Reset");
     }
-
-    public void Unregister<TMessage>(object recipient, object token, Action<TMessage> action)
-    {
-        lock (SyncRoot)
-        {
-            this.defaultMessenger.Unregister(recipient, token, action);
-        }
-
-        this.logger.LogInfo(l => l.Format("IMessenger.Unregister {0} with token {1}", recipient, token));
-    }
-
 }
