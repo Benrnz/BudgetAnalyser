@@ -2,12 +2,13 @@
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
-using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Statement
 {
-    public class StatementControllerFileOperations : ObservableRecipient
+    public class StatementControllerFileOperations : ControllerBase
     {
         private readonly LoadFileController loadFileController;
         private readonly IUserMessageBox messageBox;
@@ -122,8 +123,8 @@ namespace BudgetAnalyser.Statement
             var statementModel = this.transactionService.StatementModel;
             LoadingData = true;
             await Dispatcher.CurrentDispatcher.BeginInvoke(
-                DispatcherPriority.Normal,
-                () =>
+                (DispatcherPriority)DispatcherPriority.Normal,
+                (Delegate)(() =>
                 {
                     // Update all UI bound properties.
                     var requestCurrentFilterMessage = new RequestFilterMessage(this);
@@ -140,7 +141,7 @@ namespace BudgetAnalyser.Statement
                     Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
 
                     LoadingData = false;
-                });
+                }));
 
             return true;
         }
