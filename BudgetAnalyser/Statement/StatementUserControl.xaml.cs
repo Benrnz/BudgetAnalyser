@@ -103,9 +103,9 @@ namespace BudgetAnalyser.Statement
             {
                 // Once only initialisation:
                 this.subscribedToMainWindowClose = true;
-                Controller.RegisterListener<TransactionsChangedMessage>(this, OnTransactionsChanged);
-                Controller.RegisterListener<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
-                Controller.RegisterListener<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
+                Controller.RegisterListener<TransactionsChangedMessage>(this, static (r, m) => r.OnTransactionsChanged(m));
+                Controller.RegisterListener<ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
+                Controller.RegisterListener<NavigateToTransactionMessage>(this, static (r, m) => r.OnNavigateToTransactionRequestReceived(m));
             }
 
             if (Controller != null)

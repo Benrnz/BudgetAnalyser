@@ -156,9 +156,9 @@ namespace BudgetAnalyser.Statement
             FileOperations.Initialise(this.transactionService);
         }
 
-        public void RegisterListener<T>(object listener, Action<T> handler)
+        public void RegisterListener<TMessage>(StatementUserControl recipient, MessageHandler<StatementUserControl, TMessage> handler) where TMessage : MessageBase
         {
-            Messenger.Register(listener, handler);
+            Messenger.Register(recipient, handler);
         }
 
         private bool CanExecuteSortCommand()
