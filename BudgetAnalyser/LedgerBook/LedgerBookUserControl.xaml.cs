@@ -34,13 +34,13 @@ namespace BudgetAnalyser.LedgerBook
             if (e.OldValue != null)
             {
                 ((LedgerBookController)e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
-                ((LedgerBookController)e.OldValue).DeregisterListener<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+                ((LedgerBookController)e.OldValue).DeregisterListener(this);
             }
 
             if (e.NewValue != null)
             {
                 ((LedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
-                Controller.RegisterListener<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+                Controller.RegisterListener(this, static (r, m) => r.OnLedgerBookReadyMessageReceived(m));
             }
 
             DynamicallyCreateLedgerBookGrid();

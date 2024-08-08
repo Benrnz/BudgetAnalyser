@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 

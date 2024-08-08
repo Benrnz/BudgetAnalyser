@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Statement
             this.controller = controller;
             this.questionBox = questionBox;
 
-            MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
+            MessengerInstance.Register<StatementControllerNavigation, NavigateToTransactionMessage>(this, static (r, m) => r.OnNavigateToTransactionRequestReceived(m));
         }
 
         private IMessenger MessengerInstance { get; }

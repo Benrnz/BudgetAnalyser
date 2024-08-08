@@ -18,7 +18,7 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException(nameof(messenger));
             }
 
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<TransferFundsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         public event EventHandler TransferFundsRequested;

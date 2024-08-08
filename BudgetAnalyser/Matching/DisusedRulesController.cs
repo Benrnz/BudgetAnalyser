@@ -27,8 +27,8 @@ namespace BudgetAnalyser.Matching
             if (ruleService == null) throw new ArgumentNullException(nameof(ruleService));
             if (dbService == null) throw new ArgumentNullException(nameof(dbService));
 
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
-            Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            Messenger.Register<DisusedRulesController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+            Messenger.Register<DisusedRulesController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
         }
 
         public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; }

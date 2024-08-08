@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -112,9 +113,9 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
-    public void DeregisterListener<T>(object listener, Action<T> handler)
+    public void DeregisterListener(LedgerBookUserControl recipient)
     {
-        Messenger.Unregister(listener, handler);
+        Messenger.Unregister<LedgerBookReadyMessage>(recipient);
     }
 
     public void EditLedgerBookName()
@@ -134,9 +135,9 @@ public class LedgerBookController : ControllerBase, IShowableController
         FileOperations.Dirty = true;
     }
 
-    public void RegisterListener<T>(object listener, Action<T> handler)
+    public void RegisterListener(LedgerBookUserControl recipient, MessageHandler<LedgerBookUserControl, LedgerBookReadyMessage> handler)
     {
-        Messenger.Register(listener, handler);
+        Messenger.Register(recipient, handler);
     }
 
     internal ILedgerBookGridBuilder GridBuilder()

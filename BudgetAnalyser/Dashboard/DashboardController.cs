@@ -190,8 +190,8 @@ namespace BudgetAnalyser.Dashboard
         private void RegisterForMessengerNotifications()
         {
             // Register for all dependent objects change messages.
-            Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
-            Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            Messenger.Register<DashboardController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoadedMessageReceived(m));
+            Messenger.Register<DashboardController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
         }
     }
 }
