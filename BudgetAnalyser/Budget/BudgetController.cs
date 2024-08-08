@@ -38,7 +38,8 @@ public class BudgetController : ControllerBase, IShowableController
     public BudgetController(
         [NotNull] UiContext uiContext,
         [NotNull] IBudgetMaintenanceService maintenanceService,
-        [NotNull] IApplicationDatabaseService applicationDatabaseService)
+        [NotNull] IApplicationDatabaseService applicationDatabaseService) 
+        : base(uiContext.Messenger)
     {
         if (uiContext == null)
         {
@@ -55,7 +56,6 @@ public class BudgetController : ControllerBase, IShowableController
         NewBudgetController.Ready += OnAddNewBudgetReady;
         Shown = false;
 
-        Messenger = uiContext.Messenger;
         Messenger.Register<ShellDialogResponseMessage>(this, OnPopUpResponseReceived);
         this.maintenanceService.Closed += OnClosedNotificationReceived;
         this.maintenanceService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;

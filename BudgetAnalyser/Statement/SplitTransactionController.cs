@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Statement
         private decimal doNotUseSplinterAmount1;
         private decimal doNotUseSplinterAmount2;
 
-        public SplitTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo)
+        public SplitTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -29,7 +29,6 @@ namespace BudgetAnalyser.Statement
             }
 
             this.bucketRepo = bucketRepo;
-            Messenger = uiContext.Messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 

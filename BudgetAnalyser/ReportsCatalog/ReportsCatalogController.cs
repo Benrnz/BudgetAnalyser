@@ -23,7 +23,7 @@ namespace BudgetAnalyser.ReportsCatalog
         private StatementModel currentStatementModel;
         private bool doNotUseShown;
 
-        public ReportsCatalogController([NotNull] UiContext uiContext, [NotNull] NewWindowViewLoader newWindowViewLoader)
+        public ReportsCatalogController([NotNull] UiContext uiContext, [NotNull] NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -41,7 +41,6 @@ namespace BudgetAnalyser.ReportsCatalog
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             OverallPerformanceController = uiContext.OverallPerformanceController;
 
-            Messenger = uiContext.Messenger;
             Messenger.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
             Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             Messenger.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);

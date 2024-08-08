@@ -30,7 +30,8 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public AddLedgerReconciliationController(
         [NotNull] UiContext uiContext,
-        [NotNull] IAccountTypeRepository accountTypeRepository)
+        [NotNull] IAccountTypeRepository accountTypeRepository) 
+        : base(uiContext.Messenger)
     {
         this.accountTypeRepository = accountTypeRepository;
         if (uiContext == null)
@@ -43,7 +44,6 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             throw new ArgumentNullException(nameof(accountTypeRepository));
         }
 
-        Messenger = uiContext.Messenger;
         Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         this.messageBox = uiContext.UserPrompts.MessageBox;
     }

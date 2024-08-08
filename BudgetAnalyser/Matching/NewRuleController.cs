@@ -26,6 +26,7 @@ namespace BudgetAnalyser.Matching
             [NotNull] UiContext uiContext,
             [NotNull] ITransactionRuleService rulesService,
             [NotNull] IBudgetBucketRepository bucketRepo)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -47,7 +48,6 @@ namespace BudgetAnalyser.Matching
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
-            Messenger = uiContext.Messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 

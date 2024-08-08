@@ -1,6 +1,7 @@
 using System.Windows.Media;
 using BudgetAnalyser.Converters;
 using BudgetAnalyser.Engine.Reports;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
@@ -9,6 +10,11 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
     {
         private SeriesData doNotUseBalanceLine;
         private SeriesData doNotUseTrendLine;
+
+        public BucketBurnDownController([NotNull] IMessenger messenger) : base(messenger)
+        {
+        }
+
         public decimal ActualSpendingAxesMinimum { [UsedImplicitly] get; private set; }
         public Brush Background { get; private set; }
 

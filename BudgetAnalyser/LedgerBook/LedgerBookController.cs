@@ -32,6 +32,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         [NotNull] ILedgerService ledgerService,
         [NotNull] IReconciliationService reconService,
         [NotNull] NewWindowViewLoader newWindowViewLoader)
+        : base(uiContext.Messenger)
     {
         if (uiContext == null)
         {
@@ -50,7 +51,6 @@ public class LedgerBookController : ControllerBase, IShowableController
         this.uiContext = uiContext;
         this.doNotUseNumberOfPeriodsToShow = 2;
 
-        Messenger = uiContext.Messenger;
         Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
         Messenger.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
 

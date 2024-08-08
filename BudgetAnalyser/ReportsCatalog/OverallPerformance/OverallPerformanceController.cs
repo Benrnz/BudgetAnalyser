@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
@@ -16,7 +17,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
         private bool doNotUseExpenseFilter;
         private bool doNotUseIncomeFilter;
 
-        public OverallPerformanceController([NotNull] IOverallPerformanceChartService chartService)
+        public OverallPerformanceController([NotNull] IMessenger messenger, [NotNull] IOverallPerformanceChartService chartService) : base(messenger)
         {
             if (chartService == null)
             {

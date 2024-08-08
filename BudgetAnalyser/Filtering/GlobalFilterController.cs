@@ -29,7 +29,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private string doNotUseDateSummaryLine1;
     private string doNotUseDateSummaryLine2;
 
-    public GlobalFilterController([NotNull] UiContext uiContext)
+    public GlobalFilterController([NotNull] UiContext uiContext) : base(uiContext.Messenger)
     {
         if (uiContext == null)
         {
@@ -40,7 +40,6 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         this.doNotUseCriteria = new GlobalFilterCriteria();
         this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 
-        Messenger = uiContext.Messenger;
         Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         Messenger.Register<ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
         Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);

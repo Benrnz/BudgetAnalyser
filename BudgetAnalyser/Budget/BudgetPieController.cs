@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
@@ -20,7 +21,7 @@ namespace BudgetAnalyser.Budget
         private bool doNotUseShown;
         private Expense surplus;
 
-        public BudgetPieController([NotNull] IBudgetPieGraphService service)
+        public BudgetPieController([NotNull] IMessenger messenger, [NotNull] IBudgetPieGraphService service) : base(messenger)
         {
             if (service == null)
             {

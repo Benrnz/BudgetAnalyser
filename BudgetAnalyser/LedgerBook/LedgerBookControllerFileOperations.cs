@@ -27,7 +27,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             this.applicationDatabaseService = applicationDatabaseService;
-            Messenger = messenger;
+            MessengerInstance = messenger;
 
             ViewModel = new LedgerBookViewModel();
         }
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.LedgerBook
         public void Close()
         {
             ViewModel.LedgerBook = null;
-            Messenger.Send(new LedgerBookReadyMessage(null));
+            MessengerInstance.Send(new LedgerBookReadyMessage(null));
         }
 
         internal void ReconciliationChangesWillNeedToBeSaved()
@@ -72,7 +72,7 @@ namespace BudgetAnalyser.LedgerBook
         internal void SyncDataFromLedgerService()
         {
             ViewModel.LedgerBook = LedgerService.LedgerBook;
-            Messenger.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
+            MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
         }
 
         [NotifyPropertyChangedInvocator]

@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Dashboard
         private BudgetBucket doNotUseSelected;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
+        public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -33,7 +33,6 @@ namespace BudgetAnalyser.Dashboard
             }
 
             this.bucketRepository = bucketRepository;
-            Messenger = uiContext.Messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             PaymentStartDate = DateTime.Today;
             Frequency = WeeklyOrFortnightly.Weekly;

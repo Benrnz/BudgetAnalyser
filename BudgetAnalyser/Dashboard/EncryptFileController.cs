@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Dashboard
         private bool passwordConfirmed;
         private string doNotUseValidationMessage;
 
-        public EncryptFileController([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService appDbService)
+        public EncryptFileController([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService appDbService) : base(uiContext.Messenger)
         {
             this.appDbService = appDbService;
             if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));
@@ -31,7 +31,6 @@ namespace BudgetAnalyser.Dashboard
             this.questionService = uiContext.UserPrompts.YesNoBox;
             this.messageService = uiContext.UserPrompts.MessageBox;
 
-            Messenger = uiContext.Messenger;
             Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDiaglogResponseMessageReceived);
         }

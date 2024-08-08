@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -17,7 +18,7 @@ namespace BudgetAnalyser.LedgerBook
         private ToDoTask doNotUseSelectedTask;
         private ToDoCollection doNotUseTasks;
 
-        public ReconciliationToDoListController([NotNull] IApplicationDatabaseService applicationDatabaseService)
+        public ReconciliationToDoListController([NotNull] IMessenger messenger, [NotNull] IApplicationDatabaseService applicationDatabaseService) : base(messenger)
         {
             if (applicationDatabaseService == null)
             {

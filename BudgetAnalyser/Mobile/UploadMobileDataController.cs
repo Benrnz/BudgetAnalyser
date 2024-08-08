@@ -44,6 +44,7 @@ namespace BudgetAnalyser.Mobile
             [NotNull] IMobileDataExporter dataExporter,
             [NotNull] IMobileDataUploader uploader,
             [NotNull] IApplicationDatabaseService appDbService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));
             if (dataExporter == null) throw new ArgumentNullException(nameof(dataExporter));
@@ -52,7 +53,6 @@ namespace BudgetAnalyser.Mobile
             this.dataExporter = dataExporter;
             this.uploader = uploader;
             this.appDbService = appDbService;
-            Messenger = uiContext.Messenger;
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 

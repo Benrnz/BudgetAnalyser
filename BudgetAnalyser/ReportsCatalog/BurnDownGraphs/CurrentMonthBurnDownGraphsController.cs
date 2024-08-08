@@ -25,21 +25,23 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         private BucketBurnDownController doNotUseSelectedChart;
         private Engine.Ledger.LedgerBook ledgerBook;
         private StatementModel statement;
+        private IUiContext uiContext;
 
         public CurrentMonthBurnDownGraphsController(
             [NotNull] AddUserDefinedBurnDownController addUserDefinedBurnDownController,
             [NotNull] UiContext uiContext,
             [NotNull] IBurnDownChartsService chartsService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
+            this.uiContext = uiContext;
             this.addUserDefinedBurnDownController = addUserDefinedBurnDownController ?? throw new ArgumentNullException(nameof(addUserDefinedBurnDownController));
             this.chartsService = chartsService ?? throw new ArgumentNullException(nameof(chartsService));
 
-            Messenger = uiContext.Messenger;
             Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
@@ -119,7 +121,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         protected virtual BucketBurnDownController BuildBucketBurnDownController(BurnDownChartAnalyserResult analysis)
         {
-            var controller = new BucketBurnDownController();
+            var controller = new BucketBurnDownController(this.uiContext.Messenger);
             controller.Load(analysis);
             return controller;
         }

@@ -28,7 +28,7 @@ namespace BudgetAnalyser.LedgerBook
 
             using (var message = new NavigateToTransactionMessage(transactionId.Value))
             {
-                Messenger.Send(message);
+                MessengerInstance.Send(message);
             }
         }
     }

@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Statement
         private Transaction doNotUseTransaction;
         private BudgetBucket originalBucket;
 
-        public EditingTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo)
+        public EditingTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -27,7 +27,6 @@ namespace BudgetAnalyser.Statement
             }
 
             this.bucketRepo = bucketRepo;
-            Messenger = uiContext.Messenger;
         }
 
         public IEnumerable<BudgetBucket> Buckets

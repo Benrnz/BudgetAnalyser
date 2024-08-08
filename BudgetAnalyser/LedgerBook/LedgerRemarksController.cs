@@ -15,7 +15,7 @@ namespace BudgetAnalyser.LedgerBook
         private LedgerEntryLine doNotUseLedgerEntryLine;
         private string doNotUseRemarks;
 
-        public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] IReconciliationService reconciliationService)
+        public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] IReconciliationService reconciliationService) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -28,7 +28,6 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             this.reconciliationService = reconciliationService;
-            Messenger = uiContext.Messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 

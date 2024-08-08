@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.ShellDialog
@@ -14,6 +15,11 @@ namespace BudgetAnalyser.ShellDialog
         private bool doNotUseOkButtonVisible;
         private bool doNotUseSaveButtonVisible;
         private string doNotUseTitle;
+
+        public ShellDialogController([NotNull] IMessenger messenger) : base(messenger)
+        {
+            DialogType = ShellDialogType.OkCancel;
+        }
 
         public string ActionToolTip
         {

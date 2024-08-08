@@ -27,8 +27,8 @@ namespace BudgetAnalyser
         public ShellController(
             [NotNull] IUiContext uiContext,
             [NotNull] IPersistApplicationState statePersistence,
-            [NotNull] PersistenceOperations persistenceOperations
-            )
+            [NotNull] PersistenceOperations persistenceOperations)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -45,7 +45,6 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException(nameof(persistenceOperations));
             }
 
-            Messenger = uiContext.Messenger;
             Messenger.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
             Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
@@ -54,11 +53,11 @@ namespace BudgetAnalyser
             this.persistenceOperations = persistenceOperations;
             this.uiContext = uiContext;
 
-            LedgerBookDialog = new ShellDialogController();
-            DashboardDialog = new ShellDialogController();
-            TransactionsDialog = new ShellDialogController();
-            BudgetDialog = new ShellDialogController();
-            ReportsDialog = new ShellDialogController();
+            LedgerBookDialog = new ShellDialogController(Messenger);
+            DashboardDialog = new ShellDialogController(Messenger);
+            TransactionsDialog = new ShellDialogController(Messenger);
+            BudgetDialog = new ShellDialogController(Messenger);
+            ReportsDialog = new ShellDialogController(Messenger);
         }
 
         [UsedImplicitly]

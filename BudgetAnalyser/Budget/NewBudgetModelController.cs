@@ -14,14 +14,13 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     private Guid dialogCorrelationId;
     private BudgetCycle doNotUseBudgetCycle;
 
-    public NewBudgetModelController([NotNull] IUiContext uiContext)
+    public NewBudgetModelController([NotNull] IUiContext uiContext) : base(uiContext.Messenger)
     {
         if (uiContext == null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        Messenger = uiContext.Messenger;
         Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         this.messageBox = uiContext.UserPrompts.MessageBox;
         BudgetCycle = BudgetCycle.Monthly;

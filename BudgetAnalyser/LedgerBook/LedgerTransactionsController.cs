@@ -34,7 +34,7 @@ namespace BudgetAnalyser.LedgerBook
         private bool wasChanged;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService, [NotNull] IReconciliationService reconService)
+        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService, [NotNull] IReconciliationService reconService) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -53,7 +53,6 @@ namespace BudgetAnalyser.LedgerBook
 
             this.ledgerService = ledgerService;
             this.reconService = reconService;
-            Messenger = uiContext.Messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             Reset();
         }

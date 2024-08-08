@@ -20,16 +20,16 @@ namespace BudgetAnalyser.LedgerBook
         private Guid correlationId;
         private LedgerBucket ledger;
 
-        public LedgerBucketViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IUiContext context, [NotNull] ILedgerService ledgerService)
+        public LedgerBucketViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IUiContext uiContext, [NotNull] ILedgerService ledgerService) : base(uiContext.Messenger)
         {
             if (accountRepo == null)
             {
                 throw new ArgumentNullException(nameof(accountRepo));
             }
 
-            if (context == null)
+            if (uiContext == null)
             {
-                throw new ArgumentNullException(nameof(context));
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ledgerService == null)
@@ -37,11 +37,10 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException(nameof(ledgerService));
             }
 
-            Messenger = context.Messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             this.accountRepo = accountRepo;
             this.ledgerService = ledgerService;
-            this.messageBox = context.UserPrompts.MessageBox;
+            this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
         public event EventHandler Updated;

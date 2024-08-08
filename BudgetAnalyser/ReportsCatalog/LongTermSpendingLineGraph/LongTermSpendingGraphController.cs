@@ -3,6 +3,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -18,7 +19,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
         private SeriesData doNotUseSelectedSeriesData;
         private bool doNotUseToggleAll;
 
-        public LongTermSpendingGraphController([NotNull] ILongTermSpendingChartService chartService, IUserMessageBox messageService)
+        public LongTermSpendingGraphController([NotNull] IMessenger messenger, [NotNull] ILongTermSpendingChartService chartService, [NotNull] IUserMessageBox messageService) : base (messenger)
         {
             if (chartService == null)
             {

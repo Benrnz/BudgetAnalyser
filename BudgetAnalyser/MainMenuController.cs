@@ -24,6 +24,7 @@ namespace BudgetAnalyser
             [NotNull] IUiContext uiContext,
             [NotNull] IDashboardService dashboardService,
             [NotNull] DemoFileHelper demoFileHelper)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -41,7 +42,6 @@ namespace BudgetAnalyser
             }
 
             this.uiContext = uiContext;
-            Messenger = uiContext.Messenger;
             Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
             Messenger.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }

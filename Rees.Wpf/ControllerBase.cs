@@ -1,5 +1,6 @@
 ﻿using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Rees.Wpf
 {
@@ -8,12 +9,12 @@ namespace Rees.Wpf
     ///     that
     ///     executes the constructor.
     /// </summary>
-    public class ControllerBase : ObservableRecipient
+    public abstract class ControllerBase : ObservableRecipient
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ControllerBase" /> class.
         /// </summary>
-        public ControllerBase()
+        public ControllerBase(IMessenger messenger) : base(messenger)
         {
             // This relies on the Xaml being responsible for instantiating the controller.
             // Or at least the main UI thread.

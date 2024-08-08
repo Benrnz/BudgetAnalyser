@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -13,6 +14,10 @@ namespace BudgetAnalyser.LedgerBook
     public class ShowSurplusBalancesController : ControllerBase
     {
         private LedgerEntryLine ledgerEntryLine;
+
+        public ShowSurplusBalancesController(IMessenger messenger) : base(messenger)
+        {
+        }
 
         [UsedImplicitly]
         public bool HasNegativeBalances => SurplusBalances.Any(b => b.Balance < 0);

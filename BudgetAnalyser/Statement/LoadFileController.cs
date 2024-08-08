@@ -29,6 +29,7 @@ namespace BudgetAnalyser.Statement
         public LoadFileController(
             [NotNull] IUiContext uiContext,
             [NotNull] IAccountTypeRepository accountTypeRepository)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -44,7 +45,6 @@ namespace BudgetAnalyser.Statement
             this.userPromptOpenFileFactory = uiContext.UserPrompts.OpenFileFactory;
             this.accountTypeRepository = accountTypeRepository;
 
-            Messenger = uiContext.Messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 

@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Matching
         private Guid dialogCorrelationId = Guid.NewGuid();
         private List<MatchingRule> removedRules;
 
-        public DisusedRulesController(IMessenger messenger, ITransactionRuleService ruleService, IApplicationDatabaseService dbService)
+        public DisusedRulesController([NotNull] IMessenger messenger, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseService dbService) : base(messenger)
         {
             this.ruleService = ruleService;
             this.dbService = dbService;
@@ -27,7 +27,6 @@ namespace BudgetAnalyser.Matching
             if (ruleService == null) throw new ArgumentNullException(nameof(ruleService));
             if (dbService == null) throw new ArgumentNullException(nameof(dbService));
 
-            Messenger = messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
         }

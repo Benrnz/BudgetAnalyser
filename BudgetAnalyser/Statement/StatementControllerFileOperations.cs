@@ -19,6 +19,7 @@ namespace BudgetAnalyser.Statement
             [NotNull] IUiContext uiContext,
             [NotNull] LoadFileController loadFileController,
             [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {

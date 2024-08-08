@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Dashboard
 
         private static void OnWidgetCommandExecuted(Widget widget)
         {
-            Messenger.Send(new WidgetActivatedMessage(widget));
+            MessengerInstance.Send(new WidgetActivatedMessage(widget));
         }
 
         private static bool WidgetCommandCanExecute(Widget widget)

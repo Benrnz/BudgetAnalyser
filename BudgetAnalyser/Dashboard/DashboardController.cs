@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Dashboard
             [NotNull] IUiContext uiContext,
             [NotNull] IDashboardService dashboardService,
             [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -57,7 +58,7 @@ namespace BudgetAnalyser.Dashboard
 
             CorrelationId = Guid.NewGuid();
 
-            RegisterForMessengerNotifications(uiContext.Messenger);
+            RegisterForMessengerNotifications();
         }
 
         public Guid CorrelationId
@@ -186,10 +187,9 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        private void RegisterForMessengerNotifications(IMessenger messenger)
+        private void RegisterForMessengerNotifications()
         {
             // Register for all dependent objects change messages.
-            Messenger = messenger;
             Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
             Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
         }

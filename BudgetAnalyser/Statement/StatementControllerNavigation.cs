@@ -32,11 +32,11 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException(nameof(questionBox));
             }
 
-            Messenger = messenger;
+            MessengerInstance = messenger;
             this.controller = controller;
             this.questionBox = questionBox;
 
-            Messenger.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
+            MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }
 
         private IMessenger MessengerInstance { get; }
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Statement
 
                 GlobalFilterCriteria newCriteria;
                 var requestCurrentFilter = new RequestFilterMessage(this);
-                Messenger.Send(requestCurrentFilter);
+                MessengerInstance.Send(requestCurrentFilter);
 
                 if (foundTransaction.Date < requestCurrentFilter.Criteria.BeginDate)
                 {
@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Statement
                     newCriteria = new GlobalFilterCriteria { BeginDate = requestCurrentFilter.Criteria.BeginDate, EndDate = foundTransaction.Date };
                 }
 
-                Messenger.Send(new RequestFilterChangeMessage(this) { Criteria = newCriteria });
+                MessengerInstance.Send(new RequestFilterChangeMessage(this) { Criteria = newCriteria });
 
                 return NavigateToVisibleTransaction(transactionId);
             }

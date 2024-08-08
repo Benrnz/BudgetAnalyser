@@ -19,6 +19,7 @@ namespace BudgetAnalyser.Budget
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public ChooseBudgetBucketController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IAccountTypeRepository accountRepo)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -39,7 +40,6 @@ namespace BudgetAnalyser.Budget
             this.accountRepo = accountRepo;
             BudgetBuckets = bucketRepository.Buckets.ToList();
 
-            Messenger = uiContext.Messenger;
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 

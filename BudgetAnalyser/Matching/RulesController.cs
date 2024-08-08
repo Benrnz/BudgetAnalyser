@@ -32,6 +32,7 @@ namespace BudgetAnalyser.Matching
         private bool initialised;
 
         public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -53,7 +54,6 @@ namespace BudgetAnalyser.Matching
 
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             NewRuleController = uiContext.NewRuleController;
-            Messenger = uiContext.Messenger;
 
             this.ruleService.Closed += OnClosedNotificationReceived;
             this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;

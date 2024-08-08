@@ -32,6 +32,7 @@ namespace BudgetAnalyser.Statement
             [NotNull] IUiContext uiContext,
             [NotNull] StatementControllerFileOperations fileOperations,
             [NotNull] ITransactionManagerService transactionService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -52,7 +53,6 @@ namespace BudgetAnalyser.Statement
             this.uiContext = uiContext;
             this.transactionService = transactionService;
 
-            Messenger = uiContext.Messenger;
             Messenger.Register<FilterAppliedMessage>(this, OnGlobalDateFilterApplied);
             Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);

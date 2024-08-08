@@ -11,13 +11,13 @@ namespace BudgetAnalyser.LedgerBook
     {
         private Guid dialogCorrelationId;
 
-        public TransferFundsController([NotNull] IMessenger messenger)
+        public TransferFundsController([NotNull] IMessenger messenger) : base(messenger)
         {
             if (messenger == null)
             {
                 throw new ArgumentNullException(nameof(messenger));
             }
-            Messenger = messenger;
+
             Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 

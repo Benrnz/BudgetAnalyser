@@ -18,6 +18,7 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseDirty;
 
         public AppliedRulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
