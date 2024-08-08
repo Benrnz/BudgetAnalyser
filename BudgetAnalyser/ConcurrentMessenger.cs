@@ -33,7 +33,7 @@ public class ConcurrentMessenger : IMessenger
     {
         lock (SyncRoot)
         {
-            return this.defaultMessenger.IsRegistered(recipient, token);
+            return this.defaultMessenger.IsRegistered<TMessage, TToken>(recipient, token);
         }
     }
 
@@ -41,7 +41,7 @@ public class ConcurrentMessenger : IMessenger
     {
         lock (SyncRoot)
         {
-            if (this.defaultMessenger.IsRegistered(recipient, token)) return;
+            if (this.defaultMessenger.IsRegistered<TMessage, TToken>(recipient, token)) return;
             this.defaultMessenger.Register(recipient, token, handler);
         }
 
@@ -72,7 +72,7 @@ public class ConcurrentMessenger : IMessenger
     {
         lock (SyncRoot)
         {
-            if (!this.defaultMessenger.IsRegistered(recipient, token)) return;
+            if (!this.defaultMessenger.IsRegistered<TMessage, TToken>(recipient, token)) return;
             this.defaultMessenger.Unregister<TMessage, TToken>(recipient, token);
         }
     }
