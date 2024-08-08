@@ -106,7 +106,7 @@ public class ConcurrentMessenger : IMessenger
             this.defaultMessenger.Cleanup();
         }
 
-        this.logger.LogInfo("IMessenger.Cleanup");
+        this.logger.LogInfo(l => "IMessenger.Cleanup");
     }
 
     public void Reset()
@@ -116,6 +116,6 @@ public class ConcurrentMessenger : IMessenger
             this.defaultMessenger.Reset();
         }
 
-        this.logger.LogInfo("IMessenger.Reset");
+        this.logger.LogInfo(l => "IMessenger.Reset");
     }
 }
