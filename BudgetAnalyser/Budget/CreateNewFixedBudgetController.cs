@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -31,7 +32,7 @@ namespace BudgetAnalyser.Budget
             }
 
             this.bucketRepository = bucketRepository;
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<CreateNewFixedBudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 

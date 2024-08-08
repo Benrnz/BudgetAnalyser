@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.bucketRepo = bucketRepo;
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         public string ActionButtonToolTip => "Save Split Transactions.";

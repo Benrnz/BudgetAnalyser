@@ -1,6 +1,7 @@
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -21,7 +22,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        Messenger.Register<NewBudgetModelController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         this.messageBox = uiContext.UserPrompts.MessageBox;
         BudgetCycle = BudgetCycle.Monthly;
     }

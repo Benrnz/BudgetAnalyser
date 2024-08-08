@@ -53,11 +53,11 @@ namespace BudgetAnalyser.Statement
             this.uiContext = uiContext;
             this.transactionService = transactionService;
 
-            Messenger.Register<FilterAppliedMessage>(this, OnGlobalDateFilterApplied);
-            Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
+            Messenger.Register<StatementController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
+            Messenger.Register<StatementController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+            Messenger.Register<StatementController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
+            Messenger.Register<StatementController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+            Messenger.Register<StatementController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
 
             this.transactionService.Closed += OnClosedNotificationReceived;
             this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;

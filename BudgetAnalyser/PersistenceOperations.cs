@@ -3,6 +3,7 @@ using System.Windows.Input;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace BudgetAnalyser
 {
@@ -25,7 +26,7 @@ namespace BudgetAnalyser
             this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
             this.demoFileHelper = demoFileHelper ?? throw new ArgumentNullException(nameof(demoFileHelper));
 
-            this.uiContext.Messenger.Register<PasswordSetMessage>(this, OnPasswordSetMessageReceived);
+            this.uiContext.Messenger.Register<PersistenceOperations, PasswordSetMessage>(this, static (r, m) => r.OnPasswordSetMessageReceived(m));
         }
 
         public bool HasUnsavedChanges => this.applicationDatabaseService.HasUnsavedChanges;

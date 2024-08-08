@@ -37,7 +37,7 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException(nameof(ledgerService));
             }
 
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<LedgerBucketViewController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             this.accountRepo = accountRepo;
             this.ledgerService = ledgerService;
             this.messageBox = uiContext.UserPrompts.MessageBox;

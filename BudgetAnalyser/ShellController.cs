@@ -45,9 +45,9 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException(nameof(persistenceOperations));
             }
 
-            Messenger.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
-            Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            Messenger.Register<ShellController, ShellDialogRequestMessage>(this, static (r, m) => r.OnDialogRequested(m));
+            Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+            Messenger.Register<ShellController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
 
             this.statePersistence = statePersistence;
             this.persistenceOperations = persistenceOperations;

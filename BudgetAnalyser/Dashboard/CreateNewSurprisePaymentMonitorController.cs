@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -33,7 +34,7 @@ namespace BudgetAnalyser.Dashboard
             }
 
             this.bucketRepository = bucketRepository;
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<CreateNewSurprisePaymentMonitorController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             PaymentStartDate = DateTime.Today;
             Frequency = WeeklyOrFortnightly.Weekly;
             this.messageBox = uiContext.UserPrompts.MessageBox;

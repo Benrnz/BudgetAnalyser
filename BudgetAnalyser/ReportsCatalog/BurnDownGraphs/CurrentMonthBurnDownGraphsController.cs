@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
 using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
@@ -42,8 +43,8 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             this.addUserDefinedBurnDownController = addUserDefinedBurnDownController ?? throw new ArgumentNullException(nameof(addUserDefinedBurnDownController));
             this.chartsService = chartsService ?? throw new ArgumentNullException(nameof(chartsService));
 
-            Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            Messenger.Register<CurrentMonthBurnDownGraphsController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+            Messenger.Register<CurrentMonthBurnDownGraphsController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
         }
 
         [UsedImplicitly]

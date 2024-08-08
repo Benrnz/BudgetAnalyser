@@ -41,9 +41,9 @@ namespace BudgetAnalyser.ReportsCatalog
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             OverallPerformanceController = uiContext.OverallPerformanceController;
 
-            Messenger.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
-            Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            Messenger.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+            Messenger.Register<ReportsCatalogController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
+            Messenger.Register<ReportsCatalogController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+            Messenger.Register<ReportsCatalogController, LedgerBookReadyMessage>(this, static (r, m) => r.OnLedgerBookReadyMessageReceived(m));
         }
 
         [UsedImplicitly]

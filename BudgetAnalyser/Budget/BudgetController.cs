@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -56,7 +57,7 @@ public class BudgetController : ControllerBase, IShowableController
         NewBudgetController.Ready += OnAddNewBudgetReady;
         Shown = false;
 
-        Messenger.Register<ShellDialogResponseMessage>(this, OnPopUpResponseReceived);
+        Messenger.Register<BudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnPopUpResponseReceived(m));
         this.maintenanceService.Closed += OnClosedNotificationReceived;
         this.maintenanceService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
         this.maintenanceService.Saving += OnSavingNotificationReceived;

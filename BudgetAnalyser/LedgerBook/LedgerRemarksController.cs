@@ -28,7 +28,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             this.reconciliationService = reconciliationService;
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<LedgerRemarksController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         public event EventHandler Completed;

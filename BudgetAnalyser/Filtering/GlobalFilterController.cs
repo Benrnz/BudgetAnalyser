@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -40,14 +41,15 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         this.doNotUseCriteria = new GlobalFilterCriteria();
         this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 
-        Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-        Messenger.Register<ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
-        Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-        Messenger.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
-        Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-        Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
-        Messenger.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
-        Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+        // Messenger.Register<BudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnPopUpResponseReceived(m));
+        Messenger.Register<GlobalFilterController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
+        Messenger.Register<GlobalFilterController, ApplicationStateLoadFinishedMessage>(this, static (r, m) => r.OnApplicationStateLoadFinished(m));
+        Messenger.Register<GlobalFilterController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+        Messenger.Register<GlobalFilterController, RequestFilterMessage>(this, static (r, m) => r.OnGlobalFilterRequested(m));
+        Messenger.Register<GlobalFilterController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+        Messenger.Register<GlobalFilterController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+        Messenger.Register<GlobalFilterController, RequestFilterChangeMessage>(this, static (r, m) => r.OnGlobalFilterChangeRequested(m));
+        Messenger.Register<GlobalFilterController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
     }
 
     public string AccountTypeSummary

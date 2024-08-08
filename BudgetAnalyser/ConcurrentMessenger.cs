@@ -29,16 +29,6 @@ public class ConcurrentMessenger : IMessenger
         this.logger = logger;
     }
 
-    public void Register<TMessage>(object recipient, Action<TMessage> action, bool keepTargetAlive = false)
-    {
-        lock (SyncRoot)
-        {
-            this.defaultMessenger.Register(recipient, action, keepTargetAlive);
-        }
-
-        this.logger.LogInfo(l => l.Format("IMessenger.Register recipient:{0} Message:{1}", recipient, typeof(TMessage).Name));
-    }
-
     public bool IsRegistered<TMessage, TToken>(object recipient, TToken token) where TMessage : class where TToken : IEquatable<TToken>
     {
         lock (SyncRoot)

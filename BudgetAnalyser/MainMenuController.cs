@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser
@@ -42,8 +43,8 @@ namespace BudgetAnalyser
             }
 
             this.uiContext = uiContext;
-            Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            Messenger.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
+            Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+            Messenger.Register<MainMenuController, NavigateToTransactionMessage>(this, static (r, m) => r.OnNavigateToTransactionRequestReceived(m));
         }
 
         [UsedImplicitly]

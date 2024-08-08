@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Statement
             this.userPromptOpenFileFactory = uiContext.UserPrompts.OpenFileFactory;
             this.accountTypeRepository = accountTypeRepository;
 
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<LoadFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]

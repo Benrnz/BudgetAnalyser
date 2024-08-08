@@ -51,8 +51,8 @@ public class LedgerBookController : ControllerBase, IShowableController
         this.uiContext = uiContext;
         this.doNotUseNumberOfPeriodsToShow = 2;
 
-        Messenger.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-        Messenger.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+        Messenger.Register<LedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+        Messenger.Register<LedgerBookController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
 
         this.ledgerService.Saved += OnSaveNotificationReceived;
         this.ledgerService.Closed += OnClosedNotificationReceived;

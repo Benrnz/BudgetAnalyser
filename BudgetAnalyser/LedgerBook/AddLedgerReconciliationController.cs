@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -44,7 +45,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             throw new ArgumentNullException(nameof(accountTypeRepository));
         }
 
-        Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        Messenger.Register<AddLedgerReconciliationController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         this.messageBox = uiContext.UserPrompts.MessageBox;
     }
 

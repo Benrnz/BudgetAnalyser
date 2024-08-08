@@ -3,6 +3,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
@@ -40,7 +41,7 @@ namespace BudgetAnalyser.Budget
             this.accountRepo = accountRepo;
             BudgetBuckets = bucketRepository.Buckets.ToList();
 
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<ChooseBudgetBucketController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         public event EventHandler<BudgetBucketChosenEventArgs> Chosen;

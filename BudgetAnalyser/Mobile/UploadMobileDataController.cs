@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine.Mobile;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -56,8 +57,8 @@ namespace BudgetAnalyser.Mobile
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
-            Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogMessageReceived);
+            Messenger.Register<UploadMobileDataController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+            Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogMessageReceived(m));
         }
 
         public string AccessKeyId

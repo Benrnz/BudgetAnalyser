@@ -3,6 +3,7 @@ using System.Windows.Input;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -31,8 +32,8 @@ namespace BudgetAnalyser.Dashboard
             this.questionService = uiContext.UserPrompts.YesNoBox;
             this.messageService = uiContext.UserPrompts.MessageBox;
 
-            Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDiaglogResponseMessageReceived);
+            Messenger.Register<EncryptFileController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+            Messenger.Register<EncryptFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDiaglogResponseMessageReceived(m));
         }
 
         /// <summary>

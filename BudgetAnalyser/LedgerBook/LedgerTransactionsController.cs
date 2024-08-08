@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -53,7 +54,7 @@ namespace BudgetAnalyser.LedgerBook
 
             this.ledgerService = ledgerService;
             this.reconService = reconService;
-            Messenger.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<LedgerTransactionsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             Reset();
         }
 
