@@ -70,8 +70,8 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseEnterPasswordMode = value;
                 OnPropertyChanged();
-                OnPropertyChanged(() => EnterPasswordMode);
-                OnPropertyChanged(() => EncryptFileMode);
+                OnPropertyChanged(nameof(EnterPasswordMode));
+                OnPropertyChanged(nameof(EncryptFileMode));
             }
         }
 
@@ -84,8 +84,8 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseEnterPasswordMode = !value;
                 this.doNotUseDecryptFileMode = !value;
                 OnPropertyChanged();
-                OnPropertyChanged(() => EnterPasswordMode);
-                OnPropertyChanged(() => DecryptFileMode);
+                OnPropertyChanged(nameof(EnterPasswordMode));
+                OnPropertyChanged(nameof(DecryptFileMode));
             }
         }
 
@@ -98,8 +98,8 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseDecryptFileMode = !value;
                 OnPropertyChanged();
-                OnPropertyChanged(() => EncryptFileMode);
-                OnPropertyChanged(() => DecryptFileMode);
+                OnPropertyChanged(nameof(EncryptFileMode));
+                OnPropertyChanged(nameof(DecryptFileMode));
             }
         }
 

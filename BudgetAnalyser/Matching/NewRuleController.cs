@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Matching
                 this.doNotUseAndChecked = value;
                 OnPropertyChanged();
                 this.doNotUseOrChecked = !AndChecked;
-                OnPropertyChanged(() => OrChecked);
+                OnPropertyChanged(nameof(OrChecked));
             }
         }
 
@@ -87,7 +87,7 @@ namespace BudgetAnalyser.Matching
                 this.doNotUseOrChecked = value;
                 OnPropertyChanged();
                 this.doNotUseAndChecked = !OrChecked;
-                OnPropertyChanged(() => AndChecked);
+                OnPropertyChanged(nameof(AndChecked));
             }
         }
 
@@ -221,8 +221,8 @@ namespace BudgetAnalyser.Matching
             view.SortDescriptions.Add(new SortDescription(nameof(SimilarMatchedRule.SortOrder), ListSortDirection.Descending));
 
             SimilarRulesExist = !view.IsEmpty;
-            OnPropertyChanged(() => SimilarRulesExist);
-            OnPropertyChanged(() => SimilarRules);
+            OnPropertyChanged(nameof(SimilarRulesExist));
+            OnPropertyChanged(nameof(SimilarRules));
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules2: Rules.Count() = {0}", SimilarRules.Count()));
         }
     }
