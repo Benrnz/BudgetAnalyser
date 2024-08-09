@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Background="{StaticResource Brush.MainBackground}"
         Height="350"
-        Icon="..\..\UI\Assets\PieChart.png"
+        Icon="../../UI/Assets/PieChart.png"
         ResizeMode="NoResize"
         Title="Add User Defined Spending Chart"
         Width="420"

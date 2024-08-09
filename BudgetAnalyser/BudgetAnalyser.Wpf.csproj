@@ -39,6 +39,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="UI\Assets\AmexLogo.png" />
+    <Resource Include="UI\Assets\ChequeLogo.png" />
+    <Resource Include="UI\Assets\ChequeLogo1.png" />
+    <Resource Include="UI\Assets\MastercardLogo.png" />
+    <Resource Include="UI\Assets\Misc1Logo.png" />
+    <Resource Include="UI\Assets\PieChart.ico" />
+    <Resource Include="UI\Assets\PieChart.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UI\Assets\SavingsLogo.png" />
+    <Resource Include="UI\Assets\VisaLogo.png" />
+    <Resource Include="UI\Assets\warning.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="JetBrains.Annotations" />
   </ItemGroup>
 
