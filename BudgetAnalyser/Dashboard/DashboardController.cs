@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Dashboard
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
         [UsedImplicitly]
-        public ICommand WidgetActivatedCommand => WidgetCommands.WidgetActivatedCommand;
+        public ICommand WidgetActivatedCommand => WidgetCommands.WidgetClickedCommand;
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
@@ -113,7 +113,9 @@ namespace BudgetAnalyser.Dashboard
             if (storedWidgetsState != null)
             {
                 // Now that we have the previously persisted state data we can properly intialise the service.
+                WidgetCommands.DeregisterForWidgetChanges(WidgetGroups);
                 WidgetGroups = this.dashboardService.LoadPersistedStateData(storedWidgetsState);
+                WidgetCommands.ListenForWidgetChanges(WidgetGroups);
             }
         }
 
