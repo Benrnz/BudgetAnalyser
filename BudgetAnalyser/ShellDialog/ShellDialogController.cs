@@ -15,10 +15,14 @@ namespace BudgetAnalyser.ShellDialog
         private bool doNotUseOkButtonVisible;
         private bool doNotUseSaveButtonVisible;
         private string doNotUseTitle;
+        private RelayCommand<ShellDialogButton> dialogRelayCommand;
 
         public ShellDialogController([NotNull] IMessenger messenger) : base(messenger)
         {
             DialogType = ShellDialogType.OkCancel;
+            this.dialogRelayCommand = new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand);
+            DialogCommand = this.dialogRelayCommand;
+            messenger.Register<ShellDialogCommandRequerySuggestedMessage>(this, (l, m) => this.dialogRelayCommand.NotifyCanExecuteChanged());
         }
 
         public string ActionToolTip
@@ -66,11 +70,13 @@ namespace BudgetAnalyser.ShellDialog
             {
                 this.doNotUseContent = value;
                 OnPropertyChanged();
+                this.dialogRelayCommand.NotifyCanExecuteChanged();
             }
         }
 
         public Guid CorrelationId { get; set; }
-        public ICommand DialogCommand => new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand);
+
+        public ICommand DialogCommand { get; private init; }
 
         public ShellDialogType DialogType
         {
@@ -130,10 +136,23 @@ namespace BudgetAnalyser.ShellDialog
             }
         }
 
+        /// <summary>
+        ///    Intended to be called from the <see cref="ShellController"/> so it can orchestrate showing the dialog.
+        ///    Each mega-tab of the application has its own instance of this <see cref="ShellDialogController"/>.
+        /// </summary>
+        /// <param name="message">The message containing all the parameters to configure and show the dialog.</param>
+        public void ShowFromShell(ShellDialogRequestMessage message)
+        {
+            Title = message.Title;
+            Content = message.Content;
+            DialogType = message.DialogType;
+            CorrelationId = message.CorrelationId;
+            HelpButtonVisible = message.HelpAvailable;
+        }
+        
         private bool CanExecuteDialogCommand(ShellDialogButton arg)
         {
-            bool baseResult = Content != null;
-            if (!baseResult)
+            if (Content == null)
             {
                 return false;
             }

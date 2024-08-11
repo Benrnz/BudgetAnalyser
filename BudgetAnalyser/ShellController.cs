@@ -247,38 +247,32 @@ namespace BudgetAnalyser
 
         private void OnDialogRequested(ShellDialogRequestMessage message)
         {
-            ShellDialogController dialogController;
+            // Each mega-tab has its own dialog controller.  This is so each area can have independent dialogs, allowing the user to refer to other mega-tabs while a dialog is open.
             switch (message.Location)
             {
                 case BudgetAnalyserFeature.LedgerBook:
-                    dialogController = LedgerBookDialog;
+                    LedgerBookDialog.ShowFromShell(message);
                     break;
 
                 case BudgetAnalyserFeature.Dashboard:
-                    dialogController = DashboardDialog;
+                    DashboardDialog.ShowFromShell(message);
                     break;
 
                 case BudgetAnalyserFeature.Budget:
-                    dialogController = BudgetDialog;
+                    BudgetDialog.ShowFromShell(message);
                     break;
 
                 case BudgetAnalyserFeature.Transactions:
-                    dialogController = TransactionsDialog;
+                    TransactionsDialog.ShowFromShell(message);
                     break;
 
                 case BudgetAnalyserFeature.Reports:
-                    dialogController = ReportsDialog;
+                    ReportsDialog.ShowFromShell(message);
                     break;
 
                 default:
                     throw new NotSupportedException("The requested shell dialog location is not supported: " + message.Location);
             }
-
-            dialogController.Title = message.Title;
-            dialogController.Content = message.Content;
-            dialogController.DialogType = message.DialogType;
-            dialogController.CorrelationId = message.CorrelationId;
-            dialogController.HelpButtonVisible = message.HelpAvailable;
         }
     }
 }

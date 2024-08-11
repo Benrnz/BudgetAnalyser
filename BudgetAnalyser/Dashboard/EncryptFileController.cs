@@ -171,14 +171,16 @@ namespace BudgetAnalyser.Dashboard
         internal void SetConfirmedPassword(bool confirmed)
         {
             this.passwordConfirmed = confirmed;
-            CommandManager.InvalidateRequerySuggested();
+            CommandManager.InvalidateRequerySuggested(); // This stopped working here after the conversion to .NET8. The RelayCommand on ShellDialogController is not refreshed.
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>(); 
         }
 
         internal void SetPassword(SecureString newPassword)
         {
             this.password?.Dispose();
             this.password = newPassword;
-            CommandManager.InvalidateRequerySuggested();
+            CommandManager.InvalidateRequerySuggested(); // This stopped working here after the conversion to .NET8. The RelayCommand on ShellDialogController is not refreshed.
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
 
         private async Task DecryptFiles()
