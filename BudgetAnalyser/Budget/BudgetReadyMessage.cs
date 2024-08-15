@@ -1,5 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Budget;
-using GalaSoft.MvvmLight.Messaging;
+using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
 {

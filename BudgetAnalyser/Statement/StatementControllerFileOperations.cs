@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using BudgetAnalyser.Annotations;
+﻿using System.Windows.Threading;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
-using GalaSoft.MvvmLight;
-using Rees.Wpf.Contracts;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Statement
 {
-    public class StatementControllerFileOperations : ViewModelBase
+    public class StatementControllerFileOperations : ControllerBase
     {
         private readonly LoadFileController loadFileController;
         private readonly IUserMessageBox messageBox;
@@ -23,6 +19,7 @@ namespace BudgetAnalyser.Statement
             [NotNull] IUiContext uiContext,
             [NotNull] LoadFileController loadFileController,
             [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -50,7 +47,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseLoadingData = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -66,7 +63,7 @@ namespace BudgetAnalyser.Statement
             ViewModel.Statement = null;
             NotifyOfReset();
             ViewModel.TriggerRefreshTotalsRow();
-            MessengerInstance.Send(new StatementReadyMessage(null));
+            Messenger.Send(new StatementReadyMessage(null));
         }
 
         internal void Initialise(ITransactionManagerService transactionManagerService)
@@ -92,11 +89,11 @@ namespace BudgetAnalyser.Statement
                 await this.transactionService.ImportAndMergeBankStatementAsync(fileName, account);
 
                 await SyncWithServiceAsync();
-                MessengerInstance.Send(new TransactionsChangedMessage());
-                RaisePropertyChanged(() => ViewModel);
+                Messenger.Send(new TransactionsChangedMessage());
+                OnPropertyChanged(nameof(ViewModel));
                 NotifyOfEdit();
                 ViewModel.TriggerRefreshTotalsRow();
-                MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
+                Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
             }
             catch (NotSupportedException ex)
             {
@@ -119,7 +116,7 @@ namespace BudgetAnalyser.Statement
         internal void NotifyOfEdit()
         {
             ViewModel.Dirty = true;
-            MessengerInstance.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
+            Messenger.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
         }
 
         internal async Task<bool> SyncWithServiceAsync()
@@ -127,12 +124,12 @@ namespace BudgetAnalyser.Statement
             var statementModel = this.transactionService.StatementModel;
             LoadingData = true;
             await Dispatcher.CurrentDispatcher.BeginInvoke(
-                DispatcherPriority.Normal,
-                () =>
+                (DispatcherPriority)DispatcherPriority.Normal,
+                (Delegate)(() =>
                 {
                     // Update all UI bound properties.
                     var requestCurrentFilterMessage = new RequestFilterMessage(this);
-                    MessengerInstance.Send(requestCurrentFilterMessage);
+                    Messenger.Send(requestCurrentFilterMessage);
                     if (requestCurrentFilterMessage.Criteria != null)
                     {
                         this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
@@ -142,10 +139,10 @@ namespace BudgetAnalyser.Statement
                     NotifyOfReset();
                     ViewModel.TriggerRefreshTotalsRow();
 
-                    MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
+                    Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
 
                     LoadingData = false;
-                });
+                }));
 
             return true;
         }
@@ -172,7 +169,7 @@ namespace BudgetAnalyser.Statement
         private void NotifyOfReset()
         {
             ViewModel.Dirty = false;
-            MessengerInstance.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
+            Messenger.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
         }
     }
 }

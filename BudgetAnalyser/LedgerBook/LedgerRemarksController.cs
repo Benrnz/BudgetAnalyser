@@ -1,9 +1,8 @@
-﻿using System;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
+﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -17,7 +16,7 @@ namespace BudgetAnalyser.LedgerBook
         private LedgerEntryLine doNotUseLedgerEntryLine;
         private string doNotUseRemarks;
 
-        public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] IReconciliationService reconciliationService)
+        public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] IReconciliationService reconciliationService) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -30,8 +29,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             this.reconciliationService = reconciliationService;
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<LedgerRemarksController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         public event EventHandler Completed;
@@ -42,7 +40,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseIsReadOnly = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -52,7 +50,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseLedgerEntryLine = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -62,7 +60,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseRemarks = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -77,7 +75,7 @@ namespace BudgetAnalyser.LedgerBook
                 Title = "Ledger Entry Remarks",
                 CorrelationId = this.dialogCorrelationId
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

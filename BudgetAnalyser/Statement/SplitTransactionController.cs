@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
@@ -19,7 +17,7 @@ namespace BudgetAnalyser.Statement
         private decimal doNotUseSplinterAmount1;
         private decimal doNotUseSplinterAmount2;
 
-        public SplitTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo)
+        public SplitTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -32,8 +30,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.bucketRepo = bucketRepo;
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         public string ActionButtonToolTip => "Save Split Transactions.";
@@ -49,7 +46,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseInvalidMessage = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -62,10 +59,10 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseSplinterAmount1 = value;
                 this.doNotUseSplinterAmount2 = OriginalTransaction.Amount - value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => SplinterAmount2);
-                RaisePropertyChanged(() => TotalAmount);
-                RaisePropertyChanged(() => Valid);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SplinterAmount2));
+                OnPropertyChanged(nameof(TotalAmount));
+                OnPropertyChanged(nameof(Valid));
             }
         }
 
@@ -76,10 +73,10 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseSplinterAmount2 = value;
                 this.doNotUseSplinterAmount1 = OriginalTransaction.Amount - value;
-                RaisePropertyChanged(() => SplinterAmount1);
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => TotalAmount);
-                RaisePropertyChanged(() => Valid);
+                OnPropertyChanged(nameof(SplinterAmount1));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(TotalAmount));
+                OnPropertyChanged(nameof(Valid));
             }
         }
 
@@ -127,7 +124,7 @@ namespace BudgetAnalyser.Statement
                 CorrelationId = correlationId,
                 Title = "Split Transaction"
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

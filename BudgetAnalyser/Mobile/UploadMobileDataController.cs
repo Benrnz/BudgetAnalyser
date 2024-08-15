@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security;
-using System.Threading.Tasks;
-using BudgetAnalyser.Annotations;
+﻿using System.Security;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Mobile;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -48,6 +45,7 @@ namespace BudgetAnalyser.Mobile
             [NotNull] IMobileDataExporter dataExporter,
             [NotNull] IMobileDataUploader uploader,
             [NotNull] IApplicationDatabaseService appDbService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));
             if (dataExporter == null) throw new ArgumentNullException(nameof(dataExporter));
@@ -56,12 +54,11 @@ namespace BudgetAnalyser.Mobile
             this.dataExporter = dataExporter;
             this.uploader = uploader;
             this.appDbService = appDbService;
-            MessengerInstance = uiContext.Messenger;
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
-            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogMessageReceived);
+            Messenger.Register<UploadMobileDataController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+            Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogMessageReceived(m));
         }
 
         public string AccessKeyId
@@ -70,7 +67,7 @@ namespace BudgetAnalyser.Mobile
             set
             {
                 this.doNotUseAccessKeyId = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -80,7 +77,7 @@ namespace BudgetAnalyser.Mobile
             set
             {
                 this.doNotUseAccessKeySecret = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -90,7 +87,7 @@ namespace BudgetAnalyser.Mobile
             set
             {
                 this.doNotUseAmazonRegion = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -174,7 +171,7 @@ namespace BudgetAnalyser.Mobile
                 AccessKeyId = this.widget.LedgerBook.MobileSettings.AccessKeyId;
                 AccessKeySecret = this.widget.LedgerBook.MobileSettings.AccessKeySecret;
                 AmazonRegion = this.widget.LedgerBook.MobileSettings.AmazonS3Region;
-                MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+                Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
                 {
                     CorrelationId = this.correlationId,
                     Title = "Upload Mobile Summary Data"

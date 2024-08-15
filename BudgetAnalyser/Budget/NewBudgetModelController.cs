@@ -1,8 +1,7 @@
-using System;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -16,15 +15,14 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     private Guid dialogCorrelationId;
     private BudgetCycle doNotUseBudgetCycle;
 
-    public NewBudgetModelController([NotNull] IUiContext uiContext)
+    public NewBudgetModelController([NotNull] IUiContext uiContext) : base(uiContext.Messenger)
     {
         if (uiContext == null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        MessengerInstance = uiContext.Messenger;
-        MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        Messenger.Register<NewBudgetModelController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         this.messageBox = uiContext.UserPrompts.MessageBox;
         BudgetCycle = BudgetCycle.Monthly;
     }
@@ -47,9 +45,9 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             }
 
             this.doNotUseBudgetCycle = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(FortnightlyChecked));
-            RaisePropertyChanged(nameof(MonthlyChecked));
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(FortnightlyChecked));
+            OnPropertyChanged(nameof(MonthlyChecked));
         }
     }
 
@@ -96,7 +94,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             Title = "Create new Budget based on current",
             HelpAvailable = true
         };
-        MessengerInstance.Send(dialogRequest);
+        Messenger.Send(dialogRequest);
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Security;
-using System.Threading.Tasks;
+﻿using System.Security;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -26,7 +24,7 @@ namespace BudgetAnalyser.Dashboard
         private bool passwordConfirmed;
         private string doNotUseValidationMessage;
 
-        public EncryptFileController([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService appDbService)
+        public EncryptFileController([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService appDbService) : base(uiContext.Messenger)
         {
             this.appDbService = appDbService;
             if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));
@@ -34,9 +32,8 @@ namespace BudgetAnalyser.Dashboard
             this.questionService = uiContext.UserPrompts.YesNoBox;
             this.messageService = uiContext.UserPrompts.MessageBox;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDiaglogResponseMessageReceived);
+            Messenger.Register<EncryptFileController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+            Messenger.Register<EncryptFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDiaglogResponseMessageReceived(m));
         }
 
         /// <summary>
@@ -73,9 +70,9 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseDecryptFileMode = value;
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseEnterPasswordMode = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => EnterPasswordMode);
-                RaisePropertyChanged(() => EncryptFileMode);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(EnterPasswordMode));
+                OnPropertyChanged(nameof(EncryptFileMode));
             }
         }
 
@@ -87,9 +84,9 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseEncryptFileMode = value;
                 this.doNotUseEnterPasswordMode = !value;
                 this.doNotUseDecryptFileMode = !value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => EnterPasswordMode);
-                RaisePropertyChanged(() => DecryptFileMode);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(EnterPasswordMode));
+                OnPropertyChanged(nameof(DecryptFileMode));
             }
         }
 
@@ -101,9 +98,9 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseEnterPasswordMode = value;
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseDecryptFileMode = !value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => EncryptFileMode);
-                RaisePropertyChanged(() => DecryptFileMode);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(EncryptFileMode));
+                OnPropertyChanged(nameof(DecryptFileMode));
             }
         }
 
@@ -117,7 +114,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseHasUnsavedChanges = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -127,7 +124,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseIsEncrypted = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -137,7 +134,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseValidationMessage = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -164,7 +161,7 @@ namespace BudgetAnalyser.Dashboard
             FileName = appDbFileName;
             EnterPasswordText = "Please enter your password for ";
             ValidationMessage = validationMessage;
-            MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+            Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Enter Password"
@@ -174,14 +171,16 @@ namespace BudgetAnalyser.Dashboard
         internal void SetConfirmedPassword(bool confirmed)
         {
             this.passwordConfirmed = confirmed;
-            CommandManager.InvalidateRequerySuggested();
+            CommandManager.InvalidateRequerySuggested(); // This stopped working here after the conversion to .NET8. The RelayCommand on ShellDialogController is not refreshed.
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>(); 
         }
 
         internal void SetPassword(SecureString newPassword)
         {
             this.password?.Dispose();
             this.password = newPassword;
-            CommandManager.InvalidateRequerySuggested();
+            CommandManager.InvalidateRequerySuggested(); // This stopped working here after the conversion to .NET8. The RelayCommand on ShellDialogController is not refreshed.
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
 
         private async Task DecryptFiles()
@@ -242,7 +241,7 @@ namespace BudgetAnalyser.Dashboard
                 if (EnterPasswordMode)
                 {
                     this.appDbService.SetCredential(this.password);
-                    MessengerInstance.Send(new PasswordSetMessage { DatabaseStorageKey = FileName });
+                    Messenger.Send(new PasswordSetMessage { DatabaseStorageKey = FileName });
                     // Incorrect password is handled by calling code.
                 }
             }
@@ -278,7 +277,7 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+            Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Protect Data Files"

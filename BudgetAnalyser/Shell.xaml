@@ -6,7 +6,7 @@
         Background="{StaticResource Brush.MainBackground}"
         SizeChanged="OnSizeChanged"
         LocationChanged="OnLocationChanged"
-        Icon="UI\Assets\PieChart.png"
+        Icon="UI/Assets/PieChart.png"
         Loaded="OnLoaded"
         MinHeight="600"
         MinWidth="800"

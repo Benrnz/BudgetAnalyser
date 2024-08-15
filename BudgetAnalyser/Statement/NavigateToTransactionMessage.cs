@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using GalaSoft.MvvmLight.Messaging;
+﻿using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {

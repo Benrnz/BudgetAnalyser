@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
@@ -24,7 +21,7 @@ namespace BudgetAnalyser.Budget
         private bool doNotUseShown;
         private Expense surplus;
 
-        public BudgetPieController([NotNull] IBudgetPieGraphService service)
+        public BudgetPieController([NotNull] IMessenger messenger, [NotNull] IBudgetPieGraphService service) : base(messenger)
         {
             if (service == null)
             {
@@ -44,7 +41,7 @@ namespace BudgetAnalyser.Budget
             private set
             {
                 this.doNotUseCurrentExpense = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -68,7 +65,7 @@ namespace BudgetAnalyser.Budget
             private set
             {
                 this.doNotUseCurrentIncome = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -103,8 +100,8 @@ namespace BudgetAnalyser.Budget
                     CurrentExpense = this.budgetModel.Expenses.SingleOrDefault(x => x.Bucket.Code == this.doNotUseExpenseSelectedItem.Key);
                 }
 
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => CurrentExpensePercent);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentExpensePercent));
             }
         }
 
@@ -118,8 +115,8 @@ namespace BudgetAnalyser.Budget
             {
                 this.doNotUseIncomeSelectedItem = value;
                 CurrentIncome = this.budgetModel.Incomes.SingleOrDefault(x => x.Bucket.Code == this.doNotUseIncomeSelectedItem.Key);
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => CurrentIncomePercent);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentIncomePercent));
             }
         }
 
@@ -134,7 +131,7 @@ namespace BudgetAnalyser.Budget
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -166,8 +163,8 @@ namespace BudgetAnalyser.Budget
             IncomePieChartValues = this.budgetPieService.PrepareIncomeGraphData(model);
 
             Shown = true;
-            RaisePropertyChanged(() => ExpensePieChartValues);
-            RaisePropertyChanged(() => IncomePieChartValues);
+            OnPropertyChanged(nameof(ExpensePieChartValues));
+            OnPropertyChanged(nameof(IncomePieChartValues));
         }
     }
 }

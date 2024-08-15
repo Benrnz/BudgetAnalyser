@@ -1,11 +1,11 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace BudgetAnalyser.LedgerBook
 {
-    public class LedgerBookViewModel : ViewModelBase
+    public class LedgerBookViewModel : ObservableRecipient
     {
         private IBudgetCurrencyContext doNotUseCurrentBudget;
         private StatementModel doNotUseCurrentStatement;
@@ -19,8 +19,8 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.ledgerBook = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => NoLedgerBookLoaded);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(NoLedgerBookLoaded));
             }
         }
 
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseCurrentBudget = value;
-                RaisePropertyChanged(() => NoBudgetLoaded);
+                OnPropertyChanged(nameof(NoBudgetLoaded));
             }
         }
 
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseCurrentStatement = value;
-                RaisePropertyChanged(() => NoStatementLoaded);
+                OnPropertyChanged(nameof(NoStatementLoaded));
             }
         }
 
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewLedgerLine = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
     }

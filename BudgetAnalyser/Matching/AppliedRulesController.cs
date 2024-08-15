@@ -1,11 +1,8 @@
-using System;
-using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -21,6 +18,7 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseDirty;
 
         public AppliedRulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -62,7 +60,7 @@ namespace BudgetAnalyser.Matching
                 {
                     this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
                 }
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

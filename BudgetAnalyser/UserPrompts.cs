@@ -1,5 +1,3 @@
-using System;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using Rees.Wpf.Contracts;
 

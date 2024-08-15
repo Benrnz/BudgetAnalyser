@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
@@ -23,6 +20,7 @@ namespace BudgetAnalyser.Budget
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public ChooseBudgetBucketController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IAccountTypeRepository accountRepo)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -43,8 +41,7 @@ namespace BudgetAnalyser.Budget
             this.accountRepo = accountRepo;
             BudgetBuckets = bucketRepository.Buckets.ToList();
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<ChooseBudgetBucketController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         public event EventHandler<BudgetBucketChosenEventArgs> Chosen;
@@ -60,7 +57,7 @@ namespace BudgetAnalyser.Budget
             private set
             {
                 this.doNotUseBudgetBuckets = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -75,7 +72,7 @@ namespace BudgetAnalyser.Budget
             set
             {
                 this.doNotUseFilterDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -105,7 +102,7 @@ namespace BudgetAnalyser.Budget
                 CorrelationId = this.dialogCorrelationId,
                 Title = title
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

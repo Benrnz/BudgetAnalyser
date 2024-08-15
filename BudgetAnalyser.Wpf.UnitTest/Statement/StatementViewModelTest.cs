@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using BudgetAnalyser.Engine.Services;
+﻿using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Statement;
 using BudgetAnalyser.Wpf.UnitTest.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.Wpf.Contracts;
 

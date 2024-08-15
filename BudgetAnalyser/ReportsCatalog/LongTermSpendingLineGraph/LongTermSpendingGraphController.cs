@@ -1,11 +1,9 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using BudgetAnalyser.Annotations;
+﻿using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -21,7 +19,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
         private SeriesData doNotUseSelectedSeriesData;
         private bool doNotUseToggleAll;
 
-        public LongTermSpendingGraphController([NotNull] ILongTermSpendingChartService chartService, IUserMessageBox messageService)
+        public LongTermSpendingGraphController([NotNull] IMessenger messenger, [NotNull] ILongTermSpendingChartService chartService, [NotNull] IUserMessageBox messageService) : base (messenger)
         {
             if (chartService == null)
             {
@@ -43,7 +41,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseGraphMaximumValue = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -53,7 +51,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseGraphMinimumValue = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -63,7 +61,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseSelectedPlotPoint = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -73,7 +71,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseSelectedSeriesData = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -87,7 +85,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseToggleAll = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 ToggleAllLinesVisibility();
             }
         }

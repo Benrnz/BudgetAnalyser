@@ -1,9 +1,5 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -12,7 +8,8 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
 using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
@@ -36,6 +33,7 @@ namespace BudgetAnalyser.Statement
             [NotNull] IUiContext uiContext,
             [NotNull] StatementControllerFileOperations fileOperations,
             [NotNull] ITransactionManagerService transactionService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -56,12 +54,11 @@ namespace BudgetAnalyser.Statement
             this.uiContext = uiContext;
             this.transactionService = transactionService;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<FilterAppliedMessage>(this, OnGlobalDateFilterApplied);
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
+            Messenger.Register<StatementController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
+            Messenger.Register<StatementController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+            Messenger.Register<StatementController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
+            Messenger.Register<StatementController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+            Messenger.Register<StatementController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
 
             this.transactionService.Closed += OnClosedNotificationReceived;
             this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -83,7 +80,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseBucketFilter = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
                 ViewModel.TriggerRefreshTotalsRow();
             }
@@ -121,7 +118,7 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -138,7 +135,7 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseTextFilter = string.IsNullOrEmpty(value) ? null : value;
 
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 ViewModel.Transactions = this.transactionService.FilterBySearchText(TextFilter);
                 ViewModel.TriggerRefreshTotalsRow();
             }
@@ -159,9 +156,9 @@ namespace BudgetAnalyser.Statement
             FileOperations.Initialise(this.transactionService);
         }
 
-        public void RegisterListener<T>(object listener, Action<T> handler)
+        public void RegisterListener<TMessage>(StatementUserControl recipient, MessageHandler<StatementUserControl, TMessage> handler) where TMessage : MessageBase
         {
-            MessengerInstance.Register(listener, handler);
+            Messenger.Register(recipient, handler);
         }
 
         private bool CanExecuteSortCommand()
@@ -293,7 +290,7 @@ namespace BudgetAnalyser.Statement
             ViewModel.Statement = this.transactionService.StatementModel;
             ViewModel.Transactions = new ObservableCollection<Transaction>(ViewModel.Statement.Transactions);
             ViewModel.TriggerRefreshTotalsRow();
-            RaisePropertyChanged(() => BucketFilter);
+            OnPropertyChanged(nameof(BucketFilter));
         }
 
         private async void OnMergeStatementCommandExecute()

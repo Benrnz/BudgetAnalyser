@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using GalaSoft.MvvmLight.Messaging;
+﻿using System.Collections.ObjectModel;
 using Rees.Wpf.Contracts;
 
 namespace Rees.Wpf.ApplicationState

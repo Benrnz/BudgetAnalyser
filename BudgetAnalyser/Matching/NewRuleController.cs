@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -30,6 +27,7 @@ namespace BudgetAnalyser.Matching
             [NotNull] UiContext uiContext,
             [NotNull] ITransactionRuleService rulesService,
             [NotNull] IBudgetBucketRepository bucketRepo)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -51,8 +49,7 @@ namespace BudgetAnalyser.Matching
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<NewRuleController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         public event EventHandler RuleCreated;
@@ -66,9 +63,9 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseAndChecked = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 this.doNotUseOrChecked = !AndChecked;
-                RaisePropertyChanged(() => OrChecked);
+                OnPropertyChanged(nameof(OrChecked));
             }
         }
 
@@ -89,9 +86,9 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseOrChecked = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 this.doNotUseAndChecked = !OrChecked;
-                RaisePropertyChanged(() => AndChecked);
+                OnPropertyChanged(nameof(AndChecked));
             }
         }
 
@@ -162,7 +159,7 @@ namespace BudgetAnalyser.Matching
                 CorrelationId = this.shellDialogCorrelationId,
                 Title = Title
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnCriteriaValuePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -225,8 +222,8 @@ namespace BudgetAnalyser.Matching
             view.SortDescriptions.Add(new SortDescription(nameof(SimilarMatchedRule.SortOrder), ListSortDirection.Descending));
 
             SimilarRulesExist = !view.IsEmpty;
-            RaisePropertyChanged(() => SimilarRulesExist);
-            RaisePropertyChanged(() => SimilarRules);
+            OnPropertyChanged(nameof(SimilarRulesExist));
+            OnPropertyChanged(nameof(SimilarRules));
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules2: Rules.Count() = {0}", SimilarRules.Count()));
         }
     }

@@ -1,14 +1,12 @@
-using System;
-using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -35,6 +33,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         [NotNull] ILedgerService ledgerService,
         [NotNull] IReconciliationService reconService,
         [NotNull] NewWindowViewLoader newWindowViewLoader)
+        : base(uiContext.Messenger)
     {
         if (uiContext == null)
         {
@@ -53,9 +52,8 @@ public class LedgerBookController : ControllerBase, IShowableController
         this.uiContext = uiContext;
         this.doNotUseNumberOfPeriodsToShow = 2;
 
-        MessengerInstance = uiContext.Messenger;
-        MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-        MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+        Messenger.Register<LedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+        Messenger.Register<LedgerBookController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
 
         this.ledgerService.Saved += OnSaveNotificationReceived;
         this.ledgerService.Closed += OnClosedNotificationReceived;
@@ -78,7 +76,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         set
         {
             this.doNotUseNumberOfPeriodsToShow = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -98,7 +96,7 @@ public class LedgerBookController : ControllerBase, IShowableController
             }
 
             this.doNotUseShown = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -115,9 +113,9 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
-    public void DeregisterListener<T>(object listener, Action<T> handler)
+    public void DeregisterListener(LedgerBookUserControl recipient)
     {
-        MessengerInstance.Unregister(listener, handler);
+        Messenger.Unregister<LedgerBookReadyMessage>(recipient);
     }
 
     public void EditLedgerBookName()
@@ -137,9 +135,9 @@ public class LedgerBookController : ControllerBase, IShowableController
         FileOperations.Dirty = true;
     }
 
-    public void RegisterListener<T>(object listener, Action<T> handler)
+    public void RegisterListener(LedgerBookUserControl recipient, MessageHandler<LedgerBookUserControl, LedgerBookReadyMessage> handler)
     {
-        MessengerInstance.Register(listener, handler);
+        Messenger.Register(recipient, handler);
     }
 
     internal ILedgerBookGridBuilder GridBuilder()
@@ -321,7 +319,7 @@ public class LedgerBookController : ControllerBase, IShowableController
     private void OnShowHidePeriodsCommandExecuted(int increment)
     {
         NumberOfPeriodsToShow += increment;
-        MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
+        Messenger.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
     }
 
     private void OnShowLedgerBucketDetailsCommand(LedgerBucket ledgerBucket)

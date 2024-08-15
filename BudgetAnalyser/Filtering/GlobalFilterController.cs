@@ -1,8 +1,6 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -11,7 +9,8 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -31,7 +30,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private string doNotUseDateSummaryLine1;
     private string doNotUseDateSummaryLine2;
 
-    public GlobalFilterController([NotNull] UiContext uiContext)
+    public GlobalFilterController([NotNull] UiContext uiContext) : base(uiContext.Messenger)
     {
         if (uiContext == null)
         {
@@ -42,15 +41,15 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         this.doNotUseCriteria = new GlobalFilterCriteria();
         this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 
-        MessengerInstance = uiContext.Messenger;
-        MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-        MessengerInstance.Register<ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
-        MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-        MessengerInstance.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
-        MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-        MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
-        MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
-        MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+        // Messenger.Register<BudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnPopUpResponseReceived(m));
+        Messenger.Register<GlobalFilterController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
+        Messenger.Register<GlobalFilterController, ApplicationStateLoadFinishedMessage>(this, static (r, m) => r.OnApplicationStateLoadFinished(m));
+        Messenger.Register<GlobalFilterController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+        Messenger.Register<GlobalFilterController, RequestFilterMessage>(this, static (r, m) => r.OnGlobalFilterRequested(m));
+        Messenger.Register<GlobalFilterController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+        Messenger.Register<GlobalFilterController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+        Messenger.Register<GlobalFilterController, RequestFilterChangeMessage>(this, static (r, m) => r.OnGlobalFilterChangeRequested(m));
+        Messenger.Register<GlobalFilterController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
     }
 
     public string AccountTypeSummary
@@ -59,7 +58,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         private set
         {
             this.doNotUseAccountTypeSummary = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -82,7 +81,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         set
         {
             this.doNotUseCriteria = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
             UpdateSummaries();
         }
     }
@@ -93,7 +92,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         private set
         {
             this.doNotUseDateSummaryLine1 = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -103,7 +102,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         private set
         {
             this.doNotUseDateSummaryLine2 = value;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -115,7 +114,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             CorrelationId = this.dialogCorrelationId,
             Title = "Global Date Filter"
         };
-        MessengerInstance.Send(dialogRequest);
+        Messenger.Send(dialogRequest);
     }
 
     private void OnAddPeriodCommandExecute(DateTime date)
@@ -260,7 +259,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private void SendFilterAppliedMessage()
     {
         UpdateSummaries();
-        MessengerInstance.Send(new FilterAppliedMessage(this, Criteria));
+        Messenger.Send(new FilterAppliedMessage(this, Criteria));
     }
 
     private void UpdateSummaries()

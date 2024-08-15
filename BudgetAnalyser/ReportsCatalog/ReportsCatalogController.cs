@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
@@ -12,7 +9,8 @@ using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog
@@ -26,7 +24,7 @@ namespace BudgetAnalyser.ReportsCatalog
         private StatementModel currentStatementModel;
         private bool doNotUseShown;
 
-        public ReportsCatalogController([NotNull] UiContext uiContext, [NotNull] NewWindowViewLoader newWindowViewLoader)
+        public ReportsCatalogController([NotNull] UiContext uiContext, [NotNull] NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -44,10 +42,9 @@ namespace BudgetAnalyser.ReportsCatalog
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             OverallPerformanceController = uiContext.OverallPerformanceController;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
-            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+            Messenger.Register<ReportsCatalogController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
+            Messenger.Register<ReportsCatalogController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+            Messenger.Register<ReportsCatalogController, LedgerBookReadyMessage>(this, static (r, m) => r.OnLedgerBookReadyMessageReceived(m));
         }
 
         [UsedImplicitly]
@@ -76,7 +73,7 @@ namespace BudgetAnalyser.ReportsCatalog
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -159,7 +156,7 @@ namespace BudgetAnalyser.ReportsCatalog
         private GlobalFilterCriteria RequestCurrentFilter()
         {
             var currentFilterMessage = new RequestFilterMessage(this);
-            MessengerInstance.Send(currentFilterMessage);
+            Messenger.Send(currentFilterMessage);
             return currentFilterMessage.Criteria;
         }
     }

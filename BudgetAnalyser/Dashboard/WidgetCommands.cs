@@ -1,13 +1,13 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
+using System.Windows.Threading;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
-using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard
@@ -15,9 +15,11 @@ namespace BudgetAnalyser.Dashboard
     [AutoRegisterWithIoC]
     public static class WidgetCommands
     {
+        private static RelayCommand<Widget> WidgetClickedRelayCommand = new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
+
         public static ICommand AddNewBucketMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewBucketMonitorWidgetCommandExecute);
-        public static ICommand AddNewFixedBudgetMonitorWidgetCommand => new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
-        public static ICommand AddNewSurprisePaymentMonitorWidgetCommand => new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute);
+        public static ICommand AddNewFixedBudgetMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
+        public static ICommand AddNewSurprisePaymentMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute);
 
         [PropertyInjection]
         public static ChooseBudgetBucketController ChooseBudgetBucketController { get; [UsedImplicitly] set; }
@@ -41,7 +43,27 @@ namespace BudgetAnalyser.Dashboard
 
         public static ICommand RemoveWidgetCommand => new RelayCommand<Widget>(OnRemoveWidgetCommandExecute, w => w is IUserDefinedWidget);
         public static ICommand UnhideAllWidgetsCommand => new RelayCommand(OnUnhideAllWidgetsCommandExecute);
-        public static ICommand WidgetActivatedCommand => new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
+
+        public static ICommand WidgetClickedCommand => WidgetClickedRelayCommand;
+
+        public static void DeregisterForWidgetChanges(IEnumerable<WidgetGroup> widgetGroups)
+        {
+            if (widgetGroups == null) return;
+            widgetGroups.SelectMany(w => w.Widgets)
+                .ToList()
+                .ForEach(w => w.PropertyChanged -= OnWidgetDataUpdated);
+        }
+
+        /// <summary>
+        ///     The Dashboard must listen for widget data changes that could affect Command.CanExecute.
+        /// </summary>
+        public static void ListenForWidgetChanges(IEnumerable<WidgetGroup> widgetGroups)
+        {
+            if (widgetGroups == null) return;
+            widgetGroups.SelectMany(w => w.Widgets)
+                .ToList()
+                .ForEach(w => w.PropertyChanged += OnWidgetDataUpdated);
+        }
 
         private static void OnAddNewBucketMonitorWidgetCommandExecute(Guid correlationId)
         {
@@ -74,7 +96,8 @@ namespace BudgetAnalyser.Dashboard
                 }
             }
 
-            DashboardService.RemoveUserDefinedWidget((IUserDefinedWidget) widget);
+            widget.PropertyChanged -= OnWidgetDataUpdated;
+            DashboardService.RemoveUserDefinedWidget((IUserDefinedWidget)widget);
         }
 
         private static void OnUnhideAllWidgetsCommandExecute()
@@ -90,6 +113,16 @@ namespace BudgetAnalyser.Dashboard
         private static bool WidgetCommandCanExecute(Widget widget)
         {
             return widget.Clickable;
+        }
+
+        private static void OnWidgetDataUpdated(object? sender, PropertyChangedEventArgs e)
+        {
+            var widget = sender as Widget;
+            if (widget == null) return;
+            if (e.PropertyName == nameof(widget.Clickable))
+            {
+                Dispatcher.CurrentDispatcher.BeginInvoke(WidgetClickedRelayCommand.NotifyCanExecuteChanged, DispatcherPriority.ApplicationIdle);
+            }
         }
     }
 }

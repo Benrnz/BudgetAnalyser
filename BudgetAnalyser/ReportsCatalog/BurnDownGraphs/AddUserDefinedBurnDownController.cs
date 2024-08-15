@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -17,8 +15,10 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         private readonly IViewLoader viewLoader;
 
         public AddUserDefinedBurnDownController(
+            [NotNull] IMessenger messenger,
             [NotNull] AddUserDefinedBurnDownDialogViewLoader viewLoader,
             [NotNull] IBurnDownChartsService chartsService)
+        : base(messenger)
         {
             if (viewLoader == null)
             {

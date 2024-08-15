@@ -1,221 +1,216 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace BudgetAnalyser.Statement
+namespace BudgetAnalyser.Statement;
+
+public class StatementViewModel : ObservableRecipient
 {
-    public class StatementViewModel : ViewModelBase
+    private readonly IApplicationDatabaseService applicationDatabaseService;
+    private readonly IUiContext uiContext;
+    private bool doNotUseDirty;
+    private string doNotUseDuplicateSummary;
+    private ObservableCollection<TransactionGroupedByBucketViewModel> doNotUseGroupedByBucket;
+    private Transaction doNotUseSelectedRow;
+    private bool doNotUseSortByDate;
+    private StatementModel doNotUseStatement;
+    private ObservableCollection<Transaction> doNotUseTransactions;
+    private ITransactionManagerService transactionService;
+
+    public StatementViewModel([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService applicationDatabaseService)
     {
-        private readonly IApplicationDatabaseService applicationDatabaseService;
-        private readonly IUiContext uiContext;
-        private bool doNotUseDirty;
-        private string doNotUseDuplicateSummary;
-        private ObservableCollection<TransactionGroupedByBucketViewModel> doNotUseGroupedByBucket;
-        private Transaction doNotUseSelectedRow;
-        private bool doNotUseSortByDate;
-        private StatementModel doNotUseStatement;
-        private ObservableCollection<Transaction> doNotUseTransactions;
-        private ITransactionManagerService transactionService;
-
-        public StatementViewModel([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService applicationDatabaseService)
+        if (uiContext == null)
         {
-            if (uiContext == null)
-            {
-                throw new ArgumentNullException(nameof(uiContext));
-            }
-
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
-            }
-
-            this.doNotUseSortByDate = true;
-            this.uiContext = uiContext;
-            this.applicationDatabaseService = applicationDatabaseService;
+            throw new ArgumentNullException(nameof(uiContext));
         }
 
-        public decimal AverageDebit => this.transactionService.AverageDebit;
-
-        public bool Dirty
+        if (applicationDatabaseService == null)
         {
-            get { return this.doNotUseDirty; }
+            throw new ArgumentNullException(nameof(applicationDatabaseService));
+        }
 
-            set
+        this.doNotUseSortByDate = true;
+        this.uiContext = uiContext;
+        this.applicationDatabaseService = applicationDatabaseService;
+    }
+
+    public decimal AverageDebit => this.transactionService.AverageDebit;
+
+    public bool Dirty
+    {
+        get => this.doNotUseDirty;
+
+        set
+        {
+            this.doNotUseDirty = value;
+            OnPropertyChanged();
+            if (Dirty)
             {
-                this.doNotUseDirty = value;
-                RaisePropertyChanged();
-                if (Dirty)
-                {
-                    this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Transactions);
-                }
+                this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Transactions);
             }
         }
+    }
 
-        public string DuplicateSummary
+    public string DuplicateSummary
+    {
+        [UsedImplicitly] get => this.doNotUseDuplicateSummary;
+
+        private set
         {
-            [UsedImplicitly] get { return this.doNotUseDuplicateSummary; }
+            this.doNotUseDuplicateSummary = value;
+            OnPropertyChanged();
+        }
+    }
 
-            private set
+    public IEnumerable<string> FilterBudgetBuckets => this.transactionService.FilterableBuckets();
+
+    public ObservableCollection<TransactionGroupedByBucketViewModel> GroupedByBucket
+    {
+        get => this.doNotUseGroupedByBucket;
+        internal set
+        {
+            this.doNotUseGroupedByBucket = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool HasTransactions => Statement != null && Statement.Transactions.Any();
+
+    public Transaction SelectedRow
+    {
+        get => this.doNotUseSelectedRow;
+        set
+        {
+            this.doNotUseSelectedRow = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool SortByBucket
+    {
+        get => !this.doNotUseSortByDate;
+        set
+        {
+            this.doNotUseSortByDate = !value;
+            OnPropertyChanged(nameof(SortByDate));
+            OnPropertyChanged();
+        }
+    }
+
+    public bool SortByDate
+    {
+        get => this.doNotUseSortByDate;
+        set
+        {
+            this.doNotUseSortByDate = value;
+            OnPropertyChanged(nameof(SortByBucket));
+            OnPropertyChanged();
+        }
+    }
+
+    public StatementModel Statement
+    {
+        get => this.doNotUseStatement;
+
+        set
+        {
+            if (this.transactionService == null)
             {
-                this.doNotUseDuplicateSummary = value;
-                RaisePropertyChanged();
+                throw new InvalidOperationException("Initialise has not been called.");
             }
-        }
 
-        public IEnumerable<string> FilterBudgetBuckets => this.transactionService.FilterableBuckets();
-
-        public ObservableCollection<TransactionGroupedByBucketViewModel> GroupedByBucket
-        {
-            get { return this.doNotUseGroupedByBucket; }
-            internal set
+            if (this.doNotUseStatement != null)
             {
-                this.doNotUseGroupedByBucket = value;
-                RaisePropertyChanged();
+                this.doNotUseStatement.PropertyChanged -= OnStatementPropertyChanged;
             }
-        }
 
-        public bool HasTransactions => Statement != null && Statement.Transactions.Any();
+            this.doNotUseStatement = value;
 
-        public Transaction SelectedRow
-        {
-            get { return this.doNotUseSelectedRow; }
-            set
+            if (this.doNotUseStatement != null)
             {
-                this.doNotUseSelectedRow = value;
-                RaisePropertyChanged();
+                this.doNotUseStatement.PropertyChanged += OnStatementPropertyChanged;
             }
-        }
 
-        public bool SortByBucket
+            OnPropertyChanged(nameof(Statement));
+            Transactions = this.transactionService.ClearBucketAndTextFilters();
+            UpdateGroupedByBucket();
+        }
+    }
+
+    public string StatementName
+    {
+        get
         {
-            get { return !this.doNotUseSortByDate; }
-            set
+            if (Statement != null)
             {
-                this.doNotUseSortByDate = !value;
-                RaisePropertyChanged(() => SortByDate);
-                RaisePropertyChanged();
+                return Path.GetFileNameWithoutExtension(Statement.StorageKey);
             }
+
+            return "[No Transactions Loaded]";
         }
+    }
 
-        public bool SortByDate
+    public decimal TotalCount => this.transactionService.TotalCount;
+    public decimal TotalCredits => this.transactionService.TotalCredits;
+    public decimal TotalDebits => this.transactionService.TotalDebits;
+    public decimal TotalDifference => TotalCredits + TotalDebits;
+
+    public ObservableCollection<Transaction> Transactions
+    {
+        get => this.doNotUseTransactions;
+        internal set
         {
-            get { return this.doNotUseSortByDate; }
-            set
-            {
-                this.doNotUseSortByDate = value;
-                RaisePropertyChanged(() => SortByBucket);
-                RaisePropertyChanged();
-            }
+            this.doNotUseTransactions = value;
+            OnPropertyChanged();
         }
+    }
 
-        public StatementModel Statement
+    public bool HasSelectedRow()
+    {
+        return SelectedRow != null;
+    }
+
+    public StatementViewModel Initialise(ITransactionManagerService transactionManagerService)
+    {
+        this.transactionService = transactionManagerService;
+        return this;
+    }
+
+    public void TriggerRefreshBucketFilterList()
+    {
+        OnPropertyChanged(nameof(FilterBudgetBuckets));
+    }
+
+    public void TriggerRefreshTotalsRow()
+    {
+        OnPropertyChanged(nameof(TotalCredits));
+        OnPropertyChanged(nameof(TotalDebits));
+        OnPropertyChanged(nameof(TotalDifference));
+        OnPropertyChanged(nameof(AverageDebit));
+        OnPropertyChanged(nameof(TotalCount));
+        OnPropertyChanged(nameof(HasTransactions));
+        OnPropertyChanged(nameof(StatementName));
+
+        DuplicateSummary = Statement == null ? null : this.transactionService.DetectDuplicateTransactions();
+    }
+
+    public void UpdateGroupedByBucket()
+    {
+        GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(
+            this.transactionService.PopulateGroupByBucketCollection(SortByBucket)
+                .Select(x => new TransactionGroupedByBucketViewModel(x, this.uiContext)));
+    }
+
+    private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    {
+        // Caters for deleting a transaction. Could be more efficient if it becomes a problem.
+        if (propertyChangedEventArgs.PropertyName == "Transactions")
         {
-            get { return this.doNotUseStatement; }
-
-            set
-            {
-                if (this.transactionService == null)
-                {
-                    throw new InvalidOperationException("Initialise has not been called.");
-                }
-
-                if (this.doNotUseStatement != null)
-                {
-                    this.doNotUseStatement.PropertyChanged -= OnStatementPropertyChanged;
-                }
-
-                this.doNotUseStatement = value;
-
-                if (this.doNotUseStatement != null)
-                {
-                    this.doNotUseStatement.PropertyChanged += OnStatementPropertyChanged;
-                }
-
-                RaisePropertyChanged(() => Statement);
-                Transactions = this.transactionService.ClearBucketAndTextFilters();
-                UpdateGroupedByBucket();
-            }
-        }
-
-        public string StatementName
-        {
-            get
-            {
-                if (Statement != null)
-                {
-                    return Path.GetFileNameWithoutExtension(Statement.StorageKey);
-                }
-
-                return "[No Transactions Loaded]";
-            }
-        }
-
-        public decimal TotalCount => this.transactionService.TotalCount;
-        public decimal TotalCredits => this.transactionService.TotalCredits;
-        public decimal TotalDebits => this.transactionService.TotalDebits;
-        public decimal TotalDifference => TotalCredits + TotalDebits;
-
-        public ObservableCollection<Transaction> Transactions
-        {
-            get { return this.doNotUseTransactions; }
-            internal set
-            {
-                this.doNotUseTransactions = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public bool HasSelectedRow()
-        {
-            return SelectedRow != null;
-        }
-
-        public StatementViewModel Initialise(ITransactionManagerService transactionManagerService)
-        {
-            this.transactionService = transactionManagerService;
-            return this;
-        }
-
-        public void TriggerRefreshBucketFilterList()
-        {
-            RaisePropertyChanged(() => FilterBudgetBuckets);
-        }
-
-        public void TriggerRefreshTotalsRow()
-        {
-            RaisePropertyChanged(() => TotalCredits);
-            RaisePropertyChanged(() => TotalDebits);
-            RaisePropertyChanged(() => TotalDifference);
-            RaisePropertyChanged(() => AverageDebit);
-            RaisePropertyChanged(() => TotalCount);
-            RaisePropertyChanged(() => HasTransactions);
-            RaisePropertyChanged(() => StatementName);
-
-            DuplicateSummary = Statement == null ? null : this.transactionService.DetectDuplicateTransactions();
-        }
-
-        public void UpdateGroupedByBucket()
-        {
-            GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(
-                this.transactionService.PopulateGroupByBucketCollection(SortByBucket)
-                    .Select(x => new TransactionGroupedByBucketViewModel(x, this.uiContext)));
-        }
-
-        private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            // Caters for deleting a transaction. Could be more efficient if it becomes a problem.
-            if (propertyChangedEventArgs.PropertyName == "Transactions")
-            {
-                UpdateGroupedByBucket();
-            }
+            UpdateGroupedByBucket();
         }
     }
 }

@@ -1,18 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
 using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
 using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
@@ -30,23 +26,25 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         private BucketBurnDownController doNotUseSelectedChart;
         private Engine.Ledger.LedgerBook ledgerBook;
         private StatementModel statement;
+        private IUiContext uiContext;
 
         public CurrentMonthBurnDownGraphsController(
             [NotNull] AddUserDefinedBurnDownController addUserDefinedBurnDownController,
             [NotNull] UiContext uiContext,
             [NotNull] IBurnDownChartsService chartsService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
+            this.uiContext = uiContext;
             this.addUserDefinedBurnDownController = addUserDefinedBurnDownController ?? throw new ArgumentNullException(nameof(addUserDefinedBurnDownController));
             this.chartsService = chartsService ?? throw new ArgumentNullException(nameof(chartsService));
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            Messenger.Register<CurrentMonthBurnDownGraphsController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+            Messenger.Register<CurrentMonthBurnDownGraphsController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
         }
 
         [UsedImplicitly]
@@ -60,7 +58,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseDateRangeDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -119,12 +117,12 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             DateRangeDescription = results.DateRangeDescription;
             ChartControllers = new BindingList<BucketBurnDownController>(results.Charts.Select(BuildBucketBurnDownController).ToList());
 
-            RaisePropertyChanged(() => ChartControllers);
+            OnPropertyChanged(nameof(ChartControllers));
         }
 
         protected virtual BucketBurnDownController BuildBucketBurnDownController(BurnDownChartAnalyserResult analysis)
         {
-            var controller = new BucketBurnDownController();
+            var controller = new BucketBurnDownController(this.uiContext.Messenger);
             controller.Load(analysis);
             return controller;
         }
