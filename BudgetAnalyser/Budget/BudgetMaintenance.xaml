@@ -226,8 +226,6 @@
                     Grid.Row="0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-            <Button Command="{Binding ShowPieCommand}"
-                    Style="{StaticResource Button.Round.Pie}" />
             <Button Command="{Binding ShowAllCommand}"
                     Style="{StaticResource Button.Round.All}"
                     ToolTip="Show all budgets within the loaded budget file, and select one to view." />
@@ -354,15 +352,7 @@
             <TextBlock Style="{StaticResource TotalStyle}"
                        Text="{Binding Surplus, StringFormat=C}" />
         </StackPanel>
-        <Grid Background="{StaticResource Brush.MainBackground}"
-              Grid.Column="0"
-              Grid.Row="0"
-              Grid.ColumnSpan="2"
-              Grid.RowSpan="5"
-              Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-            <ContentPresenter Content="{Binding BudgetPieController}"
-                              VerticalAlignment="Top" />
-        </Grid>
+
     </Grid>
 
 </UserControl>

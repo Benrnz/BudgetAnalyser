@@ -35,18 +35,12 @@ namespace BudgetAnalyser.ReportsCatalog
             }
 
             this.newWindowViewLoader = newWindowViewLoader;
-            BudgetPieController = uiContext.BudgetPieController;
             OverallPerformanceController = uiContext.OverallPerformanceController;
 
             Messenger.Register<ReportsCatalogController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
             Messenger.Register<ReportsCatalogController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
             Messenger.Register<ReportsCatalogController, LedgerBookReadyMessage>(this, static (r, m) => r.OnLedgerBookReadyMessageReceived(m));
         }
-
-        [UsedImplicitly]
-        public ICommand BudgetPieCommand => new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand);
-
-        public BudgetPieController BudgetPieController { get; }
 
         [UsedImplicitly]
         public ICommand OverallBudgetPerformanceCommand => new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
@@ -67,26 +61,11 @@ namespace BudgetAnalyser.ReportsCatalog
             }
         }
 
-
-        private bool CanExecuteBudgetPieCommand()
-        {
-            return this.budgets?.CurrentActiveBudget != null;
-        }
-
         private bool CanExecuteOverallBudgetPerformanceCommand()
         {
             return this.currentStatementModel != null
                    && this.currentStatementModel.Transactions.Any()
                    && this.budgets?.CurrentActiveBudget != null;
-        }
-
-        private void OnBudgetPieCommandExecute()
-        {
-            BudgetPieController.Load(this.budgets.CurrentActiveBudget);
-
-            this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
-            this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 800;
-            this.newWindowViewLoader.Show(BudgetPieController);
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)

@@ -52,7 +52,6 @@ public class BudgetController : ControllerBase, IShowableController
         this.questionBox = uiContext.UserPrompts.YesNoBox;
         this.messageBox = uiContext.UserPrompts.MessageBox;
         this.inputBox = uiContext.UserPrompts.InputBox;
-        BudgetPieController = uiContext.BudgetPieController;
         NewBudgetController = uiContext.NewBudgetModelController;
         NewBudgetController.Ready += OnAddNewBudgetReady;
         Shown = false;
@@ -84,8 +83,6 @@ public class BudgetController : ControllerBase, IShowableController
         }
     }
 
-    // ReSharper disable once MemberCanBePrivate.Global
-    public BudgetPieController BudgetPieController { get; }
     public BudgetCollection Budgets { get; private set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
@@ -178,8 +175,6 @@ public class BudgetController : ControllerBase, IShowableController
 
     [UsedImplicitly] public ICommand ShowAllCommand => new RelayCommand(OnShowAllCommandExecuted);
 
-    [UsedImplicitly] public ICommand ShowPieCommand => new RelayCommand(OnShowPieCommandExecuted, CanExecuteShowPieCommand);
-
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal Surplus
     {
@@ -225,16 +220,6 @@ public class BudgetController : ControllerBase, IShowableController
         }
 
         Dirty = true;
-    }
-
-    private bool CanExecuteShowPieCommand()
-    {
-        if (Expenses == null || Incomes == null || CurrentBudget == null)
-        {
-            return false;
-        }
-
-        return Expenses.Any() || Incomes.Any();
     }
 
     private void OnAddNewBudgetCommandExecuted()
@@ -403,11 +388,6 @@ public class BudgetController : ControllerBase, IShowableController
     private void OnShowAllCommandExecuted()
     {
         SelectOtherBudget();
-    }
-
-    private void OnShowPieCommandExecuted()
-    {
-        BudgetPieController.Load(CurrentBudget.Model);
     }
 
     private void OnValidatingNotificationReceived(object sender, ValidatingEventArgs eventArgs)

@@ -45,7 +45,6 @@ namespace BudgetAnalyser
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
         public AppliedRulesController AppliedRulesController { get; set; }
         public BudgetController BudgetController { get; set; }
-        public BudgetPieController BudgetPieController { get; set; }
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
         public IEnumerable<ControllerBase> Controllers => this.controllers ?? (this.controllers = DiscoverAllControllers());
         public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
