@@ -5,7 +5,6 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
-using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Input;
@@ -37,7 +36,6 @@ namespace BudgetAnalyser.ReportsCatalog
 
             this.newWindowViewLoader = newWindowViewLoader;
             BudgetPieController = uiContext.BudgetPieController;
-            LongTermSpendingGraphController = uiContext.LongTermSpendingGraphController;
             OverallPerformanceController = uiContext.OverallPerformanceController;
 
             Messenger.Register<ReportsCatalogController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
@@ -49,11 +47,6 @@ namespace BudgetAnalyser.ReportsCatalog
         public ICommand BudgetPieCommand => new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand);
 
         public BudgetPieController BudgetPieController { get; }
-
-        [UsedImplicitly]
-        public ICommand LongTermSpendingGraphCommand => new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null);
-
-        public LongTermSpendingGraphController LongTermSpendingGraphController { get; }
 
         [UsedImplicitly]
         public ICommand OverallBudgetPerformanceCommand => new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
@@ -109,20 +102,6 @@ namespace BudgetAnalyser.ReportsCatalog
             }
 
             this.currentLedgerBook = message.LedgerBook;
-        }
-
-        private void OnLongTermSpendingGraphCommandExecute()
-        {
-            LongTermSpendingGraphController.Load(this.currentStatementModel, RequestCurrentFilter());
-            if (LongTermSpendingGraphController.Graph == null)
-            {
-                // Error creating report, message to user is handled by the LongTermSpendingController.
-                return;
-            }
-
-            this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
-            this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 600;
-            this.newWindowViewLoader.Show(LongTermSpendingGraphController);
         }
 
         private void OnOverallBudgetPerformanceCommandExecute()

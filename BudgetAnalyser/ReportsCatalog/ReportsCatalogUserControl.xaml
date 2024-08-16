@@ -91,39 +91,6 @@
                 </Grid>
             </Border>
 
-            <Border Style="{StaticResource ModernTileMediumStyle1}">
-                <Border.ToolTip>
-                    This graph shows a line for each budget bucket over a long period.  The Global Criteria is used to set the begin
-                    date and end date.
-                </Border.ToolTip>
-                <Grid>
-                    <Rectangle Fill="{StaticResource Brush.Text.Default}"
-                               Height="30"
-                               HorizontalAlignment="Left"
-                               Margin="10"
-                               Width="30" />
-                    <Border BorderBrush="{StaticResource Brush.ModernTile.Background1}"
-                            BorderThickness="1,0,0,1"
-                            Height="24"
-                            HorizontalAlignment="Left"
-                            Margin="13,10,10,10"
-                            Width="24" />
-                    <Path Data="M0,0 L5,4 L10,4 L15,1"
-                          Margin="17,-10,0,0"
-                          Stroke="{StaticResource Brush.ModernTile.Background1}"
-                          VerticalAlignment="Center" />
-                    <Path Data="M0,7 L5,7 L10,8 L15,7"
-                          Margin="17,0,0,0"
-                          Stroke="{StaticResource Brush.ModernTile.Background1}"
-                          VerticalAlignment="Center" />
-                    <TextBlock Margin="50,0,0,0"
-                               Text="{Binding LongTermSpendingGraphController.Title}"
-                               TextWrapping="Wrap" />
-                    <Button Command="{Binding LongTermSpendingGraphCommand}"
-                            Style="{StaticResource Button.ModernTile.Overlay}" />
-                </Grid>
-            </Border>
-
         </WrapPanel>
         <Border Grid.Row="1" />
     </Grid>

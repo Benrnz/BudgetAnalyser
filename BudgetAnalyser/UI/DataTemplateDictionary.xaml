@@ -123,10 +123,6 @@
         <statement:AccountUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type longTermSpendingLineGraph:LongTermSpendingGraphController}">
-        <longTermSpendingLineGraph:LongTermSpendingGraph />
-    </DataTemplate>
-
     <DataTemplate DataType="{x:Type ledgerBook:TransferFundsController}">
         <ledgerBook:TransferFundsView />
     </DataTemplate>

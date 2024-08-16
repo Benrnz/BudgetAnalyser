@@ -7,7 +7,6 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Messaging;
@@ -62,7 +61,6 @@ namespace BudgetAnalyser
         public LedgerRemarksController LedgerRemarksController { get; set; }
         public LedgerTransactionsController LedgerTransactionsController { get; set; }
         public ILogger Logger { get; set; }
-        public LongTermSpendingGraphController LongTermSpendingGraphController { get; set; }
         public MainMenuController MainMenuController { get; set; }
         public IMessenger Messenger { get; }
         public NewBudgetModelController NewBudgetModelController { get; set; }
