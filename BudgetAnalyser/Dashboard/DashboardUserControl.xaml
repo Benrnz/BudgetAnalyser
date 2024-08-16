@@ -4,12 +4,12 @@
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
              xmlns:widget="clr-namespace:BudgetAnalyser.Engine.Widgets;assembly=BudgetAnalyser.Engine"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             DataContextChanged="OnDataContextChanged"
              MinHeight="200"
              MinWidth="200">
 
     <UserControl.Resources>
         <converters1:TextToStaticResourceConverter x:Key="Converter.TextToStaticResource" />
+
         <ContextMenu x:Key="WidgetContextMenu">
             <ContextMenu.Resources>
 
@@ -133,8 +133,11 @@
                                Style="{StaticResource TextBlock.Widget.Paragraph}"
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
-                    <Button
-                        Command="{Binding DataContext.WidgetClickedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                    <!--
+                        Command="{Binding Controller.WidgetActivatedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                        Command="{Binding Source={StaticResource WidgetCommands}, Path=WidgetClickedCommand}"
+                    -->
+                    <Button Command="{x:Static dashboard:WidgetCommands.WidgetClickedCommand}"
                         CommandParameter="{Binding .}"
                         Grid.ColumnSpan="2"
                         Grid.RowSpan="2"

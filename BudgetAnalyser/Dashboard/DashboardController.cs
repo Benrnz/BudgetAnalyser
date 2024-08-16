@@ -96,10 +96,6 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
-        [UsedImplicitly]
-        public ICommand WidgetActivatedCommand => WidgetCommands.WidgetClickedCommand;
-
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
