@@ -11,21 +11,12 @@
                     xmlns:ledger="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine"
                     xmlns:account="clr-namespace:BudgetAnalyser.Engine.BankAccount;assembly=BudgetAnalyser.Engine"
                     xmlns:longTermSpendingLineGraph="clr-namespace:BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph"
-                    xmlns:burnDownGraphs="clr-namespace:BudgetAnalyser.ReportsCatalog.BurnDownGraphs"
                     xmlns:overallPerformance="clr-namespace:BudgetAnalyser.ReportsCatalog.OverallPerformance"
                     xmlns:matching1="clr-namespace:BudgetAnalyser.Engine.Matching;assembly=BudgetAnalyser.Engine"
                     xmlns:mobile="clr-namespace:BudgetAnalyser.Mobile">
     <!-- Data Templates -->
     <DataTemplate DataType="{x:Type overallPerformance:OverallPerformanceController}">
         <overallPerformance:OverallPerformanceView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type burnDownGraphs:BucketBurnDownController}">
-        <burnDownGraphs:BucketBurnDownLineChart />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type burnDownGraphs:CurrentMonthBurnDownGraphsController}">
-        <burnDownGraphs:CurrentMonthBurnDownGraphsView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type budget:BudgetController}">

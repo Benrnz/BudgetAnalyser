@@ -51,36 +51,6 @@
 
             <Border Style="{StaticResource ModernTileMediumStyle1}">
                 <Border.ToolTip>
-                    The graphs tell you if there is any surplus left over in each bucket for the current month.
-                    This report does not show more than one month even if the global filter is set to larger than one month.
-                    If it is, then the End Date is used less one month.
-                </Border.ToolTip>
-                <Grid>
-                    <Rectangle Fill="{StaticResource Brush.Text.Default}"
-                               Height="30"
-                               HorizontalAlignment="Left"
-                               Margin="10"
-                               Width="30" />
-                    <Border BorderBrush="{StaticResource Brush.ModernTile.Background1}"
-                            BorderThickness="1,0,0,1"
-                            Height="24"
-                            HorizontalAlignment="Left"
-                            Margin="13,10,10,10"
-                            Width="24" />
-                    <Path Data="M0,0 L5,4 L10,4 L15,11"
-                          Margin="17,-4,0,0"
-                          Stroke="{StaticResource Brush.ModernTile.Background1}"
-                          VerticalAlignment="Center" />
-                    <TextBlock Margin="50,0,0,0"
-                               Text="{Binding CurrentMonthBurnDownGraphsController.Title}"
-                               TextWrapping="Wrap" />
-                    <Button Command="{Binding SpendingTrendCommand}"
-                            Style="{StaticResource Button.ModernTile.Overlay}" />
-                </Grid>
-            </Border>
-
-            <Border Style="{StaticResource ModernTileMediumStyle1}">
-                <Border.ToolTip>
                     Visualise your budget as a pie chart, showing the size of expenses and incomes in comparison to each other.
                 </Border.ToolTip>
                 <Grid>

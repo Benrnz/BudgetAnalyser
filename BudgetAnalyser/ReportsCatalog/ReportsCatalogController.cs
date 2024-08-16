@@ -5,7 +5,6 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
-using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
@@ -39,7 +38,6 @@ namespace BudgetAnalyser.ReportsCatalog
             this.newWindowViewLoader = newWindowViewLoader;
             BudgetPieController = uiContext.BudgetPieController;
             LongTermSpendingGraphController = uiContext.LongTermSpendingGraphController;
-            CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             OverallPerformanceController = uiContext.OverallPerformanceController;
 
             Messenger.Register<ReportsCatalogController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
@@ -51,7 +49,6 @@ namespace BudgetAnalyser.ReportsCatalog
         public ICommand BudgetPieCommand => new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand);
 
         public BudgetPieController BudgetPieController { get; }
-        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; }
 
         [UsedImplicitly]
         public ICommand LongTermSpendingGraphCommand => new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null);
@@ -77,8 +74,6 @@ namespace BudgetAnalyser.ReportsCatalog
             }
         }
 
-        [UsedImplicitly]
-        public ICommand SpendingTrendCommand => new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
 
         private bool CanExecuteBudgetPieCommand()
         {
@@ -137,15 +132,6 @@ namespace BudgetAnalyser.ReportsCatalog
             this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 650;
             this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 740;
             this.newWindowViewLoader.Show(OverallPerformanceController);
-        }
-
-        private void OnSpendingTrendCommandExecute()
-        {
-            CurrentMonthBurnDownGraphsController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
-
-            this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
-            this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 600;
-            this.newWindowViewLoader.Show(CurrentMonthBurnDownGraphsController);
         }
 
         private void OnStatementReadyMessageReceived(StatementReadyMessage message)

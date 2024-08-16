@@ -7,7 +7,6 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
@@ -52,7 +51,6 @@ namespace BudgetAnalyser
         public IEnumerable<ControllerBase> Controllers => this.controllers ?? (this.controllers = DiscoverAllControllers());
         public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
         public CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
-        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; set; }
         public DashboardController DashboardController { get; set; }
         public DisusedRulesController DisusedRulesController { get; set; }
         public EditingTransactionController EditingTransactionController { get; set; }

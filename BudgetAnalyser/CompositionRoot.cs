@@ -17,7 +17,6 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
@@ -220,7 +219,6 @@ namespace BudgetAnalyser
             uiContext.GlobalFilterController = container.Resolve<GlobalFilterController>();
             uiContext.LedgerTransactionsController = container.Resolve<LedgerTransactionsController>();
             uiContext.LedgerBookController = container.Resolve<LedgerBookController>();
-            uiContext.CurrentMonthBurnDownGraphsController = container.Resolve<CurrentMonthBurnDownGraphsController>();
             uiContext.StatementController = container.Resolve<StatementController>();
             uiContext.NewRuleController = container.Resolve<NewRuleController>();
             uiContext.RulesController = container.Resolve<RulesController>();
