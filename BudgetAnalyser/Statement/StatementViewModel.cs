@@ -135,7 +135,7 @@ public class StatementViewModel : ObservableRecipient
                 this.doNotUseStatement.PropertyChanged += OnStatementPropertyChanged;
             }
 
-            OnPropertyChanged(nameof(Statement));
+            OnPropertyChanged();
             Transactions = this.transactionService.ClearBucketAndTextFilters();
             UpdateGroupedByBucket();
         }
