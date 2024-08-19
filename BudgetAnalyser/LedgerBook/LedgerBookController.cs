@@ -50,7 +50,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
         FileOperations.LedgerService = this.ledgerService;
         this.uiContext = uiContext;
-        this.doNotUseNumberOfPeriodsToShow = 2;
+        this.doNotUseNumberOfPeriodsToShow = 4;
 
         Messenger.Register<LedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<LedgerBookController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
