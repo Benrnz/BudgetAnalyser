@@ -106,7 +106,7 @@ namespace BudgetAnalyser.Statement
         public StatementControllerFileOperations FileOperations { get; }
 
         [UsedImplicitly]
-        public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute, FileOperations.CanExecuteCloseStatementCommand);
+        public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
 
         public bool Shown
         {

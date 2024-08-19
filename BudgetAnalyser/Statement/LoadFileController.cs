@@ -25,6 +25,7 @@ namespace BudgetAnalyser.Statement
         private string doNotUseTitle;
         private Task fileSelectionTask;
         private bool showingDialog;
+        private bool doNotUseCanExecuteOkButton;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LoadFileController(
@@ -56,7 +57,19 @@ namespace BudgetAnalyser.Statement
         public string ActionButtonToolTip { get; private set; }
         public ICommand BrowseForFileCommand => new RelayCommand(OnBrowseForFileCommandExecute);
         public bool CanExecuteCancelButton => true;
-        public bool CanExecuteOkButton { get; private set; }
+
+        public bool CanExecuteOkButton
+        {
+            get => this.doNotUseCanExecuteOkButton;
+            private set
+            {
+                if (value == this.doNotUseCanExecuteOkButton) return;
+                this.doNotUseCanExecuteOkButton = value;
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
+
         public bool CanExecuteSaveButton => false;
         public string CloseButtonToolTip => "Cancel";
         public IEnumerable<Account> ExistingAccountNames { get; private set; }

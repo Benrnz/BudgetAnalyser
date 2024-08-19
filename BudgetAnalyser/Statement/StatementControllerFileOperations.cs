@@ -53,11 +53,6 @@ namespace BudgetAnalyser.Statement
 
         internal StatementViewModel ViewModel { get; }
 
-        internal bool CanExecuteCloseStatementCommand()
-        {
-            return ViewModel.Statement != null;
-        }
-
         internal void Close()
         {
             ViewModel.Statement = null;
