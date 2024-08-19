@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Dashboard
     [AutoRegisterWithIoC]
     public static class WidgetCommands
     {
-        private static RelayCommand<Widget> WidgetClickedRelayCommand = new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
+        private static RelayCommand<Widget> WidgetClickedRelayCommand = new(OnWidgetCommandExecuted, WidgetCommandCanExecute);
 
         public static ICommand AddNewBucketMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewBucketMonitorWidgetCommandExecute);
         public static ICommand AddNewFixedBudgetMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Dashboard
         {
             var widget = sender as Widget;
             if (widget == null) return;
-            if (e.PropertyName == nameof(widget.Clickable))
+            if (e.PropertyName is nameof(widget.Clickable) or nameof(widget.Enabled))
             {
                 Dispatcher.CurrentDispatcher.BeginInvoke(WidgetClickedRelayCommand.NotifyCanExecuteChanged, DispatcherPriority.ApplicationIdle);
             }
