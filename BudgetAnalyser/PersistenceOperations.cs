@@ -79,7 +79,7 @@ namespace BudgetAnalyser
             try
             {
                 if (!this.applicationDatabaseService.HasUnsavedChanges) return;
-                if (DateTime.Now.Subtract(this.lastSave).TotalSeconds < 5) return;  // No need to save repeatedly.
+                if (DateTime.Now.Subtract(this.lastSave).TotalSeconds < 2) return;  // No need to save repeatedly.
                 await SaveDatabase();
                 this.lastSave = DateTime.Now;
             }

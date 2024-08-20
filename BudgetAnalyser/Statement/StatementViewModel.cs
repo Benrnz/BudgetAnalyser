@@ -48,7 +48,7 @@ public class StatementViewModel : ObservableRecipient
         {
             this.doNotUseDirty = value;
             OnPropertyChanged();
-            if (Dirty)
+            if (value)
             {
                 this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Transactions);
             }
