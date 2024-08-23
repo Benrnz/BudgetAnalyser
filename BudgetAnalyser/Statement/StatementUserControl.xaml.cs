@@ -206,9 +206,4 @@ public partial class StatementUserControl
         this.TransactionListBox.UpdateLayout();
         this.TransactionListBox.ScrollIntoView(Controller.ViewModel.SelectedRow);
     }
-
-    private void OnSaveStatementClicked(object sender, RoutedEventArgs e)
-    {
-        PersistenceOperationCommands.SaveDatabaseCommand.Execute(e.Source);
-    }
 }

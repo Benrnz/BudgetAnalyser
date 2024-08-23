@@ -15,11 +15,11 @@ namespace BudgetAnalyser.Matching
     public class DisusedRulesController : ControllerBase
     {
         private readonly ITransactionRuleService ruleService;
-        private readonly IApplicationDatabaseService dbService;
+        private readonly IApplicationDatabaseFacade dbService;
         private Guid dialogCorrelationId = Guid.NewGuid();
         private List<MatchingRule> removedRules;
 
-        public DisusedRulesController([NotNull] IMessenger messenger, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseService dbService) : base(messenger)
+        public DisusedRulesController([NotNull] IMessenger messenger, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseFacade dbService) : base(messenger)
         {
             this.ruleService = ruleService;
             this.dbService = dbService;

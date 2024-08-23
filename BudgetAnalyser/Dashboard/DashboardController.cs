@@ -25,23 +25,12 @@ namespace BudgetAnalyser.Dashboard
 
         public DashboardController(
             [NotNull] IUiContext uiContext,
-            [NotNull] IDashboardService dashboardService,
-            [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            [NotNull] IDashboardService dashboardService)
             : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
-            }
-
-            if (dashboardService == null)
-            {
-                throw new ArgumentNullException(nameof(dashboardService));
-            }
-
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.chooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
@@ -50,7 +39,7 @@ namespace BudgetAnalyser.Dashboard
             GlobalFilterController = uiContext.GlobalFilterController;
 
             this.uiContext = uiContext;
-            this.dashboardService = dashboardService;
+            this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
 
             this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
             this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;

@@ -167,7 +167,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private StatementViewModel CreateSubject()
         {
-            return new StatementViewModel(this.mockUiContext.Object, new Mock<IApplicationDatabaseService>().Object);
+            return new StatementViewModel(this.mockUiContext.Object, new Mock<IApplicationDatabaseFacade>().Object);
         }
     }
 }

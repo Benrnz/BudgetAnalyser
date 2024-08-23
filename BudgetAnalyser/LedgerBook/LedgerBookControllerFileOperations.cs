@@ -9,25 +9,15 @@ namespace BudgetAnalyser.LedgerBook
     [AutoRegisterWithIoC]
     public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     {
-        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IApplicationDatabaseFacade applicationDatabaseService;
         private bool doNotUseDirty;
 
         public LedgerBookControllerFileOperations(
             [NotNull] IMessenger messenger,
-            [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
         {
-            if (messenger == null)
-            {
-                throw new ArgumentNullException(nameof(messenger));
-            }
-
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
-            }
-
-            this.applicationDatabaseService = applicationDatabaseService;
-            MessengerInstance = messenger;
+            this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
+            MessengerInstance = messenger ?? throw new ArgumentNullException(nameof(messenger));
 
             ViewModel = new LedgerBookViewModel();
         }
@@ -37,12 +27,12 @@ namespace BudgetAnalyser.LedgerBook
 
         internal bool Dirty
         {
-            get { return this.doNotUseDirty; }
+            get => this.doNotUseDirty;
             set
             {
                 this.doNotUseDirty = value;
                 OnPropertyChanged();
-                if (Dirty)
+                if (value)
                 {
                     this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Ledger);
                 }

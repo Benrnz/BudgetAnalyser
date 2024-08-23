@@ -10,15 +10,15 @@ namespace BudgetAnalyser
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class PersistenceOperations
     {
-        private static SemaphoreSlim OneSaveAtATime = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim OneSaveAtATime = new(1, 1);
 
-        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IApplicationDatabaseFacade applicationDatabaseService;
         private readonly DemoFileHelper demoFileHelper;
         private readonly IUiContext uiContext;
         private DateTime lastSave = DateTime.Now;
         
         public PersistenceOperations(
-            [NotNull] IApplicationDatabaseService applicationDatabaseService,
+            [NotNull] IApplicationDatabaseFacade applicationDatabaseService,
             [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] IUiContext uiContext)
         {

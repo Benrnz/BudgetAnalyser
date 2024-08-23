@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Dashboard
 {
     public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     {
-        private readonly IApplicationDatabaseService appDbService;
+        private readonly IApplicationDatabaseFacade appDbService;
         private readonly Guid dialogCorrelationId = Guid.NewGuid();
         private readonly IUserMessageBox messageService;
         private readonly IUserQuestionBoxYesNo questionService;
@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Dashboard
         private bool passwordConfirmed;
         private string doNotUseValidationMessage;
 
-        public EncryptFileController([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService appDbService) : base(uiContext.Messenger)
+        public EncryptFileController([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseFacade appDbService) : base(uiContext.Messenger)
         {
             this.appDbService = appDbService;
             if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));

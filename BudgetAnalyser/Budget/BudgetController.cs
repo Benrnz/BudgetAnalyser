@@ -19,7 +19,7 @@ public class BudgetController : ControllerBase, IShowableController
 {
     private const string CloseBudgetMenuName = "Close _Budget";
     private const string EditBudgetMenuName = "Edit Current _Budget";
-    private readonly IApplicationDatabaseService applicationDatabaseService;
+    private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly IUserInputBox inputBox;
     private readonly IBudgetMaintenanceService maintenanceService;
     private readonly IUserMessageBox messageBox;
@@ -39,7 +39,7 @@ public class BudgetController : ControllerBase, IShowableController
     public BudgetController(
         [NotNull] UiContext uiContext,
         [NotNull] IBudgetMaintenanceService maintenanceService,
-        [NotNull] IApplicationDatabaseService applicationDatabaseService) 
+        [NotNull] IApplicationDatabaseFacade applicationDatabaseService) 
         : base(uiContext.Messenger)
     {
         if (uiContext == null)

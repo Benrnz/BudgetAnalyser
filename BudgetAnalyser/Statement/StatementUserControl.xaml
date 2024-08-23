@@ -114,8 +114,7 @@
                         </MenuItem>
                     </MenuItem>
                 </Menu>
-                <Button Click="OnSaveStatementClicked"
-                        IsEnabled="{Binding ViewModel.Dirty}"
+                <Button Command="{x:Static root:PersistenceOperationCommands.SaveDatabaseCommand}"
                         Style="{StaticResource Button.Round.Save}"
                         ToolTip="Save Transactions (Ctrl+S)" />
                 <Button Command="{Binding MergeStatementCommand}"

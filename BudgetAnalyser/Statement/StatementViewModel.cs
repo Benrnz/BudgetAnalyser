@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Statement;
 
 public class StatementViewModel : ObservableRecipient
 {
-    private readonly IApplicationDatabaseService applicationDatabaseService;
+    private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly IUiContext uiContext;
     private bool doNotUseDirty;
     private string doNotUseDuplicateSummary;
@@ -21,21 +21,11 @@ public class StatementViewModel : ObservableRecipient
     private ObservableCollection<Transaction> doNotUseTransactions;
     private ITransactionManagerService transactionService;
 
-    public StatementViewModel([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService applicationDatabaseService)
+    public StatementViewModel([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
     {
-        if (uiContext == null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        if (applicationDatabaseService == null)
-        {
-            throw new ArgumentNullException(nameof(applicationDatabaseService));
-        }
-
         this.doNotUseSortByDate = true;
-        this.uiContext = uiContext;
-        this.applicationDatabaseService = applicationDatabaseService;
+        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+        this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
     }
 
     public decimal AverageDebit => this.transactionService.AverageDebit;

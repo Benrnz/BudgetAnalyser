@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Matching
         public const string BucketSortKey = "Bucket";
         public const string DescriptionSortKey = "Description";
         public const string MatchesSortKey = "Matches";
-        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IApplicationDatabaseFacade applicationDatabaseService;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly ITransactionRuleService ruleService;
         private bool doNotUseEditingRule;
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Matching
         private string doNotUseSortBy;
         private bool initialised;
 
-        public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseService applicationDatabaseService)
+        public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
             : base(uiContext.Messenger)
         {
             if (uiContext == null)
@@ -39,18 +39,8 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (ruleService == null)
-            {
-                throw new ArgumentNullException(nameof(ruleService));
-            }
-
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
-            }
-
-            this.ruleService = ruleService;
-            this.applicationDatabaseService = applicationDatabaseService;
+            this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
+            this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             NewRuleController = uiContext.NewRuleController;
@@ -81,7 +71,7 @@ namespace BudgetAnalyser.Matching
 
         public bool EditingRule
         {
-            get { return this.doNotUseEditingRule; }
+            get => this.doNotUseEditingRule;
             private set
             {
                 this.doNotUseEditingRule = value;
@@ -95,7 +85,7 @@ namespace BudgetAnalyser.Matching
 
         public bool FlatListBoxVisibility
         {
-            get { return this.doNotUseFlatListBoxVisibility; }
+            get => this.doNotUseFlatListBoxVisibility;
             set
             {
                 this.doNotUseFlatListBoxVisibility = value;
@@ -105,7 +95,7 @@ namespace BudgetAnalyser.Matching
 
         public bool GroupByListBoxVisibility
         {
-            get { return this.doNotUseGroupByListBoxVisibility; }
+            get => this.doNotUseGroupByListBoxVisibility;
             set
             {
                 this.doNotUseGroupByListBoxVisibility = value;
@@ -119,7 +109,7 @@ namespace BudgetAnalyser.Matching
 
         public MatchingRule SelectedRule
         {
-            get { return this.doNotUseSelectedRule; }
+            get => this.doNotUseSelectedRule;
             set
             {
                 this.doNotUseSelectedRule = value;
@@ -131,7 +121,7 @@ namespace BudgetAnalyser.Matching
 
         public bool Shown
         {
-            get { return this.doNotUseShown; }
+            get => this.doNotUseShown;
             set
             {
                 if (value == this.doNotUseShown)
@@ -154,7 +144,7 @@ namespace BudgetAnalyser.Matching
 
         public string SortBy
         {
-            get { return this.doNotUseSortBy; }
+            get => this.doNotUseSortBy;
             set
             {
                 string oldValue = this.doNotUseSortBy;

@@ -18,17 +18,12 @@ namespace BudgetAnalyser.Statement
         public StatementControllerFileOperations(
             [NotNull] IUiContext uiContext,
             [NotNull] LoadFileController loadFileController,
-            [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
             : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
-            }
-
-            if (loadFileController == null)
-            {
-                throw new ArgumentNullException(nameof(loadFileController));
             }
 
             if (applicationDatabaseService == null)
@@ -37,13 +32,13 @@ namespace BudgetAnalyser.Statement
             }
 
             this.messageBox = uiContext.UserPrompts.MessageBox;
-            this.loadFileController = loadFileController;
+            this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
             ViewModel = new StatementViewModel(uiContext, applicationDatabaseService);
         }
 
         public bool LoadingData
         {
-            [UsedImplicitly] get { return this.doNotUseLoadingData; }
+            [UsedImplicitly] get => this.doNotUseLoadingData;
             private set
             {
                 this.doNotUseLoadingData = value;

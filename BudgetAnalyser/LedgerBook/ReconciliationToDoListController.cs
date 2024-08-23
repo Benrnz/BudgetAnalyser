@@ -2,7 +2,6 @@
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
@@ -12,25 +11,20 @@ namespace BudgetAnalyser.LedgerBook
     [AutoRegisterWithIoC]
     public class ReconciliationToDoListController : ControllerBase
     {
-        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IApplicationDatabaseFacade applicationDatabaseService;
         private bool doNotUseAddingNewTask;
         private string doNotUseNewTaskDescription;
         private ToDoTask doNotUseSelectedTask;
         private ToDoCollection doNotUseTasks;
 
-        public ReconciliationToDoListController([NotNull] IMessenger messenger, [NotNull] IApplicationDatabaseService applicationDatabaseService) : base(messenger)
+        public ReconciliationToDoListController([NotNull] IMessenger messenger, [NotNull] IApplicationDatabaseFacade applicationDatabaseService) : base(messenger)
         {
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
-            }
-
-            this.applicationDatabaseService = applicationDatabaseService;
+            this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         }
 
         public bool AddingNewTask
         {
-            [UsedImplicitly] get { return this.doNotUseAddingNewTask; }
+            [UsedImplicitly] get => this.doNotUseAddingNewTask;
             private set
             {
                 this.doNotUseAddingNewTask = value;
@@ -46,7 +40,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public string NewTaskDescription
         {
-            get { return this.doNotUseNewTaskDescription; }
+            get => this.doNotUseNewTaskDescription;
             [UsedImplicitly]
             set
             {
@@ -64,7 +58,7 @@ namespace BudgetAnalyser.LedgerBook
         [UsedImplicitly]
         public ToDoTask SelectedTask
         {
-            get { return this.doNotUseSelectedTask; }
+            get => this.doNotUseSelectedTask;
             set
             {
                 this.doNotUseSelectedTask = value;
@@ -74,7 +68,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public ToDoCollection Tasks
         {
-            get { return this.doNotUseTasks; }
+            get => this.doNotUseTasks;
             private set
             {
                 this.doNotUseTasks = value;
