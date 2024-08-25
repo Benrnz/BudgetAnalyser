@@ -36,7 +36,7 @@
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
-                <Grid Visibility="{Binding ViewModel.SortByDate, Converter={StaticResource Converter.BoolToVis}}">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
@@ -82,38 +82,6 @@
                                     Visibility="{Binding BucketFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}"
                                     Width="17" />
                 </Grid>
-                <Menu Style="{StaticResource RoundMenuButton}">
-                    <Menu.Resources>
-
-                        <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
-                               TargetType="{x:Type TextBlock}" />
-                    </Menu.Resources>
-                    <MenuItem Style="{StaticResource RoundMenuItemButton}">
-                        <MenuItem.Header>
-                            <TextBlock FontSize="14"
-                                       Foreground="{StaticResource Brush.Button.Glyph}"
-                                       Text="Sort..." />
-                        </MenuItem.Header>
-                        <MenuItem Command="{Binding SortCommand}"
-                                  CommandParameter="{x:Static statement:StatementController.SortByDateKey}"
-                                  IsCheckable="True"
-                                  IsChecked="{Binding ViewModel.SortByDate}"
-                                  ToolTip="Sort by Date (Ascending)">
-                            <MenuItem.Header>
-                                <TextBlock Text="Date (Ascending)" />
-                            </MenuItem.Header>
-                        </MenuItem>
-                        <MenuItem Command="{Binding SortCommand}"
-                                  CommandParameter="{x:Static statement:StatementController.SortByBucketKey}"
-                                  IsCheckable="True"
-                                  IsChecked="{Binding ViewModel.SortByBucket}"
-                                  ToolTip="Group by Bucket then sort by Date (Ascending)">
-                            <MenuItem.Header>
-                                <TextBlock Text="Bucket (Ascending)" />
-                            </MenuItem.Header>
-                        </MenuItem>
-                    </MenuItem>
-                </Menu>
                 <Button Command="{x:Static root:PersistenceOperationCommands.SaveDatabaseCommand}"
                         Style="{StaticResource Button.Round.Save}"
                         ToolTip="Save Transactions (Ctrl+S)" />
@@ -253,38 +221,8 @@
                      MouseDoubleClick="OnTransactionListBoxDoubleClick"
                      SelectedItem="{Binding ViewModel.SelectedRow}"
                      SelectionMode="Single"
-                     VirtualizingPanel.IsVirtualizing="False">
-                <ListBox.Visibility>
-                    <MultiBinding Converter="{StaticResource Converter.MultiBoolToVisibility}">
-                        <MultiBinding.Bindings>
-                            <Binding Path="ViewModel.HasTransactions" />
-                            <Binding Path="ViewModel.SortByDate" />
-                        </MultiBinding.Bindings>
-                    </MultiBinding>
-                </ListBox.Visibility>
-            </ListBox>
-            <ListBox x:Name="GroupListBox"
-                     ContextMenu="{StaticResource TransactionContextMenu}"
-                     Grid.Row="1"
-                     IsTextSearchEnabled="False"
-                     ItemContainerStyle="{StaticResource ListBox.TransactionContainer}"
-                     ItemsSource="{Binding ViewModel.GroupedByBucket}"
-                     ItemTemplate="{StaticResource GroupedByBucketTemplate}"
-                     ListBox.KeyUp="OnTransactionListBoxKeyUp"
-                     ListBox.MouseDoubleClick="OnTransactionListBoxDoubleClick"
-                     MinHeight="95"
-                     MinWidth="120"
-                     SelectedItem="{Binding ViewModel.SelectedRow}"
-                     SelectionMode="Single">
-                <ListBox.Visibility>
-                    <MultiBinding Converter="{StaticResource Converter.MultiBoolToVisibility}">
-                        <MultiBinding.Bindings>
-                            <Binding Path="ViewModel.HasTransactions" />
-                            <Binding Path="ViewModel.SortByBucket" />
-                        </MultiBinding.Bindings>
-                    </MultiBinding>
-                </ListBox.Visibility>
-            </ListBox>
+                     VirtualizingPanel.IsVirtualizing="False"
+                     Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource Converter.BoolToVis}}"/>
         </Grid>
     </Grid>
 

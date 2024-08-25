@@ -19,8 +19,6 @@ namespace BudgetAnalyser.Statement
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class StatementController : ControllerBase, IShowableController, IInitializableController
     {
-        public const string SortByBucketKey = "Bucket";
-        public const string SortByDateKey = "Date";
         private readonly ITransactionManagerService transactionService;
         private readonly IUiContext uiContext;
         private string doNotUseBucketFilter;
@@ -123,9 +121,6 @@ namespace BudgetAnalyser.Statement
         }
 
         [UsedImplicitly]
-        public ICommand SortCommand => new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand);
-
-        [UsedImplicitly]
         public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
         public string TextFilter
@@ -159,11 +154,6 @@ namespace BudgetAnalyser.Statement
         public void RegisterListener<TMessage>(StatementUserControl recipient, MessageHandler<StatementUserControl, TMessage> handler) where TMessage : MessageBase
         {
             Messenger.Register(recipient, handler);
-        }
-
-        private bool CanExecuteSortCommand()
-        {
-            return ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
         }
 
         private async Task CheckBudgetContainsAllUsedBucketsFromStatement(BudgetCollection budgets = null)
@@ -214,11 +204,6 @@ namespace BudgetAnalyser.Statement
             }
 
             this.transactionService.Initialise(statementMetadata);
-            ViewModel.SortByBucket = statementMetadata.SortByBucket ?? false;
-            if (ViewModel.Statement != null)
-            {
-                OnSortCommandExecute();
-            }
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
@@ -327,15 +312,6 @@ namespace BudgetAnalyser.Statement
             }
 
             this.shellDialogCorrelationId = Guid.Empty;
-        }
-
-        private void OnSortCommandExecute()
-        {
-            BucketFilter = null;
-            TextFilter = null;
-
-            // The bindings are processed before commands, so the bound boolean for SortByBucket will be set to true by now.
-            ViewModel.UpdateGroupedByBucket();
         }
 
         private void OnSplitTransactionCommandExecute()

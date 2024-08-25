@@ -14,6 +14,7 @@ namespace BudgetAnalyser.Engine.Statement
         public int LoadSequence => 20;
 
         /// <summary>
+        ///     DEPRECATED - no longer supported. Kept here for persistence compatibility.
         ///     Gets or sets a value indicating if the user prefers to sort and group by bucket rather than by date.
         /// </summary>
         public bool? SortByBucket { get; set; }

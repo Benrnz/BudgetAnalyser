@@ -28,32 +28,6 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         }
 
         [TestMethod]
-        public void GivenSortByBucketSortByDateShouldBeFalse()
-        {
-            StatementViewModel subject = Arrange();
-            subject.SortByBucket = true;
-            Assert.IsFalse(subject.SortByDate);
-        }
-
-        [TestMethod]
-        public void GivenSortByDateSortByBucketShouldBeFalse()
-        {
-            StatementViewModel subject = Arrange();
-            subject.SortByDate = true;
-            Assert.IsFalse(subject.SortByBucket);
-        }
-
-        [TestMethod]
-        public void GivenSortByDateUpdateGroupedByBucketShouldNotUpdateGroupedList()
-        {
-            StatementViewModel subject = Arrange();
-            subject.SortByBucket = true;
-            subject.SortByDate = true;
-            subject.UpdateGroupedByBucket();
-            Assert.IsFalse(subject.GroupedByBucket.Any());
-        }
-
-        [TestMethod]
         public void GivenTestData1HasTransactionsShouldBeTrue()
         {
             StatementViewModel subject = Arrange();
@@ -75,49 +49,12 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         }
 
         [TestMethod]
-        public void GivenTestData2OutputGroupedList()
-        {
-            StatementViewModel subject = Arrange();
-            subject.SortByBucket = true;
-            subject.UpdateGroupedByBucket();
-
-            foreach (TransactionGroupedByBucketViewModel group in subject.GroupedByBucket)
-            {
-                Console.WriteLine(
-                    "{0}, AvgDr:{1:C} {2:d} {3:d} Count:{4} TotalCr:{5:C} TotalDr{6:C} Diff{7:C}",
-                    group.Bucket,
-                    group.AverageDebit,
-                    group.MinTransactionDate,
-                    group.MaxTransactionDate,
-                    group.TotalCount,
-                    group.TotalCredits,
-                    group.TotalDebits,
-                    group.TotalDifference);
-                foreach (Transaction transaction in group.Transactions)
-                {
-                    Console.WriteLine(
-                        "     {0:d} {1:C} {2}",
-                        transaction.Date,
-                        transaction.Amount,
-                        transaction.Description);
-                }
-            }
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void SetStatement_ShouldThrow_GivenInitialiseHasNotBeenCalled()
         {
             StatementViewModel subject = CreateSubject();
             subject.Statement = StatementModelTestData.TestData1();
             Assert.Fail();
-        }
-
-        [TestMethod]
-        public void SortByDateShouldBeDefaultSort()
-        {
-            StatementViewModel subject = Arrange();
-            Assert.IsTrue(subject.SortByDate);
         }
 
         [TestInitialize]
@@ -144,13 +81,6 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
             Transaction transactionFromFullList = subject.Statement.Transactions
                 .Single(t => t.BudgetBucket == StatementModelTestData.PhoneBucket && t.Date == new DateTime(2013, 07, 16));
             return transactionFromFullList;
-        }
-
-        private static Transaction GetPhoneTxnFromGroupedList(StatementViewModel subject)
-        {
-            Transaction transactionFromGroupedList = subject.GroupedByBucket.Single(g => g.Bucket == StatementModelTestData.PhoneBucket)
-                .Transactions.Single(t => t.Date == new DateTime(2013, 07, 16));
-            return transactionFromGroupedList;
         }
 
         private static IWaitCursor WaitCursorFactory()

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -105,14 +102,6 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="stateData">The state data loaded from persistent storage.</param>
         void Initialise([NotNull] StatementApplicationState stateData);
-
-        /// <summary>
-        ///     Populates a collection grouped by bucket with date sorted transactions contained in each group.
-        /// </summary>
-        /// <param name="groupByBucket">
-        ///     True if the UI is currently showing the transactions grouped by bucket, false if not.
-        /// </param>
-        IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket);
 
         /// <summary>
         ///     Prepares the persistent state data to save to storage.

@@ -14,7 +14,6 @@ public class StatementViewModel : ObservableRecipient
     private readonly IUiContext uiContext;
     private bool doNotUseDirty;
     private string doNotUseDuplicateSummary;
-    private ObservableCollection<TransactionGroupedByBucketViewModel> doNotUseGroupedByBucket;
     private Transaction doNotUseSelectedRow;
     private bool doNotUseSortByDate;
     private StatementModel doNotUseStatement;
@@ -58,16 +57,6 @@ public class StatementViewModel : ObservableRecipient
 
     public IEnumerable<string> FilterBudgetBuckets => this.transactionService.FilterableBuckets();
 
-    public ObservableCollection<TransactionGroupedByBucketViewModel> GroupedByBucket
-    {
-        get => this.doNotUseGroupedByBucket;
-        internal set
-        {
-            this.doNotUseGroupedByBucket = value;
-            OnPropertyChanged();
-        }
-    }
-
     public bool HasTransactions => Statement != null && Statement.Transactions.Any();
 
     public Transaction SelectedRow
@@ -76,28 +65,6 @@ public class StatementViewModel : ObservableRecipient
         set
         {
             this.doNotUseSelectedRow = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool SortByBucket
-    {
-        get => !this.doNotUseSortByDate;
-        set
-        {
-            this.doNotUseSortByDate = !value;
-            OnPropertyChanged(nameof(SortByDate));
-            OnPropertyChanged();
-        }
-    }
-
-    public bool SortByDate
-    {
-        get => this.doNotUseSortByDate;
-        set
-        {
-            this.doNotUseSortByDate = value;
-            OnPropertyChanged(nameof(SortByBucket));
             OnPropertyChanged();
         }
     }
@@ -113,21 +80,10 @@ public class StatementViewModel : ObservableRecipient
                 throw new InvalidOperationException("Initialise has not been called.");
             }
 
-            if (this.doNotUseStatement != null)
-            {
-                this.doNotUseStatement.PropertyChanged -= OnStatementPropertyChanged;
-            }
-
             this.doNotUseStatement = value;
-
-            if (this.doNotUseStatement != null)
-            {
-                this.doNotUseStatement.PropertyChanged += OnStatementPropertyChanged;
-            }
 
             OnPropertyChanged();
             Transactions = this.transactionService.ClearBucketAndTextFilters();
-            UpdateGroupedByBucket();
         }
     }
 
@@ -186,21 +142,5 @@ public class StatementViewModel : ObservableRecipient
         OnPropertyChanged(nameof(StatementName));
 
         DuplicateSummary = Statement == null ? null : this.transactionService.DetectDuplicateTransactions();
-    }
-
-    public void UpdateGroupedByBucket()
-    {
-        GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(
-            this.transactionService.PopulateGroupByBucketCollection(SortByBucket)
-                .Select(x => new TransactionGroupedByBucketViewModel(x, this.uiContext)));
-    }
-
-    private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-    {
-        // Caters for deleting a transaction. Could be more efficient if it becomes a problem.
-        if (propertyChangedEventArgs.PropertyName == "Transactions")
-        {
-            UpdateGroupedByBucket();
-        }
     }
 }
