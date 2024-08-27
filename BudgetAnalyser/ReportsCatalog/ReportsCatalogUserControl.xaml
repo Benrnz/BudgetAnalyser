@@ -49,7 +49,8 @@
                     <TextBlock Margin="50,10,10,10"
                                Text="{Binding OverallPerformanceController.Title}"
                                TextWrapping="Wrap" />
-                    <Button Command="{Binding OverallBudgetPerformanceCommand}"
+                    <Button Click="OverallPerformanceClicked"
+                            IsEnabled="{Binding OverallPerformanceReportIsAvailable}"
                             Style="{StaticResource Button.ModernTile.Overlay}" />
                 </Grid>
             </Border>
