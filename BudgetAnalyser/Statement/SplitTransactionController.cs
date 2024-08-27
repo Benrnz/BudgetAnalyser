@@ -16,6 +16,7 @@ namespace BudgetAnalyser.Statement
         private string doNotUseInvalidMessage;
         private decimal doNotUseSplinterAmount1;
         private decimal doNotUseSplinterAmount2;
+        private Transaction doNotUseOriginalTransaction;
 
         public SplitTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
         {
@@ -24,12 +25,7 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (bucketRepo == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepo));
-            }
-
-            this.bucketRepo = bucketRepo;
+            this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
             Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
@@ -42,41 +38,57 @@ namespace BudgetAnalyser.Statement
 
         public string InvalidMessage
         {
-            [UsedImplicitly] get { return this.doNotUseInvalidMessage; }
+            [UsedImplicitly] get => this.doNotUseInvalidMessage;
             private set
             {
+                if (value == this.doNotUseInvalidMessage) return;
                 this.doNotUseInvalidMessage = value;
                 OnPropertyChanged();
             }
         }
 
-        public Transaction OriginalTransaction { get; private set; }
+        public Transaction? OriginalTransaction
+        {
+            get => this.doNotUseOriginalTransaction;
+            private set
+            {
+                if (Equals(value, this.doNotUseOriginalTransaction)) return;
+                this.doNotUseOriginalTransaction = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Valid));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
 
         public decimal SplinterAmount1
         {
-            get { return this.doNotUseSplinterAmount1; }
+            get => this.doNotUseSplinterAmount1;
             set
             {
+                if (value == this.doNotUseSplinterAmount1) return;
                 this.doNotUseSplinterAmount1 = value;
                 this.doNotUseSplinterAmount2 = OriginalTransaction.Amount - value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(SplinterAmount2));
                 OnPropertyChanged(nameof(TotalAmount));
                 OnPropertyChanged(nameof(Valid));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
         public decimal SplinterAmount2
         {
-            get { return this.doNotUseSplinterAmount2; }
+            get => this.doNotUseSplinterAmount2;
             set
             {
+                if (value == this.doNotUseSplinterAmount2) return;
                 this.doNotUseSplinterAmount2 = value;
                 this.doNotUseSplinterAmount1 = OriginalTransaction.Amount - value;
                 OnPropertyChanged(nameof(SplinterAmount1));
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(TotalAmount));
                 OnPropertyChanged(nameof(Valid));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 

@@ -38,14 +38,9 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (accountTypeRepository == null)
-            {
-                throw new ArgumentNullException(nameof(accountTypeRepository));
-            }
-
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.userPromptOpenFileFactory = uiContext.UserPrompts.OpenFileFactory;
-            this.accountTypeRepository = accountTypeRepository;
+            this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
 
             Messenger.Register<LoadFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
@@ -76,10 +71,11 @@ namespace BudgetAnalyser.Statement
 
         public string FileName
         {
-            get { return this.doNotUseFileName; }
+            get => this.doNotUseFileName;
 
             set
             {
+                if (value == this.doNotUseFileName) return;
                 this.doNotUseFileName = value;
                 OnPropertyChanged();
                 if (!string.IsNullOrWhiteSpace(FileName))
@@ -96,9 +92,10 @@ namespace BudgetAnalyser.Statement
 
         public bool FileTypeSelectionReady
         {
-            get { return this.doNotUseFileTypeSelectionReady; }
+            get => this.doNotUseFileTypeSelectionReady;
             private set
             {
+                if (value == this.doNotUseFileTypeSelectionReady) return;
                 this.doNotUseFileTypeSelectionReady = value;
                 OnPropertyChanged();
             }
@@ -108,10 +105,11 @@ namespace BudgetAnalyser.Statement
 
         public Account SelectedExistingAccountName
         {
-            get { return this.doNotUseSelectedExistingAccountName; }
+            get => this.doNotUseSelectedExistingAccountName;
 
             set
             {
+                if (Equals(value, this.doNotUseSelectedExistingAccountName)) return;
                 this.doNotUseSelectedExistingAccountName = value;
                 OnPropertyChanged();
                 CheckAccountName();
@@ -123,9 +121,10 @@ namespace BudgetAnalyser.Statement
 
         public string Title
         {
-            get { return this.doNotUseTitle; }
+            get => this.doNotUseTitle;
             private set
             {
+                if (value == this.doNotUseTitle) return;
                 this.doNotUseTitle = value;
                 OnPropertyChanged();
             }

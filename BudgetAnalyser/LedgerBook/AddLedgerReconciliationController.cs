@@ -49,7 +49,9 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         this.messageBox = uiContext.UserPrompts.MessageBox;
     }
 
+    // TODO Change this event to a message:
     public event EventHandler<EditBankBalancesEventArgs> Complete;
+
     public string ActionButtonToolTip => "Add new ledger entry line.";
 
     public bool AddBalanceVisibility
@@ -93,6 +95,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     }
 
     public ObservableCollection<BankBalanceViewModel> BankBalances { get; private set; }
+
     public decimal BankBalanceTotal => BankBalances.Sum(b => b.Balance);
     public bool Canceled { get; private set; }
     public bool CanExecuteCancelButton => true;
@@ -119,8 +122,10 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseDate;
         set
         {
+            if (Equals(value, this.doNotUseDate)) return;
             this.doNotUseDate = value;
             OnPropertyChanged();
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
     }
 
@@ -129,8 +134,10 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseEditable;
         private set
         {
+            if (Equals(value, this.doNotUseEditable)) return;
             this.doNotUseEditable = value;
             OnPropertyChanged();
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
     }
 

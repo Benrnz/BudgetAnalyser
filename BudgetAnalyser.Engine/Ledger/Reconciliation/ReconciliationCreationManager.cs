@@ -137,7 +137,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             throw new ArgumentNullException(nameof(ledgerEntryLine));
         }
 
-        if (!transferDetails.IsValid())
+        if (!transferDetails.IsValid)
         {
             throw new InvalidOperationException("Code Error: The transfer command is in an invalid state, this should be resolved in the UI.");
         }

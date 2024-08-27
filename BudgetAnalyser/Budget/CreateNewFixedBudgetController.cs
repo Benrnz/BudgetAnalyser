@@ -26,12 +26,7 @@ namespace BudgetAnalyser.Budget
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-
-            this.bucketRepository = bucketRepository;
+            this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
             Messenger.Register<CreateNewFixedBudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             this.messageBox = uiContext.UserPrompts.MessageBox;
         }
@@ -40,12 +35,14 @@ namespace BudgetAnalyser.Budget
 
         public decimal Amount
         {
-            get { return this.doNotUseAmount; }
+            get => this.doNotUseAmount;
             [UsedImplicitly]
             set
             {
+                if (value == this.doNotUseAmount) return;
                 this.doNotUseAmount = value;
                 OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
@@ -69,23 +66,27 @@ namespace BudgetAnalyser.Budget
 
         public string Code
         {
-            get { return this.doNotUseCode; }
+            get => this.doNotUseCode;
             [UsedImplicitly]
             set
             {
+                if (value == this.doNotUseCode) return;
                 this.doNotUseCode = value;
                 OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
         public string Description
         {
-            get { return this.doNotUseDescription; }
+            get => this.doNotUseDescription;
             [UsedImplicitly]
             set
             {
+                if (value == this.doNotUseDescription) return;
                 this.doNotUseDescription = value;
                 OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 

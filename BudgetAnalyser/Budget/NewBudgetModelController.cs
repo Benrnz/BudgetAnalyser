@@ -14,6 +14,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
     private BudgetCycle doNotUseBudgetCycle;
+    private DateTime doNotUseEffectiveFrom;
 
     public NewBudgetModelController([NotNull] IUiContext uiContext) : base(uiContext.Messenger)
     {
@@ -39,11 +40,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
         get => this.doNotUseBudgetCycle;
         set
         {
-            if (value == this.doNotUseBudgetCycle)
-            {
-                return;
-            }
-
+            if (value == this.doNotUseBudgetCycle) return;
             this.doNotUseBudgetCycle = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(FortnightlyChecked));
@@ -67,7 +64,18 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     public bool CanExecuteSaveButton => EffectiveFrom > DateTime.Today;
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public DateTime EffectiveFrom { get; set; }
+    public DateTime EffectiveFrom
+    {
+        get => this.doNotUseEffectiveFrom;
+        set
+        {
+            if (value == this.doNotUseEffectiveFrom) return;
+            this.doNotUseEffectiveFrom = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CanExecuteSaveButton));
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        }
+    }
 
     // ReSharper disable once UnusedMember.Global
     public bool FortnightlyChecked
@@ -110,16 +118,9 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             return;
         }
 
-        var handler = Ready;
-        if (handler != null)
+        if (message.Response != ShellDialogButton.Cancel)
         {
-            if (message.Response == ShellDialogButton.Cancel)
-            {
-            }
-            else
-            {
-                handler(this, EventArgs.Empty);
-            }
+            Ready?.Invoke(this, EventArgs.Empty);
         }
     }
 }

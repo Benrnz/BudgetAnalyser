@@ -8,15 +8,15 @@ namespace BudgetAnalyser.ShellDialog
 {
     public class ShellDialogController : ControllerBase
     {
+        private readonly RelayCommand<ShellDialogButton> dialogRelayCommand;
         private bool doNotUseCancelButtonVisible;
-        private object doNotUseContent;
+        private object? doNotUseContent;
         private ShellDialogType doNotUseDialogType;
         private bool doNotUseHelpButtonVisible;
         private bool doNotUseOkButtonVisible;
         private bool doNotUseSaveButtonVisible;
         private string doNotUseTitle;
-        private RelayCommand<ShellDialogButton> dialogRelayCommand;
-
+        
         public ShellDialogController([NotNull] IMessenger messenger) : base(messenger)
         {
             DialogType = ShellDialogType.OkCancel;
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.ShellDialog
 
         public bool CancelButtonVisible
         {
-            get { return this.doNotUseCancelButtonVisible; }
+            get => this.doNotUseCancelButtonVisible;
             set
             {
                 this.doNotUseCancelButtonVisible = value;
@@ -63,11 +63,12 @@ namespace BudgetAnalyser.ShellDialog
             }
         }
 
-        public object Content
+        public object? Content
         {
-            get { return this.doNotUseContent; }
+            get => this.doNotUseContent;
             set
             {
+                if (Equals(value, this.doNotUseContent)) return;
                 this.doNotUseContent = value;
                 OnPropertyChanged();
                 this.dialogRelayCommand.NotifyCanExecuteChanged();
@@ -80,9 +81,10 @@ namespace BudgetAnalyser.ShellDialog
 
         public ShellDialogType DialogType
         {
-            get { return this.doNotUseDialogType; }
+            get => this.doNotUseDialogType;
             set
             {
+                if (value == this.doNotUseDialogType) return;
                 this.doNotUseDialogType = value;
                 OkButtonVisible = DialogType == ShellDialogType.Ok || DialogType == ShellDialogType.OkCancel;
                 SaveButtonVisible = DialogType == ShellDialogType.SaveCancel;
@@ -95,9 +97,10 @@ namespace BudgetAnalyser.ShellDialog
 
         public bool HelpButtonVisible
         {
-            [UsedImplicitly] get { return this.doNotUseHelpButtonVisible; }
+            [UsedImplicitly] get => this.doNotUseHelpButtonVisible;
             set
             {
+                if (value == this.doNotUseHelpButtonVisible) return;
                 this.doNotUseHelpButtonVisible = value;
                 OnPropertyChanged();
             }
@@ -105,9 +108,10 @@ namespace BudgetAnalyser.ShellDialog
 
         public bool OkButtonVisible
         {
-            get { return this.doNotUseOkButtonVisible; }
+            get => this.doNotUseOkButtonVisible;
             set
             {
+                if (value == this.doNotUseOkButtonVisible) return;
                 this.doNotUseOkButtonVisible = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(OkIsCancel));
@@ -118,9 +122,10 @@ namespace BudgetAnalyser.ShellDialog
 
         public bool SaveButtonVisible
         {
-            get { return this.doNotUseSaveButtonVisible; }
+            get => this.doNotUseSaveButtonVisible;
             set
             {
+                if (value == this.doNotUseSaveButtonVisible) return;
                 this.doNotUseSaveButtonVisible = value;
                 OnPropertyChanged();
             }
@@ -128,9 +133,10 @@ namespace BudgetAnalyser.ShellDialog
 
         public string Title
         {
-            [UsedImplicitly] get { return this.doNotUseTitle; }
+            [UsedImplicitly] get => this.doNotUseTitle;
             set
             {
+                if (value == this.doNotUseTitle) return;
                 this.doNotUseTitle = value;
                 OnPropertyChanged();
             }
@@ -157,8 +163,7 @@ namespace BudgetAnalyser.ShellDialog
                 return false;
             }
 
-            var dialogInteractivity = Content as IShellDialogInteractivity;
-            if (dialogInteractivity == null)
+            if (Content is not IShellDialogInteractivity dialogInteractivity)
             {
                 return true;
             }
@@ -183,6 +188,8 @@ namespace BudgetAnalyser.ShellDialog
                 DispatcherPriority.ApplicationIdle,
                 () =>
                 {
+                    if (Content == null) return;
+
                     // No correlation id given so no response is expected.
                     if (CorrelationId != Guid.Empty)
                     {
@@ -191,7 +198,7 @@ namespace BudgetAnalyser.ShellDialog
                             case ShellDialogButton.Ok:
                             case ShellDialogButton.Save:
                                 if (!OkButtonVisible && commandType == ShellDialogButton.Ok) commandType = ShellDialogButton.Save;
-                                // Ok will be the default response if Enter is pressed, even when the Ok button is invisble.
+                                // Ok will be the default response if Enter is pressed, even when the Ok button is invisible.
                                 Messenger.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
                                 break;
 

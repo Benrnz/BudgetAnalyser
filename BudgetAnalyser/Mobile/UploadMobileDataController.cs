@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Mobile
         private string doNotUseAccessKeyId;
         private string doNotUseAccessKeySecret;
         private string doNotUseAmazonRegion;
-        private UpdateMobileDataWidget widget;
+        private UpdateMobileDataWidget? widget;
 
         public UploadMobileDataController(
             [NotNull] IUiContext uiContext,
@@ -62,8 +62,10 @@ namespace BudgetAnalyser.Mobile
             get => this.doNotUseAccessKeyId;
             set
             {
+                if (value == this.doNotUseAccessKeyId) return;
                 this.doNotUseAccessKeyId = value;
                 OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
@@ -72,8 +74,10 @@ namespace BudgetAnalyser.Mobile
             get => this.doNotUseAccessKeySecret;
             set
             {
+                if (value == this.doNotUseAccessKeySecret) return;
                 this.doNotUseAccessKeySecret = value;
                 OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
@@ -82,6 +86,7 @@ namespace BudgetAnalyser.Mobile
             get => this.doNotUseAmazonRegion;
             set
             {
+                if (value == this.doNotUseAmazonRegion) return;
                 this.doNotUseAmazonRegion = value;
                 OnPropertyChanged();
             }
@@ -106,6 +111,12 @@ namespace BudgetAnalyser.Mobile
 
         private async Task AttemptUploadAsync()
         {
+            if (this.widget == null)
+            {
+                this.logger.LogError(l => "Widget cannot be null when attempting to Upload mobile data.");
+                return;
+            }
+
             try
             {
                 this.widget.LockWhileUploading(true);
@@ -115,8 +126,6 @@ namespace BudgetAnalyser.Mobile
                 await Task.Run(() => this.dataExporter.SaveCopyAsync(export));
 
                 await Task.Run(() => this.uploader.UploadDataFileAsync(this.dataExporter.Serialise(export), AccessKeyId, AccessKeySecret, AmazonRegion));
-
-                this.messageBoxService.Show("Mobile summary data exported successfully.");
             }
             catch (SecurityException ex)
             {

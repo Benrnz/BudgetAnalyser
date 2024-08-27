@@ -64,7 +64,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private bool IsOkToSave()
         {
-            if (!TransferFundsDto.IsValid()) return false;
+            if (!TransferFundsDto.IsValid) return false;
             if (TransferFundsDto.BankTransferRequired)
                 return BankTransferConfirmed;
 

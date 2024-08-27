@@ -22,6 +22,12 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseAndChecked;
         private bool doNotUseOrChecked;
         private Guid shellDialogCorrelationId;
+        private DecimalCriteria doNotUseAmount;
+        private StringCriteria doNotUseDescription;
+        private StringCriteria doNotUseReference1;
+        private StringCriteria doNotUseReference2;
+        private StringCriteria doNotUseReference3;
+        private StringCriteria doNotUseTransactionType;
 
         public NewRuleController(
             [NotNull] UiContext uiContext,
@@ -34,18 +40,8 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (rulesService == null)
-            {
-                throw new ArgumentNullException(nameof(rulesService));
-            }
-
-            if (bucketRepo == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepo));
-            }
-
-            this.rulesService = rulesService;
-            this.bucketRepo = bucketRepo;
+            this.rulesService = rulesService ?? throw new ArgumentNullException(nameof(rulesService));
+            this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
@@ -55,13 +51,25 @@ namespace BudgetAnalyser.Matching
         public event EventHandler RuleCreated;
         public string ActionButtonToolTip => "Save the new rule.";
 
-        public DecimalCriteria Amount { get; set; }
+        public DecimalCriteria Amount
+        {
+            get => this.doNotUseAmount;
+            set
+            {
+                if (Equals(value, this.doNotUseAmount)) return;
+                this.doNotUseAmount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanExecuteSaveButton));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
 
         public bool AndChecked
         {
-            get { return this.doNotUseAndChecked; }
+            get => this.doNotUseAndChecked;
             set
             {
+                if (value == this.doNotUseAndChecked) return;
                 this.doNotUseAndChecked = value;
                 OnPropertyChanged();
                 this.doNotUseOrChecked = !AndChecked;
@@ -75,16 +83,28 @@ namespace BudgetAnalyser.Matching
         public bool CanExecuteSaveButton => Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable;
         public string CloseButtonToolTip => "Cancel";
 
-        public StringCriteria Description { get; set; }
+        public StringCriteria Description
+        {
+            get => this.doNotUseDescription;
+            set
+            {
+                if (Equals(value, this.doNotUseDescription)) return;
+                this.doNotUseDescription = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanExecuteSaveButton));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
 
-        public MatchingRule NewRule { get; set; }
+        public MatchingRule? NewRule { get; set; }
 
         public bool OrChecked
         {
-            get { return this.doNotUseOrChecked; }
+            get => this.doNotUseOrChecked;
             [UsedImplicitly]
             set
             {
+                if (value == this.doNotUseOrChecked) return;
                 this.doNotUseOrChecked = value;
                 OnPropertyChanged();
                 this.doNotUseAndChecked = !OrChecked;
@@ -92,17 +112,61 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public StringCriteria Reference1 { get; set; }
+        public StringCriteria Reference1
+        {
+            get => this.doNotUseReference1;
+            set
+            {
+                if (Equals(value, this.doNotUseReference1)) return;
+                this.doNotUseReference1 = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanExecuteSaveButton));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
 
-        public StringCriteria Reference2 { get; set; }
+        public StringCriteria Reference2
+        {
+            get => this.doNotUseReference2;
+            set
+            {
+                if (Equals(value, this.doNotUseReference2)) return;
+                this.doNotUseReference2 = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanExecuteSaveButton));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
 
-        public StringCriteria Reference3 { get; set; }
+        public StringCriteria Reference3
+        {
+            get => this.doNotUseReference3;
+            set
+            {
+                if (Equals(value, this.doNotUseReference3)) return;
+                this.doNotUseReference3 = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanExecuteSaveButton));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
 
-        public IEnumerable<SimilarMatchedRule> SimilarRules { get; private set; }
+        public IEnumerable<SimilarMatchedRule>? SimilarRules { get; private set; }
         public bool SimilarRulesExist { get; private set; }
         public string Title => "New Matching Rule for: " + Bucket;
 
-        public StringCriteria TransactionType { get; set; }
+        public StringCriteria TransactionType
+        {
+            get => this.doNotUseTransactionType;
+            set
+            {
+                if (Equals(value, this.doNotUseTransactionType)) return;
+                this.doNotUseTransactionType = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanExecuteSaveButton));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
 
         public void Initialize()
         {
@@ -198,8 +262,7 @@ namespace BudgetAnalyser.Matching
                 Amount.Applicable ? Amount.Value : null,
                 AndChecked);
 
-            EventHandler handler = RuleCreated;
-            handler?.Invoke(this, EventArgs.Empty);
+            RuleCreated?.Invoke(this, EventArgs.Empty);
         }
 
         private void RefreshSimilarRules()

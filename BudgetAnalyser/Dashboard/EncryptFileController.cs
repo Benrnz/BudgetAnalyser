@@ -18,9 +18,8 @@ namespace BudgetAnalyser.Dashboard
         private bool doNotUseDecryptFileMode;
         private bool doNotUseEncryptFileMode;
         private bool doNotUseEnterPasswordMode;
-        private bool doNotUseHasUnsavedChanges;
         private bool doNotUseIsEncrypted;
-        private SecureString password;
+        private SecureString? password;
         private bool passwordConfirmed;
         private string doNotUseValidationMessage;
 
@@ -64,9 +63,10 @@ namespace BudgetAnalyser.Dashboard
 
         public bool DecryptFileMode
         {
-            get { return this.doNotUseDecryptFileMode; }
+            get => this.doNotUseDecryptFileMode;
             private set
             {
+                if (value == this.doNotUseDecryptFileMode) return;
                 this.doNotUseDecryptFileMode = value;
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseEnterPasswordMode = value;
@@ -78,9 +78,10 @@ namespace BudgetAnalyser.Dashboard
 
         public bool EncryptFileMode
         {
-            get { return this.doNotUseEncryptFileMode; }
+            get => this.doNotUseEncryptFileMode;
             private set
             {
+                if (value == this.doNotUseEncryptFileMode) return;
                 this.doNotUseEncryptFileMode = value;
                 this.doNotUseEnterPasswordMode = !value;
                 this.doNotUseDecryptFileMode = !value;
@@ -92,9 +93,10 @@ namespace BudgetAnalyser.Dashboard
 
         public bool EnterPasswordMode
         {
-            get { return this.doNotUseEnterPasswordMode; }
+            get => this.doNotUseEnterPasswordMode;
             private set
             {
+                if (value == this.doNotUseEnterPasswordMode) return;
                 this.doNotUseEnterPasswordMode = value;
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseDecryptFileMode = !value;
@@ -108,21 +110,12 @@ namespace BudgetAnalyser.Dashboard
 
         public string FileName { get; private set; }
 
-        public bool HasUnsavedChanges
-        {
-            get { return this.doNotUseHasUnsavedChanges; }
-            private set
-            {
-                this.doNotUseHasUnsavedChanges = value;
-                OnPropertyChanged();
-            }
-        }
-
         public bool IsEncrypted
         {
-            get { return this.doNotUseIsEncrypted; }
+            get => this.doNotUseIsEncrypted;
             private set
             {
+                if(value == this.doNotUseIsEncrypted) return;
                 this.doNotUseIsEncrypted = value;
                 OnPropertyChanged();
             }
@@ -130,9 +123,10 @@ namespace BudgetAnalyser.Dashboard
 
         public string ValidationMessage
         {
-            get { return this.doNotUseValidationMessage; }
+            get => this.doNotUseValidationMessage;
             private set
             {
+                if (value == this.doNotUseValidationMessage) return;
                 this.doNotUseValidationMessage = value;
                 OnPropertyChanged();
             }
@@ -268,10 +262,9 @@ namespace BudgetAnalyser.Dashboard
         private void ShowEncryptDecryptDialogCommon()
         {
             this.passwordConfirmed = false;
-            HasUnsavedChanges = this.appDbService.HasUnsavedChanges;
             FileName = string.Empty;
 
-            if (HasUnsavedChanges)
+            if (this.appDbService.HasUnsavedChanges)
             {
                 this.messageService.Show("There are unsaved changes. You will need to save these changes before password protecting the data files. Unable to proceed.", "Protect Data Files");
                 return;

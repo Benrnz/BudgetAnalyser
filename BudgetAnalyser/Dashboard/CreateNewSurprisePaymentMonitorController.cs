@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Dashboard
         private Guid dialogCorrelationId;
         private WeeklyOrFortnightly doNotUseFrequency;
         private DateTime doNotUsePaymentStartDate;
-        private BudgetBucket doNotUseSelected;
+        private BudgetBucket? doNotUseSelected;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
@@ -28,18 +28,14 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-
-            this.bucketRepository = bucketRepository;
+            this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
             Messenger.Register<CreateNewSurprisePaymentMonitorController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             PaymentStartDate = DateTime.Today;
             Frequency = WeeklyOrFortnightly.Weekly;
             this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
+        // TODO Replace this event with a message.
         public event EventHandler<DialogResponseEventArgs> Complete;
 
         [UsedImplicitly]
@@ -53,7 +49,7 @@ namespace BudgetAnalyser.Dashboard
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton => Selected != null && PaymentStartDate != DateTime.MinValue;
+        public bool CanExecuteOkButton => Selected! != null! && PaymentStartDate != DateTime.MinValue;
 
         /// <summary>
         ///     Will be called ascertain the availability of the button.
@@ -72,22 +68,26 @@ namespace BudgetAnalyser.Dashboard
 
         public DateTime PaymentStartDate
         {
-            get { return this.doNotUsePaymentStartDate; }
+            get => this.doNotUsePaymentStartDate;
             set
             {
+                if (Equals(value, this.doNotUsePaymentStartDate)) return;
                 this.doNotUsePaymentStartDate = value;
                 OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
-        public BudgetBucket Selected
+        public BudgetBucket? Selected
         {
-            get { return this.doNotUseSelected; }
+            get => this.doNotUseSelected;
             [UsedImplicitly]
             set
             {
+                if (Equals(value, this.doNotUseSelected)) return;
                 this.doNotUseSelected = value;
                 OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
