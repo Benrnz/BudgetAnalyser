@@ -7,20 +7,26 @@ namespace BudgetAnalyser.LedgerBook
 {
     public class LedgerBookViewModel : ObservableRecipient
     {
-        private IBudgetCurrencyContext doNotUseCurrentBudget;
-        private StatementModel doNotUseCurrentStatement;
-        private Engine.Ledger.LedgerBook ledgerBook;
-        private LedgerEntryLine doNotUseNewLedgerLine;
+        private IBudgetCurrencyContext? doNotUseCurrentBudget;
+        private StatementModel? doNotUseCurrentStatement;
+        private Engine.Ledger.LedgerBook? doNotUseLedgerBook;
+        private LedgerEntryLine? doNotUseNewLedgerLine;
 
-        public Engine.Ledger.LedgerBook LedgerBook
+        public bool AddNewReconciliationIsEnabled =>
+            // Decided not to validate budget here, budget for dates is a more complicated decision / validation for the engine.
+            CurrentStatement != null && LedgerBook != null;
+
+        public Engine.Ledger.LedgerBook? LedgerBook
         {
-            get { return this.ledgerBook; }
+            get => this.doNotUseLedgerBook;
 
             set
             {
-                this.ledgerBook = value;
+                if (Equals(value, this.doNotUseLedgerBook)) return;
+                this.doNotUseLedgerBook = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(NoLedgerBookLoaded));
+                OnPropertyChanged(nameof(AddNewReconciliationIsEnabled));
             }
         }
 
@@ -35,7 +41,7 @@ namespace BudgetAnalyser.LedgerBook
         ///     CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
         ///     CurrentBudget should only be used for UI purposes such as an indication of current budgeted amount for something etc. 
         /// </summary>
-        internal IBudgetCurrencyContext CurrentBudget
+        internal IBudgetCurrencyContext? CurrentBudget
         {
             get { return this.doNotUseCurrentBudget; }
             set
@@ -45,25 +51,29 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        internal StatementModel CurrentStatement
+        internal StatementModel? CurrentStatement
         {
-            get { return this.doNotUseCurrentStatement; }
+            get => this.doNotUseCurrentStatement;
 
             set
             {
+                if (Equals(value, this.doNotUseCurrentStatement)) return;
                 this.doNotUseCurrentStatement = value;
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(NoStatementLoaded));
+                OnPropertyChanged(nameof(AddNewReconciliationIsEnabled));
             }
         }
 
         /// <summary>
         ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null it also indicates the ledger row can be edited.
         /// </summary>
-        public LedgerEntryLine NewLedgerLine
+        public LedgerEntryLine? NewLedgerLine
         {
-            get { return this.doNotUseNewLedgerLine; }
+            get => this.doNotUseNewLedgerLine;
             set
             {
+                if (Equals(value, this.doNotUseNewLedgerLine)) return;
                 this.doNotUseNewLedgerLine = value;
                 OnPropertyChanged();
             }

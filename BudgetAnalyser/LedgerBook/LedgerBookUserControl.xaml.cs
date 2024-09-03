@@ -1,75 +1,78 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
-namespace BudgetAnalyser.LedgerBook
+namespace BudgetAnalyser.LedgerBook;
+
+/// <summary>
+///     Interaction logic for LegderBookView.xaml
+/// </summary>
+public partial class LedgerBookUserControl
 {
-    /// <summary>
-    ///     Interaction logic for LegderBookView.xaml
-    /// </summary>
-    public partial class LedgerBookUserControl
+    private bool subscribedToMainWindowClose;
+
+    public LedgerBookUserControl()
     {
-        private bool subscribedToMainWindowClose;
+        InitializeComponent();
+    }
 
-        public LedgerBookUserControl()
+    private LedgerBookController Controller => DataContext as LedgerBookController;
+
+    private void DynamicallyCreateLedgerBookGrid()
+    {
+        var builder = Controller.GridBuilder();
+        builder.BuildGrid(Controller.ViewModel.LedgerBook, Resources, this.LedgerBookPanel, Controller.NumberOfPeriodsToShow);
+    }
+
+    private void OnAddNewReconciliationClicked(object sender, RoutedEventArgs e)
+    {
+        Controller.OnAddNewReconciliationCommandExecuted();
+    }
+
+    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (!this.subscribedToMainWindowClose)
         {
-            InitializeComponent();
+            this.subscribedToMainWindowClose = true;
         }
 
-        private LedgerBookController Controller => DataContext as LedgerBookController;
-
-        private void DynamicallyCreateLedgerBookGrid()
+        if (e.OldValue != null)
         {
-            ILedgerBookGridBuilder builder = Controller.GridBuilder();
-            builder.BuildGrid(Controller.ViewModel.LedgerBook, Resources, this.LedgerBookPanel, Controller.NumberOfPeriodsToShow);
+            ((LedgerBookController)e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
+            ((LedgerBookController)e.OldValue).DeregisterListener(this);
         }
 
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        if (e.NewValue != null)
         {
-            if (!this.subscribedToMainWindowClose)
-            {
-                this.subscribedToMainWindowClose = true;
-            }
+            ((LedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
+            Controller.RegisterListener(this, static (r, m) => r.OnLedgerBookReadyMessageReceived(m));
+        }
 
-            if (e.OldValue != null)
-            {
-                ((LedgerBookController)e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
-                ((LedgerBookController)e.OldValue).DeregisterListener(this);
-            }
+        DynamicallyCreateLedgerBookGrid();
+    }
 
-            if (e.NewValue != null)
-            {
-                ((LedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
-                Controller.RegisterListener(this, static (r, m) => r.OnLedgerBookReadyMessageReceived(m));
-            }
+    private void OnLedgerBookNameClick(object sender, MouseButtonEventArgs e)
+    {
+        Controller.EditLedgerBookName();
+    }
 
+    private void OnLedgerBookReadyMessageReceived(LedgerBookReadyMessage message)
+    {
+        // this is only used when no Ledgerbook has been previously loaded. Data binding hasnt been set up to respond to the ViewModel.LedgerBook property changing until the UI is actually drawn 
+        // for the first time.
+        if (message.LedgerBook != null && message.ForceUiRefresh)
+        {
             DynamicallyCreateLedgerBookGrid();
         }
+    }
 
-        private void OnLedgerBookNameClick(object sender, MouseButtonEventArgs e)
-        {
-            Controller.EditLedgerBookName();
-        }
+    private void OnLedgerBookUpdated(object sender, EventArgs e)
+    {
+        ResetLedgerBookContent();
+        DynamicallyCreateLedgerBookGrid();
+    }
 
-        private void OnLedgerBookReadyMessageReceived(LedgerBookReadyMessage message)
-        {
-            // this is only used when no Ledgerbook has been previously loaded. Data binding hasnt been set up to respond to the ViewModel.LedgerBook property changing until the UI is actually drawn 
-            // for the first time.
-            if (message.LedgerBook != null && message.ForceUiRefresh)
-            {
-                DynamicallyCreateLedgerBookGrid();
-            }
-        }
-
-        private void OnLedgerBookUpdated(object sender, EventArgs e)
-        {
-            ResetLedgerBookContent();
-            DynamicallyCreateLedgerBookGrid();
-        }
-
-        private void ResetLedgerBookContent()
-        {
-            this.LedgerBookPanel.Content = null;
-        }
+    private void ResetLedgerBookContent()
+    {
+        this.LedgerBookPanel.Content = null;
     }
 }
