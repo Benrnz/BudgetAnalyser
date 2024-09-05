@@ -54,6 +54,7 @@ public class LedgerBookController : ControllerBase, IShowableController
 
         Messenger.Register<LedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<LedgerBookController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
+        Messenger.Register<LedgerBookController, LedgerBookReadyMessage>(this, (r, m) => ShowRemarksCommand.NotifyCanExecuteChanged());
 
         this.ledgerService.Saved += OnSaveNotificationReceived;
         this.ledgerService.Closed += OnClosedNotificationReceived;
@@ -79,7 +80,7 @@ public class LedgerBookController : ControllerBase, IShowableController
     public ICommand ShowHidePeriodsCommand => new RelayCommand<int>(OnShowHidePeriodsCommandExecuted);
     public ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null);
 
-    public ICommand ShowRemarksCommand => new RelayCommand<LedgerEntryLine>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
+    public RelayCommand<LedgerEntryLine> ShowRemarksCommand => new(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
     public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null);
     public ICommand ShowTransactionsCommand => new RelayCommand<object>(OnShowTransactionsCommandExecuted);
     public ReconciliationToDoListController ToDoListController => this.uiContext.ReconciliationToDoListController;
@@ -211,6 +212,8 @@ public class LedgerBookController : ControllerBase, IShowableController
                 ToDoListController.Load(this.reconService.ReconciliationToDoList);
                 this.newWindowViewLoader.Show(ToDoListController);
             }
+
+            ShowRemarksCommand.NotifyCanExecuteChanged();
         }
         catch (ValidationWarningException ex)
         {
