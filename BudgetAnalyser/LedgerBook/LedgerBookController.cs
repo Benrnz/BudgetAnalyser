@@ -50,7 +50,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
         FileOperations.LedgerService = this.ledgerService;
         this.uiContext = uiContext;
-        this.doNotUseNumberOfPeriodsToShow = 4;
+        this.doNotUseNumberOfPeriodsToShow = 6;
 
         Messenger.Register<LedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<LedgerBookController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
@@ -62,8 +62,6 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     public event EventHandler LedgerBookUpdated;
 
-    [UsedImplicitly] public ICommand AddNewLedgerCommand => new RelayCommand(OnAddNewLedgerCommandExecuted, CanExecuteAddNewLedgerCommand);
-
     public LedgerBookControllerFileOperations FileOperations { get; }
 
     public int NumberOfPeriodsToShow
@@ -71,6 +69,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         get => this.doNotUseNumberOfPeriodsToShow;
         set
         {
+            if (value == this.doNotUseNumberOfPeriodsToShow) return;
             this.doNotUseNumberOfPeriodsToShow = value;
             OnPropertyChanged();
         }
@@ -84,10 +83,6 @@ public class LedgerBookController : ControllerBase, IShowableController
     public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null);
     public ICommand ShowTransactionsCommand => new RelayCommand<object>(OnShowTransactionsCommandExecuted);
     public ReconciliationToDoListController ToDoListController => this.uiContext.ReconciliationToDoListController;
-
-    [UsedImplicitly] public ICommand TransferFundsCommand => new RelayCommand(OnTransferFundsCommandExecuted, CanExecuteTransferFundsCommand);
-
-    [UsedImplicitly] public ICommand UnlockLedgerLineCommand => new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand);
 
     public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
@@ -129,6 +124,14 @@ public class LedgerBookController : ControllerBase, IShowableController
         FileOperations.Dirty = true;
     }
 
+    public void OnAddNewLedgerCommandExecuted()
+    {
+        // TODO Change this to an event.
+        this.uiContext.ChooseBudgetBucketController.Chosen += OnAddNewLedgerComplete;
+        this.uiContext.ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBucket, "Choose an Expense Budget Bucket");
+        this.uiContext.ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book", Guid.NewGuid(), true);
+    }
+
     public void OnAddNewReconciliationCommandExecuted()
     {
         try
@@ -143,8 +146,32 @@ public class LedgerBookController : ControllerBase, IShowableController
             }
         }
 
+        // TODO Change this to an event.
         this.uiContext.AddLedgerReconciliationController.Complete += OnAddReconciliationDialogClose;
         this.uiContext.AddLedgerReconciliationController.ShowCreateDialog(ViewModel.LedgerBook);
+    }
+
+    public void OnTransferFundsCommandExecuted()
+    {
+        // TODO Change this to a message
+        this.uiContext.TransferFundsController.TransferFundsRequested += OnTransferFundsRequested;
+        this.uiContext.TransferFundsController.ShowDialog(ViewModel.LedgerBook.LedgersAvailableForTransfer());
+    }
+
+    public void OnUnlockLedgerLineCommandExecuted()
+    {
+        var response = this.questionBox.Show(
+            "Unlock Ledger Entry Line",
+            "Are you sure you want to unlock the Ledger Entry Line dated {0:d} for editing?",
+            ViewModel.LedgerBook.Reconciliations.First().Date);
+
+        if (response == null || response.Value == false)
+        {
+            return;
+        }
+
+        ViewModel.NewLedgerLine = this.reconService.UnlockCurrentPeriod(ViewModel.LedgerBook);
+        FileOperations.Dirty = true;
     }
 
     public void RegisterListener(LedgerBookUserControl recipient, MessageHandler<LedgerBookUserControl, LedgerBookReadyMessage> handler)
@@ -157,25 +184,10 @@ public class LedgerBookController : ControllerBase, IShowableController
         return this.uiBuilder.GridBuilderV2(this);
     }
 
-    private bool CanExecuteAddNewLedgerCommand()
-    {
-        return ViewModel.LedgerBook != null;
-    }
-
     private bool CanExecuteShowRemarksCommand(LedgerEntryLine parameter)
     {
         return parameter != null
                && (!string.IsNullOrWhiteSpace(parameter.Remarks) || parameter == ViewModel.NewLedgerLine);
-    }
-
-    private bool CanExecuteTransferFundsCommand()
-    {
-        return FileOperations.ViewModel.AddNewReconciliationIsEnabled && ViewModel.NewLedgerLine != null;
-    }
-
-    private bool CanExecuteUnlockLedgerLineCommand()
-    {
-        return ViewModel.NewLedgerLine == null && ViewModel.LedgerBook != null;
     }
 
     private void CreatePeriodEndReconciliation(bool ignoreWarnings = false)
@@ -213,13 +225,6 @@ public class LedgerBookController : ControllerBase, IShowableController
         {
             this.messageBox.Show(ex, "Unable to add new reconciliation.");
         }
-    }
-
-    private void OnAddNewLedgerCommandExecuted()
-    {
-        this.uiContext.ChooseBudgetBucketController.Chosen += OnAddNewLedgerComplete;
-        this.uiContext.ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBucket, "Choose an Expense Budget Bucket");
-        this.uiContext.ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book", Guid.NewGuid(), true);
     }
 
     private void OnAddNewLedgerComplete(object sender, BudgetBucketChosenEventArgs e)
@@ -371,34 +376,12 @@ public class LedgerBookController : ControllerBase, IShowableController
         ViewModel.CurrentStatement = message.StatementModel;
     }
 
-    private void OnTransferFundsCommandExecuted()
-    {
-        this.uiContext.TransferFundsController.TransferFundsRequested += OnTransferFundsRequested;
-        this.uiContext.TransferFundsController.ShowDialog(ViewModel.LedgerBook.LedgersAvailableForTransfer());
-    }
-
     private void OnTransferFundsRequested(object sender, EventArgs eventArgs)
     {
         this.uiContext.TransferFundsController.TransferFundsRequested -= OnTransferFundsRequested;
         this.reconService.TransferFunds(ViewModel.LedgerBook, ViewModel.NewLedgerLine, this.uiContext.TransferFundsController.TransferFundsDto);
         RaiseLedgerBookUpdated();
         FileOperations.ReconciliationChangesWillNeedToBeSaved();
-    }
-
-    private void OnUnlockLedgerLineCommandExecuted()
-    {
-        var response = this.questionBox.Show(
-            "Unlock Ledger Entry Line",
-            "Are you sure you want to unlock the Ledger Entry Line dated {0:d} for editing?",
-            ViewModel.LedgerBook.Reconciliations.First().Date);
-
-        if (response == null || response.Value == false)
-        {
-            return;
-        }
-
-        ViewModel.NewLedgerLine = this.reconService.UnlockCurrentPeriod(ViewModel.LedgerBook);
-        FileOperations.Dirty = true;
     }
 
     private bool ProceedAfterReconciliationValidationWarning(ValidationWarningException ex)

@@ -15,12 +15,17 @@ public partial class LedgerBookUserControl
         InitializeComponent();
     }
 
-    private LedgerBookController Controller => DataContext as LedgerBookController;
+    private LedgerBookController Controller => (LedgerBookController)DataContext;
 
     private void DynamicallyCreateLedgerBookGrid()
     {
         var builder = Controller.GridBuilder();
         builder.BuildGrid(Controller.ViewModel.LedgerBook, Resources, this.LedgerBookPanel, Controller.NumberOfPeriodsToShow);
+    }
+
+    private void OnAddLedgerClicked(object sender, RoutedEventArgs e)
+    {
+        Controller.OnAddNewLedgerCommandExecuted();
     }
 
     private void OnAddNewReconciliationClicked(object sender, RoutedEventArgs e)
@@ -69,6 +74,16 @@ public partial class LedgerBookUserControl
     {
         ResetLedgerBookContent();
         DynamicallyCreateLedgerBookGrid();
+    }
+
+    private void OnTransferFundsClicked(object sender, RoutedEventArgs e)
+    {
+        Controller.OnTransferFundsCommandExecuted();
+    }
+
+    private void OnUnlockCurrentLedgerLineClicked(object sender, RoutedEventArgs e)
+    {
+        Controller.OnUnlockLedgerLineCommandExecuted();
     }
 
     private void ResetLedgerBookContent()

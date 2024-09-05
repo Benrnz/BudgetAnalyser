@@ -5,6 +5,9 @@
     <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
 
     <!-- Rees.Wpf -->
+    <converters1:MultiBoolAndBoolConverter x:Key="Converter.MultiAndBool" />
+    <converters1:NotNullToBoolConverter x:Key="Converter.NotNullIsTrue" />
+    <converters1:NullToBoolConverter x:Key="Converter.NullIsTrue" />
     <converters1:NotBoolToVisibilityConverter x:Key="Converter.NotBoolToVis" />
     <converters1:BoolToVisibility2Converter x:Key="Converter.BoolToVis2" />
     <converters1:NullToVisibilityConverter x:Key="Converter.NullToVis" />

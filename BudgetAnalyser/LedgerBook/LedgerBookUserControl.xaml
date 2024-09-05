@@ -85,19 +85,31 @@
         <StackPanel Orientation="Horizontal">
             <Button Command="{x:Static budgetAnalyser:PersistenceOperationCommands.SaveDatabaseCommand}"
                     Style="{StaticResource Button.Round.Save}" />
-            <Button Command="{Binding TransferFundsCommand}"
-                    Style="{StaticResource Button.Round.TransferFunds}" />
+            <Button Style="{StaticResource Button.Round.TransferFunds}"
+                    IsEnabled="{Binding ViewModel.NewLedgerLine, Converter={StaticResource Converter.NotNullIsTrue}}"
+                    Click="OnTransferFundsClicked" />
             <Button Style="{StaticResource Button.Round.PlusR}"
-                    IsEnabled="{Binding FileOperations.ViewModel.AddNewReconciliationIsEnabled}"
+                    IsEnabled="{Binding ViewModel.AddNewReconciliationIsEnabled}"
                     ToolTip="Add new reconciliation"
                     Click="OnAddNewReconciliationClicked" />
             <Button Style="{StaticResource Button.Round.PlusL}"
+                    IsEnabled="{Binding ViewModel.LedgerBook, Converter={StaticResource Converter.NotNullIsTrue}}"
                     ToolTip="Add new ledger"
-                    Command="{Binding AddNewLedgerCommand}" />
-            <Button Command="{Binding UnlockLedgerLineCommand}"
+                    Click="OnAddLedgerClicked" />
+            <Button 
+                    Click="OnUnlockCurrentLedgerLineClicked"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Unlock}"
-                    ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line." />
+                    ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line.">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource Converter.MultiAndBool}">
+                        <Binding Path="ViewModel.NewLedgerLine"
+                                 Converter="{StaticResource Converter.NullIsTrue}" />
+                        <Binding Path="ViewModel.LedgerBook"
+                                 Converter="{StaticResource Converter.NotNullIsTrue}" />
+                    </MultiBinding>
+                </Button.IsEnabled>
+            </Button>
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding ViewModel.LedgerBook.Name}"
                        MouseUp="OnLedgerBookNameClick" />
