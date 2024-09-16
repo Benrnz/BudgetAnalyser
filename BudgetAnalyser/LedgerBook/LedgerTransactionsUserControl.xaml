@@ -1,9 +1,12 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerTransactionsUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance ledgerBook:LedgerTransactionsController}">
 
-    <!-- Controller: LedgerTransactionsController -->
     <!-- Used to show any kind of transaction list including balance adjustments -->
 
     <Grid>
@@ -70,7 +73,7 @@
                 <TextBlock Grid.Column="2"
                            Grid.Row="0"
                            Style="{StaticResource TextBlock.Number}"
-                           Text="{Binding OpeningBalance, StringFormat=N}"/>
+                           Text="{Binding OpeningBalance, StringFormat=N2}"/>
                 <TextBlock Grid.Column="1"
                            Grid.Row="1"
                            HorizontalAlignment="Right"
@@ -79,7 +82,7 @@
                 <TextBlock Grid.Column="2"
                            Grid.Row="1"
                            Style="{StaticResource TextBlock.Number}"
-                           Text="{Binding TransactionsTotal, StringFormat=N}" />
+                           Text="{Binding TransactionsTotal, StringFormat=N2}" />
                 <TextBlock Grid.Column="1"
                            Grid.Row="2"
                            HorizontalAlignment="Right"
@@ -89,7 +92,7 @@
                 <TextBlock Grid.Column="2"
                            Grid.Row="2"
                            Style="{StaticResource TextBlock.Number}"
-                           Text="{Binding LedgerEntry.Balance, StringFormat=N}"
+                           Text="{Binding LedgerEntry.Balance, StringFormat=N2}"
                            Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
             </Grid>
         </Grid>

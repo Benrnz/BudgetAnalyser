@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
