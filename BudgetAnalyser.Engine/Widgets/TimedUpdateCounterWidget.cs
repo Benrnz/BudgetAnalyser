@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
@@ -30,10 +29,10 @@ namespace BudgetAnalyser.Engine.Widgets
                 typeof(GlobalFilterCriteria),
                 typeof(LedgerCalculation)
             };
-            RecommendedTimeIntervalUpdate = TimeSpan.FromSeconds(10);
+            RecommendedTimeIntervalUpdate = TimeSpan.FromSeconds(100);
             DetailedText = "Refresh Count";
             Name = "Refresh Interval Counter";
-            ToolTip = "Counts the number of refreshes recieved by any widget as well as refreshing every 10 seconds.";
+            ToolTip = "Counts the number of refreshes received by any widget as well as refreshing every 100 seconds.";
         }
 
         /// <summary>
