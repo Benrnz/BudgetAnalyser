@@ -10,9 +10,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
-// ReSharper disable MemberCanBePrivate.Global
-// Used for DataBinding
-
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
@@ -30,11 +27,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private Engine.Ledger.LedgerBook parentBook;
 
     public AddLedgerReconciliationController(
-        [NotNull] UiContext uiContext,
-        [NotNull] IAccountTypeRepository accountTypeRepository) 
+        UiContext uiContext,
+        IAccountTypeRepository accountTypeRepository) 
         : base(uiContext.Messenger)
     {
-        this.accountTypeRepository = accountTypeRepository;
+        this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
         if (uiContext == null)
         {
             throw new ArgumentNullException(nameof(uiContext));
@@ -59,12 +56,12 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseAddBalanceVisibility;
         private set
         {
+            if (value == this.doNotUseAddBalanceVisibility) return;
             this.doNotUseAddBalanceVisibility = value;
             OnPropertyChanged();
         }
     }
 
-    [UsedImplicitly]
     public ICommand AddBankBalanceCommand => new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
 
     public decimal? AdjustedBankBalanceTotal
@@ -74,9 +71,10 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public IEnumerable<Account> BankAccounts
     {
-        [UsedImplicitly] get => this.doNotUseBankAccounts;
+        get => this.doNotUseBankAccounts;
         private set
         {
+            if (Object.ReferenceEquals(value, this.doNotUseBankAccounts)) return;
             this.doNotUseBankAccounts = value;
             OnPropertyChanged();
         }
@@ -87,6 +85,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseBankBalance;
         set
         {
+            if (value == this.doNotUseBankBalance) return;
             this.doNotUseBankBalance = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(BankBalanceTotal));
@@ -206,6 +205,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         SelectedBankAccount = null;
         BankBalance = 0;
         OnPropertyChanged(nameof(HasRequiredBalances));
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private bool CanExecuteAddBankBalanceCommand()
@@ -246,7 +246,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         AddNewBankBalance();
     }
 
-    private void OnRemoveBankBalanceCommandExecuted(BankBalanceViewModel bankBalance)
+    private void OnRemoveBankBalanceCommandExecuted(BankBalanceViewModel? bankBalance)
     {
         if (bankBalance == null)
         {
