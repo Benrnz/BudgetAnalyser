@@ -165,7 +165,6 @@ public class StatementController : ControllerBase, IShowableController, IInitial
                 SplitTransactionController.SplinterBucket1,
                 SplitTransactionController.SplinterBucket2);
 
-            ViewModel.TriggerRefreshTotalsRow();
             FileOperations.NotifyOfEdit();
             await FileOperations.SyncWithServiceAsync();
         }

@@ -100,6 +100,8 @@ namespace BudgetAnalyser.Statement
         {
             get
             {
+                if (OriginalTransaction == null) return false;
+
                 if (SplinterAmount1 == 0)
                 {
                     InvalidMessage = "Amount 1 cannot be zero.";
