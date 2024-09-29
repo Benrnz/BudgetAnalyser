@@ -23,8 +23,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnBankBalanceGotFocus(object sender, RoutedEventArgs e)
         {
-            var textBox = e.OriginalSource as TextBox;
-            if (textBox != null)
+            if (e.OriginalSource is TextBox textBox)
             {
                 textBox.SelectAll();
             }
