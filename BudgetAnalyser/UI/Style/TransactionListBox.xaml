@@ -2,8 +2,10 @@
                     xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
                     xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
                     xmlns:statement="clr-namespace:BudgetAnalyser.Engine.Statement;assembly=BudgetAnalyser.Engine"
-                    xmlns:statement1="clr-namespace:BudgetAnalyser.Statement"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:statementUI="clr-namespace:BudgetAnalyser.Statement"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
     <converters1:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility" />
 
@@ -44,7 +46,7 @@
     </Style>
 
     <ContextMenu x:Key="TransactionContextMenu"
-                 HasDropShadow="true">
+                 HasDropShadow="true" d:DataContext="{d:DesignInstance statementUI:StatementController}">
         <ContextMenu.Resources>
             <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
                    TargetType="{x:Type TextBlock}" />
@@ -162,7 +164,7 @@
     </DataTemplate>
 
 
-    <DataTemplate DataType="{x:Type statement1:EditingTransactionController}">
+    <DataTemplate DataType="{x:Type statementUI:EditingTransactionController}">
         <Border x:Name="MainBorder"
                 BorderBrush="{StaticResource Brush.Text.Default}"
                 BorderThickness="1"
@@ -276,7 +278,7 @@
 
 
     <DataTemplate x:Key="GroupedByBucketTemplate"
-                  DataType="statement1:TransactionGroupedByBucketViewModel">
+                  DataType="statementUI:TransactionGroupedByBucketViewModel">
         <Expander Style="{StaticResource Expander.Style1}">
             <Expander.Resources>
                 <Style x:Key="Local.Badge.WarningLightStyle"
