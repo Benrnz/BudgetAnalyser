@@ -1,10 +1,12 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Matching.EditRulesUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:matching="clr-namespace:BudgetAnalyser.Engine.Matching;assembly=BudgetAnalyser.Engine"
-             xmlns:matching1="clr-namespace:BudgetAnalyser.Matching"
+             xmlns:matchingUI="clr-namespace:BudgetAnalyser.Matching"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             DataContextChanged="OnDataContextChanged">
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+             DataContextChanged="OnDataContextChanged" d:DataContext="{d:DesignInstance matchingUI:RulesController}">
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type matching:RulesGroupedByBucket}">
@@ -77,19 +79,19 @@
                                    Text="Sort..." />
                     </MenuItem.Header>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matching1:RulesController.BucketSortKey}">
+                              CommandParameter="{x:Static matchingUI:RulesController.BucketSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Bucket" />
                         </MenuItem.Header>
                     </MenuItem>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matching1:RulesController.DescriptionSortKey}">
+                              CommandParameter="{x:Static matchingUI:RulesController.DescriptionSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Description" />
                         </MenuItem.Header>
                     </MenuItem>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matching1:RulesController.MatchesSortKey}">
+                              CommandParameter="{x:Static matchingUI:RulesController.MatchesSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Number of Matches" />
                         </MenuItem.Header>
@@ -118,7 +120,7 @@
                  Visibility="{Binding FlatListBoxVisibility, Converter={StaticResource Converter.BoolToVis}}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <matching1:MatchingRuleUserControl />
+                    <matchingUI:MatchingRuleUserControl />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
