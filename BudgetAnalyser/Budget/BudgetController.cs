@@ -78,6 +78,7 @@ public class BudgetController : ControllerBase, IShowableController
 
         set
         {
+            if (Equals(value, this.BudgetMenuItemName)) return;
             this.budgetMenuItemName = value;
             OnPropertyChanged();
         }
@@ -130,6 +131,7 @@ public class BudgetController : ControllerBase, IShowableController
         get => this.doNotUseDirty;
         private set
         {
+            if (value == this.doNotUseDirty) return;
             this.doNotUseDirty = value;
             OnPropertyChanged();
             if (Dirty)
@@ -149,6 +151,7 @@ public class BudgetController : ControllerBase, IShowableController
 
         private set
         {
+            if (value == this.expenseTotal) return;
             this.expenseTotal = value;
             OnPropertyChanged();
         }
@@ -163,6 +166,7 @@ public class BudgetController : ControllerBase, IShowableController
 
         private set
         {
+            if (value == this.incomeTotal) return;
             this.incomeTotal = value;
             OnPropertyChanged();
         }
@@ -181,6 +185,7 @@ public class BudgetController : ControllerBase, IShowableController
         [UsedImplicitly] get => this.surplus;
         private set
         {
+            if (value == this.surplus) return;
             this.surplus = value;
             OnPropertyChanged();
         }
@@ -195,21 +200,11 @@ public class BudgetController : ControllerBase, IShowableController
 
         set
         {
-            if (value == this.doNotUseShownBudget)
-            {
-                return;
-            }
-
+            if (value == this.doNotUseShownBudget) return;
             this.doNotUseShownBudget = value;
             OnPropertyChanged();
             BudgetMenuItemName = this.doNotUseShownBudget ? CloseBudgetMenuName : EditBudgetMenuName;
         }
-    }
-
-    protected virtual string PromptUserForLastModifiedComment()
-    {
-        var comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
-        return comment ?? string.Empty;
     }
 
     private void BudgetModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
