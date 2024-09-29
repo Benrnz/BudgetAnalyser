@@ -71,6 +71,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         }
     }
 
+    public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
     public StatementControllerFileOperations FileOperations { get; }
 
@@ -203,6 +204,24 @@ public class StatementController : ControllerBase, IShowableController, IInitial
     private void OnClosedNotificationReceived(object sender, EventArgs e)
     {
         FileOperations.Close();
+    }
+
+    private void OnDeleteTransactionCommandExecute()
+    {
+        if (ViewModel.SelectedRow == null)
+        {
+            return;
+        }
+
+        var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
+            "Are you sure you want to delete this transaction?",
+            "Delete Transaction");
+        if (confirm != null && confirm.Value)
+        {
+            this.transactionService.RemoveTransaction(ViewModel.SelectedRow);
+            ViewModel.TriggerRefreshTotalsRow();
+            FileOperations.NotifyOfEdit();
+        }
     }
 
     private void OnEditTransactionCommandExecute()
