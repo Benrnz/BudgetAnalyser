@@ -206,12 +206,9 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         FileOperations.Close();
     }
 
-    private void OnDeleteTransactionCommandExecute()
+    private async void OnDeleteTransactionCommandExecute()
     {
-        if (ViewModel.SelectedRow == null)
-        {
-            return;
-        }
+        if (ViewModel.SelectedRow == null) return;
 
         var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
             "Are you sure you want to delete this transaction?",
@@ -219,8 +216,8 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         if (confirm != null && confirm.Value)
         {
             this.transactionService.RemoveTransaction(ViewModel.SelectedRow);
-            ViewModel.TriggerRefreshTotalsRow();
             FileOperations.NotifyOfEdit();
+            await FileOperations.SyncWithServiceAsync();
         }
     }
 

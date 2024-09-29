@@ -126,7 +126,6 @@ namespace BudgetAnalyser.Statement
                     }
 
                     ViewModel.Statement = statementModel;
-                    NotifyOfReset();
                     ViewModel.TriggerRefreshTotalsRow();
 
                     Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
