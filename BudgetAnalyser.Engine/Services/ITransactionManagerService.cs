@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     fields are searched: Description, Reference1, Reference2, Reference3.
         /// </summary>
         /// <param name="searchText">The search text. Minimum 3 characters.</param>
-        ObservableCollection<Transaction> FilterBySearchText(string searchText);
+        ObservableCollection<Transaction> FilterBySearchText(string? searchText);
 
         /// <summary>
         ///     Filters the transactions using the filter object provided.

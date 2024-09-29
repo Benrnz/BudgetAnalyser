@@ -206,4 +206,15 @@ public partial class StatementUserControl
         this.TransactionListBox.UpdateLayout();
         this.TransactionListBox.ScrollIntoView(Controller.ViewModel.SelectedRow);
     }
+
+    private void ClearSearchButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        Controller.ClearSearch();
+        this.ClearSearchButton.IsEnabled = false;
+    }
+
+    private void SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)
+    {
+        this.ClearSearchButton.IsEnabled = this.SearchTextBox.Text.Length > 0;
+    }
 }

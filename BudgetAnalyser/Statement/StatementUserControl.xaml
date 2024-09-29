@@ -45,6 +45,7 @@
                     <TextBox x:Name="SearchTextBox"
                              GotFocus="OnSearchTextBoxGotFocus"
                              LostFocus="OnSearchTextBoxLostFocus"
+                             KeyUp="SearchTextBox_OnKeyUp"
                              MinWidth="27"
                              Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
                              ToolTip="Search for text within a transaction"
@@ -60,7 +61,8 @@
                     <Button x:Name="ClearSearchButton"
                             Grid.Column="1"
                             Style="{StaticResource Button.Round.SmallCross}"
-                            Command="{Binding ClearTextFilterCommand}"
+                            Click="ClearSearchButton_OnClick"
+                            IsEnabled="False"
                             Width="0" />
                     <ComboBox x:Name="BucketFilterComboBox"
                               DropDownClosed="OnBucketFilterComboBoxDropDownClosed"

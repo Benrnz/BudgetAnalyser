@@ -354,8 +354,8 @@ namespace BudgetAnalyser.Engine.Services
         ///     Returns a filtered list of <see cref="Transaction" />s using the provided search text.  All following transaction
         ///     fields are searched: Description, Reference1, Reference2, Reference3.
         /// </summary>
-        /// <param name="searchText">The search text. Minimum 3 characters.</param>
-        public ObservableCollection<Transaction> FilterBySearchText(string searchText)
+        /// <param name="searchText">The search text. Minimum 3 characters. A Null value clears the search.</param>
+        public ObservableCollection<Transaction> FilterBySearchText(string? searchText)
         {
             if (searchText.IsNothing())
             {
