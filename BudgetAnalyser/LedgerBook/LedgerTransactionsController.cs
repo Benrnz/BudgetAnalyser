@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -38,7 +35,7 @@ namespace BudgetAnalyser.LedgerBook
         private bool wasChanged;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService, [NotNull] IReconciliationService reconService)
+        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService, [NotNull] IReconciliationService reconService) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -57,8 +54,7 @@ namespace BudgetAnalyser.LedgerBook
 
             this.ledgerService = ledgerService;
             this.reconService = reconService;
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<LedgerTransactionsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             Reset();
         }
 
@@ -82,8 +78,8 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseIsReadOnly = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => IsAddBalanceAdjustmentAllowed);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsAddBalanceAdjustmentAllowed));
             }
         }
 
@@ -93,9 +89,9 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseLedgerEntry = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => InBalanceAdjustmentMode);
-                RaisePropertyChanged(() => InLedgerEntryMode);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(InBalanceAdjustmentMode));
+                OnPropertyChanged(nameof(InLedgerEntryMode));
             }
         }
 
@@ -105,7 +101,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewTransactionAccount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -115,7 +111,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewTransactionAmount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -125,7 +121,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewTransactionNarrative = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -137,7 +133,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseShowAddingNewTransactionPanel = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -149,7 +145,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseTitle = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -244,8 +240,8 @@ namespace BudgetAnalyser.LedgerBook
                 ShownTransactions.Remove(transaction);
             }
 
-            RaisePropertyChanged(() => TransactionsTotal);
-            RaisePropertyChanged(() => LedgerEntry);
+            OnPropertyChanged(nameof(TransactionsTotal));
+            OnPropertyChanged(nameof(LedgerEntry));
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -351,7 +347,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             Reset();
-            RaisePropertyChanged(() => LedgerEntry);
+            OnPropertyChanged(nameof(LedgerEntry));
         }
 
         private void SaveBalanceAdjustment()
@@ -359,7 +355,7 @@ namespace BudgetAnalyser.LedgerBook
             LedgerTransaction newTransaction = this.reconService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccount);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
-            RaisePropertyChanged(() => TransactionsTotal);
+            OnPropertyChanged(nameof(TransactionsTotal));
         }
 
         private void SaveNewEntryTransaction()
@@ -376,7 +372,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            RaisePropertyChanged(() => TransactionsTotal);
+            OnPropertyChanged(nameof(TransactionsTotal));
             this.wasChanged = true;
         }
 
@@ -389,7 +385,7 @@ namespace BudgetAnalyser.LedgerBook
                 CorrelationId = this.dialogCorrelationId,
                 Title = Title
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
     }
 }

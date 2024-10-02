@@ -1,6 +1,4 @@
-﻿using System;
-using System.Xaml;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.UnitTest.ThirdPartyTests
 {

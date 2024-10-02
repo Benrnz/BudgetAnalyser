@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using BudgetAnalyser.Annotations;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 
 namespace BudgetAnalyser.LedgerBook

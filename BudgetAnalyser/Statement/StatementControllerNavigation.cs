@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
+﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Statement
@@ -39,7 +36,7 @@ namespace BudgetAnalyser.Statement
             this.controller = controller;
             this.questionBox = questionBox;
 
-            MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
+            MessengerInstance.Register<StatementControllerNavigation, NavigateToTransactionMessage>(this, static (r, m) => r.OnNavigateToTransactionRequestReceived(m));
         }
 
         private IMessenger MessengerInstance { get; }

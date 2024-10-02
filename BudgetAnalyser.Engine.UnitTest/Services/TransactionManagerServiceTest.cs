@@ -298,54 +298,6 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         }
 
         [TestMethod]
-        public void PopulateGroupByBucketCollection_ShouldReturnEmpty_GivenFalse()
-        {
-            IEnumerable<TransactionGroupedByBucket> result = this.subject.PopulateGroupByBucketCollection(false);
-
-            Assert.IsFalse(result.Any());
-        }
-
-        [TestMethod]
-        public void PopulateGroupByBucketCollection_ShouldReturnEmpty_GivenStatementModelNotLoaded()
-        {
-            this.subject = CreateSubject();
-            IEnumerable<TransactionGroupedByBucket> result = this.subject.PopulateGroupByBucketCollection(true);
-
-            Assert.IsFalse(result.Any());
-        }
-
-        [TestMethod]
-        public void PopulateGroupByBucketCollection_ShouldReturnListOf6_GivenStatementModelAndTrue()
-        {
-            IEnumerable<TransactionGroupedByBucket> result = this.subject.PopulateGroupByBucketCollection(true);
-
-            Assert.AreEqual(6, result.Count());
-        }
-
-        [TestMethod]
-        public void PopulateGroupByBucketCollection_ShouldReturnListSortedByBucket_GivenStatementModelAndTrue()
-        {
-            IEnumerable<TransactionGroupedByBucket> result = this.subject.PopulateGroupByBucketCollection(true);
-
-            TransactionGroupedByBucket previous = null;
-            foreach (TransactionGroupedByBucket groupedByBucket in result)
-            {
-                if (previous == null)
-                {
-                    previous = groupedByBucket;
-                    continue;
-                }
-
-                if (string.Compare(previous.Bucket.Code, groupedByBucket.Bucket.Code, StringComparison.Ordinal) >= 0)
-                {
-                    Assert.Fail("The grouped list should be sorted by Bucket Code in ascending order. {0} >= {1}", previous.Bucket.Code, groupedByBucket.Bucket.Code);
-                }
-
-                previous = groupedByBucket;
-            }
-        }
-
-        [TestMethod]
         public void RemoveTransaction_ShouldCallStatementModelRemove_GivenATransaction()
         {
             this.testData = new StatementModelTestHarness();

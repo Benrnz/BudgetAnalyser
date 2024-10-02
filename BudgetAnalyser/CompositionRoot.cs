@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Autofac;
@@ -19,11 +17,9 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
-using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.RecentFiles;
@@ -92,10 +88,12 @@ namespace BudgetAnalyser
 
         /// <summary>
         ///     Register all IoC mappings and instantiate the object graph required to run the application.
+        ///     IMPORTANT:  The main UI thread needs to call this method. This will ensure Controllers & ViewModels have default UI dependencies set correctly. Ex: the <see cref="System.Windows.Threading.Dispatcher"/>
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "IoC Config")]
         public void Compose()
         {
+            Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
             var builder = new ContainerBuilder();
             var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
             var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
@@ -107,8 +105,10 @@ namespace BudgetAnalyser
             ComposeTypesWithDefaultImplementations(engineAssembly, builder);
             ComposeTypesWithDefaultImplementations(thisAssembly, builder);
 
-            // Register Messenger Singleton from MVVM Light
-            builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", Messenger.Default);
+            // Register Messenger Singleton from MVVM CommunityToolkit
+            // NOTE This should be the only place we refer to WeakReferenceMessenger.Default
+            // Choosing to customise this could result in two messengers being used in the application. Controllers currently rely on the default messenger set in the base class, not this one.
+            builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", WeakReferenceMessenger.Default);
 
             // Registrations from Rees.Wpf - There are no automatic registrations in this assembly.
             RegistrationsForReesWpf(builder);
@@ -123,7 +123,7 @@ namespace BudgetAnalyser
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.
-            builder.RegisterType<DebugPlusLog4NetLogger>().As<ILogger>().SingleInstance();
+            builder.RegisterType<DebugLogger>().As<ILogger>().SingleInstance();
         }
 
         private void BuildApplicationObjectGraph(ContainerBuilder builder, params Assembly[] assemblies)
@@ -210,7 +210,6 @@ namespace BudgetAnalyser
             uiContext.LedgerBucketViewController = container.Resolve<LedgerBucketViewController>();
             uiContext.ShowSurplusBalancesController = container.Resolve<ShowSurplusBalancesController>();
             uiContext.AddLedgerReconciliationController = container.Resolve<AddLedgerReconciliationController>();
-            uiContext.BudgetPieController = container.Resolve<BudgetPieController>();
             uiContext.NewBudgetModelController = container.Resolve<NewBudgetModelController>();
             uiContext.BudgetController = container.Resolve<BudgetController>();
             uiContext.ChooseBudgetBucketController = container.Resolve<ChooseBudgetBucketController>();
@@ -218,13 +217,11 @@ namespace BudgetAnalyser
             uiContext.GlobalFilterController = container.Resolve<GlobalFilterController>();
             uiContext.LedgerTransactionsController = container.Resolve<LedgerTransactionsController>();
             uiContext.LedgerBookController = container.Resolve<LedgerBookController>();
-            uiContext.CurrentMonthBurnDownGraphsController = container.Resolve<CurrentMonthBurnDownGraphsController>();
             uiContext.StatementController = container.Resolve<StatementController>();
             uiContext.NewRuleController = container.Resolve<NewRuleController>();
             uiContext.RulesController = container.Resolve<RulesController>();
             uiContext.MainMenuController = container.Resolve<MainMenuController>();
             uiContext.DashboardController = container.Resolve<DashboardController>();
-            uiContext.LongTermSpendingGraphController = container.Resolve<LongTermSpendingGraphController>();
             uiContext.OverallPerformanceController = container.Resolve<OverallPerformanceController>();
             uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
             uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
@@ -256,14 +253,19 @@ namespace BudgetAnalyser
                 .SingleInstance();
         }
 
+        private bool IsMainThread()
+        {
+            return Application.Current.Dispatcher.CheckAccess();
+        }
+        
         /// <summary>
-        ///     Finalizes an instance of the <see cref="CompositionRoot" /> class.
-        ///     Use C# destructor syntax for finalization code.
-        ///     This destructor will run only if the Dispose method
-        ///     does not get called.
-        ///     It gives your base class the opportunity to finalize.
-        ///     Do not provide destructors in types derived from this class.
-        /// </summary>
+                ///     Finalizes an instance of the <see cref="CompositionRoot" /> class.
+                ///     Use C# destructor syntax for finalization code.
+                ///     This destructor will run only if the Dispose method
+                ///     does not get called.
+                ///     It gives your base class the opportunity to finalize.
+                ///     Do not provide destructors in types derived from this class.
+                /// </summary>
         ~CompositionRoot()
         {
             // Do not re-create Dispose clean-up code here. 

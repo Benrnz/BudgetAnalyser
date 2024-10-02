@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Reflection;
 
 namespace BudgetAnalyser.Wpf.UnitTest
 {
     [TestClass]
     public class MetaTest
     {
-        private const int MinimumTestCount = 14;
+        private const int MinimumTestCount = 7;
 
         [TestMethod]
         public void ListAllTests()

@@ -1,8 +1,7 @@
-using System;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -15,16 +14,16 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
     private BudgetCycle doNotUseBudgetCycle;
+    private DateTime doNotUseEffectiveFrom;
 
-    public NewBudgetModelController([NotNull] IUiContext uiContext)
+    public NewBudgetModelController([NotNull] IUiContext uiContext) : base(uiContext.Messenger)
     {
         if (uiContext == null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        MessengerInstance = uiContext.Messenger;
-        MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        Messenger.Register<NewBudgetModelController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         this.messageBox = uiContext.UserPrompts.MessageBox;
         BudgetCycle = BudgetCycle.Monthly;
     }
@@ -41,15 +40,11 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
         get => this.doNotUseBudgetCycle;
         set
         {
-            if (value == this.doNotUseBudgetCycle)
-            {
-                return;
-            }
-
+            if (value == this.doNotUseBudgetCycle) return;
             this.doNotUseBudgetCycle = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(FortnightlyChecked));
-            RaisePropertyChanged(nameof(MonthlyChecked));
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(FortnightlyChecked));
+            OnPropertyChanged(nameof(MonthlyChecked));
         }
     }
 
@@ -69,7 +64,18 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     public bool CanExecuteSaveButton => EffectiveFrom > DateTime.Today;
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public DateTime EffectiveFrom { get; set; }
+    public DateTime EffectiveFrom
+    {
+        get => this.doNotUseEffectiveFrom;
+        set
+        {
+            if (value == this.doNotUseEffectiveFrom) return;
+            this.doNotUseEffectiveFrom = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CanExecuteSaveButton));
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        }
+    }
 
     // ReSharper disable once UnusedMember.Global
     public bool FortnightlyChecked
@@ -96,7 +102,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             Title = "Create new Budget based on current",
             HelpAvailable = true
         };
-        MessengerInstance.Send(dialogRequest);
+        Messenger.Send(dialogRequest);
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -112,16 +118,9 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             return;
         }
 
-        var handler = Ready;
-        if (handler != null)
+        if (message.Response != ShellDialogButton.Cancel)
         {
-            if (message.Response == ShellDialogButton.Cancel)
-            {
-            }
-            else
-            {
-                handler(this, EventArgs.Empty);
-            }
+            Ready?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -23,16 +21,16 @@ namespace BudgetAnalyser.LedgerBook
         private Guid correlationId;
         private LedgerBucket ledger;
 
-        public LedgerBucketViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IUiContext context, [NotNull] ILedgerService ledgerService)
+        public LedgerBucketViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IUiContext uiContext, [NotNull] ILedgerService ledgerService) : base(uiContext.Messenger)
         {
             if (accountRepo == null)
             {
                 throw new ArgumentNullException(nameof(accountRepo));
             }
 
-            if (context == null)
+            if (uiContext == null)
             {
-                throw new ArgumentNullException(nameof(context));
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ledgerService == null)
@@ -40,11 +38,10 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException(nameof(ledgerService));
             }
 
-            MessengerInstance = context.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<LedgerBucketViewController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             this.accountRepo = accountRepo;
             this.ledgerService = ledgerService;
-            this.messageBox = context.UserPrompts.MessageBox;
+            this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
         public event EventHandler Updated;
@@ -100,7 +97,7 @@ namespace BudgetAnalyser.LedgerBook
                 HelpAvailable = true
             };
 
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         protected virtual LedgerBucketHistoryAnalyser CreateBucketHistoryAnalyser()

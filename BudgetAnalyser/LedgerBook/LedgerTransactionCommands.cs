@@ -1,10 +1,8 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace BudgetAnalyser.LedgerBook
 {
@@ -21,7 +19,7 @@ namespace BudgetAnalyser.LedgerBook
             return transactionId != null;
         }
 
-        private static void OnNavigateToTransactionCommandExecute([Annotations.NotNull] Guid? transactionId)
+        private static void OnNavigateToTransactionCommandExecute([NotNull] Guid? transactionId)
         {
             if (transactionId == null)
             {

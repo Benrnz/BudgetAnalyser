@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using GalaSoft.MvvmLight.Messaging;
+﻿using System.IO;
+using CommunityToolkit.Mvvm.Messaging;
 using JetBrains.Annotations;
 using Rees.Wpf.ApplicationState;
 using Rees.Wpf.Contracts;
@@ -34,8 +31,8 @@ namespace Rees.Wpf.RecentFiles
                 throw new ArgumentNullException("messenger");
             }
 
-            messenger.Register<ApplicationStateRequestedMessage>(this, OnPersistentDataRequested);
-            messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            messenger.Register<ApplicationStateRequestedMessage>(this, (recipient, message) => OnPersistentDataRequested(message));
+            messenger.Register<ApplicationStateLoadedMessage>(this, (recipient, message) => OnApplicationStateLoaded(message));
         }
 
         /// <summary>

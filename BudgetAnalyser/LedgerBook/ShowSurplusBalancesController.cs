@@ -1,13 +1,11 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -16,6 +14,10 @@ namespace BudgetAnalyser.LedgerBook
     public class ShowSurplusBalancesController : ControllerBase
     {
         private LedgerEntryLine ledgerEntryLine;
+
+        public ShowSurplusBalancesController(IMessenger messenger) : base(messenger)
+        {
+        }
 
         [UsedImplicitly]
         public bool HasNegativeBalances => SurplusBalances.Any(b => b.Balance < 0);
@@ -52,7 +54,7 @@ namespace BudgetAnalyser.LedgerBook
                 Title = "Surplus Balances in all Accounts"
             };
 
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
     }
 }

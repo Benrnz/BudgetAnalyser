@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
@@ -358,8 +354,8 @@ namespace BudgetAnalyser.Engine.Services
         ///     Returns a filtered list of <see cref="Transaction" />s using the provided search text.  All following transaction
         ///     fields are searched: Description, Reference1, Reference2, Reference3.
         /// </summary>
-        /// <param name="searchText">The search text. Minimum 3 characters.</param>
-        public ObservableCollection<Transaction> FilterBySearchText(string searchText)
+        /// <param name="searchText">The search text. Minimum 3 characters. A Null value clears the search.</param>
+        public ObservableCollection<Transaction> FilterBySearchText(string? searchText)
         {
             if (searchText.IsNothing())
             {
@@ -452,33 +448,6 @@ namespace BudgetAnalyser.Engine.Services
 
             this.budgetHash = 0;
             this.sortedByBucket = stateData.SortByBucket ?? false;
-        }
-
-        /// <summary>
-        ///     Populates a collection grouped by bucket with date sorted transactions contained in each group.
-        /// </summary>
-        /// <param name="groupByBucket">True if the UI is currently showing the transactions grouped by bucket, false if not.</param>
-        public IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket)
-        {
-            this.sortedByBucket = groupByBucket;
-            if (StatementModel == null)
-            {
-                // This can occur if the statement file is closed while viewing in GroupByBucket Mode.
-                return new TransactionGroupedByBucket[] { };
-            }
-
-            if (this.sortedByBucket)
-            {
-                // SortByBucket == true so group and sort by bucket.
-                IEnumerable<TransactionGroupedByBucket> query = StatementModel.Transactions
-                    .GroupBy(t => t.BudgetBucket)
-                    .OrderBy(g => g.Key)
-                    .Select(group => new TransactionGroupedByBucket(group, group.Key));
-                return new List<TransactionGroupedByBucket>(query);
-            }
-            // When viewing transactions by date, databinding pulls data directly from the StatementModel.
-            // As for the GroupByBucket Collection this can be cleared.
-            return new TransactionGroupedByBucket[] { };
         }
 
         /// <summary>

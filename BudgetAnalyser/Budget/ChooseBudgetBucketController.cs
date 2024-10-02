@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
@@ -20,33 +17,25 @@ namespace BudgetAnalyser.Budget
         private IEnumerable<BudgetBucket> doNotUseBudgetBuckets;
         private string doNotUseFilterDescription;
         private bool filtered;
+        private BudgetBucket? doNotUseSelected;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public ChooseBudgetBucketController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IAccountTypeRepository accountRepo)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-
-            if (accountRepo == null)
-            {
-                throw new ArgumentNullException(nameof(accountRepo));
-            }
-
-            this.bucketRepository = bucketRepository;
-            this.accountRepo = accountRepo;
+            this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
+            this.accountRepo = accountRepo ?? throw new ArgumentNullException(nameof(accountRepo));
             BudgetBuckets = bucketRepository.Buckets.ToList();
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<ChooseBudgetBucketController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
+        // TODO Change this to a message:
         public event EventHandler<BudgetBucketChosenEventArgs> Chosen;
         public string ActionButtonToolTip => "Select and use this Expense Budget Bucket.";
 
@@ -55,37 +44,47 @@ namespace BudgetAnalyser.Budget
 
         public IEnumerable<BudgetBucket> BudgetBuckets
         {
-            [UsedImplicitly] get { return this.doNotUseBudgetBuckets; }
+            [UsedImplicitly] get => this.doNotUseBudgetBuckets;
 
             private set
             {
                 this.doNotUseBudgetBuckets = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
         public bool CanExecuteCancelButton => true;
-        public bool CanExecuteOkButton => Selected != null;
+        public bool CanExecuteOkButton => Selected! != null!;
         public bool CanExecuteSaveButton => false;
         public string CloseButtonToolTip => "Cancel";
 
         public string FilterDescription
         {
-            [UsedImplicitly] get { return this.doNotUseFilterDescription; }
+            [UsedImplicitly] get => this.doNotUseFilterDescription;
             set
             {
+                if (value == this.doNotUseFilterDescription) return;
                 this.doNotUseFilterDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
-        [UsedImplicitly]
-        public BudgetBucket Selected { get; set; }
+        public BudgetBucket? Selected
+        {
+            get => this.doNotUseSelected;
+            set
+            {
+                if (Equals(value, this.doNotUseSelected)) return;
+                this.doNotUseSelected = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanExecuteOkButton));
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
 
-        [UsedImplicitly]
         public bool ShowBankAccount { get; set; }
 
-        public Account StoreInThisAccount { get; set; }
+        public Account? StoreInThisAccount { get; set; }
 
         public void Filter(Func<BudgetBucket, bool> predicate, string filterDescription)
         {
@@ -105,7 +104,7 @@ namespace BudgetAnalyser.Budget
                 CorrelationId = this.dialogCorrelationId,
                 Title = title
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

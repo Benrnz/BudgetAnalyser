@@ -1,6 +1,4 @@
-﻿using System;
-using BudgetAnalyser.Annotations;
-using BudgetAnalyser.Engine.Widgets;
+﻿using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Dashboard
 {

@@ -1,6 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-
-namespace Rees.Wpf.ApplicationState
+﻿namespace Rees.Wpf.ApplicationState
 {
     /// <summary>
     ///     A <see cref="MessageBase" /> message object that signifies the application state has finished loading.

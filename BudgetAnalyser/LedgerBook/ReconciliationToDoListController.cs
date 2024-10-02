@@ -1,11 +1,9 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Services;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -13,29 +11,24 @@ namespace BudgetAnalyser.LedgerBook
     [AutoRegisterWithIoC]
     public class ReconciliationToDoListController : ControllerBase
     {
-        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IApplicationDatabaseFacade applicationDatabaseService;
         private bool doNotUseAddingNewTask;
         private string doNotUseNewTaskDescription;
         private ToDoTask doNotUseSelectedTask;
         private ToDoCollection doNotUseTasks;
 
-        public ReconciliationToDoListController([NotNull] IApplicationDatabaseService applicationDatabaseService)
+        public ReconciliationToDoListController([NotNull] IMessenger messenger, [NotNull] IApplicationDatabaseFacade applicationDatabaseService) : base(messenger)
         {
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
-            }
-
-            this.applicationDatabaseService = applicationDatabaseService;
+            this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         }
 
         public bool AddingNewTask
         {
-            [UsedImplicitly] get { return this.doNotUseAddingNewTask; }
+            [UsedImplicitly] get => this.doNotUseAddingNewTask;
             private set
             {
                 this.doNotUseAddingNewTask = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -47,12 +40,12 @@ namespace BudgetAnalyser.LedgerBook
 
         public string NewTaskDescription
         {
-            get { return this.doNotUseNewTaskDescription; }
+            get => this.doNotUseNewTaskDescription;
             [UsedImplicitly]
             set
             {
                 this.doNotUseNewTaskDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -65,21 +58,21 @@ namespace BudgetAnalyser.LedgerBook
         [UsedImplicitly]
         public ToDoTask SelectedTask
         {
-            get { return this.doNotUseSelectedTask; }
+            get => this.doNotUseSelectedTask;
             set
             {
                 this.doNotUseSelectedTask = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
         public ToDoCollection Tasks
         {
-            get { return this.doNotUseTasks; }
+            get => this.doNotUseTasks;
             private set
             {
                 this.doNotUseTasks = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

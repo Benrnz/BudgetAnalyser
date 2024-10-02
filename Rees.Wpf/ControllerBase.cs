@@ -1,5 +1,6 @@
 ﻿using System.Windows.Threading;
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Rees.Wpf
 {
@@ -8,16 +9,12 @@ namespace Rees.Wpf
     ///     that
     ///     executes the constructor.
     /// </summary>
-    public class ControllerBase : ViewModelBase
+    public abstract class ControllerBase : ObservableRecipient
     {
-        // ReSharper disable FieldCanBeMadeReadOnly.Local
-        // Required for testing
-        // ReSharper restore FieldCanBeMadeReadOnly.Local
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ControllerBase" /> class.
         /// </summary>
-        public ControllerBase()
+        public ControllerBase(IMessenger messenger) : base(messenger)
         {
             // This relies on the Xaml being responsible for instantiating the controller.
             // Or at least the main UI thread.

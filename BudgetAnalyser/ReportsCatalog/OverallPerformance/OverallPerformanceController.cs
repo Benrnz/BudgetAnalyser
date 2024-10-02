@@ -1,13 +1,12 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
@@ -18,7 +17,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
         private bool doNotUseExpenseFilter;
         private bool doNotUseIncomeFilter;
 
-        public OverallPerformanceController([NotNull] IOverallPerformanceChartService chartService)
+        public OverallPerformanceController([NotNull] IMessenger messenger, [NotNull] IOverallPerformanceChartService chartService) : base(messenger)
         {
             if (chartService == null)
             {
@@ -38,7 +37,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             set
             {
                 this.doNotUseExpenseFilter = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 RefreshCollection();
             }
         }
@@ -50,7 +49,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             set
             {
                 this.doNotUseIncomeFilter = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 RefreshCollection();
             }
         }
@@ -68,7 +67,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             ExpenseFilter = true;
             IncomeFilter = false;
 
-            RaisePropertyChanged(() => Analysis);
+            OnPropertyChanged(nameof(Analysis));
             ICollectionView view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
             view.Filter = x =>
             {

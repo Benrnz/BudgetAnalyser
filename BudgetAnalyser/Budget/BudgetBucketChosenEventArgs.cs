@@ -1,5 +1,4 @@
-﻿using System;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Budget
@@ -10,18 +9,18 @@ namespace BudgetAnalyser.Budget
         {
         }
 
-        public BudgetBucketChosenEventArgs(Guid correlationId, BudgetBucket bucket) : this(correlationId, false)
+        public BudgetBucketChosenEventArgs(Guid correlationId, BudgetBucket? bucket) : this(correlationId, false)
         {
             SelectedBucket = bucket;
         }
 
-        public BudgetBucketChosenEventArgs(Guid correlationId, BudgetBucket bucket, Account storeInThisAccount)
+        public BudgetBucketChosenEventArgs(Guid correlationId, BudgetBucket? bucket, Account storeInThisAccount)
             : this(correlationId, bucket)
         {
             StoreInThisAccount = storeInThisAccount;
         }
 
-        public BudgetBucket SelectedBucket { get; private set; }
+        public BudgetBucket? SelectedBucket { get; private set; }
         public Account StoreInThisAccount { get; private set; }
     }
 }

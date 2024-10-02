@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
@@ -11,11 +7,9 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
-using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser
@@ -51,12 +45,10 @@ namespace BudgetAnalyser
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
         public AppliedRulesController AppliedRulesController { get; set; }
         public BudgetController BudgetController { get; set; }
-        public BudgetPieController BudgetPieController { get; set; }
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
         public IEnumerable<ControllerBase> Controllers => this.controllers ?? (this.controllers = DiscoverAllControllers());
         public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
         public CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
-        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; set; }
         public DashboardController DashboardController { get; set; }
         public DisusedRulesController DisusedRulesController { get; set; }
         public EditingTransactionController EditingTransactionController { get; set; }
@@ -68,7 +60,6 @@ namespace BudgetAnalyser
         public LedgerRemarksController LedgerRemarksController { get; set; }
         public LedgerTransactionsController LedgerTransactionsController { get; set; }
         public ILogger Logger { get; set; }
-        public LongTermSpendingGraphController LongTermSpendingGraphController { get; set; }
         public MainMenuController MainMenuController { get; set; }
         public IMessenger Messenger { get; }
         public NewBudgetModelController NewBudgetModelController { get; set; }

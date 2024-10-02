@@ -1,8 +1,6 @@
-﻿using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.UnitTest.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
@@ -50,7 +48,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 TransferAmount = 1
             };
 
-            Assert.IsFalse(this.subject.IsValid());
+            Assert.IsFalse(this.subject.IsValid);
         }
 
         [TestMethod]
@@ -69,7 +67,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 TransferAmount = 1
             };
 
-            Assert.IsFalse(this.subject.IsValid());
+            Assert.IsFalse(this.subject.IsValid);
         }
 
         [TestMethod]
@@ -91,7 +89,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 TransferAmount = -20M
             };
 
-            Assert.IsFalse(this.subject.IsValid());
+            Assert.IsFalse(this.subject.IsValid);
         }
 
         [TestMethod]
@@ -109,7 +107,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 TransferAmount = 1
             };
 
-            Assert.IsFalse(this.subject.IsValid());
+            Assert.IsFalse(this.subject.IsValid);
         }
 
         [TestMethod]
@@ -147,7 +145,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 TransferAmount = 1
             };
 
-            Assert.IsFalse(this.subject.IsValid());
+            Assert.IsFalse(this.subject.IsValid);
         }
 
         [TestMethod]
@@ -169,7 +167,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 TransferAmount = 0.00001M
             };
 
-            Assert.IsFalse(this.subject.IsValid());
+            Assert.IsFalse(this.subject.IsValid);
         }
 
         [TestMethod]
@@ -191,7 +189,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 TransferAmount = 0M
             };
 
-            Assert.IsFalse(this.subject.IsValid());
+            Assert.IsFalse(this.subject.IsValid);
         }
 
         [TestMethod]
@@ -213,7 +211,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 TransferAmount = 12
             };
 
-            Assert.IsTrue(this.subject.IsValid());
+            Assert.IsTrue(this.subject.IsValid);
         }
 
         [TestMethod]
