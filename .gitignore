@@ -114,3 +114,4 @@ Backup*/
 UpgradeLog*.XML
 /Rees.TangyFruitMapper/project.lock.json
 .idea
+*.zip
