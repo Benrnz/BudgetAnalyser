@@ -20,7 +20,6 @@ public class BudgetController : ControllerBase, IShowableController
     private const string CloseBudgetMenuName = "Close _Budget";
     private const string EditBudgetMenuName = "Edit Current _Budget";
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
-    private readonly IUserInputBox inputBox;
     private readonly IBudgetMaintenanceService maintenanceService;
     private readonly IUserMessageBox messageBox;
     private readonly IUserQuestionBoxYesNo questionBox;
@@ -51,7 +50,6 @@ public class BudgetController : ControllerBase, IShowableController
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.questionBox = uiContext.UserPrompts.YesNoBox;
         this.messageBox = uiContext.UserPrompts.MessageBox;
-        this.inputBox = uiContext.UserPrompts.InputBox;
         NewBudgetController = uiContext.NewBudgetModelController;
         NewBudgetController.Ready += OnAddNewBudgetReady;
         Shown = false;
@@ -121,9 +119,9 @@ public class BudgetController : ControllerBase, IShowableController
         }
     }
 
-    [UsedImplicitly] public ICommand DeleteBudgetItemCommand => new RelayCommand<object>(OnDeleteBudgetItemCommandExecute);
+    public ICommand DeleteBudgetItemCommand => new RelayCommand<object>(OnDeleteBudgetItemCommandExecute);
 
-    [UsedImplicitly] public ICommand DetailsCommand => new RelayCommand(OnDetailsCommandExecute);
+    public ICommand DetailsCommand => new RelayCommand(OnDetailsCommandExecute);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public bool Dirty
@@ -172,12 +170,12 @@ public class BudgetController : ControllerBase, IShowableController
         }
     }
 
-    [UsedImplicitly] public ICommand NewBudgetCommand => new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null);
+    public ICommand NewBudgetCommand => new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public NewBudgetModelController NewBudgetController { get; }
 
-    [UsedImplicitly] public ICommand ShowAllCommand => new RelayCommand(OnShowAllCommandExecuted);
+    public ICommand ShowAllCommand => new RelayCommand(OnShowAllCommandExecuted);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal Surplus
