@@ -1,3 +1,0 @@
-MainPackage=D:\Development\BudgetAnalyserProject\master\BudgetAnalyser.Uwp\bin\x64\Debug\BudgetAnalyser.Uwp_1.0.0.0_x64_Debug.appx
-SymbolPackage=D:\Development\BudgetAnalyserProject\master\BudgetAnalyser.Uwp\AppPackages\BudgetAnalyser.Uwp_1.0.0.0_Debug_Test\BudgetAnalyser.Uwp_1.0.0.0_x64_Debug.appxsym
-ResourcePack=D:\Development\BudgetAnalyserProject\master\BudgetAnalyser.Uwp\bin\x64\Debug\BudgetAnalyser.Uwp_1.0.0.0_scale-400.appx

@@ -1,5 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters="using:BudgetAnalyser.Uwp.Converters">
-    <converters:DebuggerConverter x:Key="Converter.Debugger" />
-</ResourceDictionary>
