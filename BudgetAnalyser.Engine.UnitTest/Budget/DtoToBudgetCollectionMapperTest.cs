@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xaml;
+﻿using Portable.Xaml;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest.Budget
 {

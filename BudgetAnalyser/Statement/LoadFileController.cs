@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -29,28 +25,24 @@ namespace BudgetAnalyser.Statement
         private string doNotUseTitle;
         private Task fileSelectionTask;
         private bool showingDialog;
+        private bool doNotUseCanExecuteOkButton;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LoadFileController(
             [NotNull] IUiContext uiContext,
             [NotNull] IAccountTypeRepository accountTypeRepository)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (accountTypeRepository == null)
-            {
-                throw new ArgumentNullException(nameof(accountTypeRepository));
-            }
-
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.userPromptOpenFileFactory = uiContext.UserPrompts.OpenFileFactory;
-            this.accountTypeRepository = accountTypeRepository;
+            this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            Messenger.Register<LoadFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
@@ -60,19 +52,32 @@ namespace BudgetAnalyser.Statement
         public string ActionButtonToolTip { get; private set; }
         public ICommand BrowseForFileCommand => new RelayCommand(OnBrowseForFileCommandExecute);
         public bool CanExecuteCancelButton => true;
-        public bool CanExecuteOkButton { get; private set; }
+
+        public bool CanExecuteOkButton
+        {
+            get => this.doNotUseCanExecuteOkButton;
+            private set
+            {
+                if (value == this.doNotUseCanExecuteOkButton) return;
+                this.doNotUseCanExecuteOkButton = value;
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            }
+        }
+
         public bool CanExecuteSaveButton => false;
         public string CloseButtonToolTip => "Cancel";
         public IEnumerable<Account> ExistingAccountNames { get; private set; }
 
         public string FileName
         {
-            get { return this.doNotUseFileName; }
+            get => this.doNotUseFileName;
 
             set
             {
+                if (value == this.doNotUseFileName) return;
                 this.doNotUseFileName = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 if (!string.IsNullOrWhiteSpace(FileName))
                 {
                     CheckFileName();
@@ -87,11 +92,12 @@ namespace BudgetAnalyser.Statement
 
         public bool FileTypeSelectionReady
         {
-            get { return this.doNotUseFileTypeSelectionReady; }
+            get => this.doNotUseFileTypeSelectionReady;
             private set
             {
+                if (value == this.doNotUseFileTypeSelectionReady) return;
                 this.doNotUseFileTypeSelectionReady = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -99,12 +105,13 @@ namespace BudgetAnalyser.Statement
 
         public Account SelectedExistingAccountName
         {
-            get { return this.doNotUseSelectedExistingAccountName; }
+            get => this.doNotUseSelectedExistingAccountName;
 
             set
             {
+                if (Equals(value, this.doNotUseSelectedExistingAccountName)) return;
                 this.doNotUseSelectedExistingAccountName = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 CheckAccountName();
                 CheckFileName();
             }
@@ -114,11 +121,12 @@ namespace BudgetAnalyser.Statement
 
         public string Title
         {
-            get { return this.doNotUseTitle; }
+            get => this.doNotUseTitle;
             private set
             {
+                if (value == this.doNotUseTitle) return;
                 this.doNotUseTitle = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -341,7 +349,7 @@ namespace BudgetAnalyser.Statement
             this.fileSelectionTask?.Dispose();
 
             this.fileSelectionTask = new Task(() => { });
-            MessengerInstance.Send(popRequest);
+            Messenger.Send(popRequest);
             return this.fileSelectionTask;
         }
 

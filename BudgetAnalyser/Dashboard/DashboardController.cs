@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
-using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Dashboard
@@ -28,22 +25,12 @@ namespace BudgetAnalyser.Dashboard
 
         public DashboardController(
             [NotNull] IUiContext uiContext,
-            [NotNull] IDashboardService dashboardService,
-            [NotNull] IApplicationDatabaseService applicationDatabaseService)
+            [NotNull] IDashboardService dashboardService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
-            }
-
-            if (dashboardService == null)
-            {
-                throw new ArgumentNullException(nameof(dashboardService));
-            }
-
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.chooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
@@ -52,7 +39,7 @@ namespace BudgetAnalyser.Dashboard
             GlobalFilterController = uiContext.GlobalFilterController;
 
             this.uiContext = uiContext;
-            this.dashboardService = dashboardService;
+            this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
 
             this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
             this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;
@@ -60,7 +47,7 @@ namespace BudgetAnalyser.Dashboard
 
             CorrelationId = Guid.NewGuid();
 
-            RegisterForMessengerNotifications(uiContext.Messenger);
+            RegisterForMessengerNotifications();
         }
 
         public Guid CorrelationId
@@ -69,7 +56,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseCorrelationId = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -85,7 +72,7 @@ namespace BudgetAnalyser.Dashboard
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -97,10 +84,6 @@ namespace BudgetAnalyser.Dashboard
                 return assemblyName.Name + "Version: " + assemblyName.Version;
             }
         }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
-        [UsedImplicitly]
-        public ICommand WidgetActivatedCommand => WidgetCommands.WidgetActivatedCommand;
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
@@ -115,7 +98,9 @@ namespace BudgetAnalyser.Dashboard
             if (storedWidgetsState != null)
             {
                 // Now that we have the previously persisted state data we can properly intialise the service.
+                WidgetCommands.DeregisterForWidgetChanges(WidgetGroups);
                 WidgetGroups = this.dashboardService.LoadPersistedStateData(storedWidgetsState);
+                WidgetCommands.ListenForWidgetChanges(WidgetGroups);
             }
         }
 
@@ -189,12 +174,11 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        private void RegisterForMessengerNotifications(IMessenger messenger)
+        private void RegisterForMessengerNotifications()
         {
             // Register for all dependent objects change messages.
-            MessengerInstance = messenger;
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            Messenger.Register<DashboardController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoadedMessageReceived(m));
+            Messenger.Register<DashboardController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
         }
     }
 }

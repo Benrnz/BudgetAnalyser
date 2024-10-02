@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
+﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
@@ -18,7 +15,7 @@ namespace BudgetAnalyser.Statement
         private Transaction doNotUseTransaction;
         private BudgetBucket originalBucket;
 
-        public EditingTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo)
+        public EditingTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -31,7 +28,6 @@ namespace BudgetAnalyser.Statement
             }
 
             this.bucketRepo = bucketRepo;
-            MessengerInstance = uiContext.Messenger;
         }
 
         public IEnumerable<BudgetBucket> Buckets
@@ -40,7 +36,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseBuckets = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -66,7 +62,7 @@ namespace BudgetAnalyser.Statement
             this.originalBucket = Transaction.BudgetBucket;
             Buckets = this.bucketRepo.Buckets.Where(b => b.Active);
 
-            MessengerInstance.Send(
+            Messenger.Send(
                 new ShellDialogRequestMessage(
                     BudgetAnalyserFeature.Transactions,
                     this,

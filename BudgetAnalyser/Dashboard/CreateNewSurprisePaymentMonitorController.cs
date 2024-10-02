@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -21,29 +18,24 @@ namespace BudgetAnalyser.Dashboard
         private Guid dialogCorrelationId;
         private WeeklyOrFortnightly doNotUseFrequency;
         private DateTime doNotUsePaymentStartDate;
-        private BudgetBucket doNotUseSelected;
+        private BudgetBucket? doNotUseSelected;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
+        public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-
-            this.bucketRepository = bucketRepository;
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
+            Messenger.Register<CreateNewSurprisePaymentMonitorController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             PaymentStartDate = DateTime.Today;
             Frequency = WeeklyOrFortnightly.Weekly;
             this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
+        // TODO Replace this event with a message.
         public event EventHandler<DialogResponseEventArgs> Complete;
 
         [UsedImplicitly]
@@ -57,7 +49,7 @@ namespace BudgetAnalyser.Dashboard
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton => Selected != null && PaymentStartDate != DateTime.MinValue;
+        public bool CanExecuteOkButton => Selected! != null! && PaymentStartDate != DateTime.MinValue;
 
         /// <summary>
         ///     Will be called ascertain the availability of the button.
@@ -70,28 +62,32 @@ namespace BudgetAnalyser.Dashboard
             set
             {
                 this.doNotUseFrequency = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
         public DateTime PaymentStartDate
         {
-            get { return this.doNotUsePaymentStartDate; }
+            get => this.doNotUsePaymentStartDate;
             set
             {
+                if (Equals(value, this.doNotUsePaymentStartDate)) return;
                 this.doNotUsePaymentStartDate = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
-        public BudgetBucket Selected
+        public BudgetBucket? Selected
         {
-            get { return this.doNotUseSelected; }
+            get => this.doNotUseSelected;
             [UsedImplicitly]
             set
             {
+                if (Equals(value, this.doNotUseSelected)) return;
                 this.doNotUseSelected = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
@@ -105,7 +101,7 @@ namespace BudgetAnalyser.Dashboard
                 Title = "Create new surprise regular payment monitor",
                 HelpAvailable = true
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

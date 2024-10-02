@@ -5,7 +5,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement">
 
-    <!-- Used to show (readonly) a transation in an items control -->
+    <!-- Used to show (readonly) a transaction in an items control -->
 
     <Grid Background="{StaticResource Brush.TileBackground}"
           Margin="1">
@@ -53,14 +53,14 @@
         <TextBlock x:Name="CreditAmount"
                    Grid.Column="2"
                    Style="{StaticResource TextBlock.Number}"
-                   Text="{Binding Amount, StringFormat=N}" />
+                   Text="{Binding Amount, StringFormat=N2}" />
         <TextBlock x:Name="CreditLabel"
                    Grid.Column="3"
                    Text="CR" />
         <TextBlock x:Name="DebitAmount"
                    Grid.Column="4"
                    Style="{StaticResource TextBlock.Number}"
-                   Text="{Binding Amount, StringFormat=N}" />
+                   Text="{Binding Amount, StringFormat=N2}" />
         <TextBlock x:Name="DebitLabel"
                    Grid.Column="5"
                    Text="DR" />

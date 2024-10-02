@@ -1,9 +1,8 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -20,21 +19,15 @@ namespace BudgetAnalyser.Budget
         private string doNotUseDescription;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public CreateNewFixedBudgetController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
+        public CreateNewFixedBudgetController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-
-            this.bucketRepository = bucketRepository;
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
+            Messenger.Register<CreateNewFixedBudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
@@ -42,12 +35,14 @@ namespace BudgetAnalyser.Budget
 
         public decimal Amount
         {
-            get { return this.doNotUseAmount; }
+            get => this.doNotUseAmount;
             [UsedImplicitly]
             set
             {
+                if (value == this.doNotUseAmount) return;
                 this.doNotUseAmount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
@@ -71,23 +66,27 @@ namespace BudgetAnalyser.Budget
 
         public string Code
         {
-            get { return this.doNotUseCode; }
+            get => this.doNotUseCode;
             [UsedImplicitly]
             set
             {
+                if (value == this.doNotUseCode) return;
                 this.doNotUseCode = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
         public string Description
         {
-            get { return this.doNotUseDescription; }
+            get => this.doNotUseDescription;
             [UsedImplicitly]
             set
             {
+                if (value == this.doNotUseDescription) return;
                 this.doNotUseDescription = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
@@ -101,7 +100,7 @@ namespace BudgetAnalyser.Budget
                 Title = "Create new fixed budget project",
                 HelpAvailable = true
             };
-            MessengerInstance.Send(dialogRequest);
+            Messenger.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

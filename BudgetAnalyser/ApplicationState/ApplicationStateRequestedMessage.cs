@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine;
+﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
-using GalaSoft.MvvmLight.Messaging;
+using Rees.Wpf;
 
 namespace BudgetAnalyser.ApplicationState
 {

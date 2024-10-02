@@ -1,14 +1,11 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
-using GalaSoft.MvvmLight.CommandWpf;
+using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -23,7 +20,7 @@ namespace BudgetAnalyser.Matching
         public const string BucketSortKey = "Bucket";
         public const string DescriptionSortKey = "Description";
         public const string MatchesSortKey = "Matches";
-        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IApplicationDatabaseFacade applicationDatabaseService;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly ITransactionRuleService ruleService;
         private bool doNotUseEditingRule;
@@ -34,29 +31,19 @@ namespace BudgetAnalyser.Matching
         private string doNotUseSortBy;
         private bool initialised;
 
-        public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseService applicationDatabaseService)
+        public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (ruleService == null)
-            {
-                throw new ArgumentNullException(nameof(ruleService));
-            }
-
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabaseService));
-            }
-
-            this.ruleService = ruleService;
-            this.applicationDatabaseService = applicationDatabaseService;
+            this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
+            this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             NewRuleController = uiContext.NewRuleController;
-            MessengerInstance = uiContext.Messenger;
 
             this.ruleService.Closed += OnClosedNotificationReceived;
             this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -84,12 +71,12 @@ namespace BudgetAnalyser.Matching
 
         public bool EditingRule
         {
-            get { return this.doNotUseEditingRule; }
+            get => this.doNotUseEditingRule;
             private set
             {
                 this.doNotUseEditingRule = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => ShowReadOnlyRuleDetails);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
             }
         }
 
@@ -98,21 +85,21 @@ namespace BudgetAnalyser.Matching
 
         public bool FlatListBoxVisibility
         {
-            get { return this.doNotUseFlatListBoxVisibility; }
+            get => this.doNotUseFlatListBoxVisibility;
             set
             {
                 this.doNotUseFlatListBoxVisibility = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
         public bool GroupByListBoxVisibility
         {
-            get { return this.doNotUseGroupByListBoxVisibility; }
+            get => this.doNotUseGroupByListBoxVisibility;
             set
             {
                 this.doNotUseGroupByListBoxVisibility = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -122,19 +109,19 @@ namespace BudgetAnalyser.Matching
 
         public MatchingRule SelectedRule
         {
-            get { return this.doNotUseSelectedRule; }
+            get => this.doNotUseSelectedRule;
             set
             {
                 this.doNotUseSelectedRule = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(() => ShowReadOnlyRuleDetails);
-                RaisePropertyChanged(() => AndOrText);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
+                OnPropertyChanged(nameof(AndOrText));
             }
         }
 
         public bool Shown
         {
-            get { return this.doNotUseShown; }
+            get => this.doNotUseShown;
             set
             {
                 if (value == this.doNotUseShown)
@@ -142,7 +129,7 @@ namespace BudgetAnalyser.Matching
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -157,12 +144,12 @@ namespace BudgetAnalyser.Matching
 
         public string SortBy
         {
-            get { return this.doNotUseSortBy; }
+            get => this.doNotUseSortBy;
             set
             {
                 string oldValue = this.doNotUseSortBy;
                 this.doNotUseSortBy = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 GroupByListBoxVisibility = false;
                 FlatListBoxVisibility = false;
                 switch (SortBy)
@@ -286,8 +273,8 @@ namespace BudgetAnalyser.Matching
             Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);
             RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(this.ruleService.MatchingRulesGroupedByBucket);
             SelectedRule = null;
-            RaisePropertyChanged(() => Rules);
-            RaisePropertyChanged(() => RulesGroupedByBucket);
+            OnPropertyChanged(nameof(Rules));
+            OnPropertyChanged(nameof(RulesGroupedByBucket));
         }
 
         private void OnNewRuleCreated(object sender, EventArgs eventArgs)
@@ -302,7 +289,7 @@ namespace BudgetAnalyser.Matching
         private void OnSavedNotificationReceived(object sender, EventArgs eventArgs)
         {
             EditingRule = false;
-            RaisePropertyChanged(() => AndOrText);
+            OnPropertyChanged(nameof(AndOrText));
         }
 
         private void OnSortCommandExecute(string sortBy)

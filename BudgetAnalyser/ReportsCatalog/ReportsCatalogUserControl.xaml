@@ -1,6 +1,11 @@
 ﻿<UserControl x:Class="BudgetAnalyser.ReportsCatalog.ReportsCatalogUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance reportsCatalog:ReportsCatalogController}">
 
     <Grid Background="{StaticResource Brush.TileBackground}">
         <Grid.RowDefinitions>
@@ -44,112 +49,8 @@
                     <TextBlock Margin="50,10,10,10"
                                Text="{Binding OverallPerformanceController.Title}"
                                TextWrapping="Wrap" />
-                    <Button Command="{Binding OverallBudgetPerformanceCommand}"
-                            Style="{StaticResource Button.ModernTile.Overlay}" />
-                </Grid>
-            </Border>
-
-            <Border Style="{StaticResource ModernTileMediumStyle1}">
-                <Border.ToolTip>
-                    The graphs tell you if there is any surplus left over in each bucket for the current month.
-                    This report does not show more than one month even if the global filter is set to larger than one month.
-                    If it is, then the End Date is used less one month.
-                </Border.ToolTip>
-                <Grid>
-                    <Rectangle Fill="{StaticResource Brush.Text.Default}"
-                               Height="30"
-                               HorizontalAlignment="Left"
-                               Margin="10"
-                               Width="30" />
-                    <Border BorderBrush="{StaticResource Brush.ModernTile.Background1}"
-                            BorderThickness="1,0,0,1"
-                            Height="24"
-                            HorizontalAlignment="Left"
-                            Margin="13,10,10,10"
-                            Width="24" />
-                    <Path Data="M0,0 L5,4 L10,4 L15,11"
-                          Margin="17,-4,0,0"
-                          Stroke="{StaticResource Brush.ModernTile.Background1}"
-                          VerticalAlignment="Center" />
-                    <TextBlock Margin="50,0,0,0"
-                               Text="{Binding CurrentMonthBurnDownGraphsController.Title}"
-                               TextWrapping="Wrap" />
-                    <Button Command="{Binding SpendingTrendCommand}"
-                            Style="{StaticResource Button.ModernTile.Overlay}" />
-                </Grid>
-            </Border>
-
-            <Border Style="{StaticResource ModernTileMediumStyle1}">
-                <Border.ToolTip>
-                    Visualise your budget as a pie chart, showing the size of expenses and incomes in comparison to each other.
-                </Border.ToolTip>
-                <Grid>
-                    <Rectangle Fill="{StaticResource Brush.Text.Default}"
-                               Height="30"
-                               HorizontalAlignment="Left"
-                               Margin="10"
-                               Width="30" />
-
-                    <Image Height="24"
-                           HorizontalAlignment="Left"
-                           Margin="13,10,10,10"
-                           Width="24">
-                        <Image.Source>
-                            <DrawingImage>
-                                <DrawingImage.Drawing>
-                                    <DrawingGroup Opacity="1">
-                                        <DrawingGroup.Children>
-                                            <GeometryDrawing Brush="{StaticResource Brush.ModernTile.Background1}"
-                                                             Pen="{x:Null}">
-                                                <GeometryDrawing.Geometry>
-                                                    <PathGeometry FillRule="Nonzero"
-                                                                  Figures="M224,64L224,288 424.381988525391,187.809005737305C439.485992431641,217.957992553711 448,251.983001708984 448,288 448,411.712005615234 347.712005615234,512 224,512 100.28800201416,512 0,411.712005615234 0,288 0,164.287994384766 100.28800201416,64 224,64z M256,0C343.695007324219,0,419.605987548828,50.4010009765625,456.381988525391,123.80899810791L256,224 256,0z" />
-                                                </GeometryDrawing.Geometry>
-                                            </GeometryDrawing>
-                                        </DrawingGroup.Children>
-                                    </DrawingGroup>
-                                </DrawingImage.Drawing>
-                            </DrawingImage>
-                        </Image.Source>
-                    </Image>
-
-                    <TextBlock Margin="50,0,0,0"
-                               Text="{Binding BudgetPieController.Title}"
-                               TextWrapping="Wrap" />
-                    <Button Command="{Binding BudgetPieCommand}"
-                            Style="{StaticResource Button.ModernTile.Overlay}" />
-                </Grid>
-            </Border>
-
-            <Border Style="{StaticResource ModernTileMediumStyle1}">
-                <Border.ToolTip>
-                    This graph shows a line for each budget bucket over a long period.  The Global Criteria is used to set the begin
-                    date and end date.
-                </Border.ToolTip>
-                <Grid>
-                    <Rectangle Fill="{StaticResource Brush.Text.Default}"
-                               Height="30"
-                               HorizontalAlignment="Left"
-                               Margin="10"
-                               Width="30" />
-                    <Border BorderBrush="{StaticResource Brush.ModernTile.Background1}"
-                            BorderThickness="1,0,0,1"
-                            Height="24"
-                            HorizontalAlignment="Left"
-                            Margin="13,10,10,10"
-                            Width="24" />
-                    <Path Data="M0,0 L5,4 L10,4 L15,1"
-                          Margin="17,-10,0,0"
-                          Stroke="{StaticResource Brush.ModernTile.Background1}"
-                          VerticalAlignment="Center" />
-                    <Path Data="M0,7 L5,7 L10,8 L15,7"
-                          Margin="17,0,0,0"
-                          Stroke="{StaticResource Brush.ModernTile.Background1}"
-                          VerticalAlignment="Center" />
-                    <TextBlock Margin="50,0,0,0"
-                               Text="{Binding LongTermSpendingGraphController.Title}"
-                               TextWrapping="Wrap" />
-                    <Button Command="{Binding LongTermSpendingGraphCommand}"
+                    <Button Click="OverallPerformanceClicked"
+                            IsEnabled="{Binding OverallPerformanceReportIsAvailable}"
                             Style="{StaticResource Button.ModernTile.Overlay}" />
                 </Grid>
             </Border>

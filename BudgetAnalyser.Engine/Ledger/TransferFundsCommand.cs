@@ -11,15 +11,18 @@ namespace BudgetAnalyser.Engine.Ledger
     /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public class TransferFundsCommand : INotifyPropertyChanged
     {
-        private string doNotUseAutoMatchingReference;
+        private string doNotUseAutoMatchingReference = string.Empty;
         private bool doNotUseBankTransferRequired;
-        private LedgerBucket doNotUseFromLedger;
-        private LedgerBucket doNotUseToLedger;
+        private LedgerBucket? doNotUseFromLedger;
+        private LedgerBucket? doNotUseToLedger;
+        private string doNotUseNarrative = string.Empty;
+        private decimal doNotUseTransferAmount;
+        private bool isValid;
 
         /// <summary>
         ///     Occurs when a property value changes.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         ///     Gets or sets the automatic matching reference.
@@ -29,9 +32,10 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </value>
         public string AutoMatchingReference
         {
-            get { return this.doNotUseAutoMatchingReference; }
+            get => this.doNotUseAutoMatchingReference;
             set
             {
+                if (value == this.doNotUseAutoMatchingReference) return;
                 this.doNotUseAutoMatchingReference = value;
                 OnPropertyChanged();
             }
@@ -44,9 +48,10 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public bool BankTransferRequired
         {
-            get { return this.doNotUseBankTransferRequired; }
+            get => this.doNotUseBankTransferRequired;
             set
             {
+                if (value == this.doNotUseBankTransferRequired) return;
                 this.doNotUseBankTransferRequired = value;
                 OnPropertyChanged();
                 if (BankTransferRequired && AutoMatchingReference.IsNothing())
@@ -59,69 +64,112 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Gets or sets the source ledger to transfer from.
         /// </summary>
-        public LedgerBucket FromLedger
+        public LedgerBucket? FromLedger
         {
-            get { return this.doNotUseFromLedger; }
+            get => this.doNotUseFromLedger;
             set
             {
+                if (Equals(value, this.doNotUseFromLedger)) return;
                 this.doNotUseFromLedger = value;
                 OnPropertyChanged();
                 SetBankTransferRequired();
+                if (IsValid != this.isValid)
+                {
+                    this.isValid = !this.isValid;
+                    OnPropertyChanged(nameof(IsValid));
+                }
             }
         }
 
         /// <summary>
         ///     Gets or sets the transfer narrative. This will be used on both transactions.
         /// </summary>
-        public string Narrative { get; set; }
+        public string Narrative
+        {
+            get => this.doNotUseNarrative;
+            set
+            {
+                if (value == this.doNotUseNarrative) return;
+                this.doNotUseNarrative = value;
+                OnPropertyChanged();
+                if (IsValid != this.isValid)
+                {
+                    this.isValid = !this.isValid;
+                    OnPropertyChanged(nameof(IsValid));
+                }
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the destination ledger to transfer into.
         /// </summary>
-        public LedgerBucket ToLedger
+        public LedgerBucket? ToLedger
         {
-            get { return this.doNotUseToLedger; }
+            get => this.doNotUseToLedger;
             set
             {
+                if (Equals(value, this.doNotUseToLedger)) return;
                 this.doNotUseToLedger = value;
                 OnPropertyChanged();
                 SetBankTransferRequired();
+                if (IsValid != this.isValid)
+                {
+                    this.isValid = !this.isValid;
+                    OnPropertyChanged(nameof(IsValid));
+                }
             }
         }
 
         /// <summary>
         ///     Gets or sets the transfer amount.
         /// </summary>
-        public decimal TransferAmount { get; set; }
+        public decimal TransferAmount
+        {
+            get => this.doNotUseTransferAmount;
+            set
+            {
+                if (value == this.doNotUseTransferAmount) return;
+                this.doNotUseTransferAmount = value;
+                OnPropertyChanged();
+                if (IsValid != this.isValid)
+                {
+                    this.isValid = !this.isValid;
+                    OnPropertyChanged(nameof(IsValid));
+                }
+            }
+        }
 
         /// <summary>
         ///     Returns true if the transfer is valid.
         /// </summary>
-        public bool IsValid()
+        public bool IsValid
         {
-            var valid = Narrative.IsSomething()
-                        && FromLedger != null
-                        && ToLedger != null
-                        && FromLedger != ToLedger
-                        && TransferAmount > 0.0001M;
-            if (!valid)
+            get
             {
-                return false;
-            }
+                var valid = Narrative.IsSomething()
+                            && FromLedger != null
+                            && ToLedger != null
+                            && FromLedger != ToLedger
+                            && TransferAmount >= 0.01M;
+                if (!valid)
+                {
+                    return false;
+                }
 
-            if (BankTransferRequired)
-            {
-                valid = AutoMatchingReference.IsSomething();
-            }
+                if (BankTransferRequired)
+                {
+                    valid = AutoMatchingReference.IsSomething();
+                }
 
-            if (FromLedger.BudgetBucket is SurplusBucket
-                && ToLedger.BudgetBucket is SurplusBucket
-                && FromLedger.StoredInAccount == ToLedger.StoredInAccount)
-            {
-                valid = false;
-            }
+                if (FromLedger!.BudgetBucket is SurplusBucket
+                    && ToLedger!.BudgetBucket is SurplusBucket
+                    && FromLedger.StoredInAccount == ToLedger.StoredInAccount)
+                {
+                    valid = false;
+                }
 
-            return valid;
+                return valid;
+            }
         }
 
         /// <summary>
@@ -129,7 +177,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

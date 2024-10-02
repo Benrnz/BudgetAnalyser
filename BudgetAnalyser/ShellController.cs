@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -16,6 +11,7 @@ using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser
@@ -32,8 +28,8 @@ namespace BudgetAnalyser
         public ShellController(
             [NotNull] IUiContext uiContext,
             [NotNull] IPersistApplicationState statePersistence,
-            [NotNull] PersistenceOperations persistenceOperations
-            )
+            [NotNull] PersistenceOperations persistenceOperations)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null)
             {
@@ -50,20 +46,19 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException(nameof(persistenceOperations));
             }
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            Messenger.Register<ShellController, ShellDialogRequestMessage>(this, static (r, m) => r.OnDialogRequested(m));
+            Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+            Messenger.Register<ShellController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
 
             this.statePersistence = statePersistence;
             this.persistenceOperations = persistenceOperations;
             this.uiContext = uiContext;
 
-            LedgerBookDialog = new ShellDialogController();
-            DashboardDialog = new ShellDialogController();
-            TransactionsDialog = new ShellDialogController();
-            BudgetDialog = new ShellDialogController();
-            ReportsDialog = new ShellDialogController();
+            LedgerBookDialog = new ShellDialogController(Messenger);
+            DashboardDialog = new ShellDialogController(Messenger);
+            TransactionsDialog = new ShellDialogController(Messenger);
+            BudgetDialog = new ShellDialogController(Messenger);
+            ReportsDialog = new ShellDialogController(Messenger);
         }
 
         [UsedImplicitly]
@@ -128,10 +123,10 @@ namespace BudgetAnalyser
             {
                 var sequenceCopy = sequence;
                 IEnumerable<IPersistentApplicationStateObject> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
-                MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
+                Messenger.Send(new ApplicationStateLoadedMessage(models));
             }
 
-            MessengerInstance.Send(new ApplicationStateLoadFinishedMessage());
+            Messenger.Send(new ApplicationStateLoadFinishedMessage());
         }
 
         public void NotifyOfWindowLocationChange(Point location)
@@ -167,7 +162,7 @@ namespace BudgetAnalyser
         public void SaveApplicationState()
         {
             var gatherDataMessage = new ApplicationStateRequestedMessage();
-            MessengerInstance.Send(gatherDataMessage);
+            Messenger.Send(gatherDataMessage);
             this.statePersistence.Persist(gatherDataMessage.PersistentData);
         }
 
@@ -252,38 +247,32 @@ namespace BudgetAnalyser
 
         private void OnDialogRequested(ShellDialogRequestMessage message)
         {
-            ShellDialogController dialogController;
+            // Each mega-tab has its own dialog controller.  This is so each area can have independent dialogs, allowing the user to refer to other mega-tabs while a dialog is open.
             switch (message.Location)
             {
                 case BudgetAnalyserFeature.LedgerBook:
-                    dialogController = LedgerBookDialog;
+                    LedgerBookDialog.ShowFromShell(message);
                     break;
 
                 case BudgetAnalyserFeature.Dashboard:
-                    dialogController = DashboardDialog;
+                    DashboardDialog.ShowFromShell(message);
                     break;
 
                 case BudgetAnalyserFeature.Budget:
-                    dialogController = BudgetDialog;
+                    BudgetDialog.ShowFromShell(message);
                     break;
 
                 case BudgetAnalyserFeature.Transactions:
-                    dialogController = TransactionsDialog;
+                    TransactionsDialog.ShowFromShell(message);
                     break;
 
                 case BudgetAnalyserFeature.Reports:
-                    dialogController = ReportsDialog;
+                    ReportsDialog.ShowFromShell(message);
                     break;
 
                 default:
                     throw new NotSupportedException("The requested shell dialog location is not supported: " + message.Location);
             }
-
-            dialogController.Title = message.Title;
-            dialogController.Content = message.Content;
-            dialogController.DialogType = message.DialogType;
-            dialogController.CorrelationId = message.CorrelationId;
-            dialogController.HelpButtonVisible = message.HelpAvailable;
         }
     }
 }

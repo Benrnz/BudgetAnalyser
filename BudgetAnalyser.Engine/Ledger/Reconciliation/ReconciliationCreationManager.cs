@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
+using NotNull = JetBrains.Annotations.NotNullAttribute;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 
@@ -139,7 +137,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             throw new ArgumentNullException(nameof(ledgerEntryLine));
         }
 
-        if (!transferDetails.IsValid())
+        if (!transferDetails.IsValid)
         {
             throw new InvalidOperationException("Code Error: The transfer command is in an invalid state, this should be resolved in the UI.");
         }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security;
-using System.Threading.Tasks;
-using BudgetAnalyser.Annotations;
+﻿using System.Security;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Mobile;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf.Contracts;
 using Rees.Wpf;
 
@@ -32,7 +28,7 @@ namespace BudgetAnalyser.Mobile
             "ap-northeast-2"
         };
 
-        private readonly IApplicationDatabaseService appDbService;
+        private readonly IApplicationDatabaseFacade appDbService;
         private readonly Guid correlationId = Guid.NewGuid();
         private readonly IMobileDataExporter dataExporter;
         private readonly ILogger logger;
@@ -41,56 +37,58 @@ namespace BudgetAnalyser.Mobile
         private string doNotUseAccessKeyId;
         private string doNotUseAccessKeySecret;
         private string doNotUseAmazonRegion;
-        private UpdateMobileDataWidget widget;
+        private UpdateMobileDataWidget? widget;
 
         public UploadMobileDataController(
             [NotNull] IUiContext uiContext,
             [NotNull] IMobileDataExporter dataExporter,
             [NotNull] IMobileDataUploader uploader,
-            [NotNull] IApplicationDatabaseService appDbService)
+            [NotNull] IApplicationDatabaseFacade appDbService)
+            : base(uiContext.Messenger)
         {
             if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));
-            if (dataExporter == null) throw new ArgumentNullException(nameof(dataExporter));
-            if (uploader == null) throw new ArgumentNullException(nameof(uploader));
-            if (appDbService == null) throw new ArgumentNullException(nameof(appDbService));
-            this.dataExporter = dataExporter;
-            this.uploader = uploader;
-            this.appDbService = appDbService;
-            MessengerInstance = uiContext.Messenger;
+            this.dataExporter = dataExporter ?? throw new ArgumentNullException(nameof(dataExporter));
+            this.uploader = uploader ?? throw new ArgumentNullException(nameof(uploader));
+            this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
-            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogMessageReceived);
+            Messenger.Register<UploadMobileDataController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+            Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogMessageReceived(m));
         }
 
         public string AccessKeyId
         {
-            get { return this.doNotUseAccessKeyId; }
+            get => this.doNotUseAccessKeyId;
             set
             {
+                if (value == this.doNotUseAccessKeyId) return;
                 this.doNotUseAccessKeyId = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
         public string AccessKeySecret
         {
-            get { return this.doNotUseAccessKeySecret; }
+            get => this.doNotUseAccessKeySecret;
             set
             {
+                if (value == this.doNotUseAccessKeySecret) return;
                 this.doNotUseAccessKeySecret = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
+                Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
             }
         }
 
         public string AmazonRegion
         {
-            get { return this.doNotUseAmazonRegion; }
+            get => this.doNotUseAmazonRegion;
             set
             {
+                if (value == this.doNotUseAmazonRegion) return;
                 this.doNotUseAmazonRegion = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -113,6 +111,12 @@ namespace BudgetAnalyser.Mobile
 
         private async Task AttemptUploadAsync()
         {
+            if (this.widget == null)
+            {
+                this.logger.LogError(l => "Widget cannot be null when attempting to Upload mobile data.");
+                return;
+            }
+
             try
             {
                 this.widget.LockWhileUploading(true);
@@ -122,8 +126,6 @@ namespace BudgetAnalyser.Mobile
                 await Task.Run(() => this.dataExporter.SaveCopyAsync(export));
 
                 await Task.Run(() => this.uploader.UploadDataFileAsync(this.dataExporter.Serialise(export), AccessKeyId, AccessKeySecret, AmazonRegion));
-
-                this.messageBoxService.Show("Mobile summary data exported successfully.");
             }
             catch (SecurityException ex)
             {
@@ -174,7 +176,7 @@ namespace BudgetAnalyser.Mobile
                 AccessKeyId = this.widget.LedgerBook.MobileSettings.AccessKeyId;
                 AccessKeySecret = this.widget.LedgerBook.MobileSettings.AccessKeySecret;
                 AmazonRegion = this.widget.LedgerBook.MobileSettings.AmazonS3Region;
-                MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+                Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
                 {
                     CorrelationId = this.correlationId,
                     Title = "Upload Mobile Summary Data"

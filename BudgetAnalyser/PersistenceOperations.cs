@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace BudgetAnalyser
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class PersistenceOperations
     {
-        private static SemaphoreSlim OneSaveAtATime = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim OneSaveAtATime = new(1, 1);
 
-        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IApplicationDatabaseFacade applicationDatabaseService;
         private readonly DemoFileHelper demoFileHelper;
         private readonly IUiContext uiContext;
         private DateTime lastSave = DateTime.Now;
         
         public PersistenceOperations(
-            [NotNull] IApplicationDatabaseService applicationDatabaseService,
+            [NotNull] IApplicationDatabaseFacade applicationDatabaseService,
             [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] IUiContext uiContext)
         {
@@ -30,7 +26,7 @@ namespace BudgetAnalyser
             this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
             this.demoFileHelper = demoFileHelper ?? throw new ArgumentNullException(nameof(demoFileHelper));
 
-            this.uiContext.Messenger.Register<PasswordSetMessage>(this, OnPasswordSetMessageReceived);
+            this.uiContext.Messenger.Register<PersistenceOperations, PasswordSetMessage>(this, static (r, m) => r.OnPasswordSetMessageReceived(m));
         }
 
         public bool HasUnsavedChanges => this.applicationDatabaseService.HasUnsavedChanges;
@@ -83,7 +79,7 @@ namespace BudgetAnalyser
             try
             {
                 if (!this.applicationDatabaseService.HasUnsavedChanges) return;
-                if (DateTime.Now.Subtract(this.lastSave).TotalSeconds < 5) return;  // No need to save repeatedly.
+                if (DateTime.Now.Subtract(this.lastSave).TotalSeconds < 2) return;  // No need to save repeatedly.
                 await SaveDatabase();
                 this.lastSave = DateTime.Now;
             }

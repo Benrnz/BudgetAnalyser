@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 
 namespace BudgetAnalyser
@@ -9,8 +8,8 @@ namespace BudgetAnalyser
     /// </summary>
     public partial class NewWindowContainer : Window
     {
-        private INotifyPropertyChanged notifyController;
-        private IShowableController showableController;
+        private INotifyPropertyChanged? notifyController;
+        private IShowableController? showableController;
 
         public NewWindowContainer()
         {

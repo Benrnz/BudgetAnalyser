@@ -1,5 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Widgets;
-using GalaSoft.MvvmLight.Messaging;
+using Rees.Wpf;
 
 namespace BudgetAnalyser.Dashboard
 {

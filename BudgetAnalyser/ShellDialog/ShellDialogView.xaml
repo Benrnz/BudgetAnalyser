@@ -1,9 +1,10 @@
 ﻿<UserControl x:Class="BudgetAnalyser.ShellDialog.ShellDialogView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:shellDialog="clr-namespace:BudgetAnalyser.ShellDialog">
-
-    <!-- DataContext ShellDialogController -->
+             xmlns:shellDialog="clr-namespace:BudgetAnalyser.ShellDialog"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=shellDialog:ShellDialogController}">
 
     <Grid Background="#cc000000"
           KeyUp="OnShellDialogKeyUp"
