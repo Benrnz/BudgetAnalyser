@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BudgetAnalyser.Engine
+﻿namespace BudgetAnalyser.Engine
 {
     /// <summary>
     ///     A null logger for use with classes that require an instance of a logger but the usage doesn't require creating a
@@ -8,6 +6,8 @@ namespace BudgetAnalyser.Engine
     /// </summary>
     public class NullLogger : ILogger
     {
+        public LogLevel LogLevelFilter { get; set; }
+
         /// <summary>
         ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always
         ///     English.

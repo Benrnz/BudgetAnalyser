@@ -133,13 +133,14 @@ namespace BudgetAnalyser
             var container = builder.Build();
 
             Logger = container.Resolve<ILogger>();
+            Logger.LogLevelFilter = LogLevel.Warn; // hardcoded default log level. 
 
             foreach (var assembly in assemblies)
             {
                 IEnumerable<PropertyInjectionDependencyRequirement> requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);
                 foreach (var requirement in requiredPropertyInjections)
                 {
-                    // Some reasonably awkard Autofac usage here to allow testibility.  (Extension methods aren't easy to test)
+                    // Some reasonably awkward Autofac usage here to allow testability.  (Extension methods aren't easy to test)
                     ServiceRegistration registration;
                     var typedService = new TypedService(requirement.DependencyRequired);
                     var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out registration);

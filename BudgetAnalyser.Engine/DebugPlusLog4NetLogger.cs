@@ -44,3 +44,5 @@
 //        base.LogWarning(logEntryBuilder);
 //    }
 //}
+
+namespace BudgetAnalyser.Engine;
