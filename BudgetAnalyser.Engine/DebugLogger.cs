@@ -105,7 +105,7 @@ public class DebugLogger : ILogger
 
     private string ConstructLogEntry(LogLevel level, Func<ILogger, string> logEntryBuilder)
     {
-        return $"{DateTime.Now:yy-MM-dThh:mm:ss.ffff} {level.ToString(),-7}{logEntryBuilder(this)}";
+        return $"{DateTime.Now:yy-MM-dThh:mm:ss.ffff} {level.ToString().ToUpperInvariant(),-7}{logEntryBuilder(this)}";
     }
 
     private bool ShouldILog(LogLevel logEntryLevel)
