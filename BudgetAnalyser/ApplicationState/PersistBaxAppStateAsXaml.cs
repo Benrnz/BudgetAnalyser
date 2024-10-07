@@ -46,7 +46,7 @@ namespace BudgetAnalyser.ApplicationState
                 if (string.IsNullOrEmpty(this.doNotUseFullFileName))
                 {
                     var location = Path.GetDirectoryName(GetType().Assembly.Location);
-                    Debug.Assert(location != null);
+                    Debug.Assert(location is not null);
                     this.doNotUseFullFileName = Path.Combine(location, FileName);
                 }
 

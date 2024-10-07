@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Budget
             }
 
             this.budgetNameTextBox.Visibility = Visibility.Hidden;
-            Debug.Assert(this.budgetNameTextBlock != null);
+            Debug.Assert(this.budgetNameTextBlock is not null);
             this.budgetNameTextBlock.Visibility = Visibility.Visible;
         }
 
@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Budget
             }
 
             this.budgetNameTextBox.Visibility = Visibility.Visible;
-            Debug.Assert(this.budgetNameTextBlock != null);
+            Debug.Assert(this.budgetNameTextBlock is not null);
             this.budgetNameTextBlock.Visibility = Visibility.Hidden;
         }
     }

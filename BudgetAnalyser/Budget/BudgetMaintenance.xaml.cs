@@ -13,34 +13,31 @@ namespace BudgetAnalyser.Budget
             InitializeComponent();
         }
 
-        private BudgetController Controller => DataContext as BudgetController;
+        private BudgetController Controller => (BudgetController)DataContext;
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.OldValue is BudgetController controller)
             {
-                if (controller.Expenses != null)
+                if (controller.Expenses is not null)
                 {
                     controller.Expenses.ListChanged -= OnExpensesListChanged;
                 }
 
-                if (controller.Incomes != null)
+                if (controller.Incomes is not null)
                 {
                     controller.Incomes.ListChanged -= OnIncomesListChanged;
                 }
             }
 
-            if (Controller != null)
+            if (Controller.Expenses is not null)
             {
-                if (Controller.Expenses != null)
-                {
-                    Controller.Expenses.ListChanged += OnExpensesListChanged;
-                }
+                Controller.Expenses.ListChanged += OnExpensesListChanged;
+            }
 
-                if (Controller.Incomes != null)
-                {
-                    Controller.Incomes.ListChanged += OnIncomesListChanged;
-                }
+            if (Controller.Incomes is not null)
+            {
+                Controller.Incomes.ListChanged += OnIncomesListChanged;
             }
         }
 

@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Budget
         }
 
         public bool CanExecuteCancelButton => true;
-        public bool CanExecuteOkButton => Selected! != null!;
+        public bool CanExecuteOkButton => Selected is not null;
         public bool CanExecuteSaveButton => false;
         public string CloseButtonToolTip => "Cancel";
 
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Budget
             }
 
             EventHandler<BudgetBucketChosenEventArgs> handler = Chosen;
-            if (handler != null)
+            if (handler is not null)
             {
                 if (message.Response == ShellDialogButton.Cancel)
                 {

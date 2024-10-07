@@ -24,7 +24,7 @@ namespace BudgetAnalyser.ApplicationState
         {
             var removeDuplicates = rehydratedModels
                 .GroupBy(model => model.GetType(), model => model)
-                .Where(group => group.Key != null)
+                .Where(group => group.Key is not null)
                 .Select(group => group.First());
 
             RehydratedModels =
@@ -41,12 +41,12 @@ namespace BudgetAnalyser.ApplicationState
         ///     If no element of the requested type exists in the <see cref="RehydratedModels" /> dictionary, null is returned.
         /// </summary>
         /// <typeparam name="T">The concrete type that implements <see cref="IPersistentApplicationStateObject" /> to retrieve.</typeparam>
-        public T ElementOfType<T>() where T : class, IPersistentApplicationStateObject
+        public T? ElementOfType<T>() where T : class, IPersistentApplicationStateObject
         {
             var type = typeof(T);
-            if (RehydratedModels.ContainsKey(type))
+            if (RehydratedModels.TryGetValue(type, out var model))
             {
-                return RehydratedModels[type] as T;
+                return model as T;
             }
 
             return null;
