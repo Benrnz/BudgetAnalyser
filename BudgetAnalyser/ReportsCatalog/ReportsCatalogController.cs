@@ -32,6 +32,12 @@ public class ReportsCatalogController : ControllerBase, IShowableController
         Messenger.Register<ReportsCatalogController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
     }
 
+    /// <summary>
+    ///     Used by the styles as the styles are shared with widgets. The tile can be dynamically enabled or disabled.
+    /// </summary>
+    [UsedImplicitly]
+    public bool Enabled => true;
+
     public OverallPerformanceController OverallPerformanceController { get; }
 
     public bool OverallPerformanceReportIsAvailable =>
