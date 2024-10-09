@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override string LoadXamlAsString(string fileName)
         {
-            if (LoadXamlAsStringOverride == null)
+            if (LoadXamlAsStringOverride is null)
             {
                 string result = base.LoadXamlAsString(fileName);
                 Debug.WriteLine(result);
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity, bool isEncrypted)
         {
-            if (SaveDtoToDiskOverride == null)
+            if (SaveDtoToDiskOverride is null)
             {
                 await base.SaveDtoToDiskAsync(dataEntity, isEncrypted);
                 return;

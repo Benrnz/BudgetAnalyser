@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Persistence
         public XamlOnDiskApplicationDatabaseRepository(
             [NotNull] IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> mapper)
         {
-            if (mapper == null)
+            if (mapper is null)
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Engine.Persistence
 
             var db = this.mapper.ToModel(storageRoot);
             db.FileName = fileName;
-            if (db.LedgerReconciliationToDoCollection == null)
+            if (db.LedgerReconciliationToDoCollection is null)
             {
                 db.LedgerReconciliationToDoCollection = new ToDoCollection();
             }
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Persistence
         /// <exception cref="System.ArgumentNullException"></exception>
         public async Task SaveAsync(ApplicationDatabase budgetAnalyserDatabase)
         {
-            if (budgetAnalyserDatabase == null)
+            if (budgetAnalyserDatabase is null)
             {
                 throw new ArgumentNullException(nameof(budgetAnalyserDatabase));
             }

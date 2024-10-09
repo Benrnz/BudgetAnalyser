@@ -24,7 +24,7 @@ namespace Rees.Wpf.Converters
         /// </returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
+            if (value is null)
             {
                 return Visibility.Hidden;
             }

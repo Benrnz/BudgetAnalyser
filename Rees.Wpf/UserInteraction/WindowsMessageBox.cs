@@ -67,7 +67,7 @@ namespace Rees.Wpf.UserInteraction
         /// <param name="message">The message.</param>
         public override void Show(Exception ex, string message)
         {
-            if (ex == null)
+            if (ex is null)
             {
                 Show(message);
                 return;

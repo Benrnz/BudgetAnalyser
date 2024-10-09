@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override bool FileExists(string budgetAnalyserDataStorage)
         {
-            if (FileExistsOverride == null)
+            if (FileExistsOverride is null)
             {
                 return base.FileExists(budgetAnalyserDataStorage);
             }
