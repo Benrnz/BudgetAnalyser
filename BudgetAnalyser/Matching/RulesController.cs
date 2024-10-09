@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Matching
         }
 
         [UsedImplicitly]
-        public ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null);
+        public ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
 
         public bool FlatListBoxVisibility
         {
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.Matching
         {
             get
             {
-                bool result = SelectedRule != null && !EditingRule;
+                bool result = SelectedRule is not null && !EditingRule;
                 return result;
             }
         }
@@ -229,7 +229,7 @@ namespace BudgetAnalyser.Matching
 
         private bool CanExecuteDeleteRuleCommand()
         {
-            return SelectedRule != null;
+            return SelectedRule is not null;
         }
 
         private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
@@ -247,7 +247,7 @@ namespace BudgetAnalyser.Matching
             }
 
             bool? certainty = this.questionBox.Show("Delete this rule?", "Are you sure?");
-            if (certainty != null && certainty.Value)
+            if (certainty is not null && certainty.Value)
             {
                 RemoveRule();
             }
@@ -280,7 +280,7 @@ namespace BudgetAnalyser.Matching
         private void OnNewRuleCreated(object sender, EventArgs eventArgs)
         {
             NewRuleController.RuleCreated -= OnNewRuleCreated;
-            if (NewRuleController.NewRule != null)
+            if (NewRuleController.NewRule is not null)
             {
                 AddToList(NewRuleController.NewRule);
             }

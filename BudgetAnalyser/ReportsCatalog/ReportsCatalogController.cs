@@ -35,9 +35,9 @@ public class ReportsCatalogController : ControllerBase, IShowableController
     public OverallPerformanceController OverallPerformanceController { get; }
 
     public bool OverallPerformanceReportIsAvailable =>
-        this.currentStatementModel != null
+        this.currentStatementModel is not null
         && this.currentStatementModel.Transactions.Any()
-        && this.budgets?.CurrentActiveBudget != null;
+        && this.budgets?.CurrentActiveBudget is not null;
 
     public bool Shown
     {

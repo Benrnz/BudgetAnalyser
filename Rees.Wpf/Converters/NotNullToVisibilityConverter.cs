@@ -28,7 +28,7 @@ namespace Rees.Wpf.Converters
             var hiddenValue = Visibility.Hidden;
             Func<bool> test = () => value == null;
 
-            if (stringParameter != null)
+            if (stringParameter is not null)
             {
                 if (value is string && (stringParameter == string.Empty || stringParameter == "Empty"))
                 {

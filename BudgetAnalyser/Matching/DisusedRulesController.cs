@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Matching
         {
             get
             {
-                return new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r != null);
+                return new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r is not null);
             }
         }
 

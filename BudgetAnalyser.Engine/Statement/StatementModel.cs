@@ -161,12 +161,12 @@ namespace BudgetAnalyser.Engine.Statement
             List<Transaction> list = transactions.ToList();
             DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
 
-            if (criteria != null && !criteria.Cleared)
+            if (criteria is not null && !criteria.Cleared)
             {
-                if (criteria.BeginDate != null)
+                if (criteria.BeginDate is not null)
                 {
                     minDate = criteria.BeginDate.Value;
-                    Debug.Assert(criteria.EndDate != null);
+                    Debug.Assert(criteria.EndDate is not null);
                     maxDate = criteria.EndDate.Value;
                 }
             }
@@ -390,7 +390,7 @@ namespace BudgetAnalyser.Engine.Statement
         internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates(DateTime? minDate = null, DateTime? maxDate = null)
         {
             ThrowIfDisposed();
-            if (this.duplicates != null)
+            if (this.duplicates is not null)
             {
                 return this.duplicates;
                 // Reset by Merging Transactions, Load Transactions, or by reloading the statement model.
@@ -426,12 +426,12 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             IEnumerable<Transaction> query = AllTransactions;
-            if (criteria.BeginDate != null)
+            if (criteria.BeginDate is not null)
             {
                 query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
             }
 
-            if (criteria.EndDate != null)
+            if (criteria.EndDate is not null)
             {
                 query = query.Where(t => t.Date <= criteria.EndDate.Value);
             }

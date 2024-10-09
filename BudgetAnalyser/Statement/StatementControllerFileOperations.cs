@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Statement
                     // Update all UI bound properties.
                     var requestCurrentFilterMessage = new RequestFilterMessage(this);
                     Messenger.Send(requestCurrentFilterMessage);
-                    if (requestCurrentFilterMessage.Criteria != null)
+                    if (requestCurrentFilterMessage.Criteria is not null)
                     {
                         this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
                     }

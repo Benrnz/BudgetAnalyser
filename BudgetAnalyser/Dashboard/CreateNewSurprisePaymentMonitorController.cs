@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Dashboard
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton => Selected! != null! && PaymentStartDate != DateTime.MinValue;
+        public bool CanExecuteOkButton => Selected! is not null && PaymentStartDate != DateTime.MinValue;
 
         /// <summary>
         ///     Will be called ascertain the availability of the button.

@@ -344,7 +344,7 @@ namespace BudgetAnalyser.Engine.Matching
                 totalComparisons++;
             }
 
-            if (Amount != null)
+            if (Amount is not null)
             {
                 if (transaction.Amount == Amount.Value)
                 {

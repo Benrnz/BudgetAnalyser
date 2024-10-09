@@ -29,7 +29,7 @@ public class SavedUpForLedger : LedgerBucket
         // This ledger can accumulate a balance but cannot be negative.
         var closingBalance = openingBalance + netAmount;
         var budgetedAmount = transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
-        if (budgetedAmount != null && closingBalance < budgetedAmount.Amount)
+        if (budgetedAmount is not null && closingBalance < budgetedAmount.Amount)
         {
             // This ledger has a monthly budgeted amount and the balance has resulted in a balance less than the monthly budgeted amount, supplement from surplus to equal budgeted amount.
             // While there is a monthly amount the balance should not drop below this amount.
@@ -50,7 +50,7 @@ public class SavedUpForLedger : LedgerBucket
             };
         }
 
-        if (zeroingTransaction != null)
+        if (zeroingTransaction is not null)
         {
             transactions.Add(zeroingTransaction);
             return true;

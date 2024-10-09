@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Converters
                 return Visibility.Visible;
             }
 
-            if (parameter != null)
+            if (parameter is not null)
             {
                 if (parameter.ToString() == "Expense")
                 {

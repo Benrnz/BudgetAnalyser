@@ -83,7 +83,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private Border AddBorderToGridCell(Panel parent, string background, bool hasBorder, int gridRow, int gridColumn)
     {
         var border = new Border();
-        if (background != null)
+        if (background is not null)
         {
             border.Background = (Brush)FindResource(background);
         }
@@ -113,11 +113,11 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         };
         Grid.SetColumn(textBlock, gridColumn);
         Grid.SetRow(textBlock, gridRow++);
-        if (panel != null)
+        if (panel is not null)
         {
             panel.Children.Add(textBlock);
         }
-        else if (decorator != null)
+        else if (decorator is not null)
         {
             decorator.Child = textBlock;
         }
@@ -534,7 +534,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private object FindResource(string resourceName)
     {
         var localResource = this.localResources[resourceName];
-        if (localResource != null)
+        if (localResource is not null)
         {
             return localResource;
         }

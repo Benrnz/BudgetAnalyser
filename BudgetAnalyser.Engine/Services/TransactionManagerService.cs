@@ -552,7 +552,7 @@ namespace BudgetAnalyser.Engine.Services
                 () =>
                 {
                     return StatementModel.AllTransactions
-                        .Where(t => t.BudgetBucket != null)
+                        .Where(t => t.BudgetBucket is not null)
                         .AsParallel()
                         .All(
                             t =>

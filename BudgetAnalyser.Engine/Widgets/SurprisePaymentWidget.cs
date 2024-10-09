@@ -235,7 +235,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     private PaymentDate CalculateNextPaymentDate(PaymentDate paymentDate)
     {
         var proposedDate = new PaymentDate(paymentDate.ScheduledDate.AddDays(7 * this.multiplier));
-        if (this.filter.BeginDate != null)
+        if (this.filter.BeginDate is not null)
         {
             List<DateTime> holidays =
                 NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value,

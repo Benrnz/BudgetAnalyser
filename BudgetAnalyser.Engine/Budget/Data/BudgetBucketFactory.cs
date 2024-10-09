@@ -46,7 +46,7 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
     {
         BudgetBucketDto dto;
         var fixedProjectBucket = bucket as FixedBudgetProjectBucket;
-        if (fixedProjectBucket != null)
+        if (fixedProjectBucket is not null)
         {
             dto = new FixedBudgetBucketDto
             {

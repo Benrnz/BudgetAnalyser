@@ -134,12 +134,12 @@ namespace BudgetAnalyser.Engine
 
         private void CheckConsistency()
         {
-            if (BeginDate != null && BeginDate.Value == DateTime.MinValue)
+            if (BeginDate is not null && BeginDate.Value == DateTime.MinValue)
             {
                 BeginDate = null;
             }
 
-            if (EndDate != null && EndDate.Value == DateTime.MinValue)
+            if (EndDate is not null && EndDate.Value == DateTime.MinValue)
             {
                 EndDate = null;
             }
@@ -154,7 +154,7 @@ namespace BudgetAnalyser.Engine
                 Cleared = false;
             }
 
-            if (BeginDate != null && EndDate != null && BeginDate > EndDate)
+            if (BeginDate is not null && EndDate is not null && BeginDate > EndDate)
             {
                 EndDate = BeginDate.Value.AddDays(1);
             }

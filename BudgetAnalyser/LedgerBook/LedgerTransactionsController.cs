@@ -197,12 +197,12 @@ namespace BudgetAnalyser.LedgerBook
 
         private bool CanExecuteDeleteTransactionCommand(LedgerTransaction arg)
         {
-            return !IsReadOnly && arg != null;
+            return !IsReadOnly && arg is not null;
         }
 
         private bool CanExecuteZeroNetAmountCommand()
         {
-            return LedgerEntry != null && LedgerEntry.NetAmount != 0;
+            return LedgerEntry is not null && LedgerEntry.NetAmount != 0;
         }
 
         private void OnAddNewTransactionCommandExecuted()
@@ -362,7 +362,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                Debug.Assert(this.entryLine != null);
+                Debug.Assert(this.entryLine is not null);
                 var newTransaction = this.reconService.CreateLedgerTransaction(this.ledgerService.LedgerBook, this.entryLine, LedgerEntry, NewTransactionAmount, NewTransactionNarrative);
                 ShownTransactions.Add(newTransaction);
             }

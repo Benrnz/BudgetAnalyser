@@ -57,7 +57,7 @@ public class StatementViewModel : ObservableRecipient
 
     public IEnumerable<string> FilterBudgetBuckets => this.transactionService.FilterableBuckets();
 
-    public bool HasTransactions => Statement != null && Statement.Transactions.Any();
+    public bool HasTransactions => Statement is not null && Statement.Transactions.Any();
 
     public Transaction SelectedRow
     {
@@ -91,7 +91,7 @@ public class StatementViewModel : ObservableRecipient
     {
         get
         {
-            if (Statement != null)
+            if (Statement is not null)
             {
                 return Path.GetFileNameWithoutExtension(Statement.StorageKey);
             }
@@ -117,7 +117,7 @@ public class StatementViewModel : ObservableRecipient
 
     public bool HasSelectedRow()
     {
-        return SelectedRow != null;
+        return SelectedRow is not null;
     }
 
     public StatementViewModel Initialise(ITransactionManagerService transactionManagerService)

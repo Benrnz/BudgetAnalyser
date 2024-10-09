@@ -186,7 +186,7 @@ namespace BudgetAnalyser
                 registration.AsImplementedInterfaces().AsSelf();
 
                 // Register as custom type, other than its own class name, and directly implemented interfaces.
-                if (dependency.AdditionalRegistrationType != null)
+                if (dependency.AdditionalRegistrationType is not null)
                 {
                     registration.As(dependency.AdditionalRegistrationType);
                 }

@@ -157,7 +157,7 @@ namespace BudgetAnalyser
             {
                 const string messageBoxHeading = "Open Budget Analyser File";
                 bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", messageBoxHeading);
-                if (response != null && response.Value)
+                if (response is not null && response.Value)
                 {
                     return await SaveDatabase(messageBoxHeading);
                 }

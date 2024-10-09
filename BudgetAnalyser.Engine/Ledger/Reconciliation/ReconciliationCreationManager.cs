@@ -338,13 +338,13 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             .Any(
                  t =>
                      t.BudgetBucket == null ||
-                     (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
+                     (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
         {
             IEnumerable<Transaction> uncategorised =
                 statement.AllTransactions.Where(
                                                 t =>
                                                     t.BudgetBucket == null ||
-                                                    (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
+                                                    (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
             var count = 0;
             this.logger.LogWarning(
                                    _ =>
@@ -375,7 +375,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
     private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate, StatementModel statement, BudgetCycle periodType)
     {
         var previousEntry = ledgerBook.Reconciliations.FirstOrDefault();
-        if (previousEntry != null)
+        if (previousEntry is not null)
         {
             if (reconciliationDate <= previousEntry.Date)
             {

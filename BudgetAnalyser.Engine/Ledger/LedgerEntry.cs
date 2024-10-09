@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
-            if (txn != null)
+            if (txn is not null)
             {
                 this.transactions.Remove(txn);
                 // Can't just simply adjust Balance here by subtract the txn amount from the balance. Must recalc based on opening balance and txns.

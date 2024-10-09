@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 NoDateFilterApplied();
             }
-            else if (criteria.BeginDate != null)
+            else if (criteria.BeginDate is not null)
             {
                 DateFilterApplied(criteria);
             }

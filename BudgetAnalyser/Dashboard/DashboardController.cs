@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Dashboard
             }
 
             var storedWidgetsState = message.ElementOfType<WidgetsApplicationState>();
-            if (storedWidgetsState != null)
+            if (storedWidgetsState is not null)
             {
                 // Now that we have the previously persisted state data we can properly intialise the service.
                 WidgetCommands.DeregisterForWidgetChanges(WidgetGroups);

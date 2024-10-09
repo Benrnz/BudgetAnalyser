@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Statement
         private bool NavigateToTransactionOutsideOfFilter(Guid transactionId)
         {
             Transaction foundTransaction = ViewModel.Statement.AllTransactions.FirstOrDefault(t => t.Id == transactionId);
-            if (foundTransaction != null)
+            if (foundTransaction is not null)
             {
                 bool? result = this.questionBox.Show("The transaction falls outside the current filter. Do you wish to adjust the filter to show the transaction?", "Navigate to Transaction");
                 if (result == null || !result.Value)
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Statement
         private bool NavigateToVisibleTransaction(Guid transactionId)
         {
             Transaction foundTransaction = ViewModel.Statement.Transactions.FirstOrDefault(t => t.Id == transactionId);
-            if (foundTransaction != null)
+            if (foundTransaction is not null)
             {
                 ViewModel.SelectedRow = foundTransaction;
                 return true;

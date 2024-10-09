@@ -76,12 +76,12 @@ public class LedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    public ICommand ShowBankBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null);
+    public ICommand ShowBankBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param is not null);
     public ICommand ShowHidePeriodsCommand => new RelayCommand<int>(OnShowHidePeriodsCommandExecuted);
-    public ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null);
+    public ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param is not null);
 
     public RelayCommand<LedgerEntryLine> ShowRemarksCommand => new(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
-    public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null);
+    public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param is not null);
     public ICommand ShowTransactionsCommand => new RelayCommand<object>(OnShowTransactionsCommandExecuted);
     public ReconciliationToDoListController ToDoListController => this.uiContext.ReconciliationToDoListController;
 
@@ -187,7 +187,7 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     private bool CanExecuteShowRemarksCommand(LedgerEntryLine parameter)
     {
-        return parameter != null
+        return parameter is not null
                && (!string.IsNullOrWhiteSpace(parameter.Remarks) || parameter == ViewModel.NewLedgerLine);
     }
 
@@ -351,7 +351,7 @@ public class LedgerBookController : ControllerBase, IShowableController
 
         if (parameter is LedgerEntry ledgerEntry)
         {
-            var isNew = ViewModel.NewLedgerLine != null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
+            var isNew = ViewModel.NewLedgerLine is not null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
             this.uiContext.LedgerTransactionsController.ShowLedgerTransactionsDialog(ViewModel.NewLedgerLine, ledgerEntry, isNew);
         }
         else if (parameter is LedgerEntryLine bankBalanceAdjustments)
@@ -390,7 +390,7 @@ public class LedgerBookController : ControllerBase, IShowableController
     private bool ProceedAfterReconciliationValidationWarning(ValidationWarningException ex)
     {
         var result = this.questionBox.Show("Warning", "Warning: {0}\nDo you wish to proceed?", ex.Message);
-        return result != null && result.Value;
+        return result is not null && result.Value;
     }
 
     private void RaiseLedgerBookUpdated()

@@ -40,6 +40,6 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [UsedImplicitly]
-        public bool ShowAdjustedBalance => this.line != null;
+        public bool ShowAdjustedBalance => this.line is not null;
     }
 }

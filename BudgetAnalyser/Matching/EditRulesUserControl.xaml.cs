@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            if (radioButton.IsChecked != null && radioButton.IsChecked.Value)
+            if (radioButton.IsChecked is not null && radioButton.IsChecked.Value)
             {
                 return;
             }
@@ -43,7 +43,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue != null)
+            if (e.OldValue is not null)
             {
                 var oldController = (RulesController)e.OldValue;
                 oldController.SortChanged -= OnSortChanged;
@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Matching
                 oldController.RuleAdded -= OnRuleAdded;
             }
 
-            if (e.NewValue != null)
+            if (e.NewValue is not null)
             {
                 Controller.SortChanged += OnSortChanged;
                 Controller.RuleRemoved += OnRuleRemoved;
@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Matching
 
             var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
             RulesGroupedByBucket group = groupedList.FirstOrDefault(g => g.Bucket == rule.Bucket);
-            if (group != null)
+            if (group is not null)
             {
                 group.Rules.Remove(rule);
             }

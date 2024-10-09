@@ -14,7 +14,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool AddNewReconciliationIsEnabled =>
             // Decided not to validate budget here, budget for dates is a more complicated decision / validation for the engine.
-            CurrentStatement != null && LedgerBook != null;
+            CurrentStatement is not null && LedgerBook is not null;
 
         public Engine.Ledger.LedgerBook? LedgerBook
         {

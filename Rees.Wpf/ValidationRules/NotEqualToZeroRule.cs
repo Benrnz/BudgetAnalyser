@@ -19,7 +19,7 @@ namespace Rees.Wpf.ValidationRules
         /// <param name="cultureInfo">The culture to use in this rule.</param>
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            if (value != null)
+            if (value is not null)
             {
                 double i;
                 if (double.TryParse(value.ToString(), NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, cultureInfo, out i))

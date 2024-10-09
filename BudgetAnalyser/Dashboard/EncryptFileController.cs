@@ -49,10 +49,10 @@ namespace BudgetAnalyser.Dashboard
             {
                 if (EncryptFileMode)
                 {
-                    return this.password != null && this.password.Length > 4 && this.passwordConfirmed;
+                    return this.password is not null && this.password.Length > 4 && this.passwordConfirmed;
                 }
 
-                return this.password != null && this.password.Length > 4;
+                return this.password is not null && this.password.Length > 4;
             }
         }
 

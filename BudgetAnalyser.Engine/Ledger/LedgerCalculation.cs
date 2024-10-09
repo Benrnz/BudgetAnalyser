@@ -333,7 +333,7 @@ public class LedgerCalculation
         }
         else
         {
-            transactions = transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == bucketCode);
+            transactions = transactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == bucketCode);
         }
 
         this.logger.LogInfo(_ =>

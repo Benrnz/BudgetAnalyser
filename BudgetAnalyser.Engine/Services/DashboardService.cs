@@ -144,7 +144,7 @@ namespace BudgetAnalyser.Engine.Services
             UpdateAllWidgets();
             foreach (var group in WidgetGroups)
             {
-                foreach (var widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate != null))
+                foreach (var widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate is not null))
                 {
                     ScheduledWidgetUpdate(widget);
                 }
@@ -165,7 +165,7 @@ namespace BudgetAnalyser.Engine.Services
         public void RemoveUserDefinedWidget(IUserDefinedWidget widgetToRemove)
         {
             var fixedProjectWidget = widgetToRemove as FixedBudgetMonitorWidget;
-            if (fixedProjectWidget != null)
+            if (fixedProjectWidget is not null)
             {
                 // Reassign transactions to Surplus
                 var projectBucket =
@@ -205,7 +205,7 @@ namespace BudgetAnalyser.Engine.Services
         private static WidgetPersistentState CreateWidgetState(Widget widget)
         {
             var multiInstanceWidget = widget as IUserDefinedWidget;
-            if (multiInstanceWidget != null)
+            if (multiInstanceWidget is not null)
             {
                 var surprisePaymentWidget = multiInstanceWidget as SurprisePaymentWidget;
                 if (surprisePaymentWidget == null)
@@ -242,7 +242,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private async void ScheduledWidgetUpdate(Widget widget)
         {
-            Debug.Assert(widget.RecommendedTimeIntervalUpdate != null);
+            Debug.Assert(widget.RecommendedTimeIntervalUpdate is not null);
             this.logger.LogInfo(
                 l => l.Format(
                     "Scheduling \"{0}\" widget to update every {1} minutes.",
@@ -275,7 +275,7 @@ namespace BudgetAnalyser.Engine.Services
                 return;
             }
 
-            if (filterDependencyTypes != null && filterDependencyTypes.Length > 0)
+            if (filterDependencyTypes is not null && filterDependencyTypes.Length > 0)
             {
                 // targeted update
                 List<Widget> affectedWidgets = WidgetGroups.SelectMany(group => group.Widgets)

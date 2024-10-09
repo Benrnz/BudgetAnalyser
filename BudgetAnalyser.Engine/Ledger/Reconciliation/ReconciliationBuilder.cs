@@ -216,7 +216,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
                 // Remove auto-matched transactions from the new recon
                 var duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
-                if (duplicateTransaction != null)
+                if (duplicateTransaction is not null)
                 {
                     this.logger.LogInfo(l => l.Format("Ledger Reconciliation - Removing Duplicate Ledger transaction after auto-matching: {0}", duplicateTransaction));
 
@@ -281,7 +281,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
         builder.Append(FormatTransactionFragment(t.Reference2));
         builder.Append(FormatTransactionFragment(t.Reference3));
         
-        if (builder.Length == 16 && t.TransactionType != null)
+        if (builder.Length == 16 && t.TransactionType is not null)
         {
             return t.TransactionType.ToString();
         }
@@ -315,7 +315,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
     {
         var budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
         var transactions = new List<LedgerTransaction>();
-        if (budgetedExpense != null)
+        if (budgetedExpense is not null)
         {
             BudgetCreditLedgerTransaction budgetedAmount;
             if (ledgerBucket.StoredInAccount.IsSalaryAccount)

@@ -40,13 +40,13 @@ public partial class LedgerBookUserControl
             this.subscribedToMainWindowClose = true;
         }
 
-        if (e.OldValue != null)
+        if (e.OldValue is not null)
         {
             ((LedgerBookController)e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
             ((LedgerBookController)e.OldValue).DeregisterListener(this);
         }
 
-        if (e.NewValue != null)
+        if (e.NewValue is not null)
         {
             ((LedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
             Controller.RegisterListener(this, static (r, m) => r.OnLedgerBookReadyMessageReceived(m));
@@ -64,7 +64,7 @@ public partial class LedgerBookUserControl
     {
         // this is only used when no Ledgerbook has been previously loaded. Data binding hasnt been set up to respond to the ViewModel.LedgerBook property changing until the UI is actually drawn 
         // for the first time.
-        if (message.LedgerBook != null && message.ForceUiRefresh)
+        if (message.LedgerBook is not null && message.ForceUiRefresh)
         {
             DynamicallyCreateLedgerBookGrid();
         }

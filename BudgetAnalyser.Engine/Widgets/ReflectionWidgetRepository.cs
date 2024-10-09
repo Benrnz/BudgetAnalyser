@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             var widget = Activator.CreateInstance(type) as IUserDefinedWidget;
-            Debug.Assert(widget != null);
+            Debug.Assert(widget is not null);
             widget.Id = id;
             var key = BuildMultiUseWidgetKey(widget);
 

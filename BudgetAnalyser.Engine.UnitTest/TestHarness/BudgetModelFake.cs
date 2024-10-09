@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         internal override bool Validate(StringBuilder validationMessages)
         {
-            if (ValidateOverride != null)
+            if (ValidateOverride is not null)
             {
                 return ValidateOverride(validationMessages);
             }
@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override void Initialise()
         {
-            if (InitialiseOverride != null)
+            if (InitialiseOverride is not null)
             {
                 InitialiseOverride();
                 return;

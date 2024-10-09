@@ -171,7 +171,7 @@ namespace BudgetAnalyser.Mobile
         private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
         {
             this.widget = message.Widget as UpdateMobileDataWidget;
-            if (this.widget != null && this.widget.Enabled)
+            if (this.widget is not null && this.widget.Enabled)
             {
                 AccessKeyId = this.widget.LedgerBook.MobileSettings.AccessKeyId;
                 AccessKeySecret = this.widget.LedgerBook.MobileSettings.AccessKeySecret;

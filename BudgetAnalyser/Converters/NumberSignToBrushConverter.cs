@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var stringParameter = parameter as string;
-            bool light = stringParameter != null && stringParameter == "Light";
+            bool light = stringParameter is not null && stringParameter == "Light";
             decimal? number = ConverterHelper.ParseNumber(value);
             if (number == null)
             {

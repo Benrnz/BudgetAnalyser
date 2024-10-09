@@ -213,7 +213,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
             "Are you sure you want to delete this transaction?",
             "Delete Transaction");
-        if (confirm != null && confirm.Value)
+        if (confirm is not null && confirm.Value)
         {
             this.transactionService.RemoveTransaction(ViewModel.SelectedRow);
             FileOperations.NotifyOfEdit();

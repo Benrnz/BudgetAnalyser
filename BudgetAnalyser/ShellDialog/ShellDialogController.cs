@@ -216,7 +216,7 @@ namespace BudgetAnalyser.ShellDialog
                         }
                     }
 
-                    // Setting the content to null will hide the dialog, its visibility is bound to the Content != null
+                    // Setting the content to null will hide the dialog, its visibility is bound to the Content is not null
                     Content = null;
                 });
         }

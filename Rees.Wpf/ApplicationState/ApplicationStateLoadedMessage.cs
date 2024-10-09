@@ -22,7 +22,7 @@ namespace Rees.Wpf.ApplicationState
         {
             IEnumerable<IPersistent> removeDuplicates = rehydratedModels
                 .GroupBy(model => model.GetType(), model => model)
-                .Where(group => group.Key != null)
+                .Where(group => group.Key is not null)
                 .Select(group => group.First());
 
             RehydratedModels =

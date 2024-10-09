@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Dashboard
         [PropertyInjection]
         public static IDashboardService DashboardService { get; [UsedImplicitly] set; }
 
-        public static ICommand HideWidgetCommand => new RelayCommand<Widget>(w => w.Visibility = false, w => w != null);
+        public static ICommand HideWidgetCommand => new RelayCommand<Widget>(w => w.Visibility = false, w => w is not null);
 
         [PropertyInjection]
         public static IMessenger MessengerInstance { get; [UsedImplicitly] set; }
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Dashboard
         private static void OnRemoveWidgetCommandExecute(Widget widget)
         {
             var fixedProject = widget as FixedBudgetMonitorWidget;
-            if (fixedProject != null)
+            if (fixedProject is not null)
             {
                 bool? result = QuestionBoxService.Show(
                     "Remove Widget",

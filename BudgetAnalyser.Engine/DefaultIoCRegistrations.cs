@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine
             {
                 IEnumerable<AutoRegisterWithIoCAttribute> attributes = instance.GetType().GetTypeInfo().GetCustomAttributes<AutoRegisterWithIoCAttribute>();
                 var attribute = attributes.FirstOrDefault();
-                if (attribute != null)
+                if (attribute is not null)
                 {
                     if (attribute.Named == name) return instance;
                 }
@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Engine
                 .Where(t =>
                 {
                     var typeInfo = t.GetTypeInfo();
-                    return typeInfo.IsClass && typeInfo.IsAbstract && typeInfo.IsSealed && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() != null;
+                    return typeInfo.IsClass && typeInfo.IsAbstract && typeInfo.IsSealed && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null;
                 })
                 .ToArray();
             foreach (var type in allTypes)
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine
                 foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Static))
                 {
                     var injectionAttribute = property.GetCustomAttribute<PropertyInjectionAttribute>();
-                    if (injectionAttribute != null)
+                    if (injectionAttribute is not null)
                     {
                         yield return new PropertyInjectionDependencyRequirement
                         {
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine
                 .Where(t =>
                 {
                     var typeInfo = t.GetTypeInfo();
-                    return !typeInfo.IsAbstract && typeInfo.IsClass && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() != null;
+                    return !typeInfo.IsAbstract && typeInfo.IsClass && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null;
                 })
                 .ToArray();
 

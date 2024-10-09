@@ -119,7 +119,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnAddPeriodCommandExecute(DateTime date)
     {
-        if (Criteria.BeginDate != null && date == Criteria.BeginDate)
+        if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
         {
             if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
             {
@@ -130,7 +130,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             Criteria.BeginDate = Criteria.BeginDate.Value.AddDays(14);
         }
 
-        if (Criteria.EndDate != null && date == Criteria.EndDate)
+        if (Criteria.EndDate is not null && date == Criteria.EndDate)
         {
             if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
             {
@@ -181,7 +181,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnBackPeriodCommandExecute(DateTime date)
     {
-        if (Criteria.BeginDate != null && date == Criteria.BeginDate)
+        if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
         {
             if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
             {
@@ -192,7 +192,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             Criteria.BeginDate = Criteria.BeginDate.Value.AddDays(-14);
         }
 
-        if (Criteria.EndDate != null && date == Criteria.EndDate)
+        if (Criteria.EndDate is not null && date == Criteria.EndDate)
         {
             if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
             {
@@ -273,12 +273,12 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             return;
         }
 
-        if (Criteria.BeginDate != null)
+        if (Criteria.BeginDate is not null)
         {
             DateSummaryLine1 = string.Format(CultureInfo.CurrentCulture, "Filtered from: {0:d}", Criteria.BeginDate.Value);
         }
 
-        if (Criteria.EndDate != null)
+        if (Criteria.EndDate is not null)
         {
             DateSummaryLine2 = string.Format(CultureInfo.CurrentCulture, "up until: {0:d}", Criteria.EndDate.Value);
         }

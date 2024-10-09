@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
-            if (newElement != null)
+            if (newElement is not null)
             {
                 instance.Add(newElement);
                 return true;

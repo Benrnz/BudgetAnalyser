@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Matching
 
         private bool CanExecuteCreateRuleCommand()
         {
-            return this.statementController.ViewModel.SelectedRow != null;
+            return this.statementController.ViewModel.SelectedRow is not null;
         }
 
         private void OnApplyRulesCommandExecute()

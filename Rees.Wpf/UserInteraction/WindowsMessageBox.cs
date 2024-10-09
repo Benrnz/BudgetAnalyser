@@ -45,7 +45,7 @@ namespace Rees.Wpf.UserInteraction
 
             try
             {
-                if (Application.Current.MainWindow != null)
+                if (Application.Current.MainWindow is not null)
                 {
                     MessageBox.Show(Application.Current.MainWindow, content, heading);
                 }

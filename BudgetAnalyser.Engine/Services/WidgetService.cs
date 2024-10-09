@@ -43,7 +43,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="storedStates">The stored application state for widgets.</param>
         public IEnumerable<WidgetGroup> PrepareWidgets(IEnumerable<WidgetPersistentState> storedStates)
         {
-            if (storedStates != null)
+            if (storedStates is not null)
             {
                 List<Widget> widgets = this.widgetRepo.GetAll().ToList();
                 foreach (var widgetState in storedStates)
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Services
                     {
                         // Ordinary widgets will already exist in the repository as they are single instance per class.
                         var typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
-                        if (typedWidget != null)
+                        if (typedWidget is not null)
                         {
                             typedWidget.Visibility = widgetState.Visible;
                         }

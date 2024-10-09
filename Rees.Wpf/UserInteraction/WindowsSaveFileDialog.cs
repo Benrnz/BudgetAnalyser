@@ -55,32 +55,32 @@ namespace Rees.Wpf.UserInteraction
         public bool? ShowDialog()
         {
             var dialog = new SaveFileDialog();
-            if (AddExtension != null)
+            if (AddExtension is not null)
             {
                 dialog.AddExtension = AddExtension.Value;
             }
 
-            if (CheckPathExists != null)
+            if (CheckPathExists is not null)
             {
                 dialog.CheckPathExists = CheckPathExists.Value;
             }
 
-            if (DefaultExt != null)
+            if (DefaultExt is not null)
             {
                 dialog.DefaultExt = DefaultExt;
             }
 
-            if (Title != null)
+            if (Title is not null)
             {
                 dialog.Title = Title;
             }
 
-            if (Filter != null)
+            if (Filter is not null)
             {
                 dialog.Filter = Filter;
             }
 
-            if (FilterIndex != null)
+            if (FilterIndex is not null)
             {
                 dialog.FilterIndex = FilterIndex.Value;
             }

@@ -166,8 +166,8 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     /// </summary>
     protected virtual decimal LedgerBucketBalanceOrBudgetAmount()
     {
-        Debug.Assert(Filter.BeginDate != null);
-        Debug.Assert(Filter.EndDate != null);
+        Debug.Assert(Filter.BeginDate is not null);
+        Debug.Assert(Filter.EndDate is not null);
 
         var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
 

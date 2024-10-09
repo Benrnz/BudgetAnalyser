@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 
         public void ApplyBehaviour()
         {
-            if (Statement != null)
+            if (Statement is not null)
             {
                 AddBalanceAdjustmentsForFutureTransactions(Statement, NewReconLine.Date);
             }

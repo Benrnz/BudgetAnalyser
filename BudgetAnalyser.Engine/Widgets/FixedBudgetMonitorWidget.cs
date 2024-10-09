@@ -125,7 +125,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             // Debit transactions are negative so normally the total spend will be a negative number.
             var totalSpend =
-                Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode)
+                Statement.AllTransactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == BucketCode)
                     .Sum(t => t.Amount);
             var remainingBudget = totalBudget + totalSpend;
 

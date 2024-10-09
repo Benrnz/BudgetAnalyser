@@ -173,27 +173,27 @@ namespace BudgetAnalyser.Matching
             SimilarRules = null;
             AndChecked = true;
             NewRule = null;
-            if (Description != null)
+            if (Description is not null)
             {
                 Description.PropertyChanged -= OnCriteriaValuePropertyChanged;
             }
-            if (Reference1 != null)
+            if (Reference1 is not null)
             {
                 Reference1.PropertyChanged -= OnCriteriaValuePropertyChanged;
             }
-            if (Reference2 != null)
+            if (Reference2 is not null)
             {
                 Reference2.PropertyChanged -= OnCriteriaValuePropertyChanged;
             }
-            if (Reference3 != null)
+            if (Reference3 is not null)
             {
                 Reference3.PropertyChanged -= OnCriteriaValuePropertyChanged;
             }
-            if (Amount != null)
+            if (Amount is not null)
             {
                 Amount.PropertyChanged -= OnCriteriaValuePropertyChanged;
             }
-            if (TransactionType != null)
+            if (TransactionType is not null)
             {
                 TransactionType.PropertyChanged -= OnCriteriaValuePropertyChanged;
             }

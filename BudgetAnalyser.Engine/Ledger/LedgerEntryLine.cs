@@ -186,7 +186,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             var txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
-            if (txn != null)
+            if (txn is not null)
             {
                 this.bankBalanceAdjustments.Remove(txn);
             }

@@ -65,7 +65,7 @@ public partial class StatementUserControl
             defaultView.Filter = t =>
             {
                 var txn = (Transaction)t;
-                return txn.BudgetBucket != null && txn.BudgetBucket.Code == Controller.BucketFilter;
+                return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
             };
         }
     }
@@ -107,7 +107,7 @@ public partial class StatementUserControl
             Controller.RegisterListener<NavigateToTransactionMessage>(this, static (r, m) => r.OnNavigateToTransactionRequestReceived(m));
         }
 
-        if (Controller != null)
+        if (Controller is not null)
         {
             Controller.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -155,7 +155,7 @@ public partial class StatementUserControl
         if (message.Content is EditingTransactionController)
         {
             var listBoxItem = GetSelectedListBoxItem();
-            if (listBoxItem != null)
+            if (listBoxItem is not null)
             {
                 listBoxItem.Focus();
             }

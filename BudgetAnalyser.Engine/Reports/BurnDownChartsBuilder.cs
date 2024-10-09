@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return DateTime.Today.AddMonths(-1);
             }
 
-            if (criteria.BeginDate != null)
+            if (criteria.BeginDate is not null)
             {
                 return criteria.BeginDate.Value;
             }
@@ -130,7 +130,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return DateTime.Today.AddMonths(-1);
             }
 
-            if (criteria.EndDate != null)
+            if (criteria.EndDate is not null)
             {
                 return criteria.EndDate.Value;
             }

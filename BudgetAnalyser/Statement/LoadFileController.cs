@@ -156,7 +156,7 @@ namespace BudgetAnalyser.Statement
             SuggestedDateRange = null;
             Title = "Merge Statement";
             ActionButtonToolTip = "Merge transactions from the selected file into the current statement file.";
-            if (currentStatement != null)
+            if (currentStatement is not null)
             {
                 CalculateSuggestedDateRange(currentStatement);
             }

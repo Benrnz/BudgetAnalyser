@@ -212,7 +212,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     {
         if (CreateMode)
         {
-            return SelectedBankAccount != null;
+            return SelectedBankAccount is not null;
         }
 
         if (!Editable)
@@ -225,7 +225,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             return true;
         }
 
-        return SelectedBankAccount != null;
+        return SelectedBankAccount is not null;
     }
 
     private void OnAddBankBalanceCommandExecuted()
