@@ -42,22 +42,22 @@ internal class ReconciliationBuilder : IReconciliationBuilder
         StatementModel statement,
         params BankBalance[] bankBalances)
     {
-        if (bankBalances == null)
+        if (bankBalances is null)
         {
             throw new ArgumentNullException(nameof(bankBalances));
         }
 
-        if (budget == null)
+        if (budget is null)
         {
             throw new ArgumentNullException(nameof(budget));
         }
 
-        if (statement == null)
+        if (statement is null)
         {
             throw new ArgumentNullException(nameof(statement));
         }
 
-        if (LedgerBook == null)
+        if (LedgerBook is null)
         {
             throw new ArgumentException("The Ledger Book property cannot be null. You must set this prior to calling this method.");
         }
@@ -70,7 +70,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
     public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon, bool includeMatchedTransactions = false)
     {
-        if (recon == null)
+        if (recon is null)
         {
             return new List<LedgerTransaction>();
         }
@@ -253,7 +253,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
     {
         var ledgersAndBalances = new List<LedgerEntry>();
         var previousLine = parentLedgerBook.Reconciliations.FirstOrDefault();
-        if (previousLine == null)
+        if (previousLine is null)
         {
             return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerBucket = ledger });
         }
@@ -291,12 +291,12 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
     private static string FormatTransactionFragment(string fragment)
     {
-        return fragment == null ? string.Empty : $"; {fragment}";
+        return fragment is null ? string.Empty : $"; {fragment}";
     }
 
     private static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry ledgerEntry, bool includeMatchedTransactions = false)
     {
-        if (ledgerEntry == null)
+        if (ledgerEntry is null)
         {
             return new List<LedgerTransaction>();
         }

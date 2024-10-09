@@ -23,12 +23,12 @@ namespace BudgetAnalyser.Engine.Matching
 
         public bool Match([NotNull] IEnumerable<Transaction> transactions, [NotNull] IEnumerable<MatchingRule> rules)
         {
-            if (transactions == null)
+            if (transactions is null)
             {
                 throw new ArgumentNullException(nameof(transactions));
             }
 
-            if (rules == null)
+            if (rules is null)
             {
                 throw new ArgumentNullException(nameof(rules));
             }
@@ -85,7 +85,7 @@ namespace BudgetAnalyser.Engine.Matching
         private bool MatchToRules(IEnumerable<MatchingRule> rules, Transaction transaction)
         {
             var matchesOccured = false;
-            if (transaction.BudgetBucket?.Code == null)
+            if (transaction.BudgetBucket?.Code is null)
             {
                 foreach (var rule in rules.ToList())
                 {

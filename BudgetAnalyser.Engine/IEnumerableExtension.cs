@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static bool None<T>(this IEnumerable<T> instance)
         {
-            if (instance == null) return false;
+            if (instance is null) return false;
             return !instance.Any();
         }
 

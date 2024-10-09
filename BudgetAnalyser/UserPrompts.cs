@@ -13,27 +13,27 @@ namespace BudgetAnalyser
             [NotNull] IUserQuestionBoxYesNo yesNoBox,
             [NotNull] IUserInputBox inputBox)
         {
-            if (messageBox == null)
+            if (messageBox is null)
             {
                 throw new ArgumentNullException(nameof(messageBox));
             }
 
-            if (openFileFactory == null)
+            if (openFileFactory is null)
             {
                 throw new ArgumentNullException(nameof(openFileFactory));
             }
 
-            if (saveFileFactory == null)
+            if (saveFileFactory is null)
             {
                 throw new ArgumentNullException(nameof(saveFileFactory));
             }
 
-            if (yesNoBox == null)
+            if (yesNoBox is null)
             {
                 throw new ArgumentNullException(nameof(yesNoBox));
             }
 
-            if (inputBox == null)
+            if (inputBox is null)
             {
                 throw new ArgumentNullException(nameof(inputBox));
             }

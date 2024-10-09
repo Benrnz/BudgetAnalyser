@@ -174,7 +174,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
     private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
     {
         var statementMetadata = message.ElementOfType<StatementApplicationState>();
-        if (statementMetadata == null)
+        if (statementMetadata is null)
         {
             return;
         }
@@ -208,7 +208,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
     private async void OnDeleteTransactionCommandExecute()
     {
-        if (ViewModel.SelectedRow == null) return;
+        if (ViewModel.SelectedRow is null) return;
 
         var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
             "Are you sure you want to delete this transaction?",
@@ -223,7 +223,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
     private void OnEditTransactionCommandExecute()
     {
-        if (ViewModel.SelectedRow == null || this.shellDialogCorrelationId != Guid.Empty)
+        if (ViewModel.SelectedRow is null || this.shellDialogCorrelationId != Guid.Empty)
         {
             return;
         }
@@ -234,12 +234,12 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
     private void OnGlobalDateFilterApplied(FilterAppliedMessage message)
     {
-        if (message.Sender == this || message.Criteria == null)
+        if (message.Sender == this || message.Criteria is null)
         {
             return;
         }
 
-        if (ViewModel.Statement == null)
+        if (ViewModel.Statement is null)
         {
             return;
         }

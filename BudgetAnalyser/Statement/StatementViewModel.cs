@@ -75,7 +75,7 @@ public class StatementViewModel : ObservableRecipient
 
         set
         {
-            if (this.transactionService == null)
+            if (this.transactionService is null)
             {
                 throw new InvalidOperationException("Initialise has not been called.");
             }
@@ -141,6 +141,6 @@ public class StatementViewModel : ObservableRecipient
         OnPropertyChanged(nameof(HasTransactions));
         OnPropertyChanged(nameof(StatementName));
 
-        DuplicateSummary = Statement == null ? null : this.transactionService.DetectDuplicateTransactions();
+        DuplicateSummary = Statement is null ? null : this.transactionService.DetectDuplicateTransactions();
     }
 }

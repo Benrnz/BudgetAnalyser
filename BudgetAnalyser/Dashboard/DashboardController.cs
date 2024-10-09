@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Dashboard
             [NotNull] IDashboardService dashboardService)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
         {
-            if (message == null)
+            if (message is null)
             {
                 throw new ArgumentNullException(nameof(message));
             }
@@ -119,14 +119,14 @@ namespace BudgetAnalyser.Dashboard
 
             CorrelationId = Guid.NewGuid();
             var bucket = this.chooseBudgetBucketController.Selected;
-            if (bucket == null)
+            if (bucket is null)
             {
                 // Cancelled by user.
                 return;
             }
 
             var widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
-            if (widget == null)
+            if (widget is null)
             {
                 this.uiContext.UserPrompts.MessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
             }

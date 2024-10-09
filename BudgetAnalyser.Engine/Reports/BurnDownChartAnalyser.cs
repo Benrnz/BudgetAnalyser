@@ -35,12 +35,12 @@ namespace BudgetAnalyser.Engine.Reports
             DateTime inclBeginDate,
             DateTime inclEndDate)
         {
-            if (statementModel == null)
+            if (statementModel is null)
             {
                 throw new ArgumentNullException(nameof(statementModel));
             }
 
-            if (budgetModel == null)
+            if (budgetModel is null)
             {
                 throw new ArgumentNullException(nameof(budgetModel));
             }
@@ -183,7 +183,7 @@ namespace BudgetAnalyser.Engine.Reports
             List<BudgetBucket> bucketsCopy = buckets.ToList();
 
             var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, inclBeginDate, inclEndDate);
-            if (ledgerLine == null)
+            if (ledgerLine is null)
             {
                 // Use budget values from budget model instead, there is no ledger book line for this month.
                 budgetTotal += bucketsCopy.Sum(bucket => GetBudgetModelTotalForBucket(budgetModel, bucket));

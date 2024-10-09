@@ -60,7 +60,7 @@ public class OverspentWarning : Widget
     /// </summary>
     public override void Update([NotNull] params object[] input)
     {
-        if (input == null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input));
         }
@@ -78,13 +78,13 @@ public class OverspentWarning : Widget
         var ledgerBook = (LedgerBook)input[3];
         var ledgerCalculator = (LedgerCalculation)input[4];
 
-        if (budget == null
-            || ledgerBook == null
-            || statement == null
-            || filter == null
+        if (budget is null
+            || ledgerBook is null
+            || statement is null
+            || filter is null
             || filter.Cleared
-            || filter.BeginDate == null
-            || filter.EndDate == null)
+            || filter.BeginDate is null
+            || filter.EndDate is null)
         {
             this.logger.LogInfo(_ => "Statement, budget, ledgerbook, or ledgercalculator are null. Or date filter is invalid.");
             Enabled = false;
@@ -102,7 +102,7 @@ public class OverspentWarning : Widget
         }
 
         var ledgerLine = ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
-        if (ledgerLine == null)
+        if (ledgerLine is null)
         {
             Enabled = false;
             return;

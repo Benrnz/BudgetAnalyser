@@ -25,22 +25,22 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] ILedgerBucketFactory ledgerBucketFactory,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
-            if (ledgerRepository == null)
+            if (ledgerRepository is null)
             {
                 throw new ArgumentNullException(nameof(ledgerRepository));
             }
 
-            if (accountTypeRepository == null)
+            if (accountTypeRepository is null)
             {
                 throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
-            if (ledgerBucketFactory == null)
+            if (ledgerBucketFactory is null)
             {
                 throw new ArgumentNullException(nameof(ledgerBucketFactory));
             }
 
-            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
+            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
 
             this.ledgerRepository = ledgerRepository;
             this.accountTypeRepository = accountTypeRepository;
@@ -61,11 +61,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public void MoveLedgerToAccount(LedgerBucket ledger, Account storedInAccount)
         {
-            if (ledger == null)
+            if (ledger is null)
             {
                 throw new ArgumentNullException(nameof(ledger));
             }
-            if (storedInAccount == null)
+            if (storedInAccount is null)
             {
                 throw new ArgumentNullException(nameof(storedInAccount));
             }
@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public void RenameLedgerBook(string newName)
         {
-            if (newName == null)
+            if (newName is null)
             {
                 throw new ArgumentNullException(nameof(newName));
             }
@@ -85,11 +85,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
         {
-            if (bucket == null)
+            if (bucket is null)
             {
                 throw new ArgumentNullException(nameof(bucket));
             }
-            if (storeInThisAccount == null)
+            if (storeInThisAccount is null)
             {
                 throw new ArgumentNullException(nameof(storeInThisAccount));
             }
@@ -122,7 +122,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
-            if (applicationDatabase == null)
+            if (applicationDatabase is null)
             {
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }

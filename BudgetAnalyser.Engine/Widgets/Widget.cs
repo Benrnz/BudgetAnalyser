@@ -311,7 +311,7 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     protected bool ValidateUpdateInput(object[] input)
     {
-        if (input == null)
+        if (input is null)
         {
             return false;
         }
@@ -326,7 +326,7 @@ public abstract class Widget : INotifyPropertyChanged
         foreach (var dependencyType in Dependencies)
         {
             var dependencyInstance = input[index++];
-            if (dependencyInstance == null)
+            if (dependencyInstance is null)
             {
                 // Allow this to continue, because nulls are valid when the dependency isnt available yet.
                 nullCount++;

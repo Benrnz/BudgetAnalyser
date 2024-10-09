@@ -37,17 +37,17 @@ namespace BudgetAnalyser.LedgerBook
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService, [NotNull] IReconciliationService reconService) : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (ledgerService == null)
+            if (ledgerService is null)
             {
                 throw new ArgumentNullException(nameof(ledgerService));
             }
 
-            if (reconService == null)
+            if (reconService is null)
             {
                 throw new ArgumentNullException(nameof(reconService));
             }
@@ -161,7 +161,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         public void ShowLedgerTransactionsDialog(LedgerEntryLine ledgerEntryLine, LedgerEntry ledgerEntry, bool isNew)
         {
-            if (ledgerEntry == null)
+            if (ledgerEntry is null)
             {
                 return;
             }
@@ -181,7 +181,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         public void ShowBankBalanceAdjustmentsDialog(LedgerEntryLine ledgerEntryLine, bool isNew)
         {
-            if (ledgerEntryLine == null)
+            if (ledgerEntryLine is null)
             {
                 return;
             }
@@ -279,7 +279,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnZeroNetAmountCommandExecuted()
         {
-            if (LedgerEntry == null)
+            if (LedgerEntry is null)
             {
                 return;
             }
@@ -325,7 +325,7 @@ namespace BudgetAnalyser.LedgerBook
             }).Take(1);
 
             LedgerEntryLine previousLine = remainingRecons.FirstOrDefault();
-            if (previousLine == null) return 0M;
+            if (previousLine is null) return 0M;
             var previousEntry = previousLine.Entries.FirstOrDefault(l => l.LedgerBucket == LedgerEntry.LedgerBucket);
             return previousEntry?.Balance ?? 0M;
         }

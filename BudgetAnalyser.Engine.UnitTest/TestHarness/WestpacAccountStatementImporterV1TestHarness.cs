@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
-            if (ReadLinesOverride == null)
+            if (ReadLinesOverride is null)
             {
                 return Task.FromResult((IEnumerable<string>)new string[] { });
             }
@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override Task<string> ReadTextChunkAsync(string filePath)
         {
-            if (ReadTextChunkOverride == null)
+            if (ReadTextChunkOverride is null)
             {
                 return Task.FromResult("Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code\r\n20/07/2020,-12.50,\"Brew On Quay\",\"EFTPOS TRANSACTION\",\"20-16:10-941\",\"************\",\"7786 30941\"");
             }

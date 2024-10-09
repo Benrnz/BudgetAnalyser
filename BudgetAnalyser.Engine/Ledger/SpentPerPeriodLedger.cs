@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Ledger
             var closingBalance = openingBalance + netAmount;
             var budgetTransaction = transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
 
-            if (budgetTransaction == null)
+            if (budgetTransaction is null)
             {
                 return transactions.AddIfSomething(SupplementToZero(closingBalance, reconciliationDate));
             }

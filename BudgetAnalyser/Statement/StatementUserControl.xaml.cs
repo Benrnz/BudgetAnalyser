@@ -57,7 +57,7 @@ public partial class StatementUserControl
             defaultView.Filter = t =>
             {
                 var txn = (Transaction)t;
-                return txn.BudgetBucket == null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
+                return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
             };
         }
         else
@@ -112,13 +112,13 @@ public partial class StatementUserControl
             Controller.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
-        if (Controller == null)
+        if (Controller is null)
         {
             ((StatementController)e.OldValue).ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
             return;
         }
 
-        if (Controller.ViewModel.Statement == null)
+        if (Controller.ViewModel.Statement is null)
         {
             return;
         }

@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Matching
         private void OnCheckedAndSelectedRule(object sender, RoutedEventArgs e)
         {
             var radioButton = sender as RadioButton;
-            if (radioButton == null)
+            if (radioButton is null)
             {
                 return;
             }
@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Matching
         private void OnGroupListBoxLoaded(object sender, RoutedEventArgs e)
         {
             var listBox = e.OriginalSource as ListBox;
-            if (listBox == null)
+            if (listBox is null)
             {
                 return;
             }
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Matching
                 if (eventArgs.PropertyName == "SelectedRule")
                 {
                     Debug.WriteLine("EditRulesUserControl: SelectedRule Changed handled by a listbox");
-                    if (listBox.SelectedItem == null || Controller.SelectedRule == null)
+                    if (listBox.SelectedItem is null || Controller.SelectedRule is null)
                     {
                         return;
                     }
@@ -123,7 +123,7 @@ namespace BudgetAnalyser.Matching
 
             var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
             RulesGroupedByBucket group = groupedList.SingleOrDefault(g => g.Bucket == rule.Bucket);
-            if (group == null)
+            if (group is null)
             {
                 group = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
                 groupedList.Add(group);

@@ -18,12 +18,12 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] IReconciliationService reconciliationService) : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (reconciliationService == null)
+            if (reconciliationService is null)
             {
                 throw new ArgumentNullException(nameof(reconciliationService));
             }

@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Budget
         public ChooseBudgetBucketController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IAccountTypeRepository accountRepo)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }

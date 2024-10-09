@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             ToModelPreprocessing(dto);
             BudgetBucket model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(BudgetBucket).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             ToDtoPreprocessing(model);
             BudgetBucketDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new BudgetBucketDto();
             }

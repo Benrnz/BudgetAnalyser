@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Converters
             var stringParameter = parameter as string;
             bool light = stringParameter is not null && stringParameter == "Light";
             decimal? number = ConverterHelper.ParseNumber(value);
-            if (number == null)
+            if (number is null)
             {
                 return ConverterHelper.TransparentBrush;
             }

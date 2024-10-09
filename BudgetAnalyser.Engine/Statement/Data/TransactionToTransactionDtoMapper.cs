@@ -14,9 +14,9 @@ namespace BudgetAnalyser.Engine.Statement.Data
 
         public Mapper_TransactionDto_Transaction([NotNull] IAccountTypeRepository accountRepo, [NotNull] IBudgetBucketRepository bucketRepo, [NotNull] ITransactionTypeRepository transactionTypeRepo)
         {
-            if (accountRepo == null) throw new ArgumentNullException(nameof(accountRepo));
-            if (bucketRepo == null) throw new ArgumentNullException(nameof(bucketRepo));
-            if (transactionTypeRepo == null) throw new ArgumentNullException(nameof(transactionTypeRepo));
+            if (accountRepo is null) throw new ArgumentNullException(nameof(accountRepo));
+            if (bucketRepo is null) throw new ArgumentNullException(nameof(bucketRepo));
+            if (transactionTypeRepo is null) throw new ArgumentNullException(nameof(transactionTypeRepo));
             this.accountRepo = accountRepo;
             this.bucketRepo = bucketRepo;
             this.transactionTypeRepo = transactionTypeRepo;

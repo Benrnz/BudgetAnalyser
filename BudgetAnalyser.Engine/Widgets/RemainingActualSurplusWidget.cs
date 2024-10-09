@@ -41,7 +41,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
     /// </summary>
     public override void Update([NotNull] params object[] input)
     {
-        if (input == null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input));
         }
@@ -60,13 +60,13 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         this.budget = (IBudgetCurrencyContext)input[4];
         this.logger = (ILogger)input[5];
 
-        if (this.ledgerBook == null
-            || this.budget == null
-            || this.statement == null
-            || this.filter == null
+        if (this.ledgerBook is null
+            || this.budget is null
+            || this.statement is null
+            || this.filter is null
             || this.filter.Cleared
-            || this.filter.BeginDate == null
-            || this.filter.EndDate == null)
+            || this.filter.BeginDate is null
+            || this.filter.EndDate is null)
         {
             Enabled = false;
             return;
@@ -85,7 +85,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         var openingBalance = CalculateOpeningBalance();
         Logger.LogInfo(l => l.Format("Opening Balance = {0:C}", openingBalance));
         var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter.BeginDate.Value, this.filter.EndDate.Value);
-        if (ledgerLine == null)
+        if (ledgerLine is null)
         {
             ToolTip = "No ledger entries can be found in the date range.";
             Enabled = false;

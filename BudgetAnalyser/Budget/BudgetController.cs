@@ -41,7 +41,7 @@ public class BudgetController : ControllerBase, IShowableController
         [NotNull] IApplicationDatabaseFacade applicationDatabaseService) 
         : base(uiContext.Messenger)
     {
-        if (uiContext == null)
+        if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
@@ -96,7 +96,7 @@ public class BudgetController : ControllerBase, IShowableController
                 this.isLoadingBudgetModel = true;
                 this.doNotUseModel = value;
                 ReleaseListBindingEvents();
-                if (this.doNotUseModel == null)
+                if (this.doNotUseModel is null)
                 {
                     Incomes = null;
                     Expenses = null;
@@ -358,7 +358,7 @@ public class BudgetController : ControllerBase, IShowableController
         }
 
         var viewModel = (BudgetSelectionViewModel)message.Content;
-        if (viewModel.Selected == null || viewModel.Selected == CurrentBudget.Model)
+        if (viewModel.Selected is null || viewModel.Selected == CurrentBudget.Model)
         {
             return;
         }

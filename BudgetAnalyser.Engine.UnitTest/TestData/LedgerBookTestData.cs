@@ -709,7 +709,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     {
                         PrivateAccessor.SetField(entry, "isNew", false);
                     }
-                    if (entry.LedgerBucket.StoredInAccount == null)
+                    if (entry.LedgerBucket.StoredInAccount is null)
                     {
                         entry.LedgerBucket.StoredInAccount = StatementModelTestData.ChequeAccount;
                     }

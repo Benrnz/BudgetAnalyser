@@ -26,8 +26,8 @@ namespace BudgetAnalyser.Dashboard
         public EncryptFileController([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseFacade appDbService) : base(uiContext.Messenger)
         {
             this.appDbService = appDbService;
-            if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));
-            if (appDbService == null) throw new ArgumentNullException(nameof(appDbService));
+            if (uiContext is null) throw new ArgumentNullException(nameof(uiContext));
+            if (appDbService is null) throw new ArgumentNullException(nameof(appDbService));
             this.questionService = uiContext.UserPrompts.YesNoBox;
             this.messageService = uiContext.UserPrompts.MessageBox;
 
@@ -184,7 +184,7 @@ namespace BudgetAnalyser.Dashboard
                 bool? confirmation = this.questionService.Show(
                     "Are you sure you want to decrypt and store the data files in plain text?  After this is complete the files can be read by any other program without a password.",
                     "Decrypt Data Files?");
-                if (confirmation == null || !confirmation.Value) return;
+                if (confirmation is null || !confirmation.Value) return;
                 await Task.Run(async () => await this.appDbService.DecryptFilesAsync(this.password));
                 this.messageService.Show("Files are decrypted and are saved as plain CSV and XML files. They are no longer protected.  Encrypted files have been deleted.",
                     "Decrypt Data Files - Completed");
@@ -200,7 +200,7 @@ namespace BudgetAnalyser.Dashboard
             bool? confirmation = this.questionService.Show(
                 "Are you sure you want to encrypt and protect the data files?  After this is complete the files cannot be read by any other program aside from Budget Analyser. You will be required to enter the password each time you load your Budget Analyser file.",
                 "Encrypt Data Files?");
-            if (confirmation == null || !confirmation.Value) return;
+            if (confirmation is null || !confirmation.Value) return;
             this.appDbService.SetCredential(this.password);
             await Task.Run(async () => await this.appDbService.EncryptFilesAsync());
             this.messageService.Show(

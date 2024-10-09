@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Engine.Widgets
             BudgetCollection = (BudgetCollection) input[2];
             Filter = (GlobalFilterCriteria) input[3];
 
-            if (LedgerBook == null || StatementModel == null || BudgetCollection == null || Filter == null) return;
+            if (LedgerBook is null || StatementModel is null || BudgetCollection is null || Filter is null) return;
 
             Enabled = true;
         }

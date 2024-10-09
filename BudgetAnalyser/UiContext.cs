@@ -28,12 +28,12 @@ namespace BudgetAnalyser
             [NotNull] UserPrompts userPrompts,
             [NotNull] IMessenger messenger)
         {
-            if (userPrompts == null)
+            if (userPrompts is null)
             {
                 throw new ArgumentNullException(nameof(userPrompts));
             }
 
-            if (messenger == null)
+            if (messenger is null)
             {
                 throw new ArgumentNullException(nameof(messenger));
             }

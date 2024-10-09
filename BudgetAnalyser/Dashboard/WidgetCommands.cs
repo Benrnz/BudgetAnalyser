@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Dashboard
 
         public static void DeregisterForWidgetChanges(IEnumerable<WidgetGroup> widgetGroups)
         {
-            if (widgetGroups == null) return;
+            if (widgetGroups is null) return;
             widgetGroups.SelectMany(w => w.Widgets)
                 .ToList()
                 .ForEach(w => w.PropertyChanged -= OnWidgetDataUpdated);
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Dashboard
         /// </summary>
         public static void ListenForWidgetChanges(IEnumerable<WidgetGroup> widgetGroups)
         {
-            if (widgetGroups == null) return;
+            if (widgetGroups is null) return;
             widgetGroups.SelectMany(w => w.Widgets)
                 .ToList()
                 .ForEach(w => w.PropertyChanged += OnWidgetDataUpdated);
@@ -90,7 +90,7 @@ namespace BudgetAnalyser.Dashboard
                     "Remove Widget",
                     "Are you sure you want to remove the Fixed Budget Project Widget '{0}'?\n\nOnce removed, it cannot be undone. All assigned transactions will be remain in the project bucket. Any unsaved edits will also be committed.",
                     fixedProject.Id);
-                if (result == null || result == false)
+                if (result is null || result == false)
                 {
                     return;
                 }
@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Dashboard
         private static void OnWidgetDataUpdated(object? sender, PropertyChangedEventArgs e)
         {
             var widget = sender as Widget;
-            if (widget == null) return;
+            if (widget is null) return;
             if (e.PropertyName is nameof(widget.Clickable) or nameof(widget.Enabled))
             {
                 Dispatcher.CurrentDispatcher.BeginInvoke(WidgetClickedRelayCommand.NotifyCanExecuteChanged, DispatcherPriority.ApplicationIdle);

@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine
         /// <returns>If the instance is in an invalid state it will return false, otherwise it returns true.</returns>
         public bool Validate(StringBuilder validationMessages)
         {
-            if (validationMessages == null) throw new ArgumentNullException(nameof(validationMessages));
+            if (validationMessages is null) throw new ArgumentNullException(nameof(validationMessages));
 
             if (Cleared)
             {
@@ -102,13 +102,13 @@ namespace BudgetAnalyser.Engine
             }
 
             var valid = true;
-            if (BeginDate == null)
+            if (BeginDate is null)
             {
                 validationMessages.AppendLine("Begin date cannot be blank unless filter is 'Cleared'.");
                 valid = false;
             }
 
-            if (EndDate == null)
+            if (EndDate is null)
             {
                 validationMessages.AppendLine("End date cannot be blank unless filter is 'Cleared'.");
                 valid = false;
@@ -144,8 +144,8 @@ namespace BudgetAnalyser.Engine
                 EndDate = null;
             }
 
-            if (BeginDate == null
-                && EndDate == null)
+            if (BeginDate is null
+                && EndDate is null)
             {
                 Cleared = true;
             }

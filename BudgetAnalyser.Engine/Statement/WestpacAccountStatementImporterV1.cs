@@ -35,16 +35,16 @@ namespace BudgetAnalyser.Engine.Statement
         /// </exception>
         public WestpacAccountStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger, [NotNull] IReaderWriterSelector readerWriterSelector)
         {
-            if (importUtilities == null)
+            if (importUtilities is null)
             {
                 throw new ArgumentNullException(nameof(importUtilities));
             }
 
-            if (logger == null)
+            if (logger is null)
             {
                 throw new ArgumentNullException(nameof(logger));
             }
-            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
+            if (readerWriterSelector is null) throw new ArgumentNullException(nameof(readerWriterSelector));
 
             this.importUtilities = importUtilities;
             this.logger = logger;
@@ -121,7 +121,7 @@ namespace BudgetAnalyser.Engine.Statement
             this.importUtilities.AbortIfFileDoesntExist(fileName);
 
             string[] lines = await ReadFirstTwoLinesAsync(fileName);
-            if (lines == null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
+            if (lines is null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
             }

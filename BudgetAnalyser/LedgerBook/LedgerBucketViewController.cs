@@ -23,17 +23,17 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerBucketViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IUiContext uiContext, [NotNull] ILedgerService ledgerService) : base(uiContext.Messenger)
         {
-            if (accountRepo == null)
+            if (accountRepo is null)
             {
                 throw new ArgumentNullException(nameof(accountRepo));
             }
 
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (ledgerService == null)
+            if (ledgerService is null)
             {
                 throw new ArgumentNullException(nameof(ledgerService));
             }
@@ -62,22 +62,22 @@ namespace BudgetAnalyser.LedgerBook
 
         public void ShowDialog([NotNull] Engine.Ledger.LedgerBook parentLedgerBook, [NotNull] LedgerBucket ledgerBucket, [NotNull] BudgetModel budgetModel)
         {
-            if (parentLedgerBook == null)
+            if (parentLedgerBook is null)
             {
                 throw new ArgumentNullException(nameof(parentLedgerBook));
             }
 
-            if (ledgerBucket == null)
+            if (ledgerBucket is null)
             {
                 throw new ArgumentNullException(nameof(ledgerBucket));
             }
 
-            if (budgetModel == null)
+            if (budgetModel is null)
             {
                 throw new ArgumentNullException(nameof(budgetModel));
             }
 
-            if (LedgerBucketHistoryAnalysis == null)
+            if (LedgerBucketHistoryAnalysis is null)
             {
                 LedgerBucketHistoryAnalysis = CreateBucketHistoryAnalyser();
             }

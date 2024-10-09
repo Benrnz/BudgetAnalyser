@@ -32,7 +32,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     public GlobalFilterController([NotNull] UiContext uiContext) : base(uiContext.Messenger)
     {
-        if (uiContext == null)
+        if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
@@ -145,7 +145,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
     {
         var filterState = message.ElementOfType<PersistentFiltersApplicationState>();
-        if (filterState == null)
+        if (filterState is null)
         {
             return;
         }
@@ -161,7 +161,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnApplicationStateLoadFinished(ApplicationStateLoadFinishedMessage message)
     {
-        if (Criteria == null || Criteria.Cleared)
+        if (Criteria is null || Criteria.Cleared)
         {
             SendFilterAppliedMessage();
         }
@@ -169,7 +169,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
     {
-        var noCriteria = Criteria == null;
+        var noCriteria = Criteria is null;
         var filterState = new PersistentFiltersApplicationState
         {
             BeginDate = noCriteria ? null : Criteria.BeginDate,
@@ -245,7 +245,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
     {
-        if (message == null)
+        if (message is null)
         {
             throw new ArgumentNullException(nameof(message));
         }

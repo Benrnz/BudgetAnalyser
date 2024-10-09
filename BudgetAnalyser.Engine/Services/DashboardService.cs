@@ -27,26 +27,26 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] ILogger logger,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
-            if (widgetService == null)
+            if (widgetService is null)
             {
                 throw new ArgumentNullException(nameof(widgetService));
             }
 
-            if (bucketRepository == null)
+            if (bucketRepository is null)
             {
                 throw new ArgumentNullException(nameof(bucketRepository));
             }
 
-            if (budgetRepository == null)
+            if (budgetRepository is null)
             {
                 throw new ArgumentNullException(nameof(budgetRepository));
             }
 
-            if (logger == null)
+            if (logger is null)
             {
                 throw new ArgumentNullException(nameof(logger));
             }
-            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
+            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
 
             this.widgetService = widgetService;
             this.bucketRepository = bucketRepository;
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var bucket = this.bucketRepository.GetByCode(bucketCode);
-            if (bucket == null)
+            if (bucket is null)
             {
                 throw new ArgumentException(
                     string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode),
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationState storedState)
         {
-            if (storedState == null)
+            if (storedState is null)
             {
                 throw new ArgumentNullException(nameof(storedState));
             }
@@ -170,7 +170,7 @@ namespace BudgetAnalyser.Engine.Services
                 // Reassign transactions to Surplus
                 var projectBucket =
                     this.bucketRepository.GetByCode(fixedProjectWidget.BucketCode) as FixedBudgetProjectBucket;
-                if (projectBucket == null)
+                if (projectBucket is null)
                 {
                     throw new InvalidOperationException(
                         "The fixed project bucket provided doesn't actually appear to be a Fixed Budget Project Bucket");
@@ -208,7 +208,7 @@ namespace BudgetAnalyser.Engine.Services
             if (multiInstanceWidget is not null)
             {
                 var surprisePaymentWidget = multiInstanceWidget as SurprisePaymentWidget;
-                if (surprisePaymentWidget == null)
+                if (surprisePaymentWidget is null)
                 {
                     return new MultiInstanceWidgetState
                     {
@@ -269,7 +269,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void UpdateAllWidgets(params Type[] filterDependencyTypes)
         {
-            if (WidgetGroups == null || WidgetGroups.None())
+            if (WidgetGroups is null || WidgetGroups.None())
             {
                 // Widget Groups have not yet been initialised and persistent state has not yet been loaded.
                 return;
@@ -292,7 +292,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void UpdateWidget(Widget widget)
         {
-            if (widget.Dependencies == null || widget.Dependencies.None())
+            if (widget.Dependencies is null || widget.Dependencies.None())
             {
                 widget.Update();
                 return;
@@ -324,7 +324,7 @@ namespace BudgetAnalyser.Engine.Services
         private Widget UpdateWidgetCollectionWithNewAddition(Widget baseWidget)
         {
             var widgetGroup = WidgetGroups.FirstOrDefault(group => @group.Heading == baseWidget.Category);
-            if (widgetGroup == null)
+            if (widgetGroup is null)
             {
                 widgetGroup = new WidgetGroup
                 {

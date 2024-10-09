@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public OverallPerformanceChartService([NotNull] OverallPerformanceBudgetAnalyser analyser)
         {
-            if (analyser == null)
+            if (analyser is null)
             {
                 throw new ArgumentNullException(nameof(analyser));
             }
@@ -24,17 +24,17 @@ namespace BudgetAnalyser.Engine.Services
         public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets,
                                                          GlobalFilterCriteria criteria)
         {
-            if (statementModel == null)
+            if (statementModel is null)
             {
                 throw new ArgumentNullException(nameof(statementModel));
             }
 
-            if (budgets == null)
+            if (budgets is null)
             {
                 throw new ArgumentNullException(nameof(budgets));
             }
 
-            if (criteria == null)
+            if (criteria is null)
             {
                 throw new ArgumentNullException(nameof(criteria));
             }

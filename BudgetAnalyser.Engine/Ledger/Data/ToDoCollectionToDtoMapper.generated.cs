@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         {
             ToDoTask model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(ToDoTask).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         {
             ToDoTaskDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new ToDoTaskDto();
             }

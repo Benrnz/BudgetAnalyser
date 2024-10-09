@@ -33,9 +33,9 @@ namespace BudgetAnalyser.LedgerBook
         /// <summary>
         ///     Is only referring to finding a budget based on DateTime.Today!  Do not use for reconciliation purposes or validation. Delegate down to the engine. 
         /// </summary>
-        public bool NoBudgetLoaded => CurrentBudget == null;
-        public bool NoLedgerBookLoaded => LedgerBook == null;
-        public bool NoStatementLoaded => CurrentStatement == null;
+        public bool NoBudgetLoaded => CurrentBudget is null;
+        public bool NoLedgerBookLoaded => LedgerBook is null;
+        public bool NoStatementLoaded => CurrentStatement is null;
 
         /// <summary>
         ///     CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.

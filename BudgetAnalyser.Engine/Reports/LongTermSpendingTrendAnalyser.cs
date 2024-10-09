@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// <exception cref="System.ArgumentNullException"></exception>
         public LongTermSpendingTrendAnalyser([NotNull] IBudgetBucketRepository budgetBucketRepo)
         {
-            if (budgetBucketRepo == null)
+            if (budgetBucketRepo is null)
             {
                 throw new ArgumentNullException(nameof(budgetBucketRepo));
             }
@@ -45,12 +45,12 @@ namespace BudgetAnalyser.Engine.Reports
         /// </exception>
         public void Analyse([NotNull] StatementModel statement, [NotNull] GlobalFilterCriteria criteria)
         {
-            if (statement == null)
+            if (statement is null)
             {
                 throw new ArgumentNullException(nameof(statement));
             }
 
-            if (criteria == null)
+            if (criteria is null)
             {
                 throw new ArgumentNullException(nameof(criteria));
             }
@@ -94,7 +94,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         private static DateTime CalculateEndDate(StatementModel statement, GlobalFilterCriteria criteria)
         {
-            if (criteria.Cleared || criteria.EndDate == null)
+            if (criteria.Cleared || criteria.EndDate is null)
             {
                 var maxDate = statement.AllTransactions.Max(t => t.Date).Date;
                 return maxDate.LastDateInMonth();
@@ -105,7 +105,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         private static DateTime CalculateStartDate(StatementModel statement, GlobalFilterCriteria criteria)
         {
-            if (criteria.Cleared || criteria.BeginDate == null)
+            if (criteria.Cleared || criteria.BeginDate is null)
             {
                 var minDate = statement.AllTransactions.Min(t => t.Date).Date;
                 minDate = minDate.FirstDateInMonth();

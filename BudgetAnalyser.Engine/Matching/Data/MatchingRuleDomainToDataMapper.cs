@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Matching.Data
 
         public Mapper_MatchingRuleDto_MatchingRule([NotNull] IBudgetBucketRepository bucketRepo)
         {
-            if (bucketRepo == null) throw new ArgumentNullException(nameof(bucketRepo));
+            if (bucketRepo is null) throw new ArgumentNullException(nameof(bucketRepo));
             this.bucketRepo = bucketRepo;
         }
 

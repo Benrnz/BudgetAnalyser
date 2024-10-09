@@ -51,7 +51,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
 
     public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom, BudgetCycle budgetCycle)
     {
-        if (sourceBudget == null)
+        if (sourceBudget is null)
         {
             throw new ArgumentNullException(nameof(sourceBudget));
         }
@@ -97,7 +97,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         IEnumerable<Income> allIncomes,
         IEnumerable<Expense> allExpenses)
     {
-        if (model == null)
+        if (model is null)
         {
             throw new ArgumentNullException(nameof(model));
         }
@@ -126,7 +126,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
 
     public async Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
-        if (applicationDatabase == null)
+        if (applicationDatabase is null)
         {
             throw new ArgumentNullException(nameof(applicationDatabase));
         }

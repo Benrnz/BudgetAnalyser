@@ -38,12 +38,12 @@ namespace BudgetAnalyser.Engine.Budget
         /// </exception>
         protected BudgetBucket(string code, string name) : this()
         {
-            if (code == null)
+            if (code is null)
             {
                 throw new ArgumentNullException(nameof(code));
             }
 
-            if (name == null)
+            if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine.Budget
 
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     value = string.Empty;
                 }
@@ -122,7 +122,7 @@ namespace BudgetAnalyser.Engine.Budget
         public int CompareTo(object obj)
         {
             var otherBucket = obj as BudgetBucket;
-            if (otherBucket == null)
+            if (otherBucket is null)
             {
                 return -1;
             }
@@ -141,7 +141,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public bool Validate([NotNull] StringBuilder validationMessages)
         {
-            if (validationMessages == null)
+            if (validationMessages is null)
             {
                 throw new ArgumentNullException(nameof(validationMessages));
             }
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Budget
         public override bool Equals(object obj)
         {
             var otherBucket = obj as BudgetBucket;
-            if (otherBucket == null)
+            if (otherBucket is null)
             {
                 return false;
             }
@@ -210,12 +210,12 @@ namespace BudgetAnalyser.Engine.Budget
         public static bool operator ==(BudgetBucket obj1, BudgetBucket obj2)
         {
             object obj3 = obj1, obj4 = obj2;
-            if (obj3 == null && obj4 == null)
+            if (obj3 is null && obj4 is null)
             {
                 return true;
             }
 
-            if (obj3 == null || obj4 == null)
+            if (obj3 is null || obj4 is null)
             {
                 return false;
             }
@@ -235,12 +235,12 @@ namespace BudgetAnalyser.Engine.Budget
         /// </exception>
         public static bool operator >([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
         {
-            if (obj1 == null)
+            if (obj1 is null)
             {
                 throw new ArgumentNullException(nameof(obj1));
             }
 
-            if (obj2 == null)
+            if (obj2 is null)
             {
                 throw new ArgumentNullException(nameof(obj2));
             }
@@ -263,12 +263,12 @@ namespace BudgetAnalyser.Engine.Budget
         /// </exception>
         public static bool operator <([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
         {
-            if (obj1 == null)
+            if (obj1 is null)
             {
                 throw new ArgumentNullException(nameof(obj1));
             }
 
-            if (obj2 == null)
+            if (obj2 is null)
             {
                 throw new ArgumentNullException(nameof(obj2));
             }

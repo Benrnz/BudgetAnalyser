@@ -132,7 +132,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         protected bool Equals([NotNull] BudgetItem other)
         {
-            if (other == null)
+            if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }

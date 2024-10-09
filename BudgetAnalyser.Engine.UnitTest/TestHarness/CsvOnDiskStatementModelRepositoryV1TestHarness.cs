@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName, bool isEncrypted)
         {
-            if (ReadLinesOverride == null)
+            if (ReadLinesOverride is null)
             {
                 return Task.FromResult<IEnumerable<string>>(new List<string>());
             }
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines, bool isEncrypted)
         {
-            if (ReadLinesOverride == null)
+            if (ReadLinesOverride is null)
             {
                 return Task.FromResult<IEnumerable<string>>(new List<string>());
             }

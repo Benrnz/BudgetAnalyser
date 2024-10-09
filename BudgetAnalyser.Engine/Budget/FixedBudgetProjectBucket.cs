@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public static string CreateCode([NotNull] string subCode)
         {
-            if (subCode == null)
+            if (subCode is null)
             {
                 throw new ArgumentNullException(nameof(subCode));
             }

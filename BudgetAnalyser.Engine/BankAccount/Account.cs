@@ -108,7 +108,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// </summary>
         protected bool Equals([CanBeNull] Account other)
         {
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }

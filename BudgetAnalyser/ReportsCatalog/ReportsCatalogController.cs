@@ -20,7 +20,7 @@ public class ReportsCatalogController : ControllerBase, IShowableController
 
     public ReportsCatalogController([NotNull] UiContext uiContext, [NotNull] NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
     {
-        if (uiContext == null)
+        if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
@@ -52,7 +52,7 @@ public class ReportsCatalogController : ControllerBase, IShowableController
 
     public void ShowOverallPerformanceReport()
     {
-        if (this.currentStatementModel == null) return;
+        if (this.currentStatementModel is null) return;
         OverallPerformanceController.Load(this.currentStatementModel, this.budgets, RequestCurrentFilter());
 
         this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 650;

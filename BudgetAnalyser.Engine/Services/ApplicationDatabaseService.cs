@@ -27,19 +27,19 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] ICredentialStore credentialStore,
             [NotNull] ILogger logger)
         {
-            if (applicationRepository == null)
+            if (applicationRepository is null)
             {
                 throw new ArgumentNullException(nameof(applicationRepository));
             }
 
-            if (databaseDependents == null)
+            if (databaseDependents is null)
             {
                 throw new ArgumentNullException(nameof(databaseDependents));
             }
 
-            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
-            if (credentialStore == null) throw new ArgumentNullException(nameof(credentialStore));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
+            if (credentialStore is null) throw new ArgumentNullException(nameof(credentialStore));
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
 
             this.applicationRepository = applicationRepository;
             this.monitorableDependencies = monitorableDependencies;
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public ApplicationDatabase Close()
         {
-            if (this.budgetAnalyserDatabase == null)
+            if (this.budgetAnalyserDatabase is null)
             {
                 return null;
             }
@@ -101,7 +101,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public async Task EncryptFilesAsync()
         {  
-            if (this.credentialStore.RetrievePasskey() == null)
+            if (this.credentialStore.RetrievePasskey() is null)
             {
                 throw new EncryptionKeyNotProvidedException("Attempt to use encryption but no password is set.");
             }
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public async Task DecryptFilesAsync(object confirmCredentialsClaim)
         {
-            if (this.credentialStore.RetrievePasskey() == null)
+            if (this.credentialStore.RetrievePasskey() is null)
             {
                 throw new EncryptionKeyNotProvidedException("Attempt to use encryption but no password is set.");
             }
@@ -146,7 +146,7 @@ namespace BudgetAnalyser.Engine.Services
             ClearDirtyDataFlags();
             var encryptionKey = this.credentialStore.RetrievePasskey();
             this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
-            if (this.budgetAnalyserDatabase.IsEncrypted && encryptionKey == null)
+            if (this.budgetAnalyserDatabase.IsEncrypted && encryptionKey is null)
             {
                 throw new EncryptionKeyNotProvidedException($"{this.budgetAnalyserDatabase.FileName} is encrypted and no password has been provided.");
             }
@@ -188,7 +188,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public MainApplicationState PreparePersistentStateData()
         {
-            if (this.budgetAnalyserDatabase == null)
+            if (this.budgetAnalyserDatabase is null)
             {
                 return new MainApplicationState();
             }
@@ -201,7 +201,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public async Task SaveAsync()
         {
-            if (this.budgetAnalyserDatabase == null)
+            if (this.budgetAnalyserDatabase is null)
             {
                 throw new InvalidOperationException("Application Database cannot be null here. Code Bug.");
             }
@@ -243,7 +243,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool ValidateAll([NotNull] StringBuilder messages)
         {
-            if (messages == null)
+            if (messages is null)
             {
                 throw new ArgumentNullException(nameof(messages));
             }

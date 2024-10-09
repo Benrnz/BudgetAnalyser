@@ -15,12 +15,12 @@ public class ConcurrentMessenger : IMessenger
 
     public ConcurrentMessenger([NotNull] IMessenger defaultMessenger, [NotNull] ILogger logger)
     {
-        if (defaultMessenger == null)
+        if (defaultMessenger is null)
         {
             throw new ArgumentNullException(nameof(defaultMessenger));
         }
 
-        if (logger == null)
+        if (logger is null)
         {
             throw new ArgumentNullException(nameof(logger));
         }

@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Encryption
         {
             if (sourceFile.IsNothing()) throw new ArgumentNullException(nameof(sourceFile));
             if (destinationFile.IsNothing()) throw new ArgumentNullException(nameof(destinationFile));
-            if (passphrase == null) throw new ArgumentNullException(nameof(passphrase));
+            if (passphrase is null) throw new ArgumentNullException(nameof(passphrase));
 
             if (!FileExists(sourceFile))
             {

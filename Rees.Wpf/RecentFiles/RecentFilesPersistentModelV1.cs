@@ -28,7 +28,7 @@ namespace Rees.Wpf.RecentFiles
         /// </exception>
         public RecentFilesPersistentModelV1(Dictionary<string, RecentFileV1> recentlyUsedFiles)
         {
-            if (recentlyUsedFiles == null)
+            if (recentlyUsedFiles is null)
             {
                 throw new ArgumentNullException("recentlyUsedFiles");
             }

@@ -21,12 +21,12 @@ namespace BudgetAnalyser.Statement
             [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (applicationDatabaseService == null)
+            if (applicationDatabaseService is null)
             {
                 throw new ArgumentNullException(nameof(applicationDatabaseService));
             }

@@ -32,12 +32,12 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         : base(uiContext.Messenger)
     {
         this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
-        if (uiContext == null)
+        if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        if (accountTypeRepository == null)
+        if (accountTypeRepository is null)
         {
             throw new ArgumentNullException(nameof(accountTypeRepository));
         }
@@ -184,7 +184,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     /// </summary>
     public void ShowViewDialog([NotNull] Engine.Ledger.LedgerBook ledgerBook, [NotNull] LedgerEntryLine line)
     {
-        if (line == null)
+        if (line is null)
         {
             throw new ArgumentNullException(nameof(line));
         }
@@ -248,7 +248,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     private void OnRemoveBankBalanceCommandExecuted(BankBalanceViewModel? bankBalance)
     {
-        if (bankBalance == null)
+        if (bankBalance is null)
         {
             return;
         }

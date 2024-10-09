@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Dashboard
 
         public override void Update([NotNull] params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }

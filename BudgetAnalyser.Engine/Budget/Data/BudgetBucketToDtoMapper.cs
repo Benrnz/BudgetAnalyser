@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
 
         public Mapper_BudgetBucketDto_BudgetBucket([NotNull] IBudgetBucketFactory bucketFactory)
         {
-            if (bucketFactory == null) throw new ArgumentNullException(nameof(bucketFactory));
+            if (bucketFactory is null) throw new ArgumentNullException(nameof(bucketFactory));
             this.bucketFactory = bucketFactory;
         }
 

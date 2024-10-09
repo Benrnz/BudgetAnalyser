@@ -31,17 +31,17 @@ namespace BudgetAnalyser
             [NotNull] PersistenceOperations persistenceOperations)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (statePersistence == null)
+            if (statePersistence is null)
             {
                 throw new ArgumentNullException(nameof(statePersistence));
             }
 
-            if (persistenceOperations == null)
+            if (persistenceOperations is null)
             {
                 throw new ArgumentNullException(nameof(persistenceOperations));
             }
@@ -108,7 +108,7 @@ namespace BudgetAnalyser
             this.initialised = true;
             IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load()?.ToList();
 
-            if (rehydratedModels == null || rehydratedModels.None())
+            if (rehydratedModels is null || rehydratedModels.None())
             {
                 rehydratedModels = CreateNewDefaultApplicationState();
             }
@@ -200,7 +200,7 @@ namespace BudgetAnalyser
 
         private async void OnApplicationStateLoaded([NotNull] ApplicationStateLoadedMessage message)
         {
-            if (message == null)
+            if (message is null)
             {
                 throw new ArgumentNullException(nameof(message));
             }

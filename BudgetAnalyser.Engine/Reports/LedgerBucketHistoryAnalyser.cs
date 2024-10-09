@@ -27,12 +27,12 @@ namespace BudgetAnalyser.Engine.Reports
         /// </summary>
         public void Analyse([NotNull] LedgerBucket ledger, [NotNull] LedgerBook book)
         {
-            if (ledger == null)
+            if (ledger is null)
             {
                 throw new ArgumentNullException(nameof(ledger));
             }
 
-            if (book == null)
+            if (book is null)
             {
                 throw new ArgumentNullException(nameof(book));
             }

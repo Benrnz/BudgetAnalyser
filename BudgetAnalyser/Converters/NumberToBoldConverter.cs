@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             decimal? number = ConverterHelper.ParseNumber(value);
-            if (number == null)
+            if (number is null)
             {
                 return FontWeights.Normal;
             }

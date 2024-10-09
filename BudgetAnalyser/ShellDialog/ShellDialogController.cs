@@ -30,7 +30,7 @@ namespace BudgetAnalyser.ShellDialog
             get
             {
                 var customTooltips = Content as IShellDialogToolTips;
-                if (customTooltips == null)
+                if (customTooltips is null)
                 {
                     return DialogType == ShellDialogType.SaveCancel ? "Save" : "Ok";
                 }
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.ShellDialog
             get
             {
                 var customTooltips = Content as IShellDialogToolTips;
-                if (customTooltips == null)
+                if (customTooltips is null)
                 {
                     return "Close";
                 }
@@ -158,7 +158,7 @@ namespace BudgetAnalyser.ShellDialog
         
         private bool CanExecuteDialogCommand(ShellDialogButton arg)
         {
-            if (Content == null)
+            if (Content is null)
             {
                 return false;
             }
@@ -188,7 +188,7 @@ namespace BudgetAnalyser.ShellDialog
                 DispatcherPriority.ApplicationIdle,
                 () =>
                 {
-                    if (Content == null) return;
+                    if (Content is null) return;
 
                     // No correlation id given so no response is expected.
                     if (CorrelationId != Guid.Empty)

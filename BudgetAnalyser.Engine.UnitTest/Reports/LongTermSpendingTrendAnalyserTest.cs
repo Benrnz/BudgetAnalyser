@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
 
         private LongTermSpendingTrendAnalyser Arrange(IBudgetBucketRepository bucketRepo = null)
         {
-            if (bucketRepo == null)
+            if (bucketRepo is null)
             {
                 var bucketRepositoryMock = new Mock<IBudgetBucketRepository>();
                 var buckets = new List<BudgetBucket>

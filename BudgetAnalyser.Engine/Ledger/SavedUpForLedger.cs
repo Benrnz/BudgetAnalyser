@@ -18,7 +18,7 @@ public class SavedUpForLedger : LedgerBucket
     public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
                                                       decimal openingBalance)
     {
-        if (transactions == null)
+        if (transactions is null)
         {
             throw new ArgumentNullException(nameof(transactions));
         }

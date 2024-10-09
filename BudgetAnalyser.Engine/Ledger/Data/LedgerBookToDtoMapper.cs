@@ -57,7 +57,7 @@ internal partial class Mapper_LedgerBookDto_LedgerBook
         this.cachedLedgers.Clear();
         foreach (var ledgerBucket in model.Ledgers)
         {
-            if (ledgerBucket.StoredInAccount == null)
+            if (ledgerBucket.StoredInAccount is null)
             {
                 // Defaults to Cheque Account if unspecified.
                 ledgerBucket.StoredInAccount = this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
@@ -76,7 +76,7 @@ internal partial class Mapper_LedgerBookDto_LedgerBook
                 // Ensure the ledger bucket is the same instance as listed in the book.Ledgers;
                 // If its not found thats ok, this means its a old ledger no longer declared in the LedgerBook and is archived and hidden.
                 entry.LedgerBucket = GetOrAddFromCache(entry.LedgerBucket, false);
-                if (entry.LedgerBucket is not null && entry.LedgerBucket.StoredInAccount == null)
+                if (entry.LedgerBucket is not null && entry.LedgerBucket.StoredInAccount is null)
                 {
                     entry.LedgerBucket.StoredInAccount = this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
                 }
@@ -98,7 +98,7 @@ internal partial class Mapper_LedgerBookDto_LedgerBook
 
     partial void ToDtoPreprocessing(LedgerBook model)
     {
-        if (model.MobileSettings == null)
+        if (model.MobileSettings is null)
         {
             model.MobileSettings = new MobileStorageSettings();
         }

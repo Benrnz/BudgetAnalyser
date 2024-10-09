@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </exception>
         public InMemoryBudgetBucketRepository([NotNull] IDtoMapper<BudgetBucketDto, BudgetBucket> mapper)
         {
-            if (mapper == null)
+            if (mapper is null)
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public virtual BudgetBucket GetByCode(string code)
         {
-            if (code == null)
+            if (code is null)
             {
                 throw new ArgumentNullException(nameof(code));
             }
@@ -132,12 +132,12 @@ namespace BudgetAnalyser.Engine.Budget
         /// </exception>
         public virtual BudgetBucket GetOrCreateNew(string code, Func<BudgetBucket> factory)
         {
-            if (code == null)
+            if (code is null)
             {
                 throw new ArgumentNullException(nameof(code));
             }
 
-            if (factory == null)
+            if (factory is null)
             {
                 throw new ArgumentNullException(nameof(factory));
             }
@@ -162,7 +162,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public virtual void Initialise(IEnumerable<BudgetBucketDto> buckets)
         {
-            if (buckets == null)
+            if (buckets is null)
             {
                 throw new ArgumentNullException(nameof(buckets));
             }
@@ -189,7 +189,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public virtual bool IsValidCode(string code)
         {
-            if (code == null)
+            if (code is null)
             {
                 throw new ArgumentNullException(nameof(code));
             }
@@ -203,7 +203,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <param name="projectBucket">The project bucket to remove.</param>
         public void RemoveFixedBudgetProject(FixedBudgetProjectBucket projectBucket)
         {
-            if (projectBucket == null)
+            if (projectBucket is null)
             {
                 throw new ArgumentNullException(nameof(projectBucket));
             }
@@ -228,7 +228,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         protected void AddBucket([NotNull] BudgetBucket bucket)
         {
-            if (bucket == null)
+            if (bucket is null)
             {
                 throw new ArgumentNullException(nameof(bucket));
             }

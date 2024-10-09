@@ -20,7 +20,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                if (LedgerTransaction == null)
+                if (LedgerTransaction is null)
                 {
                     return null;
                 }
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                if (LedgerTransaction == null)
+                if (LedgerTransaction is null)
                 {
                     return null;
                 }

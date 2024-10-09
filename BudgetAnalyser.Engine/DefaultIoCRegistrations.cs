@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine
         /// <returns>The found named instance, or null if no instance matches the name.</returns>
         public static T GetNamedInstance<T>([NotNull] IEnumerable<T> instances, string name) where T : class
         {
-            if (instances == null) throw new ArgumentNullException(nameof(instances));
+            if (instances is null) throw new ArgumentNullException(nameof(instances));
             foreach (var instance in instances)
             {
                 IEnumerable<AutoRegisterWithIoCAttribute> attributes = instance.GetType().GetTypeInfo().GetCustomAttributes<AutoRegisterWithIoCAttribute>();
@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine
         /// <param name="assembly">The assembly in which to search for automatic registrations.</param>
         public static IEnumerable<PropertyInjectionDependencyRequirement> ProcessPropertyInjection([NotNull] Assembly assembly)
         {
-            if (assembly == null)
+            if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine
         /// <param name="assembly">The assembly in which to search for automatic registrations.</param>
         public static IEnumerable<DependencyRegistrationRequirement> RegisterAutoMappingsFromAssembly([NotNull] Assembly assembly)
         {
-            if (assembly == null)
+            if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }

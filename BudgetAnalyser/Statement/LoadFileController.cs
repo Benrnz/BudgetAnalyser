@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Statement
             [NotNull] IAccountTypeRepository accountTypeRepository)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
@@ -224,7 +224,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            if (SelectedExistingAccountName == null)
+            if (SelectedExistingAccountName is null)
             {
                 CanExecuteOkButton = false;
                 return;
@@ -292,7 +292,7 @@ namespace BudgetAnalyser.Statement
                 dialog.Title = "Select a CSV file of transactions to load.";
                 dialog.Filter = "Comma Separated Values (*.CSV)|*.CSV";
                 bool? result = dialog.ShowDialog();
-                if (result == null || result == false)
+                if (result is null || result == false)
                 {
                     FileName = null;
                     return;

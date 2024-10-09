@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Matching
             [NotNull] IBudgetBucketRepository bucketRepo)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
@@ -243,7 +243,7 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            if (Bucket == null)
+            if (Bucket is null)
             {
                 this.messageBoxService.Show("Bucket cannot be null.");
                 return;
@@ -274,7 +274,7 @@ namespace BudgetAnalyser.Matching
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Reviewed, acceptable here.")]
         private void UpdateSimilarRules()
         {
-            if (SimilarRules == null)
+            if (SimilarRules is null)
             {
                 return;
             }

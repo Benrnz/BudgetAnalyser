@@ -23,12 +23,12 @@ namespace BudgetAnalyser.Engine.Matching
         /// </exception>
         public RulesGroupedByBucket([NotNull] BudgetBucket bucket, [NotNull] IEnumerable<MatchingRule> rules)
         {
-            if (bucket == null)
+            if (bucket is null)
             {
                 throw new ArgumentNullException(nameof(bucket));
             }
 
-            if (rules == null)
+            if (rules is null)
             {
                 throw new ArgumentNullException(nameof(rules));
             }

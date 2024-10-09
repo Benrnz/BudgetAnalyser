@@ -17,17 +17,17 @@ namespace BudgetAnalyser.Statement
             [NotNull] StatementController controller,
             [NotNull] IUserQuestionBoxYesNo questionBox)
         {
-            if (messenger == null)
+            if (messenger is null)
             {
                 throw new ArgumentNullException(nameof(messenger));
             }
 
-            if (controller == null)
+            if (controller is null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
 
-            if (questionBox == null)
+            if (questionBox is null)
             {
                 throw new ArgumentNullException(nameof(questionBox));
             }
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Statement
             if (foundTransaction is not null)
             {
                 bool? result = this.questionBox.Show("The transaction falls outside the current filter. Do you wish to adjust the filter to show the transaction?", "Navigate to Transaction");
-                if (result == null || !result.Value)
+                if (result is null || !result.Value)
                 {
                     return false;
                 }

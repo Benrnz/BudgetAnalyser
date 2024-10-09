@@ -27,7 +27,7 @@ namespace Rees.Wpf.ApplicationState
         /// <exception cref="System.ArgumentNullException">userMessageBox cannot be null.</exception>
         public PersistApplicationStateAsXaml([NotNull] IUserMessageBox userMessageBox)
         {
-            if (userMessageBox == null)
+            if (userMessageBox is null)
             {
                 throw new ArgumentNullException("userMessageBox");
             }
@@ -74,7 +74,7 @@ namespace Rees.Wpf.ApplicationState
                 var serialised = XamlServices.Load(FullFileName);
                 // Will always succeed without exceptions even if bad file format, but will return null.
                 var correctFormat = serialised as List<IPersistent>;
-                if (correctFormat == null)
+                if (correctFormat is null)
                 {
                     throw new BadApplicationStateFileFormatException(
                                                                      string.Format(CultureInfo.InvariantCulture,

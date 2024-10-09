@@ -26,7 +26,7 @@ namespace Rees.Wpf.RecentFiles
         /// <exception cref="System.ArgumentNullException">messenger cannot be null.</exception>
         public AppStateRecentFileManager([NotNull] IMessenger messenger)
         {
-            if (messenger == null)
+            if (messenger is null)
             {
                 throw new ArgumentNullException("messenger");
             }

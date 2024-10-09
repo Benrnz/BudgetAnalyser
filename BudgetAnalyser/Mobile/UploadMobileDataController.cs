@@ -46,7 +46,7 @@ namespace BudgetAnalyser.Mobile
             [NotNull] IApplicationDatabaseFacade appDbService)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));
+            if (uiContext is null) throw new ArgumentNullException(nameof(uiContext));
             this.dataExporter = dataExporter ?? throw new ArgumentNullException(nameof(dataExporter));
             this.uploader = uploader ?? throw new ArgumentNullException(nameof(uploader));
             this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Mobile
 
         private async Task AttemptUploadAsync()
         {
-            if (this.widget == null)
+            if (this.widget is null)
             {
                 this.logger.LogError(l => "Widget cannot be null when attempting to Upload mobile data.");
                 return;

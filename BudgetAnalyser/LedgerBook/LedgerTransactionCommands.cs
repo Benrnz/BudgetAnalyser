@@ -21,7 +21,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private static void OnNavigateToTransactionCommandExecute([NotNull] Guid? transactionId)
         {
-            if (transactionId == null)
+            if (transactionId is null)
             {
                 throw new ArgumentNullException(nameof(transactionId));
             }

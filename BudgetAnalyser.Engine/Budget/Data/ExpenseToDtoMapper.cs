@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
 
         public Mapper_ExpenseDto_Expense([NotNull] IBudgetBucketRepository bucketRepo)
         {
-            if (bucketRepo == null) throw new ArgumentNullException(nameof(bucketRepo));
+            if (bucketRepo is null) throw new ArgumentNullException(nameof(bucketRepo));
             this.bucketRepo = bucketRepo;
         }
 

@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         public bool Equals(BudgetBucket x, BudgetBucket y)
         {
-            if (x == null || y == null)
+            if (x is null || y is null)
             {
                 return false;
             }
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         public int GetHashCode(BudgetBucket obj)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return 0;
             }

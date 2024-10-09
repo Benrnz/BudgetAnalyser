@@ -40,22 +40,22 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
                                                         bool ignoreWarnings,
                                                         params BankBalance[] currentBankBalances)
     {
-        if (ledgerBook == null)
+        if (ledgerBook is null)
         {
             throw new ArgumentNullException(nameof(ledgerBook));
         }
 
-        if (currentBankBalances == null)
+        if (currentBankBalances is null)
         {
             throw new ArgumentNullException(nameof(currentBankBalances));
         }
 
-        if (budgetCollection == null)
+        if (budgetCollection is null)
         {
             throw new ArgumentNullException(nameof(budgetCollection));
         }
 
-        if (statement == null)
+        if (statement is null)
         {
             throw new ArgumentNullException(nameof(statement));
         }
@@ -93,7 +93,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
                 ledgerBook.Reconcile(recon);
             }
 
-            if (recon == null)
+            if (recon is null)
             {
                 throw new NullReferenceException("Unexpected error: Reconciliation failed to create.");
             }
@@ -127,12 +127,12 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
     /// </summary>
     public void TransferFunds(LedgerBook ledgerBook, TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
     {
-        if (transferDetails == null)
+        if (transferDetails is null)
         {
             throw new ArgumentNullException(nameof(transferDetails));
         }
 
-        if (ledgerEntryLine == null)
+        if (ledgerEntryLine is null)
         {
             throw new ArgumentNullException(nameof(ledgerEntryLine));
         }
@@ -154,18 +154,18 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
     /// </summary>
     public void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, StatementModel statement)
     {
-        if (ledgerBook == null)
+        if (ledgerBook is null)
         {
             throw new ArgumentNullException(nameof(ledgerBook));
         }
 
-        if (statement == null)
+        if (statement is null)
         {
             throw new ArgumentNullException(nameof(statement));
         }
 
         var lastLine = ledgerBook.Reconciliations.FirstOrDefault();
-        if (lastLine == null)
+        if (lastLine is null)
         {
             return;
         }
@@ -280,7 +280,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             throw new InvalidOperationException("Ledger book is currently in an invalid state. Cannot add new entries.\n" + messages);
         }
 
-        if (budget == null)
+        if (budget is null)
         {
             throw new InvalidOperationException("No budget can be found with an effective date before " + reconciliationDate);
         }
@@ -337,13 +337,13 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             .Where(t => t.Date >= startDate && t.Date < reconciliationDate)
             .Any(
                  t =>
-                     t.BudgetBucket == null ||
+                     t.BudgetBucket is null ||
                      (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
         {
             IEnumerable<Transaction> uncategorised =
                 statement.AllTransactions.Where(
                                                 t =>
-                                                    t.BudgetBucket == null ||
+                                                    t.BudgetBucket is null ||
                                                     (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
             var count = 0;
             this.logger.LogWarning(

@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Statement
 
         public SplitTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
@@ -100,7 +100,7 @@ namespace BudgetAnalyser.Statement
         {
             get
             {
-                if (OriginalTransaction == null) return false;
+                if (OriginalTransaction is null) return false;
 
                 if (SplinterAmount1 == 0)
                 {

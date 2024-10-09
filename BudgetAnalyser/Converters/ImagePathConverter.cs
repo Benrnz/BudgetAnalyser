@@ -8,12 +8,12 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
+            if (value is null)
             {
                 return null;
             }
 
-            if (parameter == null)
+            if (parameter is null)
             {
                 return value;
             }

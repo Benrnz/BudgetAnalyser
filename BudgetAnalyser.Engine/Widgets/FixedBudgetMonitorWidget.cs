@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            if (Statement == null)
+            if (Statement is null)
             {
                 ToolTip = this.disabledToolTip;
                 Enabled = false;

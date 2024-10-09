@@ -621,7 +621,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             currentLine.BankBalance = bankBalance;
             currentLine.BankBalances.Add(new BankBalanceDto { Account = StatementModelTestData.ChequeAccount.Name, Balance = bankBalance });
 
-            if (previousLine == null)
+            if (previousLine is null)
             {
                 return;
             }

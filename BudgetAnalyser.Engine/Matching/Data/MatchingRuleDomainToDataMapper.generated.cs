@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Matching.Data
             ToModelPreprocessing(dto);
             MatchingRule model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(MatchingRule).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);

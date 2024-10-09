@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Matching
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
-            if (bucketRepository == null)
+            if (bucketRepository is null)
             {
                 throw new ArgumentNullException(nameof(bucketRepository));
             }
@@ -94,7 +94,7 @@ namespace BudgetAnalyser.Engine.Matching
             [UsedImplicitly]
             private set
             {
-                if (value == null)
+                if (value is null)
                 {
                     BucketCode = null;
                     return;
@@ -287,7 +287,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// <returns>true if a the rule matches the transactions</returns>
         public bool Match([NotNull] Transaction transaction)
         {
-            if (transaction == null)
+            if (transaction is null)
             {
                 throw new ArgumentNullException(nameof(transaction));
             }

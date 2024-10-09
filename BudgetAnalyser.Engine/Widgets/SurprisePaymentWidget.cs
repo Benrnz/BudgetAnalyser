@@ -101,7 +101,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
     public override void Update(params object[] input)
     {
-        if (input == null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input));
         }
@@ -116,20 +116,20 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         this.filter = (GlobalFilterCriteria)input[1];
         var budgetCollection = ((BudgetCollection)input[2]);
 
-        if (this.filter == null 
+        if (this.filter is null 
             || this.filter.Cleared 
-            || this.filter.BeginDate == null 
+            || this.filter.BeginDate is null 
             || this.filter.BeginDate == DateTime.MinValue 
-            || this.filter.EndDate == null 
+            || this.filter.EndDate is null 
             || this.filter.EndDate.Value == DateTime.MinValue 
-            || this.bucketRepository == null)
+            || this.bucketRepository is null)
         {
             Enabled = false;
             ToolTip = "The global filter dates are not set."; 
             return;
         }
 
-        if (budgetCollection == null)
+        if (budgetCollection is null)
         {
             Enabled = false;
             ToolTip = "The budget collection is empty or null."; 
@@ -179,7 +179,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
                 this.diagLogger.LogInfo(l => l.Format("    {0} {1}", tally4Log.StartDate.ToString("MMMM"), tally4Log.ConcatDates()));
                 if (AbnormalNumberOfPayments(currentMonthTally.Dates.Count))
                 {
-                    if (firstOccurance == null)
+                    if (firstOccurance is null)
                     {
                         firstOccurance = currentMonthTally;
                     }
@@ -202,7 +202,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
 
         ColourStyleName = alert ? WidgetWarningStyle : WidgetStandardStyle;
         DetailedText = string.Format(CultureInfo.CurrentCulture, "Monitoring {0} {1} bucket. {2}", Frequency, BucketCode, content);
-        if (firstOccurance == null)
+        if (firstOccurance is null)
         {
             LargeNumber = string.Empty;
             ToolTip = ToolTipPrefix;

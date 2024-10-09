@@ -329,7 +329,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
                 decimal balance, netAmount;
 
                 var movedBankAccounts = false;
-                if (entry == null)
+                if (entry is null)
                 {
                     // New ledger added that older entries do not have.
                     balance = 0;
@@ -492,7 +492,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
 
     private void DynamicallyCreateLedgerBookGrid(int numberOfPeriodsToShow)
     {
-        if (this.ledgerBook == null)
+        if (this.ledgerBook is null)
         {
             this.contentPresenter = null;
             return;
