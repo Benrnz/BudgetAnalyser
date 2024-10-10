@@ -115,9 +115,9 @@ internal class ReconciliationBuilder : IReconciliationBuilder
     internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
     {
         IOrderedEnumerable<Transaction> sortedTransactions = transactions.Where(t =>
-                                                                      t.Reference1.TrimEndSafely() == autoMatchingReference
-                                                                      || t.Reference2.TrimEndSafely() == autoMatchingReference
-                                                                      || t.Reference3.TrimEndSafely() == autoMatchingReference)
+                                                                      t.Reference1?.TrimEnd() == autoMatchingReference
+                                                                      || t.Reference2?.TrimEnd() == autoMatchingReference
+                                                                      || t.Reference3?.TrimEnd() == autoMatchingReference)
             .OrderBy(t => t.Amount);
         return sortedTransactions;
     }
