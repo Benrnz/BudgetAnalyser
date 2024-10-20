@@ -19,7 +19,7 @@ internal class Mapper_ListToDoTaskDto_ToDoCollection : IDtoMapper<List<ToDoTaskD
 
     public ToDoCollection ToModel([NotNull] List<ToDoTaskDto> dto)
     {
-        if (dto == null)
+        if (dto is null)
         {
             throw new ArgumentNullException(nameof(dto));
         }

@@ -50,10 +50,10 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [UsedImplicitly]
-        public ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t != null);
+        public ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t is not null);
 
         [UsedImplicitly]
-        public ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t != null);
+        public ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t is not null);
 
         [UsedImplicitly]
         public ToDoTask SelectedTask

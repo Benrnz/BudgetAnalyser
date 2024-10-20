@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             set
             {
-                if (value == null && this.budgetBucket != null)
+                if (value is null && this.budgetBucket is not null)
                 {
                     throw new ArgumentNullException(nameof(value), "Setting a budget bucket to null when it already has a non-null value is not allowed.");
                 }
@@ -209,7 +209,7 @@ namespace BudgetAnalyser.Engine.Statement
         public int CompareTo(object obj)
         {
             var otherTransaction = obj as Transaction;
-            if (otherTransaction == null)
+            if (otherTransaction is null)
             {
                 return 1;
             }

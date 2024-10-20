@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToModelPreprocessing(dto);
             LedgerBook model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(LedgerBook).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPreprocessing(model);
             LedgerBookDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new LedgerBookDto();
             }
@@ -90,7 +90,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToModelPreprocessing(dto);
             LedgerBucket model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(LedgerBucket).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPreprocessing(model);
             LedgerBucketDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new LedgerBucketDto();
             }
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToModelPreprocessing(dto);
             LedgerEntryLine model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(LedgerEntryLine).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -161,7 +161,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPreprocessing(model);
             LedgerEntryLineDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new LedgerEntryLineDto();
             }
@@ -198,7 +198,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToModelPreprocessing(dto);
             BankBalanceAdjustmentTransaction model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(BankBalanceAdjustmentTransaction).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -224,7 +224,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPreprocessing(model);
             LedgerTransactionDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new LedgerTransactionDto();
             }
@@ -258,7 +258,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToModelPreprocessing(dto);
             BankBalance model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 // model = new BankBalance(); 
             }
@@ -272,7 +272,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPreprocessing(model);
             BankBalanceDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new BankBalanceDto();
             }
@@ -297,7 +297,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         {
             LedgerEntry model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(LedgerEntry).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -316,7 +316,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPreprocessing(model);
             LedgerEntryDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new LedgerEntryDto();
             }
@@ -345,7 +345,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToModelPreprocessing(dto);
             LedgerTransaction model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(LedgerTransaction).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -371,7 +371,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPreprocessing(model);
             LedgerTransactionDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new LedgerTransactionDto();
             }
@@ -404,11 +404,11 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToModelPreprocessing(dto);
             Mobile.MobileStorageSettings model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 model = new MobileStorageSettings();
             }
-            if (dto == null) return model;
+            if (dto is null) return model;
             var modelType = model.GetType();
             model.AccessKeyId = dto.AccessKeyId;
             model.AccessKeySecret = dto.AccessKeySecret;
@@ -422,7 +422,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPreprocessing(model);
             MobileStorageSettingsDto dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new MobileStorageSettingsDto();
             }

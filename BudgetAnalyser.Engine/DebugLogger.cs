@@ -66,12 +66,12 @@ public class DebugLogger : ILogger
     public void LogError(Exception ex, Func<ILogger, string> logEntryBuilder)
     {
         if (!ShouldILog(LogLevel.Error)) return;
-        if (ex == null)
+        if (ex is null)
         {
             throw new ArgumentNullException(nameof(ex));
         }
 
-        if (logEntryBuilder == null)
+        if (logEntryBuilder is null)
         {
             throw new ArgumentNullException(nameof(logEntryBuilder));
         }
@@ -86,7 +86,7 @@ public class DebugLogger : ILogger
     public void LogInfo(Func<ILogger, string> logEntryBuilder)
     {
         if (!ShouldILog(LogLevel.Info)) return;
-        if (logEntryBuilder == null)
+        if (logEntryBuilder is null)
         {
             throw new ArgumentNullException(nameof(logEntryBuilder));
         }

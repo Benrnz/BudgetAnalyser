@@ -49,7 +49,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnBankBalanceKeyDown(object sender, KeyEventArgs e)
         {
             var balanceBox = sender as TextBox;
-            if (balanceBox == null) return;
+            if (balanceBox is null) return;
             switch (e.Key)
             {
                 case Key.Decimal:
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnBankBalanceKeyUp(object sender, KeyEventArgs e)
         {
             var balanceBox = sender as TextBox;
-            if (balanceBox == null) return;
+            if (balanceBox is null) return;
             switch (e.Key)
             {
                 case Key.Back:

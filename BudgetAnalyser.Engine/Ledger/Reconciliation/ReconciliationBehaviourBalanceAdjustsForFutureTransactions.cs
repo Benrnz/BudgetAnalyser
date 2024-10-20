@@ -24,17 +24,17 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                 Statement = Statement ?? argument as StatementModel;
             }
 
-            if (TodoTasks == null)
+            if (TodoTasks is null)
             {
                 throw new ArgumentNullException(nameof(TodoTasks));
             }
 
-            if (NewReconLine == null)
+            if (NewReconLine is null)
             {
                 throw new ArgumentNullException(nameof(NewReconLine));
             }
 
-            if (Statement == null)
+            if (Statement is null)
             {
                 throw new ArgumentNullException(nameof(Statement));
             }
@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 
         public void ApplyBehaviour()
         {
-            if (Statement != null)
+            if (Statement is not null)
             {
                 AddBalanceAdjustmentsForFutureTransactions(Statement, NewReconLine.Date);
             }

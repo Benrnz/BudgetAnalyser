@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <exception cref="System.ArgumentNullException"></exception>
         public new bool Remove([NotNull] ToDoTask task)
         {
-            if (task == null)
+            if (task is null)
             {
                 throw new ArgumentNullException(nameof(task));
             }
@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <exception cref="System.ArgumentNullException"></exception>
         public bool RemoveReminderTask([NotNull] ToDoTask task)
         {
-            if (task == null)
+            if (task is null)
             {
                 throw new ArgumentNullException(nameof(task));
             }

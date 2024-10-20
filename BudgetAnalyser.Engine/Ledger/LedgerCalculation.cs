@@ -55,17 +55,17 @@ public class LedgerCalculation
         [NotNull] StatementModel statement)
     {
         CheckCacheForCleanUp();
-        if (ledgerLine == null)
+        if (ledgerLine is null)
         {
             throw new ArgumentNullException(nameof(ledgerLine));
         }
 
-        if (filter == null)
+        if (filter is null)
         {
             throw new ArgumentNullException(nameof(filter));
         }
 
-        if (statement == null)
+        if (statement is null)
         {
             throw new ArgumentNullException(nameof(statement));
         }
@@ -92,17 +92,17 @@ public class LedgerCalculation
     public virtual decimal CalculateCurrentPeriodSurplusBalance([NotNull] LedgerEntryLine ledgerLine, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
     {
         CheckCacheForCleanUp();
-        if (ledgerLine == null)
+        if (ledgerLine is null)
         {
             throw new ArgumentNullException(nameof(ledgerLine));
         }
 
-        if (filter == null)
+        if (filter is null)
         {
             throw new ArgumentNullException(nameof(filter));
         }
 
-        if (statement == null)
+        if (statement is null)
         {
             throw new ArgumentNullException(nameof(statement));
         }
@@ -136,17 +136,17 @@ public class LedgerCalculation
         [NotNull] string bucketCode)
     {
         CheckCacheForCleanUp();
-        if (ledgerLine == null)
+        if (ledgerLine is null)
         {
             throw new ArgumentNullException(nameof(ledgerLine));
         }
 
-        if (filter == null)
+        if (filter is null)
         {
             throw new ArgumentNullException(nameof(filter));
         }
 
-        if (statement == null)
+        if (statement is null)
         {
             throw new ArgumentNullException(nameof(statement));
         }
@@ -174,12 +174,12 @@ public class LedgerCalculation
     {
         CheckCacheForCleanUp();
 
-        if (statement == null)
+        if (statement is null)
         {
             throw new ArgumentNullException(nameof(statement));
         }
 
-        if (ledgerLine == null)
+        if (ledgerLine is null)
         {
             throw new ArgumentNullException(nameof(ledgerLine));
         }
@@ -222,18 +222,18 @@ public class LedgerCalculation
     public virtual decimal LocateApplicableLedgerBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, string bucketCode)
     {
         CheckCacheForCleanUp();
-        if (ledgerBook == null)
+        if (ledgerBook is null)
         {
             throw new ArgumentNullException(nameof(ledgerBook));
         }
 
-        if (filter == null)
+        if (filter is null)
         {
             throw new ArgumentNullException(nameof(filter));
         }
 
         var line = LocateApplicableLedgerLine(ledgerBook, filter);
-        if (line == null)
+        if (line is null)
         {
             return 0;
         }
@@ -251,12 +251,12 @@ public class LedgerCalculation
     public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)
     {
         CheckCacheForCleanUp();
-        if (ledgerBook == null)
+        if (ledgerBook is null)
         {
             return null;
         }
 
-        if (filter == null)
+        if (filter is null)
         {
             throw new ArgumentNullException(nameof(filter));
         }
@@ -272,7 +272,7 @@ public class LedgerCalculation
     public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime? inclBeginDate, DateTime? inclEndDate)
     {
         CheckCacheForCleanUp();
-        if (ledgerBook == null)
+        if (ledgerBook is null)
         {
             return null;
         }
@@ -333,7 +333,7 @@ public class LedgerCalculation
         }
         else
         {
-            transactions = transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == bucketCode);
+            transactions = transactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == bucketCode);
         }
 
         this.logger.LogInfo(_ =>

@@ -41,7 +41,7 @@ public class BudgetController : ControllerBase, IShowableController
         [NotNull] IApplicationDatabaseFacade applicationDatabaseService) 
         : base(uiContext.Messenger)
     {
-        if (uiContext == null)
+        if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
@@ -85,7 +85,7 @@ public class BudgetController : ControllerBase, IShowableController
     public BudgetCollection Budgets { get; private set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public BudgetCurrencyContext CurrentBudget
+    public BudgetCurrencyContext? CurrentBudget
     {
         get => this.doNotUseModel;
 
@@ -96,7 +96,7 @@ public class BudgetController : ControllerBase, IShowableController
                 this.isLoadingBudgetModel = true;
                 this.doNotUseModel = value;
                 ReleaseListBindingEvents();
-                if (this.doNotUseModel == null)
+                if (this.doNotUseModel is null)
                 {
                     Incomes = null;
                     Expenses = null;
@@ -140,7 +140,7 @@ public class BudgetController : ControllerBase, IShowableController
         }
     }
 
-    public BindingList<Expense> Expenses { get; private set; }
+    public BindingList<Expense>? Expenses { get; private set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal ExpenseTotal
@@ -155,7 +155,7 @@ public class BudgetController : ControllerBase, IShowableController
         }
     }
 
-    public BindingList<Income> Incomes { get; private set; }
+    public BindingList<Income>? Incomes { get; private set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal IncomeTotal
@@ -170,7 +170,7 @@ public class BudgetController : ControllerBase, IShowableController
         }
     }
 
-    public ICommand NewBudgetCommand => new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null);
+    public ICommand NewBudgetCommand => new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget is not null);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public NewBudgetModelController NewBudgetController { get; }
@@ -249,7 +249,7 @@ public class BudgetController : ControllerBase, IShowableController
     {
         Dirty = true;
         var newExpense = Expenses.AddNew();
-        Debug.Assert(newExpense != null);
+        Debug.Assert(newExpense is not null);
         newExpense.Amount = 0;
 
         // New buckets must be created because the one passed in, is a single command parameter instance to be used as a type indicator only.
@@ -293,14 +293,14 @@ public class BudgetController : ControllerBase, IShowableController
         var response = this.questionBox.Show(
             "Are you sure you want to delete this budget bucket?\nAnalysis may not work correctly if transactions are allocated to this bucket.",
             "Delete Budget Bucket");
-        if (response == null || response.Value == false)
+        if (response is null or false)
         {
             return;
         }
 
         Dirty = true;
         var expenseItem = budgetItem as Expense;
-        if (expenseItem != null)
+        if (expenseItem is not null)
         {
             expenseItem.PropertyChanged -= OnExpenseAmountPropertyChanged;
             expenseItem.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
@@ -309,7 +309,7 @@ public class BudgetController : ControllerBase, IShowableController
         }
 
         var incomeItem = budgetItem as Income;
-        if (incomeItem != null)
+        if (incomeItem is not null)
         {
             incomeItem.PropertyChanged -= OnIncomeAmountPropertyChanged;
             incomeItem.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
@@ -358,7 +358,7 @@ public class BudgetController : ControllerBase, IShowableController
         }
 
         var viewModel = (BudgetSelectionViewModel)message.Content;
-        if (viewModel.Selected == null || viewModel.Selected == CurrentBudget.Model)
+        if (viewModel.Selected is null || viewModel.Selected == CurrentBudget.Model)
         {
             return;
         }
@@ -394,7 +394,7 @@ public class BudgetController : ControllerBase, IShowableController
     private void ReleaseListBindingEvents()
     {
         CurrentBudget.Model.PropertyChanged -= BudgetModelOnPropertyChanged;
-        if (Incomes != null)
+        if (Incomes is not null)
         {
             foreach (var item in Incomes)
             {
@@ -403,7 +403,7 @@ public class BudgetController : ControllerBase, IShowableController
             }
         }
 
-        if (Expenses != null)
+        if (Expenses is not null)
         {
             foreach (var item in Expenses)
             {
@@ -455,7 +455,7 @@ public class BudgetController : ControllerBase, IShowableController
         CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
         BudgetBucketBindingSource.BucketRepository = this.maintenanceService.BudgetBucketRepository;
         OnPropertyChanged(nameof(TruncatedFileName));
-        if (CurrentBudget != null)
+        if (CurrentBudget is not null)
         {
             Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
         }

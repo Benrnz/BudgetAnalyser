@@ -11,12 +11,12 @@ namespace BudgetAnalyser.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var bucket = value as BudgetBucket;
-            if (bucket == null)
+            if (bucket is null)
             {
                 return Visibility.Visible;
             }
 
-            if (parameter != null)
+            if (parameter is not null)
             {
                 if (parameter.ToString() == "Expense")
                 {

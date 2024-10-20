@@ -42,22 +42,22 @@ internal class ReconciliationBuilder : IReconciliationBuilder
         StatementModel statement,
         params BankBalance[] bankBalances)
     {
-        if (bankBalances == null)
+        if (bankBalances is null)
         {
             throw new ArgumentNullException(nameof(bankBalances));
         }
 
-        if (budget == null)
+        if (budget is null)
         {
             throw new ArgumentNullException(nameof(budget));
         }
 
-        if (statement == null)
+        if (statement is null)
         {
             throw new ArgumentNullException(nameof(statement));
         }
 
-        if (LedgerBook == null)
+        if (LedgerBook is null)
         {
             throw new ArgumentException("The Ledger Book property cannot be null. You must set this prior to calling this method.");
         }
@@ -70,7 +70,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
     public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon, bool includeMatchedTransactions = false)
     {
-        if (recon == null)
+        if (recon is null)
         {
             return new List<LedgerTransaction>();
         }
@@ -115,9 +115,9 @@ internal class ReconciliationBuilder : IReconciliationBuilder
     internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
     {
         IOrderedEnumerable<Transaction> sortedTransactions = transactions.Where(t =>
-                                                                      t.Reference1.TrimEndSafely() == autoMatchingReference
-                                                                      || t.Reference2.TrimEndSafely() == autoMatchingReference
-                                                                      || t.Reference3.TrimEndSafely() == autoMatchingReference)
+                                                                      t.Reference1?.TrimEnd() == autoMatchingReference
+                                                                      || t.Reference2?.TrimEnd() == autoMatchingReference
+                                                                      || t.Reference3?.TrimEnd() == autoMatchingReference)
             .OrderBy(t => t.Amount);
         return sortedTransactions;
     }
@@ -216,7 +216,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
                 // Remove auto-matched transactions from the new recon
                 var duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
-                if (duplicateTransaction != null)
+                if (duplicateTransaction is not null)
                 {
                     this.logger.LogInfo(l => l.Format("Ledger Reconciliation - Removing Duplicate Ledger transaction after auto-matching: {0}", duplicateTransaction));
 
@@ -253,7 +253,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
     {
         var ledgersAndBalances = new List<LedgerEntry>();
         var previousLine = parentLedgerBook.Reconciliations.FirstOrDefault();
-        if (previousLine == null)
+        if (previousLine is null)
         {
             return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerBucket = ledger });
         }
@@ -281,7 +281,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
         builder.Append(FormatTransactionFragment(t.Reference2));
         builder.Append(FormatTransactionFragment(t.Reference3));
         
-        if (builder.Length == 16 && t.TransactionType != null)
+        if (builder.Length == 16 && t.TransactionType is not null)
         {
             return t.TransactionType.ToString();
         }
@@ -291,12 +291,12 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
     private static string FormatTransactionFragment(string fragment)
     {
-        return fragment == null ? string.Empty : $"; {fragment}";
+        return fragment is null ? string.Empty : $"; {fragment}";
     }
 
     private static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry ledgerEntry, bool includeMatchedTransactions = false)
     {
-        if (ledgerEntry == null)
+        if (ledgerEntry is null)
         {
             return new List<LedgerTransaction>();
         }
@@ -315,7 +315,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
     {
         var budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
         var transactions = new List<LedgerTransaction>();
-        if (budgetedExpense != null)
+        if (budgetedExpense is not null)
         {
             BudgetCreditLedgerTransaction budgetedAmount;
             if (ledgerBucket.StoredInAccount.IsSalaryAccount)

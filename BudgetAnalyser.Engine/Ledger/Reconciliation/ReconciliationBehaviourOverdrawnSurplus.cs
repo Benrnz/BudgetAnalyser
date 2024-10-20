@@ -24,12 +24,12 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                 NewReconLine = NewReconLine ?? argument as LedgerEntryLine;
             }
 
-            if (TodoTasks == null)
+            if (TodoTasks is null)
             {
                 throw new ArgumentNullException(nameof(TodoTasks));
             }
 
-            if (NewReconLine == null)
+            if (NewReconLine is null)
             {
                 throw new ArgumentNullException(nameof(NewReconLine));
             }

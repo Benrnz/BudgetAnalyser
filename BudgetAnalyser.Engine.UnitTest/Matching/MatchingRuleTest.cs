@@ -104,7 +104,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         {
             MatchingRule subject = Arrange();
             Assert.IsFalse(subject.Equals(null));
-            Assert.IsTrue(subject != null);
+            Assert.IsTrue(subject is not null);
         }
 
         [TestMethod]

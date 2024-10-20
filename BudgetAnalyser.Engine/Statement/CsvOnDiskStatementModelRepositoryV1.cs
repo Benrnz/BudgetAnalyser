@@ -27,21 +27,21 @@ namespace BudgetAnalyser.Engine.Statement
             [NotNull] IDtoMapper<TransactionSetDto, StatementModel> mapper,
             [NotNull] IReaderWriterSelector readerWriterSelector)
         {
-            if (importUtilities == null)
+            if (importUtilities is null)
             {
                 throw new ArgumentNullException(nameof(importUtilities));
             }
 
-            if (logger == null)
+            if (logger is null)
             {
                 throw new ArgumentNullException(nameof(logger));
             }
 
-            if (mapper == null)
+            if (mapper is null)
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
-            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
+            if (readerWriterSelector is null) throw new ArgumentNullException(nameof(readerWriterSelector));
 
             this.importUtilities = importUtilities;
             this.logger = logger;
@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Engine.Statement
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
         public async Task SaveAsync(StatementModel model, string storageKey, bool isEncrypted)
         {
-            if (model == null)
+            if (model is null)
             {
                 throw new ArgumentNullException(nameof(model));
             }

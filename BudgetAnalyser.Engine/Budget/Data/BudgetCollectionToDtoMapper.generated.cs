@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             ToModelPreprocessing(dto);
             BudgetCollection model = null;
             ModelFactory(dto, ref model);
-            if (model == null) model = new BudgetCollection();
+            if (model is null) model = new BudgetCollection();
             var modelType = model.GetType();
             var storageKey1 = dto.StorageKey;
             model.StorageKey = storageKey1;

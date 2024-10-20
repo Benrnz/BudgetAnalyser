@@ -9,7 +9,7 @@ using BadApplicationStateFileFormatException = Rees.Wpf.ApplicationState.BadAppl
 namespace BudgetAnalyser.ApplicationState
 {
     /// <summary>
-    ///     An implmentation of <see cref="IPersistApplicationState" /> that saves the user meta-data as Xaml to a file on the
+    ///     An implementation of <see cref="IPersistApplicationState" /> that saves the user meta-data as Xaml to a file on the
     ///     local disk.
     /// </summary>
     public class PersistBaxAppStateAsXaml : IPersistApplicationState
@@ -26,7 +26,7 @@ namespace BudgetAnalyser.ApplicationState
         /// <exception cref="System.ArgumentNullException">userMessageBox cannot be null.</exception>
         public PersistBaxAppStateAsXaml([NotNull] IUserMessageBox userMessageBox)
         {
-            if (userMessageBox == null)
+            if (userMessageBox is null)
             {
                 throw new ArgumentNullException(nameof(userMessageBox));
             }
@@ -46,7 +46,7 @@ namespace BudgetAnalyser.ApplicationState
                 if (string.IsNullOrEmpty(this.doNotUseFullFileName))
                 {
                     var location = Path.GetDirectoryName(GetType().Assembly.Location);
-                    Debug.Assert(location != null);
+                    Debug.Assert(location is not null);
                     this.doNotUseFullFileName = Path.Combine(location, FileName);
                 }
 
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.ApplicationState
                 object serialised = XamlServices.Load(FullFileName);
                 // Will throw Xaml Exception if the xml is corrupt, or the xaml types cannot be found and created.
                 var correctFormat = serialised as List<IPersistentApplicationStateObject>;
-                if (correctFormat == null)
+                if (correctFormat is null)
                 {
                     throw new BadApplicationStateFileFormatException(
                         string.Format(CultureInfo.InvariantCulture,

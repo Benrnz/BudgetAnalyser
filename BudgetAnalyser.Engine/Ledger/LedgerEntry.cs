@@ -78,7 +78,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="newTransaction"></param>
         internal void AddTransactionForPersistenceOnly([NotNull] LedgerTransaction newTransaction)
         {
-            if (newTransaction == null)
+            if (newTransaction is null)
             {
                 throw new ArgumentNullException(nameof(newTransaction));
             }
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
-            if (txn != null)
+            if (txn is not null)
             {
                 this.transactions.Remove(txn);
                 // Can't just simply adjust Balance here by subtract the txn amount from the balance. Must recalc based on opening balance and txns.
@@ -144,13 +144,13 @@ namespace BudgetAnalyser.Engine.Ledger
         internal bool Validate(StringBuilder validationMessages, decimal openingBalance)
         {
             var result = true;
-            if (LedgerBucket == null)
+            if (LedgerBucket is null)
             {
                 validationMessages.AppendLine("Ledger Bucket cannot be null on " + this);
                 return false;
             }
 
-            if (LedgerBucket.BudgetBucket == null)
+            if (LedgerBucket.BudgetBucket is null)
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture,
                                                 "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);

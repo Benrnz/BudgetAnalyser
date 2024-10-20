@@ -45,7 +45,7 @@ namespace Rees.Wpf.UserInteraction
 
             try
             {
-                if (Application.Current.MainWindow != null)
+                if (Application.Current.MainWindow is not null)
                 {
                     MessageBox.Show(Application.Current.MainWindow, content, heading);
                 }
@@ -67,7 +67,7 @@ namespace Rees.Wpf.UserInteraction
         /// <param name="message">The message.</param>
         public override void Show(Exception ex, string message)
         {
-            if (ex == null)
+            if (ex is null)
             {
                 Show(message);
                 return;

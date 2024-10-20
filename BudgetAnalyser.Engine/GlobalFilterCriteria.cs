@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine
         /// <returns>If the instance is in an invalid state it will return false, otherwise it returns true.</returns>
         public bool Validate(StringBuilder validationMessages)
         {
-            if (validationMessages == null) throw new ArgumentNullException(nameof(validationMessages));
+            if (validationMessages is null) throw new ArgumentNullException(nameof(validationMessages));
 
             if (Cleared)
             {
@@ -102,13 +102,13 @@ namespace BudgetAnalyser.Engine
             }
 
             var valid = true;
-            if (BeginDate == null)
+            if (BeginDate is null)
             {
                 validationMessages.AppendLine("Begin date cannot be blank unless filter is 'Cleared'.");
                 valid = false;
             }
 
-            if (EndDate == null)
+            if (EndDate is null)
             {
                 validationMessages.AppendLine("End date cannot be blank unless filter is 'Cleared'.");
                 valid = false;
@@ -134,18 +134,18 @@ namespace BudgetAnalyser.Engine
 
         private void CheckConsistency()
         {
-            if (BeginDate != null && BeginDate.Value == DateTime.MinValue)
+            if (BeginDate is not null && BeginDate.Value == DateTime.MinValue)
             {
                 BeginDate = null;
             }
 
-            if (EndDate != null && EndDate.Value == DateTime.MinValue)
+            if (EndDate is not null && EndDate.Value == DateTime.MinValue)
             {
                 EndDate = null;
             }
 
-            if (BeginDate == null
-                && EndDate == null)
+            if (BeginDate is null
+                && EndDate is null)
             {
                 Cleared = true;
             }
@@ -154,7 +154,7 @@ namespace BudgetAnalyser.Engine
                 Cleared = false;
             }
 
-            if (BeginDate != null && EndDate != null && BeginDate > EndDate)
+            if (BeginDate is not null && EndDate is not null && BeginDate > EndDate)
             {
                 EndDate = BeginDate.Value.AddDays(1);
             }

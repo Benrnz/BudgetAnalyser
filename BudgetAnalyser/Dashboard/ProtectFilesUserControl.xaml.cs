@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnWindowIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (DataContext != null)
+            if (DataContext is not null)
             {
                 this.controller = (EncryptFileController)DataContext;
             }

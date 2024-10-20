@@ -26,12 +26,12 @@ namespace BudgetAnalyser.Engine.Statement
             [NotNull] IVersionedStatementModelRepository statementModelRepository,
             [NotNull] IBankStatementImporterRepository importerRepository)
         {
-            if (statementModelRepository == null)
+            if (statementModelRepository is null)
             {
                 throw new ArgumentNullException(nameof(statementModelRepository));
             }
 
-            if (importerRepository == null)
+            if (importerRepository is null)
             {
                 throw new ArgumentNullException(nameof(importerRepository));
             }
@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            if (account == null)
+            if (account is null)
             {
                 throw new ArgumentNullException(nameof(account));
             }
@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
         {
-            if (storageKey == null)
+            if (storageKey is null)
             {
                 throw new FileNotFoundException("storageKey");
             }
@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public async Task SaveAsync([NotNull] StatementModel statementModel, bool isEncrypted)
         {
-            if (statementModel == null)
+            if (statementModel is null)
             {
                 throw new ArgumentNullException(nameof(statementModel));
             }

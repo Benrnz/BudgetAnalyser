@@ -212,7 +212,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool RemoveRule(MatchingRule ruleToRemove)
         {
-            if (ruleToRemove == null)
+            if (ruleToRemove is null)
             {
                 throw new ArgumentNullException(nameof(ruleToRemove));
             }
@@ -224,7 +224,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(g => g.Bucket == ruleToRemove.Bucket);
-            if (existingGroup == null)
+            if (existingGroup is null)
             {
                 return false;
             }
@@ -257,7 +257,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void AddRule(MatchingRule ruleToAdd)
         {
-            if (ruleToAdd == null)
+            if (ruleToAdd is null)
             {
                 throw new ArgumentNullException(nameof(ruleToAdd));
             }
@@ -275,7 +275,7 @@ namespace BudgetAnalyser.Engine.Services
 
             // Check to see if an existing group object for the desired bucket already exists.
             var existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(group => group.Bucket == ruleToAdd.Bucket);
-            if (existingGroup == null)
+            if (existingGroup is null)
             {
                 // Create a new group object for this bucket.
                 var addNewGroup = new RulesGroupedByBucket(ruleToAdd.Bucket, new[] { ruleToAdd });
@@ -308,7 +308,7 @@ namespace BudgetAnalyser.Engine.Services
             this.matchingRules.AddRange(repoRules);
 
             IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)
-                .Where(group => group.Key != null)
+                .Where(group => group.Key is not null)
                 // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
                 .Select(group => new RulesGroupedByBucket(group.Key, group))
                 .OrderBy(group => group.Bucket.Code);
@@ -317,7 +317,7 @@ namespace BudgetAnalyser.Engine.Services
             foreach (var bucket in allBuckets)
             {
                 var group = grouped.FirstOrDefault(g => g.Bucket == bucket);
-                if (group == null)
+                if (group is null)
                 {
                     // new bucket found not yet used in the rules, add it
                     this.matchingRulesGroupedByBucket.Add(new RulesGroupedByBucket(bucket, new List<MatchingRule>()));
@@ -332,27 +332,27 @@ namespace BudgetAnalyser.Engine.Services
         private static void IsSimilarRulePreconditions(SimilarMatchedRule rule, DecimalCriteria amount,
                                                        StringCriteria description, StringCriteria[] references, StringCriteria transactionType)
         {
-            if (rule == null)
+            if (rule is null)
             {
                 throw new ArgumentNullException(nameof(rule));
             }
 
-            if (amount == null)
+            if (amount is null)
             {
                 throw new ArgumentNullException(nameof(amount));
             }
 
-            if (description == null)
+            if (description is null)
             {
                 throw new ArgumentNullException(nameof(description));
             }
 
-            if (references == null)
+            if (references is null)
             {
                 throw new ArgumentNullException(nameof(references));
             }
 
-            if (transactionType == null)
+            if (transactionType is null)
             {
                 throw new ArgumentNullException(nameof(transactionType));
             }

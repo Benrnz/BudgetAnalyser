@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName, bool isEncrypted)
         {
-            if (LoadFromDiskOveride == null)
+            if (LoadFromDiskOveride is null)
             {
                 return await base.LoadFromDiskAsync(fileName, isEncrypted);
             }
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities, bool isEncrypted)
         {
-            if (SaveToDiskOveride == null)
+            if (SaveToDiskOveride is null)
             {
                 await Task.Delay(1);
                 return;

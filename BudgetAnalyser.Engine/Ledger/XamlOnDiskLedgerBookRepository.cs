@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     ex);
             }
 
-            if (dataEntity == null)
+            if (dataEntity is null)
             {
                 throw new DataFormatException(string.Format(CultureInfo.CurrentCulture,
                     "The specified file {0} is not of type Data-Ledger-Book", storageKey));
@@ -106,7 +106,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public async Task SaveAsync(LedgerBook book, string storageKey, bool isEncrypted)
         {
-            if (book == null)
+            if (book is null)
             {
                 throw new ArgumentNullException(nameof(book));
             }
@@ -147,7 +147,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         protected virtual async Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity, bool isEncrypted)
         {
-            if (dataEntity == null)
+            if (dataEntity is null)
             {
                 throw new ArgumentNullException(nameof(dataEntity));
             }
@@ -163,7 +163,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <exception cref="System.ArgumentNullException"></exception>
         protected virtual string Serialise(LedgerBookDto dataEntity)
         {
-            if (dataEntity == null)
+            if (dataEntity is null)
             {
                 throw new ArgumentNullException(nameof(dataEntity));
             }

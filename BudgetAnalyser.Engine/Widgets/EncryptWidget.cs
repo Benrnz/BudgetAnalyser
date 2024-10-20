@@ -32,13 +32,13 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
 
             var newAppDb = (ApplicationDatabase) input[0];
-            if (newAppDb == null)
+            if (newAppDb is null)
             {
                 this.appDb = null;
             }
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 this.appDb = newAppDb;
             }
 
-            if (this.appDb == null) return;
+            if (this.appDb is null) return;
             WidgetActivated();
         }
 
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public void WidgetActivated()
         {
-            if (this.appDb == null) return;
+            if (this.appDb is null) return;
             Enabled = true;
             if (this.appDb.IsEncrypted)
             {

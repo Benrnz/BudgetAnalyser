@@ -27,17 +27,17 @@ namespace BudgetAnalyser
             [NotNull] DemoFileHelper demoFileHelper)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (dashboardService == null)
+            if (dashboardService is null)
             {
                 throw new ArgumentNullException(nameof(dashboardService));
             }
 
-            if (demoFileHelper == null)
+            if (demoFileHelper is null)
             {
                 throw new ArgumentNullException(nameof(demoFileHelper));
             }
@@ -193,7 +193,7 @@ namespace BudgetAnalyser
 
         private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
         {
-            if (message == null)
+            if (message is null)
             {
                 throw new ArgumentNullException(nameof(message));
             }
@@ -236,7 +236,7 @@ namespace BudgetAnalyser
         private void ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
         {
             var widget = message.Widget as NewFileWidget;
-            if (widget == null)
+            if (widget is null)
             {
                 return;
             }
@@ -249,7 +249,7 @@ namespace BudgetAnalyser
         private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
         {
             var widget = message.Widget as CurrentFileWidget;
-            if (widget == null)
+            if (widget is null)
             {
                 return;
             }
@@ -262,7 +262,7 @@ namespace BudgetAnalyser
         private void ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
         {
             var widget = message.Widget as LoadDemoWidget;
-            if (widget == null)
+            if (widget is null)
             {
                 return;
             }

@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Threading.Tasks;
 using BudgetAnalyser.Engine.BankAccount;
 using JetBrains.Annotations;
 
@@ -35,16 +31,9 @@ namespace BudgetAnalyser.Engine.Statement
         /// </exception>
         public AnzAccountStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger, [NotNull] IReaderWriterSelector readerWriterSelector)
         {
-            if (importUtilities == null)
-            {
-                throw new ArgumentNullException(nameof(importUtilities));
-            }
-
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
+            ArgumentNullException.ThrowIfNull(importUtilities, nameof(importUtilities));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(readerWriterSelector, nameof(readerWriterSelector));
 
             this.importUtilities = importUtilities;
             this.logger = logger;
@@ -120,8 +109,8 @@ namespace BudgetAnalyser.Engine.Statement
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
 
-            string[] lines = await ReadFirstTwoLinesAsync(fileName);
-            if (lines == null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
+            string[]? lines = await ReadFirstTwoLinesAsync(fileName);
+            if (lines is null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
             }
@@ -163,12 +152,12 @@ namespace BudgetAnalyser.Engine.Statement
             var stringType = this.importUtilities.FetchString(array, TransactionTypeIndex);
             if (stringType.IsNothing())
             {
-                return null;
+                return NamedTransaction.Empty;
             }
 
-            if (TransactionTypes.ContainsKey(stringType))
+            if (TransactionTypes.TryGetValue(stringType, out var cachedType))
             {
-                return TransactionTypes[stringType];
+                return cachedType;
             }
 
             var transactionType = new NamedTransaction(stringType, amount < 0);
@@ -176,7 +165,7 @@ namespace BudgetAnalyser.Engine.Statement
             return transactionType;
         }
 
-        private async Task<string[]> ReadFirstTwoLinesAsync(string fileName)
+        private async Task<string[]?> ReadFirstTwoLinesAsync(string fileName)
         {
             var chunk = await ReadTextChunkAsync(fileName);
             if (chunk.IsNothing())

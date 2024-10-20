@@ -50,19 +50,19 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                 this.logger = this.logger ?? argument as ILogger;
             }
 
-            if (TodoTasks == null)
+            if (TodoTasks is null)
             {
                 throw new ArgumentNullException(nameof(TodoTasks));
             }
-            if (NewReconLine == null)
+            if (NewReconLine is null)
             {
                 throw new ArgumentNullException(nameof(NewReconLine));
             }
-            if (Transactions == null)
+            if (Transactions is null)
             {
                 throw new ArgumentNullException(nameof(Transactions));
             }
-            if (this.logger == null)
+            if (this.logger is null)
             {
                 throw new ArgumentNullException(nameof(this.logger));
             }
@@ -156,7 +156,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                                                                                                    && t.BudgetBucket == suspectedPaymentTransaction.BudgetBucket
                                                                                                    && t.Account != suspectedPaymentTransaction.Account
                                                                                                    && t.Reference1 == suspectedPaymentTransaction.Reference1);
-                if (matchingTransferTransaction == null)
+                if (matchingTransferTransaction is null)
                 {
                     // No matching transaction exists - therefore the transaction is not a journal, its a payment from the wrong account.
                     this.logger.LogInfo(l => l.Format("{0}Found a payment from an account other than where the {1} funds are stored. {2}",

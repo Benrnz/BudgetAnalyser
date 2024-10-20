@@ -32,7 +32,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     public GlobalFilterController([NotNull] UiContext uiContext) : base(uiContext.Messenger)
     {
-        if (uiContext == null)
+        if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
@@ -119,7 +119,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnAddPeriodCommandExecute(DateTime date)
     {
-        if (Criteria.BeginDate != null && date == Criteria.BeginDate)
+        if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
         {
             if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
             {
@@ -130,7 +130,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             Criteria.BeginDate = Criteria.BeginDate.Value.AddDays(14);
         }
 
-        if (Criteria.EndDate != null && date == Criteria.EndDate)
+        if (Criteria.EndDate is not null && date == Criteria.EndDate)
         {
             if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
             {
@@ -145,7 +145,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
     {
         var filterState = message.ElementOfType<PersistentFiltersApplicationState>();
-        if (filterState == null)
+        if (filterState is null)
         {
             return;
         }
@@ -161,7 +161,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnApplicationStateLoadFinished(ApplicationStateLoadFinishedMessage message)
     {
-        if (Criteria == null || Criteria.Cleared)
+        if (Criteria is null || Criteria.Cleared)
         {
             SendFilterAppliedMessage();
         }
@@ -169,7 +169,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
     {
-        var noCriteria = Criteria == null;
+        var noCriteria = Criteria is null;
         var filterState = new PersistentFiltersApplicationState
         {
             BeginDate = noCriteria ? null : Criteria.BeginDate,
@@ -181,7 +181,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnBackPeriodCommandExecute(DateTime date)
     {
-        if (Criteria.BeginDate != null && date == Criteria.BeginDate)
+        if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
         {
             if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
             {
@@ -192,7 +192,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             Criteria.BeginDate = Criteria.BeginDate.Value.AddDays(-14);
         }
 
-        if (Criteria.EndDate != null && date == Criteria.EndDate)
+        if (Criteria.EndDate is not null && date == Criteria.EndDate)
         {
             if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
             {
@@ -245,7 +245,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
     {
-        if (message == null)
+        if (message is null)
         {
             throw new ArgumentNullException(nameof(message));
         }
@@ -273,12 +273,12 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             return;
         }
 
-        if (Criteria.BeginDate != null)
+        if (Criteria.BeginDate is not null)
         {
             DateSummaryLine1 = string.Format(CultureInfo.CurrentCulture, "Filtered from: {0:d}", Criteria.BeginDate.Value);
         }
 
-        if (Criteria.EndDate != null)
+        if (Criteria.EndDate is not null)
         {
             DateSummaryLine2 = string.Format(CultureInfo.CurrentCulture, "up until: {0:d}", Criteria.EndDate.Value);
         }

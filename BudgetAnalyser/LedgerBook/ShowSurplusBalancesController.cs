@@ -40,7 +40,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public void ShowDialog([NotNull] LedgerEntryLine ledgerLine)
         {
-            if (ledgerLine == null)
+            if (ledgerLine is null)
             {
                 throw new ArgumentNullException(nameof(ledgerLine));
             }

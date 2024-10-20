@@ -47,13 +47,13 @@ namespace BudgetAnalyser.Engine.Budget
             get { return this.doNotUseBucket; }
             set
             {
-                if (this.doNotUseBucket != null)
+                if (this.doNotUseBucket is not null)
                 {
                     this.doNotUseBucket.PropertyChanged -= OnBucketPropertyChanged;
                 }
 
                 this.doNotUseBucket = value;
-                if (this.doNotUseBucket != null)
+                if (this.doNotUseBucket is not null)
                 {
                     this.doNotUseBucket.PropertyChanged += OnBucketPropertyChanged;
                 }
@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             var other = obj as BudgetItem;
-            return other != null && Equals(other);
+            return other is not null && Equals(other);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         protected bool Equals([NotNull] BudgetItem other)
         {
-            if (other == null)
+            if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }

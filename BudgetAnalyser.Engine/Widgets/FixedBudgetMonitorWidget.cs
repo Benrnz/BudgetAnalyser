@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            if (Statement == null)
+            if (Statement is null)
             {
                 ToolTip = this.disabledToolTip;
                 Enabled = false;
@@ -125,7 +125,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             // Debit transactions are negative so normally the total spend will be a negative number.
             var totalSpend =
-                Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode)
+                Statement.AllTransactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == BucketCode)
                     .Sum(t => t.Amount);
             var remainingBudget = totalBudget + totalSpend;
 

@@ -60,7 +60,7 @@ namespace Rees.Wpf.UserInteraction
         /// <exception cref="System.ArgumentNullException">existingArray cannot be null</exception>
         protected static object[] PrependElement(object newElement, object[] existingArray)
         {
-            if (existingArray == null)
+            if (existingArray is null)
             {
                 throw new ArgumentNullException("existingArray");
             }

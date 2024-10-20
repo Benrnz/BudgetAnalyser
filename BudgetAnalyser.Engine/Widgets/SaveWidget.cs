@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             Enabled = false;
             Clickable = false;
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             var appDbService = (IApplicationDatabaseService) input[0];
-            if (appDbService == null) return;
+            if (appDbService is null) return;
 
             Enabled = appDbService.HasUnsavedChanges;
             Clickable = Enabled;

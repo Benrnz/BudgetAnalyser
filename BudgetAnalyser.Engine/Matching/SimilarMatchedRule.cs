@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Engine.Matching
         public SimilarMatchedRule([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] MatchingRule rule)
             : base(bucketRepository)
         {
-            if (rule == null)
+            if (rule is null)
             {
                 throw new ArgumentNullException(nameof(rule));
             }

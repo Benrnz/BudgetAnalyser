@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             ToModelPreprocessing(dto);
             BudgetModel model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 model = new BudgetModel();
             }
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             ToModelPreprocessing(dto);
             Expense model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 model = new Expense();
             }
@@ -105,7 +105,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             ToModelPreprocessing(dto);
             Income model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 model = new Income();
             }

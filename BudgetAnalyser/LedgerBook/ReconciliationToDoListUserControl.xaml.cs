@@ -26,7 +26,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             var controller = DataContext as ReconciliationToDoListController;
-            if (controller == null)
+            if (controller is null)
             {
                 return;
             }

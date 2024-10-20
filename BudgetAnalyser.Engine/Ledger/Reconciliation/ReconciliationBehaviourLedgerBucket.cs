@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                 NewReconLine = NewReconLine ?? argument as LedgerEntryLine;
             }
 
-            if (NewReconLine == null)
+            if (NewReconLine is null)
             {
                 throw new ArgumentNullException(nameof(NewReconLine));
             }

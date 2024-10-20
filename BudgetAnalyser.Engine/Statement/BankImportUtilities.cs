@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <exception cref="System.ArgumentNullException"></exception>
         public BankImportUtilities([NotNull] ILogger logger)
         {
-            if (logger == null)
+            if (logger is null)
             {
                 throw new ArgumentNullException(nameof(logger));
             }
@@ -46,12 +46,12 @@ namespace BudgetAnalyser.Engine.Statement
 
         internal BudgetBucket FetchBudgetBucket([NotNull] string[] array, int index, [NotNull] IBudgetBucketRepository bucketRepository)
         {
-            if (array == null)
+            if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
 
-            if (bucketRepository == null)
+            if (bucketRepository is null)
             {
                 throw new ArgumentNullException(nameof(bucketRepository));
             }
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         internal DateTime FetchDate([NotNull] string[] array, int index)
         {
-            if (array == null)
+            if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         internal decimal FetchDecimal([NotNull] string[] array, int index)
         {
-            if (array == null)
+            if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
@@ -116,7 +116,7 @@ namespace BudgetAnalyser.Engine.Statement
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
         internal Guid FetchGuid([NotNull] string[] array, int index)
         {
-            if (array == null)
+            if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
@@ -139,7 +139,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         internal long FetchLong([NotNull] string[] array, int index)
         {
-            if (array == null)
+            if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }
@@ -163,7 +163,7 @@ namespace BudgetAnalyser.Engine.Statement
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
         internal string FetchString([NotNull] string[] array, int index)
         {
-            if (array == null)
+            if (array is null)
             {
                 throw new ArgumentNullException(nameof(array));
             }

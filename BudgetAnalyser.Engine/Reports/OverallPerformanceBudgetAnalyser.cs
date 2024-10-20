@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         public OverallPerformanceBudgetAnalyser([NotNull] IBudgetBucketRepository bucketRepository)
         {
-            if (bucketRepository == null)
+            if (bucketRepository is null)
             {
                 throw new ArgumentNullException(nameof(bucketRepository));
             }
@@ -133,23 +133,23 @@ namespace BudgetAnalyser.Engine.Reports
         private static void AnalysisPreconditions(GlobalFilterCriteria criteria, StatementModel statement,
                                                   BudgetCollection budgets, out DateTime beginDate, out DateTime endDate)
         {
-            if (criteria == null)
+            if (criteria is null)
             {
                 throw new ArgumentNullException(nameof(criteria));
             }
 
-            if (!criteria.Cleared && (criteria.BeginDate == null || criteria.EndDate == null))
+            if (!criteria.Cleared && (criteria.BeginDate is null || criteria.EndDate is null))
             {
                 throw new ArgumentException("The given criteria does not contain any filtering dates.");
             }
 
-            if (statement == null)
+            if (statement is null)
             {
                 throw new ArgumentNullException(nameof(statement),
                     "The statement supplied is null, analysis cannot proceed with no statement.");
             }
 
-            if (budgets == null)
+            if (budgets is null)
             {
                 throw new ArgumentNullException(nameof(budgets));
             }
@@ -171,7 +171,7 @@ namespace BudgetAnalyser.Engine.Reports
             return b =>
             {
                 var first = b.Expenses.FirstOrDefault(e => e.Bucket == bucket);
-                if (first == null)
+                if (first is null)
                 {
                     return 0;
                 }
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Reports
             return b =>
             {
                 var first = b.Incomes.FirstOrDefault(e => e.Bucket == bucket);
-                if (first == null)
+                if (first is null)
                 {
                     return 0;
                 }

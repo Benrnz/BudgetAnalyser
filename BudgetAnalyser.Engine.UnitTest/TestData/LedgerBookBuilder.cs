@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 throw new DuplicateNameException("Ledger Bucket already exists in collection.");
             }
 
-            if (ledger.StoredInAccount == null)
+            if (ledger.StoredInAccount is null)
             {
                 ledger.StoredInAccount = StatementModelTestData.ChequeAccount;
             }
@@ -189,7 +189,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             foreach (LedgerBucket ledgerBucket in this.ledgerBuckets)
             {
                 decimal openingBalance;
-                if (previousRecon == null)
+                if (previousRecon is null)
                 {
                     openingBalance = this.openingBalances[ledgerBucket];
                 }
@@ -298,7 +298,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             public TransactionTestDataBuilder WithBudgetCredit(decimal amount, DateTime? date = null, string automatchingRef = null)
             {
                 BudgetCreditLedgerTransaction budgetTxn = this.transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
-                if (budgetTxn == null)
+                if (budgetTxn is null)
                 {
                     budgetTxn = new BudgetCreditLedgerTransaction { AutoMatchingReference = automatchingRef, Date = date, Narrative = "Budgeted Amount" };
                     this.transactions.Add(budgetTxn);

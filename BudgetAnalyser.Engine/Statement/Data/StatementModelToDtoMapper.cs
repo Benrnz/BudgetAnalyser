@@ -13,8 +13,8 @@ namespace BudgetAnalyser.Engine.Statement.Data
 
         public Mapper_TransactionSetDto_StatementModel([NotNull] ILogger logger, [NotNull] IDtoMapper<TransactionDto, Transaction> transactionMapper)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            if (transactionMapper == null) throw new ArgumentNullException(nameof(transactionMapper));
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            if (transactionMapper is null) throw new ArgumentNullException(nameof(transactionMapper));
             this.logger = logger;
             this.transactionMapper = transactionMapper;
         }

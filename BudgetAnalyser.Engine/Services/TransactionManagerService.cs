@@ -41,22 +41,22 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] ILogger logger,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
-            if (bucketRepository == null)
+            if (bucketRepository is null)
             {
                 throw new ArgumentNullException(nameof(bucketRepository));
             }
 
-            if (statementRepository == null)
+            if (statementRepository is null)
             {
                 throw new ArgumentNullException(nameof(statementRepository));
             }
 
-            if (logger == null)
+            if (logger is null)
             {
                 throw new ArgumentNullException(nameof(logger));
             }
 
-            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
+            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
 
             this.bucketRepository = bucketRepository;
             this.statementRepository = statementRepository;
@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.transactions == null || this.transactions.None())
+                if (this.transactions is null || this.transactions.None())
                 {
                     return 0;
                 }
@@ -130,7 +130,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.transactions == null || this.transactions.None())
+                if (this.transactions is null || this.transactions.None())
                 {
                     return 0;
                 }
@@ -146,7 +146,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.transactions == null || this.transactions.None())
+                if (this.transactions is null || this.transactions.None())
                 {
                     return 0;
                 }
@@ -162,7 +162,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.transactions == null || this.transactions.None())
+                if (this.transactions is null || this.transactions.None())
                 {
                     return 0;
                 }
@@ -207,7 +207,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <exception cref="DataFormatException">Statement Model data is corrupt and has been tampered with. Unable to load.</exception>
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
-            if (applicationDatabase == null)
+            if (applicationDatabase is null)
             {
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }
@@ -234,7 +234,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         public async Task SaveAsync(ApplicationDatabase applicationDatabase)
         {
-            if (StatementModel == null)
+            if (StatementModel is null)
             {
                 return;
             }
@@ -295,7 +295,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </returns>
         public string DetectDuplicateTransactions()
         {
-            if (StatementModel == null)
+            if (StatementModel is null)
             {
                 return null;
             }
@@ -336,12 +336,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (bucketCode == TransactionConstants.UncategorisedFilter)
             {
-                return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket == null));
+                return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket is null));
             }
 
-            var bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
+            var bucket = bucketCode is null ? null : this.bucketRepository.GetByCode(bucketCode);
 
-            if (bucket == null)
+            if (bucket is null)
             {
                 return new ObservableCollection<Transaction>(StatementModel.Transactions);
             }
@@ -380,7 +380,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <exception cref="System.ArgumentNullException"></exception>
         public void FilterTransactions(GlobalFilterCriteria criteria)
         {
-            if (criteria == null)
+            if (criteria is null)
             {
                 throw new ArgumentNullException(nameof(criteria));
             }
@@ -408,12 +408,12 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            if (account == null)
+            if (account is null)
             {
                 throw new ArgumentNullException(nameof(account));
             }
 
-            if (StatementModel == null)
+            if (StatementModel is null)
             {
                 throw new InvalidOperationException(
                     "There are no transactions loaded, you must first load an existing file or create a new one.");
@@ -441,7 +441,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <exception cref="System.ArgumentNullException"></exception>
         public void Initialise(StatementApplicationState stateData)
         {
-            if (stateData == null)
+            if (stateData is null)
             {
                 throw new ArgumentNullException(nameof(stateData));
             }
@@ -468,7 +468,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <exception cref="System.ArgumentNullException"></exception>
         public void RemoveTransaction(Transaction transactionToRemove)
         {
-            if (transactionToRemove == null)
+            if (transactionToRemove is null)
             {
                 throw new ArgumentNullException(nameof(transactionToRemove));
             }
@@ -485,17 +485,17 @@ namespace BudgetAnalyser.Engine.Services
         public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2,
                                      BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
         {
-            if (originalTransaction == null)
+            if (originalTransaction is null)
             {
                 throw new ArgumentNullException(nameof(originalTransaction));
             }
 
-            if (splinterBucket1 == null)
+            if (splinterBucket1 is null)
             {
                 throw new ArgumentNullException(nameof(splinterBucket1));
             }
 
-            if (splinterBucket2 == null)
+            if (splinterBucket2 is null)
             {
                 throw new ArgumentNullException(nameof(splinterBucket2));
             }
@@ -527,14 +527,14 @@ namespace BudgetAnalyser.Engine.Services
         public async Task<bool> ValidateWithCurrentBudgetsAsync(BudgetCollection budgets = null)
         {
             // This method must be called at least once with a budget collection.  Second and subsequent times do not require the budget.
-            if (this.budgetCollection == null && budgets == null)
+            if (this.budgetCollection is null && budgets is null)
             {
                 throw new ArgumentNullException(nameof(budgets));
             }
 
             this.budgetCollection = budgets ?? this.budgetCollection;
 
-            if (StatementModel == null)
+            if (StatementModel is null)
             {
                 // Can't check yet, statement hasn't been loaded yet. Everything is ok for now.
                 return true;
@@ -552,7 +552,7 @@ namespace BudgetAnalyser.Engine.Services
                 () =>
                 {
                     return StatementModel.AllTransactions
-                        .Where(t => t.BudgetBucket != null)
+                        .Where(t => t.BudgetBucket is not null)
                         .AsParallel()
                         .All(
                             t =>
@@ -617,7 +617,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void ResetTransactionsCollection()
         {
-            this.transactions = StatementModel == null
+            this.transactions = StatementModel is null
                 ? new ObservableCollection<Transaction>()
                 : new ObservableCollection<Transaction>(StatementModel.Transactions);
         }

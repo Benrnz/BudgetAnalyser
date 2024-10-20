@@ -18,7 +18,7 @@ namespace BudgetAnalyser
 
         private void OnClosed(object sender, EventArgs e)
         {
-            if (this.notifyController != null)
+            if (this.notifyController is not null)
             {
                 this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
             }
@@ -26,7 +26,7 @@ namespace BudgetAnalyser
 
         private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (this.showableController != null)
+            if (this.showableController is not null)
             {
                 if (propertyChangedEventArgs.PropertyName == "Shown" && this.showableController.Shown == false)
                 {
@@ -38,13 +38,13 @@ namespace BudgetAnalyser
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue != null && this.notifyController != null)
+            if (e.OldValue is not null && this.notifyController is not null)
             {
                 this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
             }
 
             this.notifyController = e.NewValue as INotifyPropertyChanged;
-            if (this.notifyController != null)
+            if (this.notifyController is not null)
             {
                 this.notifyController.PropertyChanged += OnControllerPropertyChanged;
             }

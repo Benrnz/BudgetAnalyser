@@ -35,12 +35,12 @@ namespace BudgetAnalyser.Engine.Reports
             DateTime inclBeginDate,
             DateTime inclEndDate)
         {
-            if (statementModel == null)
+            if (statementModel is null)
             {
                 throw new ArgumentNullException(nameof(statementModel));
             }
 
-            if (budgetModel == null)
+            if (budgetModel is null)
             {
                 throw new ArgumentNullException(nameof(budgetModel));
             }
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.Reports
             List<ReportTransactionWithRunningBalance> spendingTransactions = CollateStatementTransactions(statementModel, bucketsCopy, inclBeginDate, lastDate, openingBalance);
 
             // Only relevant when calculating surplus burndown - overspent ledgers are supplemented from surplus so affect its burndown.
-            if (ledgerBook != null && bucketsCopy.OfType<SurplusBucket>().Any())
+            if (ledgerBook is not null && bucketsCopy.OfType<SurplusBucket>().Any())
             {
                 var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, inclBeginDate, inclEndDate);
                 List<ReportTransaction> overSpentLedgers = this.ledgerCalculator.CalculateOverSpentLedgers(statementModel, ledgerLine, inclBeginDate, inclEndDate).ToList();
@@ -183,7 +183,7 @@ namespace BudgetAnalyser.Engine.Reports
             List<BudgetBucket> bucketsCopy = buckets.ToList();
 
             var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, inclBeginDate, inclEndDate);
-            if (ledgerLine == null)
+            if (ledgerLine is null)
             {
                 // Use budget values from budget model instead, there is no ledger book line for this month.
                 budgetTotal += bucketsCopy.Sum(bucket => GetBudgetModelTotalForBucket(budgetModel, bucket));
@@ -217,7 +217,7 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             var budget = budgetModel.Expenses.FirstOrDefault(e => e.Bucket == bucket);
-            if (budget != null)
+            if (budget is not null)
             {
                 return budget.Amount;
             }
@@ -239,7 +239,7 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             var ledger = ledgerLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == bucket);
-            if (ledger != null)
+            if (ledger is not null)
             {
                 return ledger.Balance;
             }

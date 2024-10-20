@@ -20,7 +20,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                if (LedgerTransaction == null)
+                if (LedgerTransaction is null)
                 {
                     return null;
                 }
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                if (LedgerTransaction == null)
+                if (LedgerTransaction is null)
                 {
                     return null;
                 }
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (Credit != null && Credit >= 0)
+            if (Credit is not null && Credit >= 0)
             {
                 this.CreditAmount.Text = Credit.Value.ToString("N", CultureInfo.CurrentCulture);
                 this.CreditAmount.Visibility = Visibility.Visible;
@@ -53,7 +53,7 @@ namespace BudgetAnalyser.LedgerBook
                 this.DebitLabel.Visibility = Visibility.Hidden;
             }
 
-            if (Debit != null && Debit > 0)
+            if (Debit is not null && Debit > 0)
             {
                 this.DebitAmount.Text = Debit.Value.ToString("N", CultureInfo.CurrentCulture);
                 this.CreditAmount.Visibility = Visibility.Hidden;

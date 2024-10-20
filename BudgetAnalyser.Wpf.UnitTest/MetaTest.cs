@@ -15,11 +15,11 @@ namespace BudgetAnalyser.Wpf.UnitTest
             foreach (Type type in assembly.ExportedTypes)
             {
                 var testClassAttrib = type.GetCustomAttribute<TestClassAttribute>();
-                if (testClassAttrib != null)
+                if (testClassAttrib is not null)
                 {
                     foreach (MethodInfo method in type.GetMethods())
                     {
-                        if (method.GetCustomAttribute<TestMethodAttribute>() != null)
+                        if (method.GetCustomAttribute<TestMethodAttribute>() is not null)
                         {
                             Console.WriteLine("{0} {1} - {2}", ++count, type.FullName, method.Name);
                         }
@@ -34,8 +34,8 @@ namespace BudgetAnalyser.Wpf.UnitTest
             Assembly assembly = GetType().Assembly;
             int count = (from type in assembly.ExportedTypes
                 let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
-                where testClassAttrib != null
-                select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() != null)).Sum();
+                where testClassAttrib is not null
+                select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() is not null)).Sum();
             Console.WriteLine(count);
             Assert.IsTrue(count >= MinimumTestCount);
         }

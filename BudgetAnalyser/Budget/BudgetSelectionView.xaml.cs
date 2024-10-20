@@ -17,8 +17,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var budgetController = e.NewValue as BudgetController;
-            if (budgetController != null)
+            if (e.NewValue is BudgetController budgetController)
             {
                 ICollectionView view = CollectionViewSource.GetDefaultView(budgetController.Budgets);
                 view.SortDescriptions.Add(new SortDescription("EffectiveFrom", ListSortDirection.Descending));

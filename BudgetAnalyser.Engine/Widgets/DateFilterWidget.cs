@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 NoDateFilterApplied();
             }
-            else if (criteria.BeginDate != null)
+            else if (criteria.BeginDate is not null)
             {
                 DateFilterApplied(criteria);
             }

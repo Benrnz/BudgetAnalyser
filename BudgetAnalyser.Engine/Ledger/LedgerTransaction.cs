@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         internal virtual LedgerTransaction WithNarrative([NotNull] string narrative)
         {
-            if (narrative == null)
+            if (narrative is null)
             {
                 throw new ArgumentNullException(nameof(narrative));
             }

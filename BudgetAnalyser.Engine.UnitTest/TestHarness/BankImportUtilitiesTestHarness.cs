@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         internal override void AbortIfFileDoesntExist(string fileName)
         {
-            if (AbortIfFileDoesntExistOverride == null)
+            if (AbortIfFileDoesntExistOverride is null)
             {
                 return;
             }

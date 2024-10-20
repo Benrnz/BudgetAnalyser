@@ -13,7 +13,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public TransferFundsController([NotNull] IMessenger messenger) : base(messenger)
         {
-            if (messenger == null)
+            if (messenger is null)
             {
                 throw new ArgumentNullException(nameof(messenger));
             }

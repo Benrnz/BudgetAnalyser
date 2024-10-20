@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.Mobile
                 }
                 catch (AmazonS3Exception amazonS3Exception)
                 {
-                    if (amazonS3Exception.ErrorCode != null &&
+                    if (amazonS3Exception.ErrorCode is not null &&
                         (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId") || amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
                     {
                         throw new SecurityException("Invalid Amazon S3 credentials - data was not uploaded.", amazonS3Exception);

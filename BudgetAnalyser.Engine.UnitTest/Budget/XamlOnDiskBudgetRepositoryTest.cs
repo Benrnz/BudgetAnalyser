@@ -228,7 +228,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
         private XamlOnDiskBudgetRepository Arrange(IBudgetBucketRepository bucketRepo = null)
         {
-            if (bucketRepo == null)
+            if (bucketRepo is null)
             {
                 bucketRepo = new InMemoryBudgetBucketRepository(new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()));
             }

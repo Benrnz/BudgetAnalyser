@@ -13,7 +13,7 @@ namespace BudgetAnalyser.LedgerBook
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "It is validated.")]
         public BankBalanceViewModel([CanBeNull] LedgerEntryLine line, [NotNull] BankBalance balance) : base(balance.Account, balance.Balance)
         {
-            if (balance == null)
+            if (balance is null)
             {
                 throw new ArgumentNullException(nameof(balance));
             }
@@ -30,7 +30,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                if (this.line == null)
+                if (this.line is null)
                 {
                     return Balance;
                 }
@@ -40,6 +40,6 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [UsedImplicitly]
-        public bool ShowAdjustedBalance => this.line != null;
+        public bool ShowAdjustedBalance => this.line is not null;
     }
 }

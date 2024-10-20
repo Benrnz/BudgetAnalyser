@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public MatchingRuleFactory([NotNull] IBudgetBucketRepository bucketRepo)
         {
-            if (bucketRepo == null)
+            if (bucketRepo is null)
             {
                 throw new ArgumentNullException(nameof(bucketRepo));
             }
@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(bucketCode));
             }
 
-            if (references == null)
+            if (references is null)
             {
                 throw new ArgumentNullException(nameof(references));
             }

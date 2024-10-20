@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// <exception cref="System.ArgumentNullException"></exception>
         public ReportTransactionWithRunningBalance([NotNull] ReportTransaction transaction)
         {
-            if (transaction == null)
+            if (transaction is null)
             {
                 throw new ArgumentNullException(nameof(transaction));
             }

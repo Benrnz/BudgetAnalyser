@@ -17,12 +17,12 @@ namespace BudgetAnalyser.Statement
 
         public EditingTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (bucketRepo == null)
+            if (bucketRepo is null)
             {
                 throw new ArgumentNullException(nameof(bucketRepo));
             }

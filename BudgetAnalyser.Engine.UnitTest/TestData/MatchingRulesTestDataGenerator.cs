@@ -70,7 +70,7 @@
 
 //        private static string NullDateTimeOrValue(DateTime? date)
 //        {
-//            if (date == null)
+//            if (date is null)
 //            {
 //                return "null";
 //            }
@@ -80,7 +80,7 @@
 
 //        private static string NullDecimalOrValue(decimal? amount)
 //        {
-//            if (amount == null)
+//            if (amount is null)
 //            {
 //                return "null";
 //            }

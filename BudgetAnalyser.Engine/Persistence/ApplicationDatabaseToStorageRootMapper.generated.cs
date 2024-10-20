@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Persistence
         {
             ApplicationDatabase model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 model = new ApplicationDatabase();
             }
@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Persistence
         {
             BudgetAnalyserStorageRoot dto = null;
             DtoFactory(ref dto, model);
-            if (dto == null)
+            if (dto is null)
             {
                 dto = new BudgetAnalyserStorageRoot();
             }

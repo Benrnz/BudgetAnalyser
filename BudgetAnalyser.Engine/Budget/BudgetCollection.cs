@@ -102,7 +102,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public void Add([NotNull] BudgetModel item)
         {
-            if (item == null)
+            if (item is null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             var budgets = new List<BudgetModel>();
             var firstEffectiveBudget = ForDate(beginInclusive);
-            if (firstEffectiveBudget == null)
+            if (firstEffectiveBudget is null)
             {
                 throw new BudgetException(
                     "The period covered by the dates given overlaps a period where no budgets are available.");
@@ -182,7 +182,7 @@ namespace BudgetAnalyser.Engine.Budget
             Justification = "Better for consistency with other methods here")]
         public bool IsFutureBudget([NotNull] BudgetModel budget)
         {
-            if (budget == null)
+            if (budget is null)
             {
                 throw new ArgumentNullException(nameof(budget));
             }

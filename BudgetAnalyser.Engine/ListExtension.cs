@@ -17,9 +17,9 @@ namespace BudgetAnalyser.Engine
         /// <param name="newElement">The new element to add if its not null.</param>
         public static bool AddIfSomething<T>([NotNull] this IList<T> instance, T newElement) where T : class
         {
-            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            if (instance is null) throw new ArgumentNullException(nameof(instance));
 
-            if (newElement != null)
+            if (newElement is not null)
             {
                 instance.Add(newElement);
                 return true;

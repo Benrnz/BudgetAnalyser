@@ -465,7 +465,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         public static LedgerBook TestData5(Func<LedgerBook> ctor = null)
         {
             LedgerBook book;
-            if (ctor != null)
+            if (ctor is not null)
             {
                 book = ctor();
             }
@@ -599,7 +599,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         public static LedgerBook TestData6(Func<LedgerBook> ctor = null)
         {
             LedgerBook book;
-            if (ctor != null)
+            if (ctor is not null)
             {
                 book = ctor();
             }
@@ -709,7 +709,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     {
                         PrivateAccessor.SetField(entry, "isNew", false);
                     }
-                    if (entry.LedgerBucket.StoredInAccount == null)
+                    if (entry.LedgerBucket.StoredInAccount is null)
                     {
                         entry.LedgerBucket.StoredInAccount = StatementModelTestData.ChequeAccount;
                     }

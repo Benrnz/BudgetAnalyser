@@ -33,13 +33,13 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
 
             var appDb = input[0] as ApplicationDatabase;
-            if (appDb == null || appDb.FileName.IsNothing())
+            if (appDb is null || appDb.FileName.IsNothing())
             {
                 ColourStyleName = WidgetWarningStyle;
                 DetailedText = "Open";
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         private static string ShortenFileName([NotNull] string fileName)
         {
-            if (fileName == null)
+            if (fileName is null)
             {
                 throw new ArgumentNullException(nameof(fileName));
             }

@@ -227,12 +227,11 @@ I do not like green eggs and ham.";
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void SplitLines_ShouldReturnNull_GivenNullString()
         {
             string data = null;
             var lines = data.SplitLines(3);
-
-            Assert.IsNull(lines);
         }
     }
 }

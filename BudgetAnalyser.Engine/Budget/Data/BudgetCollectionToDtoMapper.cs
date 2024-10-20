@@ -17,9 +17,9 @@ namespace BudgetAnalyser.Engine.Budget.Data
             [NotNull] IDtoMapper<BudgetBucketDto, BudgetBucket> bucketMapper,
             [NotNull] IDtoMapper<BudgetModelDto, BudgetModel> budgetMapper)
         {
-            if (bucketRepo == null) throw new ArgumentNullException(nameof(bucketRepo));
-            if (bucketMapper == null) throw new ArgumentNullException(nameof(bucketMapper));
-            if (budgetMapper == null) throw new ArgumentNullException(nameof(budgetMapper));
+            if (bucketRepo is null) throw new ArgumentNullException(nameof(bucketRepo));
+            if (bucketMapper is null) throw new ArgumentNullException(nameof(bucketMapper));
+            if (budgetMapper is null) throw new ArgumentNullException(nameof(budgetMapper));
             this.bucketRepo = bucketRepo;
             this.bucketMapper = bucketMapper;
             this.budgetMapper = budgetMapper;

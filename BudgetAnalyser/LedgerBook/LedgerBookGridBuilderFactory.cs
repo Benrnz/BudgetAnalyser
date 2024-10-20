@@ -7,7 +7,7 @@ namespace BudgetAnalyser.LedgerBook
     {
         public virtual ILedgerBookGridBuilder GridBuilderV2([NotNull] LedgerBookController ledgerBookController)
         {
-            if (ledgerBookController == null)
+            if (ledgerBookController is null)
             {
                 throw new ArgumentNullException(nameof(ledgerBookController));
             }

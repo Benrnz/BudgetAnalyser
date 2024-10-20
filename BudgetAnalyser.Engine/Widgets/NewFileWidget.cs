@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.Widgets
             var appDb = input[0] as ApplicationDatabase;
             ToolTip = "Create a new Budget Analyser File.";
             DetailedText = "Create new";
-            ColourStyleName = appDb == null ? WidgetWarningStyle : WidgetStandardStyle;
+            ColourStyleName = appDb is null ? WidgetWarningStyle : WidgetStandardStyle;
         }
     }
 }

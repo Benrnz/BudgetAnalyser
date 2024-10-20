@@ -147,8 +147,8 @@ namespace BudgetAnalyser.Engine.Ledger
             get
             {
                 var valid = Narrative.IsSomething()
-                            && FromLedger != null
-                            && ToLedger != null
+                            && FromLedger is not null
+                            && ToLedger is not null
                             && FromLedger != ToLedger
                             && TransferAmount >= 0.01M;
                 if (!valid)
@@ -184,7 +184,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private void SetBankTransferRequired()
         {
-            if (FromLedger != null && ToLedger != null)
+            if (FromLedger is not null && ToLedger is not null)
             {
                 BankTransferRequired = FromLedger.StoredInAccount != ToLedger.StoredInAccount;
             }

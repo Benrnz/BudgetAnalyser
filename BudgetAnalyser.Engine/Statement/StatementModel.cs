@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.Statement
             Justification = "Reviewed, ok here. Required for binding")]
         public StatementModel([NotNull] ILogger logger)
         {
-            if (logger == null)
+            if (logger is null)
             {
                 throw new ArgumentNullException(nameof(logger));
             }
@@ -161,12 +161,12 @@ namespace BudgetAnalyser.Engine.Statement
             List<Transaction> list = transactions.ToList();
             DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
 
-            if (criteria != null && !criteria.Cleared)
+            if (criteria is not null && !criteria.Cleared)
             {
-                if (criteria.BeginDate != null)
+                if (criteria.BeginDate is not null)
                 {
                     minDate = criteria.BeginDate.Value;
-                    Debug.Assert(criteria.EndDate != null);
+                    Debug.Assert(criteria.EndDate is not null);
                     maxDate = criteria.EndDate.Value;
                 }
             }
@@ -208,7 +208,7 @@ namespace BudgetAnalyser.Engine.Statement
         internal virtual void Filter(GlobalFilterCriteria criteria)
         {
             ThrowIfDisposed();
-            if (criteria == null)
+            if (criteria is null)
             {
                 this.changeHash = Guid.NewGuid();
                 Transactions = AllTransactions.ToList();
@@ -252,7 +252,7 @@ namespace BudgetAnalyser.Engine.Statement
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
             List<Transaction> listOfTransactions;
-            if (transactions == null)
+            if (transactions is null)
             {
                 listOfTransactions = new List<Transaction>();
             }
@@ -283,7 +283,7 @@ namespace BudgetAnalyser.Engine.Statement
         internal virtual StatementModel Merge([NotNull] StatementModel additionalModel)
         {
             ThrowIfDisposed();
-            if (additionalModel == null)
+            if (additionalModel is null)
             {
                 throw new ArgumentNullException(nameof(additionalModel));
             }
@@ -303,12 +303,12 @@ namespace BudgetAnalyser.Engine.Statement
                                                        [NotNull] BudgetBucket reassignmentBucket)
         {
             ThrowIfDisposed();
-            if (bucket == null)
+            if (bucket is null)
             {
                 throw new ArgumentNullException(nameof(bucket));
             }
 
-            if (reassignmentBucket == null)
+            if (reassignmentBucket is null)
             {
                 throw new ArgumentNullException(nameof(reassignmentBucket));
             }
@@ -322,7 +322,7 @@ namespace BudgetAnalyser.Engine.Statement
         internal virtual void RemoveTransaction([NotNull] Transaction transaction)
         {
             ThrowIfDisposed();
-            if (transaction == null)
+            if (transaction is null)
             {
                 throw new ArgumentNullException(nameof(transaction));
             }
@@ -341,17 +341,17 @@ namespace BudgetAnalyser.Engine.Statement
             [NotNull] BudgetBucket splinterBucket2)
         {
             ThrowIfDisposed();
-            if (originalTransaction == null)
+            if (originalTransaction is null)
             {
                 throw new ArgumentNullException(nameof(originalTransaction));
             }
 
-            if (splinterBucket1 == null)
+            if (splinterBucket1 is null)
             {
                 throw new ArgumentNullException(nameof(splinterBucket1));
             }
 
-            if (splinterBucket2 == null)
+            if (splinterBucket2 is null)
             {
                 throw new ArgumentNullException(nameof(splinterBucket2));
             }
@@ -373,7 +373,7 @@ namespace BudgetAnalyser.Engine.Statement
             RemoveTransaction(originalTransaction);
 
             this.changeHash = Guid.NewGuid();
-            if (AllTransactions == null)
+            if (AllTransactions is null)
             {
                 AllTransactions = new List<Transaction>();
             }
@@ -390,7 +390,7 @@ namespace BudgetAnalyser.Engine.Statement
         internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates(DateTime? minDate = null, DateTime? maxDate = null)
         {
             ThrowIfDisposed();
-            if (this.duplicates != null)
+            if (this.duplicates is not null)
             {
                 return this.duplicates;
                 // Reset by Merging Transactions, Load Transactions, or by reloading the statement model.
@@ -426,12 +426,12 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             IEnumerable<Transaction> query = AllTransactions;
-            if (criteria.BeginDate != null)
+            if (criteria.BeginDate is not null)
             {
                 query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
             }
 
-            if (criteria.EndDate != null)
+            if (criteria.EndDate is not null)
             {
                 query = query.Where(t => t.Date <= criteria.EndDate.Value);
             }
@@ -453,7 +453,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private void SubscribeToTransactionChangedEvents()
         {
-            if (AllTransactions == null)
+            if (AllTransactions is null)
             {
                 return;
             }
@@ -472,7 +472,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private void UnsubscribeToTransactionChangedEvents()
         {
-            if (AllTransactions == null || AllTransactions.None())
+            if (AllTransactions is null || AllTransactions.None())
             {
                 return;
             }

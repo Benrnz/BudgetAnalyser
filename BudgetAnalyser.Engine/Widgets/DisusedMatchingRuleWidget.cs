@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update(params object[] input)
         {
-            if (input == null)
+            if (input is null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Enabled = true;
             var ruleService = (ITransactionRuleService) input[0];
 
-            if (ruleService == null)
+            if (ruleService is null)
             {
                 Enabled = false;
                 return;

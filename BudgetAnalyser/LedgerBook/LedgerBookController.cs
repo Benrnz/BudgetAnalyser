@@ -35,7 +35,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         [NotNull] NewWindowViewLoader newWindowViewLoader)
         : base(uiContext.Messenger)
     {
-        if (uiContext == null)
+        if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
@@ -76,12 +76,12 @@ public class LedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    public ICommand ShowBankBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null);
+    public ICommand ShowBankBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param is not null);
     public ICommand ShowHidePeriodsCommand => new RelayCommand<int>(OnShowHidePeriodsCommandExecuted);
-    public ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null);
+    public ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param is not null);
 
     public RelayCommand<LedgerEntryLine> ShowRemarksCommand => new(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
-    public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null);
+    public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param is not null);
     public ICommand ShowTransactionsCommand => new RelayCommand<object>(OnShowTransactionsCommandExecuted);
     public ReconciliationToDoListController ToDoListController => this.uiContext.ReconciliationToDoListController;
 
@@ -110,7 +110,7 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     public void EditLedgerBookName()
     {
-        if (ViewModel.LedgerBook == null)
+        if (ViewModel.LedgerBook is null)
         {
             return;
         }
@@ -166,7 +166,7 @@ public class LedgerBookController : ControllerBase, IShowableController
             "Are you sure you want to unlock the Ledger Entry Line dated {0:d} for editing?",
             ViewModel.LedgerBook.Reconciliations.First().Date);
 
-        if (response == null || response.Value == false)
+        if (response is null || response.Value == false)
         {
             return;
         }
@@ -187,7 +187,7 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     private bool CanExecuteShowRemarksCommand(LedgerEntryLine parameter)
     {
-        return parameter != null
+        return parameter is not null
                && (!string.IsNullOrWhiteSpace(parameter.Remarks) || parameter == ViewModel.NewLedgerLine);
     }
 
@@ -239,14 +239,14 @@ public class LedgerBookController : ControllerBase, IShowableController
         }
 
         var expenseBucket = e.SelectedBucket as ExpenseBucket;
-        if (expenseBucket == null)
+        if (expenseBucket is null)
         {
             this.messageBox.Show("You must select an expense budget bucket to track when adding a new Ledger Column.");
             return;
         }
 
         var newBucket = this.ledgerService.TrackNewBudgetBucket(expenseBucket, e.StoreInThisAccount);
-        if (newBucket == null)
+        if (newBucket is null)
         {
             this.uiContext.UserPrompts.MessageBox.Show("Leader Bucket is already tracked in the LedgerBook. If its not shown, there are no transactions for that bucket yet.", "LedgerBook");
         }
@@ -273,7 +273,7 @@ public class LedgerBookController : ControllerBase, IShowableController
     {
         // CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
         // CurrentBudget should only be used for UI purposes such as an indication of current budgeted amount for something etc. 
-        if (message.ActiveBudget == null)
+        if (message.ActiveBudget is null)
         {
             ViewModel.CurrentBudget = null;
             return;
@@ -342,7 +342,7 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     private void OnShowTransactionsCommandExecuted(object parameter)
     {
-        if (parameter == null)
+        if (parameter is null)
         {
             return;
         }
@@ -351,7 +351,7 @@ public class LedgerBookController : ControllerBase, IShowableController
 
         if (parameter is LedgerEntry ledgerEntry)
         {
-            var isNew = ViewModel.NewLedgerLine != null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
+            var isNew = ViewModel.NewLedgerLine is not null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
             this.uiContext.LedgerTransactionsController.ShowLedgerTransactionsDialog(ViewModel.NewLedgerLine, ledgerEntry, isNew);
         }
         else if (parameter is LedgerEntryLine bankBalanceAdjustments)
@@ -390,7 +390,7 @@ public class LedgerBookController : ControllerBase, IShowableController
     private bool ProceedAfterReconciliationValidationWarning(ValidationWarningException ex)
     {
         var result = this.questionBox.Show("Warning", "Warning: {0}\nDo you wish to proceed?", ex.Message);
-        return result != null && result.Value;
+        return result is not null && result.Value;
     }
 
     private void RaiseLedgerBookUpdated()

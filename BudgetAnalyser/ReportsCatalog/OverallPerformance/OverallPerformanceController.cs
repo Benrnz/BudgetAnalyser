@@ -19,7 +19,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public OverallPerformanceController([NotNull] IMessenger messenger, [NotNull] IOverallPerformanceChartService chartService) : base(messenger)
         {
-            if (chartService == null)
+            if (chartService is null)
             {
                 throw new ArgumentNullException(nameof(chartService));
             }
@@ -72,7 +72,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             view.Filter = x =>
             {
                 var bucketAnalysis = x as BucketPerformanceResult;
-                if (bucketAnalysis == null)
+                if (bucketAnalysis is null)
                 {
                     return true;
                 }
@@ -89,7 +89,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         private void RefreshCollection()
         {
-            if (Analysis?.Analyses == null || Analysis.Analyses.None())
+            if (Analysis?.Analyses is null || Analysis.Analyses.None())
             {
                 return;
             }

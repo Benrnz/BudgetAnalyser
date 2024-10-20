@@ -31,17 +31,17 @@ namespace BudgetAnalyser
             [NotNull] PersistenceOperations persistenceOperations)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (statePersistence == null)
+            if (statePersistence is null)
             {
                 throw new ArgumentNullException(nameof(statePersistence));
             }
 
-            if (persistenceOperations == null)
+            if (persistenceOperations is null)
             {
                 throw new ArgumentNullException(nameof(persistenceOperations));
             }
@@ -108,7 +108,7 @@ namespace BudgetAnalyser
             this.initialised = true;
             IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load()?.ToList();
 
-            if (rehydratedModels == null || rehydratedModels.None())
+            if (rehydratedModels is null || rehydratedModels.None())
             {
                 rehydratedModels = CreateNewDefaultApplicationState();
             }
@@ -174,7 +174,7 @@ namespace BudgetAnalyser
             if (this.persistenceOperations.HasUnsavedChanges)
             {
                 bool? result = this.uiContext.UserPrompts.YesNoBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
-                if (result != null && result.Value)
+                if (result is not null && result.Value)
                 {
                     // Save must be run carefully because the application is exiting.  If run using the task factory with defaults the task will stall, as background tasks are waiting to be marshalled back to main context
                     // which is also waiting here, resulting in a deadlock.  This method will only work by first cancelling the close, awaiting this method and then re-triggering it.
@@ -200,13 +200,13 @@ namespace BudgetAnalyser
 
         private async void OnApplicationStateLoaded([NotNull] ApplicationStateLoadedMessage message)
         {
-            if (message == null)
+            if (message is null)
             {
                 throw new ArgumentNullException(nameof(message));
             }
 
             var shellState = message.ElementOfType<ShellPersistentState>();
-            if (shellState != null)
+            if (shellState is not null)
             {
                 // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
                 if (shellState.Size.X > 0 || shellState.Size.Y > 0)
@@ -226,7 +226,7 @@ namespace BudgetAnalyser
             }
 
             var storedMainAppState = message.ElementOfType<MainApplicationState>();
-            if (storedMainAppState != null)
+            if (storedMainAppState is not null)
             {
                 await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
             }

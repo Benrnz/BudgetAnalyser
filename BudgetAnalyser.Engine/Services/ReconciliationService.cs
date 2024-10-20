@@ -20,7 +20,7 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
 
     public ReconciliationService([NotNull] IReconciliationCreationManager reconciliationManager)
     {
-        if (reconciliationManager == null)
+        if (reconciliationManager is null)
         {
             throw new ArgumentNullException(nameof(reconciliationManager));
         }
@@ -57,7 +57,7 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
 
     public void CancelBalanceAdjustment(LedgerEntryLine entryLine, Guid transactionId)
     {
-        if (entryLine == null)
+        if (entryLine is null)
         {
             throw new ArgumentNullException(nameof(entryLine));
         }
@@ -68,17 +68,17 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
     public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative,
                                                      Account account)
     {
-        if (entryLine == null)
+        if (entryLine is null)
         {
             throw new ArgumentNullException(nameof(entryLine));
         }
 
-        if (narrative == null)
+        if (narrative is null)
         {
             throw new ArgumentNullException(nameof(narrative));
         }
 
-        if (account == null)
+        if (account is null)
         {
             throw new ArgumentNullException(nameof(account));
         }
@@ -91,17 +91,17 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
     public LedgerTransaction CreateLedgerTransaction(LedgerBook ledgerBook, LedgerEntryLine reconciliation, LedgerEntry ledgerEntry,
                                                      decimal amount, string narrative)
     {
-        if (reconciliation == null)
+        if (reconciliation is null)
         {
             throw new ArgumentNullException(nameof(reconciliation));
         }
 
-        if (ledgerEntry == null)
+        if (ledgerEntry is null)
         {
             throw new ArgumentNullException(nameof(ledgerEntry));
         }
 
-        if (narrative == null)
+        if (narrative is null)
         {
             throw new ArgumentNullException(nameof(narrative));
         }
@@ -133,12 +133,12 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
 
     public void RemoveTransaction(LedgerBook ledgerBook, LedgerEntry ledgerEntry, Guid transactionId)
     {
-        if (ledgerBook == null)
+        if (ledgerBook is null)
         {
             throw new ArgumentNullException(nameof(ledgerBook));
         }
 
-        if (ledgerEntry == null)
+        if (ledgerEntry is null)
         {
             throw new ArgumentNullException(nameof(ledgerEntry));
         }
@@ -158,7 +158,7 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
     /// <param name="transferDetails">The details of the requested transfer.</param>
     public void TransferFunds(LedgerBook ledgerBook, LedgerEntryLine reconciliation, TransferFundsCommand transferDetails)
     {
-        if (reconciliation == null)
+        if (reconciliation is null)
         {
             throw new ArgumentNullException(nameof(reconciliation), "There are no reconciliations. Transfer funds can only be used on the most recent reconciliation.");
         }
@@ -168,7 +168,7 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
 
     public LedgerEntryLine UnlockCurrentPeriod(LedgerBook ledgerBook)
     {
-        if (ledgerBook == null)
+        if (ledgerBook is null)
         {
             throw new ArgumentNullException(nameof(ledgerBook));
         }
@@ -178,7 +178,7 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
 
     public void UpdateRemarks(LedgerEntryLine entryLine, string remarks)
     {
-        if (entryLine == null)
+        if (entryLine is null)
         {
             throw new ArgumentNullException(nameof(entryLine));
         }
@@ -208,7 +208,7 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
     /// </summary>
     public Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
-        if (applicationDatabase == null)
+        if (applicationDatabase is null)
         {
             throw new ArgumentNullException(nameof(applicationDatabase));
         }

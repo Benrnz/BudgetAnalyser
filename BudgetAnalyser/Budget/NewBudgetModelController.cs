@@ -18,7 +18,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
 
     public NewBudgetModelController([NotNull] IUiContext uiContext) : base(uiContext.Messenger)
     {
-        if (uiContext == null)
+        if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }

@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public bool Validate([NotNull] StringBuilder validationMessages)
         {
-            if (validationMessages == null)
+            if (validationMessages is null)
             {
                 throw new ArgumentNullException(nameof(validationMessages));
             }

@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
             ToModelPreprocessing(dto);
             StatementModel model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 var constructors = typeof(StatementModel).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
                 var constructor = constructors.First(c => c.GetParameters().Length == 0);
@@ -62,7 +62,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
             ToModelPreprocessing(dto);
             Transaction model = null;
             ModelFactory(dto, ref model);
-            if (model == null)
+            if (model is null)
             {
                 model = new Transaction();
             }

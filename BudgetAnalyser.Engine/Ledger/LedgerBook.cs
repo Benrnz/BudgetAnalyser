@@ -75,7 +75,7 @@ public class LedgerBook : IModelValidate
     /// </returns>
     public bool Validate([NotNull] StringBuilder validationMessages)
     {
-        if (validationMessages == null)
+        if (validationMessages is null)
         {
             throw new ArgumentNullException(nameof(validationMessages));
         }
@@ -87,10 +87,10 @@ public class LedgerBook : IModelValidate
         }
 
         var line = Reconciliations.FirstOrDefault();
-        if (line != null)
+        if (line is not null)
         {
             var previous = Reconciliations.Skip(1).FirstOrDefault();
-            if (previous != null && line.Date <= previous.Date)
+            if (previous is not null && line.Date <= previous.Date)
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Duplicate and or out of sequence dates exist in the reconciliations for this Ledger Book.");
                 return false;

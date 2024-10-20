@@ -16,12 +16,12 @@ namespace BudgetAnalyser.LedgerBook
 
         private static bool CanExecuteNavigateToTransactionCommand(Guid? transactionId)
         {
-            return transactionId != null;
+            return transactionId is not null;
         }
 
         private static void OnNavigateToTransactionCommandExecute([NotNull] Guid? transactionId)
         {
-            if (transactionId == null)
+            if (transactionId is null)
             {
                 throw new ArgumentNullException(nameof(transactionId));
             }

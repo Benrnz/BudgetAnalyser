@@ -51,7 +51,7 @@ namespace BudgetAnalyser
             fileDialog.Filter = "Budget Analyser files (*.bax)|*.bax";
             fileDialog.Title = "Select a folder and filename";
             bool? response = fileDialog.ShowDialog();
-            if (response == null || response == false || fileDialog.FileName.IsNothing())
+            if (response is null || response == false || fileDialog.FileName.IsNothing())
             {
                 return;
             }
@@ -157,7 +157,7 @@ namespace BudgetAnalyser
             {
                 const string messageBoxHeading = "Open Budget Analyser File";
                 bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", messageBoxHeading);
-                if (response != null && response.Value)
+                if (response is not null && response.Value)
                 {
                     return await SaveDatabase(messageBoxHeading);
                 }
@@ -178,7 +178,7 @@ namespace BudgetAnalyser
             openDialog.Filter = "Budget Analyser files (*.bax)|*.bax|Xml files (*.xml, *.xaml)|*.xml;*.xaml";
             openDialog.Title = "Select Budget Analyser file to open";
             bool? response = openDialog.ShowDialog();
-            if (response == null || response.Value == false)
+            if (response is null || response.Value == false)
             {
                 return null;
             }

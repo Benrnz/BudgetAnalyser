@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// </returns>
         public Account Add([NotNull] string key, [NotNull] Account instance)
         {
-            if (instance == null)
+            if (instance is null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }

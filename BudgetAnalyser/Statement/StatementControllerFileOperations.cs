@@ -21,12 +21,12 @@ namespace BudgetAnalyser.Statement
             [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (applicationDatabaseService == null)
+            if (applicationDatabaseService is null)
             {
                 throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Statement
                     // Update all UI bound properties.
                     var requestCurrentFilterMessage = new RequestFilterMessage(this);
                     Messenger.Send(requestCurrentFilterMessage);
-                    if (requestCurrentFilterMessage.Criteria != null)
+                    if (requestCurrentFilterMessage.Criteria is not null)
                     {
                         this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
                     }

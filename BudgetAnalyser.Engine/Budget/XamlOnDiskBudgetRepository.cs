@@ -103,7 +103,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             var correctDataFormat = serialised as BudgetCollectionDto;
-            if (correctDataFormat == null)
+            if (correctDataFormat is null)
             {
                 throw new DataFormatException(
                     string.Format(CultureInfo.InvariantCulture,
@@ -122,7 +122,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public async Task SaveAsync()
         {
-            if (this.currentBudgetCollection == null)
+            if (this.currentBudgetCollection is null)
             {
                 throw new InvalidOperationException("There is no current budget collection loaded.");
             }
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public async Task SaveAsync(string storageKey, bool isEncrypted)
         {
-            if (this.currentBudgetCollection == null)
+            if (this.currentBudgetCollection is null)
             {
                 throw new InvalidOperationException("There is no current budget collection loaded.");
             }

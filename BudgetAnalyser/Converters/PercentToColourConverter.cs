@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (parameter == null || value == null)
+            if (parameter is null || value is null)
             {
                 return ConverterHelper.TransparentBrush;
             }

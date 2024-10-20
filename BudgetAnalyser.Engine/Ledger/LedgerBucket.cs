@@ -130,7 +130,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         protected bool Equals([CanBeNull] LedgerBucket other)
         {
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }

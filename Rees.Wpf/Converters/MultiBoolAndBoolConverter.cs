@@ -25,7 +25,7 @@ public class MultiBoolAndBoolConverter : IMultiValueConverter
     /// <returns>true if all bool values are true, otherwise false. If anything goes wrong, will return false.</returns>
     public object Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)
     {
-        if (values == null)
+        if (values is null)
         {
             return false;
         }

@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Matching
         public AppliedRulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Matching
 
         private bool CanExecuteCreateRuleCommand()
         {
-            return this.statementController.ViewModel.SelectedRow != null;
+            return this.statementController.ViewModel.SelectedRow is not null;
         }
 
         private void OnApplyRulesCommandExecute()
@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnCreateRuleCommandExecute()
         {
-            if (this.statementController.ViewModel.SelectedRow == null)
+            if (this.statementController.ViewModel.SelectedRow is null)
             {
                 this.messageBox.Show("No row selected.");
                 return;

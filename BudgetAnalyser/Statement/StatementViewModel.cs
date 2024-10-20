@@ -57,7 +57,7 @@ public class StatementViewModel : ObservableRecipient
 
     public IEnumerable<string> FilterBudgetBuckets => this.transactionService.FilterableBuckets();
 
-    public bool HasTransactions => Statement != null && Statement.Transactions.Any();
+    public bool HasTransactions => Statement is not null && Statement.Transactions.Any();
 
     public Transaction SelectedRow
     {
@@ -75,7 +75,7 @@ public class StatementViewModel : ObservableRecipient
 
         set
         {
-            if (this.transactionService == null)
+            if (this.transactionService is null)
             {
                 throw new InvalidOperationException("Initialise has not been called.");
             }
@@ -91,7 +91,7 @@ public class StatementViewModel : ObservableRecipient
     {
         get
         {
-            if (Statement != null)
+            if (Statement is not null)
             {
                 return Path.GetFileNameWithoutExtension(Statement.StorageKey);
             }
@@ -117,7 +117,7 @@ public class StatementViewModel : ObservableRecipient
 
     public bool HasSelectedRow()
     {
-        return SelectedRow != null;
+        return SelectedRow is not null;
     }
 
     public StatementViewModel Initialise(ITransactionManagerService transactionManagerService)
@@ -141,6 +141,6 @@ public class StatementViewModel : ObservableRecipient
         OnPropertyChanged(nameof(HasTransactions));
         OnPropertyChanged(nameof(StatementName));
 
-        DuplicateSummary = Statement == null ? null : this.transactionService.DetectDuplicateTransactions();
+        DuplicateSummary = Statement is null ? null : this.transactionService.DetectDuplicateTransactions();
     }
 }

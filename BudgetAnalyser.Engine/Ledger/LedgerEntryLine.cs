@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntryLine(DateTime reconciliationDate, [NotNull] IEnumerable<BankBalance> bankBalances)
             : this()
         {
-            if (bankBalances == null)
+            if (bankBalances is null)
             {
                 throw new ArgumentNullException(nameof(bankBalances));
             }
@@ -186,7 +186,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             var txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
-            if (txn != null)
+            if (txn is not null)
             {
                 this.bankBalanceAdjustments.Remove(txn);
             }
@@ -194,12 +194,12 @@ namespace BudgetAnalyser.Engine.Ledger
 
         internal static decimal FindPreviousEntryClosingBalance([CanBeNull] LedgerEntryLine previousLine, [NotNull] LedgerBucket ledgerBucket)
         {
-            if (ledgerBucket == null)
+            if (ledgerBucket is null)
             {
                 throw new ArgumentNullException(nameof(ledgerBucket));
             }
 
-            if (previousLine == null)
+            if (previousLine is null)
             {
                 return 0;
             }
@@ -248,7 +248,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         internal bool Validate([NotNull] StringBuilder validationMessages, [CanBeNull] LedgerEntryLine previousLine)
         {
-            if (validationMessages == null)
+            if (validationMessages is null)
             {
                 throw new ArgumentNullException(nameof(validationMessages));
             }

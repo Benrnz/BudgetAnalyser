@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var bucketValue = value as BudgetBucket;
-            if (bucketValue == null)
+            if (bucketValue is null)
             {
                 return null;
             }

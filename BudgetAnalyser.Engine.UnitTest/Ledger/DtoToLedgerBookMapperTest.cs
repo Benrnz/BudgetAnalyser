@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void ShouldMapLedgerBucketsOnLedgerEntriesWithAccountNotNull()
         {
             LedgerBook result = ArrangeAndAct();
-            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket == null));
+            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket is null));
         }
 
         [TestMethod]

@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// <returns>
         ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -106,9 +106,9 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// <summary>
         ///     Returns true if the <see cref="Account.Name" /> is equal to the other <see cref="Account.Name" />
         /// </summary>
-        protected bool Equals([CanBeNull] Account other)
+        protected bool Equals(Account? other)
         {
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }

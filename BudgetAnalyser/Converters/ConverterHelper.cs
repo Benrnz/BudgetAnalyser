@@ -85,7 +85,7 @@ namespace BudgetAnalyser.Converters
             }
 
             var stringValue = value as string;
-            if (stringValue != null)
+            if (stringValue is not null)
             {
                 decimal number;
                 if (decimal.TryParse(stringValue, out number))

@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.Mobile
         /// </summary>
         public MobileDataExporter([NotNull] LedgerCalculation calculator, IReaderWriterSelector readerWriterSelector, IEnvironmentFolders environmentFolders)
         {
-            if (calculator == null)
+            if (calculator is null)
             {
                 throw new ArgumentNullException(nameof(calculator));
             }
@@ -45,23 +45,23 @@ namespace BudgetAnalyser.Engine.Mobile
             [NotNull] LedgerBook ledgerBook,
             [NotNull] GlobalFilterCriteria filter)
         {
-            if (transactions == null)
+            if (transactions is null)
             {
                 throw new ArgumentNullException(nameof(transactions));
             }
-            if (currentBudget == null)
+            if (currentBudget is null)
             {
                 throw new ArgumentNullException(nameof(currentBudget));
             }
-            if (ledgerBook == null)
+            if (ledgerBook is null)
             {
                 throw new ArgumentNullException(nameof(ledgerBook));
             }
-            if (filter == null)
+            if (filter is null)
             {
                 throw new ArgumentNullException(nameof(filter));
             }
-            if (filter.BeginDate == null || filter.EndDate == null)
+            if (filter.BeginDate is null || filter.EndDate is null)
             {
                 return null;
             }
@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Engine.Mobile
             };
 
             var latestRecon = this.calculator.LocateApplicableLedgerLine(ledgerBook, filter);
-            if (latestRecon == null)
+            if (latestRecon is null)
             {
                 return null;
             }

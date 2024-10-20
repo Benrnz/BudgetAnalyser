@@ -23,9 +23,9 @@ namespace BudgetAnalyser.Matching
         {
             this.ruleService = ruleService;
             this.dbService = dbService;
-            if (messenger == null) throw new ArgumentNullException(nameof(messenger));
-            if (ruleService == null) throw new ArgumentNullException(nameof(ruleService));
-            if (dbService == null) throw new ArgumentNullException(nameof(dbService));
+            if (messenger is null) throw new ArgumentNullException(nameof(messenger));
+            if (ruleService is null) throw new ArgumentNullException(nameof(ruleService));
+            if (dbService is null) throw new ArgumentNullException(nameof(dbService));
 
             Messenger.Register<DisusedRulesController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             Messenger.Register<DisusedRulesController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Matching
         {
             get
             {
-                return new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r != null);
+                return new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r is not null);
             }
         }
 

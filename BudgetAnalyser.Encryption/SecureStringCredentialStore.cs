@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Encryption
         /// <returns>A credential object or null if no credentials have been provided by the user.</returns>
         public object RetrievePasskey()
         {
-            if (this.passPhrase == null || this.passPhrase.Length == 0) return null;
+            if (this.passPhrase is null || this.passPhrase.Length == 0) return null;
             return this.passPhrase;
         }
 
@@ -67,14 +67,14 @@ namespace BudgetAnalyser.Encryption
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SecureStringCredentialStore")]
         public bool AreEqual(object compareTo)
         {
-            if (this.passPhrase == null || compareTo == null)
+            if (this.passPhrase is null || compareTo is null)
             {
                 return false;
             }
 
             var key1 = this.passPhrase;
             var key2 = compareTo as SecureString;
-            if (key2 == null)
+            if (key2 is null)
             {
                 throw new NotSupportedException($"{nameof(SecureStringCredentialStore)} only supports use of SecureStrings.");
             }

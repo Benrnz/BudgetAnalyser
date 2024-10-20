@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Matching
         public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
             : base(uiContext.Messenger)
         {
-            if (uiContext == null)
+            if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Matching
         public event EventHandler<MatchingRuleEventArgs> RuleRemoved;
 
         public event EventHandler SortChanged;
-        public string AndOrText => SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR";
+        public string AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
 
         [UsedImplicitly]
         public ICommand CloseCommand => new RelayCommand(() => Shown = false);
@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Matching
         }
 
         [UsedImplicitly]
-        public ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null);
+        public ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
 
         public bool FlatListBoxVisibility
         {
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.Matching
         {
             get
             {
-                bool result = SelectedRule != null && !EditingRule;
+                bool result = SelectedRule is not null && !EditingRule;
                 return result;
             }
         }
@@ -178,7 +178,7 @@ namespace BudgetAnalyser.Matching
 
         public void CreateNewRuleFromTransaction([NotNull] Transaction transaction)
         {
-            if (transaction == null)
+            if (transaction is null)
             {
                 throw new ArgumentNullException(nameof(transaction));
             }
@@ -229,7 +229,7 @@ namespace BudgetAnalyser.Matching
 
         private bool CanExecuteDeleteRuleCommand()
         {
-            return SelectedRule != null;
+            return SelectedRule is not null;
         }
 
         private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
@@ -241,13 +241,13 @@ namespace BudgetAnalyser.Matching
 
         private void OnDeleteRuleCommandExecute()
         {
-            if (SelectedRule == null)
+            if (SelectedRule is null)
             {
                 return;
             }
 
             bool? certainty = this.questionBox.Show("Delete this rule?", "Are you sure?");
-            if (certainty != null && certainty.Value)
+            if (certainty is not null && certainty.Value)
             {
                 RemoveRule();
             }
@@ -280,7 +280,7 @@ namespace BudgetAnalyser.Matching
         private void OnNewRuleCreated(object sender, EventArgs eventArgs)
         {
             NewRuleController.RuleCreated -= OnNewRuleCreated;
-            if (NewRuleController.NewRule != null)
+            if (NewRuleController.NewRule is not null)
             {
                 AddToList(NewRuleController.NewRule);
             }

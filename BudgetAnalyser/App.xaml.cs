@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Windows;
@@ -15,9 +14,9 @@ namespace BudgetAnalyser
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This is the root object in the App")]
     public partial class App
     {
-        private CompositionRoot compositionRoot;
-        private ILogger logger;
-        private ShellController shellController;
+        private CompositionRoot? compositionRoot;
+        private ILogger? logger;
+        private ShellController? shellController;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -38,7 +37,7 @@ namespace BudgetAnalyser
             this.logger.LogAlways(_ => "=========== Budget Analyser Starting ===========");
             this.logger.LogAlways(_ => this.compositionRoot.ShellController.DashboardController.VersionString);
             this.shellController = this.compositionRoot.ShellController;
-            this.shellController?.Initialize();
+            this.shellController.Initialize();
 
             this.compositionRoot.ShellWindow.DataContext = this.compositionRoot.ShellController;
             this.logger.LogInfo(_ => "Initialisation finished.");
@@ -49,7 +48,7 @@ namespace BudgetAnalyser
             Justification = "All exceptions are already logged, any further exceptions attempting to gracefully shutdown can be ignored.")]
         private void LogUnhandledException(string origin, object ex)
         {
-            if (this.logger != null)
+            if (this.logger is not null)
             {
                 var builder = new StringBuilder();
                 builder.AppendLine(string.Empty);
@@ -75,8 +74,8 @@ namespace BudgetAnalyser
         private void OnApplicationExit(object sender, ExitEventArgs e)
         {
             Current.Exit -= OnApplicationExit;
-            this.compositionRoot.Dispose();
-            this.logger.LogAlways(_ => "=========== Application Exiting ===========");
+            this.compositionRoot?.Dispose();
+            this.logger?.LogAlways(_ => "=========== Application Exiting ===========");
         }
 
         private void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)

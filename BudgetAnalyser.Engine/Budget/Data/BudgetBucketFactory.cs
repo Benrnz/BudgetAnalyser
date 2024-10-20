@@ -11,7 +11,7 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
 {
     public BudgetBucket BuildModel([NotNull] BudgetBucketDto dto)
     {
-        if (dto == null)
+        if (dto is null)
         {
             throw new ArgumentNullException(nameof(dto));
         }
@@ -46,7 +46,7 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
     {
         BudgetBucketDto dto;
         var fixedProjectBucket = bucket as FixedBudgetProjectBucket;
-        if (fixedProjectBucket != null)
+        if (fixedProjectBucket is not null)
         {
             dto = new FixedBudgetBucketDto
             {
@@ -65,7 +65,7 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
 
     public BucketDtoType SerialiseType([NotNull] BudgetBucket bucket)
     {
-        if (bucket == null)
+        if (bucket is null)
         {
             throw new ArgumentNullException(nameof(bucket));
         }

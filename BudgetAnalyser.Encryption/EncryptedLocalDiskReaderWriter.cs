@@ -18,8 +18,8 @@ namespace BudgetAnalyser.Encryption
 
         public EncryptedLocalDiskReaderWriter([NotNull] IFileEncryptor fileEncryptor, [NotNull] ICredentialStore credentialStore)
         {
-            if (fileEncryptor == null) throw new ArgumentNullException(nameof(fileEncryptor));
-            if (credentialStore == null) throw new ArgumentNullException(nameof(credentialStore));
+            if (fileEncryptor is null) throw new ArgumentNullException(nameof(fileEncryptor));
+            if (credentialStore is null) throw new ArgumentNullException(nameof(credentialStore));
             this.fileEncryptor = fileEncryptor;
             this.credentialStore = credentialStore;
         }
@@ -87,7 +87,7 @@ namespace BudgetAnalyser.Encryption
 
         internal bool IsValidAlphaNumericWithPunctuation(string text)
         {
-            if (text == null) return false;
+            if (text is null) return false;
             var valid = text.ToCharArray().Take(16).All(IsValidUtf8AlphaNumericWithPunctuation);
             return valid;
         }
@@ -105,7 +105,7 @@ namespace BudgetAnalyser.Encryption
         {
             var password = this.credentialStore.RetrievePasskey() as SecureString;
 
-            if (password == null)
+            if (password is null)
             {
                 // This condition should be checked by the UI before calling into the Engine ideally.
                 throw new EncryptionKeyNotProvidedException("Attempt to load an encrypted password protected file and no password has been set.");

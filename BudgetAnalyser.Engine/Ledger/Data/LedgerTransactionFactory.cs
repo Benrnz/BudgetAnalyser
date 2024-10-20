@@ -17,7 +17,7 @@ internal class LedgerTransactionFactory : ILedgerTransactionFactory
     public LedgerTransaction Build(string transactionTypeName, Guid id)
     {
         var type = Type.GetType(transactionTypeName);
-        if (type == null)
+        if (type is null)
         {
             throw new DataFormatException("Invalid transaction type encountered: " + transactionTypeName);
         }

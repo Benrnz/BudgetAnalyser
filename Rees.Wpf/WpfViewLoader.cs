@@ -21,7 +21,7 @@ namespace Rees.Wpf
         /// </summary>
         public virtual void Close()
         {
-            if (TargetWindow != null)
+            if (TargetWindow is not null)
             {
                 TargetWindow.Close();
                 TargetWindow = null;
@@ -36,7 +36,7 @@ namespace Rees.Wpf
                          Justification = "Clean up code. The window is orphaned or has been instructed to close.")]
         public virtual void Show(object context)
         {
-            if (TargetWindow != null)
+            if (TargetWindow is not null)
             {
                 try
                 {
@@ -78,22 +78,22 @@ namespace Rees.Wpf
         protected virtual void ConfigureWindow(object context)
         {
             TargetWindow.DataContext = context;
-            if (Height != null)
+            if (Height is not null)
             {
                 TargetWindow.Height = Height.Value;
             }
 
-            if (Width != null)
+            if (Width is not null)
             {
                 TargetWindow.Width = Width.Value;
             }
 
-            if (MinHeight != null)
+            if (MinHeight is not null)
             {
                 TargetWindow.MinHeight = MinHeight.Value;
             }
 
-            if (MinWidth != null)
+            if (MinWidth is not null)
             {
                 TargetWindow.MinWidth = MinWidth.Value;
             }

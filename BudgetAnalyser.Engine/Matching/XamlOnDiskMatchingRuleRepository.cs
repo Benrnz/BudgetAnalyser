@@ -20,13 +20,13 @@ namespace BudgetAnalyser.Engine.Matching
 
         public XamlOnDiskMatchingRuleRepository([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper, [NotNull] ILogger logger, [NotNull] IReaderWriterSelector readerWriterSelector)
         {
-            if (mapper == null)
+            if (mapper is null)
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
 
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            if (readerWriterSelector is null) throw new ArgumentNullException(nameof(readerWriterSelector));
 
             this.mapper = mapper;
             this.logger = logger;
@@ -72,7 +72,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new DataFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
-            if (dataEntities == null)
+            if (dataEntities is null)
             {
                 throw new DataFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
             }
@@ -83,12 +83,12 @@ namespace BudgetAnalyser.Engine.Matching
 
         public async Task SaveAsync(IEnumerable<MatchingRule> rules, string storageKey, bool isEncrypted)
         {
-            if (rules == null)
+            if (rules is null)
             {
                 throw new ArgumentNullException(nameof(rules));
             }
 
-            if (storageKey == null)
+            if (storageKey is null)
             {
                 throw new ArgumentNullException(nameof(storageKey));
             }
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         protected virtual string Serialise(IEnumerable<MatchingRuleDto> dataEntity)
         {
-            if (dataEntity == null)
+            if (dataEntity is null)
             {
                 throw new ArgumentNullException(nameof(dataEntity));
             }

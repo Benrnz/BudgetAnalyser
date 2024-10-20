@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Statement
         public BankStatementImporterRepository([NotNull] IEnumerable<IBankStatementImporter> importers)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            if (importers == null || importers.None())
+            if (importers is null || importers.None())
             {
                 throw new ArgumentNullException(nameof(importers));
             }

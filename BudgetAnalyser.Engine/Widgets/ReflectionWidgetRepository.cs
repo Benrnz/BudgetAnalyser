@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public IUserDefinedWidget Create(string widgetType, string id)
         {
             var type = Type.GetType(widgetType);
-            if (type == null)
+            if (type is null)
             {
                 throw new NotSupportedException("The widget type specified " + widgetType +
                                                 " is not found in any known type library.");
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             var widget = Activator.CreateInstance(type) as IUserDefinedWidget;
-            Debug.Assert(widget != null);
+            Debug.Assert(widget is not null);
             widget.Id = id;
             var key = BuildMultiUseWidgetKey(widget);
 
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public void Remove(IUserDefinedWidget widget)
         {
-            if (widget == null)
+            if (widget is null)
             {
                 return;
             }

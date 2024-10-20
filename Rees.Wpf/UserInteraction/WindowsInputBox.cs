@@ -18,7 +18,7 @@ namespace Rees.Wpf.UserInteraction
         /// <exception cref="System.ArgumentNullException">viewLoader cannot be null.</exception>
         public WindowsInputBox(IViewLoader viewLoader)
         {
-            if (viewLoader == null)
+            if (viewLoader is null)
             {
                 throw new ArgumentNullException("viewLoader");
             }
@@ -58,7 +58,7 @@ namespace Rees.Wpf.UserInteraction
             Input = defaultInput;
             var result = this.viewLoader.ShowDialog(this);
 
-            if (result == null || result == false)
+            if (result is null || result == false)
             {
                 Input = null;
                 return null;

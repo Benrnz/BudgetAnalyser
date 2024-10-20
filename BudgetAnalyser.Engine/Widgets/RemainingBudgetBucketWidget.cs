@@ -84,7 +84,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     /// </summary>
     public override void Update([NotNull] params object[] input)
     {
-        if (input == null)
+        if (input is null)
         {
             throw new ArgumentNullException(nameof(input));
         }
@@ -102,15 +102,15 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         LedgerBook = (LedgerBook)input[4];
         LedgerCalculation = (LedgerCalculation)input[5];
 
-        if (Statement == null
-            || Budget == null
-            || Filter == null
+        if (Statement is null
+            || Budget is null
+            || Filter is null
             || Filter.Cleared
-            || Filter.BeginDate == null
-            || Filter.EndDate == null
-            || LedgerCalculation == null
-            || LedgerBook == null
-            || this.bucketRepository == null)
+            || Filter.BeginDate is null
+            || Filter.EndDate is null
+            || LedgerCalculation is null
+            || LedgerBook is null
+            || this.bucketRepository is null)
         {
             Enabled = false;
             return;
@@ -134,7 +134,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         Maximum = Convert.ToDouble(totalBudget);
 
         var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
-        if (ledgerLine == null)
+        if (ledgerLine is null)
         {
             Enabled = false;
             return;
@@ -166,12 +166,12 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     /// </summary>
     protected virtual decimal LedgerBucketBalanceOrBudgetAmount()
     {
-        Debug.Assert(Filter.BeginDate != null);
-        Debug.Assert(Filter.EndDate != null);
+        Debug.Assert(Filter.BeginDate is not null);
+        Debug.Assert(Filter.EndDate is not null);
 
         var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
 
-        if (LedgerBook == null || ledgerLine == null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode))
+        if (LedgerBook is null || ledgerLine is null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode))
         {
             return Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
         }

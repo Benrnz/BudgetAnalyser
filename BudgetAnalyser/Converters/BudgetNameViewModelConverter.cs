@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values == null || values.Length < 2)
+            if (values is null || values.Length < 2)
             {
                 return null;
             }
@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Converters
             var budget = values[0] as BudgetModel;
             var budgets = values[1] as BudgetCollection;
 
-            if (budget == null || budgets == null)
+            if (budget is null || budgets is null)
             {
                 return null;
             }

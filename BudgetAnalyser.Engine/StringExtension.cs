@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace BudgetAnalyser.Engine
+﻿namespace BudgetAnalyser.Engine
 {
     /// <summary>
     ///     An extension class for string.
     /// </summary>
     public static class StringExtension
     {
-        private static readonly char[] Vowels = { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
+        private static readonly char[] Vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
 
         /// <summary>
         ///     Returns the appropriate 'An' or 'A' prefix for the given string.  The given string is not included
@@ -46,7 +42,8 @@ namespace BudgetAnalyser.Engine
 
         /// <summary>
         ///     Returns true if the string is null, whitespace or empty.
-        ///     Equivelant to IsNullOrWhiteSpace
+        ///     Equivalent to IsNullOrWhiteSpace.
+        ///     The reason for this function is to provide a more readable way to check if a string is nothing or whitespace.
         /// </summary>
         public static bool IsNothing(this string instance)
         {
@@ -55,7 +52,8 @@ namespace BudgetAnalyser.Engine
 
         /// <summary>
         ///     Returns true if the string is not null, not whitespace, and not empty.
-        ///     The direct opporsite of <see cref="IsNothing" />
+        ///     The direct opposite of <see cref="IsNothing" />.
+        ///     The reason for this function is to provide a more readable way to check if a string is not nothing or whitespace.
         /// </summary>
         public static bool IsSomething(this string instance)
         {
@@ -68,8 +66,8 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static string[] SplitLines(this string instance, int numberOfLines = 0)
         {
+            ArgumentNullException.ThrowIfNull(instance);
             if (numberOfLines < 0) throw new ArgumentOutOfRangeException(nameof(numberOfLines), "Number of Lines must be a positive integer.");
-            if (instance == null) return null;
 
             string[] split = instance.Split('\r', '\n');
             IEnumerable<string> query = split.Where(l => l.Length > 0);
@@ -79,14 +77,6 @@ namespace BudgetAnalyser.Engine
             }
 
             return query.ToArray();
-        }
-
-        /// <summary>
-        ///     Trims the end of a string safely.  If the string is null, null is returned.
-        /// </summary>
-        public static string TrimEndSafely(this string instance)
-        {
-            return instance?.TrimEnd();
         }
 
         /// <summary>
