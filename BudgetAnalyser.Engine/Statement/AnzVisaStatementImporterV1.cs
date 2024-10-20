@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Threading.Tasks;
 using BudgetAnalyser.Engine.BankAccount;
 using JetBrains.Annotations;
 
@@ -22,7 +18,7 @@ namespace BudgetAnalyser.Engine.Statement
         private const string DebitTransactionType = "D";
         private const string CreditTransactionType = "C";
 
-        private static readonly Dictionary<string, NamedTransaction> TransactionTypes = new Dictionary<string, NamedTransaction>
+        private static readonly Dictionary<string, NamedTransaction> TransactionTypes = new()
         {
             { CreditTransactionType, new NamedTransaction("Credit Card Credit") },
             { DebitTransactionType, new NamedTransaction("Credit Card Debit", true) }
@@ -34,17 +30,10 @@ namespace BudgetAnalyser.Engine.Statement
 
         public AnzVisaStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger, [NotNull] IReaderWriterSelector readerWriterSelector)
         {
-            if (importUtilities is null)
-            {
-                throw new ArgumentNullException(nameof(importUtilities));
-            }
-
-            if (logger is null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-            if (readerWriterSelector is null) throw new ArgumentNullException(nameof(readerWriterSelector));
-
+            ArgumentNullException.ThrowIfNull(importUtilities, nameof(importUtilities));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(readerWriterSelector, nameof(readerWriterSelector));
+            
             this.importUtilities = importUtilities;
             this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
             // ANZ importers are NZ specific at this stage.
@@ -116,7 +105,7 @@ namespace BudgetAnalyser.Engine.Statement
         public async Task<bool> TasteTestAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
-            string[] lines = await ReadFirstTwoLinesAsync(fileName);
+            string[]? lines = await ReadFirstTwoLinesAsync(fileName);
             if (lines is null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
@@ -152,23 +141,6 @@ namespace BudgetAnalyser.Engine.Statement
         {
             var reader = this.readerWriterSelector.SelectReaderWriter(false);
             return await reader.LoadFirstLinesFromDiskAsync(filePath, 2);
-            //using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
-            //{
-            //    var sb = new StringBuilder();
-            //    var buffer = new byte[0x256];
-            //    int numRead;
-            //    while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-            //    {
-            //        var text = Encoding.UTF8.GetString(buffer, 0, numRead);
-            //        sb.Append(text);
-            //        if (text.Contains("\n"))
-            //        {
-            //            break;
-            //        }
-            //    }
-
-            //    return sb.ToString();
-            //}
         }
 
         private decimal FetchAmount(string[] array, NamedTransaction transaction)
@@ -189,7 +161,7 @@ namespace BudgetAnalyser.Engine.Statement
             } catch (InvalidDataException ex)
             {
                 this.logger.LogError(ex, l => l.Format("Unable to convert provided string to a decimal. Probable format change in bank file."));
-                throw ex;
+                throw;
             }
         }
 
@@ -198,12 +170,12 @@ namespace BudgetAnalyser.Engine.Statement
             var stringType = this.importUtilities.FetchString(array, TransactionTypeIndex);
             if (string.IsNullOrWhiteSpace(stringType))
             {
-                return null;
+                return NamedTransaction.Empty;
             }
 
-            if (TransactionTypes.ContainsKey(stringType))
+            if (TransactionTypes.TryGetValue(stringType, out var cachedTransactionType))
             {
-                return TransactionTypes[stringType];
+                return cachedTransactionType;
             }
 
             var fullTypeText = stringType;
@@ -212,7 +184,7 @@ namespace BudgetAnalyser.Engine.Statement
             return transactionType;
         }
 
-        private async Task<string[]> ReadFirstTwoLinesAsync(string fileName)
+        private async Task<string[]?> ReadFirstTwoLinesAsync(string fileName)
         {
             var chunk = await ReadTextChunkAsync(fileName);
             if (chunk.IsNothing())

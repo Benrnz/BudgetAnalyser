@@ -10,11 +10,6 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Gets or sets the context. The consumer of the event can optionally set the context.
         /// </summary>
-        public object Context { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the optional modification comment.
-        /// </summary>
-        public string ModificationComment { get; set; }
+        public object? Context { get; set; }
     }
 }

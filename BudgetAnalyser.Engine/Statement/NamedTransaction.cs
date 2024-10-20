@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BudgetAnalyser.Engine.Statement
+﻿namespace BudgetAnalyser.Engine.Statement
 {
     /// <summary>
     ///     A simple type to represent the transaction type classification provided by the bank for a transaction.
@@ -27,6 +25,8 @@ namespace BudgetAnalyser.Engine.Statement
             this.name = name;
             IsDebit = isDebit;
         }
+
+        public static NamedTransaction Empty => new NamedTransaction("");
 
         /// <summary>
         ///     Gets the transaction type name.
