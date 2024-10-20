@@ -83,13 +83,12 @@
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap"
                                VerticalAlignment="Bottom" />
-                    <Button
-                        Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
-                        CommandParameter="{Binding .}"
-                        Grid.ColumnSpan="2"
-                        Grid.RowSpan="2"
-                        Style="{StaticResource Button.ModernTile.Overlay}"
-                        Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
+                    <Button Command="{x:Static dashboard:WidgetCommands.WidgetClickedCommand}"
+                            CommandParameter="{Binding .}"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="2"
+                            Style="{StaticResource Button.ModernTile.Overlay}"
+                            Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
         </DataTemplate>
@@ -138,11 +137,11 @@
                         Command="{Binding Source={StaticResource WidgetCommands}, Path=WidgetClickedCommand}"
                     -->
                     <Button Command="{x:Static dashboard:WidgetCommands.WidgetClickedCommand}"
-                        CommandParameter="{Binding .}"
-                        Grid.ColumnSpan="2"
-                        Grid.RowSpan="2"
-                        Style="{StaticResource Button.ModernTile.Overlay}"
-                        Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
+                            CommandParameter="{Binding .}"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="2"
+                            Style="{StaticResource Button.ModernTile.Overlay}"
+                            Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
         </DataTemplate>
