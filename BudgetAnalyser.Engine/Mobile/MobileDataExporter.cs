@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
@@ -24,15 +19,11 @@ namespace BudgetAnalyser.Engine.Mobile
         /// <summary>
         ///     Initialises an instance of the <see cref="MobileDataExporter" /> class.
         /// </summary>
-        public MobileDataExporter([NotNull] LedgerCalculation calculator, IReaderWriterSelector readerWriterSelector, IEnvironmentFolders environmentFolders)
+        public MobileDataExporter(LedgerCalculation calculator, IReaderWriterSelector readerWriterSelector, IEnvironmentFolders environmentFolders)
         {
-            if (calculator is null)
-            {
-                throw new ArgumentNullException(nameof(calculator));
-            }
-            this.calculator = calculator;
-            this.readerWriterSelector = readerWriterSelector;
-            this.environmentFolders = environmentFolders;
+            this.calculator = calculator ?? throw new ArgumentNullException(nameof(calculator));
+            this.readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
+            this.environmentFolders = environmentFolders ?? throw new ArgumentNullException(nameof(environmentFolders));
         }
 
         /// <summary>
