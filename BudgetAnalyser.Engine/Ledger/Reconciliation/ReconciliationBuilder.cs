@@ -275,15 +275,54 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
     private static string ExtractNarrative(Transaction t)
     {
-        var builder = new StringBuilder();
-        builder.Append(t.Description ?? "[No Description]");
-        builder.Append(FormatTransactionFragment(t.Reference1));
-        builder.Append(FormatTransactionFragment(t.Reference2));
-        builder.Append(FormatTransactionFragment(t.Reference3));
-        
-        if (builder.Length == 16 && t.TransactionType is not null)
+        var peices = new List<string>();  // In priority order
+        if (t.Description.IsSomething())
         {
-            return t.TransactionType.ToString();
+            peices.Add(t.Description);
+        }
+
+        if (t.Reference1.IsSomething())
+        {
+            peices.Add(t.Reference1);
+        }
+
+        if (t.Reference2.IsSomething())
+        {
+            peices.Add(t.Reference2);
+        }
+
+        if (t.Reference3.IsSomething())
+        {
+            peices.Add(t.Reference3);
+        }
+
+        if (peices.None())
+        {
+            if (t.TransactionType is not null)
+            {
+                peices.Add(t.TransactionType.ToString());
+            }
+            else
+            {
+                peices.Add("[No Description]");
+            }
+        }
+        
+        if (peices.Count == 1) return peices[0];
+
+        var builder = new StringBuilder();
+        for (int index = 0; index < peices.Count; index++)
+        {
+            var firstOne = index == 0;
+            if (firstOne)
+            {
+                builder.Append(peices[index]);
+            }
+            else
+            {
+                builder.Append("; ");
+                builder.Append(peices[index]);
+            }
         }
 
         return builder.ToString();
