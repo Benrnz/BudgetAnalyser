@@ -11,30 +11,35 @@ public class ReconciliationBuilder_NarrativeTest
     private const string? NoDescriptionText = "[No Description]";
     private const string? BillPaymentTransactionText = "Bill Payment";
     private const string TestDescriptionText = "My description here 123.";
-    private Transaction testTransaction; 
-    
-    [TestInitialize]
-    public void TestInitialise()
-    {
-        this.testTransaction = new Transaction
-        {
-            Account = LedgerBookTestData.ChequeAccount,
-            Amount = 123.45M,
-            BudgetBucket = BudgetBucketTestData.BudgetModelTestData1Buckets.First(),
-            Date = new DateTime(2024, 12, 9),
-            Id = Guid.NewGuid(),
-            TransactionType = StatementModelTestData.TransactionType, /* Bill Payment */
-        };
-    }
-    
+    private Transaction testTransaction;
+
     [TestMethod]
-    public void ExtractNarrative_NoDescNoRefWithTxnType_ShouldReturnTxnType()
+    public void ExtractNarrative_EmptyDescEmptyRefNoType_ShouldReturnNoDescription()
     {
+        this.testTransaction.TransactionType = null;
+        this.testTransaction.Description = string.Empty;
+        this.testTransaction.Reference1 = string.Empty;
+        this.testTransaction.Reference2 = string.Empty;
+        this.testTransaction.Reference3 = string.Empty;
+
+        var result = ExtractNarrative();
+
+        Assert.AreEqual(NoDescriptionText, result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_EmptyDescEmptyRefWithTxnType_ShouldReturnTxnType()
+    {
+        this.testTransaction.Description = string.Empty;
+        this.testTransaction.Reference1 = string.Empty;
+        this.testTransaction.Reference2 = string.Empty;
+        this.testTransaction.Reference3 = string.Empty;
+
         var result = ExtractNarrative();
 
         Assert.AreEqual(BillPaymentTransactionText, result);
     }
-    
+
     [TestMethod]
     public void ExtractNarrative_NoDescNoRefNoType_ShouldReturnNoDescription()
     {
@@ -45,56 +50,115 @@ public class ReconciliationBuilder_NarrativeTest
     }
 
     [TestMethod]
-    public void ExtractNarrative_EmptyDescEmptyRefWithTxnType_ShouldReturnTxnType()
+    public void ExtractNarrative_NoDescNoRefWithTxnType_ShouldReturnTxnType()
     {
-        this.testTransaction.Description = string.Empty;
-        this.testTransaction.Reference1 =  string.Empty;
-        this.testTransaction.Reference2 =  string.Empty;
-        this.testTransaction.Reference3 =  string.Empty;
-        
         var result = ExtractNarrative();
 
         Assert.AreEqual(BillPaymentTransactionText, result);
     }
 
     [TestMethod]
-    public void ExtractNarrative_EmptyDescEmptyRefNoType_ShouldReturnNoDescription()
+    public void ExtractNarrative_ShouldUseDescIfNotNull()
     {
-        this.testTransaction.TransactionType = null;
-        this.testTransaction.Description = string.Empty;
-        this.testTransaction.Reference1 =  string.Empty;
-        this.testTransaction.Reference2 =  string.Empty;
-        this.testTransaction.Reference3 =  string.Empty;
-        
+        this.testTransaction = new Transaction
+        {
+            Description = "Test Description1"
+        };
+
         var result = ExtractNarrative();
 
-        Assert.AreEqual(NoDescriptionText, result);
+        Assert.AreEqual("Test Description1", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseNoDescriptionIfNull()
+    {
+        this.testTransaction = new Transaction
+        {
+            Description = null,
+            Reference1 = "Ref123",
+            Reference2 = "Ref456",
+            Reference3 = "Ref789"
+        };
+
+        var result = ExtractNarrative();
+
+        Assert.AreEqual("Ref123; Ref456; Ref789", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseRef1IfNotNull()
+    {
+        this.testTransaction = new Transaction
+        {
+            Description = "Test Description1",
+            Reference1 = "Ref123"
+        };
+
+        var result = ExtractNarrative();
+
+        Assert.AreEqual("Test Description1; Ref123", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseRef2IfNotNull()
+    {
+        this.testTransaction = new Transaction
+        {
+            Description = "Test Description1",
+            Reference1 = "Ref123",
+            Reference2 = "Ref456"
+        };
+
+        var result = ExtractNarrative();
+
+        Assert.AreEqual("Test Description1; Ref123; Ref456", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseRef3IfNotNull()
+    {
+        this.testTransaction = new Transaction
+        {
+            Description = "Test Description1",
+            Reference1 = "Ref123",
+            Reference2 = "Ref456",
+            Reference3 = "Ref789"
+        };
+
+        var result = ExtractNarrative();
+
+        Assert.AreEqual("Test Description1; Ref123; Ref456; Ref789", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_ShouldUseTxnTypeIfEverythingIsNull()
+    {
+        this.testTransaction = new Transaction
+        {
+            Description = null,
+            Reference1 = null,
+            Reference2 = null,
+            Reference3 = null,
+            TransactionType = new NamedTransaction("Foo")
+        };
+
+        var result = ExtractNarrative();
+
+        Assert.AreEqual("Foo", result);
     }
 
     [TestMethod]
     public void ExtractNarrative_WithDescEmptyRefWithType()
     {
         this.testTransaction.Description = TestDescriptionText;
-        this.testTransaction.Reference1 =  string.Empty;
-        this.testTransaction.Reference2 =  string.Empty;
-        this.testTransaction.Reference3 =  string.Empty;
-        
+        this.testTransaction.Reference1 = string.Empty;
+        this.testTransaction.Reference2 = string.Empty;
+        this.testTransaction.Reference3 = string.Empty;
+
         var result = ExtractNarrative();
 
         Assert.AreEqual(TestDescriptionText, result);
-    }
-
-    [TestMethod]
-    public void ExtractNarrative_WithDescOneRefWithType()
-    {
-        this.testTransaction.Description = TestDescriptionText;
-        this.testTransaction.Reference1 =  TestDescriptionText;
-        this.testTransaction.Reference2 =  string.Empty;
-        this.testTransaction.Reference3 =  string.Empty;
-        
-        var result = ExtractNarrative();
-
-        Assert.AreEqual($"{TestDescriptionText}; {TestDescriptionText}", result);
     }
 
     [TestMethod]
@@ -103,11 +167,38 @@ public class ReconciliationBuilder_NarrativeTest
         this.testTransaction.Description = TestDescriptionText;
         this.testTransaction.Reference1 = null;
         this.testTransaction.Reference2 = TestDescriptionText;
-        this.testTransaction.Reference3 =  string.Empty;
-        
+        this.testTransaction.Reference3 = string.Empty;
+
         var result = ExtractNarrative();
 
         Assert.AreEqual($"{TestDescriptionText}; {TestDescriptionText}", result);
+    }
+
+    [TestMethod]
+    public void ExtractNarrative_WithDescOneRefWithType()
+    {
+        this.testTransaction.Description = TestDescriptionText;
+        this.testTransaction.Reference1 = TestDescriptionText;
+        this.testTransaction.Reference2 = string.Empty;
+        this.testTransaction.Reference3 = string.Empty;
+
+        var result = ExtractNarrative();
+
+        Assert.AreEqual($"{TestDescriptionText}; {TestDescriptionText}", result);
+    }
+
+    [TestInitialize]
+    public void TestInitialise()
+    {
+        this.testTransaction = new Transaction
+        {
+            Account = LedgerBookTestData.ChequeAccount,
+            Amount = 123.45M,
+            BudgetBucket = BudgetBucketTestData.BudgetModelTestData1Buckets.First(),
+            Date = new DateTime(2024, 12, 9),
+            Id = Guid.NewGuid(),
+            TransactionType = StatementModelTestData.TransactionType /* Bill Payment */
+        };
     }
 
     private string? ExtractNarrative()
