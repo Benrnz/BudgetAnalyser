@@ -174,7 +174,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <summary>
         ///     Gets or sets the type of the transaction. This is a type classification provided by the bank.
         /// </summary>
-        public TransactionType TransactionType
+        public TransactionType? TransactionType
         {
             get { return this.doNotUseTransactionType; }
             set
