@@ -97,6 +97,19 @@ public class ReconciliationBuilder_NarrativeTest
         Assert.AreEqual($"{TestDescriptionText}; {TestDescriptionText}", result);
     }
 
+    [TestMethod]
+    public void ExtractNarrative_WithDescMixedRefWithType()
+    {
+        this.testTransaction.Description = TestDescriptionText;
+        this.testTransaction.Reference1 = null;
+        this.testTransaction.Reference2 = TestDescriptionText;
+        this.testTransaction.Reference3 =  string.Empty;
+        
+        var result = ExtractNarrative();
+
+        Assert.AreEqual($"{TestDescriptionText}; {TestDescriptionText}", result);
+    }
+
     private string? ExtractNarrative()
     {
         return PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "ExtractNarrative", this.testTransaction);
