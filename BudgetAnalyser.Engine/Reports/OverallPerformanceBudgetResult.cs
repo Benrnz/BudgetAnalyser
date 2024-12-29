@@ -16,6 +16,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         /// <summary>
         ///     Gets the average spend per month based on statement transaction data over a period of time.
+        ///     This excludes Surplus transactions, these are budgeted expenses only.
         ///     Expected to be negative.
         /// </summary>
         public decimal AverageSpend { get; internal set; }

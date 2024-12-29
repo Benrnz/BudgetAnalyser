@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData
@@ -27,6 +25,18 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 new[]
                 {
                     CreateTestData1(),
+                    CreateTestData2()
+                });
+            collection.StorageKey = @"C:\Temp\Foo.xaml";
+            return collection;
+        }
+
+        public static BudgetCollection CreateCollectionWith2And5()
+        {
+            var collection = new BudgetCollection(
+                new[]
+                {
+                    CreateTestData5(),
                     CreateTestData2()
                 });
             collection.StorageKey = @"C:\Temp\Foo.xaml";
