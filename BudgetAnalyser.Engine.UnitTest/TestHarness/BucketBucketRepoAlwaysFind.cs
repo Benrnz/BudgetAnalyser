@@ -7,11 +7,16 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
     public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
     {
         private readonly string projectPrefix;
+        private bool isInitialising;
 
         public BucketBucketRepoAlwaysFind() : base(new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()))
         {
-            InitialiseMandatorySpecialBuckets();
+            this.isInitialising = true;
+            SurplusBucket = new SurplusBucket();
+            AddBucket(SurplusBucket);
+            AddBucket(new PayCreditCardBucket(PayCreditCardBucket.PayCreditCardCode, "A special bucket to allocate internal transfers."));
             this.projectPrefix = string.Format(FixedBudgetProjectBucket.ProjectCodeTemplateWithPrefix, string.Empty);
+            this.isInitialising = false;
         }
 
         public override BudgetBucket GetByCode(string code)
@@ -46,6 +51,11 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         public override bool IsValidCode(string code)
         {
+            if (this.isInitialising)
+            {
+                return false;
+            }
+            
             return true;
         }
     }
