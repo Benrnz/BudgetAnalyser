@@ -65,9 +65,9 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --no-restore --configuration Debug
       
     # Execute all unit tests in the solution
     - name: Run unit tests
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity minimal --configuration Debug
 
