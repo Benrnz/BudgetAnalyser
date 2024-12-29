@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using JetBrains.Annotations;
-using NotNull = JetBrains.Annotations.NotNullAttribute;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -144,7 +142,12 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             budgets.Add(firstEffectiveBudget);
-            budgets.AddRange(this.Where(b => b.EffectiveFrom >= beginInclusive && b.EffectiveFrom < endInclusive));
+            budgets.AddRange(this.Where(b => b.EffectiveFrom >= beginInclusive && b.EffectiveFrom <= endInclusive));
+            if (budgets.Count(b => b == firstEffectiveBudget) > 1)
+            {
+                var index = budgets.FindIndex(1, b => b == firstEffectiveBudget);
+                budgets.RemoveAt(index);
+            }
             return budgets;
         }
 
