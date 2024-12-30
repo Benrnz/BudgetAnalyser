@@ -1,4 +1,4 @@
-using BudgetAnalyser.Engine;
+﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;

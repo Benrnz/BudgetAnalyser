@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    [AutoRegisterWithIoC(Named = "Named Logger", SingleInstance  = true)]
+    [AutoRegisterWithIoC(Named = "Named Logger", SingleInstance = true)]
     public class FakeLogger : ILogger
     {
         public LogLevel LogLevelFilter { get; set; }

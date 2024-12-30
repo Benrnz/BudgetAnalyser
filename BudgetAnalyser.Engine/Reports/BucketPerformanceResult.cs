@@ -48,9 +48,9 @@ namespace BudgetAnalyser.Engine.Reports
             {
                 if (BudgetTotal < 0.01M)
                 {
-                    return (double) Math.Round(TotalSpent / 0.01M, 2);
+                    return (double)Math.Round(TotalSpent / 0.01M, 2);
                 }
-                return (double) Math.Round(TotalSpent / BudgetTotal, 2);
+                return (double)Math.Round(TotalSpent / BudgetTotal, 2);
             }
         }
 

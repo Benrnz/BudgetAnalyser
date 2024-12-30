@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
@@ -28,10 +28,10 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         public BurnDownChartAnalyserResult Analyse(
-            StatementModel statementModel, 
+            StatementModel statementModel,
             BudgetModel budgetModel,
-            IEnumerable<BudgetBucket> bucketsSubset, 
-            LedgerBook ledgerBook, 
+            IEnumerable<BudgetBucket> bucketsSubset,
+            LedgerBook ledgerBook,
             DateTime inclBeginDate,
             DateTime inclEndDate)
         {

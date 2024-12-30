@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.BankAccount
             {
                 return false;
             }
-            return Equals((Account) obj);
+            return Equals((Account)obj);
         }
 
         /// <summary>

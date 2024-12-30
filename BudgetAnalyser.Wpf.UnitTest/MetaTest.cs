@@ -33,9 +33,9 @@ namespace BudgetAnalyser.Wpf.UnitTest
         {
             Assembly assembly = GetType().Assembly;
             int count = (from type in assembly.ExportedTypes
-                let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
-                where testClassAttrib is not null
-                select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() is not null)).Sum();
+                         let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
+                         where testClassAttrib is not null
+                         select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() is not null)).Sum();
             Console.WriteLine(count);
             Assert.IsTrue(count >= MinimumTestCount);
         }

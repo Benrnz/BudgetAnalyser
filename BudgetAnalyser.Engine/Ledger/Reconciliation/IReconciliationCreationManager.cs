@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;

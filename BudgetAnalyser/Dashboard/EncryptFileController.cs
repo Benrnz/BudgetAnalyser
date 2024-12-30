@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Dashboard
             get => this.doNotUseIsEncrypted;
             private set
             {
-                if(value == this.doNotUseIsEncrypted) return;
+                if (value == this.doNotUseIsEncrypted) return;
                 this.doNotUseIsEncrypted = value;
                 OnPropertyChanged();
             }
@@ -166,7 +166,7 @@ namespace BudgetAnalyser.Dashboard
         {
             this.passwordConfirmed = confirmed;
             CommandManager.InvalidateRequerySuggested(); // This stopped working here after the conversion to .NET8. The RelayCommand on ShellDialogController is not refreshed.
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>(); 
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
 
         internal void SetPassword(SecureString newPassword)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media;
@@ -21,42 +21,54 @@ namespace BudgetAnalyser.Converters
         private const string TileBackground = "Brush.TileBackground";
         private const string TileBackgroundAlternate = "Brush.TileBackgroundAlternate";
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush AccumulatedBucketBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush AccumulatedBucketBrush =
             Application.Current.Resources[AccumulatedBucket] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush CreditBackground1Brush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush CreditBackground1Brush =
             Application.Current.Resources[CreditBackground1] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush CreditBackground2Brush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush CreditBackground2Brush =
             Application.Current.Resources[CreditBackground2] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush DebitBackground1Brush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush DebitBackground1Brush =
             Application.Current.Resources[DebitBackground1] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush DebitBackground2Brush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush DebitBackground2Brush =
             Application.Current.Resources[DebitBackground2] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush IncomeBucketBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush IncomeBucketBrush =
             Application.Current.Resources[IncomeBucket] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush NeutralNumberBackgroundBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush NeutralNumberBackgroundBrush =
             Application.Current.Resources[NeutralNumberBackground] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush NotSoBadDebitBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush NotSoBadDebitBrush =
             Application.Current.Resources[NotSoBadDebit] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush SecondaryBackgroundBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush SecondaryBackgroundBrush =
             Application.Current.Resources[SecondaryBackground] as Brush;
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush SlightDebitBrush = Application.Current.Resources[SlightDebit] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush SpentPeriodicallyBucketBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush SpentPeriodicallyBucketBrush =
             Application.Current.Resources[SpentMonthlyBucket] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush TileBackgroundBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush TileBackgroundBrush =
             Application.Current.Resources[TileBackground] as Brush;
 
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush TileBackgroundAlternateBrush =
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush TileBackgroundAlternateBrush =
             Application.Current.Resources[TileBackgroundAlternate] as Brush;
 
 

@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             }
             catch (ArgumentNullException)
             {
-                    return;
+                return;
             }
 
             Assert.Fail();
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             TestData.Ledgers.Clear();
             var model = ArrangeAndAct();
-            
+
             // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the 
             // reconciliations and this will be persisted next save.
             Assert.AreEqual(3, model.Ledgers.Count());
@@ -108,7 +108,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             TestData.Ledgers.RemoveAt(0);
             var model = ArrangeAndAct();
-            
+
             // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the 
             // reconciliations and this will be persisted next save.
             Assert.AreEqual(2, model.Ledgers.Count());

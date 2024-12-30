@@ -46,52 +46,52 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             Assert.AreEqual(2, Result.DurationInMonths);
         }
 
-//        [TestMethod]
-//        public void CodifyTestData2()
-//        {
-//            var testData = StatementModelTestData.TestData2();
-//            var mapper = new StatementModelToTransactionSetDtoMapper(new TransactionToTransactionDtoMapper());
-//            var result = mapper.Map(testData, "skjgiuwguih2798yrg972hguoisi7fgiusgfs", @"C:\Foo\Bar.csv");
+        //        [TestMethod]
+        //        public void CodifyTestData2()
+        //        {
+        //            var testData = StatementModelTestData.TestData2();
+        //            var mapper = new StatementModelToTransactionSetDtoMapper(new TransactionToTransactionDtoMapper());
+        //            var result = mapper.Map(testData, "skjgiuwguih2798yrg972hguoisi7fgiusgfs", @"C:\Foo\Bar.csv");
 
-//            Console.WriteLine(@"
-//public TransactionSetDto TestData2() {{
-//    return new TransactionSetDto() {{
-//        Checksum = 252523523525,
-//        StorageKey = ""{0}"",
-//        LastImport = new DateTime({1}, {2}, {3}),
-//        VersionHash = ""uiwhgr8972y59872gh5972798gh"",
-//        Transactions = new List<TransactionDto>
-//        {{ {4} }},
-//    }};
-//}}
-//", result.StorageKey, result.LastImport.Year, result.LastImport.Month, result.LastImport.Day, GenerateTransactionsCode(result));
+        //            Console.WriteLine(@"
+        //public TransactionSetDto TestData2() {{
+        //    return new TransactionSetDto() {{
+        //        Checksum = 252523523525,
+        //        StorageKey = ""{0}"",
+        //        LastImport = new DateTime({1}, {2}, {3}),
+        //        VersionHash = ""uiwhgr8972y59872gh5972798gh"",
+        //        Transactions = new List<TransactionDto>
+        //        {{ {4} }},
+        //    }};
+        //}}
+        //", result.StorageKey, result.LastImport.Year, result.LastImport.Month, result.LastImport.Day, GenerateTransactionsCode(result));
 
-//        }
+        //        }
 
-//        private string GenerateTransactionsCode(TransactionSetDto result)
-//        {
-//            var builder = new StringBuilder();
-//            foreach (var txn in result.Transactions)
-//            {
-//                builder.AppendFormat(@"
-//            new TransactionDto
-//            {{
-//                Account = ""{0}"",
-//                Amount = {1}M,
-//                BudgetBucketCode = ""{2}"",
-//                Date = new DateTime({3}, {4}, {5}),
-//                Description = ""{6}"",
-//                Id = new Guid(""{7}""),
-//                Reference1 = ""{8}"",
-//                Reference2 = ""{9}"",
-//                Reference3 = ""{10}"",
-//                TransactionType = ""{11}"",
-//            }},
-//", txn.Account, txn.Amount, txn.BudgetBucketCode, txn.Date.Year, txn.Date.Month, txn.Date.Day, txn.Description, txn.Id, txn.Reference1, txn.Reference2, txn.Reference3, txn.TransactionType);
-//            }
+        //        private string GenerateTransactionsCode(TransactionSetDto result)
+        //        {
+        //            var builder = new StringBuilder();
+        //            foreach (var txn in result.Transactions)
+        //            {
+        //                builder.AppendFormat(@"
+        //            new TransactionDto
+        //            {{
+        //                Account = ""{0}"",
+        //                Amount = {1}M,
+        //                BudgetBucketCode = ""{2}"",
+        //                Date = new DateTime({3}, {4}, {5}),
+        //                Description = ""{6}"",
+        //                Id = new Guid(""{7}""),
+        //                Reference1 = ""{8}"",
+        //                Reference2 = ""{9}"",
+        //                Reference3 = ""{10}"",
+        //                TransactionType = ""{11}"",
+        //            }},
+        //", txn.Account, txn.Amount, txn.BudgetBucketCode, txn.Date.Year, txn.Date.Month, txn.Date.Day, txn.Description, txn.Id, txn.Reference1, txn.Reference2, txn.Reference3, txn.TransactionType);
+        //            }
 
-//            return builder.ToString();
-//        }
+        //            return builder.ToString();
+        //        }
 
         [TestMethod]
         public void ShouldMapFileName()
@@ -109,10 +109,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public void TestInitialise()
         {
             var subject = new Mapper_TransactionSetDto_StatementModel(
-                new FakeLogger(), 
+                new FakeLogger(),
                 new Mapper_TransactionDto_Transaction(
-                    new InMemoryAccountTypeRepository(), 
-                    new BucketBucketRepoAlwaysFind(), 
+                    new InMemoryAccountTypeRepository(),
+                    new BucketBucketRepoAlwaysFind(),
                     new InMemoryTransactionTypeRepository()));
             Result = subject.ToModel(TestData);
         }

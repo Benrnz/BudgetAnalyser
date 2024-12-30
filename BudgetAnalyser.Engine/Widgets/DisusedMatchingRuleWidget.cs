@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            var ruleService = (ITransactionRuleService) input[0];
+            var ruleService = (ITransactionRuleService)input[0];
 
             if (ruleService is null)
             {

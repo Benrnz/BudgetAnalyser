@@ -1,4 +1,4 @@
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Ledger
 {

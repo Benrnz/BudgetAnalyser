@@ -16,7 +16,7 @@ namespace BudgetAnalyser
         private readonly DemoFileHelper demoFileHelper;
         private readonly IUiContext uiContext;
         private DateTime lastSave = DateTime.Now;
-        
+
         public PersistenceOperations(
             [NotNull] IApplicationDatabaseFacade applicationDatabaseService,
             [NotNull] DemoFileHelper demoFileHelper,

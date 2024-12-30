@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
@@ -38,7 +38,7 @@ public class BudgetController : ControllerBase, IShowableController
     public BudgetController(
         [NotNull] UiContext uiContext,
         [NotNull] IBudgetMaintenanceService maintenanceService,
-        [NotNull] IApplicationDatabaseFacade applicationDatabaseService) 
+        [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
         : base(uiContext.Messenger)
     {
         if (uiContext is null)
@@ -72,7 +72,8 @@ public class BudgetController : ControllerBase, IShowableController
     // ReSharper disable once MemberCanBePrivate.Global
     public string BudgetMenuItemName
     {
-        [UsedImplicitly] get => this.budgetMenuItemName;
+        [UsedImplicitly]
+        get => this.budgetMenuItemName;
 
         set
         {
@@ -180,7 +181,8 @@ public class BudgetController : ControllerBase, IShowableController
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal Surplus
     {
-        [UsedImplicitly] get => this.surplus;
+        [UsedImplicitly]
+        get => this.surplus;
         private set
         {
             if (value == this.surplus) return;

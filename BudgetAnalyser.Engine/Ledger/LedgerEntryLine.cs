@@ -64,7 +64,8 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<BankBalanceAdjustmentTransaction> BankBalanceAdjustments
         {
             get => this.bankBalanceAdjustments;
-            [UsedImplicitly] private set => this.bankBalanceAdjustments = value.ToList();
+            [UsedImplicitly]
+            private set => this.bankBalanceAdjustments = value.ToList();
         }
 
         /// <summary>
@@ -74,7 +75,8 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<BankBalance> BankBalances
         {
             get => this.bankBalancesList;
-            [UsedImplicitly] private set => this.bankBalancesList = value.ToList();
+            [UsedImplicitly]
+            private set => this.bankBalancesList = value.ToList();
         }
 
         /// <summary>

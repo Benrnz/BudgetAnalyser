@@ -121,7 +121,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
             return new XamlOnDiskMatchingRuleRepositoryTestHarness(
                 new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind()),
                 new LocalDiskReaderWriterSelector(
-                    new [] { new EmbeddedResourceFileReaderWriter() }));
+                    new[] { new EmbeddedResourceFileReaderWriter() }));
         }
 
         private XamlOnDiskMatchingRuleRepositoryTestHarness ArrangeUsingMocks()

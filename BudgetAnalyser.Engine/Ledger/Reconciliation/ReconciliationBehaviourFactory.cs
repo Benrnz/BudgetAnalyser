@@ -22,10 +22,10 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
             return new IReconciliationBehaviour[]
             {
                 new ReconciliationBehaviourBudgetAmountBalanceAdjustments(),
-                new ReconciliationBehaviourBalanceAdjustsForFutureTransactions(), 
-                new ReconciliationBehaviourForLedgerBucket(), 
+                new ReconciliationBehaviourBalanceAdjustsForFutureTransactions(),
+                new ReconciliationBehaviourForLedgerBucket(),
                 new ReconciliationBehaviourPaidFromWrongAccount(),
-                new ReconciliationBehaviourOverdrawnSurplus(), 
+                new ReconciliationBehaviourOverdrawnSurplus(),
             };
         }
     }

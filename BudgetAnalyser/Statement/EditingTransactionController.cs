@@ -32,7 +32,8 @@ namespace BudgetAnalyser.Statement
 
         public IEnumerable<BudgetBucket> Buckets
         {
-            [UsedImplicitly] get { return this.doNotUseBuckets; }
+            [UsedImplicitly]
+            get { return this.doNotUseBuckets; }
             private set
             {
                 this.doNotUseBuckets = value;

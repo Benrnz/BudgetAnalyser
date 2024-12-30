@@ -98,8 +98,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             }
 
             var subject = new Mapper_BudgetCollectionDto_BudgetCollection(
-                bucketRepo, 
-                new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()), 
+                bucketRepo,
+                new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()),
                 new Mapper_BudgetModelDto_BudgetModel(bucketRepo));
             Result = subject.ToDto(TestData);
         }

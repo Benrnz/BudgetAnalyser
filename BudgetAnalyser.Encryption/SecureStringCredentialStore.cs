@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Encryption
         public void SetPasskey(object passkey)
         {
             this.passPhrase?.Dispose();
-            this.passPhrase = (SecureString) passkey;
+            this.passPhrase = (SecureString)passkey;
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Encryption
 
                 unsafe
                 {
-                    for (char* ptr1 = (char*) bstr1.ToPointer(), ptr2 = (char*) bstr2.ToPointer();
+                    for (char* ptr1 = (char*)bstr1.ToPointer(), ptr2 = (char*)bstr2.ToPointer();
                         *ptr1 != 0 && *ptr2 != 0;
                         ++ptr1, ++ptr2)
                     {

@@ -58,7 +58,8 @@ public class LedgerBook : IModelValidate
     public IEnumerable<LedgerEntryLine> Reconciliations
     {
         get => this.reconciliations;
-        [UsedImplicitly] private set => this.reconciliations = value.ToList();
+        [UsedImplicitly]
+        private set => this.reconciliations = value.ToList();
     }
 
     /// <summary>

@@ -59,10 +59,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         private void Act(StatementModel testData)
         {
             var subject = new Mapper_TransactionSetDto_StatementModel(
-                new FakeLogger(), 
+                new FakeLogger(),
                 new Mapper_TransactionDto_Transaction(
-                    new InMemoryAccountTypeRepository(), 
-                    new BucketBucketRepoAlwaysFind(), 
+                    new InMemoryAccountTypeRepository(),
+                    new BucketBucketRepoAlwaysFind(),
                     new InMemoryTransactionTypeRepository()));
             Result = subject.ToDto(testData);
         }

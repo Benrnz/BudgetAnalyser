@@ -307,7 +307,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
                 peices.Add("[No Description]");
             }
         }
-        
+
         if (peices.Count == 1) return peices[0];
 
         var builder = new StringBuilder();

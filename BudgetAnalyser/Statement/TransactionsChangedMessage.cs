@@ -1,4 +1,4 @@
-using Rees.Wpf;
+﻿using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {

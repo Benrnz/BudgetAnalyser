@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

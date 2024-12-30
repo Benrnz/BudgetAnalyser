@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -284,12 +284,12 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
         {
             throw new InvalidOperationException("No budget can be found with an effective date before " + reconciliationDate);
         }
-        
+
         if (!budget.Validate(messages))
         {
             throw new InvalidOperationException($"Current budget ({budget.Name}) is in an invalid state. Cannot add new reconciliation.\n" + messages);
         }
-        
+
         var startDate = ReconciliationBuilder.CalculateBeginDateForReconciliationPeriod(ledgerBook, reconciliationDate, budget.BudgetCycle);
 
         ValidateDates(ledgerBook, startDate, reconciliationDate, statement, budget.BudgetCycle);
@@ -399,7 +399,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
                     }
 
                     break;
-                
+
                 case BudgetCycle.Fortnightly:
                     if (reconciliationDate.Subtract(previousEntry.Date).Days != 14)
                     {

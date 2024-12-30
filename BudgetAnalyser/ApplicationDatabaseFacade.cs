@@ -9,7 +9,7 @@ namespace BudgetAnalyser;
 /// An interface to represent a clientside facade to marshall all access to the <see cref="IApplicationDatabaseService"/>.  This is to allow clientside code to be notified of changing data and send
 /// messages between controllers.
 /// </summary>
-public interface IApplicationDatabaseFacade 
+public interface IApplicationDatabaseFacade
 {
     // NOTE This interface could inherit from IApplicationDatabaseService, but for simplicity of IOC registration, it does not. Also, not necessarily a bad thing because it forces local code to use 
     // this facade and not accidentally use the service directly.

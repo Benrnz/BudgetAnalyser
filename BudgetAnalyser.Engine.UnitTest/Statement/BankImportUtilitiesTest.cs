@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -306,7 +306,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public void FetchStringShouldRemoveQuotes()
         {
             var subject = CreateSubject();
-            var myData = new[] { "\"Test String\"","no quotes","-21.45" };
+            var myData = new[] { "\"Test String\"", "no quotes", "-21.45" };
             Console.WriteLine($"Input:");
             Array.ForEach(myData, x => Console.Write($"{x}, "));
             var result1 = subject.FetchString(myData, 0);

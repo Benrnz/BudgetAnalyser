@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -38,7 +38,8 @@ namespace BudgetAnalyser.Statement
 
         public string InvalidMessage
         {
-            [UsedImplicitly] get => this.doNotUseInvalidMessage;
+            [UsedImplicitly]
+            get => this.doNotUseInvalidMessage;
             private set
             {
                 if (value == this.doNotUseInvalidMessage) return;

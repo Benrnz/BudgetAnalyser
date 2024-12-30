@@ -258,15 +258,15 @@ namespace BudgetAnalyser
         {
             return Application.Current.Dispatcher.CheckAccess();
         }
-        
+
         /// <summary>
-                ///     Finalizes an instance of the <see cref="CompositionRoot" /> class.
-                ///     Use C# destructor syntax for finalization code.
-                ///     This destructor will run only if the Dispose method
-                ///     does not get called.
-                ///     It gives your base class the opportunity to finalize.
-                ///     Do not provide destructors in types derived from this class.
-                /// </summary>
+        ///     Finalizes an instance of the <see cref="CompositionRoot" /> class.
+        ///     Use C# destructor syntax for finalization code.
+        ///     This destructor will run only if the Dispose method
+        ///     does not get called.
+        ///     It gives your base class the opportunity to finalize.
+        ///     Do not provide destructors in types derived from this class.
+        /// </summary>
         ~CompositionRoot()
         {
             // Do not re-create Dispose clean-up code here. 

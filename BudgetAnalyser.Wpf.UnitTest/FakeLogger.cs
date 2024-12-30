@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine;
 
 namespace BudgetAnalyser.Wpf.UnitTest
 {
-    [AutoRegisterWithIoC(Named = "Named Logger", SingleInstance  = true)]
+    [AutoRegisterWithIoC(Named = "Named Logger", SingleInstance = true)]
     public class FakeLogger : ILogger
     {
         public LogLevel LogLevelFilter { get; set; }

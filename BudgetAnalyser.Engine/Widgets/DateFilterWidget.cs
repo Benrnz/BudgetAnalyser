@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            var criteria = (GlobalFilterCriteria) input[0];
+            var criteria = (GlobalFilterCriteria)input[0];
             if (criteria.Cleared)
             {
                 NoDateFilterApplied();

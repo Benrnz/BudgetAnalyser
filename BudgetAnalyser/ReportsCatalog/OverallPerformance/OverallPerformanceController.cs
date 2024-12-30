@@ -32,7 +32,8 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public bool ExpenseFilter
         {
-            [UsedImplicitly] get { return this.doNotUseExpenseFilter; }
+            [UsedImplicitly]
+            get { return this.doNotUseExpenseFilter; }
 
             set
             {

@@ -20,11 +20,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private static LedgerBook CreateLedgerBookTestData()
         {
             return new LedgerBookBuilder
-                {
-                    StorageKey = "BudgetBucketMonitorWidgetTest.xml",
-                    Modified = new DateTime(2015, 11, 23),
-                    Name = "Smith Budget 2015"
-                }
+            {
+                StorageKey = "BudgetBucketMonitorWidgetTest.xml",
+                Modified = new DateTime(2015, 11, 23),
+                Name = "Smith Budget 2015"
+            }
                 .IncludeLedger(LedgerBookTestData.PhoneLedger, 50M)
                 .IncludeLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount, 200M)
                 .AppendReconciliation(
@@ -149,13 +149,13 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
             var statement = CreateStatementBuilder().AppendTransaction(new Transaction
-                {
-                    Account = StatementModelTestData.ChequeAccount,
-                    Amount = -100M,
-                    BudgetBucket = StatementModelTestData.PayCreditCard,
-                    Date = new DateTime(2015, 11, 2),
-                    Reference1 = "Pay credit card debit from surplus"
-                })
+            {
+                Account = StatementModelTestData.ChequeAccount,
+                Amount = -100M,
+                BudgetBucket = StatementModelTestData.PayCreditCard,
+                Date = new DateTime(2015, 11, 2),
+                Reference1 = "Pay credit card debit from surplus"
+            })
                 .AppendTransaction(new Transaction
                 {
                     Account = StatementModelTestData.VisaAccount,
@@ -198,7 +198,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 })
                 .Build();
             var result = Subject.CalculateCurrentPeriodSurplusBalance(
-                  ledgerLine, 
+                  ledgerLine,
                   new GlobalFilterCriteria
                   {
                       BeginDate = new DateTime(2015, 10, 20),

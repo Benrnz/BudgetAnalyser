@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
             : base(importUtilities,
                 new FakeLogger(),
                 new Mapper_TransactionSetDto_StatementModel(
-                    new FakeLogger(), 
+                    new FakeLogger(),
                     new Mapper_TransactionDto_Transaction(new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository())),
                 readerWriterSelector)
         {

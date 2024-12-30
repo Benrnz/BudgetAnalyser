@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 return false;
             }
-            return Equals((LedgerBucket) obj);
+            return Equals((LedgerBucket)obj);
         }
 
         /// <summary>

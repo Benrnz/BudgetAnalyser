@@ -101,8 +101,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            Statement = (StatementModel) input[0];
-            this.bucketRepository = (IBudgetBucketRepository) input[1];
+            Statement = (StatementModel)input[0];
+            this.bucketRepository = (IBudgetBucketRepository)input[1];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            var bucket = (FixedBudgetProjectBucket) this.bucketRepository.GetByCode(BucketCode);
+            var bucket = (FixedBudgetProjectBucket)this.bucketRepository.GetByCode(BucketCode);
             var totalBudget = bucket.FixedBudgetAmount;
             Maximum = Convert.ToDouble(totalBudget);
 

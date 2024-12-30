@@ -13,7 +13,7 @@ public class BudgetModelDto
     ///     Gets the pay cycle for this budget. Can only be set during budget creation.
     /// </summary>
     public BudgetCycle BudgetCycle { get; set; }
-    
+
     /// <summary>
     ///     Gets or sets the effective from date.
     /// </summary>

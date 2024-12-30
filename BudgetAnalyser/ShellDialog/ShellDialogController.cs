@@ -16,7 +16,7 @@ namespace BudgetAnalyser.ShellDialog
         private bool doNotUseOkButtonVisible;
         private bool doNotUseSaveButtonVisible;
         private string doNotUseTitle;
-        
+
         public ShellDialogController([NotNull] IMessenger messenger) : base(messenger)
         {
             DialogType = ShellDialogType.OkCancel;
@@ -97,7 +97,8 @@ namespace BudgetAnalyser.ShellDialog
 
         public bool HelpButtonVisible
         {
-            [UsedImplicitly] get => this.doNotUseHelpButtonVisible;
+            [UsedImplicitly]
+            get => this.doNotUseHelpButtonVisible;
             set
             {
                 if (value == this.doNotUseHelpButtonVisible) return;
@@ -133,7 +134,8 @@ namespace BudgetAnalyser.ShellDialog
 
         public string Title
         {
-            [UsedImplicitly] get => this.doNotUseTitle;
+            [UsedImplicitly]
+            get => this.doNotUseTitle;
             set
             {
                 if (value == this.doNotUseTitle) return;
@@ -155,7 +157,7 @@ namespace BudgetAnalyser.ShellDialog
             CorrelationId = message.CorrelationId;
             HelpButtonVisible = message.HelpAvailable;
         }
-        
+
         private bool CanExecuteDialogCommand(ShellDialogButton arg)
         {
             if (Content is null)

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Portable.Xaml;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Services;

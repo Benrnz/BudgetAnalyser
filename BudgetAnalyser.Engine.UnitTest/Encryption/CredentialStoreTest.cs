@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
         {
             this.subject.SetPasskey(CreateSecureString(""));
 
-            var result = (SecureString) this.subject.RetrievePasskey();
+            var result = (SecureString)this.subject.RetrievePasskey();
 
             Assert.IsNull(result);
         }
@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
         [TestMethod]
         public void RetrievePasskey_ShouldReturnNull_GivenNullWasStored()
         {
-            var result = (SecureString) this.subject.RetrievePasskey();
+            var result = (SecureString)this.subject.RetrievePasskey();
 
             Assert.IsNull(result);
         }
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
         {
             this.subject.SetPasskey(CreateSecureString("Foo"));
 
-            var result = (SecureString) this.subject.RetrievePasskey();
+            var result = (SecureString)this.subject.RetrievePasskey();
 
             Assert.AreEqual(3, result.Length);
         }

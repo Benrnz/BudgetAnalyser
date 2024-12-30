@@ -43,7 +43,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 
             LedgerBookDto reserialisedDto = null;
             subject.SaveDtoToDiskOverride = bookDto => reserialisedDto = bookDto;
-            
+
             var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName, false);
             predeserialiseDto.Output(true);
 
@@ -181,10 +181,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var fileName = @"CompleteSmellyFoo.xml";
 
             XamlOnDiskLedgerBookRepository subject = CreateSubject();
-            
+
             var testData = LedgerBookTestData.TestData2();
             await subject.SaveAsync(testData, fileName, false);
-            
+
             this.mockReaderWriter.Verify(m => m.WriteToDiskAsync(It.IsAny<string>(), It.IsAny<string>()));
         }
 
@@ -192,7 +192,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public async Task SavingAndLoading_ShouldProduceTheSameCheckSum()
         {
             var subject1 = CreateSubject();
-            
+
             await subject1.SaveAsync(LedgerBookTestData.TestData2(), "Foo2.xml", false);
             var serialisedData = subject1.SerialisedData;
 

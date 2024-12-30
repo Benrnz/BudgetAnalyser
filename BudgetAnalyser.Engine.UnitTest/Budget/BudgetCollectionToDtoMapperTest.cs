@@ -43,8 +43,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             var mapper = new Mapper_BudgetCollectionDto_BudgetCollection(
-                bucketRepo, 
-                new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()), 
+                bucketRepo,
+                new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()),
                 new Mapper_BudgetModelDto_BudgetModel(bucketRepo));
             return mapper.ToDto(TestData);
         }

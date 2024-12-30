@@ -1,4 +1,4 @@
-// TODO Reconsider if this is necessary, I'm removing Log4Net from the project.
+﻿// TODO Reconsider if this is necessary, I'm removing Log4Net from the project.
 
 //using System;
 //using JetBrains.Annotations;

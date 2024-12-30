@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var widget = this.widgetService.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
-            return UpdateWidgetCollectionWithNewAddition((Widget) widget);
+            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
         }
 
         public Widget CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
@@ -102,7 +102,7 @@ namespace BudgetAnalyser.Engine.Services
             var bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
             this.budgetRepository.SaveAsync();
             var widget = this.widgetService.Create(typeof(FixedBudgetMonitorWidget).FullName, bucket.Code);
-            return UpdateWidgetCollectionWithNewAddition((Widget) widget);
+            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
         }
 
         public Widget CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate,
@@ -127,10 +127,10 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var widget = this.widgetService.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
-            var paymentWidget = (SurprisePaymentWidget) widget;
+            var paymentWidget = (SurprisePaymentWidget)widget;
             paymentWidget.StartPaymentDate = paymentDate;
             paymentWidget.Frequency = frequency;
-            return UpdateWidgetCollectionWithNewAddition((Widget) widget);
+            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
         }
 
         public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationState storedState)
@@ -189,7 +189,7 @@ namespace BudgetAnalyser.Engine.Services
 
             this.widgetService.Remove(widgetToRemove);
 
-            var baseWidget = (Widget) widgetToRemove;
+            var baseWidget = (Widget)widgetToRemove;
             var widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
 
             widgetGroup?.Widgets.Remove(baseWidget);

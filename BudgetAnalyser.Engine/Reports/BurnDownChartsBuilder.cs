@@ -79,10 +79,10 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         private BurnDownChartAnalyserResult AnalyseDataForChart(
-            StatementModel statementModel, 
+            StatementModel statementModel,
             BudgetModel budgetModel,
-            LedgerBook ledgerBookModel, 
-            BudgetBucket bucket, 
+            LedgerBook ledgerBookModel,
+            BudgetBucket bucket,
             DateTime inclBeginDate,
             DateTime inclEndDate)
         {

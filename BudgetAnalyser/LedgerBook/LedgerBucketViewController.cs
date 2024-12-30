@@ -54,7 +54,7 @@ namespace BudgetAnalyser.LedgerBook
 
         [UsedImplicitly]
         public decimal BudgetAmount { get; private set; }
-        
+
         [UsedImplicitly]
         public BudgetCycle BudgetCycle { get; private set; }
 

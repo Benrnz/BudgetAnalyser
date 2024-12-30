@@ -265,7 +265,7 @@ namespace BudgetAnalyser.Engine.Matching
             {
                 return false;
             }
-            return Equals((MatchingRule) obj);
+            return Equals((MatchingRule)obj);
         }
 
         /// <summary>

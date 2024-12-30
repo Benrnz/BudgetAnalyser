@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         {
             List<TransferTask> transferTasks = TodoTasks.OfType<TransferTask>().ToList();
             foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
-                // Rather than create a task, just do it
+            // Rather than create a task, just do it
             {
                 NewReconLine.BalanceAdjustment(
                                                -grouping.Sum(t => t.Amount),
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
             }
 
             foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
-                // Rather than create a task, just do it
+            // Rather than create a task, just do it
             {
                 NewReconLine.BalanceAdjustment(
                                                grouping.Sum(t => t.Amount),

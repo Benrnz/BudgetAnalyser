@@ -14,10 +14,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
             if (instance.BudgetActive)
             {
                 Debug.WriteLine("Budget is ACTIVE.");
-            } else if (instance.BudgetArchived)
+            }
+            else if (instance.BudgetArchived)
             {
                 Debug.WriteLine("Budget is ARCHIVED.");
-            } else if (instance.BudgetInFuture)
+            }
+            else if (instance.BudgetInFuture)
             {
                 Debug.WriteLine("Budget is FUTURE.");
             }

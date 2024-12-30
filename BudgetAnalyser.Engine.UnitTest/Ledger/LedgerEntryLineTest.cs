@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void UpdateRemarks_ShouldSetRemarks()
         {
             NewSubject.UpdateRemarks("Foo bar");
-            
+
             Assert.AreEqual("Foo bar", NewSubject.Remarks);
         }
 
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             // Starting Surplus is $1,530.50
             var entry = NewSubject.Entries.First();
             entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
-            
+
             // The balance of a ledger cannot simply be calculated inside the ledger line. It must be recalc'ed at the ledger book level.
             Assert.AreEqual(1530.50M, NewSubject.CalculatedSurplus); // It should be unchanged.
         }
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void AddAdjustment_ShouldAffectLedgerBalance()
         {
             NewSubject.BalanceAdjustment(-101M, "foo dar far", new ChequeAccount("Chq"));
-            
+
             Assert.AreEqual(1749.50M, NewSubject.LedgerBalance);
         }
 
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void AddBalanceAdjustment_ShouldAddToAdjustmentCollection()
         {
             NewSubject.BalanceAdjustment(101M, "foo dar far", new ChequeAccount("Chq"));
-            
+
             Assert.AreEqual(1, Subject.BankBalanceAdjustments.Count());
         }
 

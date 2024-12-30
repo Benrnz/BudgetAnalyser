@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
-        
+
         [TestMethod]
         public async Task TasteTestShouldReturnFalseGivenNullTasteTestResponse()
         {
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task TasteTestShouldReturnFalseGivenTheWestpacFormat()
         {
             var subject = Arrange();
-            subject.ReadTextChunkOverride = file => WestpacChequeCsvTestData.FirstTwoLines1(); 
+            subject.ReadTextChunkOverride = file => WestpacChequeCsvTestData.FirstTwoLines1();
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }

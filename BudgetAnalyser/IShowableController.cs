@@ -1,4 +1,4 @@
-namespace BudgetAnalyser
+﻿namespace BudgetAnalyser
 {
     /// <summary>
     ///     An interface that uses a data bound Shown property to show or hide the controller

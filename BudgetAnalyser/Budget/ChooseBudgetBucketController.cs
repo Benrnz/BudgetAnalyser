@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
@@ -44,7 +44,8 @@ namespace BudgetAnalyser.Budget
 
         public IEnumerable<BudgetBucket> BudgetBuckets
         {
-            [UsedImplicitly] get => this.doNotUseBudgetBuckets;
+            [UsedImplicitly]
+            get => this.doNotUseBudgetBuckets;
 
             private set
             {
@@ -60,7 +61,8 @@ namespace BudgetAnalyser.Budget
 
         public string FilterDescription
         {
-            [UsedImplicitly] get => this.doNotUseFilterDescription;
+            [UsedImplicitly]
+            get => this.doNotUseFilterDescription;
             set
             {
                 if (value == this.doNotUseFilterDescription) return;

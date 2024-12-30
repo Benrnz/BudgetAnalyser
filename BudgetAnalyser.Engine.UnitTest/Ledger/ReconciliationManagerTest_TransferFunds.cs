@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private LedgerBucket surplusChqLedger;
         private LedgerEntryLine testDataEntryLine;
         private LedgerBook testDataLedgerBook;
-        
+
         [TestInitialize]
         public void TestInitialise()
         {

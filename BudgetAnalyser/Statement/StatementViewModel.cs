@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using BudgetAnalyser.Engine;
@@ -46,7 +46,8 @@ public class StatementViewModel : ObservableRecipient
 
     public string DuplicateSummary
     {
-        [UsedImplicitly] get => this.doNotUseDuplicateSummary;
+        [UsedImplicitly]
+        get => this.doNotUseDuplicateSummary;
 
         private set
         {

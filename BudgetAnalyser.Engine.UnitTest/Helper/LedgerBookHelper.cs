@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
                                         entry.LedgerBucket.BudgetBucket.Code.PadRight(6),
                                         transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
                                         transaction.Id,
-                                        transaction.AutoMatchingReference, 
+                                        transaction.AutoMatchingReference,
                                         transaction.Narrative.Truncate(30));
                     }
                 }
@@ -118,14 +118,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
                 if (outputTransactions)
                 {
                     foreach (var entry in line.Entries)
-                    foreach (var transaction in entry.Transactions)
-                    {
-                        Debug.WriteLine(
-                                        "          {0} {1} {2}",
-                                        entry.BucketCode.PadRight(6),
-                                        transaction.Amount > 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
-                                        transaction.Narrative);
-                    }
+                        foreach (var transaction in entry.Transactions)
+                        {
+                            Debug.WriteLine(
+                                            "          {0} {1} {2}",
+                                            entry.BucketCode.PadRight(6),
+                                            transaction.Amount > 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
+                                            transaction.Narrative);
+                        }
                     Debug.WriteLine("====================================================================================================================");
                 }
             }

@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
             firstRule.And = false; // Using OR
 
             var subject = Arrange();
-            
+
             var result = subject.Match(this.testDataTransactions, this.allRules);
             Assert.IsTrue(result);
             Assert.AreEqual(2, firstRule.MatchCount);

@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 throw new ArgumentException("A widget with this key already exists.", nameof(id));
             }
 
-            var baseWidget = (Widget) widget;
+            var baseWidget = (Widget)widget;
             this.cachedWidgets.Add(key, baseWidget);
             return widget;
         }
@@ -106,7 +106,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         private static string BuildMultiUseWidgetKey(IUserDefinedWidget widget)
         {
-            var baseWidget = (Widget) widget;
+            var baseWidget = (Widget)widget;
             return baseWidget.Category + baseWidget.Name + widget.Id;
         }
     }

@@ -116,28 +116,28 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         this.filter = (GlobalFilterCriteria)input[1];
         var budgetCollection = ((BudgetCollection)input[2]);
 
-        if (this.filter is null 
-            || this.filter.Cleared 
-            || this.filter.BeginDate is null 
-            || this.filter.BeginDate == DateTime.MinValue 
-            || this.filter.EndDate is null 
-            || this.filter.EndDate.Value == DateTime.MinValue 
+        if (this.filter is null
+            || this.filter.Cleared
+            || this.filter.BeginDate is null
+            || this.filter.BeginDate == DateTime.MinValue
+            || this.filter.EndDate is null
+            || this.filter.EndDate.Value == DateTime.MinValue
             || this.bucketRepository is null)
         {
             Enabled = false;
-            ToolTip = "The global filter dates are not set."; 
+            ToolTip = "The global filter dates are not set.";
             return;
         }
 
         if (budgetCollection is null)
         {
             Enabled = false;
-            ToolTip = "The budget collection is empty or null."; 
+            ToolTip = "The budget collection is empty or null.";
             return;
         }
 
         var budgetModel = budgetCollection.CurrentActiveBudget;
-        
+
         if (!this.bucketRepository.IsValidCode(BucketCode))
         {
             Enabled = false;

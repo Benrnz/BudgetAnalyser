@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
@@ -28,7 +28,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public AddLedgerReconciliationController(
         UiContext uiContext,
-        IAccountTypeRepository accountTypeRepository) 
+        IAccountTypeRepository accountTypeRepository)
         : base(uiContext.Messenger)
     {
         this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));

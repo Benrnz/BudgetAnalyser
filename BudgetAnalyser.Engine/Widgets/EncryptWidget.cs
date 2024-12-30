@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 throw new ArgumentNullException(nameof(input));
             }
 
-            var newAppDb = (ApplicationDatabase) input[0];
+            var newAppDb = (ApplicationDatabase)input[0];
             if (newAppDb is null)
             {
                 this.appDb = null;

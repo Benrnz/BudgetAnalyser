@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.BankAccount;
 using JetBrains.Annotations;
 
@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Statement
             ArgumentNullException.ThrowIfNull(importUtilities, nameof(importUtilities));
             ArgumentNullException.ThrowIfNull(logger, nameof(logger));
             ArgumentNullException.ThrowIfNull(readerWriterSelector, nameof(readerWriterSelector));
-            
+
             this.importUtilities = importUtilities;
             this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
             // ANZ importers are NZ specific at this stage.
@@ -158,7 +158,8 @@ namespace BudgetAnalyser.Engine.Statement
                 }
 
                 return amount;
-            } catch (InvalidDataException ex)
+            }
+            catch (InvalidDataException ex)
             {
                 this.logger.LogError(ex, l => l.Format("Unable to convert provided string to a decimal. Probable format change in bank file."));
                 throw;

@@ -1,4 +1,4 @@
-namespace BudgetAnalyser.Engine.Ledger
+﻿namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
     ///     A task item for use with the <see cref="ToDoCollection" />.

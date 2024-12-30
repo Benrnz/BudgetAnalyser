@@ -1,4 +1,4 @@
-namespace BudgetAnalyser.Engine.Budget;
+﻿namespace BudgetAnalyser.Engine.Budget;
 
 /// <summary>
 ///     The period for which a budget covers.
