@@ -149,7 +149,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             subject.ValidateAgainstDuplicates();
             stopwatch.Stop();
             Console.WriteLine("{0:N0} ms", stopwatch.ElapsedMilliseconds);
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 250);
+            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 500); // Should be less than 500ms on Github actions. Runs much faster locally <250ms
         }
 
         [TestMethod]
