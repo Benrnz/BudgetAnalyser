@@ -35,7 +35,11 @@ namespace BudgetAnalyser.Engine.Ledger
             get => this.doNotUseAutoMatchingReference;
             set
             {
-                if (value == this.doNotUseAutoMatchingReference) return;
+                if (value == this.doNotUseAutoMatchingReference)
+                {
+                    return;
+                }
+
                 this.doNotUseAutoMatchingReference = value;
                 OnPropertyChanged();
             }
@@ -51,7 +55,11 @@ namespace BudgetAnalyser.Engine.Ledger
             get => this.doNotUseBankTransferRequired;
             set
             {
-                if (value == this.doNotUseBankTransferRequired) return;
+                if (value == this.doNotUseBankTransferRequired)
+                {
+                    return;
+                }
+
                 this.doNotUseBankTransferRequired = value;
                 OnPropertyChanged();
                 if (BankTransferRequired && AutoMatchingReference.IsNothing())
@@ -69,7 +77,11 @@ namespace BudgetAnalyser.Engine.Ledger
             get => this.doNotUseFromLedger;
             set
             {
-                if (Equals(value, this.doNotUseFromLedger)) return;
+                if (Equals(value, this.doNotUseFromLedger))
+                {
+                    return;
+                }
+
                 this.doNotUseFromLedger = value;
                 OnPropertyChanged();
                 SetBankTransferRequired();
@@ -89,7 +101,11 @@ namespace BudgetAnalyser.Engine.Ledger
             get => this.doNotUseNarrative;
             set
             {
-                if (value == this.doNotUseNarrative) return;
+                if (value == this.doNotUseNarrative)
+                {
+                    return;
+                }
+
                 this.doNotUseNarrative = value;
                 OnPropertyChanged();
                 if (IsValid != this.isValid)
@@ -108,7 +124,11 @@ namespace BudgetAnalyser.Engine.Ledger
             get => this.doNotUseToLedger;
             set
             {
-                if (Equals(value, this.doNotUseToLedger)) return;
+                if (Equals(value, this.doNotUseToLedger))
+                {
+                    return;
+                }
+
                 this.doNotUseToLedger = value;
                 OnPropertyChanged();
                 SetBankTransferRequired();
@@ -128,7 +148,11 @@ namespace BudgetAnalyser.Engine.Ledger
             get => this.doNotUseTransferAmount;
             set
             {
-                if (value == this.doNotUseTransferAmount) return;
+                if (value == this.doNotUseTransferAmount)
+                {
+                    return;
+                }
+
                 this.doNotUseTransferAmount = value;
                 OnPropertyChanged();
                 if (IsValid != this.isValid)

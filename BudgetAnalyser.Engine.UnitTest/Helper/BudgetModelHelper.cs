@@ -35,9 +35,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
             }
             Debug.WriteLine(@"    Incomes                      Expenses");
             Debug.WriteLine(@"    ==================================================================");
-            int incomeIndex = 0;
+            var incomeIndex = 0;
             var incomeArray = instance.Incomes.ToArray();
-            foreach (Expense expense in instance.Expenses)
+            foreach (var expense in instance.Expenses)
             {
                 if (incomeIndex <= incomeArray.GetUpperBound(0))
                 {

@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Statement
         {
             TransactionId = transactionId;
             this.cancellationSource = new CancellationTokenSource();
-            CancellationToken cancellationToken = this.cancellationSource.Token;
+            var cancellationToken = this.cancellationSource.Token;
             WhenReadyToNavigate = new Task(() => { }, cancellationToken);
         }
 

@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Persistence
                 }
             };
 
-            var subject = new Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase();
+            var subject = new MapperBudgetAnalyserStorageRoot2ApplicationDatabase();
             this.result = subject.ToModel(this.testData);
         }
     }

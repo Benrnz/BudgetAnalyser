@@ -316,7 +316,7 @@ public abstract class Widget : INotifyPropertyChanged
             return false;
         }
 
-        List<Type> dependencies = Dependencies.ToList();
+        var dependencies = Dependencies.ToList();
         if (dependencies.Count() > input.Length)
         {
             return false;
@@ -339,11 +339,6 @@ public abstract class Widget : INotifyPropertyChanged
             }
         }
 
-        if (nullCount == Dependencies.Count())
-        {
-            return false;
-        }
-
-        return true;
+        return nullCount != Dependencies.Count();
     }
 }

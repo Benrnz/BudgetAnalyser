@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void Budget1ShouldBeArchivedAfterConstruction()
         {
-            BudgetCurrencyContext subject = CreateSubject1();
+            var subject = CreateSubject1();
 
             Assert.IsFalse(subject.BudgetActive);
             Assert.IsTrue(subject.BudgetArchived);
@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void Budget1ShouldBeEffectiveUntilBudget2EffectiveDate()
         {
-            BudgetCurrencyContext subject = CreateSubject1();
+            var subject = CreateSubject1();
 
             Assert.IsTrue(subject.BudgetArchived);
             Assert.AreEqual(new DateTime(2014, 01, 20), subject.EffectiveUntil);
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void Budget2ShouldBeCurrentAfterConstruction()
         {
-            BudgetCurrencyContext subject = CreateSubject2();
+            var subject = CreateSubject2();
 
             Assert.IsTrue(subject.BudgetActive);
             Assert.IsFalse(subject.BudgetArchived);
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ModelShouldNotBeNullAfterConstruction()
         {
-            BudgetCurrencyContext subject = CreateSubject1();
+            var subject = CreateSubject1();
 
             Assert.IsNotNull(subject.Model);
         }
@@ -92,14 +92,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
         private static BudgetCurrencyContext CreateSubject1()
         {
-            BudgetModel budget1 = BudgetModelTestData.CreateTestData1();
+            var budget1 = BudgetModelTestData.CreateTestData1();
             var subject = new BudgetCurrencyContext(new BudgetCollection(new[] { budget1, BudgetModelTestData.CreateTestData2() }), budget1);
             return subject;
         }
 
         private static BudgetCurrencyContext CreateSubject2()
         {
-            BudgetModel budget2 = BudgetModelTestData.CreateTestData2();
+            var budget2 = BudgetModelTestData.CreateTestData2();
             var subject = new BudgetCurrencyContext(new BudgetCollection(new[] { BudgetModelTestData.CreateTestData1(), budget2 }), budget2);
             return subject;
         }

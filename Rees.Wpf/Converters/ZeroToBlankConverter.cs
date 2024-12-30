@@ -42,12 +42,7 @@ namespace Rees.Wpf.Converters
                 return null;
             }
 
-            if (value is long && (long)value == 0)
-            {
-                return null;
-            }
-
-            return value;
+            return value is long && (long)value == 0 ? null : value;
         }
 
         /// <summary>

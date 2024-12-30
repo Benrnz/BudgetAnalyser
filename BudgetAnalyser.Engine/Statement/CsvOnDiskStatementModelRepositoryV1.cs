@@ -41,7 +41,10 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
-            if (readerWriterSelector is null) throw new ArgumentNullException(nameof(readerWriterSelector));
+            if (readerWriterSelector is null)
+            {
+                throw new ArgumentNullException(nameof(readerWriterSelector));
+            }
 
             this.importUtilities = importUtilities;
             this.logger = logger;
@@ -81,14 +84,14 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new NotSupportedException("The CSV file is not supported by this version of the Budget Analyser.");
             }
 
-            List<string> allLines = (await ReadLinesAsync(storageKey, isEncrypted)).ToList();
+            var allLines = (await ReadLinesAsync(storageKey, isEncrypted)).ToList();
             var totalLines = allLines.LongCount();
             if (totalLines < 2)
             {
                 return new StatementModel(this.logger) { StorageKey = storageKey }.LoadTransactions(new List<Transaction>());
             }
 
-            List<TransactionDto> transactions = ReadTransactions(totalLines, allLines);
+            var transactions = ReadTransactions(totalLines, allLines);
             var transactionSet = CreateTransactionSet(storageKey, allLines, transactions);
 
             ValidateChecksumIntegrity(transactionSet);
@@ -124,11 +127,9 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var selector = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-            using (var stream = selector.CreateWritableStream(storageKey))
-            using (var streamWriter = new StreamWriter(stream))
-            {
-                await WriteToStream(transactionSet, streamWriter);
-            }
+            await using var stream = selector.CreateWritableStream(storageKey);
+            await using var streamWriter = new StreamWriter(stream);
+            await WriteToStream(transactionSet, streamWriter);
         }
 
         protected async Task WriteToStream(TransactionSetDto transactionSet, StreamWriter writer)
@@ -191,7 +192,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             var textData = await reader.LoadFirstLinesFromDiskAsync(fileName, lines);
-            string[] firstLines = textData.SplitLines(lines);
+            var firstLines = textData.SplitLines(lines);
             return firstLines;
         }
 
@@ -203,13 +204,8 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.importUtilities.AbortIfFileDoesntExist(storageKey);
-            List<string> allLines = (await ReadLinesAsync(storageKey, 2, isEncrypted)).ToList();
-            if (!VersionCheck(allLines))
-            {
-                return false;
-            }
-
-            return true;
+            var allLines = (await ReadLinesAsync(storageKey, 2, isEncrypted)).ToList();
+            return VersionCheck(allLines);
         }
 
         private static long CalculateTransactionCheckSum(TransactionSetDto setDto)
@@ -217,7 +213,7 @@ namespace BudgetAnalyser.Engine.Statement
             long txnCheckSum = 37; // prime
             unchecked
             {
-                txnCheckSum *= 397; // also prime 
+                txnCheckSum *= 397; // also prime
                 foreach (var txn in setDto.Transactions)
                 {
                     txnCheckSum += (long)txn.Amount * 100;
@@ -236,7 +232,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new DataFormatException("The Budget Analyser file does not have a valid header row.");
             }
 
-            string[] headerSplit = header.Split(',');
+            var headerSplit = header.Split(',');
             var transactionSet = new TransactionSetDto
             {
                 Checksum = this.importUtilities.FetchLong(headerSplit, 3),
@@ -259,7 +255,7 @@ namespace BudgetAnalyser.Engine.Statement
                     continue;
                 }
 
-                string[] split = line.Split(',');
+                var split = line.Split(',');
                 TransactionDto transaction;
                 try
                 {
@@ -323,18 +319,13 @@ namespace BudgetAnalyser.Engine.Statement
         private static bool VersionCheck(List<string> allLines)
         {
             var firstLine = allLines[0];
-            string[] split = firstLine.Split(',');
+            var split = firstLine.Split(',');
             if (split.Length != 5)
             {
                 return false;
             }
 
-            if (split[1] != VersionHash)
-            {
-                return false;
-            }
-
-            return true;
+            return split[1] == VersionHash;
         }
 
         private static void WriteHeader(StreamWriter writer, TransactionSetDto setDto)
@@ -344,7 +335,11 @@ namespace BudgetAnalyser.Engine.Statement
 
         private string SanitiseString(string data, string property)
         {
-            if (string.IsNullOrWhiteSpace(data)) return data;
+            if (string.IsNullOrWhiteSpace(data))
+            {
+                return data;
+            }
+
             var result = data.Replace(",", string.Empty);
             if (result.Length != data.Length)
             {

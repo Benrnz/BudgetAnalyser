@@ -34,7 +34,7 @@ public class LedgerBook : IModelValidate
     public IEnumerable<LedgerBucket> Ledgers
     {
         get => this.ledgersColumns;
-        internal set { this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList(); }
+        internal set => this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList();
     }
 
     /// <summary>
@@ -111,8 +111,8 @@ public class LedgerBook : IModelValidate
     /// </summary>
     public IEnumerable<LedgerBucket> LedgersAvailableForTransfer()
     {
-        List<LedgerBucket> ledgers = Ledgers.ToList();
-        IEnumerable<Account> accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
+        var ledgers = Ledgers.ToList();
+        var accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
         foreach (var account in accounts)
         {
             ledgers.Insert(0, new SurplusLedger { StoredInAccount = account });

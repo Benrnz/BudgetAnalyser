@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
                 Description = "Foo bar tiddle-de-dum",
                 FixedBudgetAmount = 2000
             };
-            var subject = new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory());
+            var subject = new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory());
             this.result = subject.ToModel(this.testData);
         }
     }

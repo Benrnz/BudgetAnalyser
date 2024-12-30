@@ -79,12 +79,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Narrative = "Testing 123"
             };
 
-            decimal beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+            var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
                                     + this.testDataEntryLine.BankBalanceAdjustments
                                         .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
                                         .Sum(a => a.Amount);
             this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+            var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
                                    + this.testDataEntryLine.BankBalanceAdjustments
                                        .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
                                        .Sum(a => a.Amount);
@@ -103,9 +103,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Narrative = "Testing 123"
             };
 
-            decimal beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+            var beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
             this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+            var afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
 
             Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
         }
@@ -121,9 +121,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Narrative = "Testing 123"
             };
 
-            decimal beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+            var beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
             this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+            var afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
 
             Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
         }
@@ -139,9 +139,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Narrative = "Testing 123"
             };
 
-            decimal beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
+            var beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
             this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
+            var afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
 
             Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
         }
@@ -157,12 +157,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Narrative = "Testing 123"
             };
 
-            decimal beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+            var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
                                     + this.testDataEntryLine.BankBalanceAdjustments
                                         .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
                                         .Sum(a => a.Amount);
             this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+            var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
                                    + this.testDataEntryLine.BankBalanceAdjustments
                                        .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
                                        .Sum(a => a.Amount);
@@ -181,9 +181,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Narrative = "Testing 123"
             };
 
-            decimal beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.insHomeSavLedger).Balance;
+            var beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.insHomeSavLedger).Balance;
             this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.insHomeSavLedger).Balance;
+            var afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.insHomeSavLedger).Balance;
 
             Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
         }
@@ -223,12 +223,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Narrative = "Testing 123"
             };
 
-            decimal beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+            var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
                                     + this.testDataEntryLine.BankBalanceAdjustments
                                         .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
                                         .Sum(a => a.Amount);
             this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+            var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
                                    + this.testDataEntryLine.BankBalanceAdjustments
                                        .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
                                        .Sum(a => a.Amount);
@@ -247,12 +247,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 Narrative = "Testing 123"
             };
 
-            decimal beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+            var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
                                     + this.testDataEntryLine.BankBalanceAdjustments
                                         .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
                                         .Sum(a => a.Amount);
             this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+            var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
                                    + this.testDataEntryLine.BankBalanceAdjustments
                                        .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
                                        .Sum(a => a.Amount);

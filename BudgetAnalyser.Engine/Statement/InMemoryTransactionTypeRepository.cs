@@ -17,12 +17,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public TransactionType GetOrCreateNew(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return null;
-            }
-
-            return this.transactionTypes.GetOrAdd(name, n => new NamedTransaction(n));
+            return string.IsNullOrWhiteSpace(name) ? null : this.transactionTypes.GetOrAdd(name, n => new NamedTransaction(n));
         }
     }
 }

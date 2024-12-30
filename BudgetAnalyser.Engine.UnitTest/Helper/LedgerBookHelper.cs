@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
             Debug.WriteLine($"Filename: {book.StorageKey}");
             Debug.WriteLine($"Modified: {book.Modified}");
             Debug.Write("Date        ");
-            Dictionary<BudgetBucket, int> ledgerOrder = LedgerOrder(book);
+            var ledgerOrder = LedgerOrder(book);
 
             OutputReconciliationHeader();
 
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
             {
                 foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
                 {
-                    var tab = new string(' ', 11 + 18 * ledgerOrder[entry.LedgerBucket.BudgetBucket]);
+                    var tab = new string(' ', 11 + (18 * ledgerOrder[entry.LedgerBucket.BudgetBucket]));
                     foreach (var transaction in entry.Transactions)
                     {
                         Debug.WriteLine(
@@ -118,6 +118,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
                 if (outputTransactions)
                 {
                     foreach (var entry in line.Entries)
+                    {
                         foreach (var transaction in entry.Transactions)
                         {
                             Debug.WriteLine(
@@ -126,6 +127,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
                                             transaction.Amount > 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
                                             transaction.Narrative);
                         }
+                    }
+
                     Debug.WriteLine("====================================================================================================================");
                 }
             }

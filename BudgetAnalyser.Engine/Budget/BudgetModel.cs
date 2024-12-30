@@ -192,7 +192,7 @@ public class BudgetModel : INotifyPropertyChanged
             retval = false;
         }
 
-        IEnumerable<string> duplicates = Expenses
+        var duplicates = Expenses
             .GroupBy(i => i.Bucket.Code)
             .Where(g => g.Count() > 1)
             .Select(g => g.Key);

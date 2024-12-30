@@ -33,7 +33,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
         public bool ExpenseFilter
         {
             [UsedImplicitly]
-            get { return this.doNotUseExpenseFilter; }
+            get => this.doNotUseExpenseFilter;
 
             set
             {
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public bool IncomeFilter
         {
-            get { return this.doNotUseIncomeFilter; }
+            get => this.doNotUseIncomeFilter;
 
             set
             {
@@ -69,11 +69,10 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             IncomeFilter = false;
 
             OnPropertyChanged(nameof(Analysis));
-            ICollectionView view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
+            var view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
             view.Filter = x =>
             {
-                var bucketAnalysis = x as BucketPerformanceResult;
-                if (bucketAnalysis is null)
+                if (x is not BucketPerformanceResult bucketAnalysis)
                 {
                     return true;
                 }
@@ -83,7 +82,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
                     return bucketAnalysis.Bucket is IncomeBudgetBucket;
                 }
 
-                bool result = !(bucketAnalysis.Bucket is IncomeBudgetBucket);
+                var result = !(bucketAnalysis.Bucket is IncomeBudgetBucket);
                 return result;
             };
         }

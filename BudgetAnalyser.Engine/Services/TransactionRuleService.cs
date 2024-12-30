@@ -127,13 +127,13 @@ namespace BudgetAnalyser.Engine.Services
 
         public void SavePreview()
         {
-            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
+            var handler = Saving;
             handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
         }
 
         public bool ValidateModel(StringBuilder messages)
         {
-            EventHandler<ValidatingEventArgs> handler = Validating;
+            var handler = Validating;
             handler?.Invoke(this, new ValidatingEventArgs());
             return true;
         }
@@ -313,7 +313,7 @@ namespace BudgetAnalyser.Engine.Services
                 .Select(group => new RulesGroupedByBucket(group.Key, group))
                 .OrderBy(group => group.Bucket.Code);
 
-            IOrderedEnumerable<BudgetBucket> allBuckets = this.bucketRepo.Buckets.OrderBy(b => b);
+            var allBuckets = this.bucketRepo.Buckets.OrderBy(b => b);
             foreach (var bucket in allBuckets)
             {
                 var group = grouped.FirstOrDefault(g => g.Bucket == bucket);

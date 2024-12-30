@@ -39,7 +39,7 @@ namespace BudgetAnalyser.Engine.UnitTest
 
         private static void WriteMainBody(StringBuilder builder)
         {
-            foreach (KeyValuePair<int, IEnumerable<DateTime>> annualHoliday in PublicHolidaysTestData.ExpectedHolidays)
+            foreach (var annualHoliday in PublicHolidaysTestData.ExpectedHolidays)
             {
                 WriteTestClassHeader(builder, annualHoliday);
                 WriteTestClassBody(builder, annualHoliday.Key);
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine.UnitTest
             {{
 ", annualHoliday.Key);
 
-            foreach (DateTime holiday in annualHoliday.Value)
+            foreach (var holiday in annualHoliday.Value)
             {
                 builder.AppendFormat(@"
                 new DateTime({0}, {1}, {2}),

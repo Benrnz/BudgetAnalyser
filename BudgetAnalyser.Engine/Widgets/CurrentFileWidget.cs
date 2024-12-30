@@ -38,8 +38,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 throw new ArgumentNullException(nameof(input));
             }
 
-            var appDb = input[0] as ApplicationDatabase;
-            if (appDb is null || appDb.FileName.IsNothing())
+            if (input[0] is not ApplicationDatabase appDb || appDb.FileName.IsNothing())
             {
                 ColourStyleName = WidgetWarningStyle;
                 DetailedText = "Open";
@@ -67,12 +66,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             var proposed = Path.GetFileName(fileName);
             var drive = Path.GetPathRoot(fileName);
-            if (proposed.Length < 30)
-            {
-                return drive + "...\\" + proposed;
-            }
-
-            return drive + "...\\" + proposed.Substring(proposed.Length - 30);
+            return proposed.Length < 30 ? drive + "...\\" + proposed : drive + "...\\" + proposed.Substring(proposed.Length - 30);
         }
     }
 }

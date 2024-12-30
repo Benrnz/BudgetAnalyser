@@ -46,7 +46,10 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException(nameof(logger));
             }
-            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
+            if (monitorableDependencies is null)
+            {
+                throw new ArgumentNullException(nameof(monitorableDependencies));
+            }
 
             this.widgetService = widgetService;
             this.bucketRepository = bucketRepository;
@@ -118,14 +121,9 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentException("Payment date is not set.", nameof(paymentDate));
             }
 
-            var bucket = this.bucketRepository.GetByCode(bucketCode);
-            if (bucket is null)
-            {
-                throw new ArgumentException(
+            var bucket = this.bucketRepository.GetByCode(bucketCode) ?? throw new ArgumentException(
                     string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode),
                     nameof(bucketCode));
-            }
-
             var widget = this.widgetService.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
             var paymentWidget = (SurprisePaymentWidget)widget;
             paymentWidget.StartPaymentDate = paymentDate;
@@ -168,9 +166,7 @@ namespace BudgetAnalyser.Engine.Services
             if (fixedProjectWidget is not null)
             {
                 // Reassign transactions to Surplus
-                var projectBucket =
-                    this.bucketRepository.GetByCode(fixedProjectWidget.BucketCode) as FixedBudgetProjectBucket;
-                if (projectBucket is null)
+                if (this.bucketRepository.GetByCode(fixedProjectWidget.BucketCode) is not FixedBudgetProjectBucket projectBucket)
                 {
                     throw new InvalidOperationException(
                         "The fixed project bucket provided doesn't actually appear to be a Fixed Budget Project Bucket");
@@ -207,25 +203,21 @@ namespace BudgetAnalyser.Engine.Services
             var multiInstanceWidget = widget as IUserDefinedWidget;
             if (multiInstanceWidget is not null)
             {
-                var surprisePaymentWidget = multiInstanceWidget as SurprisePaymentWidget;
-                if (surprisePaymentWidget is null)
-                {
-                    return new MultiInstanceWidgetState
+                return multiInstanceWidget is not SurprisePaymentWidget surprisePaymentWidget
+                    ? new MultiInstanceWidgetState
                     {
                         Id = multiInstanceWidget.Id,
                         Visible = multiInstanceWidget.Visibility,
                         WidgetType = multiInstanceWidget.WidgetType.FullName
+                    }
+                    : (WidgetPersistentState)new SurprisePaymentWidgetPersistentState
+                    {
+                        Id = surprisePaymentWidget.Id,
+                        Visible = surprisePaymentWidget.Visibility,
+                        WidgetType = surprisePaymentWidget.WidgetType.FullName,
+                        PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
+                        Frequency = surprisePaymentWidget.Frequency
                     };
-                }
-
-                return new SurprisePaymentWidgetPersistentState
-                {
-                    Id = surprisePaymentWidget.Id,
-                    Visible = surprisePaymentWidget.Visibility,
-                    WidgetType = surprisePaymentWidget.WidgetType.FullName,
-                    PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
-                    Frequency = surprisePaymentWidget.Frequency
-                };
             }
 
             return new WidgetPersistentState
@@ -278,7 +270,7 @@ namespace BudgetAnalyser.Engine.Services
             if (filterDependencyTypes is not null && filterDependencyTypes.Length > 0)
             {
                 // targeted update
-                List<Widget> affectedWidgets = WidgetGroups.SelectMany(group => group.Widgets)
+                var affectedWidgets = WidgetGroups.SelectMany(group => group.Widgets)
                     .Where(w => w.Dependencies.Any(filterDependencyTypes.Contains))
                     .ToList();
                 affectedWidgets.ForEach(UpdateWidget);

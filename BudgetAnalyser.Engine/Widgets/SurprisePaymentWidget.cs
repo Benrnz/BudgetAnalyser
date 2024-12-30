@@ -114,7 +114,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
 
         this.bucketRepository = (IBudgetBucketRepository)input[0];
         this.filter = (GlobalFilterCriteria)input[1];
-        var budgetCollection = ((BudgetCollection)input[2]);
+        var budgetCollection = (BudgetCollection)input[2];
 
         if (this.filter is null
             || this.filter.Cleared
@@ -237,7 +237,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         var proposedDate = new PaymentDate(paymentDate.ScheduledDate.AddDays(7 * this.multiplier));
         if (this.filter.BeginDate is not null)
         {
-            List<DateTime> holidays =
+            var holidays =
                 NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value,
                                                            this.filter.BeginDate.Value.AddYears(1)).ToList();
             while (holidays.Contains(proposedDate.Date))

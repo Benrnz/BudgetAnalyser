@@ -4,8 +4,8 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard
 {
@@ -26,8 +26,16 @@ namespace BudgetAnalyser.Dashboard
         public EncryptFileController([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseFacade appDbService) : base(uiContext.Messenger)
         {
             this.appDbService = appDbService;
-            if (uiContext is null) throw new ArgumentNullException(nameof(uiContext));
-            if (appDbService is null) throw new ArgumentNullException(nameof(appDbService));
+            if (uiContext is null)
+            {
+                throw new ArgumentNullException(nameof(uiContext));
+            }
+
+            if (appDbService is null)
+            {
+                throw new ArgumentNullException(nameof(appDbService));
+            }
+
             this.questionService = uiContext.UserPrompts.YesNoBox;
             this.messageService = uiContext.UserPrompts.MessageBox;
 
@@ -43,18 +51,9 @@ namespace BudgetAnalyser.Dashboard
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton
-        {
-            get
-            {
-                if (EncryptFileMode)
-                {
-                    return this.password is not null && this.password.Length > 4 && this.passwordConfirmed;
-                }
-
-                return this.password is not null && this.password.Length > 4;
-            }
-        }
+        public bool CanExecuteOkButton => EncryptFileMode
+                    ? this.password is not null && this.password.Length > 4 && this.passwordConfirmed
+                    : this.password is not null && this.password.Length > 4;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
@@ -66,7 +65,11 @@ namespace BudgetAnalyser.Dashboard
             get => this.doNotUseDecryptFileMode;
             private set
             {
-                if (value == this.doNotUseDecryptFileMode) return;
+                if (value == this.doNotUseDecryptFileMode)
+                {
+                    return;
+                }
+
                 this.doNotUseDecryptFileMode = value;
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseEnterPasswordMode = value;
@@ -81,7 +84,11 @@ namespace BudgetAnalyser.Dashboard
             get => this.doNotUseEncryptFileMode;
             private set
             {
-                if (value == this.doNotUseEncryptFileMode) return;
+                if (value == this.doNotUseEncryptFileMode)
+                {
+                    return;
+                }
+
                 this.doNotUseEncryptFileMode = value;
                 this.doNotUseEnterPasswordMode = !value;
                 this.doNotUseDecryptFileMode = !value;
@@ -96,7 +103,11 @@ namespace BudgetAnalyser.Dashboard
             get => this.doNotUseEnterPasswordMode;
             private set
             {
-                if (value == this.doNotUseEnterPasswordMode) return;
+                if (value == this.doNotUseEnterPasswordMode)
+                {
+                    return;
+                }
+
                 this.doNotUseEnterPasswordMode = value;
                 this.doNotUseEncryptFileMode = !value;
                 this.doNotUseDecryptFileMode = !value;
@@ -115,7 +126,11 @@ namespace BudgetAnalyser.Dashboard
             get => this.doNotUseIsEncrypted;
             private set
             {
-                if (value == this.doNotUseIsEncrypted) return;
+                if (value == this.doNotUseIsEncrypted)
+                {
+                    return;
+                }
+
                 this.doNotUseIsEncrypted = value;
                 OnPropertyChanged();
             }
@@ -126,7 +141,11 @@ namespace BudgetAnalyser.Dashboard
             get => this.doNotUseValidationMessage;
             private set
             {
-                if (value == this.doNotUseValidationMessage) return;
+                if (value == this.doNotUseValidationMessage)
+                {
+                    return;
+                }
+
                 this.doNotUseValidationMessage = value;
                 OnPropertyChanged();
             }
@@ -181,10 +200,14 @@ namespace BudgetAnalyser.Dashboard
         {
             try
             {
-                bool? confirmation = this.questionService.Show(
+                var confirmation = this.questionService.Show(
                     "Are you sure you want to decrypt and store the data files in plain text?  After this is complete the files can be read by any other program without a password.",
                     "Decrypt Data Files?");
-                if (confirmation is null || !confirmation.Value) return;
+                if (confirmation is null || !confirmation.Value)
+                {
+                    return;
+                }
+
                 await Task.Run(async () => await this.appDbService.DecryptFilesAsync(this.password));
                 this.messageService.Show("Files are decrypted and are saved as plain CSV and XML files. They are no longer protected.  Encrypted files have been deleted.",
                     "Decrypt Data Files - Completed");
@@ -197,10 +220,14 @@ namespace BudgetAnalyser.Dashboard
 
         private async Task EncryptFiles()
         {
-            bool? confirmation = this.questionService.Show(
+            var confirmation = this.questionService.Show(
                 "Are you sure you want to encrypt and protect the data files?  After this is complete the files cannot be read by any other program aside from Budget Analyser. You will be required to enter the password each time you load your Budget Analyser file.",
                 "Encrypt Data Files?");
-            if (confirmation is null || !confirmation.Value) return;
+            if (confirmation is null || !confirmation.Value)
+            {
+                return;
+            }
+
             this.appDbService.SetCredential(this.password);
             await Task.Run(async () => await this.appDbService.EncryptFilesAsync());
             this.messageService.Show(
@@ -210,7 +237,10 @@ namespace BudgetAnalyser.Dashboard
 
         private async void OnShellDiaglogResponseMessageReceived(ShellDialogResponseMessage message)
         {
-            if (!message.IsItForMe(this.dialogCorrelationId)) return;
+            if (!message.IsItForMe(this.dialogCorrelationId))
+            {
+                return;
+            }
 
             if (message.Response == ShellDialogButton.Cancel)
             {
@@ -247,7 +277,10 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
         {
-            if (message.Handled || !(message.Widget is EncryptWidget)) return;
+            if (message.Handled || !(message.Widget is EncryptWidget))
+            {
+                return;
+            }
 
             if (this.appDbService.IsEncrypted)
             {

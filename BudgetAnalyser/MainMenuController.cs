@@ -52,7 +52,7 @@ namespace BudgetAnalyser
 
         public bool BudgetToggle
         {
-            get { return this.doNotUseBudgetToggle; }
+            get => this.doNotUseBudgetToggle;
             set
             {
                 this.doNotUseBudgetToggle = value;
@@ -64,7 +64,7 @@ namespace BudgetAnalyser
 
         public bool DashboardToggle
         {
-            get { return this.doNotUseDashboardToggle; }
+            get => this.doNotUseDashboardToggle;
             set
             {
                 this.doNotUseDashboardToggle = value;
@@ -77,7 +77,7 @@ namespace BudgetAnalyser
 
         public bool LedgerBookToggle
         {
-            get { return this.doNotUseLedgerBookToggle; }
+            get => this.doNotUseLedgerBookToggle;
             set
             {
                 this.doNotUseLedgerBookToggle = value;
@@ -90,7 +90,7 @@ namespace BudgetAnalyser
 
         public bool ReportsToggle
         {
-            get { return this.doNotUseReportsToggle; }
+            get => this.doNotUseReportsToggle;
             set
             {
                 this.doNotUseReportsToggle = value;
@@ -103,7 +103,7 @@ namespace BudgetAnalyser
 
         public bool TransactionsToggle
         {
-            get { return this.doNotUseTransactionsToggle; }
+            get => this.doNotUseTransactionsToggle;
             set
             {
                 this.doNotUseTransactionsToggle = value;
@@ -123,7 +123,7 @@ namespace BudgetAnalyser
 
         private void AfterTabExecutedCommon()
         {
-            foreach (IShowableController controller in this.uiContext.ShowableControllers)
+            foreach (var controller in this.uiContext.ShowableControllers)
             {
                 controller.Shown = false;
             }
@@ -205,7 +205,11 @@ namespace BudgetAnalyser
 
             if (message.Widget is SaveWidget)
             {
-                if (PersistenceOperationCommands.SaveDatabaseCommand.CanExecute(null)) PersistenceOperationCommands.SaveDatabaseCommand.Execute(null);
+                if (PersistenceOperationCommands.SaveDatabaseCommand.CanExecute(null))
+                {
+                    PersistenceOperationCommands.SaveDatabaseCommand.Execute(null);
+                }
+
                 return;
             }
 
@@ -235,8 +239,7 @@ namespace BudgetAnalyser
 
         private void ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
         {
-            var widget = message.Widget as NewFileWidget;
-            if (widget is null)
+            if (message.Widget is not NewFileWidget widget)
             {
                 return;
             }
@@ -248,8 +251,7 @@ namespace BudgetAnalyser
 
         private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
         {
-            var widget = message.Widget as CurrentFileWidget;
-            if (widget is null)
+            if (message.Widget is not CurrentFileWidget widget)
             {
                 return;
             }
@@ -261,8 +263,7 @@ namespace BudgetAnalyser
 
         private void ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
         {
-            var widget = message.Widget as LoadDemoWidget;
-            if (widget is null)
+            if (message.Widget is not LoadDemoWidget widget)
             {
                 return;
             }

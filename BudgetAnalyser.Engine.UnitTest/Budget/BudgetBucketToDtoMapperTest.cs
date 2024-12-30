@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public void TestInitialise()
         {
             var testData = StatementModelTestData.CarMtcBucket;
-            var subject = new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory());
+            var subject = new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory());
             Result = subject.ToDto(testData);
         }
     }

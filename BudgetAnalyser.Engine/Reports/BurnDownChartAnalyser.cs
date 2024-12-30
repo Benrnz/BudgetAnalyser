@@ -45,12 +45,12 @@ namespace BudgetAnalyser.Engine.Reports
                 throw new ArgumentNullException(nameof(budgetModel));
             }
 
-            List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
+            var bucketsCopy = bucketsSubset.ToList();
             this.logger.LogInfo(l => "BurnDownChartAnalyser.Analyse: " + string.Join(" ", bucketsCopy.Select(b => b.Code)));
 
             var result = new BurnDownChartAnalyserResult();
 
-            List<DateTime> datesOfTheMonth = YieldAllDaysInDateRange(inclBeginDate);
+            var datesOfTheMonth = YieldAllDaysInDateRange(inclBeginDate);
             var lastDate = datesOfTheMonth.Last();
 
             CreateZeroLine(datesOfTheMonth, result);
@@ -58,13 +58,13 @@ namespace BudgetAnalyser.Engine.Reports
             var openingBalance = GetBudgetedTotal(budgetModel, ledgerBook, bucketsCopy, inclBeginDate, inclEndDate);
             CalculateBudgetLineValues(openingBalance, datesOfTheMonth, result);
 
-            List<ReportTransactionWithRunningBalance> spendingTransactions = CollateStatementTransactions(statementModel, bucketsCopy, inclBeginDate, lastDate, openingBalance);
+            var spendingTransactions = CollateStatementTransactions(statementModel, bucketsCopy, inclBeginDate, lastDate, openingBalance);
 
             // Only relevant when calculating surplus burndown - overspent ledgers are supplemented from surplus so affect its burndown.
             if (ledgerBook is not null && bucketsCopy.OfType<SurplusBucket>().Any())
             {
                 var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, inclBeginDate, inclEndDate);
-                List<ReportTransaction> overSpentLedgers = this.ledgerCalculator.CalculateOverSpentLedgers(statementModel, ledgerLine, inclBeginDate, inclEndDate).ToList();
+                var overSpentLedgers = this.ledgerCalculator.CalculateOverSpentLedgers(statementModel, ledgerLine, inclBeginDate, inclEndDate).ToList();
                 if (overSpentLedgers.Any())
                 {
                     spendingTransactions.AddRange(overSpentLedgers.Select(t => new ReportTransactionWithRunningBalance(t)));
@@ -112,7 +112,7 @@ namespace BudgetAnalyser.Engine.Reports
             var iteration = 0;
             foreach (var day in datesOfTheMonth)
             {
-                seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - average * iteration++, Date = day });
+                seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - (average * iteration++), Date = day });
             }
         }
 
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.Engine.Reports
             decimal openingBalance)
         {
             // The below query has to cater for special Surplus buckets which are intended to be equivelent but use a type hierarchy with inheritance.
-            List<ReportTransactionWithRunningBalance> query = statementModel.Transactions
+            var query = statementModel.Transactions
                 .Join(bucketsToInclude, t => t.BudgetBucket, b => b, (t, b) => t, new SurplusAgnosticBucketComparer())
                 .Where(t => t.Date >= beginDate && t.Date <= lastDate)
                 .OrderBy(t => t.Date)
@@ -180,7 +180,7 @@ namespace BudgetAnalyser.Engine.Reports
             DateTime inclEndDate)
         {
             decimal budgetTotal = 0;
-            List<BudgetBucket> bucketsCopy = buckets.ToList();
+            var bucketsCopy = buckets.ToList();
 
             var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, inclBeginDate, inclEndDate);
             if (ledgerLine is null)
@@ -217,12 +217,7 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             var budget = budgetModel.Expenses.FirstOrDefault(e => e.Bucket == bucket);
-            if (budget is not null)
-            {
-                return budget.Amount;
-            }
-
-            return 0;
+            return budget is not null ? budget.Amount : 0;
         }
 
         private static decimal GetDayClosingBalance(

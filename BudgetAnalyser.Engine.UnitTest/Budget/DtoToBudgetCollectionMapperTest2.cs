@@ -36,10 +36,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             TestData = GetType().Assembly.ExtractEmbeddedResourceAsXamlObject<BudgetCollectionDto>("BudgetAnalyser.Engine.UnitTest.TestData.BudgetCollectionTestData.xml");
             var bucketRepo = new BucketBucketRepoAlwaysFind();
-            var subject = new Mapper_BudgetCollectionDto_BudgetCollection(
+            var subject = new MapperBudgetCollectionDtoBudgetCollection(
                 bucketRepo,
-                new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()),
-                new Mapper_BudgetModelDto_BudgetModel(bucketRepo));
+                new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()),
+                new MapperBudgetModelDtoBudgetModel(bucketRepo));
             Result = subject.ToModel(TestData);
         }
     }

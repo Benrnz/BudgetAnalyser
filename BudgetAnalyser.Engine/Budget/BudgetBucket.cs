@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </value>
         public bool Active
         {
-            get { return this.doNotUseActive; }
+            get => this.doNotUseActive;
             set
             {
                 this.doNotUseActive = value;
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         public string Code
         {
-            get { return this.doNotUseCode; }
+            get => this.doNotUseCode;
 
             set
             {
@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         public string Description
         {
-            get { return this.doNotUseDescription; }
+            get => this.doNotUseDescription;
             set
             {
                 this.doNotUseDescription = value;
@@ -121,13 +121,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         public int CompareTo(object obj)
         {
-            var otherBucket = obj as BudgetBucket;
-            if (otherBucket is null)
-            {
-                return -1;
-            }
-
-            return string.Compare(Code, otherBucket.Code, StringComparison.Ordinal);
+            return obj is not BudgetBucket otherBucket ? -1 : string.Compare(Code, otherBucket.Code, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -184,13 +178,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </returns>
         public override bool Equals(object obj)
         {
-            var otherBucket = obj as BudgetBucket;
-            if (otherBucket is null)
-            {
-                return false;
-            }
-
-            return Code == otherBucket.Code;
+            return obj is not BudgetBucket otherBucket ? false : Code == otherBucket.Code;
         }
 
         /// <summary>
@@ -220,12 +208,7 @@ namespace BudgetAnalyser.Engine.Budget
                 return false;
             }
 
-            if (ReferenceEquals(obj1, obj2))
-            {
-                return true;
-            }
-
-            return obj1.Equals(obj2);
+            return ReferenceEquals(obj1, obj2) ? true : obj1.Equals(obj2);
         }
 
         /// <summary>
@@ -240,12 +223,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(obj1));
             }
 
-            if (obj2 is null)
-            {
-                throw new ArgumentNullException(nameof(obj2));
-            }
-
-            return obj1.CompareTo(obj2) > 0;
+            return obj2 is null ? throw new ArgumentNullException(nameof(obj2)) : obj1.CompareTo(obj2) > 0;
         }
 
         /// <summary>
@@ -268,12 +246,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(obj1));
             }
 
-            if (obj2 is null)
-            {
-                throw new ArgumentNullException(nameof(obj2));
-            }
-
-            return obj1.CompareTo(obj2) < 0;
+            return obj2 is null ? throw new ArgumentNullException(nameof(obj2)) : obj1.CompareTo(obj2) < 0;
         }
 
         /// <summary>

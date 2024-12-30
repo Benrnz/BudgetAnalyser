@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         public decimal Amount
         {
-            get { return this.doNotUseAmount; }
+            get => this.doNotUseAmount;
 
             set
             {
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         public BudgetBucket Bucket
         {
-            get { return this.doNotUseBucket; }
+            get => this.doNotUseBucket;
             set
             {
                 if (this.doNotUseBucket is not null)
@@ -132,12 +132,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         protected bool Equals([NotNull] BudgetItem other)
         {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return Equals(Bucket, other.Bucket) && GetType() == other.GetType();
+            return other is null ? throw new ArgumentNullException(nameof(other)) : Equals(Bucket, other.Bucket) && GetType() == other.GetType();
         }
 
         /// <summary>
@@ -163,14 +158,7 @@ namespace BudgetAnalyser.Engine.Budget
 
             string lastWord;
             var wordIndex = sentence1.LastIndexOf(' ');
-            if (wordIndex <= 0)
-            {
-                lastWord = sentence1;
-            }
-            else
-            {
-                lastWord = sentence1.Substring(wordIndex + 1);
-            }
+            lastWord = wordIndex <= 0 ? sentence1 : sentence1.Substring(wordIndex + 1);
 
             string firstWord;
             wordIndex = sentence2.IndexOf(' ');
@@ -184,12 +172,9 @@ namespace BudgetAnalyser.Engine.Budget
                 firstWord = sentence2.Substring(0, wordIndex);
             }
 
-            if (lastWord == firstWord)
-            {
-                return string.Format(CultureInfo.CurrentCulture, "{0}{1}", sentence1, sentence2.Substring(wordIndex));
-            }
-
-            return string.Format(CultureInfo.CurrentCulture, "{0} {1}", sentence1, sentence2);
+            return lastWord == firstWord
+                ? string.Format(CultureInfo.CurrentCulture, "{0}{1}", sentence1, sentence2.Substring(wordIndex))
+                : string.Format(CultureInfo.CurrentCulture, "{0} {1}", sentence1, sentence2);
         }
 
         private void OnBucketPropertyChanged(object sender, PropertyChangedEventArgs e)

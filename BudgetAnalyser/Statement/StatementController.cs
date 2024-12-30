@@ -63,7 +63,11 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
         set
         {
-            if (Equals(value, this.doNotUseBucketFilter)) return;
+            if (Equals(value, this.doNotUseBucketFilter))
+            {
+                return;
+            }
+
             this.doNotUseBucketFilter = value;
             OnPropertyChanged();
             ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
@@ -84,7 +88,11 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         get => this.doNotUseTextFilter;
         set
         {
-            if (Equals(value, this.doNotUseTextFilter)) return;
+            if (Equals(value, this.doNotUseTextFilter))
+            {
+                return;
+            }
+
             this.doNotUseTextFilter = string.IsNullOrEmpty(value) ? null : value;
             OnPropertyChanged();
             ViewModel.Transactions = this.transactionService.FilterBySearchText(TextFilter);
@@ -208,7 +216,10 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
     private async void OnDeleteTransactionCommandExecute()
     {
-        if (ViewModel.SelectedRow is null) return;
+        if (ViewModel.SelectedRow is null)
+        {
+            return;
+        }
 
         var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
             "Are you sure you want to delete this transaction?",

@@ -7,8 +7,8 @@ using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.LedgerBook
 {
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.LedgerBook
                 }
 
                 this.ledgerService.MoveLedgerToAccount(this.ledger, StoredInAccount);
-                EventHandler handler = Updated;
+                var handler = Updated;
                 handler?.Invoke(this, EventArgs.Empty);
             }
             finally

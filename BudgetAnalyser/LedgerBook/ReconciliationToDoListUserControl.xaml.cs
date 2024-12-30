@@ -19,14 +19,13 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnListDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            ICollectionView view = CollectionViewSource.GetDefaultView(Controller.Tasks);
+            var view = CollectionViewSource.GetDefaultView(Controller.Tasks);
             view.SortDescriptions.Add(new SortDescription("SystemGenerated", ListSortDirection.Descending));
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            var controller = DataContext as ReconciliationToDoListController;
-            if (controller is null)
+            if (DataContext is not ReconciliationToDoListController controller)
             {
                 return;
             }

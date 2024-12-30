@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
 {
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 12:48:10 AM UTC")]
-    internal partial class Mapper_BudgetModelDto_BudgetModel : IDtoMapper<BudgetModelDto, BudgetModel>
+    internal partial class MapperBudgetModelDtoBudgetModel : IDtoMapper<BudgetModelDto, BudgetModel>
     {
 
         public virtual BudgetModel ToModel(BudgetModelDto dto)
@@ -60,7 +60,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 12:48:10 AM UTC")]
-    internal partial class Mapper_ExpenseDto_Expense : IDtoMapper<ExpenseDto, Expense>
+    internal partial class MapperExpenseDto2Expense : IDtoMapper<ExpenseDto, Expense>
     {
 
         public virtual Expense ToModel(ExpenseDto dto)
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 12:48:10 AM UTC")]
-    internal partial class Mapper_IncomeDto_Income : IDtoMapper<IncomeDto, Income>
+    internal partial class MapperIncomeDto2Income : IDtoMapper<IncomeDto, Income>
     {
 
         public virtual Income ToModel(IncomeDto dto)

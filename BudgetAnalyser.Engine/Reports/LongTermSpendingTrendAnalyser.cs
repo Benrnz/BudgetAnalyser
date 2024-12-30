@@ -62,7 +62,7 @@ namespace BudgetAnalyser.Engine.Reports
             var currentMonth = minDate;
             var nextMonth = currentMonth.AddMonths(1);
             var subTotals = new Dictionary<string, decimal>();
-            List<SeriesData> allSeriesData = InitialiseSeriesData(minDate, maxDate);
+            var allSeriesData = InitialiseSeriesData(minDate, maxDate);
 
             foreach (var transaction in statement.AllTransactions)
             {
@@ -129,7 +129,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         private List<SeriesData> InitialiseSeriesData(DateTime minDate, DateTime maxDate)
         {
-            List<SeriesData> allSeriesData = this.budgetBucketRepo.Buckets
+            var allSeriesData = this.budgetBucketRepo.Buckets
                 .Select(bucket => new SeriesData { SeriesName = bucket.Code, Description = bucket.Description })
                 .ToList();
 
@@ -149,7 +149,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         private void RemoveSeriesWithNoData()
         {
-            List<SeriesData> zeroSeries = Graph.SeriesList.Where(s => s.PlotsList.Sum(p => p.Amount) == 0).ToList();
+            var zeroSeries = Graph.SeriesList.Where(s => s.PlotsList.Sum(p => p.Amount) == 0).ToList();
             foreach (var removeMe in zeroSeries)
             {
                 Graph.SeriesList.Remove(removeMe);
@@ -160,7 +160,7 @@ namespace BudgetAnalyser.Engine.Reports
                                                      List<SeriesData> allSeriesData, DateTime currentMonth)
         {
             // Current month's data is complete - update totals and advance to next month
-            foreach (KeyValuePair<string, decimal> subTotal in subTotals)
+            foreach (var subTotal in subTotals)
             {
                 // Find appropriate bucket series
                 var series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);

@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public BudgetBucket Bucket
         {
-            get { return this.bucketRepository.GetByCode(BucketCode); }
+            get => this.bucketRepository.GetByCode(BucketCode);
 
             [UsedImplicitly]
             private set
@@ -235,12 +235,7 @@ namespace BudgetAnalyser.Engine.Matching
                 return false;
             }
 
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return RuleId.Equals(other.RuleId);
+            return ReferenceEquals(this, other) ? true : RuleId.Equals(other.RuleId);
         }
 
         /// <summary>
@@ -261,11 +256,7 @@ namespace BudgetAnalyser.Engine.Matching
             {
                 return true;
             }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((MatchingRule)obj);
+            return obj.GetType() != GetType() ? false : Equals((MatchingRule)obj);
         }
 
         /// <summary>

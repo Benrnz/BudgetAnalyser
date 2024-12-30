@@ -44,9 +44,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Persistence
         [TestInitialize]
         public void TestInitialise()
         {
-            var todoCollection = new ToDoCollection();
-            todoCollection.Add(new ToDoTask("Foo1"));
-            todoCollection.Add(new ToDoTask("Foo2", false, false));
+            var todoCollection = new ToDoCollection
+            {
+                new ToDoTask("Foo1"),
+                new ToDoTask("Foo2", false, false)
+            };
             this.testData = new ApplicationDatabase();
             PrivateAccessor.SetProperty(this.testData, "BudgetCollectionStorageKey", "Budget.xml");
             PrivateAccessor.SetProperty(this.testData, "FileName", "C:\\Foo\\TestData.bax");
@@ -55,7 +57,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Persistence
             PrivateAccessor.SetProperty(this.testData, "StatementModelStorageKey", "Statement.xml");
             PrivateAccessor.SetProperty(this.testData, "LedgerReconciliationToDoCollection", todoCollection);
 
-            var subject = new Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase();
+            var subject = new MapperBudgetAnalyserStorageRoot2ApplicationDatabase();
             this.result = subject.ToDto(this.testData);
         }
     }

@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         public async Task LoadFromDemoFileShouldReturnMatchingRules()
         {
             var subject = ArrangeUsingEmbeddedResources();
-            IEnumerable<MatchingRule> results = await subject.LoadAsync(TestDataConstants.DemoRulesFileName, false);
+            var results = await subject.LoadAsync(TestDataConstants.DemoRulesFileName, false);
 
             Assert.IsNotNull(results);
             Assert.IsTrue(results.Any());
@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         {
             var subject = ArrangeUsingEmbeddedResources();
             subject.LoadFromDiskOveride = fileName => MatchingRulesTestData.RawTestData1().ToList();
-            IEnumerable<MatchingRule> results = await subject.LoadAsync("foo.bar", false);
+            var results = await subject.LoadAsync("foo.bar", false);
 
             Assert.IsNotNull(results);
             Assert.IsTrue(results.Any());
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
             MatchingRulesTestDataGenerated.BucketRepo = bucketRepo;
 
             return new XamlOnDiskMatchingRuleRepositoryTestHarness(
-                new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind()),
+                new MapperMatchingRuleDto2MatchingRule(new BucketBucketRepoAlwaysFind()),
                 new LocalDiskReaderWriterSelector(
                     new[] { new EmbeddedResourceFileReaderWriter() }));
         }
@@ -130,7 +130,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
             MatchingRulesTestDataGenerated.BucketRepo = bucketRepo;
 
             return new XamlOnDiskMatchingRuleRepositoryTestHarness(
-                new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind()),
+                new MapperMatchingRuleDto2MatchingRule(new BucketBucketRepoAlwaysFind()),
                 this.mockSelector.Object);
         }
     }

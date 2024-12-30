@@ -52,12 +52,9 @@ namespace BudgetAnalyser.Engine.Ledger
             // Remove-excess
             if (closingBalance > openingBalance || closingBalance > budgetTransaction.Amount)
             {
-                if (openingBalance > budgetTransaction.Amount)
-                {
-                    return transactions.AddIfSomething(RemoveExcessToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
-                }
-
-                return transactions.AddIfSomething(RemoveExcessToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
+                return openingBalance > budgetTransaction.Amount
+                    ? transactions.AddIfSomething(RemoveExcessToOpeningBalance(closingBalance, reconciliationDate, openingBalance))
+                    : transactions.AddIfSomething(RemoveExcessToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
             }
 
             return false;
@@ -84,11 +81,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static LedgerTransaction RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
         {
-            if (closingBalance - budgetAmount == 0)
-            {
-                return null;
-            }
-            return new CreditLedgerTransaction
+            return closingBalance - budgetAmount == 0
+                ? null
+                : (LedgerTransaction)new CreditLedgerTransaction
             {
                 Amount = -(closingBalance - budgetAmount),
                 Date = reconciliationDate,
@@ -98,11 +93,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static LedgerTransaction RemoveExcessToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
         {
-            if (closingBalance - openingBalance == 0)
-            {
-                return null;
-            }
-            return new CreditLedgerTransaction
+            return closingBalance - openingBalance == 0
+                ? null
+                : (LedgerTransaction)new CreditLedgerTransaction
             {
                 Amount = -(closingBalance - openingBalance),
                 Date = reconciliationDate,
@@ -112,11 +105,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static LedgerTransaction SupplementToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
         {
-            if (budgetAmount - closingBalance == 0)
-            {
-                return null;
-            }
-            return new CreditLedgerTransaction
+            return budgetAmount - closingBalance == 0
+                ? null
+                : (LedgerTransaction)new CreditLedgerTransaction
             {
                 Amount = budgetAmount - closingBalance,
                 Date = reconciliationDate,
@@ -126,11 +117,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static LedgerTransaction SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
         {
-            if (openingBalance - closingBalance == 0)
-            {
-                return null;
-            }
-            return new CreditLedgerTransaction
+            return openingBalance - closingBalance == 0
+                ? null
+                : (LedgerTransaction)new CreditLedgerTransaction
             {
                 Amount = openingBalance - closingBalance,
                 Date = reconciliationDate,
@@ -140,11 +129,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static CreditLedgerTransaction SupplementToZero(decimal closingBalance, DateTime reconciliationDate)
         {
-            if (closingBalance == 0)
-            {
-                return null;
-            }
-            return new CreditLedgerTransaction
+            return closingBalance == 0
+                ? null
+                : new CreditLedgerTransaction
             {
                 Amount = 0 - closingBalance,
                 Date = reconciliationDate,

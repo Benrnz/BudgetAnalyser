@@ -9,8 +9,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void CloneShouldGiveUseNameGiven()
         {
-            VisaAccount subject = CreateSubject();
-            Engine.BankAccount.Account clone = subject.Clone("CloneVisa");
+            var subject = CreateSubject();
+            var clone = subject.Clone("CloneVisa");
 
             Assert.AreEqual("CloneVisa", clone.Name);
             Assert.AreNotEqual("CloneVisa", subject.Name);
@@ -19,8 +19,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void CloneShouldNotJustCopyReference()
         {
-            VisaAccount subject = CreateSubject();
-            Engine.BankAccount.Account clone = subject.Clone("CloneVisa");
+            var subject = CreateSubject();
+            var clone = subject.Clone("CloneVisa");
 
             Assert.IsFalse(ReferenceEquals(subject, clone));
         }
@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void KeywordsShouldContainElements()
         {
-            VisaAccount subject = CreateSubject();
+            var subject = CreateSubject();
 
             Assert.IsTrue(subject.KeyWords.Length > 0);
         }
@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void KeywordsShouldNotBeNull()
         {
-            VisaAccount subject = CreateSubject();
+            var subject = CreateSubject();
 
             Assert.IsNotNull(subject.KeyWords);
         }
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void NameShouldBeSomething()
         {
-            VisaAccount subject = CreateSubject();
+            var subject = CreateSubject();
             Assert.IsFalse(string.IsNullOrWhiteSpace(subject.Name));
         }
 

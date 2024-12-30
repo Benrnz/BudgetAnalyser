@@ -20,8 +20,7 @@ namespace BudgetAnalyser.Encryption
         /// <returns>A credential object or null if no credentials have been provided by the user.</returns>
         public object RetrievePasskey()
         {
-            if (this.passPhrase is null || this.passPhrase.Length == 0) return null;
-            return this.passPhrase;
+            return this.passPhrase is null || this.passPhrase.Length == 0 ? null : (object)this.passPhrase;
         }
 
         /// <summary>
@@ -73,8 +72,7 @@ namespace BudgetAnalyser.Encryption
             }
 
             var key1 = this.passPhrase;
-            var key2 = compareTo as SecureString;
-            if (key2 is null)
+            if (compareTo is not SecureString key2)
             {
                 throw new NotSupportedException($"{nameof(SecureStringCredentialStore)} only supports use of SecureStrings.");
             }

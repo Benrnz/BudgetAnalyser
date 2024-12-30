@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public BudgetBucket BudgetBucket
         {
-            get { return this.budgetBucket; }
+            get => this.budgetBucket;
             internal set
             {
                 ValidateBucketSet(value);
@@ -75,11 +75,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 return true;
             }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((LedgerBucket)obj);
+            return obj.GetType() != GetType() ? false : Equals((LedgerBucket)obj);
         }
 
         /// <summary>
@@ -130,11 +126,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         protected bool Equals([CanBeNull] LedgerBucket other)
         {
-            if (other is null)
-            {
-                return false;
-            }
-            return Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
+            return other is null ? false : Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
         }
 
         /// <summary>

@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Dashboard
 
         public Guid CorrelationId
         {
-            get { return this.doNotUseCorrelationId; }
+            get => this.doNotUseCorrelationId;
             private set
             {
                 this.doNotUseCorrelationId = value;
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Dashboard
 
         public bool Shown
         {
-            get { return this.doNotUseShown; }
+            get => this.doNotUseShown;
             set
             {
                 if (value == this.doNotUseShown)

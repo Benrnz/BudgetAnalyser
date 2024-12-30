@@ -65,7 +65,11 @@ namespace BudgetAnalyser.Budget
             get => this.doNotUseFilterDescription;
             set
             {
-                if (value == this.doNotUseFilterDescription) return;
+                if (value == this.doNotUseFilterDescription)
+                {
+                    return;
+                }
+
                 this.doNotUseFilterDescription = value;
                 OnPropertyChanged();
             }
@@ -76,7 +80,11 @@ namespace BudgetAnalyser.Budget
             get => this.doNotUseSelected;
             set
             {
-                if (Equals(value, this.doNotUseSelected)) return;
+                if (Equals(value, this.doNotUseSelected))
+                {
+                    return;
+                }
+
                 this.doNotUseSelected = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanExecuteOkButton));
@@ -116,7 +124,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            EventHandler<BudgetBucketChosenEventArgs> handler = Chosen;
+            var handler = Chosen;
             if (handler is not null)
             {
                 if (message.Response == ShellDialogButton.Cancel)

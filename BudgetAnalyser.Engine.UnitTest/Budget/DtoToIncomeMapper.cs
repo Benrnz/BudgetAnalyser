@@ -11,17 +11,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
     {
         private Income Result { get; set; }
 
-        private IncomeDto TestData
+        private IncomeDto TestData => new IncomeDto
         {
-            get
-            {
-                return new IncomeDto
-                {
-                    Amount = 1444.22M,
-                    BudgetBucketCode = TestDataConstants.IncomeBucketCode
-                };
-            }
-        }
+            Amount = 1444.22M,
+            BudgetBucketCode = TestDataConstants.IncomeBucketCode
+        };
 
         [TestMethod]
         public void ShouldMapAmount()
@@ -38,7 +32,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_IncomeDto_Income(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperIncomeDto2Income(new BucketBucketRepoAlwaysFind());
             Result = subject.ToModel(TestData);
         }
     }

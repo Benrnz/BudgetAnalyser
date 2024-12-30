@@ -37,9 +37,20 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(databaseDependents));
             }
 
-            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
-            if (credentialStore is null) throw new ArgumentNullException(nameof(credentialStore));
-            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            if (monitorableDependencies is null)
+            {
+                throw new ArgumentNullException(nameof(monitorableDependencies));
+            }
+
+            if (credentialStore is null)
+            {
+                throw new ArgumentNullException(nameof(credentialStore));
+            }
+
+            if (logger is null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
 
             this.applicationRepository = applicationRepository;
             this.monitorableDependencies = monitorableDependencies;
@@ -188,12 +199,9 @@ namespace BudgetAnalyser.Engine.Services
 
         public MainApplicationState PreparePersistentStateData()
         {
-            if (this.budgetAnalyserDatabase is null)
-            {
-                return new MainApplicationState();
-            }
-
-            return new MainApplicationState
+            return this.budgetAnalyserDatabase is null
+                ? new MainApplicationState()
+                : new MainApplicationState
             {
                 BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName
             };

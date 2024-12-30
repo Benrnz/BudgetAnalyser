@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.Text;
-using Portable.Xaml;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
+using Portable.Xaml;
 using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger
@@ -163,12 +163,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <exception cref="System.ArgumentNullException"></exception>
         protected virtual string Serialise(LedgerBookDto dataEntity)
         {
-            if (dataEntity is null)
-            {
-                throw new ArgumentNullException(nameof(dataEntity));
-            }
-
-            return XamlServices.Save(dataEntity);
+            return dataEntity is null ? throw new ArgumentNullException(nameof(dataEntity)) : XamlServices.Save(dataEntity);
         }
 
         private static double CalculateChecksum(LedgerBook dataEntity)

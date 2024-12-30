@@ -4,15 +4,9 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC]
-    internal partial class Mapper_ExpenseDto_Expense
+    internal partial class MapperExpenseDto2Expense(IBudgetBucketRepository bucketRepo)
     {
-        private readonly IBudgetBucketRepository bucketRepo;
-
-        public Mapper_ExpenseDto_Expense([NotNull] IBudgetBucketRepository bucketRepo)
-        {
-            if (bucketRepo is null) throw new ArgumentNullException(nameof(bucketRepo));
-            this.bucketRepo = bucketRepo;
-        }
+        private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
 
         partial void ToDtoPostprocessing(ref ExpenseDto dto, Expense model)
         {

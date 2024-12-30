@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             this.testData = new FixedBudgetProjectBucket(FixedProjectCode, "Foo bar dum-de-dum", 1000);
             PrivateAccessor.SetProperty(this.testData, "Created", this.testDataCreatedDate);
 
-            var subject = new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory());
+            var subject = new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory());
             this.result = subject.ToDto(this.testData);
         }
     }

@@ -36,9 +36,8 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is bool)
+            if (e.NewValue is bool visible)
             {
-                var visible = (bool)e.NewValue;
                 if (visible)
                 {
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => this.BankBalance.Focus());
@@ -48,8 +47,11 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnBankBalanceKeyDown(object sender, KeyEventArgs e)
         {
-            var balanceBox = sender as TextBox;
-            if (balanceBox is null) return;
+            if (sender is not TextBox balanceBox)
+            {
+                return;
+            }
+
             switch (e.Key)
             {
                 case Key.Decimal:
@@ -68,8 +70,11 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnBankBalanceKeyUp(object sender, KeyEventArgs e)
         {
-            var balanceBox = sender as TextBox;
-            if (balanceBox is null) return;
+            if (sender is not TextBox balanceBox)
+            {
+                return;
+            }
+
             switch (e.Key)
             {
                 case Key.Back:

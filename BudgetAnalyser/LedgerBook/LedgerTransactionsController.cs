@@ -74,7 +74,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool IsReadOnly
         {
-            get { return this.doNotUseIsReadOnly; }
+            get => this.doNotUseIsReadOnly;
             set
             {
                 this.doNotUseIsReadOnly = value;
@@ -85,7 +85,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerEntry LedgerEntry
         {
-            get { return this.doNotUseLedgerEntry; }
+            get => this.doNotUseLedgerEntry;
             private set
             {
                 this.doNotUseLedgerEntry = value;
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public Account NewTransactionAccount
         {
-            get { return this.doNotUseNewTransactionAccount; }
+            get => this.doNotUseNewTransactionAccount;
             set
             {
                 this.doNotUseNewTransactionAccount = value;
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public decimal NewTransactionAmount
         {
-            get { return this.doNotUseNewTransactionAmount; }
+            get => this.doNotUseNewTransactionAmount;
             set
             {
                 this.doNotUseNewTransactionAmount = value;
@@ -117,7 +117,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public string NewTransactionNarrative
         {
-            get { return this.doNotUseNewTransactionNarrative; }
+            get => this.doNotUseNewTransactionNarrative;
             set
             {
                 this.doNotUseNewTransactionNarrative = value;
@@ -129,7 +129,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool ShowAddingNewTransactionPanel
         {
-            get { return this.doNotUseShowAddingNewTransactionPanel; }
+            get => this.doNotUseShowAddingNewTransactionPanel;
             private set
             {
                 this.doNotUseShowAddingNewTransactionPanel = value;
@@ -141,7 +141,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public string Title
         {
-            get { return this.doNotUseTitle; }
+            get => this.doNotUseTitle;
             private set
             {
                 this.doNotUseTitle = value;
@@ -270,7 +270,7 @@ namespace BudgetAnalyser.LedgerBook
                 LedgerEntry = null;
             }
 
-            EventHandler<LedgerTransactionEventArgs> handler = Complete;
+            var handler = Complete;
             handler?.Invoke(this, new LedgerTransactionEventArgs(this.wasChanged));
 
             Reset();
@@ -315,17 +315,25 @@ namespace BudgetAnalyser.LedgerBook
         private decimal RetrieveOpeningBalance()
         {
             var book = this.ledgerService.LedgerBook;
-            bool found = false;
-            IEnumerable<LedgerEntryLine> remainingRecons = book.Reconciliations.SkipWhile(r =>
+            var found = false;
+            var remainingRecons = book.Reconciliations.SkipWhile(r =>
             {
                 // Find the recon that directly precedes this current one.
-                if (found) return false; // Found recon line on previous pass, now return.
+                if (found)
+                {
+                    return false; // Found recon line on previous pass, now return.
+                }
+
                 found = r.Entries.Contains(LedgerEntry);
                 return true; // Keep skipping...
             }).Take(1);
 
-            LedgerEntryLine previousLine = remainingRecons.FirstOrDefault();
-            if (previousLine is null) return 0M;
+            var previousLine = remainingRecons.FirstOrDefault();
+            if (previousLine is null)
+            {
+                return 0M;
+            }
+
             var previousEntry = previousLine.Entries.FirstOrDefault(l => l.LedgerBucket == LedgerEntry.LedgerBucket);
             return previousEntry?.Balance ?? 0M;
         }
@@ -352,7 +360,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void SaveBalanceAdjustment()
         {
-            LedgerTransaction newTransaction = this.reconService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccount);
+            var newTransaction = this.reconService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccount);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
             OnPropertyChanged(nameof(TransactionsTotal));

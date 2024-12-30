@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [TestMethod]
         public void ShouldMapAllTransactionsEvenWhenFiltered()
         {
-            StatementModel testData = TestData;
+            var testData = TestData;
             testData.Filter(new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 20), EndDate = new DateTime(2013, 08, 19) });
             Act(testData);
 
@@ -58,9 +58,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
 
         private void Act(StatementModel testData)
         {
-            var subject = new Mapper_TransactionSetDto_StatementModel(
+            var subject = new MapperTransactionSetDto2StatementModel(
                 new FakeLogger(),
-                new Mapper_TransactionDto_Transaction(
+                new MapperTransactionDto2Transaction(
                     new InMemoryAccountTypeRepository(),
                     new BucketBucketRepoAlwaysFind(),
                     new InMemoryTransactionTypeRepository()));

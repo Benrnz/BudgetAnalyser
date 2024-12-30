@@ -58,7 +58,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
             Subject.SeriesList.Add(Series3);
 
             var seriesNumber = 0;
-            foreach (SeriesData series in Subject.SeriesList)
+            foreach (var series in Subject.SeriesList)
             {
                 for (var index = 0; index < 31; index++)
                 {

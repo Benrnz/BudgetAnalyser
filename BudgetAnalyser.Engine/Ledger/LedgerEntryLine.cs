@@ -132,10 +132,10 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             get
             {
-                IEnumerable<BankBalance> adjustedBalances =
+                var adjustedBalances =
                     BankBalances.Select(
                                         b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
-                IEnumerable<BankBalance> results = Entries.GroupBy(
+                var results = Entries.GroupBy(
                                                                    e => e.LedgerBucket.StoredInAccount,
                                                                    (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
                 return

@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public IEnumerable<Transaction> AllTransactions
         {
-            get { return this.doNotUseAllTransactions; }
+            get => this.doNotUseAllTransactions;
 
             private set
             {
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public int DurationInMonths
         {
-            get { return this.doNotUseDurationInMonths; }
+            get => this.doNotUseDurationInMonths;
 
             private set
             {
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public IEnumerable<Transaction> Transactions
         {
-            get { return this.doNotUseTransactions; }
+            get => this.doNotUseTransactions;
 
             private set
             {
@@ -158,7 +158,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <param name="transactions">The list of transactions to use to determine duration.</param>
         public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
         {
-            List<Transaction> list = transactions.ToList();
+            var list = transactions.ToList();
             DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
 
             if (criteria is not null && !criteria.Cleared)
@@ -233,7 +233,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            IEnumerable<Transaction> query = BaseFilterQuery(criteria);
+            var query = BaseFilterQuery(criteria);
 
             Transactions = query.ToList();
             DurationInMonths = CalculateDuration(criteria, Transactions);
@@ -251,16 +251,7 @@ namespace BudgetAnalyser.Engine.Statement
             ThrowIfDisposed();
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
-            List<Transaction> listOfTransactions;
-            if (transactions is null)
-            {
-                listOfTransactions = new List<Transaction>();
-            }
-            else
-            {
-                listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
-            }
-
+            var listOfTransactions = transactions is null ? new List<Transaction>() : transactions.OrderBy(t => t.Date).ToList();
             Transactions = listOfTransactions;
             AllTransactions = Transactions;
             if (listOfTransactions.Any())
@@ -294,7 +285,7 @@ namespace BudgetAnalyser.Engine.Statement
                 StorageKey = StorageKey
             };
 
-            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
+            var mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
             combinedModel.LoadTransactions(mergedTransactions);
             return combinedModel;
         }
@@ -377,7 +368,7 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 AllTransactions = new List<Transaction>();
             }
-            List<Transaction> mergedTransactions =
+            var mergedTransactions =
                 AllTransactions.ToList().Merge(new[] { splinterTransaction1, splinterTransaction2 }).ToList();
             AllTransactions = mergedTransactions;
             splinterTransaction1.PropertyChanged += OnTransactionPropertyChanged;
@@ -398,7 +389,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             minDate ??= DateTime.MinValue;
             maxDate ??= DateTime.MaxValue;
-            List<IGrouping<int, Transaction>> query =
+            var query =
                 Transactions
                     .Where(t => t.Date >= minDate && t.Date <= maxDate)
                     .GroupBy(t => t.GetEqualityHashCode(), t => t)
@@ -425,7 +416,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return AllTransactions.ToList();
             }
 
-            IEnumerable<Transaction> query = AllTransactions;
+            var query = AllTransactions;
             if (criteria.BeginDate is not null)
             {
                 query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);

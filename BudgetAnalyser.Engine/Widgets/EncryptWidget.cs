@@ -38,16 +38,13 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             var newAppDb = (ApplicationDatabase)input[0];
-            if (newAppDb is null)
+            this.appDb = newAppDb is null ? null : newAppDb;
+
+            if (this.appDb is null)
             {
-                this.appDb = null;
-            }
-            else
-            {
-                this.appDb = newAppDb;
+                return;
             }
 
-            if (this.appDb is null) return;
             WidgetActivated();
         }
 
@@ -56,7 +53,11 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public void WidgetActivated()
         {
-            if (this.appDb is null) return;
+            if (this.appDb is null)
+            {
+                return;
+            }
+
             Enabled = true;
             if (this.appDb.IsEncrypted)
             {

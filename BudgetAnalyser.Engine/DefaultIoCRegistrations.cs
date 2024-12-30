@@ -19,14 +19,21 @@ namespace BudgetAnalyser.Engine
         /// <returns>The found named instance, or null if no instance matches the name.</returns>
         public static T GetNamedInstance<T>([NotNull] IEnumerable<T> instances, string name) where T : class
         {
-            if (instances is null) throw new ArgumentNullException(nameof(instances));
+            if (instances is null)
+            {
+                throw new ArgumentNullException(nameof(instances));
+            }
+
             foreach (var instance in instances)
             {
-                IEnumerable<AutoRegisterWithIoCAttribute> attributes = instance.GetType().GetTypeInfo().GetCustomAttributes<AutoRegisterWithIoCAttribute>();
+                var attributes = instance.GetType().GetTypeInfo().GetCustomAttributes<AutoRegisterWithIoCAttribute>();
                 var attribute = attributes.FirstOrDefault();
                 if (attribute is not null)
                 {
-                    if (attribute.Named == name) return instance;
+                    if (attribute.Named == name)
+                    {
+                        return instance;
+                    }
                 }
             }
 
@@ -47,7 +54,7 @@ namespace BudgetAnalyser.Engine
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            Type[] allTypes = assembly.GetTypes()
+            var allTypes = assembly.GetTypes()
                 .Where(t =>
                 {
                     var typeInfo = t.GetTypeInfo();
@@ -84,7 +91,7 @@ namespace BudgetAnalyser.Engine
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            Type[] allTypes = assembly.GetTypes()
+            var allTypes = assembly.GetTypes()
                 .Where(t =>
                 {
                     var typeInfo = t.GetTypeInfo();

@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             var lines = new List<LedgerEntryLineDto>();
 
-            LedgerEntryLineDto line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
+            var line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
             line1.Entries.AddRange(
                 new[]
                 {
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
+            var line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
             line2.Entries.AddRange(
                 new[]
                 {
@@ -144,7 +144,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
+            var line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
             line3.Entries.AddRange(
                 new[]
                 {
@@ -213,7 +213,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             var lines = new List<LedgerEntryLineDto>();
 
-            LedgerEntryLineDto line1 = AddEntryLineForTestData2(lines, new DateTime(2013, 12, 20));
+            var line1 = AddEntryLineForTestData2(lines, new DateTime(2013, 12, 20));
             line1.Entries.AddRange(
                 new[]
                 {
@@ -264,7 +264,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line2 = AddEntryLineForTestData2(lines, new DateTime(2014, 1, 20));
+            var line2 = AddEntryLineForTestData2(lines, new DateTime(2014, 1, 20));
             line2.Entries.AddRange(
                 new[]
                 {
@@ -312,7 +312,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line3 = AddEntryLineForTestData2(lines, new DateTime(2014, 02, 20));
+            var line3 = AddEntryLineForTestData2(lines, new DateTime(2014, 02, 20));
             line3.Entries.AddRange(
                 new[]
                 {
@@ -399,7 +399,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             var lines = new List<LedgerEntryLineDto>();
 
-            LedgerEntryLineDto line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
+            var line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
             line1.Entries.AddRange(
                 new[]
                 {
@@ -464,7 +464,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
+            var line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
             line2.Entries.AddRange(
                 new[]
                 {
@@ -512,7 +512,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
+            var line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
             line3.Entries.AddRange(
                 new[]
                 {
@@ -626,9 +626,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 return;
             }
 
-            foreach (LedgerEntryDto entry in currentLine.Entries)
+            foreach (var entry in currentLine.Entries)
             {
-                LedgerEntryDto previousEntry = previousLine.Entries.Single(e => e.BucketCode == entry.BucketCode);
+                var previousEntry = previousLine.Entries.Single(e => e.BucketCode == entry.BucketCode);
                 entry.Balance = previousEntry.Balance + entry.Transactions.Sum(t => t.Amount);
                 if (entry.Balance < 0)
                 {

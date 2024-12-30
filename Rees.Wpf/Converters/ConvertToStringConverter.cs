@@ -45,12 +45,9 @@ namespace Rees.Wpf.Converters
                 return System.Convert.ToInt64(value).ToString(parameter.ToString());
             }
 
-            if (value is decimal || value is double || value is float)
-            {
-                return System.Convert.ToDouble(value).ToString(parameter.ToString());
-            }
-
-            return value.ToString();
+            return value is decimal || value is double || value is float
+                ? System.Convert.ToDouble(value).ToString(parameter.ToString())
+                : (object?)value.ToString();
         }
 
         /// <summary>

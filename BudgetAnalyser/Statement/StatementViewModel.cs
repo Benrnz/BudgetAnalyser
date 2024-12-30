@@ -15,7 +15,7 @@ public class StatementViewModel : ObservableRecipient
     private bool doNotUseDirty;
     private string doNotUseDuplicateSummary;
     private Transaction doNotUseSelectedRow;
-    private bool doNotUseSortByDate;
+    private readonly bool doNotUseSortByDate;
     private StatementModel doNotUseStatement;
     private ObservableCollection<Transaction> doNotUseTransactions;
     private ITransactionManagerService transactionService;
@@ -88,18 +88,7 @@ public class StatementViewModel : ObservableRecipient
         }
     }
 
-    public string StatementName
-    {
-        get
-        {
-            if (Statement is not null)
-            {
-                return Path.GetFileNameWithoutExtension(Statement.StorageKey);
-            }
-
-            return "[No Transactions Loaded]";
-        }
-    }
+    public string StatementName => Statement is not null ? Path.GetFileNameWithoutExtension(Statement.StorageKey) : "[No Transactions Loaded]";
 
     public decimal TotalCount => this.transactionService.TotalCount;
     public decimal TotalCredits => this.transactionService.TotalCredits;

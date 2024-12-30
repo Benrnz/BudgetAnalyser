@@ -50,14 +50,8 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Gets the current active budget.
         /// </summary>
-        public BudgetModel CurrentActiveBudget
-        {
-            get
-            {
-                return this.OrderByDescending(b => b.EffectiveFrom)
+        public BudgetModel CurrentActiveBudget => this.OrderByDescending(b => b.EffectiveFrom)
                     .FirstOrDefault(b => b.EffectiveFrom <= DateTime.Now);
-            }
-        }
 
         internal BudgetModel this[int index] => this.budgetStorage.ElementAt(index).Value;
 
@@ -136,13 +130,8 @@ namespace BudgetAnalyser.Engine.Budget
         public IEnumerable<BudgetModel> ForDates(DateTime beginInclusive, DateTime endInclusive)
         {
             var budgets = new List<BudgetModel>();
-            var firstEffectiveBudget = ForDate(beginInclusive);
-            if (firstEffectiveBudget is null)
-            {
-                throw new BudgetException(
+            var firstEffectiveBudget = ForDate(beginInclusive) ?? throw new BudgetException(
                     "The period covered by the dates given overlaps a period where no budgets are available.");
-            }
-
             budgets.Add(firstEffectiveBudget);
             budgets.AddRange(this.Where(b => b.EffectiveFrom >= beginInclusive && b.EffectiveFrom < endInclusive));
             return budgets;
@@ -158,12 +147,7 @@ namespace BudgetAnalyser.Engine.Budget
                 return false;
             }
 
-            if (IsCurrentBudget(budget))
-            {
-                return false;
-            }
-
-            return this.Any(b => b.EffectiveFrom <= budget.EffectiveFrom);
+            return IsCurrentBudget(budget) ? false : this.Any(b => b.EffectiveFrom <= budget.EffectiveFrom);
         }
 
         /// <summary>
@@ -182,12 +166,7 @@ namespace BudgetAnalyser.Engine.Budget
             Justification = "Better for consistency with other methods here")]
         public bool IsFutureBudget([NotNull] BudgetModel budget)
         {
-            if (budget is null)
-            {
-                throw new ArgumentNullException(nameof(budget));
-            }
-
-            return budget.EffectiveFrom > DateTime.Now;
+            return budget is null ? throw new ArgumentNullException(nameof(budget)) : budget.EffectiveFrom > DateTime.Now;
         }
 
         internal virtual int IndexOf(BudgetModel budget)

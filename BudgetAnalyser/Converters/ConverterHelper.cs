@@ -80,27 +80,23 @@ namespace BudgetAnalyser.Converters
             {
                 return (decimal)value;
             }
-            if (value is double)
+            if (value is double doublenumber)
             {
-                var doublenumber = (double)value;
                 return Convert.ToDecimal(doublenumber);
             }
-            if (value is int)
+            if (value is int intNumber)
             {
-                var intNumber = (int)value;
                 return Convert.ToDecimal(intNumber);
             }
-            if (value is long)
+            if (value is long longNumber)
             {
-                var longNumber = (long)value;
                 return Convert.ToDecimal(longNumber);
             }
 
             var stringValue = value as string;
             if (stringValue is not null)
             {
-                decimal number;
-                if (decimal.TryParse(stringValue, out number))
+                if (decimal.TryParse(stringValue, out var number))
                 {
                     return number;
                 }

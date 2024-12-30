@@ -56,7 +56,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseAddBalanceVisibility;
         private set
         {
-            if (value == this.doNotUseAddBalanceVisibility) return;
+            if (value == this.doNotUseAddBalanceVisibility)
+            {
+                return;
+            }
+
             this.doNotUseAddBalanceVisibility = value;
             OnPropertyChanged();
         }
@@ -64,17 +68,18 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public ICommand AddBankBalanceCommand => new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
 
-    public decimal? AdjustedBankBalanceTotal
-    {
-        get { return AddBalanceVisibility ? default(decimal?) : BankBalances.Sum(b => b.AdjustedBalance); }
-    }
+    public decimal? AdjustedBankBalanceTotal => AddBalanceVisibility ? default(decimal?) : BankBalances.Sum(b => b.AdjustedBalance);
 
     public IEnumerable<Account> BankAccounts
     {
         get => this.doNotUseBankAccounts;
         private set
         {
-            if (Object.ReferenceEquals(value, this.doNotUseBankAccounts)) return;
+            if (object.ReferenceEquals(value, this.doNotUseBankAccounts))
+            {
+                return;
+            }
+
             this.doNotUseBankAccounts = value;
             OnPropertyChanged();
         }
@@ -85,7 +90,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseBankBalance;
         set
         {
-            if (value == this.doNotUseBankBalance) return;
+            if (value == this.doNotUseBankBalance)
+            {
+                return;
+            }
+
             this.doNotUseBankBalance = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(BankBalanceTotal));
@@ -99,18 +108,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     public bool Canceled { get; private set; }
     public bool CanExecuteCancelButton => true;
 
-    public bool CanExecuteOkButton
-    {
-        get
-        {
-            if (CreateMode)
-            {
-                return Date != DateTime.MinValue && HasRequiredBalances;
-            }
-
-            return Editable && Date != DateTime.MinValue && HasRequiredBalances;
-        }
-    }
+    public bool CanExecuteOkButton => CreateMode ? Date != DateTime.MinValue && HasRequiredBalances : Editable && Date != DateTime.MinValue && HasRequiredBalances;
 
     public bool CanExecuteSaveButton => false;
     public string CloseButtonToolTip => "Cancel";
@@ -121,7 +119,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseDate;
         set
         {
-            if (Equals(value, this.doNotUseDate)) return;
+            if (Equals(value, this.doNotUseDate))
+            {
+                return;
+            }
+
             this.doNotUseDate = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -133,7 +135,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseEditable;
         private set
         {
-            if (Equals(value, this.doNotUseEditable)) return;
+            if (Equals(value, this.doNotUseEditable))
+            {
+                return;
+            }
+
             this.doNotUseEditable = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -220,12 +226,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             return false;
         }
 
-        if (!AddBalanceVisibility)
-        {
-            return true;
-        }
-
-        return SelectedBankAccount is not null;
+        return !AddBalanceVisibility ? true : SelectedBankAccount is not null;
     }
 
     private void OnAddBankBalanceCommandExecuted()
@@ -294,7 +295,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
                 }
             }
 
-            EventHandler<EditBankBalancesEventArgs> handler = Complete;
+            var handler = Complete;
             handler?.Invoke(this, new EditBankBalancesEventArgs { Canceled = Canceled });
         }
         finally
@@ -315,7 +316,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private void ShowDialogCommon(string title)
     {
         Canceled = false;
-        List<Account> accountsToShow = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
+        var accountsToShow = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
         BankAccounts = accountsToShow.OrderBy(a => a.Name);
         SelectedBankAccount = null;
         if (CreateMode)

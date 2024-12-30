@@ -11,12 +11,7 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool)
-            {
-                return (bool)value ? "And" : "Or";
-            }
-
-            return null;
+            return value is bool ? (bool)value ? "And" : "Or" : (object?)null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -37,7 +37,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions1();
+        var transactions = CreateTransactions1();
         statement.LoadTransactions(transactions);
         return statement;
     }
@@ -54,7 +54,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions2();
+        var transactions = CreateTransactions2();
         statement.LoadTransactions(transactions);
         return statement;
     }
@@ -92,7 +92,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions3();
+        var transactions = CreateTransactions3();
         statement.LoadTransactions(transactions);
         return statement;
     }
@@ -111,7 +111,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        List<Transaction> transactions = CreateTransactions3().ToList();
+        var transactions = CreateTransactions3().ToList();
         transactions.AddRange(CreateTransactions1());
         statement.LoadTransactions(transactions);
         return statement;
@@ -132,7 +132,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions5();
+        var transactions = CreateTransactions5();
         statement.LoadTransactions(transactions);
         return statement;
     }

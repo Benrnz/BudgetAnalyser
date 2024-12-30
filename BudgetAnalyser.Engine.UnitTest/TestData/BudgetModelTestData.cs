@@ -28,8 +28,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 {
                     CreateTestData1(),
                     CreateTestData2()
-                });
-            collection.StorageKey = @"C:\Temp\Foo.xaml";
+                })
+            {
+                StorageKey = @"C:\Temp\Foo.xaml"
+            };
             return collection;
         }
 

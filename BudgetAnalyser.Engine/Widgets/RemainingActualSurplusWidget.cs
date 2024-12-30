@@ -20,7 +20,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
     private StatementModel statement;
     private IBudgetCurrencyContext budget;
     private ILogger logger;
-    private ILogger nullLogger = new NullLogger();
+    private readonly ILogger nullLogger = new NullLogger();
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RemainingActualSurplusWidget" /> class.
@@ -34,7 +34,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         this.standardStyle = "WidgetStandardStyle3";
     }
 
-    private ILogger Logger { get => this.logger == this.nullLogger ? null : this.logger; }
+    private ILogger Logger => this.logger == this.nullLogger ? null : this.logger;
 
     /// <summary>
     ///     Updates the widget with new input.
@@ -101,14 +101,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         Maximum = Convert.ToDouble(openingBalance);
         Value = Convert.ToDouble(remainingBalance);
         Minimum = 0;
-        if (remainingBalance < 0.2M * openingBalance)
-        {
-            ColourStyleName = WidgetWarningStyle;
-        }
-        else
-        {
-            ColourStyleName = this.standardStyle;
-        }
+        ColourStyleName = remainingBalance < 0.2M * openingBalance ? WidgetWarningStyle : this.standardStyle;
 
         ToolTip = $"Remaining Surplus for period is {remainingBalance:C} of {openingBalance:C} {remainingBalance / openingBalance:P0}";
     }

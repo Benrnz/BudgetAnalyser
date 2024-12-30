@@ -117,13 +117,11 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         {
             panel.Children.Add(textBlock);
         }
-        else if (decorator is not null)
-        {
-            decorator.Child = textBlock;
-        }
         else
         {
-            throw new ArgumentException($"{nameof(parent)} is not a Panel nor a Decorator", nameof(parent));
+            decorator.Child = decorator is not null
+                ? (UIElement)textBlock
+                : throw new ArgumentException($"{nameof(parent)} is not a Panel nor a Decorator", nameof(parent));
         }
 
         return textBlock;
@@ -534,12 +532,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private object FindResource(string resourceName)
     {
         var localResource = this.localResources[resourceName];
-        if (localResource is not null)
-        {
-            return localResource;
-        }
-
-        return Application.Current.FindResource(resourceName);
+        return localResource is not null ? localResource : Application.Current.FindResource(resourceName);
     }
 
     private static Brush StripColour(LedgerBucket ledger)
@@ -549,11 +542,6 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
             return ConverterHelper.SpentPeriodicallyBucketBrush;
         }
 
-        if (ledger.BudgetBucket is SavedUpForExpenseBucket)
-        {
-            return ConverterHelper.AccumulatedBucketBrush;
-        }
-
-        return ConverterHelper.TileBackgroundBrush;
+        return ledger.BudgetBucket is SavedUpForExpenseBucket ? ConverterHelper.AccumulatedBucketBrush : ConverterHelper.TileBackgroundBrush;
     }
 }

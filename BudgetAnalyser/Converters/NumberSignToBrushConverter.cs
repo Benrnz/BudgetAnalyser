@@ -10,14 +10,9 @@ namespace BudgetAnalyser.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var stringParameter = parameter as string;
-            bool light = stringParameter is not null && stringParameter == "Light";
-            decimal? number = ConverterHelper.ParseNumber(value);
-            if (number is null)
-            {
-                return ConverterHelper.TransparentBrush;
-            }
-
-            return ConvertToBrush(number.Value, light);
+            var light = stringParameter is not null && stringParameter == "Light";
+            var number = ConverterHelper.ParseNumber(value);
+            return number is null ? ConverterHelper.TransparentBrush : (object)ConvertToBrush(number.Value, light);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -29,17 +24,9 @@ namespace BudgetAnalyser.Converters
         {
             if (light)
             {
-                if (number < 0)
-                {
-                    return ConverterHelper.DebitBackground2Brush;
-                }
-                return ConverterHelper.CreditBackground2Brush;
+                return number < 0 ? ConverterHelper.DebitBackground2Brush : ConverterHelper.CreditBackground2Brush;
             }
-            if (number < 0)
-            {
-                return ConverterHelper.DebitBackground1Brush;
-            }
-            return ConverterHelper.CreditBackground1Brush;
+            return number < 0 ? ConverterHelper.DebitBackground1Brush : ConverterHelper.CreditBackground1Brush;
         }
     }
 }

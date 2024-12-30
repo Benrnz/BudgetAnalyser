@@ -40,7 +40,11 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
         get => this.doNotUseBudgetCycle;
         set
         {
-            if (value == this.doNotUseBudgetCycle) return;
+            if (value == this.doNotUseBudgetCycle)
+            {
+                return;
+            }
+
             this.doNotUseBudgetCycle = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(FortnightlyChecked));
@@ -69,7 +73,11 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
         get => this.doNotUseEffectiveFrom;
         set
         {
-            if (value == this.doNotUseEffectiveFrom) return;
+            if (value == this.doNotUseEffectiveFrom)
+            {
+                return;
+            }
+
             this.doNotUseEffectiveFrom = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteSaveButton));

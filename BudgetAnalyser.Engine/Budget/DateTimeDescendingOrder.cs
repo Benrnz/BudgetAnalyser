@@ -11,11 +11,7 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 return 1;
             }
-            if (x > y)
-            {
-                return -1;
-            }
-            return 0;
+            return x > y ? -1 : 0;
         }
     }
 }

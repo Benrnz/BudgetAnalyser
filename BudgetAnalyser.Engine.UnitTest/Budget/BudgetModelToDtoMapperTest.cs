@@ -15,70 +15,70 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void EffectiveFromShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.EffectiveFrom, result.EffectiveFrom);
         }
 
         [TestMethod]
         public void ExpensesBucketsShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.IsTrue(result.Expenses.All(dto => !string.IsNullOrWhiteSpace(dto.BudgetBucketCode)));
         }
 
         [TestMethod]
         public void ExpensesCountShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Expenses.Count(), result.Expenses.Count);
         }
 
         [TestMethod]
         public void ExpensesSumShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Expenses.Sum(i => i.Amount), result.Expenses.Sum(i => i.Amount));
         }
 
         [TestMethod]
         public void IncomesBucketsShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.IsTrue(result.Incomes.All(dto => !string.IsNullOrWhiteSpace(dto.BudgetBucketCode)));
         }
 
         [TestMethod]
         public void IncomesCountShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Incomes.Count(), result.Incomes.Count);
         }
 
         [TestMethod]
         public void IncomesSumShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Incomes.Sum(i => i.Amount), result.Incomes.Sum(i => i.Amount));
         }
 
         [TestMethod]
         public void LastModifiedCommentShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.LastModifiedComment, result.LastModifiedComment);
         }
 
         [TestMethod]
         public void LastModifiedDateShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.LastModified, result.LastModified);
         }
 
         [TestMethod]
         public void NameShouldBeMapped()
         {
-            BudgetModelDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Name, result.Name);
         }
 
@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [Description("A test designed to break when new properties are added to the BudgetModelDto. This is a trigger to update the mappers.")]
         public void NumberOfDataBudgetModelPropertiesShouldBe7()
         {
-            int dataProperties = typeof(BudgetModelDto).CountProperties();
+            var dataProperties = typeof(BudgetModelDto).CountProperties();
             Assert.AreEqual(7, dataProperties);
         }
 
@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
         private BudgetModelDto ArrangeAndAct()
         {
-            var mapper = new Mapper_BudgetModelDto_BudgetModel(new BucketBucketRepoAlwaysFind());
+            var mapper = new MapperBudgetModelDtoBudgetModel(new BucketBucketRepoAlwaysFind());
             return mapper.ToDto(TestData);
         }
     }

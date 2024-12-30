@@ -62,9 +62,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             await subject.SaveAsync(LedgerBookTestData.TestData2(), "Foo.xml", false);
 
             var serialisedData = subject.SerialisedData;
-            int checksumPosition = serialisedData.IndexOf("CheckSum=\"", StringComparison.OrdinalIgnoreCase);
-            int checksumLength = serialisedData.IndexOf('"', checksumPosition + 11) - checksumPosition;
-            string serialisedCheckSum = serialisedData.Substring(checksumPosition + 10, checksumLength - 10);
+            var checksumPosition = serialisedData.IndexOf("CheckSum=\"", StringComparison.OrdinalIgnoreCase);
+            var checksumLength = serialisedData.IndexOf('"', checksumPosition + 11) - checksumPosition;
+            var serialisedCheckSum = serialisedData.Substring(checksumPosition + 10, checksumLength - 10);
 
             Assert.AreEqual(8435.06, double.Parse(serialisedCheckSum));
         }
@@ -207,9 +207,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             await subject2.LoadAsync("foo", false);
             bookDto = subject2.LedgerBookDto;
 
-            int checksumPosition = serialisedData.IndexOf("CheckSum=\"", StringComparison.OrdinalIgnoreCase);
-            int checksumLength = serialisedData.IndexOf('"', checksumPosition + 11) - checksumPosition;
-            string serialisedCheckSum = serialisedData.Substring(checksumPosition + 10, checksumLength - 10);
+            var checksumPosition = serialisedData.IndexOf("CheckSum=\"", StringComparison.OrdinalIgnoreCase);
+            var checksumLength = serialisedData.IndexOf('"', checksumPosition + 11) - checksumPosition;
+            var serialisedCheckSum = serialisedData.Substring(checksumPosition + 10, checksumLength - 10);
 
             Assert.AreEqual(double.Parse(serialisedCheckSum), bookDto.Checksum);
         }
@@ -232,7 +232,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var accountRepo = new InMemoryAccountTypeRepository();
             var bucketRepo = new BucketBucketRepoAlwaysFind();
-            this.mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
+            this.mapper = new MapperLedgerBookDto2LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
             this.mockReaderWriterSelector = new Mock<IReaderWriterSelector>();
             this.mockReaderWriter = new Mock<IFileReaderWriter>();
             this.mockReaderWriterSelector.Setup(m => m.SelectReaderWriter(It.IsAny<bool>())).Returns(this.mockReaderWriter.Object);

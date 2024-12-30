@@ -64,11 +64,12 @@ namespace BudgetAnalyser.LedgerBook
 
         private bool IsOkToSave()
         {
-            if (!TransferFundsDto.IsValid) return false;
-            if (TransferFundsDto.BankTransferRequired)
-                return BankTransferConfirmed;
+            if (!TransferFundsDto.IsValid)
+            {
+                return false;
+            }
 
-            return true;
+            return TransferFundsDto.BankTransferRequired ? BankTransferConfirmed : true;
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

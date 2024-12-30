@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public string BucketCode
         {
-            get { return this.doNotUseBucketCode; }
+            get => this.doNotUseBucketCode;
             set
             {
                 this.doNotUseBucketCode = value;
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public string Id
         {
-            get { return this.doNotUseId; }
+            get => this.doNotUseId;
             set
             {
                 this.doNotUseId = value;
@@ -134,14 +134,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 remainingBudget, totalSpend);
             DetailedText = string.Format(CultureInfo.CurrentCulture, "{0} Project", bucket.SubCode);
 
-            if (remainingBudget < 0.1M * totalBudget)
-            {
-                ColourStyleName = WidgetWarningStyle;
-            }
-            else
-            {
-                ColourStyleName = this.standardStyle;
-            }
+            ColourStyleName = remainingBudget < 0.1M * totalBudget ? WidgetWarningStyle : this.standardStyle;
         }
     }
 }

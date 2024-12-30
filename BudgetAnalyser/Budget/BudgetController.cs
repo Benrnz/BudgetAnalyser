@@ -77,7 +77,11 @@ public class BudgetController : ControllerBase, IShowableController
 
         set
         {
-            if (Equals(value, this.BudgetMenuItemName)) return;
+            if (Equals(value, BudgetMenuItemName))
+            {
+                return;
+            }
+
             this.budgetMenuItemName = value;
             OnPropertyChanged();
         }
@@ -130,7 +134,11 @@ public class BudgetController : ControllerBase, IShowableController
         get => this.doNotUseDirty;
         private set
         {
-            if (value == this.doNotUseDirty) return;
+            if (value == this.doNotUseDirty)
+            {
+                return;
+            }
+
             this.doNotUseDirty = value;
             OnPropertyChanged();
             if (Dirty)
@@ -150,7 +158,11 @@ public class BudgetController : ControllerBase, IShowableController
 
         private set
         {
-            if (value == this.expenseTotal) return;
+            if (value == this.expenseTotal)
+            {
+                return;
+            }
+
             this.expenseTotal = value;
             OnPropertyChanged();
         }
@@ -165,7 +177,11 @@ public class BudgetController : ControllerBase, IShowableController
 
         private set
         {
-            if (value == this.incomeTotal) return;
+            if (value == this.incomeTotal)
+            {
+                return;
+            }
+
             this.incomeTotal = value;
             OnPropertyChanged();
         }
@@ -185,7 +201,11 @@ public class BudgetController : ControllerBase, IShowableController
         get => this.surplus;
         private set
         {
-            if (value == this.surplus) return;
+            if (value == this.surplus)
+            {
+                return;
+            }
+
             this.surplus = value;
             OnPropertyChanged();
         }
@@ -200,7 +220,11 @@ public class BudgetController : ControllerBase, IShowableController
 
         set
         {
-            if (value == this.doNotUseShownBudget) return;
+            if (value == this.doNotUseShownBudget)
+            {
+                return;
+            }
+
             this.doNotUseShownBudget = value;
             OnPropertyChanged();
             BudgetMenuItemName = this.doNotUseShownBudget ? CloseBudgetMenuName : EditBudgetMenuName;
@@ -260,13 +284,11 @@ public class BudgetController : ControllerBase, IShowableController
         {
             newExpense.Bucket = new SpentPerPeriodExpenseBucket(string.Empty, string.Empty);
         }
-        else if (expense is SavedUpForExpenseBucket)
-        {
-            newExpense.Bucket = new SavedUpForExpenseBucket(string.Empty, string.Empty);
-        }
         else
         {
-            throw new InvalidCastException("Invalid type passed to Add New Expense: " + expense);
+            newExpense.Bucket = expense is SavedUpForExpenseBucket
+                ? (BudgetBucket)new SavedUpForExpenseBucket(string.Empty, string.Empty)
+                : throw new InvalidCastException("Invalid type passed to Add New Expense: " + expense);
         }
 
         Expenses.RaiseListChangedEvents = true;

@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.UnitTest
     {
         public static int CountProperties(this Type instance)
         {
-            PropertyInfo[] properties = instance.GetProperties();
+            var properties = instance.GetProperties();
             properties.ToList().ForEach(p => Console.WriteLine(p.Name));
             return properties.Length;
         }

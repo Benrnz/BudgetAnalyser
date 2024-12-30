@@ -38,8 +38,8 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 
         private void CreateBalanceAdjustmentForBudgetAmounts()
         {
-            List<TransferTask> transferTasks = TodoTasks.OfType<TransferTask>().ToList();
-            foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
+            var transferTasks = TodoTasks.OfType<TransferTask>().ToList();
+            foreach (var grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
             // Rather than create a task, just do it
             {
                 NewReconLine.BalanceAdjustment(
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                                                grouping.Key);
             }
 
-            foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
+            foreach (var grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
             // Rather than create a task, just do it
             {
                 NewReconLine.BalanceAdjustment(

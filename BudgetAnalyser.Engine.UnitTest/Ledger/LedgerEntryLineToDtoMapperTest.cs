@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             get
             {
-                LedgerBook book = LedgerBookTestData.TestData4();
+                var book = LedgerBookTestData.TestData4();
                 return book.Reconciliations.First();
             }
         }
@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void TestInitialise()
         {
             var accountRepo = new InMemoryAccountTypeRepository();
-            var subject = new Mapper_LedgerEntryLineDto_LedgerEntryLine(accountRepo, new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory());
+            var subject = new MapperLedgerEntryLineDto2LedgerEntryLine(accountRepo, new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory());
             Result = subject.ToDto(TestData);
         }
     }

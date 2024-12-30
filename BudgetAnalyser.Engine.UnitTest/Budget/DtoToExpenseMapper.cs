@@ -11,17 +11,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
     {
         private Expense Result { get; set; }
 
-        private ExpenseDto TestData
+        private ExpenseDto TestData => new ExpenseDto
         {
-            get
-            {
-                return new ExpenseDto
-                {
-                    Amount = 1444.22M,
-                    BudgetBucketCode = TestDataConstants.DoctorBucketCode
-                };
-            }
-        }
+            Amount = 1444.22M,
+            BudgetBucketCode = TestDataConstants.DoctorBucketCode
+        };
 
         [TestMethod]
         public void ShouldMapAmount()
@@ -38,7 +32,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_ExpenseDto_Expense(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperExpenseDto2Expense(new BucketBucketRepoAlwaysFind());
             Result = subject.ToModel(TestData);
         }
     }

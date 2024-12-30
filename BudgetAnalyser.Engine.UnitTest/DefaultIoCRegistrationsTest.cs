@@ -21,11 +21,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         ///     The interface exclude list.
         ///     This is used to exclude interfaces that do not need to be registered with the IoC container.
         /// </summary>
-        private List<Type> ExemptionList
-        {
-            get
-            {
-                return new List<Type>
+        private List<Type> ExemptionList => new List<Type>
                 {
                     typeof(ILogger), // Logger is instantiated with a custom registration. 
                     typeof(IModelValidate), // Used to indicate support for standard validation.
@@ -39,8 +35,6 @@ namespace BudgetAnalyser.Engine.UnitTest
                     typeof(IEnvironmentFolders), // Must be implemented in the UI project as it is platform dependent.
                     typeof(IPersistentApplicationStateObject) // Used to consistently implement a grain or persistent application data. This does not need to be registered with an IoC container.
                 };
-            }
-        }
 
         [TestMethod]
         [Description("This test is not a functional test, but is designed to detect new interfaces that have not been assigned to a concrete type with the AutoRegisterWithIoCAttribute or added to" +
@@ -49,16 +43,20 @@ namespace BudgetAnalyser.Engine.UnitTest
         {
             try
             {
-                List<DependencyRegistrationRequirement> dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(StatementModel).Assembly).ToList();
+                var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(StatementModel).Assembly).ToList();
                 dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(SecureStringCredentialStore).Assembly));
 
-                IEnumerable<Type> interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
+                var interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
 
-                List<string> exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();
+                var exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();
                 foreach (var interfaceType in interfaces.Except(ExemptionList))
                 {
                     Console.Write("Interface: {0}", interfaceType.Name);
-                    if (exemptionListNames.Contains(interfaceType.FullName)) continue;
+                    if (exemptionListNames.Contains(interfaceType.FullName))
+                    {
+                        continue;
+                    }
+
                     if (!dependencies.Any(d => d.AdditionalRegistrationType == interfaceType || IsSelfRegistered(interfaceType, d)))
                     {
                         Assert.Fail($"Interface: {interfaceType.FullName} is not registered.");
@@ -81,7 +79,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         public void ProcessPropertyInjection_ShouldBeAbleToAssignLoggerToProperty()
         {
             var logger = new FakeLogger();
-            IEnumerable<PropertyInjectionDependencyRequirement> result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
+            var result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
             result.First().PropertyInjectionAssignment(logger);
 
             Assert.AreSame(logger, AutoRegisterWithIoCProcessorPropertyInjectionTestSource.Logger);
@@ -90,14 +88,14 @@ namespace BudgetAnalyser.Engine.UnitTest
         [TestMethod]
         public void ProcessPropertyInjection_ShouldFindOnePropertyInjectionDependency()
         {
-            IEnumerable<PropertyInjectionDependencyRequirement> result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
+            var result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
             Assert.AreEqual(1, result.Count());
         }
 
         [TestMethod]
         public void ProcessPropertyInjection_ShouldFindStaticClassWithILoggerProperty()
         {
-            IEnumerable<PropertyInjectionDependencyRequirement> result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
+            var result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
             Assert.AreEqual(typeof(ILogger), result.First().DependencyRequired);
         }
 
@@ -105,7 +103,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void ProcessPropertyInjectionShouldThrowGivenNullAssembly()
         {
-            IEnumerable<PropertyInjectionDependencyRequirement> result = DefaultIoCRegistrations.ProcessPropertyInjection(null);
+            var result = DefaultIoCRegistrations.ProcessPropertyInjection(null);
             result.Any();
             Assert.Fail();
         }
@@ -113,7 +111,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         [TestMethod]
         public void RegisterAutoMappings_ShouldReturnFakeLoggerRegistration()
         {
-            IEnumerable<DependencyRegistrationRequirement> result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
+            var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
             var loggerRegistration = result.Last();
             Assert.AreEqual(typeof(FakeLogger), loggerRegistration.DependencyRequired);
             Assert.IsTrue(loggerRegistration.IsSingleInstance);
@@ -123,7 +121,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         [TestMethod]
         public void RegisterAutoMappings_ShouldReturnTwoGivenThisAssembly()
         {
-            IEnumerable<DependencyRegistrationRequirement> result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
+            var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
             Assert.AreEqual(2, result.Count());
         }
 
@@ -131,7 +129,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void RegisterAutoMappings_ShouldThrowGivenNullAssembly()
         {
-            IEnumerable<DependencyRegistrationRequirement> result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(null);
+            var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(null);
 
             result.ToList();
 
@@ -145,9 +143,12 @@ namespace BudgetAnalyser.Engine.UnitTest
 
         private bool IsSelfRegistered(Type interfaceType, DependencyRegistrationRequirement d)
         {
-            if (interfaceType == d.DependencyRequired) return true;
+            if (interfaceType == d.DependencyRequired)
+            {
+                return true;
+            }
 
-            Type[] implementedInterfaces = d.DependencyRequired.GetInterfaces();
+            var implementedInterfaces = d.DependencyRequired.GetInterfaces();
             return implementedInterfaces.Contains(interfaceType);
         }
     }

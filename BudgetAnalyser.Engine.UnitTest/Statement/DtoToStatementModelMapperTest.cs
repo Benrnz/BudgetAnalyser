@@ -108,9 +108,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_TransactionSetDto_StatementModel(
+            var subject = new MapperTransactionSetDto2StatementModel(
                 new FakeLogger(),
-                new Mapper_TransactionDto_Transaction(
+                new MapperTransactionDto2Transaction(
                     new InMemoryAccountTypeRepository(),
                     new BucketBucketRepoAlwaysFind(),
                     new InMemoryTransactionTypeRepository()));
@@ -120,8 +120,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [TestMethod]
         public void TransactionsShouldBeInAscendingOrder()
         {
-            DateTime previous = DateTime.MinValue;
-            foreach (Transaction txn in Result.AllTransactions)
+            var previous = DateTime.MinValue;
+            foreach (var txn in Result.AllTransactions)
             {
                 if (txn.Date < previous)
                 {

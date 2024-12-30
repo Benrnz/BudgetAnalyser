@@ -85,7 +85,7 @@ public class ReconciliationCreationManagerTest
         this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
             .Returns(this.testDataReconResult);
         var count = this.testDataLedgerBook.Reconciliations.Count();
-        bool reconcileCalled = false;
+        var reconcileCalled = false;
         ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = _ =>
         {
             // record the fact Reconcile was called.

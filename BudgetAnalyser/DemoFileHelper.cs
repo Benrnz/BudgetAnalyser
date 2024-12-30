@@ -12,11 +12,11 @@ namespace BudgetAnalyser
 
         public string FindDemoFile()
         {
-            string folder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var folder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             Debug.Assert(folder is not null);
             for (var failsafe = 0; failsafe < 10; failsafe++)
             {
-                string path = Path.Combine(folder, DemoFileName);
+                var path = Path.Combine(folder, DemoFileName);
                 if (FileExists(path))
                 {
                     return path;

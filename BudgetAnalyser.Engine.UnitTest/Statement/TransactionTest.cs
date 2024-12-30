@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [Description("A test designed to break when new propperties are added to the Transaction. This is a trigger to update the mappers.")]
         public void NumberOfPropertiesShouldBe11()
         {
-            int dataProperties = typeof(Transaction).CountProperties();
+            var dataProperties = typeof(Transaction).CountProperties();
             Assert.AreEqual(11, dataProperties);
         }
     }

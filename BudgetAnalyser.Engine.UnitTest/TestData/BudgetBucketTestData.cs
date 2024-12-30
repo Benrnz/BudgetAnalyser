@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             get
             {
-                BudgetModel budgetModel = BudgetModelTestData.CreateTestData1();
+                var budgetModel = BudgetModelTestData.CreateTestData1();
                 return budgetModel.Expenses.Select(e => e.Bucket)
                     .Union(budgetModel.Incomes.Select(i => i.Bucket));
             }

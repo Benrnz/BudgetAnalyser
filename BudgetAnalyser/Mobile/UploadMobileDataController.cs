@@ -5,8 +5,8 @@ using BudgetAnalyser.Engine.Mobile;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Mobile
 {
@@ -46,7 +46,11 @@ namespace BudgetAnalyser.Mobile
             [NotNull] IApplicationDatabaseFacade appDbService)
             : base(uiContext.Messenger)
         {
-            if (uiContext is null) throw new ArgumentNullException(nameof(uiContext));
+            if (uiContext is null)
+            {
+                throw new ArgumentNullException(nameof(uiContext));
+            }
+
             this.dataExporter = dataExporter ?? throw new ArgumentNullException(nameof(dataExporter));
             this.uploader = uploader ?? throw new ArgumentNullException(nameof(uploader));
             this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
@@ -62,7 +66,11 @@ namespace BudgetAnalyser.Mobile
             get => this.doNotUseAccessKeyId;
             set
             {
-                if (value == this.doNotUseAccessKeyId) return;
+                if (value == this.doNotUseAccessKeyId)
+                {
+                    return;
+                }
+
                 this.doNotUseAccessKeyId = value;
                 OnPropertyChanged();
                 Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -74,7 +82,11 @@ namespace BudgetAnalyser.Mobile
             get => this.doNotUseAccessKeySecret;
             set
             {
-                if (value == this.doNotUseAccessKeySecret) return;
+                if (value == this.doNotUseAccessKeySecret)
+                {
+                    return;
+                }
+
                 this.doNotUseAccessKeySecret = value;
                 OnPropertyChanged();
                 Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -86,7 +98,11 @@ namespace BudgetAnalyser.Mobile
             get => this.doNotUseAmazonRegion;
             set
             {
-                if (value == this.doNotUseAmazonRegion) return;
+                if (value == this.doNotUseAmazonRegion)
+                {
+                    return;
+                }
+
                 this.doNotUseAmazonRegion = value;
                 OnPropertyChanged();
             }
@@ -145,11 +161,18 @@ namespace BudgetAnalyser.Mobile
 
         private async void OnShellDialogMessageReceived(ShellDialogResponseMessage message)
         {
-            if (!message.IsItForMe(this.correlationId)) return;
+            if (!message.IsItForMe(this.correlationId))
+            {
+                return;
+            }
 
             try
             {
-                if (message.Response == ShellDialogButton.Cancel) return;
+                if (message.Response == ShellDialogButton.Cancel)
+                {
+                    return;
+                }
+
                 var changed = AccessKeyId != this.widget.LedgerBook.MobileSettings.AccessKeyId;
                 changed |= AccessKeySecret != this.widget.LedgerBook.MobileSettings.AccessKeySecret;
                 changed |= AmazonRegion != this.widget.LedgerBook.MobileSettings.AmazonS3Region;

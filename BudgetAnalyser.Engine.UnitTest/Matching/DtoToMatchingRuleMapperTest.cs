@@ -13,26 +13,20 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         private static readonly Guid Id = new Guid("901EC4BB-B8B5-43CD-A8C9-15121048CBA4");
         private MatchingRule Result { get; set; }
 
-        private MatchingRuleDto TestData
+        private MatchingRuleDto TestData => new MatchingRuleDto
         {
-            get
-            {
-                return new MatchingRuleDto
-                {
-                    Amount = 123.45M,
-                    BucketCode = TestDataConstants.PhoneBucketCode,
-                    Created = new DateTime(2014, 07, 04),
-                    Description = "The quick brown fox",
-                    LastMatch = new DateTime(2014, 07, 29),
-                    MatchCount = 2,
-                    Reference1 = "jumped",
-                    Reference2 = "over",
-                    Reference3 = "the lazy",
-                    RuleId = Id,
-                    TransactionType = "dog."
-                };
-            }
-        }
+            Amount = 123.45M,
+            BucketCode = TestDataConstants.PhoneBucketCode,
+            Created = new DateTime(2014, 07, 04),
+            Description = "The quick brown fox",
+            LastMatch = new DateTime(2014, 07, 29),
+            MatchCount = 2,
+            Reference1 = "jumped",
+            Reference2 = "over",
+            Reference3 = "the lazy",
+            RuleId = Id,
+            TransactionType = "dog."
+        };
 
         [TestMethod]
         public void ShouldMapAmount()
@@ -110,24 +104,24 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         public void ShouldSetCreatedDateToNowIfGivenNull()
         {
             TestData.Created = null;
-            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperMatchingRuleDto2MatchingRule(new BucketBucketRepoAlwaysFind());
             Result = subject.ToModel(TestData);
-            Assert.IsFalse(Result.Created == default(DateTime));
+            Assert.IsFalse(Result.Created == default);
         }
 
         [TestMethod]
         public void ShouldSetRuleIdDateToNowIfGivenNull()
         {
             TestData.RuleId = null;
-            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperMatchingRuleDto2MatchingRule(new BucketBucketRepoAlwaysFind());
             Result = subject.ToModel(TestData);
-            Assert.IsFalse(Result.RuleId == default(Guid));
+            Assert.IsFalse(Result.RuleId == default);
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperMatchingRuleDto2MatchingRule(new BucketBucketRepoAlwaysFind());
             Result = subject.ToModel(TestData);
         }
     }

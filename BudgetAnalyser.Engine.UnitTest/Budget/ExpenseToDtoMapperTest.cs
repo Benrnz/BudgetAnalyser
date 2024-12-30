@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_ExpenseDto_Expense(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperExpenseDto2Expense(new BucketBucketRepoAlwaysFind());
             Result = subject.ToDto(TestData);
         }
     }

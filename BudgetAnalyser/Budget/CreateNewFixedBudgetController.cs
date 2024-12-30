@@ -3,8 +3,8 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Budget
 {
@@ -39,7 +39,11 @@ namespace BudgetAnalyser.Budget
             [UsedImplicitly]
             set
             {
-                if (value == this.doNotUseAmount) return;
+                if (value == this.doNotUseAmount)
+                {
+                    return;
+                }
+
                 this.doNotUseAmount = value;
                 OnPropertyChanged();
                 Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -70,7 +74,11 @@ namespace BudgetAnalyser.Budget
             [UsedImplicitly]
             set
             {
-                if (value == this.doNotUseCode) return;
+                if (value == this.doNotUseCode)
+                {
+                    return;
+                }
+
                 this.doNotUseCode = value;
                 OnPropertyChanged();
                 Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -83,7 +91,11 @@ namespace BudgetAnalyser.Budget
             [UsedImplicitly]
             set
             {
-                if (value == this.doNotUseDescription) return;
+                if (value == this.doNotUseDescription)
+                {
+                    return;
+                }
+
                 this.doNotUseDescription = value;
                 OnPropertyChanged();
                 Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -117,7 +129,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            EventHandler<DialogResponseEventArgs> handler = Complete;
+            var handler = Complete;
             handler?.Invoke(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
         }
     }

@@ -52,14 +52,7 @@ namespace BudgetAnalyser.Engine.Widgets
             LargeNumber = days > 99 ? "99+" : days.ToString(CultureInfo.CurrentCulture);
             ToolTip = string.Format(CultureInfo.CurrentCulture,
                 "It's been {0} days since new transactions have been imported.", LargeNumber);
-            if (days >= 7)
-            {
-                ColourStyleName = WidgetWarningStyle;
-            }
-            else
-            {
-                ColourStyleName = WidgetStandardStyle;
-            }
+            ColourStyleName = days >= 7 ? WidgetWarningStyle : WidgetStandardStyle;
         }
     }
 }

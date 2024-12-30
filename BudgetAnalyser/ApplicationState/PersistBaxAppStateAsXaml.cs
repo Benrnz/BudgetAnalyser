@@ -74,18 +74,14 @@ namespace BudgetAnalyser.ApplicationState
 
             try
             {
-                object serialised = XamlServices.Load(FullFileName);
+                var serialised = XamlServices.Load(FullFileName);
                 // Will throw Xaml Exception if the xml is corrupt, or the xaml types cannot be found and created.
-                var correctFormat = serialised as List<IPersistentApplicationStateObject>;
-                if (correctFormat is null)
-                {
-                    throw new BadApplicationStateFileFormatException(
+                return serialised is not List<IPersistentApplicationStateObject> correctFormat
+                    ? throw new BadApplicationStateFileFormatException(
                         string.Format(CultureInfo.InvariantCulture,
                             "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.",
-                            FullFileName));
-                }
-
-                return correctFormat;
+                            FullFileName))
+                    : (IEnumerable<IPersistentApplicationStateObject>)correctFormat;
             }
             catch (IOException ex)
             {

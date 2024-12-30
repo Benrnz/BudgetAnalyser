@@ -21,8 +21,7 @@ namespace Rees.Wpf.ValidationRules
         {
             if (value is not null)
             {
-                double i;
-                if (double.TryParse(value.ToString(), NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, cultureInfo, out i))
+                if (double.TryParse(value.ToString(), NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, cultureInfo, out var i))
                 {
                     if (Math.Abs(i) > 0.0001)
                     {

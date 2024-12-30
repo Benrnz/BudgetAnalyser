@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storedStates is not null)
             {
-                List<Widget> widgets = this.widgetRepo.GetAll().ToList();
+                var widgets = this.widgetRepo.GetAll().ToList();
                 foreach (var widgetState in storedStates)
                 {
                     var stateClone = widgetState;

@@ -52,21 +52,19 @@ public partial class StatementUserControl
         {
             defaultView.Filter = null;
         }
-        else if (Controller.BucketFilter == TransactionConstants.UncategorisedFilter)
-        {
-            defaultView.Filter = t =>
-            {
-                var txn = (Transaction)t;
-                return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
-            };
-        }
         else
         {
-            defaultView.Filter = t =>
-            {
-                var txn = (Transaction)t;
-                return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
-            };
+            defaultView.Filter = Controller.BucketFilter == TransactionConstants.UncategorisedFilter
+                ? t =>
+                {
+                    var txn = (Transaction)t;
+                    return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
+                }
+                : t =>
+                {
+                    var txn = (Transaction)t;
+                    return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
+                };
         }
     }
 
@@ -155,10 +153,7 @@ public partial class StatementUserControl
         if (message.Content is EditingTransactionController)
         {
             var listBoxItem = GetSelectedListBoxItem();
-            if (listBoxItem is not null)
-            {
-                listBoxItem.Focus();
-            }
+            listBoxItem?.Focus();
         }
     }
 

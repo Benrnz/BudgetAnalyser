@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public DateTime? BeginDate
         {
-            get { return this.doNotUseBeginDate; }
+            get => this.doNotUseBeginDate;
             set
             {
                 this.doNotUseBeginDate = value;
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public bool Cleared
         {
-            get { return this.doNotUseCleared; }
+            get => this.doNotUseCleared;
             private set
             {
                 this.doNotUseCleared = value;
@@ -60,7 +60,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public DateTime? EndDate
         {
-            get { return this.doNotUseEndDate; }
+            get => this.doNotUseEndDate;
             set
             {
                 this.doNotUseEndDate = value;
@@ -92,7 +92,10 @@ namespace BudgetAnalyser.Engine
         /// <returns>If the instance is in an invalid state it will return false, otherwise it returns true.</returns>
         public bool Validate(StringBuilder validationMessages)
         {
-            if (validationMessages is null) throw new ArgumentNullException(nameof(validationMessages));
+            if (validationMessages is null)
+            {
+                throw new ArgumentNullException(nameof(validationMessages));
+            }
 
             if (Cleared)
             {
@@ -144,15 +147,8 @@ namespace BudgetAnalyser.Engine
                 EndDate = null;
             }
 
-            if (BeginDate is null
-                && EndDate is null)
-            {
-                Cleared = true;
-            }
-            else
-            {
-                Cleared = false;
-            }
+            Cleared = BeginDate is null
+                && EndDate is null;
 
             if (BeginDate is not null && EndDate is not null && BeginDate > EndDate)
             {

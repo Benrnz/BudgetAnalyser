@@ -161,7 +161,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
 
     public bool ValidateModel(StringBuilder messages)
     {
-        EventHandler<ValidatingEventArgs> handler = Validating;
+        var handler = Validating;
         var args = new ValidatingEventArgs();
         handler?.Invoke(this, args);
 
@@ -196,7 +196,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     private void EnsureAllBucketsUsedAreInBucketRepo()
     {
         // Make sure all buckets are in the bucket repo.
-        IEnumerable<BudgetBucket> buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
+        var buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
             .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
             .Distinct();
 

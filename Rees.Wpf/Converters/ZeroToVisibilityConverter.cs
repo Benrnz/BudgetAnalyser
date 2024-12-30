@@ -44,12 +44,7 @@ namespace Rees.Wpf.Converters
                 return Visibility.Hidden;
             }
 
-            if (value is long && (long)value == 0)
-            {
-                return Visibility.Hidden;
-            }
-
-            return Visibility.Visible;
+            return value is long && (long)value == 0 ? Visibility.Hidden : (object)Visibility.Visible;
         }
 
         /// <summary>

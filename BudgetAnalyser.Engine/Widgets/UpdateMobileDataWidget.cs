@@ -73,14 +73,20 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Enabled = false;
 
-            if (!ValidateUpdateInput(input)) return;
+            if (!ValidateUpdateInput(input))
+            {
+                return;
+            }
 
             LedgerBook = (LedgerBook)input[0];
             StatementModel = (StatementModel)input[1];
             BudgetCollection = (BudgetCollection)input[2];
             Filter = (GlobalFilterCriteria)input[3];
 
-            if (LedgerBook is null || StatementModel is null || BudgetCollection is null || Filter is null) return;
+            if (LedgerBook is null || StatementModel is null || BudgetCollection is null || Filter is null)
+            {
+                return;
+            }
 
             Enabled = true;
         }

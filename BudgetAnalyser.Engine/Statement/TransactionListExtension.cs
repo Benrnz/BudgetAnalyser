@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.Statement
         public static IEnumerable<Transaction> Merge(this IEnumerable<Transaction> instance,
                                                      IEnumerable<Transaction> additionalTransactions)
         {
-            List<Transaction> result = instance.ToList();
+            var result = instance.ToList();
             result.AddRange(additionalTransactions);
             return result.OrderBy(t => t.Date);
         }

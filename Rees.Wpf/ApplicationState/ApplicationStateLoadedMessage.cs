@@ -20,7 +20,7 @@ namespace Rees.Wpf.ApplicationState
         /// </param>
         public ApplicationStateLoadedMessage(IEnumerable<IPersistent> rehydratedModels)
         {
-            IEnumerable<IPersistent> removeDuplicates = rehydratedModels
+            var removeDuplicates = rehydratedModels
                 .GroupBy(model => model.GetType(), model => model)
                 .Where(group => group.Key is not null)
                 .Select(group => group.First());
@@ -42,12 +42,7 @@ namespace Rees.Wpf.ApplicationState
         public T ElementOfType<T>() where T : class, IPersistent
         {
             var type = typeof(T);
-            if (RehydratedModels.ContainsKey(type))
-            {
-                return RehydratedModels[type] as T;
-            }
-
-            return null;
+            return RehydratedModels.ContainsKey(type) ? RehydratedModels[type] as T : null;
         }
     }
 }

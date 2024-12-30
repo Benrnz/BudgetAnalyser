@@ -114,7 +114,7 @@ namespace BudgetAnalyser
             }
 
             // Create a distinct list of sequences.
-            IEnumerable<int> sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
+            var sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
 
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
 
@@ -122,7 +122,7 @@ namespace BudgetAnalyser
             foreach (var sequence in sequences)
             {
                 var sequenceCopy = sequence;
-                IEnumerable<IPersistentApplicationStateObject> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
+                var models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
                 Messenger.Send(new ApplicationStateLoadedMessage(models));
             }
 
@@ -173,7 +173,7 @@ namespace BudgetAnalyser
         {
             if (this.persistenceOperations.HasUnsavedChanges)
             {
-                bool? result = this.uiContext.UserPrompts.YesNoBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
+                var result = this.uiContext.UserPrompts.YesNoBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
                 if (result is not null && result.Value)
                 {
                     // Save must be run carefully because the application is exiting.  If run using the task factory with defaults the task will stall, as background tasks are waiting to be marshalled back to main context
@@ -209,14 +209,7 @@ namespace BudgetAnalyser
             if (shellState is not null)
             {
                 // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
-                if (shellState.Size.X > 0 || shellState.Size.Y > 0)
-                {
-                    this.originalWindowSize = shellState.Size;
-                }
-                else
-                {
-                    this.originalWindowSize = new Point(1250, 600);
-                }
+                this.originalWindowSize = shellState.Size.X > 0 || shellState.Size.Y > 0 ? shellState.Size : new Point(1250, 600);
 
                 if (shellState.TopLeft.X > 0 || shellState.TopLeft.Y > 0)
                 {

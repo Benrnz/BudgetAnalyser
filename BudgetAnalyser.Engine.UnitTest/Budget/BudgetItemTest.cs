@@ -13,15 +13,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ShouldHaveAKnownNumberOfProperties()
         {
-            IEnumerable<PropertyInfo> properties = typeof(BudgetItem).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
+            var properties = typeof(BudgetItem).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
             Assert.AreEqual(2, properties.Count());
         }
 
         [TestMethod]
         public void TwoBudgetItemsAreDifferentIfCodesAreDifferent()
         {
-            BudgetItem subject1 = CreateSubject1();
-            BudgetItem subject2 = CreateSubject2();
+            var subject1 = CreateSubject1();
+            var subject2 = CreateSubject2();
 
             Assert.AreNotEqual(subject1, subject2);
             Assert.IsTrue(subject1 != subject2);
@@ -31,8 +31,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void TwoBudgetItemsAreDifferentIfCodesAreEqualButDifferentTypes()
         {
-            BudgetItem subject1 = CreateSubject1();
-            BudgetItem subject3 = CreateSubject3();
+            var subject1 = CreateSubject1();
+            var subject3 = CreateSubject3();
 
             Assert.AreNotEqual(subject1, subject3);
             Assert.IsTrue(subject1 != subject3);
@@ -42,8 +42,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void TwoBudgetItemsAreTheSameIfCodesAreEqualAndSameType()
         {
-            BudgetItem subject1 = CreateSubject1();
-            BudgetItem subject2 = CreateSubject1();
+            var subject1 = CreateSubject1();
+            var subject2 = CreateSubject1();
 
             Assert.AreEqual(subject1, subject2);
             Assert.IsTrue(subject1 == subject2);
@@ -53,8 +53,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void TwoReferencesToTheSameObjectAreEqual()
         {
-            BudgetItem subject1 = CreateSubject1();
-            BudgetItem subject2 = subject1;
+            var subject1 = CreateSubject1();
+            var subject2 = subject1;
 
             Assert.AreEqual(subject1, subject2);
             Assert.IsTrue(subject1 == subject2);

@@ -20,8 +20,8 @@ using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 using Rees.Wpf.RecentFiles;
 using Rees.Wpf.UserInteraction;
 using IPersistApplicationState = BudgetAnalyser.ApplicationState.IPersistApplicationState;
@@ -137,13 +137,12 @@ namespace BudgetAnalyser
 
             foreach (var assembly in assemblies)
             {
-                IEnumerable<PropertyInjectionDependencyRequirement> requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);
+                var requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);
                 foreach (var requirement in requiredPropertyInjections)
                 {
                     // Some reasonably awkward Autofac usage here to allow testability.  (Extension methods aren't easy to test)
-                    ServiceRegistration registration;
                     var typedService = new TypedService(requirement.DependencyRequired);
-                    var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out registration);
+                    var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out var registration);
                     if (success)
                     {
                         var requestToResolve = new ResolveRequest(typedService, registration, Enumerable.Empty<Parameter>());
@@ -163,7 +162,7 @@ namespace BudgetAnalyser
 
         private static void ComposeTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)
         {
-            IEnumerable<DependencyRegistrationRequirement> dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(assembly);
+            var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(assembly);
             foreach (var dependency in dependencies)
             {
                 IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> registration;

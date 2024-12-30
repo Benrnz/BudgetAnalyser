@@ -41,7 +41,10 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             var appDbService = (IApplicationDatabaseService)input[0];
-            if (appDbService is null) return;
+            if (appDbService is null)
+            {
+                return;
+            }
 
             Enabled = appDbService.HasUnsavedChanges;
             Clickable = Enabled;

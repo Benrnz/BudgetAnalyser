@@ -13,10 +13,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void BucketMustHaveADescription()
         {
-            Expense subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Bucket.Description = null;
 
-            bool result = subject.Validate(Logs);
+            var result = subject.Validate(Logs);
 
             Assert.IsFalse(result);
             Assert.IsTrue(Logs.Length > 0);
@@ -25,10 +25,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void MaxDeciamlIsValidAmount()
         {
-            Expense subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Amount = decimal.MaxValue;
 
-            bool result = subject.Validate(Logs);
+            var result = subject.Validate(Logs);
 
             Assert.IsTrue(result);
             Assert.IsTrue(Logs.Length == 0);
@@ -37,10 +37,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void MustBeAnExpenseBucket()
         {
-            Expense subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Bucket = new IncomeBudgetBucket("Foo", "Bar");
 
-            bool result = subject.Validate(Logs);
+            var result = subject.Validate(Logs);
 
             Assert.IsFalse(result);
             Assert.IsTrue(Logs.Length > 0);
@@ -49,10 +49,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void NegativeAmountIsNotValid()
         {
-            Expense subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Amount = -5;
 
-            bool result = subject.Validate(Logs);
+            var result = subject.Validate(Logs);
 
             Assert.IsFalse(result);
             Assert.IsTrue(Logs.Length > 0);
@@ -61,11 +61,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void NegativeAmountIsNotValidEvenWhenInactive()
         {
-            Expense subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Amount = -5;
             subject.Bucket.Active = false;
 
-            bool result = subject.Validate(Logs);
+            var result = subject.Validate(Logs);
 
             Assert.IsFalse(result);
             Assert.IsTrue(Logs.Length > 0);
@@ -74,9 +74,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void OneCentIsValidAmount()
         {
-            Expense subject = CreateSubject();
+            var subject = CreateSubject();
 
-            bool result = subject.Validate(Logs);
+            var result = subject.Validate(Logs);
 
             Assert.IsTrue(result);
             Assert.IsTrue(Logs.Length == 0);
@@ -91,11 +91,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ZeroAmountIsNotValidWhenActive()
         {
-            Expense subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Amount = 0;
             subject.Bucket.Active = true;
 
-            bool result = subject.Validate(Logs);
+            var result = subject.Validate(Logs);
 
             Assert.IsFalse(result);
             Assert.IsTrue(Logs.Length > 0);
@@ -104,11 +104,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ZeroAmountIsValidWhenInActive()
         {
-            Expense subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Amount = 0;
             subject.Bucket.Active = false;
 
-            bool result = subject.Validate(Logs);
+            var result = subject.Validate(Logs);
 
             Assert.IsTrue(result);
         }

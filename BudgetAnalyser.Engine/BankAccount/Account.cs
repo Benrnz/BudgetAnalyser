@@ -57,11 +57,7 @@ namespace BudgetAnalyser.Engine.BankAccount
             {
                 return true;
             }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((Account)obj);
+            return obj.GetType() != GetType() ? false : Equals((Account)obj);
         }
 
         /// <summary>
@@ -108,11 +104,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// </summary>
         protected bool Equals(Account? other)
         {
-            if (other is null)
-            {
-                return false;
-            }
-            return string.Equals(Name, other.Name);
+            return other is null ? false : string.Equals(Name, other.Name);
         }
     }
 }

@@ -115,12 +115,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             var upperCode = code.ToUpperInvariant();
-            if (IsValidCode(upperCode))
-            {
-                return this.lookupTable[upperCode];
-            }
-
-            return null;
+            return IsValidCode(upperCode) ? this.lookupTable[upperCode] : null;
         }
 
         /// <summary>
@@ -189,12 +184,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public virtual bool IsValidCode(string code)
         {
-            if (code is null)
-            {
-                throw new ArgumentNullException(nameof(code));
-            }
-
-            return ContainsKeyInternal(code);
+            return code is null ? throw new ArgumentNullException(nameof(code)) : ContainsKeyInternal(code);
         }
 
         /// <summary>

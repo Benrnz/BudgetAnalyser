@@ -33,7 +33,10 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
         {
             this.doNotUseDirty = value;
             OnPropertyChanged();
-            if (value) this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Ledger);
+            if (value)
+            {
+                this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Ledger);
+            }
         }
     }
 

@@ -21,9 +21,20 @@ internal class FileEncryptor : IFileEncryptor
 
     public async Task EncryptFileAsync(string sourceFile, string destinationFile, SecureString passphrase)
     {
-        if (sourceFile.IsNothing()) throw new ArgumentNullException(nameof(sourceFile));
-        if (destinationFile.IsNothing()) throw new ArgumentNullException(nameof(destinationFile));
-        if (passphrase is null) throw new ArgumentNullException(nameof(passphrase));
+        if (sourceFile.IsNothing())
+        {
+            throw new ArgumentNullException(nameof(sourceFile));
+        }
+
+        if (destinationFile.IsNothing())
+        {
+            throw new ArgumentNullException(nameof(destinationFile));
+        }
+
+        if (passphrase is null)
+        {
+            throw new ArgumentNullException(nameof(passphrase));
+        }
 
         if (!FileExists(sourceFile))
         {
@@ -52,7 +63,10 @@ internal class FileEncryptor : IFileEncryptor
                 await outputStream.WriteAsync(buffer, 0, 4096);
                 var chunk = Encoding.UTF8.GetChars(buffer);
                 var occurrences = chunk.Count(c => c == '\n');
-                if (occurrences >= lineCount) break;
+                if (occurrences >= lineCount)
+                {
+                    break;
+                }
             }
         }
 
