@@ -32,7 +32,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore --verbosity minimal --configuration Debug
+      run: dotnet build --no-restore --verbosity quiet --configuration Debug
       
     # Execute all unit tests in the solution
     - name: Run unit tests
