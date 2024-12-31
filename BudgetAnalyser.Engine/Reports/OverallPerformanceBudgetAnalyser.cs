@@ -260,6 +260,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         }
 
         this.budgetCycle = currentBudget.BudgetCycle;
+        result.BudgetCycle = this.budgetCycle.ToString().Replace("ly", "s");
 
         return currentBudget;
     }

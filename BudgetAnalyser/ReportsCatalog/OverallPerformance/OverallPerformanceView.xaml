@@ -83,8 +83,8 @@
         </Grid.ColumnDefinitions>
         <StackPanel Margin="-1,1,1,25"
                     Orientation="Horizontal">
-            <TextBlock Margin="2"
-                       Text="Duration In Periods (Months or Fortnights):" />
+            <TextBlock Margin="4,2,2,2"
+                       Text="{Binding DurationLabel}" />
             <TextBlock Margin="2"
                        Text="{Binding Analysis.DurationInPeriods}" />
             <RadioButton Content="Expenses"

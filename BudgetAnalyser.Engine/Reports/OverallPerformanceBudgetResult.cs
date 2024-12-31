@@ -25,6 +25,12 @@ public class OverallPerformanceBudgetResult
     public decimal AverageSurplus { get; internal set; }
 
     /// <summary>
+    ///     A string that describes what kind of period this analysis is based on.
+    ///     This refers to the <see cref="BudgetAnalyser.Engine.Budget.BudgetModel.BudgetCycle" />.
+    /// </summary>
+    public string BudgetCycle { get; internal set; } = string.Empty;
+
+    /// <summary>
     ///     Gets the calculated duration in months.
     /// </summary>
     public int DurationInPeriods { get; internal set; }
