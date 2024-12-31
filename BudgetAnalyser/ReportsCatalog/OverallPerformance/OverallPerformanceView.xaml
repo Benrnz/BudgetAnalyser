@@ -4,9 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
              xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
-             xmlns:overallPerformance="clr-namespace:BudgetAnalyser.ReportsCatalog.OverallPerformance"
-             Background="{StaticResource Brush.MainBackground}"
-             d:DataContext="{d:DesignInstance overallPerformance:OverallPerformanceController}">
+             xmlns:view="clr-namespace:BudgetAnalyser.ReportsCatalog.OverallPerformance"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance view:OverallPerformanceController}"
+             Background="{StaticResource Brush.MainBackground}">
     <UserControl.Resources>
         <converters:PercentToColourConverter x:Key="Converter.PercentToColour" />
         <converters:BucketToVisibilityConverter x:Key="Converter.BucketToVisibility" />

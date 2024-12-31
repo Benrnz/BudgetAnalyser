@@ -41,7 +41,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             }
         }
 
-        public double OverallPerformance { [UsedImplicitly] get; private set; }
+        public double OverallPerformance { get; private set; }
 
         public string Title => "Overall Budget Performance";
 
