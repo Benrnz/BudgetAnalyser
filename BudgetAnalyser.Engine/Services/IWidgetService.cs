@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BudgetAnalyser.Engine.Widgets;
 using JetBrains.Annotations;
 

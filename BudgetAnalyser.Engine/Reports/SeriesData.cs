@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// </summary>
         public bool Visible
         {
-            get { return this.doNotUseVisible; }
+            get => this.doNotUseVisible;
             set
             {
                 this.doNotUseVisible = value;

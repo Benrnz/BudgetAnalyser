@@ -1,8 +1,8 @@
-﻿using JetBrains.Annotations;
-using BudgetAnalyser.Engine.Persistence;
+﻿using BudgetAnalyser.Engine.Persistence;
+using JetBrains.Annotations;
+using Portable.Xaml;
 using Rees.TangyFruitMapper;
 using Rees.UnitTestUtilities;
-using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
@@ -19,12 +19,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override bool FileExists(string budgetAnalyserDataStorage)
         {
-            if (FileExistsOverride is null)
-            {
-                return base.FileExists(budgetAnalyserDataStorage);
-            }
-
-            return FileExistsOverride(budgetAnalyserDataStorage);
+            return FileExistsOverride is null ? base.FileExists(budgetAnalyserDataStorage) : FileExistsOverride(budgetAnalyserDataStorage);
         }
 
         protected override string LoadXamlAsString(string fileName)

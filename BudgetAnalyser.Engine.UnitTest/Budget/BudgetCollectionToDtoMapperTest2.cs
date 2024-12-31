@@ -21,10 +21,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             decimal expensesTotal = 0;
             Console.WriteLine("TestData (BudgetCollection)");
-            foreach (BudgetModel budget in TestData)
+            foreach (var budget in TestData)
             {
                 Console.WriteLine("Budget: '{0}' Effective From: {1}", budget.Name, budget.EffectiveFrom);
-                foreach (Expense expense in budget.Expenses)
+                foreach (var expense in budget.Expenses)
                 {
                     Console.WriteLine("    Expense: {0} {1}", expense.Bucket.Code, expense.Amount);
                     expensesTotal += expense.Amount;
@@ -35,10 +35,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
             expensesTotal = 0;
             Console.WriteLine("Result (BudgetCollectionDto)");
-            foreach (BudgetModelDto budget in Result.Budgets)
+            foreach (var budget in Result.Budgets)
             {
                 Console.WriteLine("Budget: '{0}' Effective From: {1}", budget.Name, budget.EffectiveFrom);
-                foreach (ExpenseDto expense in budget.Expenses)
+                foreach (var expense in budget.Expenses)
                 {
                     Console.WriteLine("    Expense: {0} {1}", expense.BudgetBucketCode, expense.Amount);
                     expensesTotal += expense.Amount;
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             Console.WriteLine("Result.Buckets.Count = " + Result.Buckets.Count());
 
             Assert.IsTrue(Result.Buckets.Any());
-            foreach (BudgetBucket bucket in TestDataBuckets)
+            foreach (var bucket in TestDataBuckets)
             {
                 Assert.IsTrue(Result.Buckets.Any(b => b.Code == bucket.Code));
             }
@@ -92,15 +92,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
                 .Distinct();
 
             // Preload the buckets into the bucket repo used by the Mapper.
-            foreach (BudgetBucket bucket in TestDataBuckets)
+            foreach (var bucket in TestDataBuckets)
             {
                 bucketRepo.GetByCode(bucket.Code);
             }
 
-            var subject = new Mapper_BudgetCollectionDto_BudgetCollection(
-                bucketRepo, 
-                new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()), 
-                new Mapper_BudgetModelDto_BudgetModel(bucketRepo));
+            var subject = new MapperBudgetCollectionDtoBudgetCollection(
+                bucketRepo,
+                new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()),
+                new MapperBudgetModelDtoBudgetModel(bucketRepo));
             Result = subject.ToDto(TestData);
         }
     }

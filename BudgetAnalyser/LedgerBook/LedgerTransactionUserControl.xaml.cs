@@ -16,29 +16,9 @@ namespace BudgetAnalyser.LedgerBook
             DataContextChanged += OnDataContextChanged;
         }
 
-        public decimal? Credit
-        {
-            get
-            {
-                if (LedgerTransaction is null)
-                {
-                    return null;
-                }
-                return LedgerTransaction.Amount >= 0 ? LedgerTransaction.Amount : 0M;
-            }
-        }
+        public decimal? Credit => LedgerTransaction is null ? null : LedgerTransaction.Amount >= 0 ? LedgerTransaction.Amount : 0M;
 
-        public decimal? Debit
-        {
-            get
-            {
-                if (LedgerTransaction is null)
-                {
-                    return null;
-                }
-                return LedgerTransaction.Amount < 0 ? -LedgerTransaction.Amount : 0M;
-            }
-        }
+        public decimal? Debit => LedgerTransaction is null ? null : LedgerTransaction.Amount < 0 ? -LedgerTransaction.Amount : 0M;
 
         private LedgerTransaction LedgerTransaction => (LedgerTransaction)DataContext;
 

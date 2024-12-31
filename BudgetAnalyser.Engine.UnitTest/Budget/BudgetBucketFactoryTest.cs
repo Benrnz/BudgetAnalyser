@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             Assert.IsInstanceOfType(
                 Subject.BuildModel(
-                    new BudgetBucketDto {Type = BucketDtoType.SavedUpForExpense}),
+                    new BudgetBucketDto { Type = BucketDtoType.SavedUpForExpense }),
                 typeof(SavedUpForExpenseBucket));
         }
 
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public void BuildShouldCreateSpentMonthlyBucket()
         {
             Assert.IsInstanceOfType(
-                Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.SpentPeriodicallyExpense }), 
+                Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.SpentPeriodicallyExpense }),
                 typeof(SpentPerPeriodExpenseBucket));
         }
 
@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(NotSupportedException))]
         public void BuildShouldThrowGivenSurplus()
         {
-            Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.Surplus});
+            Subject.BuildModel(new BudgetBucketDto { Type = BucketDtoType.Surplus });
             Assert.Fail();
         }
 

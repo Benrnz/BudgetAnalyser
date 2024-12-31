@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Portable.Xaml;
 using BudgetAnalyser.Engine.Matching.Data;
 using JetBrains.Annotations;
+using Portable.Xaml;
 using Rees.TangyFruitMapper;
 using NotNull = JetBrains.Annotations.NotNullAttribute;
 
@@ -25,8 +25,15 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(mapper));
             }
 
-            if (logger is null) throw new ArgumentNullException(nameof(logger));
-            if (readerWriterSelector is null) throw new ArgumentNullException(nameof(readerWriterSelector));
+            if (logger is null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
+            if (readerWriterSelector is null)
+            {
+                throw new ArgumentNullException(nameof(readerWriterSelector));
+            }
 
             this.mapper = mapper;
             this.logger = logger;
@@ -77,7 +84,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new DataFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
             }
 
-            IEnumerable<MatchingRule> realModel = dataEntities.Select(d => this.mapper.ToModel(d));
+            var realModel = dataEntities.Select(d => this.mapper.ToModel(d));
             return Validate(realModel.ToList());
         }
 
@@ -94,7 +101,7 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             IEnumerable<MatchingRule> model = Validate(rules.ToList());
-            IEnumerable<MatchingRuleDto> dataEntities = model.Select(r => this.mapper.ToDto(r));
+            var dataEntities = model.Select(r => this.mapper.ToDto(r));
             await SaveToDiskAsync(storageKey, dataEntities, isEncrypted);
         }
 
@@ -119,12 +126,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         protected virtual string Serialise(IEnumerable<MatchingRuleDto> dataEntity)
         {
-            if (dataEntity is null)
-            {
-                throw new ArgumentNullException(nameof(dataEntity));
-            }
-
-            return XamlServices.Save(dataEntity.ToList());
+            return dataEntity is null ? throw new ArgumentNullException(nameof(dataEntity)) : XamlServices.Save(dataEntity.ToList());
         }
 
         private IList<MatchingRule> Validate(IList<MatchingRule> model)

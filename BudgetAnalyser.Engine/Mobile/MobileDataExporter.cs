@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.Mobile
 
             var ledgerList = new List<SummarisedLedgerBucket>();
             var ledgerLine = this.calculator.LocateApplicableLedgerLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
-            IDictionary<BudgetBucket, decimal> currentBalances = this.calculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, transactions);
+            var currentBalances = this.calculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, transactions);
             foreach (var entry in latestRecon.Entries)
             {
                 ledgerList.Add(new SummarisedLedgerBucket

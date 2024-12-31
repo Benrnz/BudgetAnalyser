@@ -14,25 +14,19 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         private static readonly Guid TransactionId = new Guid("7F921750-4467-4EA4-81E6-3EFD466341C6");
         private TransactionDto Result { get; set; }
 
-        private Transaction TestData
+        private Transaction TestData => new Transaction
         {
-            get
-            {
-                return new Transaction
-                {
-                    Id = TransactionId,
-                    Account = StatementModelTestData.ChequeAccount,
-                    Amount = 123.99M,
-                    BudgetBucket = StatementModelTestData.PowerBucket,
-                    Date = new DateTime(2014, 07, 31),
-                    Description = "The quick brown poo",
-                    Reference1 = "Reference 1",
-                    Reference2 = "REference 23",
-                    Reference3 = "REference 33",
-                    TransactionType = StatementModelTestData.TransactionType
-                };
-            }
-        }
+            Id = TransactionId,
+            Account = StatementModelTestData.ChequeAccount,
+            Amount = 123.99M,
+            BudgetBucket = StatementModelTestData.PowerBucket,
+            Date = new DateTime(2014, 07, 31),
+            Description = "The quick brown poo",
+            Reference1 = "Reference 1",
+            Reference2 = "REference 23",
+            Reference3 = "REference 33",
+            TransactionType = StatementModelTestData.TransactionType
+        };
 
         [TestMethod]
         public void ShouldMapAccountType()
@@ -97,7 +91,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_TransactionDto_Transaction(new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository());
+            var subject = new MapperTransactionDto2Transaction(new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository());
             Result = subject.ToDto(TestData);
         }
     }

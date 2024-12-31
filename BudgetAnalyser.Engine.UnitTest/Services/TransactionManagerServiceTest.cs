@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.testData = StatementModelTestData.TestData4();
             Arrange();
 
-            string result = this.subject.DetectDuplicateTransactions();
+            var result = this.subject.DetectDuplicateTransactions();
             Console.WriteLine(result);
             Assert.IsFalse(string.IsNullOrWhiteSpace(result));
         }
@@ -303,7 +303,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.testData = new StatementModelTestHarness();
             this.testData.LoadTransactions(StatementModelTestData.TestData2().Transactions);
             Arrange();
-            Transaction transaction = this.testData.Transactions.Skip(1).First();
+            var transaction = this.testData.Transactions.Skip(1).First();
 
             this.subject.RemoveTransaction(transaction);
 

@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         {
             if (LoadXamlAsStringOverride is null)
             {
-                string result = base.LoadXamlAsString(fileName);
+                var result = base.LoadXamlAsString(fileName);
                 Debug.WriteLine(result);
                 return result;
             }
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
             if (LoadXamlFromDiskFromEmbeddedResources)
             {
                 LedgerBookDto = GetType().Assembly.ExtractEmbeddedResourceAsXamlObject<LedgerBookDto>(fileName, true);
-                EventHandler handler = DtoDeserialised;
+                var handler = DtoDeserialised;
                 handler?.Invoke(this, EventArgs.Empty);
 
                 return LedgerBookDto;

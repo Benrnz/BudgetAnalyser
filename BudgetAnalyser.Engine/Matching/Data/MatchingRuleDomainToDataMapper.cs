@@ -5,15 +5,9 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Matching.Data
 {
     [AutoRegisterWithIoC]
-    internal partial class Mapper_MatchingRuleDto_MatchingRule
+    internal partial class MapperMatchingRuleDto2MatchingRule(IBudgetBucketRepository bucketRepo)
     {
-        private readonly IBudgetBucketRepository bucketRepo;
-
-        public Mapper_MatchingRuleDto_MatchingRule([NotNull] IBudgetBucketRepository bucketRepo)
-        {
-            if (bucketRepo is null) throw new ArgumentNullException(nameof(bucketRepo));
-            this.bucketRepo = bucketRepo;
-        }
+        private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
 
         // ReSharper disable once RedundantAssignment
         partial void ModelFactory(MatchingRuleDto dto, ref MatchingRule model)

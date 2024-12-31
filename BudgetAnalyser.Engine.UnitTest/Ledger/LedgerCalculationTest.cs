@@ -20,11 +20,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private static LedgerBook CreateLedgerBookTestData()
         {
             return new LedgerBookBuilder
-                {
-                    StorageKey = "BudgetBucketMonitorWidgetTest.xml",
-                    Modified = new DateTime(2015, 11, 23),
-                    Name = "Smith Budget 2015"
-                }
+            {
+                StorageKey = "BudgetBucketMonitorWidgetTest.xml",
+                Modified = new DateTime(2015, 11, 23),
+                Name = "Smith Budget 2015"
+            }
                 .IncludeLedger(LedgerBookTestData.PhoneLedger, 50M)
                 .IncludeLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount, 200M)
                 .AppendReconciliation(
@@ -149,13 +149,13 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
             var statement = CreateStatementBuilder().AppendTransaction(new Transaction
-                {
-                    Account = StatementModelTestData.ChequeAccount,
-                    Amount = -100M,
-                    BudgetBucket = StatementModelTestData.PayCreditCard,
-                    Date = new DateTime(2015, 11, 2),
-                    Reference1 = "Pay credit card debit from surplus"
-                })
+            {
+                Account = StatementModelTestData.ChequeAccount,
+                Amount = -100M,
+                BudgetBucket = StatementModelTestData.PayCreditCard,
+                Date = new DateTime(2015, 11, 2),
+                Reference1 = "Pay credit card debit from surplus"
+            })
                 .AppendTransaction(new Transaction
                 {
                     Account = StatementModelTestData.VisaAccount,
@@ -198,7 +198,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 })
                 .Build();
             var result = Subject.CalculateCurrentPeriodSurplusBalance(
-                  ledgerLine, 
+                  ledgerLine,
                   new GlobalFilterCriteria
                   {
                       BeginDate = new DateTime(2015, 10, 20),
@@ -247,7 +247,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var beginDate = new DateTime(2014, 07, 01);
             var endDate = beginDate.AddMonths(1).AddDays(-1);
             var ledgerLine = TestData.Reconciliations.First();
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData1(), ledgerLine, beginDate, endDate);
+            var result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData1(), ledgerLine, beginDate, endDate);
             Assert.IsFalse(result.Any());
         }
 
@@ -258,7 +258,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var beginDate = new DateTime(2013, 08, 15);
             var endDate = beginDate.AddMonths(1).AddDays(-1);
             var ledgerLine = TestData.Reconciliations.First();
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData3(), ledgerLine, beginDate, endDate);
+            var result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData3(), ledgerLine, beginDate, endDate);
             foreach (var txn in result)
             {
                 Console.WriteLine("{0} {1} {2}", txn.Date, txn.Narrative, txn.Amount);
@@ -274,7 +274,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var beginDate = new DateTime(2013, 08, 15);
             var endDate = beginDate.AddMonths(1).AddDays(-1);
             var ledgerLine = TestData.Reconciliations.First();
-            IEnumerable<ReportTransaction> result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData2(), ledgerLine, beginDate, endDate);
+            var result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData2(), ledgerLine, beginDate, endDate);
             foreach (var txn in result)
             {
                 Console.WriteLine("{0} {1} {2}", txn.Date, txn.Narrative, txn.Amount);
@@ -316,7 +316,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void UsingTestData1_LocateApplicableLedgerBalance_ShouldReturn64()
         {
             var filter = new GlobalFilterCriteria { BeginDate = new DateTime(2013, 04, 15), EndDate = new DateTime(2013, 05, 15) };
-            decimal result = Subject.LocateApplicableLedgerBalance(TestData, filter, StatementModelTestData.PhoneBucket.Code);
+            var result = Subject.LocateApplicableLedgerBalance(TestData, filter, StatementModelTestData.PhoneBucket.Code);
             Assert.AreEqual(0M, result);
         }
 
@@ -325,7 +325,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var filter = new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 15), EndDate = new DateTime(2013, 08, 15) };
 
-            decimal result = Subject.LocateApplicableLedgerBalance(TestData, filter, StatementModelTestData.PhoneBucket.Code);
+            var result = Subject.LocateApplicableLedgerBalance(TestData, filter, StatementModelTestData.PhoneBucket.Code);
             TestData.Output();
             Assert.AreEqual(64.71M, result);
         }

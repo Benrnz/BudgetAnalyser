@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
 {
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 1:54:58 AM UTC")]
-    internal partial class Mapper_TransactionSetDto_StatementModel : IDtoMapper<TransactionSetDto, StatementModel>
+    internal partial class MapperTransactionSetDto2StatementModel : IDtoMapper<TransactionSetDto, StatementModel>
     {
 
         public virtual StatementModel ToModel(TransactionSetDto dto)
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 1:41:11 AM UTC")]
-    internal partial class Mapper_TransactionDto_Transaction : IDtoMapper<TransactionDto, Transaction>
+    internal partial class MapperTransactionDto2Transaction : IDtoMapper<TransactionDto, Transaction>
     {
 
         public virtual Transaction ToModel(TransactionDto dto)

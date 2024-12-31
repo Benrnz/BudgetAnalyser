@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            var ruleService = (ITransactionRuleService) input[0];
+            var ruleService = (ITransactionRuleService)input[0];
 
             if (ruleService is null)
             {
@@ -68,19 +68,12 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             CutOffDate = DateTime.Today.AddMonths(-18);
-            List<MatchingRule> rulesList = QueryRules(ruleService.MatchingRules).ToList();
+            var rulesList = QueryRules(ruleService.MatchingRules).ToList();
             DisusedMatchingRules = rulesList;
             var count = rulesList.Count();
             LargeNumber = count.ToString();
             ToolTip = $"{count}/{ruleService.MatchingRules.Count()} Rules that have not been used for more than a year.";
-            if (count >= 20)
-            {
-                ColourStyleName = WidgetWarningStyle;
-            }
-            else
-            {
-                ColourStyleName = WidgetStandardStyle;
-            }
+            ColourStyleName = count >= 20 ? WidgetWarningStyle : WidgetStandardStyle;
         }
     }
 }

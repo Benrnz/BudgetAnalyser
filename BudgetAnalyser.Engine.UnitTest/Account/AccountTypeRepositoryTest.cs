@@ -13,10 +13,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void AddingDuplicateEntryShouldNotThrow()
         {
-            InMemoryAccountTypeRepository subject = CreateSubject();
-            ChequeAccount data = CreateTestData2();
+            var subject = CreateSubject();
+            var data = CreateTestData2();
             subject.Add(Key1, data);
-            ChequeAccount data2 = CreateTestData2();
+            var data2 = CreateTestData2();
             subject.Add(Key1, data2);
             Assert.AreEqual(data.Name, subject.GetByKey(Key1).Name);
         }
@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [ExpectedException(typeof(ArgumentNullException))]
         public void AddingEmptyKeyEntryShouldThrow()
         {
-            InMemoryAccountTypeRepository subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Add(string.Empty, CreateTestData());
             Assert.Fail();
         }
@@ -33,8 +33,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void AddingNewEntryShouldBeRetrievableByKey()
         {
-            InMemoryAccountTypeRepository subject = CreateSubject();
-            ChequeAccount data = CreateTestData2();
+            var subject = CreateSubject();
+            var data = CreateTestData2();
             subject.Add(Key1, data);
             Assert.AreEqual(data.Name, subject.GetByKey(Key1).Name);
         }
@@ -43,7 +43,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [ExpectedException(typeof(ArgumentNullException))]
         public void AddingNullEntryShouldThrow()
         {
-            InMemoryAccountTypeRepository subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Add(Key1, null);
             Assert.Fail();
         }
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [ExpectedException(typeof(ArgumentNullException))]
         public void AddingNullKeyEntryShouldThrow()
         {
-            InMemoryAccountTypeRepository subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Add(null, CreateTestData());
             Assert.Fail();
         }
@@ -60,11 +60,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void FindExistingValueShouldSucceed()
         {
-            InMemoryAccountTypeRepository subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Add(Key1, CreateTestData());
             subject.Add(Key2, CreateTestData());
 
-            Engine.BankAccount.Account result = subject.Find(a => a.Name == Key1);
+            var result = subject.Find(a => a.Name == Key1);
 
             Assert.IsNotNull(result);
         }
@@ -72,11 +72,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void FindNonExistentValueShouldFail()
         {
-            InMemoryAccountTypeRepository subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Add(Key1, CreateTestData());
             subject.Add(Key2, CreateTestData());
 
-            Engine.BankAccount.Account result = subject.Find(a => a.Name == "Key99");
+            var result = subject.Find(a => a.Name == "Key99");
 
             Assert.IsNull(result);
         }
@@ -84,9 +84,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Account
         [TestMethod]
         public void GetOrCreateNewDuplicateEntryShouldNotThrow()
         {
-            InMemoryAccountTypeRepository subject = CreateSubject();
-            Engine.BankAccount.Account result1 = subject.GetByKey(Key1);
-            Engine.BankAccount.Account result2 = subject.GetByKey(Key1);
+            var subject = CreateSubject();
+            var result1 = subject.GetByKey(Key1);
+            var result2 = subject.GetByKey(Key1);
 
             Assert.AreSame(result1, result2);
         }

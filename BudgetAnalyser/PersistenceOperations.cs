@@ -16,7 +16,7 @@ namespace BudgetAnalyser
         private readonly DemoFileHelper demoFileHelper;
         private readonly IUiContext uiContext;
         private DateTime lastSave = DateTime.Now;
-        
+
         public PersistenceOperations(
             [NotNull] IApplicationDatabaseFacade applicationDatabaseService,
             [NotNull] DemoFileHelper demoFileHelper,
@@ -50,7 +50,7 @@ namespace BudgetAnalyser
             fileDialog.AddExtension = true;
             fileDialog.Filter = "Budget Analyser files (*.bax)|*.bax";
             fileDialog.Title = "Select a folder and filename";
-            bool? response = fileDialog.ShowDialog();
+            var response = fileDialog.ShowDialog();
             if (response is null || response == false || fileDialog.FileName.IsNothing())
             {
                 return;
@@ -78,8 +78,16 @@ namespace BudgetAnalyser
             await OneSaveAtATime.WaitAsync();
             try
             {
-                if (!this.applicationDatabaseService.HasUnsavedChanges) return;
-                if (DateTime.Now.Subtract(this.lastSave).TotalSeconds < 2) return;  // No need to save repeatedly.
+                if (!this.applicationDatabaseService.HasUnsavedChanges)
+                {
+                    return;
+                }
+
+                if (DateTime.Now.Subtract(this.lastSave).TotalSeconds < 2)
+                {
+                    return;  // No need to save repeatedly.
+                }
+
                 await SaveDatabase();
                 this.lastSave = DateTime.Now;
             }
@@ -156,7 +164,7 @@ namespace BudgetAnalyser
             if (this.applicationDatabaseService.HasUnsavedChanges)
             {
                 const string messageBoxHeading = "Open Budget Analyser File";
-                bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", messageBoxHeading);
+                var response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", messageBoxHeading);
                 if (response is not null && response.Value)
                 {
                     return await SaveDatabase(messageBoxHeading);
@@ -177,13 +185,8 @@ namespace BudgetAnalyser
             openDialog.DefaultExt = "*.bax";
             openDialog.Filter = "Budget Analyser files (*.bax)|*.bax|Xml files (*.xml, *.xaml)|*.xml;*.xaml";
             openDialog.Title = "Select Budget Analyser file to open";
-            bool? response = openDialog.ShowDialog();
-            if (response is null || response.Value == false)
-            {
-                return null;
-            }
-
-            return openDialog.FileName;
+            var response = openDialog.ShowDialog();
+            return response is null || response.Value == false ? null : openDialog.FileName;
         }
 
         private async Task<bool> SaveDatabase(string title)

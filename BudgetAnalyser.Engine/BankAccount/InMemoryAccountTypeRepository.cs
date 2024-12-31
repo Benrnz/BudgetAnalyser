@@ -55,12 +55,9 @@ namespace BudgetAnalyser.Engine.BankAccount
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            return this.repository.GetOrAdd(key.ToUpperInvariant(), instance);
+            return string.IsNullOrWhiteSpace(key)
+                ? throw new ArgumentNullException(nameof(key))
+                : this.repository.GetOrAdd(key.ToUpperInvariant(), instance);
         }
 
         /// <summary>
@@ -70,7 +67,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// <returns>The found account or null.</returns>
         public Account Find(Predicate<Account> criteria)
         {
-            KeyValuePair<string, Account>[] copy = this.repository.ToArray();
+            var copy = this.repository.ToArray();
             return copy.FirstOrDefault(x => criteria(x.Value)).Value;
         }
 
@@ -86,13 +83,7 @@ namespace BudgetAnalyser.Engine.BankAccount
                 return null;
             }
 
-            Account account;
-            if (this.repository.TryGetValue(key.ToUpperInvariant(), out account))
-            {
-                return account;
-            }
-
-            return null;
+            return this.repository.TryGetValue(key.ToUpperInvariant(), out var account) ? account : null;
         }
 
         /// <summary>

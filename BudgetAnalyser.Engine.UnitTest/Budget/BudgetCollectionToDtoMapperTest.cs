@@ -14,14 +14,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void BudgetsCountShouldBeMapped()
         {
-            BudgetCollectionDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Count, result.Budgets.Count);
         }
 
         [TestMethod]
         public void EffectiveFromShouldBeMapped()
         {
-            BudgetCollectionDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.StorageKey, result.StorageKey);
         }
 
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [Description("A test designed to break when new propperties are added to the BudgetCollectionDto. This is a trigger to update the mappers.")]
         public void NumberOfBudgetCollectionDtoPropertiesShouldBe3()
         {
-            int dataProperties = typeof(BudgetCollectionDto).CountProperties();
+            var dataProperties = typeof(BudgetCollectionDto).CountProperties();
             Assert.AreEqual(3, dataProperties);
         }
 
@@ -42,10 +42,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         private BudgetCollectionDto ArrangeAndAct()
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();
-            var mapper = new Mapper_BudgetCollectionDto_BudgetCollection(
-                bucketRepo, 
-                new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()), 
-                new Mapper_BudgetModelDto_BudgetModel(bucketRepo));
+            var mapper = new MapperBudgetCollectionDtoBudgetCollection(
+                bucketRepo,
+                new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()),
+                new MapperBudgetModelDtoBudgetModel(bucketRepo));
             return mapper.ToDto(TestData);
         }
     }

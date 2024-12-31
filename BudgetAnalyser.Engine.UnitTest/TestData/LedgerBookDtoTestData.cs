@@ -8,17 +8,17 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     internal static class LedgerBookDtoTestData
     {
-        private static readonly Guid id1 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A0");
-        private static readonly Guid id10 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A9");
-        private static readonly Guid id11 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6AA");
-        private static readonly Guid id2 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A1");
-        private static readonly Guid id3 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A2");
-        private static readonly Guid id4 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A3");
-        private static readonly Guid id5 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A4");
-        private static readonly Guid id6 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A5");
-        private static readonly Guid id7 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A6");
-        private static readonly Guid id8 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A7");
-        private static readonly Guid id9 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A8");
+        private static readonly Guid Id1 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A0");
+        private static readonly Guid Id10 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A9");
+        private static readonly Guid Id11 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6AA");
+        private static readonly Guid Id2 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A1");
+        private static readonly Guid Id3 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A2");
+        private static readonly Guid Id4 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A3");
+        private static readonly Guid Id5 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A4");
+        private static readonly Guid Id6 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A5");
+        private static readonly Guid Id7 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A6");
+        private static readonly Guid Id8 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A7");
+        private static readonly Guid Id9 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A8");
 
         public static LedgerBookDto TestData1()
         {
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             var lines = new List<LedgerEntryLineDto>();
 
-            LedgerEntryLineDto line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
+            var line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
             line1.Entries.AddRange(
                 new[]
                 {
@@ -43,14 +43,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id1,
+                                Id = Id1,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
                             },
                             new LedgerTransactionDto
                             {
-                                Id = id2,
+                                Id = Id2,
                                 Amount = -195,
                                 Narrative = "Rates payment",
                                 TransactionType = typeof(CreditLedgerTransaction).FullName
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id3,
+                                Id = Id3,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -80,14 +80,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id4,
+                                Id = Id4,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
                             },
                             new LedgerTransactionDto
                             {
-                                Id = id5,
+                                Id = Id5,
                                 Amount = -295.45M,
                                 Narrative = "Fix car",
                                 TransactionType = typeof(CreditLedgerTransaction).FullName
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
+            var line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
             line2.Entries.AddRange(
                 new[]
                 {
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id6,
+                                Id = Id6,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -121,7 +121,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id7,
+                                Id = Id7,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id8,
+                                Id = Id8,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -144,7 +144,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
+            var line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
             line3.Entries.AddRange(
                 new[]
                 {
@@ -155,7 +155,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id9,
+                                Id = Id9,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -169,7 +169,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id10,
+                                Id = Id10,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -183,7 +183,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id11,
+                                Id = Id11,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -213,7 +213,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             var lines = new List<LedgerEntryLineDto>();
 
-            LedgerEntryLineDto line1 = AddEntryLineForTestData2(lines, new DateTime(2013, 12, 20));
+            var line1 = AddEntryLineForTestData2(lines, new DateTime(2013, 12, 20));
             line1.Entries.AddRange(
                 new[]
                 {
@@ -225,7 +225,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id1,
+                                Id = Id1,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -240,7 +240,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id2,
+                                Id = Id2,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -255,7 +255,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id3,
+                                Id = Id3,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -264,7 +264,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line2 = AddEntryLineForTestData2(lines, new DateTime(2014, 1, 20));
+            var line2 = AddEntryLineForTestData2(lines, new DateTime(2014, 1, 20));
             line2.Entries.AddRange(
                 new[]
                 {
@@ -275,7 +275,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id4,
+                                Id = Id4,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -289,7 +289,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id5,
+                                Id = Id5,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -303,7 +303,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id6,
+                                Id = Id6,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -312,7 +312,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line3 = AddEntryLineForTestData2(lines, new DateTime(2014, 02, 20));
+            var line3 = AddEntryLineForTestData2(lines, new DateTime(2014, 02, 20));
             line3.Entries.AddRange(
                 new[]
                 {
@@ -323,14 +323,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id7,
+                                Id = Id7,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
                             },
                             new LedgerTransactionDto
                             {
-                                Id = id8,
+                                Id = Id8,
                                 Amount = -195,
                                 Narrative = "Rates payment",
                                 TransactionType = typeof(CreditLedgerTransaction).FullName
@@ -344,7 +344,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id9,
+                                Id = Id9,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -358,14 +358,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id10,
+                                Id = Id10,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
                             },
                             new LedgerTransactionDto
                             {
-                                Id = id11,
+                                Id = Id11,
                                 Amount = -295.45M,
                                 Narrative = "Fix car",
                                 TransactionType = typeof(CreditLedgerTransaction).FullName
@@ -399,7 +399,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             var lines = new List<LedgerEntryLineDto>();
 
-            LedgerEntryLineDto line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
+            var line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
             line1.Entries.AddRange(
                 new[]
                 {
@@ -411,14 +411,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id1,
+                                Id = Id1,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
                             },
                             new LedgerTransactionDto
                             {
-                                Id = id2,
+                                Id = Id2,
                                 Amount = -195,
                                 Narrative = "Rates payment",
                                 TransactionType = typeof(CreditLedgerTransaction).FullName
@@ -433,7 +433,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id3,
+                                Id = Id3,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -448,14 +448,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id4,
+                                Id = Id4,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
                             },
                             new LedgerTransactionDto
                             {
-                                Id = id5,
+                                Id = Id5,
                                 Amount = -295.45M,
                                 Narrative = "Fix car",
                                 TransactionType = typeof(CreditLedgerTransaction).FullName
@@ -464,7 +464,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
+            var line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
             line2.Entries.AddRange(
                 new[]
                 {
@@ -475,7 +475,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id6,
+                                Id = Id6,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -489,7 +489,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id7,
+                                Id = Id7,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -503,7 +503,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id8,
+                                Id = Id8,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -512,7 +512,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     }
                 });
 
-            LedgerEntryLineDto line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
+            var line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
             line3.Entries.AddRange(
                 new[]
                 {
@@ -523,7 +523,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id9,
+                                Id = Id9,
                                 Amount = 75,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -537,7 +537,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id10,
+                                Id = Id10,
                                 Amount = 21.15M,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -551,7 +551,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         {
                             new LedgerTransactionDto
                             {
-                                Id = id11,
+                                Id = Id11,
                                 Amount = 95,
                                 Narrative = "Budgeted Amount",
                                 TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
@@ -626,9 +626,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 return;
             }
 
-            foreach (LedgerEntryDto entry in currentLine.Entries)
+            foreach (var entry in currentLine.Entries)
             {
-                LedgerEntryDto previousEntry = previousLine.Entries.Single(e => e.BucketCode == entry.BucketCode);
+                var previousEntry = previousLine.Entries.Single(e => e.BucketCode == entry.BucketCode);
                 entry.Balance = previousEntry.Balance + entry.Transactions.Sum(t => t.Amount);
                 if (entry.Balance < 0)
                 {

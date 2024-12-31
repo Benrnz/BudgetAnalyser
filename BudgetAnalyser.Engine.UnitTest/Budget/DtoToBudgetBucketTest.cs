@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory());
+            var subject = new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory());
             Result = subject.ToModel(TestData);
         }
     }

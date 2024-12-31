@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         /// <inheritdoc />
         public void ApplyBehaviour()
         {
-            IList<Transaction> wrongAccountPayments = DiscoverWrongAccountPaymentTransactions();
+            var wrongAccountPayments = DiscoverWrongAccountPaymentTransactions();
 
             var reference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
 
@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                     Narrative = "Transfer to rectify payment made from wrong account."
                 };
                 var ledger = NewReconLine.Entries.Single(l => l.LedgerBucket.BudgetBucket == transaction.BudgetBucket);
-                List<LedgerTransaction> replacementTransactions = ledger.Transactions.ToList();
+                var replacementTransactions = ledger.Transactions.ToList();
                 replacementTransactions.Add(journal1);
                 replacementTransactions.Add(journal2);
                 ledger.SetTransactionsForReconciliation(replacementTransactions);
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 
         private IList<Transaction> DiscoverWrongAccountPaymentTransactions()
         {
-            List<Transaction> debitAccountTransactionsOnly = Transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
+            var debitAccountTransactionsOnly = Transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
 
             var wrongAccountPayments = new List<Transaction>();
 

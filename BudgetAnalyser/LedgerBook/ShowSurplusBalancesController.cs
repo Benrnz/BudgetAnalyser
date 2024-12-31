@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
@@ -24,14 +24,9 @@ namespace BudgetAnalyser.LedgerBook
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Instance method required for data binding")]
         [UsedImplicitly]
-        public ICommand RemoveBankBalanceCommand
-        {
-            get
-            {
+        public ICommand RemoveBankBalanceCommand =>
                 // This is here solely to disable the Remove Bank Balance button on the default DataTemplate that displays the BankBalance type.
-                return new RelayCommand<BankBalance>(b => { }, b => false);
-            }
-        }
+                new RelayCommand<BankBalance>(b => { }, b => false);
 
         public ObservableCollection<BankBalance> SurplusBalances { get; private set; }
 

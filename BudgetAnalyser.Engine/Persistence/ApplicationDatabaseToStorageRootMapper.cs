@@ -3,13 +3,13 @@
 namespace BudgetAnalyser.Engine.Persistence
 {
     [AutoRegisterWithIoC]
-    internal partial class Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase
+    internal partial class MapperBudgetAnalyserStorageRoot2ApplicationDatabase
     {
         partial void ToDtoPostprocessing(ref BudgetAnalyserStorageRoot dto, ApplicationDatabase model)
         {
             dto.BudgetCollectionRootDto = new StorageBranch { Source = model.BudgetCollectionStorageKey };
             dto.LedgerBookRootDto = new StorageBranch { Source = model.LedgerBookStorageKey };
-            var mapper = new Mapper_ListToDoTaskDto_ToDoCollection();
+            var mapper = new MapperListToDoTaskDto2ToDoCollection();
             dto.LedgerReconciliationToDoCollection = mapper.ToDto(model.LedgerReconciliationToDoCollection);
             dto.MatchingRulesCollectionRootDto = new StorageBranch { Source = model.MatchingRulesCollectionStorageKey };
             dto.StatementModelRootDto = new StorageBranch { Source = model.StatementModelStorageKey };
@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Persistence
         {
             model.BudgetCollectionStorageKey = dto.BudgetCollectionRootDto.Source;
             model.LedgerBookStorageKey = dto.LedgerBookRootDto.Source;
-            var taskMapper = new Mapper_ListToDoTaskDto_ToDoCollection();
+            var taskMapper = new MapperListToDoTaskDto2ToDoCollection();
             model.LedgerReconciliationToDoCollection = taskMapper.ToModel(dto.LedgerReconciliationToDoCollection);
             model.MatchingRulesCollectionStorageKey = dto.MatchingRulesCollectionRootDto.Source;
             model.StatementModelStorageKey = dto.StatementModelRootDto.Source;

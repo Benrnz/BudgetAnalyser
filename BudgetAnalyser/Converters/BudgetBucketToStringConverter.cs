@@ -18,12 +18,7 @@ namespace BudgetAnalyser.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var stringValue = value as string;
-            if (string.IsNullOrWhiteSpace(stringValue))
-            {
-                return null;
-            }
-
-            return BudgetBucketBindingSource.BucketRepository.GetByCode(stringValue);
+            return string.IsNullOrWhiteSpace(stringValue) ? null : (object)BudgetBucketBindingSource.BucketRepository.GetByCode(stringValue);
         }
     }
 }

@@ -183,10 +183,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         private void SetReconciliation(IReadOnlyDictionary<LedgerBucket, SpecificLedgerEntryTestDataBuilder> ledgers, string remarks)
         {
             var recon = new LedgerEntryLine(this.tempReconDate, this.tempBankBalances) { Remarks = remarks };
-            LedgerEntryLine previousRecon = Reconciliations.OrderByDescending(r => r.Date).FirstOrDefault();
+            var previousRecon = Reconciliations.OrderByDescending(r => r.Date).FirstOrDefault();
             var entries = new List<LedgerEntry>();
 
-            foreach (LedgerBucket ledgerBucket in this.ledgerBuckets)
+            foreach (var ledgerBucket in this.ledgerBuckets)
             {
                 decimal openingBalance;
                 if (previousRecon is null)
@@ -195,7 +195,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 }
                 else
                 {
-                    LedgerEntry previousEntry = previousRecon.Entries.Single(e => e.LedgerBucket == ledgerBucket);
+                    var previousEntry = previousRecon.Entries.Single(e => e.LedgerBucket == ledgerBucket);
                     openingBalance = previousEntry.Balance;
                 }
                 var entry = new LedgerEntry
@@ -217,7 +217,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             public LedgerEntryTestDataBuilder(IEnumerable<LedgerBucket> ledgers)
             {
-                foreach (LedgerBucket ledgerBucket in ledgers)
+                foreach (var ledgerBucket in ledgers)
                 {
                     this.ledgers.Add(ledgerBucket, new SpecificLedgerEntryTestDataBuilder(this));
                 }
@@ -297,7 +297,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             public TransactionTestDataBuilder WithBudgetCredit(decimal amount, DateTime? date = null, string automatchingRef = null)
             {
-                BudgetCreditLedgerTransaction budgetTxn = this.transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
+                var budgetTxn = this.transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
                 if (budgetTxn is null)
                 {
                     budgetTxn = new BudgetCreditLedgerTransaction { AutoMatchingReference = automatchingRef, Date = date, Narrative = "Budgeted Amount" };

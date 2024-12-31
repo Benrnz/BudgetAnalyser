@@ -6,10 +6,10 @@ using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.Widgets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest.Widgets
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
             StatementModelTestDataForThisTest.BudgetBucketRepo = this.bucketRepo;
             this.statementTestData = StatementModelTestDataForThisTest.TestDataGenerated();
 
-            BudgetModel budgetModel = BudgetModelTestData.CreateTestData1();
+            var budgetModel = BudgetModelTestData.CreateTestData1();
             this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel), budgetModel);
 
             this.ledgerBookTestData = new LedgerBookBuilder

@@ -23,9 +23,20 @@ namespace BudgetAnalyser.Matching
         {
             this.ruleService = ruleService;
             this.dbService = dbService;
-            if (messenger is null) throw new ArgumentNullException(nameof(messenger));
-            if (ruleService is null) throw new ArgumentNullException(nameof(ruleService));
-            if (dbService is null) throw new ArgumentNullException(nameof(dbService));
+            if (messenger is null)
+            {
+                throw new ArgumentNullException(nameof(messenger));
+            }
+
+            if (ruleService is null)
+            {
+                throw new ArgumentNullException(nameof(ruleService));
+            }
+
+            if (dbService is null)
+            {
+                throw new ArgumentNullException(nameof(dbService));
+            }
 
             Messenger.Register<DisusedRulesController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             Messenger.Register<DisusedRulesController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
@@ -33,13 +44,7 @@ namespace BudgetAnalyser.Matching
 
         public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; }
 
-        public ICommand RemoveRuleCommand
-        {
-            get
-            {
-                return new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r is not null);
-            }
-        }
+        public ICommand RemoveRuleCommand => new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r is not null);
 
         private void OnRemoveRuleExecuted(DisusedRuleViewModel rule)
         {
@@ -49,10 +54,14 @@ namespace BudgetAnalyser.Matching
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
-            if (!message.IsItForMe(this.dialogCorrelationId)) return;
+            if (!message.IsItForMe(this.dialogCorrelationId))
+            {
+                return;
+            }
+
             if (this.removedRules.Any())
             {
-                foreach (MatchingRule rule in this.removedRules)
+                foreach (var rule in this.removedRules)
                 {
                     this.ruleService.RemoveRule(rule);
                 }
@@ -64,7 +73,10 @@ namespace BudgetAnalyser.Matching
 
         private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
         {
-            if (message.Handled || !(message.Widget is DisusedMatchingRuleWidget)) return;
+            if (message.Handled || !(message.Widget is DisusedMatchingRuleWidget))
+            {
+                return;
+            }
 
             var rules = DisusedMatchingRuleWidget.QueryRules(this.ruleService.MatchingRules);
             DisusedRules = new ObservableCollection<DisusedRuleViewModel>(rules.Select(r => new DisusedRuleViewModel { MatchingRule = r, RemoveCommand = RemoveRuleCommand }));

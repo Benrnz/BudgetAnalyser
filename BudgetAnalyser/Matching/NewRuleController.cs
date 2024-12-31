@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
@@ -7,8 +7,8 @@ using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Matching
 {
@@ -56,7 +56,11 @@ namespace BudgetAnalyser.Matching
             get => this.doNotUseAmount;
             set
             {
-                if (Equals(value, this.doNotUseAmount)) return;
+                if (Equals(value, this.doNotUseAmount))
+                {
+                    return;
+                }
+
                 this.doNotUseAmount = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanExecuteSaveButton));
@@ -69,7 +73,11 @@ namespace BudgetAnalyser.Matching
             get => this.doNotUseAndChecked;
             set
             {
-                if (value == this.doNotUseAndChecked) return;
+                if (value == this.doNotUseAndChecked)
+                {
+                    return;
+                }
+
                 this.doNotUseAndChecked = value;
                 OnPropertyChanged();
                 this.doNotUseOrChecked = !AndChecked;
@@ -88,7 +96,11 @@ namespace BudgetAnalyser.Matching
             get => this.doNotUseDescription;
             set
             {
-                if (Equals(value, this.doNotUseDescription)) return;
+                if (Equals(value, this.doNotUseDescription))
+                {
+                    return;
+                }
+
                 this.doNotUseDescription = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanExecuteSaveButton));
@@ -104,7 +116,11 @@ namespace BudgetAnalyser.Matching
             [UsedImplicitly]
             set
             {
-                if (value == this.doNotUseOrChecked) return;
+                if (value == this.doNotUseOrChecked)
+                {
+                    return;
+                }
+
                 this.doNotUseOrChecked = value;
                 OnPropertyChanged();
                 this.doNotUseAndChecked = !OrChecked;
@@ -117,7 +133,11 @@ namespace BudgetAnalyser.Matching
             get => this.doNotUseReference1;
             set
             {
-                if (Equals(value, this.doNotUseReference1)) return;
+                if (Equals(value, this.doNotUseReference1))
+                {
+                    return;
+                }
+
                 this.doNotUseReference1 = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanExecuteSaveButton));
@@ -130,7 +150,11 @@ namespace BudgetAnalyser.Matching
             get => this.doNotUseReference2;
             set
             {
-                if (Equals(value, this.doNotUseReference2)) return;
+                if (Equals(value, this.doNotUseReference2))
+                {
+                    return;
+                }
+
                 this.doNotUseReference2 = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanExecuteSaveButton));
@@ -143,7 +167,11 @@ namespace BudgetAnalyser.Matching
             get => this.doNotUseReference3;
             set
             {
-                if (Equals(value, this.doNotUseReference3)) return;
+                if (Equals(value, this.doNotUseReference3))
+                {
+                    return;
+                }
+
                 this.doNotUseReference3 = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanExecuteSaveButton));
@@ -160,7 +188,11 @@ namespace BudgetAnalyser.Matching
             get => this.doNotUseTransactionType;
             set
             {
-                if (Equals(value, this.doNotUseTransactionType)) return;
+                if (Equals(value, this.doNotUseTransactionType))
+                {
+                    return;
+                }
+
                 this.doNotUseTransactionType = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanExecuteSaveButton));
@@ -267,7 +299,7 @@ namespace BudgetAnalyser.Matching
 
         private void RefreshSimilarRules()
         {
-            ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
+            var view = CollectionViewSource.GetDefaultView(SimilarRules);
             view?.Refresh();
         }
 
@@ -280,7 +312,7 @@ namespace BudgetAnalyser.Matching
             }
 
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules1: Rules.Count() = {0}", SimilarRules.Count()));
-            ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
+            var view = CollectionViewSource.GetDefaultView(SimilarRules);
             view.Filter = item => this.rulesService.IsRuleSimilar((SimilarMatchedRule)item, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType);
             view.SortDescriptions.Add(new SortDescription(nameof(SimilarMatchedRule.SortOrder), ListSortDirection.Descending));
 

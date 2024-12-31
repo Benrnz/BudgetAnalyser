@@ -1,4 +1,4 @@
-using BudgetAnalyser.Budget;
+﻿using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Filtering;

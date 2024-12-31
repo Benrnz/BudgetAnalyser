@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public Account Account
         {
-            get { return this.doNotUseAccount; }
+            get => this.doNotUseAccount;
             set
             {
                 this.doNotUseAccount = value;
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public decimal Amount
         {
-            get { return this.doNotUseAmount; }
+            get => this.doNotUseAmount;
             set
             {
                 this.doNotUseAmount = value;
@@ -78,7 +78,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </exception>
         public BudgetBucket BudgetBucket
         {
-            get { return this.budgetBucket; }
+            get => this.budgetBucket;
 
             set
             {
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public DateTime Date
         {
-            get { return this.doNotUseDate; }
+            get => this.doNotUseDate;
             set
             {
                 this.doNotUseDate = value;
@@ -110,7 +110,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public string Description
         {
-            get { return this.doNotUseDescription; }
+            get => this.doNotUseDescription;
             set
             {
                 this.doNotUseDescription = value;
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public string Reference1
         {
-            get { return this.doNotUseReference1; }
+            get => this.doNotUseReference1;
             set
             {
                 this.doNotUseReference1 = value;
@@ -150,7 +150,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public string Reference2
         {
-            get { return this.doNotUseReference2; }
+            get => this.doNotUseReference2;
             set
             {
                 this.doNotUseReference2 = value;
@@ -163,7 +163,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public string Reference3
         {
-            get { return this.doNotUseReference3; }
+            get => this.doNotUseReference3;
             set
             {
                 this.doNotUseReference3 = value;
@@ -176,7 +176,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public TransactionType? TransactionType
         {
-            get { return this.doNotUseTransactionType; }
+            get => this.doNotUseTransactionType;
             set
             {
                 this.doNotUseTransactionType = value;
@@ -208,18 +208,12 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public int CompareTo(object obj)
         {
-            var otherTransaction = obj as Transaction;
-            if (otherTransaction is null)
-            {
-                return 1;
-            }
-
-            return Date.CompareTo(otherTransaction.Date);
+            return obj is not Transaction otherTransaction ? 1 : Date.CompareTo(otherTransaction.Date);
         }
 
         /// <summary>
         ///     Get a hash code that will indicate value based equivalence with another instance of <see cref="Transaction" />.
-        ///     <see cref="Object.GetHashCode" /> cannot be used because it is intended to show instance reference equivalence. It
+        ///     <see cref="object.GetHashCode" /> cannot be used because it is intended to show instance reference equivalence. It
         ///     will give a different value (and it should) for every instance. If overriden changing hashcodes will cause problems
         ///     with
         ///     UI controls such as ListBox.

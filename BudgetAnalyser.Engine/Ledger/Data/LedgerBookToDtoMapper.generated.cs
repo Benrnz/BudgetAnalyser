@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 {
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 3/01/2016 2:19:01 AM UTC")]
-    internal partial class Mapper_LedgerBookDto_LedgerBook : IDtoMapper<LedgerBookDto, LedgerBook>
+    internal partial class MapperLedgerBookDto2LedgerBook : IDtoMapper<LedgerBookDto, LedgerBook>
     {
 
         public virtual LedgerBook ToModel(LedgerBookDto dto)
@@ -27,14 +27,14 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 model = (LedgerBook)constructor.Invoke(new Type[] { });
             }
             var modelType = model.GetType();
-            var mapper1 = new Mapper_LedgerBucketDto_LedgerBucket(this.bucketRepo, this.accountTypeRepo, this.bucketFactory);
+            var mapper1 = new MapperLedgerBucketDto2LedgerBucket(this.bucketRepo, this.accountTypeRepo, this.bucketFactory);
             var ledgers1 = dto.Ledgers.Select(mapper1.ToModel).ToList();
             modelType.GetProperty("Ledgers").SetValue(model, ledgers1);
             var modified2 = dto.Modified;
             modelType.GetProperty("Modified").SetValue(model, modified2);
             var name3 = dto.Name;
             modelType.GetProperty("Name").SetValue(model, name3);
-            var mapper2 = new Mapper_LedgerEntryLineDto_LedgerEntryLine(this.accountTypeRepo, this.bucketFactory, this.transactionFactory);
+            var mapper2 = new MapperLedgerEntryLineDto2LedgerEntryLine(this.accountTypeRepo, this.bucketFactory, this.transactionFactory);
             var reconciliations4 = dto.Reconciliations.Select(mapper2.ToModel).ToList();
             modelType.GetProperty("Reconciliations").SetValue(model, reconciliations4);
             var storageKey5 = dto.StorageKey;
@@ -55,14 +55,14 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             {
                 dto = new LedgerBookDto();
             }
-            var mapper3 = new Mapper_LedgerBucketDto_LedgerBucket(this.bucketRepo, this.accountTypeRepo, this.bucketFactory);
+            var mapper3 = new MapperLedgerBucketDto2LedgerBucket(this.bucketRepo, this.accountTypeRepo, this.bucketFactory);
             var ledgers7 = model.Ledgers.Select(mapper3.ToDto).ToList();
             dto.Ledgers = ledgers7;
             var modified8 = model.Modified;
             dto.Modified = modified8;
             var name9 = model.Name;
             dto.Name = name9;
-            var mapper4 = new Mapper_LedgerEntryLineDto_LedgerEntryLine(this.accountTypeRepo, this.bucketFactory, this.transactionFactory);
+            var mapper4 = new MapperLedgerEntryLineDto2LedgerEntryLine(this.accountTypeRepo, this.bucketFactory, this.transactionFactory);
             var reconciliations10 = model.Reconciliations.Select(mapper4.ToDto).ToList();
             dto.Reconciliations = reconciliations10;
             var storageKey11 = model.StorageKey;
@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 3/01/2016 2:19:01 AM UTC")]
-    internal partial class Mapper_LedgerBucketDto_LedgerBucket : IDtoMapper<LedgerBucketDto, LedgerBucket>
+    internal partial class MapperLedgerBucketDto2LedgerBucket : IDtoMapper<LedgerBucketDto, LedgerBucket>
     {
 
         public virtual LedgerBucket ToModel(LedgerBucketDto dto)
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 3/01/2016 2:19:01 AM UTC")]
-    internal partial class Mapper_LedgerEntryLineDto_LedgerEntryLine : IDtoMapper<LedgerEntryLineDto, LedgerEntryLine>
+    internal partial class MapperLedgerEntryLineDto2LedgerEntryLine : IDtoMapper<LedgerEntryLineDto, LedgerEntryLine>
     {
 
         public virtual LedgerEntryLine ToModel(LedgerEntryLineDto dto)
@@ -139,15 +139,15 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 model = (LedgerEntryLine)constructor.Invoke(new Type[] { });
             }
             var modelType = model.GetType();
-            var mapper5 = new Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransaction(this.accountTypeRepo);
+            var mapper5 = new MapperLedgerTransactionDto2BankBalanceAdjustmentTransaction(this.accountTypeRepo);
             var bankBalanceAdjustments18 = dto.BankBalanceAdjustments.Select(mapper5.ToModel).ToList();
             modelType.GetProperty("BankBalanceAdjustments").SetValue(model, bankBalanceAdjustments18);
-            var mapper6 = new Mapper_BankBalanceDto_BankBalance(this.accountTypeRepo);
+            var mapper6 = new MapperBankBalanceDto2BankBalance(this.accountTypeRepo);
             var bankBalances19 = dto.BankBalances.Select(mapper6.ToModel).ToList();
             modelType.GetProperty("BankBalances").SetValue(model, bankBalances19);
             var date20 = dto.Date;
             modelType.GetProperty("Date").SetValue(model, date20);
-            var mapper7 = new Mapper_LedgerEntryDto_LedgerEntry(this.bucketFactory, this.transactionFactory, this.accountTypeRepo);
+            var mapper7 = new MapperLedgerEntryDto2LedgerEntry(this.bucketFactory, this.transactionFactory, this.accountTypeRepo);
             var entries21 = dto.Entries.Select(mapper7.ToModel).ToList();
             modelType.GetProperty("Entries").SetValue(model, entries21);
             var remarks22 = dto.Remarks;
@@ -165,15 +165,15 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             {
                 dto = new LedgerEntryLineDto();
             }
-            var mapper8 = new Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransaction(this.accountTypeRepo);
+            var mapper8 = new MapperLedgerTransactionDto2BankBalanceAdjustmentTransaction(this.accountTypeRepo);
             var bankBalanceAdjustments24 = model.BankBalanceAdjustments.Select(mapper8.ToDto).ToList();
             dto.BankBalanceAdjustments = bankBalanceAdjustments24;
-            var mapper9 = new Mapper_BankBalanceDto_BankBalance(this.accountTypeRepo);
+            var mapper9 = new MapperBankBalanceDto2BankBalance(this.accountTypeRepo);
             var bankBalances25 = model.BankBalances.Select(mapper9.ToDto).ToList();
             dto.BankBalances = bankBalances25;
             var date26 = model.Date;
             dto.Date = date26;
-            var mapper10 = new Mapper_LedgerEntryDto_LedgerEntry(this.bucketFactory, this.transactionFactory, this.accountTypeRepo);
+            var mapper10 = new MapperLedgerEntryDto2LedgerEntry(this.bucketFactory, this.transactionFactory, this.accountTypeRepo);
             var entries27 = model.Entries.Select(mapper10.ToDto).ToList();
             dto.Entries = entries27;
             var remarks28 = model.Remarks;
@@ -190,7 +190,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 3/01/2016 2:19:01 AM UTC")]
-    internal partial class Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransaction : IDtoMapper<LedgerTransactionDto, BankBalanceAdjustmentTransaction>
+    internal partial class MapperLedgerTransactionDto2BankBalanceAdjustmentTransaction : IDtoMapper<LedgerTransactionDto, BankBalanceAdjustmentTransaction>
     {
 
         public virtual BankBalanceAdjustmentTransaction ToModel(LedgerTransactionDto dto)
@@ -250,7 +250,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 3/01/2016 2:19:01 AM UTC")]
-    internal partial class Mapper_BankBalanceDto_BankBalance : IDtoMapper<BankBalanceDto, BankBalance>
+    internal partial class MapperBankBalanceDto2BankBalance : IDtoMapper<BankBalanceDto, BankBalance>
     {
 
         public virtual BankBalance ToModel(BankBalanceDto dto)
@@ -290,7 +290,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 3/01/2016 2:19:01 AM UTC")]
-    internal partial class Mapper_LedgerEntryDto_LedgerEntry : IDtoMapper<LedgerEntryDto, LedgerEntry>
+    internal partial class MapperLedgerEntryDto2LedgerEntry : IDtoMapper<LedgerEntryDto, LedgerEntry>
     {
 
         public virtual LedgerEntry ToModel(LedgerEntryDto dto)
@@ -322,7 +322,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             }
             var balance49 = model.Balance;
             dto.Balance = balance49;
-            var mapper11 = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
+            var mapper11 = new MapperLedgerTransactionDto2LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
             var transactions52 = model.Transactions.Select(mapper11.ToDto).ToList();
             dto.Transactions = transactions52;
             ToDtoPostprocessing(ref dto, model);
@@ -337,7 +337,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     } // End Class
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 3/01/2016 2:19:01 AM UTC")]
-    internal partial class Mapper_LedgerTransactionDto_LedgerTransaction : IDtoMapper<LedgerTransactionDto, LedgerTransaction>
+    internal partial class MapperLedgerTransactionDto2LedgerTransaction : IDtoMapper<LedgerTransactionDto, LedgerTransaction>
     {
 
         public virtual LedgerTransaction ToModel(LedgerTransactionDto dto)

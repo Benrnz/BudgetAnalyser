@@ -70,12 +70,9 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
     public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon, bool includeMatchedTransactions = false)
     {
-        if (recon is null)
-        {
-            return new List<LedgerTransaction>();
-        }
-
-        return recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
+        return recon is null
+            ? new List<LedgerTransaction>()
+            : recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
     }
 
     public static bool IsAutoMatchingTransaction(Transaction statementTransaction, IEnumerable<LedgerTransaction> ledgerTransactions)
@@ -114,7 +111,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
     internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
     {
-        IOrderedEnumerable<Transaction> sortedTransactions = transactions.Where(t =>
+        var sortedTransactions = transactions.Where(t =>
                                                                       t.Reference1?.TrimEnd() == autoMatchingReference
                                                                       || t.Reference2?.TrimEnd() == autoMatchingReference
                                                                       || t.Reference3?.TrimEnd() == autoMatchingReference)
@@ -134,9 +131,9 @@ internal class ReconciliationBuilder : IReconciliationBuilder
         // For example for a monthly budget if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
         // 20/Jan (inclusive) and 19/Feb (inclusive) but not including anything for the 20th of Feb.
         // Why? Because the new ledger entry is intended to show the starting balances for the new period, so you can plan for the upcoming period.
-        List<Transaction> filteredStatementTransactions = statement?.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList() ?? new List<Transaction>();
+        var filteredStatementTransactions = statement?.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList() ?? new List<Transaction>();
 
-        IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(LedgerBook);
+        var previousLedgerBalances = CompileLedgersAndBalances(LedgerBook);
 
         var entries = new List<LedgerEntry>();
         foreach (var previousLedgerEntry in previousLedgerBalances)
@@ -158,7 +155,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
 
             // Start by adding the budgeted amount to a list of transactions.
             var salaryAccount = line.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
-            List<LedgerTransaction> transactions = IncludeBudgetedAmount(salaryAccount, budget, ledgerBucket, reconciliationDate);
+            var transactions = IncludeBudgetedAmount(salaryAccount, budget, ledgerBucket, reconciliationDate);
 
             // Append all other transactions for this bucket, if any, to the transaction list.
             transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
@@ -190,7 +187,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
     /// </summary>
     private void AutoMatchTransactionsAlreadyInPreviousPeriod(DateTime lineDate, List<Transaction> transactions, LedgerEntry previousLedgerEntry, List<LedgerTransaction> newLedgerTransactions)
     {
-        List<LedgerTransaction> ledgerAutoMatchTransactions = FindAutoMatchingTransactions(previousLedgerEntry).ToList();
+        var ledgerAutoMatchTransactions = FindAutoMatchingTransactions(previousLedgerEntry).ToList();
         var checkMatchedTxns = new List<LedgerTransaction>();
         var checkMatchCount = 0;
         foreach (var lastMonthLedgerTransaction in ledgerAutoMatchTransactions)
@@ -232,7 +229,7 @@ internal class ReconciliationBuilder : IReconciliationBuilder
                                                  "Ledger Reconciliation - WARNING {0} ledger transactions appear to be waiting to be auto-matched, but no statement transactions were found. {1}",
                                                  ledgerAutoMatchTransactions.Count(),
                                                  ledgerAutoMatchTransactions.First().AutoMatchingReference));
-            IEnumerable<LedgerTransaction> unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
+            var unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
             foreach (var txn in unmatchedTxns)
             {
                 this.toDoList.Add(
@@ -307,11 +304,14 @@ internal class ReconciliationBuilder : IReconciliationBuilder
                 peices.Add("[No Description]");
             }
         }
-        
-        if (peices.Count == 1) return peices[0];
+
+        if (peices.Count == 1)
+        {
+            return peices[0];
+        }
 
         var builder = new StringBuilder();
-        for (int index = 0; index < peices.Count; index++)
+        for (var index = 0; index < peices.Count; index++)
         {
             var firstOne = index == 0;
             if (firstOne)
@@ -340,12 +340,9 @@ internal class ReconciliationBuilder : IReconciliationBuilder
             return new List<LedgerTransaction>();
         }
 
-        if (includeMatchedTransactions)
-        {
-            return ledgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference));
-        }
-
-        return ledgerEntry.Transactions.Where(t =>
+        return includeMatchedTransactions
+            ? ledgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference))
+            : ledgerEntry.Transactions.Where(t =>
                                                   t.AutoMatchingReference.IsSomething()
                                                   && !t.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal));
     }
@@ -409,28 +406,25 @@ internal class ReconciliationBuilder : IReconciliationBuilder
             return new List<LedgerTransaction>();
         }
 
-        List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
+        var transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
         if (transactions.Any())
         {
             IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select(
                                                                                        t =>
                                                                                        {
-                                                                                           if (t.Amount < 0)
-                                                                                           {
-                                                                                               return new CreditLedgerTransaction(t.Id)
+                                                                                           return t.Amount < 0
+                                                                                               ? new CreditLedgerTransaction(t.Id)
+                                                                                               {
+                                                                                                   Amount = t.Amount,
+                                                                                                   Narrative = ExtractNarrative(t),
+                                                                                                   Date = t.Date
+                                                                                               }
+                                                                                               : new CreditLedgerTransaction(t.Id)
                                                                                                {
                                                                                                    Amount = t.Amount,
                                                                                                    Narrative = ExtractNarrative(t),
                                                                                                    Date = t.Date
                                                                                                };
-                                                                                           }
-
-                                                                                           return new CreditLedgerTransaction(t.Id)
-                                                                                           {
-                                                                                               Amount = t.Amount,
-                                                                                               Narrative = ExtractNarrative(t),
-                                                                                               Date = t.Date
-                                                                                           };
                                                                                        });
 
             return newLedgerTransactions.ToList();

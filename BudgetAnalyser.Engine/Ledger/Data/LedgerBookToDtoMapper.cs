@@ -10,25 +10,17 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
 [AutoRegisterWithIoC]
-internal partial class Mapper_LedgerBookDto_LedgerBook
+internal partial class MapperLedgerBookDto2LedgerBook(
+    IBudgetBucketRepository bucketRepo,
+    IAccountTypeRepository accountTypeRepo,
+    ILedgerBucketFactory bucketFactory,
+    ILedgerTransactionFactory transactionFactory)
 {
-    private readonly IAccountTypeRepository accountTypeRepo;
-    private readonly ILedgerBucketFactory bucketFactory;
-    private readonly IBudgetBucketRepository bucketRepo;
+    private readonly IAccountTypeRepository accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
+    private readonly ILedgerBucketFactory bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
+    private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
     private readonly Dictionary<string, LedgerBucket> cachedLedgers = new();
-    private readonly ILedgerTransactionFactory transactionFactory;
-
-    public Mapper_LedgerBookDto_LedgerBook(
-        [NotNull] IBudgetBucketRepository bucketRepo,
-        [NotNull] IAccountTypeRepository accountTypeRepo,
-        [NotNull] ILedgerBucketFactory bucketFactory,
-        [NotNull] ILedgerTransactionFactory transactionFactory)
-    {
-        this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
-        this.bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
-        this.transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
-    }
+    private readonly ILedgerTransactionFactory transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
 
     // ReSharper disable once UnusedParameter.Local - This argument is used to optionally detect elements not in array.
     private LedgerBucket GetOrAddFromCache(LedgerBucket ledger, bool throwIfNotFound = false)
@@ -111,13 +103,13 @@ internal partial class Mapper_LedgerBookDto_LedgerBook
 }
 
 [AutoRegisterWithIoC]
-internal partial class Mapper_LedgerBucketDto_LedgerBucket
+internal partial class MapperLedgerBucketDto2LedgerBucket
 {
     private readonly IAccountTypeRepository accountTypeRepo;
     private readonly ILedgerBucketFactory bucketFactory;
     private readonly IBudgetBucketRepository bucketRepo;
 
-    public Mapper_LedgerBucketDto_LedgerBucket([NotNull] IBudgetBucketRepository bucketRepo, [NotNull] IAccountTypeRepository accountTypeRepo, [NotNull] ILedgerBucketFactory bucketFactory)
+    public MapperLedgerBucketDto2LedgerBucket(IBudgetBucketRepository bucketRepo, IAccountTypeRepository accountTypeRepo, ILedgerBucketFactory bucketFactory)
     {
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
         this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
@@ -144,21 +136,14 @@ internal partial class Mapper_LedgerBucketDto_LedgerBucket
 }
 
 [AutoRegisterWithIoC]
-internal partial class Mapper_LedgerEntryLineDto_LedgerEntryLine
+internal partial class MapperLedgerEntryLineDto2LedgerEntryLine(
+    IAccountTypeRepository accountTypeRepo,
+    ILedgerBucketFactory bucketFactory,
+    ILedgerTransactionFactory transactionFactory)
 {
-    private readonly IAccountTypeRepository accountTypeRepo;
-    private readonly ILedgerBucketFactory bucketFactory;
-    private readonly ILedgerTransactionFactory transactionFactory;
-
-    public Mapper_LedgerEntryLineDto_LedgerEntryLine(
-        [NotNull] IAccountTypeRepository accountTypeRepo,
-        [NotNull] ILedgerBucketFactory bucketFactory,
-        [NotNull] ILedgerTransactionFactory transactionFactory)
-    {
-        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
-        this.bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
-        this.transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
-    }
+    private readonly IAccountTypeRepository accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
+    private readonly ILedgerBucketFactory bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
+    private readonly ILedgerTransactionFactory transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
 
     partial void ToDtoPostprocessing(ref LedgerEntryLineDto dto, LedgerEntryLine model)
     {
@@ -172,14 +157,9 @@ internal partial class Mapper_LedgerEntryLineDto_LedgerEntryLine
 }
 
 [AutoRegisterWithIoC]
-internal partial class Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransaction
+internal partial class MapperLedgerTransactionDto2BankBalanceAdjustmentTransaction(IAccountTypeRepository accountTypeRepo)
 {
-    private readonly IAccountTypeRepository accountTypeRepo;
-
-    public Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransaction([NotNull] IAccountTypeRepository accountTypeRepo)
-    {
-        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
-    }
+    private readonly IAccountTypeRepository accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
 
     partial void ToDtoPostprocessing(ref LedgerTransactionDto dto, BankBalanceAdjustmentTransaction model)
     {
@@ -194,14 +174,9 @@ internal partial class Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransact
 }
 
 [AutoRegisterWithIoC]
-internal partial class Mapper_BankBalanceDto_BankBalance
+internal partial class MapperBankBalanceDto2BankBalance(IAccountTypeRepository accountTypeRepo)
 {
-    private readonly IAccountTypeRepository accountTypeRepo;
-
-    public Mapper_BankBalanceDto_BankBalance([NotNull] IAccountTypeRepository accountTypeRepo)
-    {
-        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
-    }
+    private readonly IAccountTypeRepository accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
 
     // ReSharper disable once RedundantAssignment
     partial void ModelFactory(BankBalanceDto dto, ref BankBalance model)
@@ -216,21 +191,14 @@ internal partial class Mapper_BankBalanceDto_BankBalance
 }
 
 [AutoRegisterWithIoC]
-internal partial class Mapper_LedgerEntryDto_LedgerEntry
+internal partial class MapperLedgerEntryDto2LedgerEntry(
+    ILedgerBucketFactory bucketFactory,
+    ILedgerTransactionFactory transactionFactory,
+    IAccountTypeRepository accountTypeRepo)
 {
-    private readonly IAccountTypeRepository accountTypeRepo;
-    private readonly ILedgerBucketFactory bucketFactory;
-    private readonly ILedgerTransactionFactory transactionFactory;
-
-    public Mapper_LedgerEntryDto_LedgerEntry(
-        [NotNull] ILedgerBucketFactory bucketFactory,
-        [NotNull] ILedgerTransactionFactory transactionFactory,
-        [NotNull] IAccountTypeRepository accountTypeRepo)
-    {
-        this.bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
-        this.transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
-        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
-    }
+    private readonly IAccountTypeRepository accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
+    private readonly ILedgerBucketFactory bucketFactory = bucketFactory ?? throw new ArgumentNullException(nameof(bucketFactory));
+    private readonly ILedgerTransactionFactory transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
 
     partial void ToDtoPostprocessing(ref LedgerEntryDto dto, LedgerEntry model)
     {
@@ -246,7 +214,7 @@ internal partial class Mapper_LedgerEntryDto_LedgerEntry
     partial void ToModelPreprocessing(LedgerEntryDto dto, LedgerEntry model)
     {
         // Transactions must be done first otherwise balance will be changed by adding transactions and the balance should be read from the Dto.
-        var transactionMapper = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
+        var transactionMapper = new MapperLedgerTransactionDto2LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
         foreach (var txn in dto.Transactions)
         {
             model.AddTransactionForPersistenceOnly(transactionMapper.ToModel(txn));
@@ -255,16 +223,10 @@ internal partial class Mapper_LedgerEntryDto_LedgerEntry
 }
 
 [AutoRegisterWithIoC]
-internal partial class Mapper_LedgerTransactionDto_LedgerTransaction
+internal partial class MapperLedgerTransactionDto2LedgerTransaction(ILedgerTransactionFactory transactionFactory, IAccountTypeRepository accountTypeRepo)
 {
-    private readonly IAccountTypeRepository accountTypeRepo;
-    private readonly ILedgerTransactionFactory transactionFactory;
-
-    public Mapper_LedgerTransactionDto_LedgerTransaction([NotNull] ILedgerTransactionFactory transactionFactory, [NotNull] IAccountTypeRepository accountTypeRepo)
-    {
-        this.transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
-        this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
-    }
+    private readonly IAccountTypeRepository accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
+    private readonly ILedgerTransactionFactory transactionFactory = transactionFactory ?? throw new ArgumentNullException(nameof(transactionFactory));
 
     // ReSharper disable once RedundantAssignment
     partial void ModelFactory(LedgerTransactionDto dto, ref LedgerTransaction model)

@@ -43,12 +43,6 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         /// <summary>
         /// Gets a list of supported types
         /// </summary>
-        internal override IEnumerable<Type> SupportedWidgetDependencyTypes
-        {
-            get
-            {
-                return new List<Type>();
-            }
-        }
+        internal override IEnumerable<Type> SupportedWidgetDependencyTypes => new List<Type>();
     }
 }

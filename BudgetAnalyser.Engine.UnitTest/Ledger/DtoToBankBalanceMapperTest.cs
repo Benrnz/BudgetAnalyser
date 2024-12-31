@@ -11,17 +11,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
     {
         private BankBalance Result { get; set; }
 
-        private BankBalanceDto TestData
+        private BankBalanceDto TestData => new BankBalanceDto
         {
-            get
-            {
-                return new BankBalanceDto
-                {
-                    Account = StatementModelTestData.ChequeAccount.Name,
-                    Balance = 44552.44M
-                };
-            }
-        }
+            Account = StatementModelTestData.ChequeAccount.Name,
+            Balance = 44552.44M
+        };
 
         [TestMethod]
         public void ShouldMapAmount()
@@ -38,7 +32,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_BankBalanceDto_BankBalance(new InMemoryAccountTypeRepository());
+            var subject = new MapperBankBalanceDto2BankBalance(new InMemoryAccountTypeRepository());
             Result = subject.ToModel(TestData);
         }
     }

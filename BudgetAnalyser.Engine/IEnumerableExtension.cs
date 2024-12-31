@@ -14,8 +14,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static bool None<T>(this IEnumerable<T> instance)
         {
-            if (instance is null) return false;
-            return !instance.Any();
+            return instance is null ? false : !instance.Any();
         }
 
         /// <summary>
@@ -23,12 +22,8 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static double SafeAverage<T>(this IEnumerable<T> instance, Func<T, double> selector)
         {
-            List<T> copy = instance.ToList();
-            if (copy.None())
-            {
-                return 0;
-            }
-            return copy.Average(selector);
+            var copy = instance.ToList();
+            return copy.None() ? 0 : copy.Average(selector);
         }
 
         /// <summary>
@@ -36,12 +31,8 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static decimal SafeAverage<T>(this IEnumerable<T> instance, Func<T, decimal> selector)
         {
-            List<T> copy = instance.ToList();
-            if (copy.None())
-            {
-                return 0;
-            }
-            return copy.Average(selector);
+            var copy = instance.ToList();
+            return copy.None() ? 0 : copy.Average(selector);
         }
     }
 }

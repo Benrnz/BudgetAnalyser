@@ -15,7 +15,10 @@ namespace BudgetAnalyser.Encryption
 
         public LocalDiskReaderWriterSelector([NotNull] IEnumerable<IFileReaderWriter> allReaderWriters)
         {
-            if (allReaderWriters is null) throw new ArgumentNullException(nameof(allReaderWriters));
+            if (allReaderWriters is null)
+            {
+                throw new ArgumentNullException(nameof(allReaderWriters));
+            }
 
             var fileReaderWriters = allReaderWriters.ToList();
             this.encryptedReaderWriter = DefaultIoCRegistrations.GetNamedInstance(fileReaderWriters, StorageConstants.EncryptedInstanceName);
@@ -35,14 +38,11 @@ namespace BudgetAnalyser.Encryption
                 throw new InvalidOperationException("Code Bug: There are no instances of IFileReaderWriter registered.");
             }
 
-            var readerWriter = (isEncrypted ? this.encryptedReaderWriter : this.unprotectedRaderWriter);
+            var readerWriter = isEncrypted ? this.encryptedReaderWriter : this.unprotectedRaderWriter;
 
-            if (readerWriter is null)
-            {
-                throw new InvalidOperationException("Code Bug: There are no instances of IFileReaderWriter registered for the selected encryption mode. " + isEncrypted);
-            }
-
-            return readerWriter;
+            return readerWriter is null
+                ? throw new InvalidOperationException("Code Bug: There are no instances of IFileReaderWriter registered for the selected encryption mode. " + isEncrypted)
+                : readerWriter;
         }
     }
 }

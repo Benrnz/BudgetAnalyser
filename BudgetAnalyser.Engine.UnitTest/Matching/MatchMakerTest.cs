@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         {
             this.mockBudgetBucketRepo.Setup(m => m.IsValidCode("Foo")).Returns(true);
             this.mockBudgetBucketRepo.Setup(m => m.GetByCode("Foo")).Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
-            IList<Transaction> transactions = this.testDataTransactions;
+            var transactions = this.testDataTransactions;
             transactions.First().Reference1 = "Foo";
             var subject = Arrange();
 
@@ -50,10 +50,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         {
             this.mockBudgetBucketRepo.Setup(m => m.IsValidCode("Foo")).Returns(true);
             this.mockBudgetBucketRepo.Setup(m => m.GetByCode("Foo")).Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
-            IList<Transaction> transactions = this.testDataTransactions;
+            var transactions = this.testDataTransactions;
             var firstTxn = transactions.First();
             firstTxn.Reference1 = "Foo";
-            List<MatchingRule> rules = this.allRules.ToList();
+            var rules = this.allRules.ToList();
             var firstRule = rules.First();
             firstRule.BucketCode = "FOO";
             firstRule.MatchCount = 0;
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
             firstRule.And = false; // Using OR
 
             var subject = Arrange();
-            
+
             var result = subject.Match(this.testDataTransactions, this.allRules);
             Assert.IsTrue(result);
             Assert.AreEqual(2, firstRule.MatchCount);

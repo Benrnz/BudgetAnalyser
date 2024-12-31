@@ -18,8 +18,16 @@ namespace BudgetAnalyser.Encryption
 
         public EncryptedLocalDiskReaderWriter([NotNull] IFileEncryptor fileEncryptor, [NotNull] ICredentialStore credentialStore)
         {
-            if (fileEncryptor is null) throw new ArgumentNullException(nameof(fileEncryptor));
-            if (credentialStore is null) throw new ArgumentNullException(nameof(credentialStore));
+            if (fileEncryptor is null)
+            {
+                throw new ArgumentNullException(nameof(fileEncryptor));
+            }
+
+            if (credentialStore is null)
+            {
+                throw new ArgumentNullException(nameof(credentialStore));
+            }
+
             this.fileEncryptor = fileEncryptor;
             this.credentialStore = credentialStore;
         }
@@ -44,16 +52,17 @@ namespace BudgetAnalyser.Encryption
         /// <param name="fileName">Full path and filename of the file.</param>
         public async Task<string> LoadFromDiskAsync(string fileName)
         {
-            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            if (fileName.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
             var password = RetrievePassword();
             var decryptedData = await this.fileEncryptor.LoadEncryptedFileAsync(fileName, password);
 
-            if (IsValidAlphaNumericWithPunctuation(decryptedData))
-            {
-                return decryptedData;
-            }
-
-            throw new EncryptionKeyIncorrectException("The provided encryption credential did not result in a valid decryption result.");
+            return IsValidAlphaNumericWithPunctuation(decryptedData)
+                ? decryptedData
+                : throw new EncryptionKeyIncorrectException("The provided encryption credential did not result in a valid decryption result.");
         }
 
         /// <summary>
@@ -63,14 +72,15 @@ namespace BudgetAnalyser.Encryption
         /// <param name="lineCount">The number of lines to load.</param>
         public async Task<string> LoadFirstLinesFromDiskAsync(string fileName, int lineCount)
         {
-            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
-            var decryptedData = await this.fileEncryptor.LoadFirstLinesFromDiskAsync(fileName, lineCount, RetrievePassword());
-            if (IsValidAlphaNumericWithPunctuation(decryptedData))
+            if (fileName.IsNothing())
             {
-                return decryptedData;
+                throw new ArgumentNullException(nameof(fileName));
             }
 
-            throw new EncryptionKeyIncorrectException("The provided encryption credential did not result in a valid decryption result.");
+            var decryptedData = await this.fileEncryptor.LoadFirstLinesFromDiskAsync(fileName, lineCount, RetrievePassword());
+            return IsValidAlphaNumericWithPunctuation(decryptedData)
+                ? decryptedData
+                : throw new EncryptionKeyIncorrectException("The provided encryption credential did not result in a valid decryption result.");
         }
 
         /// <summary>
@@ -78,8 +88,15 @@ namespace BudgetAnalyser.Encryption
         /// </summary>
         public async Task WriteToDiskAsync(string fileName, string data)
         {
-            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
-            if (data.IsNothing()) throw new ArgumentNullException(nameof(data));
+            if (fileName.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
+            if (data.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
 
             var password = RetrievePassword();
             await this.fileEncryptor.SaveStringDataToEncryptedFileAsync(fileName, data, password);
@@ -87,7 +104,11 @@ namespace BudgetAnalyser.Encryption
 
         internal bool IsValidAlphaNumericWithPunctuation(string text)
         {
-            if (text is null) return false;
+            if (text is null)
+            {
+                return false;
+            }
+
             var valid = text.ToCharArray().Take(16).All(IsValidUtf8AlphaNumericWithPunctuation);
             return valid;
         }
@@ -103,9 +124,7 @@ namespace BudgetAnalyser.Encryption
 
         private SecureString RetrievePassword()
         {
-            var password = this.credentialStore.RetrievePasskey() as SecureString;
-
-            if (password is null)
+            if (this.credentialStore.RetrievePasskey() is not SecureString password)
             {
                 // This condition should be checked by the UI before calling into the Engine ideally.
                 throw new EncryptionKeyNotProvidedException("Attempt to load an encrypted password protected file and no password has been set.");

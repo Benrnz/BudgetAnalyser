@@ -151,14 +151,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         Value = Convert.ToDouble(remainingBalance);
         ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance, remainingBalance / totalBudget);
 
-        if (remainingBalance < 0.2M * totalBudget)
-        {
-            ColourStyleName = WidgetWarningStyle;
-        }
-        else
-        {
-            ColourStyleName = this.standardStyle;
-        }
+        ColourStyleName = remainingBalance < 0.2M * totalBudget ? WidgetWarningStyle : this.standardStyle;
     }
 
     /// <summary>
@@ -171,12 +164,9 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 
         var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
 
-        if (LedgerBook is null || ledgerLine is null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode))
-        {
-            return Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
-        }
-
-        return ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
+        return LedgerBook is null || ledgerLine is null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode)
+            ? Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount
+            : ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
     }
 
     internal static bool ValidatePeriod(BudgetCycle budgetCycle, DateTime inclBeginDate, DateTime inclEndDate, out string validationMessage)

@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
         public static T ExtractEmbeddedResourceAsXamlObject<T>(this Assembly assembly, string resourceName, bool outputXaml = false)
         {
             var stringData = assembly.ExtractEmbeddedResourceAsText(resourceName, outputXaml);
-            return (T) XamlServices.Parse(stringData);
+            return (T)XamlServices.Parse(stringData);
         }
     }
 }

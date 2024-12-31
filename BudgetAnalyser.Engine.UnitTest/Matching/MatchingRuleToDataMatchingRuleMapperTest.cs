@@ -14,42 +14,42 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         [TestMethod]
         public void AmountShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Amount, result.Amount);
         }
 
         [TestMethod]
         public void BucketCodeShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.BucketCode, result.BucketCode);
         }
 
         [TestMethod]
         public void CreatedDatesShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Created, result.Created);
         }
 
         [TestMethod]
         public void DescriptionShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Description, result.Description);
         }
 
         [TestMethod]
         public void LastMatchShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.LastMatch, result.LastMatch);
         }
 
         [TestMethod]
         public void MatchCountShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.MatchCount, result.MatchCount);
         }
 
@@ -57,35 +57,35 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         [Description("A test designed to break when new propperties are added to the MatchingRuleDto. This is a trigger to update the mappers.")]
         public void NumberOfDataMatchingRulePropertiesShouldBe12()
         {
-            int dataProperties = typeof(MatchingRuleDto).CountProperties();
+            var dataProperties = typeof(MatchingRuleDto).CountProperties();
             Assert.AreEqual(12, dataProperties);
         }
 
         [TestMethod]
         public void Reference1ShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Reference1, result.Reference1);
         }
 
         [TestMethod]
         public void Reference2ShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Reference2, result.Reference2);
         }
 
         [TestMethod]
         public void Reference3ShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Reference3, result.Reference3);
         }
 
         [TestMethod]
         public void RuleIdShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.RuleId, result.RuleId);
         }
 
@@ -109,13 +109,13 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         [TestMethod]
         public void TransactionTypeShouldBeMapped()
         {
-            MatchingRuleDto result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.TransactionType, result.TransactionType);
         }
 
         private MatchingRuleDto ArrangeAndAct()
         {
-            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperMatchingRuleDto2MatchingRule(new BucketBucketRepoAlwaysFind());
             return subject.ToDto(TestData);
         }
     }

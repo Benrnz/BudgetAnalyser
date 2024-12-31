@@ -10,16 +10,16 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void OutputLedgerBookTestData1()
         {
-            LedgerBookDto testData = LedgerBookDtoTestData.TestData1();
-            string serialised = XamlServices.Save(testData);
+            var testData = LedgerBookDtoTestData.TestData1();
+            var serialised = XamlServices.Save(testData);
             Console.WriteLine(serialised);
         }
 
         [TestMethod]
         public void OutputLedgerBookTestData2()
         {
-            LedgerBookDto testData = LedgerBookDtoTestData.TestData2();
-            string serialised = XamlServices.Save(testData);
+            var testData = LedgerBookDtoTestData.TestData2();
+            var serialised = XamlServices.Save(testData);
             Console.WriteLine(serialised);
         }
     }

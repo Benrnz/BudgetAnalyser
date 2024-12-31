@@ -1,7 +1,7 @@
-﻿using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Statement.Data;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
@@ -25,8 +25,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             //    "Payment,The Very Big Telco,202610963,095501328,B Smith,-91.98,2012-08-20T00:00:00.0000000,PHNET,CHEQUE,56b22788-d1e6-4a5d-a715-08b563dae678,                            ",
             //    "Payment,The very cool Power Co,A B Smith,659792,Energyonline,-212.07,2012-08-20T00:00:00.0000000,POWER,CHEQUE,17b8c91c-5174-41a7-b382-b6a9ff52a11a,                     ",
             //    "Credit Card Debit,Z Queen Street            Auckland     Nz,4367-****-****-3239,,,-28.49,2012-08-20T00:00:00.0000000,FUEL,VISA,bd12376a-6aac-4171-a23c-f85af168582f,    "
-            var set = new TransactionSetDto();
-            set.Transactions = new List<TransactionDto>
+            var set = new TransactionSetDto
+            {
+                Transactions = new List<TransactionDto>
             {
                     new TransactionDto
                     {
@@ -103,6 +104,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         Account = TestDataConstants.VisaAccountName,
                         Id = new Guid("136e9010-9d07-4ddb-b7a3-abd209a23f44"),
                     },
+            }
             };
 
             return set;

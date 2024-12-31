@@ -74,7 +74,7 @@ public abstract class Widget : INotifyPropertyChanged
         // ReSharper disable once DoNotCallOverridableMethodsInConstructor - ok here, simple bool property with straightforward usage.
         Enabled = true;
         Sequence = 99;
-        RecommendedTimeIntervalUpdate = 30.Seconds(); 
+        RecommendedTimeIntervalUpdate = 30.Seconds();
     }
 
     /// <summary>
@@ -316,7 +316,7 @@ public abstract class Widget : INotifyPropertyChanged
             return false;
         }
 
-        List<Type> dependencies = Dependencies.ToList();
+        var dependencies = Dependencies.ToList();
         if (dependencies.Count() > input.Length)
         {
             return false;
@@ -339,11 +339,6 @@ public abstract class Widget : INotifyPropertyChanged
             }
         }
 
-        if (nullCount == Dependencies.Count())
-        {
-            return false;
-        }
-
-        return true;
+        return nullCount != Dependencies.Count();
     }
 }

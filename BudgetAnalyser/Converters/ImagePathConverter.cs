@@ -18,13 +18,10 @@ namespace BudgetAnalyser.Converters
                 return value;
             }
 
-            string path = value.ToString();
-            if (path.StartsWith("../", StringComparison.OrdinalIgnoreCase))
-            {
-                return string.Format(CultureInfo.CurrentCulture, "../{0}/{1}", parameter, path.Substring(3));
-            }
-
-            return string.Format(CultureInfo.CurrentCulture, "../{0}/{1}", parameter, path);
+            var path = value.ToString();
+            return path.StartsWith("../", StringComparison.OrdinalIgnoreCase)
+                ? string.Format(CultureInfo.CurrentCulture, "../{0}/{1}", parameter, path.Substring(3))
+                : (object)string.Format(CultureInfo.CurrentCulture, "../{0}/{1}", parameter, path);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

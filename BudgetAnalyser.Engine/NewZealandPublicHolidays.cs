@@ -128,10 +128,10 @@ namespace BudgetAnalyser.Engine
 
                     var goldenNumber = year % 19;
                     var century = year / 100;
-                    var h = (century - century / 4 - (8 * century + 13) / 25 + 19 * goldenNumber + 15) % 30;
-                    var i = h - h / 28 * (1 - h / 28 * (29 / (h + 1)) * ((21 - goldenNumber) / 11));
+                    var h = (century - (century / 4) - (((8 * century) + 13) / 25) + (19 * goldenNumber) + 15) % 30;
+                    var i = h - (h / 28 * (1 - (h / 28 * (29 / (h + 1)) * ((21 - goldenNumber) / 11))));
 
-                    var day = i - (year + year / 4 + i + 2 - century + century / 4) % 7 + 28;
+                    var day = i - ((year + (year / 4) + i + 2 - century + (century / 4)) % 7) + 28;
                     var month = 3;
 
                     if (day > 31)
@@ -201,13 +201,10 @@ namespace BudgetAnalyser.Engine
                     } while (proposed.DayOfWeek != DayOfWeek.Monday);
                 }
 
-                if (proposed < DateTime.MinValue.AddMonths(1))
-                {
-                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
-                        "Cannot find a suitable date between {0} and {1}", start, end));
-                }
-
-                return proposed;
+                return proposed < DateTime.MinValue.AddMonths(1)
+                    ? throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                        "Cannot find a suitable date between {0} and {1}", start, end))
+                    : proposed;
             }
         }
 

@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
@@ -56,7 +56,10 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(logger));
             }
 
-            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
+            if (monitorableDependencies is null)
+            {
+                throw new ArgumentNullException(nameof(monitorableDependencies));
+            }
 
             this.bucketRepository = bucketRepository;
             this.statementRepository = statementRepository;
@@ -95,18 +98,9 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Gets the calculated average debit.
         /// </summary>
-        public decimal AverageDebit
-        {
-            get
-            {
-                if (this.transactions is null || this.transactions.None())
-                {
-                    return 0;
-                }
-
-                return this.transactions.Where(t => t.Amount < 0).SafeAverage(t => t.Amount);
-            }
-        }
+        public decimal AverageDebit => this.transactions is null || this.transactions.None()
+                    ? 0
+                    : this.transactions.Where(t => t.Amount < 0).SafeAverage(t => t.Amount);
 
         /// <summary>
         ///     Gets the type of the data the implementation deals with.
@@ -126,50 +120,17 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Gets the calculated total count.
         /// </summary>
-        public decimal TotalCount
-        {
-            get
-            {
-                if (this.transactions is null || this.transactions.None())
-                {
-                    return 0;
-                }
-
-                return this.transactions.Count();
-            }
-        }
+        public decimal TotalCount => this.transactions is null || this.transactions.None() ? 0 : this.transactions.Count();
 
         /// <summary>
         ///     Gets the calculated total credits.
         /// </summary>
-        public decimal TotalCredits
-        {
-            get
-            {
-                if (this.transactions is null || this.transactions.None())
-                {
-                    return 0;
-                }
-
-                return this.transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
-            }
-        }
+        public decimal TotalCredits => this.transactions is null || this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
 
         /// <summary>
         ///     Gets the calculated total debits.
         /// </summary>
-        public decimal TotalDebits
-        {
-            get
-            {
-                if (this.transactions is null || this.transactions.None())
-                {
-                    return 0;
-                }
-
-                return this.transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
-            }
-        }
+        public decimal TotalDebits => this.transactions is null || this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
 
         /// <summary>
         ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
@@ -239,7 +200,7 @@ namespace BudgetAnalyser.Engine.Services
                 return;
             }
 
-            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
+            var handler = Saving;
             handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
 
             var messages = new StringBuilder();
@@ -300,7 +261,7 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
-            List<IGrouping<int, Transaction>> duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
+            var duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
             return duplicates.Any()
                 ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!",
                     duplicates.Sum(group => group.Count()))
@@ -421,7 +382,7 @@ namespace BudgetAnalyser.Engine.Services
 
             var additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
             var combinedModel = StatementModel.Merge(additionalModel);
-            var  minDate = additionalModel.AllTransactions.Min(t => t.Date);
+            var minDate = additionalModel.AllTransactions.Min(t => t.Date);
             var maxDate = additionalModel.AllTransactions.Max(t => t.Date);
             IEnumerable<IGrouping<int, Transaction>> duplicates = combinedModel.ValidateAgainstDuplicates(minDate, maxDate).ToList();
             if (duplicates.Count() == additionalModel.AllTransactions.Count())

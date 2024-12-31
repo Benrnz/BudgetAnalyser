@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void UpdateRemarks_ShouldSetRemarks()
         {
             NewSubject.UpdateRemarks("Foo bar");
-            
+
             Assert.AreEqual("Foo bar", NewSubject.Remarks);
         }
 
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             // Starting Surplus is $1,530.50
             var entry = NewSubject.Entries.First();
             entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
-            
+
             // The balance of a ledger cannot simply be calculated inside the ledger line. It must be recalc'ed at the ledger book level.
             Assert.AreEqual(1530.50M, NewSubject.CalculatedSurplus); // It should be unchanged.
         }
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void AddAdjustment_ShouldAffectLedgerBalance()
         {
             NewSubject.BalanceAdjustment(-101M, "foo dar far", new ChequeAccount("Chq"));
-            
+
             Assert.AreEqual(1749.50M, NewSubject.LedgerBalance);
         }
 
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void AddBalanceAdjustment_ShouldAddToAdjustmentCollection()
         {
             NewSubject.BalanceAdjustment(101M, "foo dar far", new ChequeAccount("Chq"));
-            
+
             Assert.AreEqual(1, Subject.BankBalanceAdjustments.Count());
         }
 
@@ -59,14 +59,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             Console.WriteLine("Date: " + Subject.Date);
             Console.WriteLine("Remarks: " + Subject.Remarks);
             Console.Write("Entries: x{0} (", Subject.Entries.Count());
-            foreach (LedgerEntry entry in Subject.Entries)
+            foreach (var entry in Subject.Entries)
             {
                 Console.Write("{0}, ", entry.LedgerBucket.BudgetBucket.Code);
             }
             Console.WriteLine(")");
 
             Console.WriteLine("Bank Balances:");
-            foreach (BankBalance bankBalance in Subject.BankBalances)
+            foreach (var bankBalance in Subject.BankBalances)
             {
                 Console.WriteLine("    {0} {1:N}", bankBalance.Account.Name, bankBalance.Balance);
             }
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             Console.WriteLine("TotalBankBalance: " + Subject.TotalBankBalance);
 
             Console.WriteLine("Balance Adjustments:");
-            foreach (BankBalanceAdjustmentTransaction adjustment in Subject.BankBalanceAdjustments)
+            foreach (var adjustment in Subject.BankBalanceAdjustments)
             {
                 Console.WriteLine("    {0} {1} {2:N}", adjustment.BankAccount.Name, adjustment.Narrative, adjustment.Amount);
             }
@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 
             Console.WriteLine();
             Console.WriteLine("Surplus Balances:");
-            foreach (BankBalance surplusBalance in Subject.SurplusBalances)
+            foreach (var surplusBalance in Subject.SurplusBalances)
             {
                 Console.WriteLine("    {0} {1:N}", surplusBalance.Account.Name, surplusBalance.Balance);
             }
@@ -97,14 +97,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void SurplusBalancesShouldHave2Items()
         {
-            IEnumerable<BankBalance> surplusBalances = Subject.SurplusBalances;
+            var surplusBalances = Subject.SurplusBalances;
             Assert.AreEqual(2, surplusBalances.Count());
         }
 
         [TestMethod]
         public void SurplusBalancesShouldHaveSavingsBalanceOf100()
         {
-            IEnumerable<BankBalance> surplusBalances = Subject.SurplusBalances;
+            var surplusBalances = Subject.SurplusBalances;
             Assert.AreEqual(100M, surplusBalances.Single(b => b.Account.Name == TestDataConstants.SavingsAccountName).Balance);
         }
 

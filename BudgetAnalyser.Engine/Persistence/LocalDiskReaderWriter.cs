@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,13 +23,16 @@ namespace BudgetAnalyser.Engine.Persistence
 
         public bool FileExists(string fileName)
         {
-            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
-            return File.Exists(fileName);
+            return fileName.IsNothing() ? throw new ArgumentNullException(nameof(fileName)) : File.Exists(fileName);
         }
 
         public async Task<string> LoadFromDiskAsync(string fileName)
         {
-            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            if (fileName.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
             using (var reader = File.OpenText(fileName))
             {
                 try
@@ -46,7 +49,11 @@ namespace BudgetAnalyser.Engine.Persistence
 
         public async Task<string> LoadFirstLinesFromDiskAsync(string fileName, int lineCount)
         {
-            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            if (fileName.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
             using (var reader = File.OpenText(fileName))
             {
                 try
@@ -74,7 +81,11 @@ namespace BudgetAnalyser.Engine.Persistence
 
         public async Task WriteToDiskAsync(string fileName, string data)
         {
-            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            if (fileName.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
             using (var fileStream = new StreamWriter(new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Write, 4096, true)))
             {
                 await fileStream.WriteAsync(data);

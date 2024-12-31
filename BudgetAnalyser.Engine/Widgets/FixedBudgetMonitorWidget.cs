@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public string BucketCode
         {
-            get { return this.doNotUseBucketCode; }
+            get => this.doNotUseBucketCode;
             set
             {
                 this.doNotUseBucketCode = value;
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public string Id
         {
-            get { return this.doNotUseId; }
+            get => this.doNotUseId;
             set
             {
                 this.doNotUseId = value;
@@ -101,8 +101,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            Statement = (StatementModel) input[0];
-            this.bucketRepository = (IBudgetBucketRepository) input[1];
+            Statement = (StatementModel)input[0];
+            this.bucketRepository = (IBudgetBucketRepository)input[1];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            var bucket = (FixedBudgetProjectBucket) this.bucketRepository.GetByCode(BucketCode);
+            var bucket = (FixedBudgetProjectBucket)this.bucketRepository.GetByCode(BucketCode);
             var totalBudget = bucket.FixedBudgetAmount;
             Maximum = Convert.ToDouble(totalBudget);
 
@@ -134,14 +134,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 remainingBudget, totalSpend);
             DetailedText = string.Format(CultureInfo.CurrentCulture, "{0} Project", bucket.SubCode);
 
-            if (remainingBudget < 0.1M * totalBudget)
-            {
-                ColourStyleName = WidgetWarningStyle;
-            }
-            else
-            {
-                ColourStyleName = this.standardStyle;
-            }
+            ColourStyleName = remainingBudget < 0.1M * totalBudget ? WidgetWarningStyle : this.standardStyle;
         }
     }
 }

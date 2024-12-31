@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Data;
 
 namespace BudgetAnalyser.Converters
@@ -9,17 +8,17 @@ namespace BudgetAnalyser.Converters
     /// </summary>
     public class BoolToAndConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is bool)
+            if (value is bool b)
             {
-                return (bool)value ? "And" : "Or";
+                return b ? "And" : "Or";
             }
 
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

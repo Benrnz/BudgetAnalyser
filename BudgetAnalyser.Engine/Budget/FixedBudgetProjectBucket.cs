@@ -70,12 +70,9 @@ namespace BudgetAnalyser.Engine.Budget
         /// <exception cref="ArgumentNullException"></exception>
         public static string CreateCode([NotNull] string subCode)
         {
-            if (subCode is null)
-            {
-                throw new ArgumentNullException(nameof(subCode));
-            }
-
-            return string.Format(CultureInfo.InvariantCulture, ProjectCodeTemplateWithPrefix, subCode.ToUpperInvariant());
+            return subCode is null
+                ? throw new ArgumentNullException(nameof(subCode))
+                : string.Format(CultureInfo.InvariantCulture, ProjectCodeTemplateWithPrefix, subCode.ToUpperInvariant());
         }
 
         /// <summary>

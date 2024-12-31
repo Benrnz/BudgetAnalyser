@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_BankBalanceDto_BankBalance(new InMemoryAccountTypeRepository());
+            var subject = new MapperBankBalanceDto2BankBalance(new InMemoryAccountTypeRepository());
             Result = subject.ToDto(TestData);
         }
     }

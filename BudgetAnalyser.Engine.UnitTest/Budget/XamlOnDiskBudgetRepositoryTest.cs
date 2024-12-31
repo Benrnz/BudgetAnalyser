@@ -1,11 +1,11 @@
-﻿using Portable.Xaml;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Moq;
+using Portable.Xaml;
 using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Budget
@@ -230,15 +230,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             if (bucketRepo is null)
             {
-                bucketRepo = new InMemoryBudgetBucketRepository(new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()));
+                bucketRepo = new InMemoryBudgetBucketRepository(new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()));
             }
 
             return new XamlOnDiskBudgetRepository(
                 bucketRepo,
-                new Mapper_BudgetCollectionDto_BudgetCollection(
+                new MapperBudgetCollectionDtoBudgetCollection(
                     bucketRepo,
-                    new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()),
-                    new Mapper_BudgetModelDto_BudgetModel(bucketRepo)),
+                    new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()),
+                    new MapperBudgetModelDtoBudgetModel(bucketRepo)),
                 this.mockFileSelector.Object);
         }
 

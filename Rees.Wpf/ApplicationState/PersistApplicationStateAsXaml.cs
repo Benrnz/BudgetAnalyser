@@ -73,16 +73,12 @@ namespace Rees.Wpf.ApplicationState
             {
                 var serialised = XamlServices.Load(FullFileName);
                 // Will always succeed without exceptions even if bad file format, but will return null.
-                var correctFormat = serialised as List<IPersistent>;
-                if (correctFormat is null)
-                {
-                    throw new BadApplicationStateFileFormatException(
+                return serialised is not List<IPersistent> correctFormat
+                    ? throw new BadApplicationStateFileFormatException(
                                                                      string.Format(CultureInfo.InvariantCulture,
                                                                                    "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.",
-                                                                                   FullFileName));
-                }
-
-                return correctFormat;
+                                                                                   FullFileName))
+                    : (IEnumerable<IPersistent>)correctFormat;
             }
             catch (IOException ex)
             {

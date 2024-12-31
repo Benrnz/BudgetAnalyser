@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Persistence
                 }
             };
 
-            var subject = new Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase();
+            var subject = new MapperBudgetAnalyserStorageRoot2ApplicationDatabase();
             this.result = subject.ToModel(this.testData);
         }
     }

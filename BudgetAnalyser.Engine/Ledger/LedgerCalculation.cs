@@ -120,7 +120,7 @@ public class LedgerCalculation
         balance += transactionTotal;
 
         // Find any ledgers that are overpsent and subtract them from the Surplus total.  This is actually what is happening when you overspend a ledger, it spills over and spend Surplus.
-        Dictionary<BudgetBucket, decimal> ledgersSummary = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
+        var ledgersSummary = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
         balance += ledgersSummary.Where(kvp => kvp.Value < 0).Sum(kvp => kvp.Value);
 
         return balance;
@@ -189,8 +189,8 @@ public class LedgerCalculation
         {
             var overSpendTransactions = new List<ReportTransaction>();
             var currentDate = inclBeginDate;
-            Dictionary<BudgetBucket, decimal> runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerBucket.BudgetBucket, entry => entry.Balance);
-            Dictionary<BudgetBucket, decimal> previousBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerBucket.BudgetBucket, _ => 0M);
+            var runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerBucket.BudgetBucket, entry => entry.Balance);
+            var previousBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerBucket.BudgetBucket, _ => 0M);
 
             do
             {
@@ -233,12 +233,9 @@ public class LedgerCalculation
         }
 
         var line = LocateApplicableLedgerLine(ledgerBook, filter);
-        if (line is null)
-        {
-            return 0;
-        }
-
-        return line.Entries
+        return line is null
+            ? 0
+            : line.Entries
             .Where(ledgerEntry => ledgerEntry.LedgerBucket.BudgetBucket.Code == bucketCode)
             .Select(ledgerEntry => ledgerEntry.Balance)
             .FirstOrDefault();
@@ -261,12 +258,9 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(filter));
         }
 
-        if (filter.Cleared)
-        {
-            return ledgerBook.Reconciliations.FirstOrDefault();
-        }
-
-        return LocateApplicableLedgerLine(ledgerBook, filter.BeginDate, filter.EndDate);
+        return filter.Cleared
+            ? ledgerBook.Reconciliations.FirstOrDefault()
+            : LocateApplicableLedgerLine(ledgerBook, filter.BeginDate, filter.EndDate);
     }
 
     public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime? inclBeginDate, DateTime? inclEndDate)
@@ -282,12 +276,9 @@ public class LedgerCalculation
             return null;
         }
 
-        if (inclEndDate == default || inclEndDate.Value == DateTime.MinValue)
-        {
-            return null;
-        }
-
-        return LocateLedgerEntryLine(ledgerBook, inclBeginDate.Value, inclEndDate.Value);
+        return inclEndDate == default || inclEndDate.Value == DateTime.MinValue
+            ? null
+            : LocateLedgerEntryLine(ledgerBook, inclBeginDate.Value, inclEndDate.Value);
     }
 
     private static string BuildCacheKey(object dependency1, object dependency2, DateTime dependentDate)
@@ -317,9 +308,9 @@ public class LedgerCalculation
 
     private decimal CalculateTransactionTotal(DateTime inclBeginDate, DateTime inclEndDate, StatementModel statement, LedgerEntryLine entryLine, string bucketCode)
     {
-        IEnumerable<LedgerTransaction> autoMatchLedgerTransactions = GetAutoMatchingTransactions(statement, entryLine, inclBeginDate);
+        var autoMatchLedgerTransactions = GetAutoMatchingTransactions(statement, entryLine, inclBeginDate);
         // This needs to query .AllTransactions, not just .Transactions, when changing the date range the statement may not have had its internal filter changed when this runs. 
-        IEnumerable<Transaction> transactions = statement.AllTransactions
+        var transactions = statement.AllTransactions
             .Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate)
             .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
 
@@ -405,7 +396,7 @@ public class LedgerCalculation
         List<ReportTransaction> overSpendTransactions,
         DateTime currentDate)
     {
-        foreach (KeyValuePair<BudgetBucket, decimal> runningBalance in runningBalances)
+        foreach (var runningBalance in runningBalances)
         {
             var previousBalance = previousBalances[runningBalance.Key];
 

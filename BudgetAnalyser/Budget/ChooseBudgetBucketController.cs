@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
@@ -44,7 +44,8 @@ namespace BudgetAnalyser.Budget
 
         public IEnumerable<BudgetBucket> BudgetBuckets
         {
-            [UsedImplicitly] get => this.doNotUseBudgetBuckets;
+            [UsedImplicitly]
+            get => this.doNotUseBudgetBuckets;
 
             private set
             {
@@ -60,10 +61,15 @@ namespace BudgetAnalyser.Budget
 
         public string FilterDescription
         {
-            [UsedImplicitly] get => this.doNotUseFilterDescription;
+            [UsedImplicitly]
+            get => this.doNotUseFilterDescription;
             set
             {
-                if (value == this.doNotUseFilterDescription) return;
+                if (value == this.doNotUseFilterDescription)
+                {
+                    return;
+                }
+
                 this.doNotUseFilterDescription = value;
                 OnPropertyChanged();
             }
@@ -74,7 +80,11 @@ namespace BudgetAnalyser.Budget
             get => this.doNotUseSelected;
             set
             {
-                if (Equals(value, this.doNotUseSelected)) return;
+                if (Equals(value, this.doNotUseSelected))
+                {
+                    return;
+                }
+
                 this.doNotUseSelected = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanExecuteOkButton));
@@ -114,7 +124,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            EventHandler<BudgetBucketChosenEventArgs> handler = Chosen;
+            var handler = Chosen;
             if (handler is not null)
             {
                 if (message.Response == ShellDialogButton.Cancel)

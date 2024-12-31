@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             }
             catch (ArgumentNullException)
             {
-                    return;
+                return;
             }
 
             Assert.Fail();
@@ -51,14 +51,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [Description("A test designed to break when new propperties are added to the LedgerBook. This is a trigger to update the mappers.")]
         public void NumberOfLedgerBookPropertiesShouldBe6()
         {
-            int domainProperties = typeof(LedgerBook).CountProperties();
+            var domainProperties = typeof(LedgerBook).CountProperties();
             Assert.AreEqual(6, domainProperties);
         }
 
         [TestMethod]
         public void ShouldMapCorrectNumberOfLedgers()
         {
-            LedgerBook result = ArrangeAndAct();
+            var result = ArrangeAndAct();
 
             Assert.AreEqual(3, result.Ledgers.Count());
         }
@@ -66,28 +66,28 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapCorrectNumberOfLineEntries()
         {
-            LedgerBook result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Reconciliations.First().Entries.Count, result.Reconciliations.First().Entries.Count());
         }
 
         [TestMethod]
         public void ShouldMapCorrectNumberOfLineEntryTransactions()
         {
-            LedgerBook result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.Count, result.Reconciliations.First().Entries.First().Transactions.Count());
         }
 
         [TestMethod]
         public void ShouldMapCorrectNumberOfLines()
         {
-            LedgerBook result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Reconciliations.Count, result.Reconciliations.Count());
         }
 
         [TestMethod]
         public void ShouldMapFileName()
         {
-            LedgerBook result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.StorageKey, result.StorageKey);
             Assert.IsNotNull(result.StorageKey);
         }
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             TestData.Ledgers.Clear();
             var model = ArrangeAndAct();
-            
+
             // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the 
             // reconciliations and this will be persisted next save.
             Assert.AreEqual(3, model.Ledgers.Count());
@@ -108,7 +108,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             TestData.Ledgers.RemoveAt(0);
             var model = ArrangeAndAct();
-            
+
             // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the 
             // reconciliations and this will be persisted next save.
             Assert.AreEqual(2, model.Ledgers.Count());
@@ -117,15 +117,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLedgerBucketsOnLedgerEntriesWithAccountNotNull()
         {
-            LedgerBook result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket is null));
         }
 
         [TestMethod]
         public void ShouldMapLedgerBucketsWithNoDuplicateInstances()
         {
-            LedgerBook result = ArrangeAndAct();
-            IEnumerable<LedgerBucket> ledgerBuckets = result.Reconciliations
+            var result = ArrangeAndAct();
+            var ledgerBuckets = result.Reconciliations
                 .SelectMany(e => e.Entries)
                 .Select(e => e.LedgerBucket)
                 .Union(result.Ledgers)
@@ -138,8 +138,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void ShouldMapLineBalanceAdjustments()
         {
             TestData = LedgerBookDtoTestData.TestData2();
-            LedgerBook result = ArrangeAndAct();
-            LedgerEntryLine subject = result.Reconciliations.First();
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First();
 
             Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.Sum(a => a.Amount), subject.TotalBalanceAdjustments);
             Assert.AreNotEqual(0, subject.BankBalanceAdjustments.Count());
@@ -148,8 +148,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineBankBalance()
         {
-            LedgerBook result = ArrangeAndAct();
-            LedgerEntryLine subject = result.Reconciliations.First();
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First();
             Assert.AreEqual(TestData.Reconciliations.First().BankBalance, subject.TotalBankBalance);
             Assert.AreNotEqual(0, subject.TotalBankBalance);
         }
@@ -157,8 +157,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineDate()
         {
-            LedgerBook result = ArrangeAndAct();
-            DateTime subject = result.Reconciliations.First().Date;
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First().Date;
             Assert.AreEqual(TestData.Reconciliations.First().Date, subject);
             Assert.AreNotEqual(DateTime.MinValue, subject);
         }
@@ -166,8 +166,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineEntryBucketCode()
         {
-            LedgerBook result = ArrangeAndAct();
-            string subject = result.Reconciliations.First().Entries.First().LedgerBucket.BudgetBucket.Code;
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First().Entries.First().LedgerBucket.BudgetBucket.Code;
             Assert.AreEqual(TestData.Reconciliations.First().Entries.First().BucketCode, subject);
             Assert.IsNotNull(subject);
         }
@@ -175,8 +175,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineEntryTransactionAmount()
         {
-            LedgerBook result = ArrangeAndAct();
-            decimal subject = result.Reconciliations.First().Entries.First().Transactions.First().Amount;
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First().Entries.First().Transactions.First().Amount;
             Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Amount, subject);
             Assert.AreNotEqual(0, subject);
         }
@@ -184,8 +184,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineEntryTransactionId()
         {
-            LedgerBook result = ArrangeAndAct();
-            Guid subject = result.Reconciliations.First().Entries.First().Transactions.First().Id;
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First().Entries.First().Transactions.First().Id;
             Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Id, subject);
             Assert.AreNotEqual(Guid.Empty, subject);
         }
@@ -193,8 +193,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineEntryTransactionNarrative()
         {
-            LedgerBook result = ArrangeAndAct();
-            string subject = result.Reconciliations.First().Entries.First().Transactions.First().Narrative;
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First().Entries.First().Transactions.First().Narrative;
             Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Narrative, subject);
             Assert.IsNotNull(subject);
         }
@@ -202,8 +202,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineEntryTransactionType()
         {
-            LedgerBook result = ArrangeAndAct();
-            string subject = result.Reconciliations.First().Entries.First().Transactions.First().GetType().FullName;
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First().Entries.First().Transactions.First().GetType().FullName;
             Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().TransactionType, subject);
             Assert.IsNotNull(subject);
         }
@@ -211,8 +211,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineRemarks()
         {
-            LedgerBook result = ArrangeAndAct();
-            string subject = result.Reconciliations.First().Remarks;
+            var result = ArrangeAndAct();
+            var subject = result.Reconciliations.First().Remarks;
             Assert.AreEqual(TestData.Reconciliations.First().Remarks, subject);
             Assert.IsNotNull(subject);
         }
@@ -220,7 +220,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapModifiedDate()
         {
-            LedgerBook result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Modified, result.Modified);
             Assert.AreNotEqual(DateTime.MinValue, result.Modified);
         }
@@ -228,7 +228,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapName()
         {
-            LedgerBook result = ArrangeAndAct();
+            var result = ArrangeAndAct();
             Assert.AreEqual(TestData.Name, result.Name);
             Assert.IsNotNull(result.Name);
         }
@@ -243,7 +243,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             var accountRepo = new InMemoryAccountTypeRepository();
-            var mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
+            var mapper = new MapperLedgerBookDto2LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
             return mapper.ToModel(TestData);
         }
     }

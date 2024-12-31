@@ -46,7 +46,7 @@ namespace BudgetAnalyser.Budget
             if (listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded)
             {
                 this.ExpensesListScrollViewer.ScrollToBottom();
-                int count = this.Expenses.Items.Count == 0 ? 0 : this.Expenses.Items.Count - 1;
+                var count = this.Expenses.Items.Count == 0 ? 0 : this.Expenses.Items.Count - 1;
                 this.Expenses.SelectedIndex = count;
             }
         }
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Budget
             if (listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded)
             {
                 this.IncomesListScrollViewer.ScrollToBottom();
-                int count = this.Incomes.Items.Count == 0 ? 0 : this.Incomes.Items.Count - 1;
+                var count = this.Incomes.Items.Count == 0 ? 0 : this.Incomes.Items.Count - 1;
                 this.Incomes.SelectedIndex = count;
             }
         }

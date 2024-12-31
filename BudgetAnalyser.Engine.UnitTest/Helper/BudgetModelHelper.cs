@@ -14,10 +14,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
             if (instance.BudgetActive)
             {
                 Debug.WriteLine("Budget is ACTIVE.");
-            } else if (instance.BudgetArchived)
+            }
+            else if (instance.BudgetArchived)
             {
                 Debug.WriteLine("Budget is ARCHIVED.");
-            } else if (instance.BudgetInFuture)
+            }
+            else if (instance.BudgetInFuture)
             {
                 Debug.WriteLine("Budget is FUTURE.");
             }
@@ -33,9 +35,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
             }
             Debug.WriteLine(@"    Incomes                      Expenses");
             Debug.WriteLine(@"    ==================================================================");
-            int incomeIndex = 0;
+            var incomeIndex = 0;
             var incomeArray = instance.Incomes.ToArray();
-            foreach (Expense expense in instance.Expenses)
+            foreach (var expense in instance.Expenses)
             {
                 if (incomeIndex <= incomeArray.GetUpperBound(0))
                 {

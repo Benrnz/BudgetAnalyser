@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         private readonly string projectPrefix;
         private bool isInitialising;
 
-        public BucketBucketRepoAlwaysFind() : base(new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()))
+        public BucketBucketRepoAlwaysFind() : base(new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()))
         {
             this.isInitialising = true;
             SurplusBucket = new SurplusBucket();
@@ -36,12 +36,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
                 return SurplusBucket;
             }
 
-            if (code.StartsWith(this.projectPrefix))
-            {
-                return GetOrCreateNew(code, () => new FixedBudgetProjectBucket(code, code, 100000M));
-            }
-
-            return GetOrCreateNew(code, () => new SavedUpForExpenseBucket(code, code));
+            return code.StartsWith(this.projectPrefix)
+                ? GetOrCreateNew(code, () => new FixedBudgetProjectBucket(code, code, 100000M))
+                : GetOrCreateNew(code, () => new SavedUpForExpenseBucket(code, code));
         }
 
         public override void Initialise(IEnumerable<BudgetBucketDto> buckets)

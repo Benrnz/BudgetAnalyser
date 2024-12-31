@@ -66,7 +66,11 @@ namespace BudgetAnalyser.Engine.Services
         /// <returns>A boolean value indicating if the dependency has significantly change, true if so, otherwise false.</returns>
         internal virtual bool NotifyOfDependencyChange([CanBeNull] object dependency, Type typeKey)
         {
-            if (dependency is null) return false;
+            if (dependency is null)
+            {
+                return false;
+            }
+
             this.availableDependencies[typeKey] = dependency;
             if (HasDependencySignificantlyChanged(dependency, typeKey))
             {
@@ -90,8 +94,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private bool HasDependencySignificantlyChanged(object dependency, Type typeKey)
         {
-            var supportsDataChangeDetection = dependency as IDataChangeDetection;
-            if (supportsDataChangeDetection is null)
+            if (dependency is not IDataChangeDetection supportsDataChangeDetection)
             {
                 // Dependency doesn't support change hashes so every change is deemed worthy to trigger an update the UI.
                 return true;

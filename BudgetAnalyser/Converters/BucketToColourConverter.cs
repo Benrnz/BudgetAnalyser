@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 using BudgetAnalyser.Engine.Budget;
@@ -9,8 +9,7 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var bucketValue = value as BudgetBucket;
-            if (bucketValue is null)
+            if (value is not BudgetBucket bucketValue)
             {
                 return null;
             }
@@ -30,12 +29,7 @@ namespace BudgetAnalyser.Converters
                 return ConverterHelper.AccumulatedBucketBrush;
             }
 
-            if (value is IncomeBudgetBucket)
-            {
-                return ConverterHelper.IncomeBucketBrush;
-            }
-
-            return ConverterHelper.NeutralNumberBackgroundBrush;
+            return value is IncomeBudgetBucket ? ConverterHelper.IncomeBucketBrush : (object)ConverterHelper.NeutralNumberBackgroundBrush;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

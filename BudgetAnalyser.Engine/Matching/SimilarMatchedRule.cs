@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public bool AmountMatched
         {
-            get { return this.doNotUseAmountMatched; }
+            get => this.doNotUseAmountMatched;
             set
             {
                 if (value == this.doNotUseAmountMatched)
@@ -62,7 +62,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public bool DescriptionMatched
         {
-            get { return this.doNotUseDescriptionMatched; }
+            get => this.doNotUseDescriptionMatched;
             set
             {
                 if (value == this.doNotUseDescriptionMatched)
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public bool Reference1Matched
         {
-            get { return this.doNotUseReference1Matched; }
+            get => this.doNotUseReference1Matched;
             set
             {
                 if (value == this.doNotUseReference1Matched)
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public bool Reference2Matched
         {
-            get { return this.doNotUseReference2Matched; }
+            get => this.doNotUseReference2Matched;
             set
             {
                 if (value == this.doNotUseReference2Matched)
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public bool Reference3Matched
         {
-            get { return this.doNotUseReference3Matched; }
+            get => this.doNotUseReference3Matched;
             set
             {
                 if (value == this.doNotUseReference3Matched)
@@ -128,25 +128,19 @@ namespace BudgetAnalyser.Engine.Matching
         /// <summary>
         ///     Gets the sort order.
         /// </summary>
-        public int SortOrder
-        {
-            get
-            {
-                return (AmountMatched ? 100 : 0)
+        public int SortOrder => (AmountMatched ? 100 : 0)
                        + (DescriptionMatched ? 90 : 0)
                        + (Reference1Matched ? 70 : 0)
                        + (Reference2Matched ? 60 : 0)
                        + (Reference3Matched ? 50 : 0)
                        + (TransactionTypeMatched ? 10 : 0);
-            }
-        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether the transaction type property was used to match.
         /// </summary>
         public bool TransactionTypeMatched
         {
-            get { return this.doNotUseTransactionTypeMatched; }
+            get => this.doNotUseTransactionTypeMatched;
             set
             {
                 if (value == this.doNotUseTransactionTypeMatched)

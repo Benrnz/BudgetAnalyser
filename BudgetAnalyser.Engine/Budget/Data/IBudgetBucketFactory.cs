@@ -1,4 +1,4 @@
-namespace BudgetAnalyser.Engine.Budget.Data
+﻿namespace BudgetAnalyser.Engine.Budget.Data
 {
     /// <summary>
     ///     A factory to build to and from persistence types for <see cref="BudgetBucket" />.

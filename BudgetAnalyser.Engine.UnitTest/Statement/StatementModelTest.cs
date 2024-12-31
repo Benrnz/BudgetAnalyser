@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -144,39 +144,39 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [TestMethod]
         public void PerformanceOfValidateTest()
         {
-            StatementModel subject = StatementModelTestData.TestData1();
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            var subject = StatementModelTestData.TestData1();
+            var stopwatch = Stopwatch.StartNew();
             subject.ValidateAgainstDuplicates();
             stopwatch.Stop();
             Console.WriteLine("{0:N0} ms", stopwatch.ElapsedMilliseconds);
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 250);
+            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 500); // Should be less than 500ms on Github actions. Runs much faster locally <250ms
         }
 
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates1()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3, Duplicate1 });
+            var statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3, Duplicate1 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates2()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Duplicate2, Transaction3 });
+            var statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Duplicate2, Transaction3 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates3()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Duplicate3, Transaction1, Transaction2, Transaction3 });
+            var statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Duplicate3, Transaction1, Transaction2, Transaction3 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldPassWhenNoDuplicates()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3 });
+            var statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3 });
             Assert.IsFalse(statement.ValidateAgainstDuplicates().Any());
         }
     }

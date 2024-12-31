@@ -13,8 +13,8 @@ namespace BudgetAnalyser.Engine.UnitTest
         [TestMethod]
         public void CheckReferenceEquality()
         {
-            GlobalFilterCriteria subject1 = CreateSubject_StandardPayMonth();
-            GlobalFilterCriteria subject2 = subject1;
+            var subject1 = CreateSubject_StandardPayMonth();
+            var subject2 = subject1;
 
             Assert.AreEqual(subject1, subject2);
             Assert.IsFalse(subject1 != subject2);
@@ -27,8 +27,8 @@ namespace BudgetAnalyser.Engine.UnitTest
         [TestMethod]
         public void CheckReferenceInequality()
         {
-            GlobalFilterCriteria subject1 = CreateSubject_StandardPayMonth();
-            GlobalFilterCriteria subject2 = CreateSubject_NotFiltered();
+            var subject1 = CreateSubject_StandardPayMonth();
+            var subject2 = CreateSubject_NotFiltered();
 
             Assert.AreNotEqual(subject1, subject2);
             Assert.IsTrue(subject1 != subject2);
@@ -74,8 +74,8 @@ namespace BudgetAnalyser.Engine.UnitTest
         [TestMethod]
         public void TwoInstancesWithDifferentValuesAreNotEqual()
         {
-            GlobalFilterCriteria subject1 = CreateSubject_StandardPayMonth();
-            GlobalFilterCriteria subject2 = CreateSubject_StandardPayMonthAndVisaFilter();
+            var subject1 = CreateSubject_StandardPayMonth();
+            var subject2 = CreateSubject_StandardPayMonthAndVisaFilter();
 
             Assert.AreNotEqual(subject1, subject2);
             Assert.IsTrue(subject1 != subject2);
@@ -88,8 +88,8 @@ namespace BudgetAnalyser.Engine.UnitTest
         [TestMethod]
         public void TwoInstancesWithSameValuesShouldHaveSameEqualityHash()
         {
-            GlobalFilterCriteria subject1 = CreateSubject_StandardPayMonth();
-            GlobalFilterCriteria subject2 = CreateSubject_StandardPayMonth();
+            var subject1 = CreateSubject_StandardPayMonth();
+            var subject2 = CreateSubject_StandardPayMonth();
 
             Assert.AreEqual(subject1.SignificantDataChangeHash(), subject2.SignificantDataChangeHash());
             Assert.IsFalse(subject1.SignificantDataChangeHash() != subject2.SignificantDataChangeHash());
@@ -142,7 +142,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         [TestMethod]
         public void WhenNotFilteredClearedShouldBeTrue()
         {
-            GlobalFilterCriteria subject1 = CreateSubject_NotFiltered();
+            var subject1 = CreateSubject_NotFiltered();
             Assert.IsTrue(subject1.Cleared);
         }
 

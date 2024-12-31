@@ -45,12 +45,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Persistence
         [TestInitialize]
         public void TestInitialise()
         {
-            this.subject = new XamlOnDiskApplicationDatabaseRepositoryTestHarness(new Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase())
+            this.subject = new XamlOnDiskApplicationDatabaseRepositoryTestHarness(new MapperBudgetAnalyserStorageRoot2ApplicationDatabase())
             {
                 FileExistsOverride = fileName => true
             };
 
-            Task<ApplicationDatabase> task = this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
+            var task = this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
             task.Wait();
             this.result = task.Result;
         }

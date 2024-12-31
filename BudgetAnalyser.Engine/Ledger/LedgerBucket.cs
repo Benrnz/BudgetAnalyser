@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public BudgetBucket BudgetBucket
         {
-            get { return this.budgetBucket; }
+            get => this.budgetBucket;
             internal set
             {
                 ValidateBucketSet(value);
@@ -58,16 +58,16 @@ namespace BudgetAnalyser.Engine.Ledger
         public abstract bool ApplyReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
 
         /// <summary>
-        ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        ///     Determines whether the specified <see cref="object" />, is equal to this instance.
         ///     Delegates to <see cref="Equals(LedgerBucket)" />
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
         /// <returns>
-        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        ///     <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -75,11 +75,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 return true;
             }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((LedgerBucket) obj);
+            return obj.GetType() != GetType() ? false : Equals((LedgerBucket)obj);
         }
 
         /// <summary>
@@ -130,11 +126,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         protected bool Equals([CanBeNull] LedgerBucket other)
         {
-            if (other is null)
-            {
-                return false;
-            }
-            return Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
+            return other is null ? false : Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
         }
 
         /// <summary>

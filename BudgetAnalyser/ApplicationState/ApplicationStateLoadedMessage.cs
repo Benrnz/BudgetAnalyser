@@ -44,12 +44,7 @@ namespace BudgetAnalyser.ApplicationState
         public T? ElementOfType<T>() where T : class, IPersistentApplicationStateObject
         {
             var type = typeof(T);
-            if (RehydratedModels.TryGetValue(type, out var model))
-            {
-                return model as T;
-            }
-
-            return null;
+            return RehydratedModels.TryGetValue(type, out var model) ? model as T : null;
         }
     }
 }

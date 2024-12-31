@@ -64,14 +64,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
         [TestMethod]
         public void AnalyseShouldReturnALastBudgetElementOfOneThirtythOfTheFirst()
         {
-            decimal expected = decimal.Round(BudgetLine.Plots.First().Amount / 31, 2);
+            var expected = decimal.Round(BudgetLine.Plots.First().Amount / 31, 2);
             Assert.AreEqual(expected, decimal.Round(BudgetLine.Plots.Last().Amount, 2));
         }
 
         [TestMethod]
         public void AnalyseShouldReturnALastReportTransactionsElementWithBalanceEqualTo3376()
         {
-            foreach (ReportTransactionWithRunningBalance transaction in Result.ReportTransactions)
+            foreach (var transaction in Result.ReportTransactions)
             {
                 Console.WriteLine(
                     "{0} {1} {2:N} {3:N}",

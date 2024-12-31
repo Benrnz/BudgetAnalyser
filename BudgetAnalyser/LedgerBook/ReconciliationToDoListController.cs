@@ -24,7 +24,8 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool AddingNewTask
         {
-            [UsedImplicitly] get => this.doNotUseAddingNewTask;
+            [UsedImplicitly]
+            get => this.doNotUseAddingNewTask;
             private set
             {
                 this.doNotUseAddingNewTask = value;

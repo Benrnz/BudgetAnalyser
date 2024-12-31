@@ -36,7 +36,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool IsReadOnly
         {
-            get { return this.doNotUseIsReadOnly; }
+            get => this.doNotUseIsReadOnly;
             private set
             {
                 this.doNotUseIsReadOnly = value;
@@ -46,7 +46,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerEntryLine LedgerEntryLine
         {
-            get { return this.doNotUseLedgerEntryLine; }
+            get => this.doNotUseLedgerEntryLine;
             private set
             {
                 this.doNotUseLedgerEntryLine = value;
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public string Remarks
         {
-            get { return this.doNotUseRemarks; }
+            get => this.doNotUseRemarks;
             set
             {
                 this.doNotUseRemarks = value;
@@ -93,7 +93,7 @@ namespace BudgetAnalyser.LedgerBook
             LedgerEntryLine = null;
             Remarks = null;
 
-            EventHandler handler = Completed;
+            var handler = Completed;
             handler?.Invoke(this, EventArgs.Empty);
         }
     }

@@ -1,16 +1,20 @@
-using System;
+﻿using System;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC]
-    internal partial class Mapper_BudgetBucketDto_BudgetBucket
+    internal partial class MapperBudgetBucketDtoBudgetBucket
     {
         private readonly IBudgetBucketFactory bucketFactory;
 
-        public Mapper_BudgetBucketDto_BudgetBucket([NotNull] IBudgetBucketFactory bucketFactory)
+        public MapperBudgetBucketDtoBudgetBucket([NotNull] IBudgetBucketFactory bucketFactory)
         {
-            if (bucketFactory is null) throw new ArgumentNullException(nameof(bucketFactory));
+            if (bucketFactory is null)
+            {
+                throw new ArgumentNullException(nameof(bucketFactory));
+            }
+
             this.bucketFactory = bucketFactory;
         }
 
