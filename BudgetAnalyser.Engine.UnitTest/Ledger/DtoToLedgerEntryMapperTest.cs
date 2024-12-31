@@ -17,20 +17,17 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private LedgerEntry Control { get; set; }
         private LedgerEntry Result { get; set; }
 
-        private LedgerEntryDto TestData
-        {
-            get
-            {
+        private LedgerEntryDto TestData =>
                 /*
-            <LedgerEntryDto Balance="52.32" BucketCode="POWER">
-              <LedgerEntryDto.Transactions>
-                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
-                  <LedgerTransactionDto Account="{x:Null}" Credit="140" Debit="0" Id="601d77e5-63d5-479c-a0e5-d56a18c975f1" Narrative="Budgeted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <LedgerTransactionDto Account="{x:Null}" Credit="0" Debit="98.56" Id="450f9b46-010a-4508-afc5-d46042c80d02" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
-                </scg:List>
-              </LedgerEntryDto.Transactions>
-            </LedgerEntryDto>                 */
-                return new LedgerEntryDto
+<LedgerEntryDto Balance="52.32" BucketCode="POWER">
+<LedgerEntryDto.Transactions>
+<scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+<LedgerTransactionDto Account="{x:Null}" Credit="140" Debit="0" Id="601d77e5-63d5-479c-a0e5-d56a18c975f1" Narrative="Budgeted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+<LedgerTransactionDto Account="{x:Null}" Credit="0" Debit="98.56" Id="450f9b46-010a-4508-afc5-d46042c80d02" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+</scg:List>
+</LedgerEntryDto.Transactions>
+</LedgerEntryDto>                 */
+                new LedgerEntryDto
                 {
                     Balance = 52.32M,
                     BucketCode = TestDataConstants.PowerBucketCode,
@@ -54,8 +51,6 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                         }
                     }
                 };
-            }
-        }
 
         [TestMethod]
         public void ShouldMapBalance()
@@ -91,10 +86,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void TestInitialise()
         {
             var accountRepo = new InMemoryAccountTypeRepository();
-            var subject = new Mapper_LedgerEntryDto_LedgerEntry(new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory(), accountRepo);
+            var subject = new MapperLedgerEntryDto2LedgerEntry(new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory(), accountRepo);
             Result = subject.ToModel(TestData);
 
-            LedgerBook book = LedgerBookTestData.TestData2();
+            var book = LedgerBookTestData.TestData2();
             Control = book.Reconciliations.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
         }
     }

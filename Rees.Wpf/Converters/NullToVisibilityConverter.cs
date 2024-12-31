@@ -22,11 +22,11 @@ namespace Rees.Wpf.Converters
         /// <returns>
         ///     A converted value. If the method returns null, the valid null value is used.
         /// </returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             var stringParameter = parameter as string;
             var hiddenValue = Visibility.Hidden;
-            Func<bool> test = () => value is null;
+            var test = () => value is null;
 
             if (stringParameter is not null)
             {

@@ -9,7 +9,7 @@
         public void NoLoggingShouldOccurWhenDebuggerNotAttached()
         {
             var logger = new DebugLogger(false);
-            bool didLog = false;
+            var didLog = false;
             logger.LogError(l => (didLog = true).ToString());
             logger.LogWarning(l => (didLog = true).ToString());
             logger.LogInfo(l => (didLog = true).ToString());
@@ -37,7 +37,7 @@
         [DataRow(LogLevel.Always, true)]
         public void ShouldLogExceptionWhenFilteredToError(LogLevel filter, bool expected)
         {
-            bool didLog = false;
+            var didLog = false;
             this.debugLogger.LogLevelFilter = filter;
             this.debugLogger.LogError(new Exception("Test Exception"), l => (didLog = true).ToString());
             Assert.AreEqual(expected, didLog);
@@ -50,7 +50,7 @@
         [DataRow(LogLevel.Always, true)]
         public void ShouldLogError(LogLevel filter, bool expected)
         {
-            bool didLog = false;
+            var didLog = false;
             this.debugLogger.LogLevelFilter = filter;
             this.debugLogger.LogError(l => (didLog = true).ToString());
             Assert.AreEqual(expected, didLog);
@@ -63,7 +63,7 @@
         [DataRow(LogLevel.Always, true)]
         public void ShouldLogWarning(LogLevel filter, bool expected)
         {
-            bool didLog = false;
+            var didLog = false;
             this.debugLogger.LogLevelFilter = filter;
             this.debugLogger.LogWarning(l => (didLog = true).ToString());
             Assert.AreEqual(expected, didLog);
@@ -76,7 +76,7 @@
         [DataRow(LogLevel.Always, true)]
         public void ShouldLogInfo(LogLevel filter, bool expected)
         {
-            bool didLog = false;
+            var didLog = false;
             this.debugLogger.LogLevelFilter = filter;
             this.debugLogger.LogInfo(l => (didLog = true).ToString());
             Assert.AreEqual(expected, didLog);
@@ -89,7 +89,7 @@
         [DataRow(LogLevel.Always, true)]
         public void ShouldLogAlways(LogLevel filter, bool expected)
         {
-            bool didLog = false;
+            var didLog = false;
             this.debugLogger.LogLevelFilter = filter;
             this.debugLogger.LogAlways(l => (didLog = true).ToString());
             Assert.AreEqual(expected, didLog);

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Data;
 
 namespace BudgetAnalyser.Converters
@@ -25,12 +25,7 @@ namespace BudgetAnalyser.Converters
                     return ConvertToIncomeColors(percent);
                 }
 
-                if (parameter.ToString() == "Performance")
-                {
-                    return ConvertToPerformanceColors(percent);
-                }
-
-                return ConverterHelper.NeutralNumberBackgroundBrush;
+                return parameter.ToString() == "Performance" ? ConvertToPerformanceColors(percent) : ConverterHelper.NeutralNumberBackgroundBrush;
             }
             catch (InvalidCastException)
             {
@@ -55,12 +50,7 @@ namespace BudgetAnalyser.Converters
                 return ConverterHelper.SlightDebitBrush;
             }
 
-            if (percent < 1.1)
-            {
-                return ConverterHelper.NotSoBadDebitBrush;
-            }
-
-            return ConverterHelper.DebitBackground1Brush;
+            return percent < 1.1 ? ConverterHelper.NotSoBadDebitBrush : (object)ConverterHelper.DebitBackground1Brush;
         }
 
         private static object ConvertToIncomeColors(double percent)
@@ -75,12 +65,7 @@ namespace BudgetAnalyser.Converters
                 return ConverterHelper.NotSoBadDebitBrush;
             }
 
-            if (percent < 1.00)
-            {
-                return ConverterHelper.SlightDebitBrush;
-            }
-
-            return ConverterHelper.CreditBackground1Brush;
+            return percent < 1.00 ? ConverterHelper.SlightDebitBrush : (object)ConverterHelper.CreditBackground1Brush;
         }
 
         private static object ConvertToPerformanceColors(double percent)
@@ -95,12 +80,7 @@ namespace BudgetAnalyser.Converters
                 return ConverterHelper.NotSoBadDebitBrush;
             }
 
-            if (percent < 100.00)
-            {
-                return ConverterHelper.NeutralNumberBackgroundBrush;
-            }
-
-            return ConverterHelper.CreditBackground1Brush;
+            return percent < 100.00 ? ConverterHelper.NeutralNumberBackgroundBrush : (object)ConverterHelper.CreditBackground1Brush;
         }
     }
 }

@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [TestMethod]
         public void Ctor_ShouldOrderServices()
         {
-            var services = (IEnumerable<ISupportsModelPersistence>) PrivateAccessor.GetField(this.subject, "databaseDependents");
+            var services = (IEnumerable<ISupportsModelPersistence>)PrivateAccessor.GetField(this.subject, "databaseDependents");
             var sequence = 0;
             foreach (var service in services)
             {
@@ -225,7 +225,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         {
             foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
             {
-                this.subject.NotifyOfChange((ApplicationDataType) dataType);
+                this.subject.NotifyOfChange((ApplicationDataType)dataType);
                 Assert.IsTrue(this.subject.HasUnsavedChanges);
                 TestInitialise();
             }

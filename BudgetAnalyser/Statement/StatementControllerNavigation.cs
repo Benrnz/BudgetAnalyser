@@ -44,10 +44,10 @@ namespace BudgetAnalyser.Statement
 
         private bool NavigateToTransactionOutsideOfFilter(Guid transactionId)
         {
-            Transaction foundTransaction = ViewModel.Statement.AllTransactions.FirstOrDefault(t => t.Id == transactionId);
+            var foundTransaction = ViewModel.Statement.AllTransactions.FirstOrDefault(t => t.Id == transactionId);
             if (foundTransaction is not null)
             {
-                bool? result = this.questionBox.Show("The transaction falls outside the current filter. Do you wish to adjust the filter to show the transaction?", "Navigate to Transaction");
+                var result = this.questionBox.Show("The transaction falls outside the current filter. Do you wish to adjust the filter to show the transaction?", "Navigate to Transaction");
                 if (result is null || !result.Value)
                 {
                     return false;
@@ -57,14 +57,9 @@ namespace BudgetAnalyser.Statement
                 var requestCurrentFilter = new RequestFilterMessage(this);
                 MessengerInstance.Send(requestCurrentFilter);
 
-                if (foundTransaction.Date < requestCurrentFilter.Criteria.BeginDate)
-                {
-                    newCriteria = new GlobalFilterCriteria { BeginDate = foundTransaction.Date, EndDate = requestCurrentFilter.Criteria.EndDate };
-                }
-                else
-                {
-                    newCriteria = new GlobalFilterCriteria { BeginDate = requestCurrentFilter.Criteria.BeginDate, EndDate = foundTransaction.Date };
-                }
+                newCriteria = foundTransaction.Date < requestCurrentFilter.Criteria.BeginDate
+                    ? new GlobalFilterCriteria { BeginDate = foundTransaction.Date, EndDate = requestCurrentFilter.Criteria.EndDate }
+                    : new GlobalFilterCriteria { BeginDate = requestCurrentFilter.Criteria.BeginDate, EndDate = foundTransaction.Date };
 
                 MessengerInstance.Send(new RequestFilterChangeMessage(this) { Criteria = newCriteria });
 
@@ -76,7 +71,7 @@ namespace BudgetAnalyser.Statement
 
         private bool NavigateToVisibleTransaction(Guid transactionId)
         {
-            Transaction foundTransaction = ViewModel.Statement.Transactions.FirstOrDefault(t => t.Id == transactionId);
+            var foundTransaction = ViewModel.Statement.Transactions.FirstOrDefault(t => t.Id == transactionId);
             if (foundTransaction is not null)
             {
                 ViewModel.SelectedRow = foundTransaction;

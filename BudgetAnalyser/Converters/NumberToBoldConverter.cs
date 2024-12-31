@@ -9,13 +9,8 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            decimal? number = ConverterHelper.ParseNumber(value);
-            if (number is null)
-            {
-                return FontWeights.Normal;
-            }
-
-            return number < 0 ? FontWeights.Bold : FontWeights.Normal;
+            var number = ConverterHelper.ParseNumber(value);
+            return number is null ? FontWeights.Normal : (object)(number < 0 ? FontWeights.Bold : FontWeights.Normal);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 StorageKey = "C:\\Folder\\book1.xml"
             };
 
-            LedgerEntryLine line = CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
+            var line = CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
             SetEntriesForTesting(
                 line,
                 new List<LedgerEntry>
@@ -94,9 +94,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             var list = new List<LedgerEntryLine> { line };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            var previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            var previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
                 CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
@@ -199,9 +199,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     })
             };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            var previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            var previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
                 CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
@@ -231,7 +231,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
             previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
-            LedgerEntryLine line = CreateLine(
+            var line = CreateLine(
                 new DateTime(2013, 08, 15),
                 new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
@@ -393,9 +393,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                     })
             };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            var previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            var previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
                 CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
@@ -425,7 +425,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
             previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
-            LedgerEntryLine line = CreateLine(
+            var line = CreateLine(
                 new DateTime(2013, 08, 15),
                 new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2750), new BankBalance(StatementModelTestData.SavingsAccount, 200) },
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
@@ -464,15 +464,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData5(Func<LedgerBook> ctor = null)
         {
-            LedgerBook book;
-            if (ctor is not null)
-            {
-                book = ctor();
-            }
-            else
-            {
-                book = new LedgerBook();
-            }
+            var book = ctor is not null ? ctor() : new LedgerBook();
             book.Name = "Test Data 5 Book";
             book.Modified = new DateTime(2013, 12, 16);
             book.StorageKey = "C:\\Folder\\book5.xml";
@@ -512,10 +504,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         })
             };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
-            LedgerEntry previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
+            var previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            var previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            var previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
 
             list.Add(
                 CreateLine(
@@ -553,7 +545,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
             previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
 
-            LedgerEntryLine line = CreateLine(
+            var line = CreateLine(
                 new DateTime(2013, 08, 15),
                 new[] { new BankBalance(ChequeAccount, 3050), new BankBalance(SavingsAccount, 1000) },
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
@@ -598,15 +590,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData6(Func<LedgerBook> ctor = null)
         {
-            LedgerBook book;
-            if (ctor is not null)
-            {
-                book = ctor();
-            }
-            else
-            {
-                book = new LedgerBook();
-            }
+            var book = ctor is not null ? ctor() : new LedgerBook();
             book.Name = "Test Data 6 Book";
             book.Modified = new DateTime(2013, 08, 15);
             book.StorageKey = "C:\\FakeFolder\\book6.xml";
@@ -646,10 +630,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                         })
             };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
-            LedgerEntry previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
+            var previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            var previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            var previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
 
             list.Add(
                 CreateLine(
@@ -695,15 +679,19 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         internal static void Finalise(LedgerBook book, bool unlock = false)
         {
-            if (book.Reconciliations.None()) return;
+            if (book.Reconciliations.None())
+            {
+                return;
+            }
+
             var ledgers = new Dictionary<BudgetBucket, LedgerBucket>();
-            foreach (LedgerEntryLine line in book.Reconciliations)
+            foreach (var line in book.Reconciliations)
             {
                 if (!unlock)
                 {
                     PrivateAccessor.SetProperty(line, "IsNew", false);
                 }
-                foreach (LedgerEntry entry in line.Entries)
+                foreach (var entry in line.Entries)
                 {
                     if (!unlock)
                     {
@@ -732,7 +720,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         internal static LedgerEntry SetTransactionsForTesting(this LedgerEntry entry, List<LedgerTransaction> transactions)
         {
             PrivateAccessor.SetField(entry, "transactions", transactions);
-            decimal newBalance = entry.Balance + entry.NetAmount;
+            var newBalance = entry.Balance + entry.NetAmount;
             entry.Balance = newBalance < 0 ? 0 : newBalance;
             return entry;
         }

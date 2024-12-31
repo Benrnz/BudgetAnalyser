@@ -6,17 +6,29 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Statement.Data
 {
     [AutoRegisterWithIoC]
-    internal partial class Mapper_TransactionDto_Transaction
+    internal partial class MapperTransactionDto2Transaction
     {
         private readonly IAccountTypeRepository accountRepo;
         private readonly IBudgetBucketRepository bucketRepo;
         private readonly ITransactionTypeRepository transactionTypeRepo;
 
-        public Mapper_TransactionDto_Transaction([NotNull] IAccountTypeRepository accountRepo, [NotNull] IBudgetBucketRepository bucketRepo, [NotNull] ITransactionTypeRepository transactionTypeRepo)
+        public MapperTransactionDto2Transaction([NotNull] IAccountTypeRepository accountRepo, [NotNull] IBudgetBucketRepository bucketRepo, [NotNull] ITransactionTypeRepository transactionTypeRepo)
         {
-            if (accountRepo is null) throw new ArgumentNullException(nameof(accountRepo));
-            if (bucketRepo is null) throw new ArgumentNullException(nameof(bucketRepo));
-            if (transactionTypeRepo is null) throw new ArgumentNullException(nameof(transactionTypeRepo));
+            if (accountRepo is null)
+            {
+                throw new ArgumentNullException(nameof(accountRepo));
+            }
+
+            if (bucketRepo is null)
+            {
+                throw new ArgumentNullException(nameof(bucketRepo));
+            }
+
+            if (transactionTypeRepo is null)
+            {
+                throw new ArgumentNullException(nameof(transactionTypeRepo));
+            }
+
             this.accountRepo = accountRepo;
             this.bucketRepo = bucketRepo;
             this.transactionTypeRepo = transactionTypeRepo;

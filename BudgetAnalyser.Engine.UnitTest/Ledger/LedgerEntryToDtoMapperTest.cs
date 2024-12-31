@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         public void TestInitialise()
         {
             var accountTypeRepo = new InMemoryAccountTypeRepository();
-            var subject = new Mapper_LedgerEntryDto_LedgerEntry(new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountTypeRepo), new LedgerTransactionFactory(), accountTypeRepo);
+            var subject = new MapperLedgerEntryDto2LedgerEntry(new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountTypeRepo), new LedgerTransactionFactory(), accountTypeRepo);
 
             Result = subject.ToDto(TestData);
         }

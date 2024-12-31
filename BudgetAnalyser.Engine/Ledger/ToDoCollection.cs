@@ -22,12 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(task));
             }
 
-            if (task.CanDelete)
-            {
-                return base.Remove(task);
-            }
-
-            return false;
+            return task.CanDelete ? base.Remove(task) : false;
         }
 
         /// <summary>

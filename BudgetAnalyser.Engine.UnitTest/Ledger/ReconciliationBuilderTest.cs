@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -56,7 +56,7 @@ public class ReconciliationBuilderTest
     {
         // The auto-matched credit ledger transaction from last month should be linked to the statement transaction.
         this.testDataStatement = StatementModelTestData.TestData5();
-        List<Transaction> statementTransactions = this.testDataStatement.AllTransactions.Where(t => t.Reference1 == "agkT9kC").ToList();
+        var statementTransactions = this.testDataStatement.AllTransactions.Where(t => t.Reference1 == "agkT9kC").ToList();
         Debug.Assert(statementTransactions.Count() == 2);
 
         ActPeriodEndReconciliationOnTestData5(this.testDataStatement);
@@ -187,7 +187,7 @@ public class ReconciliationBuilderTest
     public void Reconcile_WithStatementSavedUpForHairLedgerShouldHaveBalance55_GivenTestData1()
     {
         TestIntialise(1);
-        List<Transaction> additionalTransactions = this.testDataStatement.AllTransactions.ToList();
+        var additionalTransactions = this.testDataStatement.AllTransactions.ToList();
 
         additionalTransactions.Add(new Transaction
         {

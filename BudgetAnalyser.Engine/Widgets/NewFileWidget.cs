@@ -41,10 +41,9 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            var appDb = input[0] as ApplicationDatabase;
             ToolTip = "Create a new Budget Analyser File.";
             DetailedText = "Create new";
-            ColourStyleName = appDb is null ? WidgetWarningStyle : WidgetStandardStyle;
+            ColourStyleName = input[0] is not ApplicationDatabase appDb ? WidgetWarningStyle : WidgetStandardStyle;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Budget
         {
             if (e.NewValue is BudgetController budgetController)
             {
-                ICollectionView view = CollectionViewSource.GetDefaultView(budgetController.Budgets);
+                var view = CollectionViewSource.GetDefaultView(budgetController.Budgets);
                 view.SortDescriptions.Add(new SortDescription("EffectiveFrom", ListSortDirection.Descending));
             }
         }

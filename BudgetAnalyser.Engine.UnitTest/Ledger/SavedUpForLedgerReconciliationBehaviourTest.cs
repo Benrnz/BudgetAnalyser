@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             };
 
             var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
-            
+
             Assert.IsTrue(result);
             Assert.AreEqual(2, testInput.Count);
         }

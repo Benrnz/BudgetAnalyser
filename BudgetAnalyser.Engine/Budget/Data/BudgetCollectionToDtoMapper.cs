@@ -6,20 +6,32 @@ using Rees.TangyFruitMapper;
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC]
-    internal partial class Mapper_BudgetCollectionDto_BudgetCollection
+    internal partial class MapperBudgetCollectionDtoBudgetCollection
     {
         private readonly IDtoMapper<BudgetBucketDto, BudgetBucket> bucketMapper;
         private readonly IBudgetBucketRepository bucketRepo;
         private readonly IDtoMapper<BudgetModelDto, BudgetModel> budgetMapper;
 
-        public Mapper_BudgetCollectionDto_BudgetCollection(
+        public MapperBudgetCollectionDtoBudgetCollection(
             [NotNull] IBudgetBucketRepository bucketRepo,
             [NotNull] IDtoMapper<BudgetBucketDto, BudgetBucket> bucketMapper,
             [NotNull] IDtoMapper<BudgetModelDto, BudgetModel> budgetMapper)
         {
-            if (bucketRepo is null) throw new ArgumentNullException(nameof(bucketRepo));
-            if (bucketMapper is null) throw new ArgumentNullException(nameof(bucketMapper));
-            if (budgetMapper is null) throw new ArgumentNullException(nameof(budgetMapper));
+            if (bucketRepo is null)
+            {
+                throw new ArgumentNullException(nameof(bucketRepo));
+            }
+
+            if (bucketMapper is null)
+            {
+                throw new ArgumentNullException(nameof(bucketMapper));
+            }
+
+            if (budgetMapper is null)
+            {
+                throw new ArgumentNullException(nameof(budgetMapper));
+            }
+
             this.bucketRepo = bucketRepo;
             this.bucketMapper = bucketMapper;
             this.budgetMapper = budgetMapper;

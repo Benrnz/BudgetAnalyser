@@ -22,7 +22,11 @@ namespace BudgetAnalyser.LedgerBook
 
             set
             {
-                if (Equals(value, this.doNotUseLedgerBook)) return;
+                if (Equals(value, this.doNotUseLedgerBook))
+                {
+                    return;
+                }
+
                 this.doNotUseLedgerBook = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(NoLedgerBookLoaded));
@@ -43,7 +47,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         internal IBudgetCurrencyContext? CurrentBudget
         {
-            get { return this.doNotUseCurrentBudget; }
+            get => this.doNotUseCurrentBudget;
             set
             {
                 this.doNotUseCurrentBudget = value;
@@ -57,7 +61,11 @@ namespace BudgetAnalyser.LedgerBook
 
             set
             {
-                if (Equals(value, this.doNotUseCurrentStatement)) return;
+                if (Equals(value, this.doNotUseCurrentStatement))
+                {
+                    return;
+                }
+
                 this.doNotUseCurrentStatement = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(NoStatementLoaded));
@@ -73,7 +81,11 @@ namespace BudgetAnalyser.LedgerBook
             get => this.doNotUseNewLedgerLine;
             set
             {
-                if (Equals(value, this.doNotUseNewLedgerLine)) return;
+                if (Equals(value, this.doNotUseNewLedgerLine))
+                {
+                    return;
+                }
+
                 this.doNotUseNewLedgerLine = value;
                 OnPropertyChanged();
             }

@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Matching.Data
 {
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 2:10:07 AM UTC")]
-    internal partial class Mapper_MatchingRuleDto_MatchingRule : IDtoMapper<MatchingRuleDto, MatchingRule>
+    internal partial class MapperMatchingRuleDto2MatchingRule : IDtoMapper<MatchingRuleDto, MatchingRule>
     {
 
         public virtual MatchingRule ToModel(MatchingRuleDto dto)

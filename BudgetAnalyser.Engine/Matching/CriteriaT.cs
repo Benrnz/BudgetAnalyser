@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </value>
         public bool Applicable
         {
-            get { return this.doNotUseApplicable; }
+            get => this.doNotUseApplicable;
             set
             {
                 if (value == this.doNotUseApplicable)
@@ -46,7 +46,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public T Value
         {
-            get { return this.doNotUseValue; }
+            get => this.doNotUseValue;
             set
             {
                 if (Equals(value, this.doNotUseValue))
@@ -106,12 +106,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         public override bool IsEqualButNotBlank(decimal? operand2)
         {
-            if (Value == default(decimal))
-            {
-                return false;
-            }
-
-            return Value == operand2;
+            return Value == default(decimal) ? false : Value == operand2;
         }
     }
 }

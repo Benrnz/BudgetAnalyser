@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
         {
             Debug.WriteLine("Date       Description     Bucket     Reference1      Reference2          Amount Account         Id");
             Debug.WriteLine("=====================================================================================================================================");
-            foreach (Transaction transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
+            foreach (var transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
             {
                 Debug.WriteLine(
                     "{0} {1} {2} {3} {4} {5} {6} {7}",

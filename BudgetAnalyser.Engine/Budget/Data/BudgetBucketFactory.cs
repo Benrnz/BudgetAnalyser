@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data;
@@ -46,18 +46,13 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
     {
         BudgetBucketDto dto;
         var fixedProjectBucket = bucket as FixedBudgetProjectBucket;
-        if (fixedProjectBucket is not null)
-        {
-            dto = new FixedBudgetBucketDto
+        dto = fixedProjectBucket is not null
+            ? new FixedBudgetBucketDto
             {
                 Created = fixedProjectBucket.Created,
                 FixedBudgetAmount = fixedProjectBucket.FixedBudgetAmount
-            };
-        }
-        else
-        {
-            dto = new BudgetBucketDto();
-        }
+            }
+            : new BudgetBucketDto();
 
         dto.Type = SerialiseType(bucket);
         return dto;

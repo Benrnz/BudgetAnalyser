@@ -10,8 +10,7 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var bucket = value as BudgetBucket;
-            if (bucket is null)
+            if (value is not BudgetBucket bucket)
             {
                 return Visibility.Visible;
             }
@@ -20,12 +19,7 @@ namespace BudgetAnalyser.Converters
             {
                 if (parameter.ToString() == "Expense")
                 {
-                    if (bucket is SurplusBucket)
-                    {
-                        return Visibility.Visible;
-                    }
-
-                    return bucket is ExpenseBucket ? Visibility.Visible : Visibility.Collapsed;
+                    return bucket is SurplusBucket ? Visibility.Visible : (object)(bucket is ExpenseBucket ? Visibility.Visible : Visibility.Collapsed);
                 }
 
                 if (parameter.ToString() == "Income")

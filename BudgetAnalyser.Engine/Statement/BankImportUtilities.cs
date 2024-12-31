@@ -80,8 +80,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var stringToParse = array[index];
-            DateTime retval;
-            if (!DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.None, out retval))
+            if (!DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var retval))
             {
                 this.logger.LogError(l => "BankImportUtilities: Unable to parse date: " + stringToParse);
                 throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
@@ -103,8 +102,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var stringToParse = array[index];
-            decimal retval;
-            if (!decimal.TryParse(stringToParse, out retval))
+            if (!decimal.TryParse(stringToParse, out var retval))
             {
                 this.logger.LogError(l => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
                 throw new InvalidDataException("Expected decimal, but provided data is invalid. " + stringToParse);
@@ -127,8 +125,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var stringToParse = array[index];
-            Guid result;
-            if (!Guid.TryParse(stringToParse, out result))
+            if (!Guid.TryParse(stringToParse, out var result))
             {
                 this.logger.LogError(l => "BankImportUtilities: Unable to parse Guid: " + stringToParse);
                 throw new InvalidDataException("Expected Guid, but provided data is invalid. " + stringToParse);
@@ -150,8 +147,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var stringToParse = array[index];
-            long retval;
-            if (!long.TryParse(stringToParse, out retval))
+            if (!long.TryParse(stringToParse, out var retval))
             {
                 this.logger.LogError(l => "BankImportUtilities: Unable to parse long: " + stringToParse);
                 throw new InvalidDataException("Expected long, but provided data is invalid. " + stringToParse);
@@ -175,12 +171,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             var result = array[index].Trim();
             var chars = result.ToCharArray();
-            if (chars.Length > 0 && chars[0] == '"')
-            {
-                return result.Replace("\"", string.Empty);
-            }
-
-            return result;
+            return chars.Length > 0 && chars[0] == '"' ? result.Replace("\"", string.Empty) : result;
         }
 
         private static void ThrowIndexOutOfRangeException(string[] array, int index)

@@ -34,12 +34,9 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(budgets));
             }
 
-            if (criteria is null)
-            {
-                throw new ArgumentNullException(nameof(criteria));
-            }
-
-            return this.analyser.Analyse(statementModel, budgets, criteria);
+            return criteria is null
+                ? throw new ArgumentNullException(nameof(criteria))
+                : this.analyser.Analyse(statementModel, budgets, criteria);
         }
     }
 }

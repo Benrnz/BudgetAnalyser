@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
 {
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 6:22:12 AM UTC")]
-    internal partial class Mapper_BudgetBucketDto_BudgetBucket : IDtoMapper<BudgetBucketDto, BudgetBucket>
+    internal partial class MapperBudgetBucketDtoBudgetBucket : IDtoMapper<BudgetBucketDto, BudgetBucket>
     {
 
         public virtual BudgetBucket ToModel(BudgetBucketDto dto)

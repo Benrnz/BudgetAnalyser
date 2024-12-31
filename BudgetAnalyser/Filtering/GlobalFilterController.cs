@@ -54,7 +54,8 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     public string AccountTypeSummary
     {
-        [UsedImplicitly] get => this.doNotUseAccountTypeSummary;
+        [UsedImplicitly]
+        get => this.doNotUseAccountTypeSummary;
         private set
         {
             this.doNotUseAccountTypeSummary = value;
@@ -88,7 +89,8 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     public string DateSummaryLine1
     {
-        [UsedImplicitly] get => this.doNotUseDateSummaryLine1;
+        [UsedImplicitly]
+        get => this.doNotUseDateSummaryLine1;
         private set
         {
             this.doNotUseDateSummaryLine1 = value;
@@ -98,7 +100,8 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     public string DateSummaryLine2
     {
-        [UsedImplicitly] get => this.doNotUseDateSummaryLine2;
+        [UsedImplicitly]
+        get => this.doNotUseDateSummaryLine2;
         private set
         {
             this.doNotUseDateSummaryLine2 = value;

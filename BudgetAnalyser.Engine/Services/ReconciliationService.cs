@@ -111,7 +111,7 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
         newTransaction.Date = reconciliation.Date;
 
         // ledgerEntry.AddTransactionForPersistenceOnly(newTransaction);
-        List<LedgerTransaction> replacementTxns = ledgerEntry.Transactions.ToList();
+        var replacementTxns = ledgerEntry.Transactions.ToList();
         replacementTxns.Add(newTransaction);
         ledgerEntry.SetTransactionsForReconciliation(replacementTxns);
         ledgerEntry.RecalculateClosingBalance(ledgerBook);
@@ -168,12 +168,7 @@ internal class ReconciliationService : IReconciliationService, ISupportsModelPer
 
     public LedgerEntryLine UnlockCurrentPeriod(LedgerBook ledgerBook)
     {
-        if (ledgerBook is null)
-        {
-            throw new ArgumentNullException(nameof(ledgerBook));
-        }
-
-        return ledgerBook.UnlockMostRecentLine();
+        return ledgerBook is null ? throw new ArgumentNullException(nameof(ledgerBook)) : ledgerBook.UnlockMostRecentLine();
     }
 
     public void UpdateRemarks(LedgerEntryLine entryLine, string remarks)

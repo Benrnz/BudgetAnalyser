@@ -1,6 +1,6 @@
-﻿using Portable.Xaml;
-using BudgetAnalyser.Engine.Budget.Data;
+﻿using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
+using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
                 StorageKey = "Foo.xml"
             };
 
-            string serialised = XamlServices.Save(collection);
+            var serialised = XamlServices.Save(collection);
             Console.WriteLine(serialised);
         }
     }

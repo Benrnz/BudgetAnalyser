@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            var statement = (StatementModel) input[0];
+            var statement = (StatementModel)input[0];
             var days = Convert.ToInt32(DateTime.Today.Subtract(statement.LastImport).TotalDays);
             if (days < 0)
             {
@@ -52,14 +52,7 @@ namespace BudgetAnalyser.Engine.Widgets
             LargeNumber = days > 99 ? "99+" : days.ToString(CultureInfo.CurrentCulture);
             ToolTip = string.Format(CultureInfo.CurrentCulture,
                 "It's been {0} days since new transactions have been imported.", LargeNumber);
-            if (days >= 7)
-            {
-                ColourStyleName = WidgetWarningStyle;
-            }
-            else
-            {
-                ColourStyleName = WidgetStandardStyle;
-            }
+            ColourStyleName = days >= 7 ? WidgetWarningStyle : WidgetStandardStyle;
         }
     }
 }

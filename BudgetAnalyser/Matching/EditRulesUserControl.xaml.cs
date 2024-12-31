@@ -27,8 +27,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnCheckedAndSelectedRule(object sender, RoutedEventArgs e)
         {
-            var radioButton = sender as RadioButton;
-            if (radioButton is null)
+            if (sender is not RadioButton radioButton)
             {
                 return;
             }
@@ -62,8 +61,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnGroupListBoxLoaded(object sender, RoutedEventArgs e)
         {
-            var listBox = e.OriginalSource as ListBox;
-            if (listBox is null)
+            if (e.OriginalSource is not ListBox listBox)
             {
                 return;
             }
@@ -114,7 +112,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnRuleAdded(object sender, MatchingRuleEventArgs e)
         {
-            MatchingRule rule = e.Rule;
+            var rule = e.Rule;
             var flatList = (ObservableCollection<MatchingRule>)this.FlatListBox.ItemsSource;
             if (flatList.All(r => r.RuleId != rule.RuleId))
             {
@@ -122,7 +120,7 @@ namespace BudgetAnalyser.Matching
             }
 
             var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
-            RulesGroupedByBucket group = groupedList.SingleOrDefault(g => g.Bucket == rule.Bucket);
+            var group = groupedList.SingleOrDefault(g => g.Bucket == rule.Bucket);
             if (group is null)
             {
                 group = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
@@ -142,11 +140,8 @@ namespace BudgetAnalyser.Matching
             flatList.Remove(rule);
 
             var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
-            RulesGroupedByBucket group = groupedList.FirstOrDefault(g => g.Bucket == rule.Bucket);
-            if (group is not null)
-            {
-                group.Rules.Remove(rule);
-            }
+            var group = groupedList.FirstOrDefault(g => g.Bucket == rule.Bucket);
+            group?.Rules.Remove(rule);
         }
 
         private void OnSortChanged(object sender, EventArgs e)
@@ -159,14 +154,14 @@ namespace BudgetAnalyser.Matching
                     switch (this.currentSort)
                     {
                         case RulesController.DescriptionSortKey:
-                            ICollectionView view1 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
+                            var view1 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
                             view1.SortDescriptions.Clear();
                             view1.SortDescriptions.Add(new SortDescription("Description", ListSortDirection.Ascending));
                             view1.Refresh();
                             break;
 
                         case RulesController.MatchesSortKey:
-                            ICollectionView view2 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
+                            var view2 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
                             view2.SortDescriptions.Clear();
                             view2.SortDescriptions.Add(new SortDescription("MatchCount", ListSortDirection.Descending));
                             view2.Refresh();
@@ -179,7 +174,7 @@ namespace BudgetAnalyser.Matching
 
                 if (Controller.GroupByListBoxVisibility)
                 {
-                    ICollectionView view = CollectionViewSource.GetDefaultView(this.GroupedByListBox.ItemsSource);
+                    var view = CollectionViewSource.GetDefaultView(this.GroupedByListBox.ItemsSource);
                     view.Refresh();
                 }
             }

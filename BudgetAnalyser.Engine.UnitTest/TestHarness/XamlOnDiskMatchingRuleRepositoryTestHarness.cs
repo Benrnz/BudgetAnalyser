@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
+using JetBrains.Annotations;
 using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
@@ -21,12 +21,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName, bool isEncrypted)
         {
-            if (LoadFromDiskOveride is null)
-            {
-                return await base.LoadFromDiskAsync(fileName, isEncrypted);
-            }
-
-            return LoadFromDiskOveride(fileName);
+            return LoadFromDiskOveride is null ? await base.LoadFromDiskAsync(fileName, isEncrypted) : LoadFromDiskOveride(fileName);
         }
 
         protected override async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities, bool isEncrypted)

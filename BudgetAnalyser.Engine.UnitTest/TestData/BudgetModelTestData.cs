@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 new BudgetBucketDto { Code = TestDataConstants.IncomeBucketCode, Type = BucketDtoType.Income, Description = "Salary from Lawn Mowing business" }
             };
         }
-       
+
         public static BudgetCollection CreateCollectionWith1And2()
         {
             var collection = new BudgetCollection(
@@ -28,8 +28,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 {
                     CreateTestData1(),
                     CreateTestData2()
-                });
-            collection.StorageKey = @"C:\Temp\Foo.xaml";
+                })
+            {
+                StorageKey = @"C:\Temp\Foo.xaml"
+            };
             return collection;
         }
 

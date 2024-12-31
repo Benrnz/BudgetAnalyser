@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
         public void IsValidAlphaNumericWithPunctuation_ShouldBeFalse_GivenTextStartsWithNull()
         {
             var bytes = new byte[] { 0x00000000, 0x00000000 };
-            char[] chars = Encoding.UTF8.GetChars(bytes);
+            var chars = Encoding.UTF8.GetChars(bytes);
             var result = this.subject.IsValidAlphaNumericWithPunctuation(new string(chars));
             Assert.IsFalse(result);
         }
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
         [TestMethod]
         public void IsValidAlphaNumericWithPunctuation_ShouldBeTrue_GivenAnyNumber()
         {
-            IEnumerable<int> number = Enumerable.Range(0, 10);
+            var number = Enumerable.Range(0, 10);
             var text = string.Concat(number);
             var result = this.subject.IsValidAlphaNumericWithPunctuation(text);
             Assert.IsTrue(result);

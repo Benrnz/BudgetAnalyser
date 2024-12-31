@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.BankAccount;
 using JetBrains.Annotations;
 
@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Statement
             ArgumentNullException.ThrowIfNull(importUtilities, nameof(importUtilities));
             ArgumentNullException.ThrowIfNull(logger, nameof(logger));
             ArgumentNullException.ThrowIfNull(readerWriterSelector, nameof(readerWriterSelector));
-            
+
             this.importUtilities = importUtilities;
             this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
             // ANZ importers are NZ specific at this stage.
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Engine.Statement
                     continue;
                 }
 
-                string[] split = line.Split(',');
+                var split = line.Split(',');
                 var transactionType = FetchTransactionType(split);
                 var transaction = new Transaction
                 {
@@ -85,9 +85,9 @@ namespace BudgetAnalyser.Engine.Statement
                     Reference1 = this.importUtilities.FetchString(split, Reference1Index),
                     TransactionType = transactionType,
                     Description = this.importUtilities.FetchString(split, DescriptionIndex),
-                    Date = this.importUtilities.FetchDate(split, DateIndex)
+                    Date = this.importUtilities.FetchDate(split, DateIndex),
+                    Amount = FetchAmount(split, transactionType)
                 };
-                transaction.Amount = FetchAmount(split, transactionType);
                 transactions.Add(transaction);
             }
 
@@ -105,7 +105,7 @@ namespace BudgetAnalyser.Engine.Statement
         public async Task<bool> TasteTestAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
-            string[]? lines = await ReadFirstTwoLinesAsync(fileName);
+            var lines = await ReadFirstTwoLinesAsync(fileName);
             if (lines is null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
@@ -113,8 +113,15 @@ namespace BudgetAnalyser.Engine.Statement
 
             try
             {
-                if (!VerifyColumnHeaderLine(lines[0])) return false;
-                if (!VerifyFirstDataLine(lines[1])) return false;
+                if (!VerifyColumnHeaderLine(lines[0]))
+                {
+                    return false;
+                }
+
+                if (!VerifyFirstDataLine(lines[1]))
+                {
+                    return false;
+                }
             }
             catch (Exception)
             {
@@ -158,7 +165,8 @@ namespace BudgetAnalyser.Engine.Statement
                 }
 
                 return amount;
-            } catch (InvalidDataException ex)
+            }
+            catch (InvalidDataException ex)
             {
                 this.logger.LogError(ex, l => l.Format("Unable to convert provided string to a decimal. Probable format change in bank file."));
                 throw;
@@ -187,11 +195,7 @@ namespace BudgetAnalyser.Engine.Statement
         private async Task<string[]?> ReadFirstTwoLinesAsync(string fileName)
         {
             var chunk = await ReadTextChunkAsync(fileName);
-            if (chunk.IsNothing())
-            {
-                return null;
-            }
-            return chunk.SplitLines(2);
+            return chunk.IsNothing() ? null : chunk.SplitLines(2);
         }
 
         private static bool VerifyColumnHeaderLine(string line)
@@ -202,7 +206,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private bool VerifyFirstDataLine(string line)
         {
-            string[] split = line.Split(',');
+            var split = line.Split(',');
             var card = this.importUtilities.FetchString(split, Reference1Index);
             if (card.IsSomething())
             {
@@ -219,11 +223,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var date = this.importUtilities.FetchDate(split, DateIndex);
-            if (date == DateTime.MinValue)
-            {
-                return false;
-            }
-            return true;
+            return date != DateTime.MinValue;
         }
     }
 }

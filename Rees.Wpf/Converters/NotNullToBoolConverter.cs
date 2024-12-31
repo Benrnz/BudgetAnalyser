@@ -10,7 +10,7 @@ namespace Rees.Wpf.Converters
     public class NotNullToBoolConverter : IValueConverter
     {
         /// <summary>
-        ///     Converts a <see cref="Boolean"/>value.
+        ///     Converts a <see cref="bool"/>value.
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">Not Used.</param>

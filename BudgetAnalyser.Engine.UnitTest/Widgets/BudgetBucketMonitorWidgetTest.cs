@@ -2,10 +2,10 @@
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.Widgets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest.Widgets
@@ -32,8 +32,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         [TestInitialize]
         public void TestInitialise()
         {
-            this.subject = new BudgetBucketMonitorWidget();
-            this.subject.BucketCode = StatementModelTestData.PhoneBucket.Code;
+            this.subject = new BudgetBucketMonitorWidget
+            {
+                BucketCode = StatementModelTestData.PhoneBucket.Code
+            };
 
             this.bucketRepo = new BucketBucketRepoAlwaysFind();
             this.criteriaTestData = new GlobalFilterCriteria
@@ -44,7 +46,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
 
             CreateStatementTestData();
 
-            BudgetModel budgetModel = BudgetModelTestData.CreateTestData5();
+            var budgetModel = BudgetModelTestData.CreateTestData5();
             this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel), budgetModel);
 
             CreateLedgerBookTestData();

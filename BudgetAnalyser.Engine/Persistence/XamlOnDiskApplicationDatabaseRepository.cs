@@ -1,7 +1,7 @@
-﻿using Portable.Xaml;
-using BudgetAnalyser.Engine.Ledger;
+﻿using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using JetBrains.Annotations;
+using Portable.Xaml;
 using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Persistence

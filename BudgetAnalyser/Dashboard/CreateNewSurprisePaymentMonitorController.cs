@@ -1,12 +1,12 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard
 {
@@ -58,7 +58,7 @@ namespace BudgetAnalyser.Dashboard
 
         public WeeklyOrFortnightly Frequency
         {
-            get { return this.doNotUseFrequency; }
+            get => this.doNotUseFrequency;
             set
             {
                 this.doNotUseFrequency = value;
@@ -71,7 +71,11 @@ namespace BudgetAnalyser.Dashboard
             get => this.doNotUsePaymentStartDate;
             set
             {
-                if (Equals(value, this.doNotUsePaymentStartDate)) return;
+                if (Equals(value, this.doNotUsePaymentStartDate))
+                {
+                    return;
+                }
+
                 this.doNotUsePaymentStartDate = value;
                 OnPropertyChanged();
                 Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -84,7 +88,11 @@ namespace BudgetAnalyser.Dashboard
             [UsedImplicitly]
             set
             {
-                if (Equals(value, this.doNotUseSelected)) return;
+                if (Equals(value, this.doNotUseSelected))
+                {
+                    return;
+                }
+
                 this.doNotUseSelected = value;
                 OnPropertyChanged();
                 Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -118,7 +126,7 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            EventHandler<DialogResponseEventArgs> handler = Complete;
+            var handler = Complete;
             handler?.Invoke(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
         }
     }

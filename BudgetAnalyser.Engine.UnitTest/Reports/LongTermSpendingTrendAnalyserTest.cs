@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
         [TestMethod]
         public void OutputTest()
         {
-            LongTermSpendingTrendAnalyser subject = Arrange();
+            var subject = Arrange();
 
             subject.Analyse(StatementModelTestData.TestData2(), new GlobalFilterCriteria());
 
@@ -59,10 +59,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
         private static void Output(LongTermSpendingTrendAnalyser subject)
         {
             Console.WriteLine("{0} - {1} lines in the graph.", subject.Graph.GraphName, subject.Graph.Series.Count());
-            foreach (SeriesData series in subject.Graph.Series)
+            foreach (var series in subject.Graph.Series)
             {
                 Console.WriteLine("[{0}] {1}", series.SeriesName, series.Description);
-                foreach (DatedGraphPlot data in series.Plots)
+                foreach (var data in series.Plots)
                 {
                     Console.WriteLine("    {0}  {1:C}", data.Month, data.Amount);
                 }

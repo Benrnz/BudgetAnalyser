@@ -42,17 +42,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// <summary>
         ///     Gets the calculated percentage.
         /// </summary>
-        public double Percent
-        {
-            get
-            {
-                if (BudgetTotal < 0.01M)
-                {
-                    return (double) Math.Round(TotalSpent / 0.01M, 2);
-                }
-                return (double) Math.Round(TotalSpent / BudgetTotal, 2);
-            }
-        }
+        public double Percent => BudgetTotal < 0.01M ? (double)Math.Round(TotalSpent / 0.01M, 2) : (double)Math.Round(TotalSpent / BudgetTotal, 2);
 
         /// <summary>
         ///     Gets the summary.
@@ -62,19 +52,16 @@ namespace BudgetAnalyser.Engine.Reports
             get
             {
                 var difference = BudgetTotal - TotalSpent;
-                if (Percent > 1)
-                {
-                    return string.Format(
+                return Percent > 1
+                    ? string.Format(
                         CultureInfo.CurrentCulture,
                         "{0:P} ({1:C}) OVER Budget of {2:C}.  Total Spent: {3:C}.  Single Month Budget: {4:C}",
                         Percent - 1,
                         difference,
                         BudgetTotal,
                         TotalSpent,
-                        Budget);
-                }
-
-                return string.Format(
+                        Budget)
+                    : string.Format(
                     CultureInfo.CurrentCulture,
                     "{0:P} ({1:C}) under Budget of {2:C}.  Total Spent: {3:C}.  Single Month Budget: {4:C}",
                     Percent,

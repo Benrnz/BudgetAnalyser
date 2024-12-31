@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [TestMethod]
         public void Match_ShouldRemoveSingleUseRulesThatWereUsed()
         {
-            IEnumerable<Transaction> testTransactions = StatementModelTestData.TestData1().Transactions;
+            var testTransactions = StatementModelTestData.TestData1().Transactions;
             var testMatchingRules = new List<MatchingRule>
             {
                 new SingleUseMatchingRule(this.mockBucketRepo)

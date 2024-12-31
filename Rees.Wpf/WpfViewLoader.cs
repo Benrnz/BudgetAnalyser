@@ -42,9 +42,9 @@ namespace Rees.Wpf
                 {
                     TargetWindow.Close();
                 }
-// ReSharper disable EmptyGeneralCatchClause
+                // ReSharper disable EmptyGeneralCatchClause
                 catch
-// ReSharper restore EmptyGeneralCatchClause
+                // ReSharper restore EmptyGeneralCatchClause
                 {
                     // Swallow any exception trying to close the orphaned window.
                 }

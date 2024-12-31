@@ -1,8 +1,8 @@
-using System.Globalization;
-using Portable.Xaml;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Services;
 using JetBrains.Annotations;
+using Portable.Xaml;
 using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Budget
@@ -102,8 +102,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new DataFormatException("Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
-            var correctDataFormat = serialised as BudgetCollectionDto;
-            if (correctDataFormat is null)
+            if (serialised is not BudgetCollectionDto correctDataFormat)
             {
                 throw new DataFormatException(
                     string.Format(CultureInfo.InvariantCulture,

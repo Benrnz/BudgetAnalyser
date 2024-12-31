@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.BankAccount;
 using JetBrains.Annotations;
 using NotNull = JetBrains.Annotations.NotNullAttribute;
@@ -53,22 +53,16 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            if (account is null)
-            {
-                throw new ArgumentNullException(nameof(account));
-            }
-
-            return await this.importerRepository.ImportAsync(storageKey, account);
+            return account is null
+                ? throw new ArgumentNullException(nameof(account))
+                : await this.importerRepository.ImportAsync(storageKey, account);
         }
 
         public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
         {
-            if (storageKey is null)
-            {
-                throw new FileNotFoundException("storageKey");
-            }
-
-            return await this.statementModelRepository.LoadAsync(storageKey, isEncrypted);
+            return storageKey is null
+                ? throw new FileNotFoundException("storageKey")
+                : await this.statementModelRepository.LoadAsync(storageKey, isEncrypted);
         }
 
         public async Task SaveAsync([NotNull] StatementModel statementModel, bool isEncrypted)

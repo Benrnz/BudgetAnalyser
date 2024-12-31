@@ -132,7 +132,7 @@ namespace Rees.Wpf.RecentFiles
 
         private IEnumerable<KeyValuePair<string, string>> ConvertAndReturnRecentFiles()
         {
-            List<KeyValuePair<string, string>> results = this.files
+            var results = this.files
                 .OrderByDescending(f => f.Value.When)
                 .Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Name))
                 .ToList();

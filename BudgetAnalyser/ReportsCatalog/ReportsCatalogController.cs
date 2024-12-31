@@ -50,7 +50,11 @@ public class ReportsCatalogController : ControllerBase, IShowableController
         get => this.doNotUseShown;
         set
         {
-            if (value == this.doNotUseShown) return;
+            if (value == this.doNotUseShown)
+            {
+                return;
+            }
+
             this.doNotUseShown = value;
             OnPropertyChanged();
         }
@@ -58,7 +62,11 @@ public class ReportsCatalogController : ControllerBase, IShowableController
 
     public void ShowOverallPerformanceReport()
     {
-        if (this.currentStatementModel is null) return;
+        if (this.currentStatementModel is null)
+        {
+            return;
+        }
+
         OverallPerformanceController.Load(this.currentStatementModel, this.budgets, RequestCurrentFilter());
 
         this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 650;

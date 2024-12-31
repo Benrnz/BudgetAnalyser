@@ -16,9 +16,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ForDate_1_1_2013_ShouldReturnBudget1()
         {
-            BudgetCollection subject = Arrange();
+            var subject = Arrange();
 
-            BudgetModel result = subject.ForDate(new DateTime(2013, 1, 1));
+            var result = subject.ForDate(new DateTime(2013, 1, 1));
 
             Assert.AreSame(subject.First(b => b.Name == TestDataConstants.Budget1Name), result);
         }
@@ -26,9 +26,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ForDate_1_1_2014_ShouldReturnBudget1()
         {
-            BudgetCollection subject = Arrange();
+            var subject = Arrange();
 
-            BudgetModel result = subject.ForDate(new DateTime(2014, 1, 1));
+            var result = subject.ForDate(new DateTime(2014, 1, 1));
 
             Assert.AreSame(subject.First(b => b.Name == TestDataConstants.Budget1Name), result);
         }
@@ -36,9 +36,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ForDate_25_1_2014_ShouldReturnBudget2()
         {
-            BudgetCollection subject = Arrange();
+            var subject = Arrange();
 
-            BudgetModel result = subject.ForDate(new DateTime(2014, 1, 25));
+            var result = subject.ForDate(new DateTime(2014, 1, 25));
 
             Assert.AreSame(subject.First(b => b.Name == TestDataConstants.Budget2Name), result);
         }
@@ -46,9 +46,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ForDate_WithEarlierDateThanFirstBudget_ShouldReturnNull()
         {
-            BudgetCollection subject = Arrange();
+            var subject = Arrange();
 
-            BudgetModel result = subject.ForDate(DateTime.MinValue);
+            var result = subject.ForDate(DateTime.MinValue);
 
             Assert.IsNull(result);
         }
@@ -56,8 +56,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ForDates_1_1_2013_to_20_1_2014_ShouldReturnBudget1And2()
         {
-            BudgetCollection subject = Arrange();
-            IEnumerable<BudgetModel> result = subject.ForDates(new DateTime(2013, 1, 1), new DateTime(2014, 1, 20));
+            var subject = Arrange();
+            var result = subject.ForDates(new DateTime(2013, 1, 1), new DateTime(2014, 1, 20));
             Assert.AreEqual(2, result.Count());
         }
 
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(BudgetException))]
         public void ForDates_WithDatesOutsideBudgetCollection_ShouldThrow()
         {
-            BudgetCollection subject = Arrange();
+            var subject = Arrange();
 
             subject.ForDates(DateTime.MinValue, DateTime.MaxValue);
 
@@ -75,8 +75,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void OutputBudgetCollection()
         {
-            BudgetCollection subject = Arrange();
-            foreach (BudgetModel budget in subject)
+            var subject = Arrange();
+            foreach (var budget in subject)
             {
                 Console.WriteLine("Budget: '{0}' EffectiveFrom: {1:d}", budget.Name, budget.EffectiveFrom);
             }
@@ -86,14 +86,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public void ShouldHaveAKnownNumberOfProperties()
         {
             // If this test breaks consider putting the new property into the Mappers and DTO's before updating the count.
-            IEnumerable<PropertyInfo> properties = typeof(BudgetCollection).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
+            var properties = typeof(BudgetCollection).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
             Assert.AreEqual(1, properties.Count());
         }
 
         [TestMethod]
         public void ValidateShouldFixGivenBudgetsWithDuplicateEffectiveDates()
         {
-            BudgetCollection subject = Arrange();
+            var subject = Arrange();
             subject.Add(
                 new BudgetModelFake
                 {
@@ -108,7 +108,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ValidateShouldReturnFalseGivenOneBadBudget()
         {
-            BudgetCollection subject = Arrange();
+            var subject = Arrange();
             subject.Add(
                 new BudgetModelFake
                 {
@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
                     ValidateOverride = msg => false
                 });
 
-            bool result = subject.Validate(new StringBuilder());
+            var result = subject.Validate(new StringBuilder());
 
             Assert.IsFalse(result);
         }
@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ValidateShouldReturnTrueGivenBudgetsWithDuplicateEffectiveDates()
         {
-            BudgetCollection subject = Arrange();
+            var subject = Arrange();
             subject.Add(
                 new BudgetModelFake
                 {
@@ -140,8 +140,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ValidateShouldReturnTrueGivenGoodBudgets()
         {
-            BudgetCollection subject = Arrange();
-            bool result = subject.Validate(new StringBuilder());
+            var subject = Arrange();
+            var result = subject.Validate(new StringBuilder());
             Assert.IsTrue(result);
         }
 

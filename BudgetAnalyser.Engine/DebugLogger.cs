@@ -25,7 +25,11 @@ public class DebugLogger : ILogger
         get => this.logLevelFilter;
         set
         {
-            if (value == this.logLevelFilter) return;
+            if (value == this.logLevelFilter)
+            {
+                return;
+            }
+
             LogAlways(l => l.Format("Logging Filter Level change from {0} to {1}.", this.logLevelFilter, value));
             this.logLevelFilter = value;
         }
@@ -37,8 +41,7 @@ public class DebugLogger : ILogger
     /// </summary>
     public string Format(string formatTemplate, params object[] parameters)
     {
-        if (!this.isDebuggerAttached) return string.Empty;
-        return string.Format(formatTemplate, parameters);
+        return !this.isDebuggerAttached ? string.Empty : string.Format(formatTemplate, parameters);
     }
 
     /// <summary>
@@ -46,7 +49,11 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogAlways(Func<ILogger, string> logEntryBuilder)
     {
-        if (!ShouldILog(LogLevel.Always)) return;
+        if (!ShouldILog(LogLevel.Always))
+        {
+            return;
+        }
+
         var msg = ConstructLogEntry(LogLevel.Always, logEntryBuilder);
         Debug.WriteLine(msg);
     }
@@ -56,7 +63,11 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogError(Func<ILogger, string> logEntryBuilder)
     {
-        if (!ShouldILog(LogLevel.Error)) return;
+        if (!ShouldILog(LogLevel.Error))
+        {
+            return;
+        }
+
         Debug.WriteLine(ConstructLogEntry(LogLevel.Error, logEntryBuilder));
     }
 
@@ -65,7 +76,11 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogError(Exception ex, Func<ILogger, string> logEntryBuilder)
     {
-        if (!ShouldILog(LogLevel.Error)) return;
+        if (!ShouldILog(LogLevel.Error))
+        {
+            return;
+        }
+
         if (ex is null)
         {
             throw new ArgumentNullException(nameof(ex));
@@ -85,7 +100,11 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogInfo(Func<ILogger, string> logEntryBuilder)
     {
-        if (!ShouldILog(LogLevel.Info)) return;
+        if (!ShouldILog(LogLevel.Info))
+        {
+            return;
+        }
+
         if (logEntryBuilder is null)
         {
             throw new ArgumentNullException(nameof(logEntryBuilder));
@@ -99,7 +118,11 @@ public class DebugLogger : ILogger
     /// </summary>
     public void LogWarning(Func<ILogger, string> logEntryBuilder)
     {
-        if (!ShouldILog(LogLevel.Warn)) return;
+        if (!ShouldILog(LogLevel.Warn))
+        {
+            return;
+        }
+
         Debug.WriteLine(ConstructLogEntry(LogLevel.Warn, logEntryBuilder));
     }
 
@@ -111,8 +134,15 @@ public class DebugLogger : ILogger
     private bool ShouldILog(LogLevel logEntryLevel)
     {
         // Only log if debugger is attached.  Uses a field so unit testing can still test when debugger is not attached.
-        if (!this.isDebuggerAttached) return false;
-        if (LogLevelFilter == LogLevel.Always || logEntryLevel == LogLevel.Always) return true;
+        if (!this.isDebuggerAttached)
+        {
+            return false;
+        }
+
+        if (LogLevelFilter == LogLevel.Always || logEntryLevel == LogLevel.Always)
+        {
+            return true;
+        }
 
         switch (LogLevelFilter)
         {

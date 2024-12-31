@@ -15,9 +15,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         public CsvOnDiskStatementModelRepositoryV1TestHarness(BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
             : base(importUtilities,
                 new FakeLogger(),
-                new Mapper_TransactionSetDto_StatementModel(
-                    new FakeLogger(), 
-                    new Mapper_TransactionDto_Transaction(new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository())),
+                new MapperTransactionSetDto2StatementModel(
+                    new FakeLogger(),
+                    new MapperTransactionDto2Transaction(new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository())),
                 readerWriterSelector)
         {
         }
@@ -37,27 +37,21 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 
         protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName, bool isEncrypted)
         {
-            if (ReadLinesOverride is null)
-            {
-                return Task.FromResult<IEnumerable<string>>(new List<string>());
-            }
-
-            return Task.FromResult(ReadLinesOverride(fileName));
+            return ReadLinesOverride is null
+                ? Task.FromResult<IEnumerable<string>>(new List<string>())
+                : Task.FromResult(ReadLinesOverride(fileName));
         }
 
         protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines, bool isEncrypted)
         {
-            if (ReadLinesOverride is null)
-            {
-                return Task.FromResult<IEnumerable<string>>(new List<string>());
-            }
-
-            return Task.FromResult(ReadLinesOverride(fileName).Take(lines));
+            return ReadLinesOverride is null
+                ? Task.FromResult<IEnumerable<string>>(new List<string>())
+                : Task.FromResult(ReadLinesOverride(fileName).Take(lines));
         }
 
         internal async Task WriteToStreamTest(TransactionSetDto dto, StreamWriter writer)
         {
-            await this.WriteToStream(dto, writer);
+            await WriteToStream(dto, writer);
         }
     }
 }

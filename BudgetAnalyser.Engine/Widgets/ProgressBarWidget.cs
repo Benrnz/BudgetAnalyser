@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public override bool Enabled
         {
-            get { return this.doNotUseEnabled; }
+            get => this.doNotUseEnabled;
             protected set
             {
                 this.doNotUseEnabled = value;
@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public double Maximum
         {
-            get { return this.doNotUseMaximum; }
+            get => this.doNotUseMaximum;
             set
             {
                 this.doNotUseMaximum = value;
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public double Minimum
         {
-            get { return this.doNotUseMinimum; }
+            get => this.doNotUseMinimum;
             set
             {
                 this.doNotUseMinimum = value;
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Justification = "Required for Data binding")]
         public bool ProgressBarVisibility
         {
-            get { return this.doNotUseProgressBarVisibility; }
+            get => this.doNotUseProgressBarVisibility;
             protected set
             {
                 this.doNotUseProgressBarVisibility = value;
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public double Value
         {
-            get { return this.doNotUseValue; }
+            get => this.doNotUseValue;
             set
             {
                 this.doNotUseValue = value;

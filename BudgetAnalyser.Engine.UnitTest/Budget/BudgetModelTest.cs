@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void AfterInitialiseExpensesShouldBeInDescendingOrder()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
             EnsureDescendingOrder(subject.Expenses);
         }
@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void AfterInitialiseIncomesShouldBeInDescendingOrder()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
             EnsureDescendingOrder(subject.Incomes);
         }
@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void AfterUpdateExpensesAreReplaced()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
             var expenses = new List<Expense>
             {
@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void AfterUpdateExpensesAreStillInDescendingOrder()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
             var expenses = new List<Expense>
             {
@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void AfterUpdateIncomesAreReplaced()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
             var incomes = new List<Income>
             {
@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void AfterUpdateIncomesAreStillInDescendingOrder()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
             var incomes = new List<Income>
             {
@@ -114,9 +114,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void AfterUpdateLastModifiedIsUpdated()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
-            DateTime lastUpdated = subject.LastModified;
+            var lastUpdated = subject.LastModified;
 
             Thread.Sleep(10);
             subject.Update(subject.Incomes, subject.Expenses);
@@ -127,7 +127,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void CalculatedSurplusShouldBeExpectedValue()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
             Assert.AreEqual(1175M, subject.Surplus);
         }
@@ -145,11 +145,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(ValidationWarningException))]
         public void SurplusCannotBeUsedInTheExpenseList()
         {
-            BudgetModel subject = BudgetModelTestData.CreateTestData1();
+            var subject = BudgetModelTestData.CreateTestData1();
 
-            List<Expense> myExpenses = subject.Expenses.ToList();
+            var myExpenses = subject.Expenses.ToList();
             myExpenses.Add(new Expense { Amount = 445M, Bucket = new SurplusBucket() });
-            List<Income> myIncomes = subject.Incomes.ToList();
+            var myIncomes = subject.Incomes.ToList();
 
             subject.Update(myIncomes, myExpenses);
 
@@ -164,10 +164,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
         private static void EnsureDescendingOrder(IEnumerable<BudgetItem> items)
         {
-            decimal previousAmount = decimal.MaxValue;
-            foreach (BudgetItem item in items)
+            var previousAmount = decimal.MaxValue;
+            foreach (var item in items)
             {
-                decimal current = item.Amount;
+                var current = item.Amount;
                 if (current > previousAmount)
                 {
                     Assert.Fail("Expenses are not in descending order.");

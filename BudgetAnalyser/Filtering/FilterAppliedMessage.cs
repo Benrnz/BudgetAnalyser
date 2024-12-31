@@ -1,4 +1,4 @@
-using BudgetAnalyser.Engine;
+﻿using BudgetAnalyser.Engine;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Filtering

@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [TestMethod]
         public void CtorShouldConstructGivenValidListOfImporters()
         {
-            BankStatementImporterRepository subject = CreateSubject();
+            var subject = CreateSubject();
             Assert.IsNotNull(subject);
         }
 
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(NotSupportedException))]
         public async Task ImportShouldThrowGivenNoImportersCanImport()
         {
-            StatementModel model = await Subject.ImportAsync("Foo.bar", new ChequeAccount("Cheque"));
+            var model = await Subject.ImportAsync("Foo.bar", new ChequeAccount("Cheque"));
         }
 
         [TestInitialize]

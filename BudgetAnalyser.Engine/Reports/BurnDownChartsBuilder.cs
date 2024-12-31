@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.Reports
             // Put any custom charts on top.
             foreach (var customChart in CustomCharts)
             {
-                IEnumerable<BudgetBucket> buckets = this.budgetBucketRepository.Buckets
+                var buckets = this.budgetBucketRepository.Buckets
                     .Join(customChart.BucketIds, bucket => bucket.Code, code => code, (bucket, code) => bucket);
 
                 var analysis = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel, buckets, inclBeginDate, inclEndDate);
@@ -79,10 +79,10 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         private BurnDownChartAnalyserResult AnalyseDataForChart(
-            StatementModel statementModel, 
+            StatementModel statementModel,
             BudgetModel budgetModel,
-            LedgerBook ledgerBookModel, 
-            BudgetBucket bucket, 
+            LedgerBook ledgerBookModel,
+            BudgetBucket bucket,
             DateTime inclBeginDate,
             DateTime inclEndDate)
         {
@@ -116,12 +116,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return criteria.BeginDate.Value;
             }
 
-            if (criteria.EndDate is null)
-            {
-                return DateTime.Today.AddMonths(-1);
-            }
-
-            return criteria.EndDate.Value.AddMonths(-1);
+            return criteria.EndDate is null ? DateTime.Today.AddMonths(-1) : criteria.EndDate.Value.AddMonths(-1);
         }
         private static DateTime CalculateEndDate(GlobalFilterCriteria criteria)
         {
@@ -135,12 +130,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return criteria.EndDate.Value;
             }
 
-            if (criteria.EndDate is null)
-            {
-                return DateTime.Today.AddMonths(-1);
-            }
-
-            return criteria.EndDate.Value.AddMonths(-1);
+            return criteria.EndDate is null ? DateTime.Today.AddMonths(-1) : criteria.EndDate.Value.AddMonths(-1);
         }
 
     }

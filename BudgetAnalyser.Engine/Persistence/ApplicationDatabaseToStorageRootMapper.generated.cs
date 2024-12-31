@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Persistence
 {
 
     [GeneratedCode("1.0", "Tangy Fruit Mapper 7/01/2016 3:19:51 AM UTC")]
-    internal partial class Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase : IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase>
+    internal partial class MapperBudgetAnalyserStorageRoot2ApplicationDatabase : IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase>
     {
 
         public virtual ApplicationDatabase ToModel(BudgetAnalyserStorageRoot dto)

@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void DictionaryTest()
         {
-            LedgerBucket instance1 = LedgerBookTestData.HairLedger;
+            var instance1 = LedgerBookTestData.HairLedger;
 
             var dictionary = new Dictionary<LedgerBucket, LedgerBucket>
             {

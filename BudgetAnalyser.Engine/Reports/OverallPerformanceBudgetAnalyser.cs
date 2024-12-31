@@ -40,12 +40,11 @@ namespace BudgetAnalyser.Engine.Reports
         public virtual OverallPerformanceBudgetResult Analyse(StatementModel statementModel, BudgetCollection budgets,
                                                               [NotNull] GlobalFilterCriteria criteria)
         {
-            DateTime endDate, beginDate;
-            AnalysisPreconditions(criteria, statementModel, budgets, out beginDate, out endDate);
+            AnalysisPreconditions(criteria, statementModel, budgets, out var beginDate, out var endDate);
 
             var result = new OverallPerformanceBudgetResult();
 
-            List<BudgetModel> budgetsInvolved = budgets.ForDates(beginDate, endDate).ToList();
+            var budgetsInvolved = budgets.ForDates(beginDate, endDate).ToList();
             result.UsesMultipleBudgets = budgetsInvolved.Count() > 1;
             var currentBudget = budgetsInvolved.Last(); // Use most recent budget as the current
 
@@ -58,7 +57,7 @@ namespace BudgetAnalyser.Engine.Reports
             foreach (var bucket in this.bucketRepository.Buckets)
             {
                 var bucketCopy = bucket;
-                List<Transaction> query = statementModel.Transactions.Where(t => t.BudgetBucket == bucketCopy).ToList();
+                var query = statementModel.Transactions.Where(t => t.BudgetBucket == bucketCopy).ToList();
                 var totalSpent = query.Sum(t => t.Amount);
                 var averageSpend = totalSpent / result.DurationInMonths;
 
@@ -171,12 +170,7 @@ namespace BudgetAnalyser.Engine.Reports
             return b =>
             {
                 var first = b.Expenses.FirstOrDefault(e => e.Bucket == bucket);
-                if (first is null)
-                {
-                    return 0;
-                }
-
-                return first.Amount;
+                return first is null ? 0 : first.Amount;
             };
         }
 
@@ -185,12 +179,7 @@ namespace BudgetAnalyser.Engine.Reports
             return b =>
             {
                 var first = b.Incomes.FirstOrDefault(e => e.Bucket == bucket);
-                if (first is null)
-                {
-                    return 0;
-                }
-
-                return first.Amount;
+                return first is null ? 0 : first.Amount;
             };
         }
 

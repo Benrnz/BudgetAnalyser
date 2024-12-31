@@ -20,12 +20,9 @@ namespace Rees.Wpf.ValidationRules
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var str = value as string;
-            if (str is not null)
-            {
-                return string.IsNullOrWhiteSpace(str) ? new ValidationResult(false, "Please enter a text value (other than spaces).") : new ValidationResult(true, null);
-            }
-
-            return new ValidationResult(false, "Please enter a text value.");
+            return str is not null
+                ? string.IsNullOrWhiteSpace(str) ? new ValidationResult(false, "Please enter a text value (other than spaces).") : new ValidationResult(true, null)
+                : new ValidationResult(false, "Please enter a text value.");
         }
     }
 }

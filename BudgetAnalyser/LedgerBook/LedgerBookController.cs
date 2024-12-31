@@ -1,4 +1,4 @@
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -70,7 +70,11 @@ public class LedgerBookController : ControllerBase, IShowableController
         get => this.doNotUseNumberOfPeriodsToShow;
         set
         {
-            if (value == this.doNotUseNumberOfPeriodsToShow) return;
+            if (value == this.doNotUseNumberOfPeriodsToShow)
+            {
+                return;
+            }
+
             this.doNotUseNumberOfPeriodsToShow = value;
             OnPropertyChanged();
         }
@@ -238,8 +242,7 @@ public class LedgerBookController : ControllerBase, IShowableController
             return;
         }
 
-        var expenseBucket = e.SelectedBucket as ExpenseBucket;
-        if (expenseBucket is null)
+        if (e.SelectedBucket is not ExpenseBucket expenseBucket)
         {
             this.messageBox.Show("You must select an expense budget bucket to track when adding a new Ledger Column.");
             return;

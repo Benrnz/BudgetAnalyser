@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -170,7 +170,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             return;
         }
 
-        List<LedgerTransaction> unmatchedTxns = lastLine.Entries
+        var unmatchedTxns = lastLine.Entries
             .SelectMany(e => e.Transactions)
             .Where(
                    t =>
@@ -184,10 +184,10 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
             return;
         }
 
-        List<Transaction> statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+        var statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
         foreach (var ledgerTransaction in unmatchedTxns)
         {
-            IEnumerable<Transaction> statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet,
+            var statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet,
                                                                                                    ledgerTransaction.AutoMatchingReference);
             if (statementTxns.None())
             {
@@ -255,7 +255,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
         if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
         {
             var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
-            List<LedgerTransaction> replacementTxns = ledgerEntry.Transactions.ToList();
+            var replacementTxns = ledgerEntry.Transactions.ToList();
             replacementTxns.Add(sourceTransaction);
             ledgerEntry.SetTransactionsForReconciliation(replacementTxns);
             ledgerEntry.RecalculateClosingBalance(ledgerBook);
@@ -265,7 +265,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
         if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
         {
             var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
-            List<LedgerTransaction> replacementTxns = ledgerEntry.Transactions.ToList();
+            var replacementTxns = ledgerEntry.Transactions.ToList();
             replacementTxns.Add(destinationTransaction);
             ledgerEntry.SetTransactionsForReconciliation(replacementTxns);
             ledgerEntry.RecalculateClosingBalance(ledgerBook);
@@ -284,12 +284,12 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
         {
             throw new InvalidOperationException("No budget can be found with an effective date before " + reconciliationDate);
         }
-        
+
         if (!budget.Validate(messages))
         {
             throw new InvalidOperationException($"Current budget ({budget.Name}) is in an invalid state. Cannot add new reconciliation.\n" + messages);
         }
-        
+
         var startDate = ReconciliationBuilder.CalculateBeginDateForReconciliationPeriod(ledgerBook, reconciliationDate, budget.BudgetCycle);
 
         ValidateDates(ledgerBook, startDate, reconciliationDate, statement, budget.BudgetCycle);
@@ -340,7 +340,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
                      t.BudgetBucket is null ||
                      (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
         {
-            IEnumerable<Transaction> uncategorised =
+            var uncategorised =
                 statement.AllTransactions.Where(
                                                 t =>
                                                     t.BudgetBucket is null ||
@@ -399,7 +399,7 @@ internal class ReconciliationCreationManager : IReconciliationCreationManager
                     }
 
                     break;
-                
+
                 case BudgetCycle.Fortnightly:
                     if (reconciliationDate.Subtract(previousEntry.Date).Days != 14)
                     {

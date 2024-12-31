@@ -1,8 +1,8 @@
-﻿using Portable.Xaml;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
@@ -11,18 +11,13 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
     {
         private BudgetModel Result { get; set; }
 
-        private BudgetModelDto TestData
+        private BudgetModelDto TestData => new BudgetModelDto
         {
-            get
-            {
-                return
-                    new BudgetModelDto
-                    {
-                        EffectiveFrom = new DateTime(2014, 4, 28),
-                        LastModified = new DateTime(2014, 5, 2),
-                        LastModifiedComment = "The quick brown fox jumped over the lazy dog.",
-                        Name = "Foo data budget",
-                        Incomes = new List<IncomeDto>
+            EffectiveFrom = new DateTime(2014, 4, 28),
+            LastModified = new DateTime(2014, 5, 2),
+            LastModifiedComment = "The quick brown fox jumped over the lazy dog.",
+            Name = "Foo data budget",
+            Incomes = new List<IncomeDto>
                         {
                             new IncomeDto
                             {
@@ -30,7 +25,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
                                 BudgetBucketCode = TestDataConstants.IncomeBucketCode
                             }
                         },
-                        Expenses = new List<ExpenseDto>
+            Expenses = new List<ExpenseDto>
                         {
                             new ExpenseDto
                             {
@@ -43,14 +38,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
                                 BudgetBucketCode = TestDataConstants.PowerBucketCode
                             }
                         }
-                    };
-            }
-        }
+        };
 
         [TestMethod]
         public void OutputBudgetModelTestData1()
         {
-            string serialised = XamlServices.Save(TestData);
+            var serialised = XamlServices.Save(TestData);
             Console.WriteLine(serialised);
         }
 
@@ -75,7 +68,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ShouldMapExpenses()
         {
-            foreach (Expense expense in Result.Expenses)
+            foreach (var expense in Result.Expenses)
             {
                 Assert.AreEqual(TestData.Expenses.First(e => e.BudgetBucketCode == expense.Bucket.Code && expense.Amount == e.Amount).Amount, expense.Amount);
             }
@@ -84,7 +77,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ShouldMapIncomes()
         {
-            foreach (Income incomes in Result.Incomes)
+            foreach (var incomes in Result.Incomes)
             {
                 Assert.AreEqual(TestData.Incomes.First(e => e.BudgetBucketCode == incomes.Bucket.Code && incomes.Amount == e.Amount).Amount, incomes.Amount);
             }
@@ -111,7 +104,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_BudgetModelDto_BudgetModel(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperBudgetModelDtoBudgetModel(new BucketBucketRepoAlwaysFind());
             Result = subject.ToModel(TestData);
         }
     }

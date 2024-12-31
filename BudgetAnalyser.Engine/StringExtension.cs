@@ -32,12 +32,7 @@
                 return "A";
             }
 
-            if (useAn)
-            {
-                return "an";
-            }
-
-            return "a";
+            return useAn ? "an" : "a";
         }
 
         /// <summary>
@@ -67,10 +62,13 @@
         public static string[] SplitLines(this string instance, int numberOfLines = 0)
         {
             ArgumentNullException.ThrowIfNull(instance);
-            if (numberOfLines < 0) throw new ArgumentOutOfRangeException(nameof(numberOfLines), "Number of Lines must be a positive integer.");
+            if (numberOfLines < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(numberOfLines), "Number of Lines must be a positive integer.");
+            }
 
-            string[] split = instance.Split('\r', '\n');
-            IEnumerable<string> query = split.Where(l => l.Length > 0);
+            var split = instance.Split('\r', '\n');
+            var query = split.Where(l => l.Length > 0);
             if (numberOfLines > 0)
             {
                 query = query.Take(numberOfLines);
@@ -95,12 +93,7 @@
                 return instance;
             }
 
-            if (useEllipses)
-            {
-                return instance.Substring(0, truncateToLength - 1) + "…";
-            }
-
-            return instance.Substring(0, truncateToLength);
+            return useEllipses ? instance.Substring(0, truncateToLength - 1) + "…" : instance.Substring(0, truncateToLength);
         }
 
         /// <summary>
@@ -119,12 +112,9 @@
                 return instance;
             }
 
-            if (useEllipses)
-            {
-                return "…" + instance.Substring(instance.Length - truncateToLength + 1, truncateToLength - 1);
-            }
-
-            return instance.Substring(instance.Length - truncateToLength, truncateToLength);
+            return useEllipses
+                ? "…" + instance.Substring(instance.Length - truncateToLength + 1, truncateToLength - 1)
+                : instance.Substring(instance.Length - truncateToLength, truncateToLength);
         }
     }
 }

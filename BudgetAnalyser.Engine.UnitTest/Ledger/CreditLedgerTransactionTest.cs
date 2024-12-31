@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public void ConstructWithGuidShouldSetId()
         {
-            Guid id = Guid.NewGuid();
+            var id = Guid.NewGuid();
             var subject = new CreditLedgerTransaction(id);
 
             Assert.AreEqual(id, subject.Id);
@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var subject = new CreditLedgerTransaction();
 
-            LedgerTransaction result = subject.WithAmount(50);
+            var result = subject.WithAmount(50);
 
             Assert.AreEqual(50M, result.Amount);
         }
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var subject = new CreditLedgerTransaction();
 
-            LedgerTransaction result = subject.WithAmount(50);
+            var result = subject.WithAmount(50);
 
             Assert.AreSame(subject, result);
         }
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var subject = new CreditLedgerTransaction();
 
-            LedgerTransaction result = subject.WithAmount(-50);
+            var result = subject.WithAmount(-50);
 
             Assert.AreEqual(-50M, result.Amount);
         }

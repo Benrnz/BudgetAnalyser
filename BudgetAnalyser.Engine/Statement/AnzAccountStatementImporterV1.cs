@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.BankAccount;
 using JetBrains.Annotations;
 
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Engine.Statement
                     continue;
                 }
 
-                string[] split = line.Split(',');
+                var split = line.Split(',');
                 var transaction = new Transaction
                 {
                     Account = account,
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
 
-            string[]? lines = await ReadFirstTwoLinesAsync(fileName);
+            var lines = await ReadFirstTwoLinesAsync(fileName);
             if (lines is null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
@@ -117,8 +117,15 @@ namespace BudgetAnalyser.Engine.Statement
 
             try
             {
-                if (!VerifyColumnHeaderLine(lines[0])) return false;
-                if (!VerifyFirstDataLine(lines[1])) return false;
+                if (!VerifyColumnHeaderLine(lines[0]))
+                {
+                    return false;
+                }
+
+                if (!VerifyFirstDataLine(lines[1]))
+                {
+                    return false;
+                }
             }
             catch (Exception)
             {
@@ -168,12 +175,7 @@ namespace BudgetAnalyser.Engine.Statement
         private async Task<string[]?> ReadFirstTwoLinesAsync(string fileName)
         {
             var chunk = await ReadTextChunkAsync(fileName);
-            if (chunk.IsNothing())
-            {
-                return null;
-            }
-
-            return chunk.SplitLines(2);
+            return chunk.IsNothing() ? null : chunk.SplitLines(2);
         }
 
         private static bool VerifyColumnHeaderLine(string line)
@@ -184,7 +186,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private bool VerifyFirstDataLine(string line)
         {
-            string[] split = line.Split(',');
+            var split = line.Split(',');
             var type = this.importUtilities.FetchString(split, 0);
             if (string.IsNullOrWhiteSpace(type))
             {
@@ -208,12 +210,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            if (split.Length != 9)
-            {
-                return false;
-            }
-
-            return true;
+            return split.Length == 9;
         }
     }
 }

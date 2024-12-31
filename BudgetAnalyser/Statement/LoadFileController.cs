@@ -7,8 +7,8 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Statement
 {
@@ -58,7 +58,11 @@ namespace BudgetAnalyser.Statement
             get => this.doNotUseCanExecuteOkButton;
             private set
             {
-                if (value == this.doNotUseCanExecuteOkButton) return;
+                if (value == this.doNotUseCanExecuteOkButton)
+                {
+                    return;
+                }
+
                 this.doNotUseCanExecuteOkButton = value;
                 OnPropertyChanged();
                 Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -75,7 +79,11 @@ namespace BudgetAnalyser.Statement
 
             set
             {
-                if (value == this.doNotUseFileName) return;
+                if (value == this.doNotUseFileName)
+                {
+                    return;
+                }
+
                 this.doNotUseFileName = value;
                 OnPropertyChanged();
                 if (!string.IsNullOrWhiteSpace(FileName))
@@ -95,7 +103,11 @@ namespace BudgetAnalyser.Statement
             get => this.doNotUseFileTypeSelectionReady;
             private set
             {
-                if (value == this.doNotUseFileTypeSelectionReady) return;
+                if (value == this.doNotUseFileTypeSelectionReady)
+                {
+                    return;
+                }
+
                 this.doNotUseFileTypeSelectionReady = value;
                 OnPropertyChanged();
             }
@@ -109,7 +121,11 @@ namespace BudgetAnalyser.Statement
 
             set
             {
-                if (Equals(value, this.doNotUseSelectedExistingAccountName)) return;
+                if (Equals(value, this.doNotUseSelectedExistingAccountName))
+                {
+                    return;
+                }
+
                 this.doNotUseSelectedExistingAccountName = value;
                 OnPropertyChanged();
                 CheckAccountName();
@@ -124,7 +140,11 @@ namespace BudgetAnalyser.Statement
             get => this.doNotUseTitle;
             private set
             {
-                if (value == this.doNotUseTitle) return;
+                if (value == this.doNotUseTitle)
+                {
+                    return;
+                }
+
                 this.doNotUseTitle = value;
                 OnPropertyChanged();
             }
@@ -291,7 +311,7 @@ namespace BudgetAnalyser.Statement
                 dialog.DefaultExt = "*.CSV";
                 dialog.Title = "Select a CSV file of transactions to load.";
                 dialog.Filter = "Comma Separated Values (*.CSV)|*.CSV";
-                bool? result = dialog.ShowDialog();
+                var result = dialog.ShowDialog();
                 if (result is null || result == false)
                 {
                     FileName = null;

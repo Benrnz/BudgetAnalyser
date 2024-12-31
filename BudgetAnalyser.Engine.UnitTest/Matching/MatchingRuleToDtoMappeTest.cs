@@ -13,26 +13,20 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         private static readonly Guid Id = new Guid("901EC4BB-B8B5-43CD-A8C9-15121048CBA4");
         private MatchingRuleDto Result { get; set; }
 
-        private MatchingRule TestData
+        private MatchingRule TestData => new MatchingRule(new BucketBucketRepoAlwaysFind())
         {
-            get
-            {
-                return new MatchingRule(new BucketBucketRepoAlwaysFind())
-                {
-                    Amount = 123.45M,
-                    BucketCode = TestDataConstants.PhoneBucketCode,
-                    Created = new DateTime(2014, 07, 04),
-                    Description = "The quick brown fox",
-                    LastMatch = new DateTime(2014, 07, 29),
-                    MatchCount = 2,
-                    Reference1 = "jumped",
-                    Reference2 = "over",
-                    Reference3 = "the lazy",
-                    RuleId = Id,
-                    TransactionType = "dog."
-                };
-            }
-        }
+            Amount = 123.45M,
+            BucketCode = TestDataConstants.PhoneBucketCode,
+            Created = new DateTime(2014, 07, 04),
+            Description = "The quick brown fox",
+            LastMatch = new DateTime(2014, 07, 29),
+            MatchCount = 2,
+            Reference1 = "jumped",
+            Reference2 = "over",
+            Reference3 = "the lazy",
+            RuleId = Id,
+            TransactionType = "dog."
+        };
 
         [TestMethod]
         public void ShouldMapAmount()
@@ -109,7 +103,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            var subject = new MapperMatchingRuleDto2MatchingRule(new BucketBucketRepoAlwaysFind());
             Result = Result = subject.ToDto(TestData);
         }
     }

@@ -110,7 +110,7 @@ public class OverspentWarning : Widget
 
         Enabled = true;
         this.logger.LogInfo(l => l.Format("Using this LedgerEntryLine: {0}", ledgerLine?.Date));
-        IDictionary<BudgetBucket, decimal> currentLedgerBalances = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, statement);
+        var currentLedgerBalances = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, statement);
         this.logger.LogInfo(l =>
         {
             var builder = new StringBuilder();
@@ -132,7 +132,7 @@ public class OverspentWarning : Widget
             LargeNumber = warnings.ToString(CultureInfo.CurrentCulture);
             var builder = new StringBuilder();
             OverSpentSummary = currentLedgerBalances.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key);
-            foreach (KeyValuePair<BudgetBucket, decimal> ledger in OverSpentSummary)
+            foreach (var ledger in OverSpentSummary)
             {
                 builder.AppendFormat(CultureInfo.CurrentCulture, "{0} is overspent by {1:C}", ledger.Key, ledger.Value);
                 builder.AppendLine();
@@ -158,7 +158,7 @@ public class OverspentWarning : Widget
         IDictionary<BudgetBucket, decimal> currentLedgerBalances)
     {
         var warnings = 0;
-        List<Transaction> transactions = statement.Transactions.Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate).ToList();
+        var transactions = statement.Transactions.Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate).ToList();
         this.logger.LogInfo(l => l.Format("SearchForOtherNonLedgerBookOverSpentBuckets: {0} statement transactions found.", transactions.Count()));
         foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
         {

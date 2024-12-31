@@ -12,17 +12,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
     {
         private LedgerBucket Result { get; set; }
 
-        private LedgerBucketDto TestData
+        private LedgerBucketDto TestData => new LedgerBucketDto
         {
-            get
-            {
-                return new LedgerBucketDto
-                {
-                    BucketCode = TestDataConstants.RegoBucketCode,
-                    StoredInAccount = TestDataConstants.ChequeAccountName
-                };
-            }
-        }
+            BucketCode = TestDataConstants.RegoBucketCode,
+            StoredInAccount = TestDataConstants.ChequeAccountName
+        };
 
         [TestMethod]
         public void ShouldMapBankAccount()
@@ -41,7 +35,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             var accountRepo = new InMemoryAccountTypeRepository();
-            var subject = new Mapper_LedgerBucketDto_LedgerBucket(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo));
+            var subject = new MapperLedgerBucketDto2LedgerBucket(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo));
             Result = subject.ToModel(TestData);
         }
     }

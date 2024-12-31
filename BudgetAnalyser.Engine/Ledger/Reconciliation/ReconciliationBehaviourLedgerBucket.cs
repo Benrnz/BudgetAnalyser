@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         {
             foreach (var ledger in NewReconLine.Entries)
             {
-                List<LedgerTransaction> transactions = ledger.Transactions.ToList();
+                var transactions = ledger.Transactions.ToList();
                 if (ledger.LedgerBucket.ApplyReconciliationBehaviour(transactions, NewReconLine.Date, ledger.Balance))
                 {
                     ledger.SetTransactionsForReconciliation(transactions);

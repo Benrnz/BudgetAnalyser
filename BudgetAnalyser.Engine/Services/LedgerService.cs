@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +40,10 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(ledgerBucketFactory));
             }
 
-            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
+            if (monitorableDependencies is null)
+            {
+                throw new ArgumentNullException(nameof(monitorableDependencies));
+            }
 
             this.ledgerRepository = ledgerRepository;
             this.accountTypeRepository = accountTypeRepository;
@@ -154,7 +157,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool ValidateModel(StringBuilder messages)
         {
-            EventHandler<ValidatingEventArgs> handler = Validating;
+            var handler = Validating;
             handler?.Invoke(this, new ValidatingEventArgs());
 
             return LedgerBook.Validate(messages);

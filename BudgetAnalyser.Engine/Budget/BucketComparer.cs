@@ -18,12 +18,7 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 return false;
             }
-            if (x is SurplusBucket && y is SurplusBucket)
-            {
-                return true;
-            }
-
-            return ReferenceEquals(x, y);
+            return x is SurplusBucket && y is SurplusBucket ? true : ReferenceEquals(x, y);
         }
 
         /// <summary>

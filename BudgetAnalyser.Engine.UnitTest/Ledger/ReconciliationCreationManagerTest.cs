@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
@@ -85,15 +85,15 @@ public class ReconciliationCreationManagerTest
         this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
             .Returns(this.testDataReconResult);
         var count = this.testDataLedgerBook.Reconciliations.Count();
-        bool reconcileCalled = false;
+        var reconcileCalled = false;
         ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = _ =>
         {
             // record the fact Reconcile was called.
             reconcileCalled = true;
         };
-        
+
         var result = ActPeriodEndReconciliation();
-        
+
         Assert.IsTrue(reconcileCalled);
     }
 
@@ -113,11 +113,11 @@ public class ReconciliationCreationManagerTest
     public void Reconcile_ShouldThrow_GivenInvalidLedgerBook()
     {
         var myTestDate = new DateTime(2012, 2, 20);
-        
+
         // Make sure there is a valid budget to isolate the invalid ledger book test
         var budget = this.testDataBudgetCollection.OrderBy(b => b.EffectiveFrom).First();
         budget.EffectiveFrom = myTestDate.AddDays(-1);
-        
+
         ActPeriodEndReconciliation(myTestDate);
     }
 

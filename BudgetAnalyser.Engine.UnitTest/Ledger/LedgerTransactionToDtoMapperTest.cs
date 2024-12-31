@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            var subject = new Mapper_LedgerTransactionDto_LedgerTransaction(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository());
+            var subject = new MapperLedgerTransactionDto2LedgerTransaction(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository());
             Result = subject.ToDto(TestData);
         }
     }

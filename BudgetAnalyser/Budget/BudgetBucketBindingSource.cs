@@ -1,4 +1,4 @@
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Budget
 {

@@ -41,12 +41,16 @@ public class ConcurrentMessenger : IMessenger
     {
         lock (SyncRoot)
         {
-            if (this.defaultMessenger.IsRegistered<TMessage, TToken>(recipient, token)) return;
+            if (this.defaultMessenger.IsRegistered<TMessage, TToken>(recipient, token))
+            {
+                return;
+            }
+
             this.defaultMessenger.Register(recipient, token, handler);
         }
 
         this.logger.LogInfo(l => l.Format("IMessenger.Register Token:{0} recipient:{1} Message:{2}", token, recipient, typeof(TMessage).Name));
-        }
+    }
 
     public void UnregisterAll(object recipient)
     {
@@ -54,7 +58,7 @@ public class ConcurrentMessenger : IMessenger
         {
             this.defaultMessenger.UnregisterAll(recipient);
         }
-        
+
         this.logger.LogInfo(l => l.Format("IMessenger.UnregisterAll recipient:{0}", recipient));
     }
 
@@ -72,7 +76,11 @@ public class ConcurrentMessenger : IMessenger
     {
         lock (SyncRoot)
         {
-            if (!this.defaultMessenger.IsRegistered<TMessage, TToken>(recipient, token)) return;
+            if (!this.defaultMessenger.IsRegistered<TMessage, TToken>(recipient, token))
+            {
+                return;
+            }
+
             this.defaultMessenger.Unregister<TMessage, TToken>(recipient, token);
         }
     }

@@ -1,4 +1,4 @@
-using BudgetAnalyser.Engine.Ledger.Reconciliation;
+﻿using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using Rees.UnitTestUtilities;
@@ -6,7 +6,7 @@ using Rees.UnitTestUtilities;
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 
 [TestClass]
-public class ReconciliationBuilder_NarrativeTest
+public class ReconciliationBuilderNarrativeTest
 {
     private const string? NoDescriptionText = "[No Description]";
     private const string? BillPaymentTransactionText = "Bill Payment";

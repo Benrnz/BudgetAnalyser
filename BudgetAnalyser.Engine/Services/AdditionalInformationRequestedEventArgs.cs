@@ -1,4 +1,4 @@
-namespace BudgetAnalyser.Engine.Services
+﻿namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
     ///     A set or event arguments for the <see cref="INotifyDatabaseChanges.Saving" /> event.

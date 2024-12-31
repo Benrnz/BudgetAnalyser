@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,9 +37,20 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(databaseDependents));
             }
 
-            if (monitorableDependencies is null) throw new ArgumentNullException(nameof(monitorableDependencies));
-            if (credentialStore is null) throw new ArgumentNullException(nameof(credentialStore));
-            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            if (monitorableDependencies is null)
+            {
+                throw new ArgumentNullException(nameof(monitorableDependencies));
+            }
+
+            if (credentialStore is null)
+            {
+                throw new ArgumentNullException(nameof(credentialStore));
+            }
+
+            if (logger is null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
 
             this.applicationRepository = applicationRepository;
             this.monitorableDependencies = monitorableDependencies;
@@ -100,7 +111,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public async Task EncryptFilesAsync()
-        {  
+        {
             if (this.credentialStore.RetrievePasskey() is null)
             {
                 throw new EncryptionKeyNotProvidedException("Attempt to use encryption but no password is set.");
@@ -188,15 +199,12 @@ namespace BudgetAnalyser.Engine.Services
 
         public MainApplicationState PreparePersistentStateData()
         {
-            if (this.budgetAnalyserDatabase is null)
-            {
-                return new MainApplicationState();
-            }
-
-            return new MainApplicationState
-            {
-                BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName
-            };
+            return this.budgetAnalyserDatabase is null
+                ? new MainApplicationState()
+                : new MainApplicationState
+                {
+                    BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName
+                };
         }
 
         public async Task SaveAsync()
@@ -229,7 +237,7 @@ namespace BudgetAnalyser.Engine.Services
             await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
 
             // Save all remaining service's data.
-            foreach(var service in this.databaseDependents.Where(s => this.dirtyData[s.DataType]))
+            foreach (var service in this.databaseDependents.Where(s => this.dirtyData[s.DataType]))
             {
                 await service.SaveAsync(this.budgetAnalyserDatabase);
             }
@@ -302,7 +310,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             foreach (int value in Enum.GetValues(typeof(ApplicationDataType)))
             {
-                var enumValue = (ApplicationDataType) value;
+                var enumValue = (ApplicationDataType)value;
                 this.dirtyData.Add(enumValue, false);
             }
         }
@@ -312,7 +320,7 @@ namespace BudgetAnalyser.Engine.Services
             // Ensure all data types are marked as requiring a save.
             foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
             {
-                this.dirtyData[(ApplicationDataType) dataType] = true;
+                this.dirtyData[(ApplicationDataType)dataType] = true;
             }
         }
     }

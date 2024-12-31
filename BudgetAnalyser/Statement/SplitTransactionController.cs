@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -38,10 +38,15 @@ namespace BudgetAnalyser.Statement
 
         public string InvalidMessage
         {
-            [UsedImplicitly] get => this.doNotUseInvalidMessage;
+            [UsedImplicitly]
+            get => this.doNotUseInvalidMessage;
             private set
             {
-                if (value == this.doNotUseInvalidMessage) return;
+                if (value == this.doNotUseInvalidMessage)
+                {
+                    return;
+                }
+
                 this.doNotUseInvalidMessage = value;
                 OnPropertyChanged();
             }
@@ -52,7 +57,11 @@ namespace BudgetAnalyser.Statement
             get => this.doNotUseOriginalTransaction;
             private set
             {
-                if (Equals(value, this.doNotUseOriginalTransaction)) return;
+                if (Equals(value, this.doNotUseOriginalTransaction))
+                {
+                    return;
+                }
+
                 this.doNotUseOriginalTransaction = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Valid));
@@ -65,7 +74,11 @@ namespace BudgetAnalyser.Statement
             get => this.doNotUseSplinterAmount1;
             set
             {
-                if (value == this.doNotUseSplinterAmount1) return;
+                if (value == this.doNotUseSplinterAmount1)
+                {
+                    return;
+                }
+
                 this.doNotUseSplinterAmount1 = value;
                 this.doNotUseSplinterAmount2 = OriginalTransaction.Amount - value;
                 OnPropertyChanged();
@@ -81,7 +94,11 @@ namespace BudgetAnalyser.Statement
             get => this.doNotUseSplinterAmount2;
             set
             {
-                if (value == this.doNotUseSplinterAmount2) return;
+                if (value == this.doNotUseSplinterAmount2)
+                {
+                    return;
+                }
+
                 this.doNotUseSplinterAmount2 = value;
                 this.doNotUseSplinterAmount1 = OriginalTransaction.Amount - value;
                 OnPropertyChanged(nameof(SplinterAmount1));
@@ -100,7 +117,10 @@ namespace BudgetAnalyser.Statement
         {
             get
             {
-                if (OriginalTransaction is null) return false;
+                if (OriginalTransaction is null)
+                {
+                    return false;
+                }
 
                 if (SplinterAmount1 == 0)
                 {

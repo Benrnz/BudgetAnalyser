@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
@@ -6,8 +6,8 @@ using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using CommunityToolkit.Mvvm.Input;
-using Rees.Wpf.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Matching
 {
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.Matching
         {
             get
             {
-                bool result = SelectedRule is not null && !EditingRule;
+                var result = SelectedRule is not null && !EditingRule;
                 return result;
             }
         }
@@ -147,7 +147,7 @@ namespace BudgetAnalyser.Matching
             get => this.doNotUseSortBy;
             set
             {
-                string oldValue = this.doNotUseSortBy;
+                var oldValue = this.doNotUseSortBy;
                 this.doNotUseSortBy = value;
                 OnPropertyChanged();
                 GroupByListBoxVisibility = false;
@@ -168,7 +168,7 @@ namespace BudgetAnalyser.Matching
                         throw new ArgumentException(value + " is not a valid sort by argument.");
                 }
 
-                EventHandler handler = SortChanged;
+                var handler = SortChanged;
                 handler?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -220,7 +220,7 @@ namespace BudgetAnalyser.Matching
             {
                 Rules.Add(rule);
                 RulesGroupedByBucket.Single(g => g.Bucket == rule.Bucket).Rules.Add(rule);
-                EventHandler<MatchingRuleEventArgs> handler = RuleAdded;
+                var handler = RuleAdded;
                 handler?.Invoke(this, new MatchingRuleEventArgs { Rule = rule });
             }
 
@@ -246,7 +246,7 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            bool? certainty = this.questionBox.Show("Delete this rule?", "Are you sure?");
+            var certainty = this.questionBox.Show("Delete this rule?", "Are you sure?");
             if (certainty is not null && certainty.Value)
             {
                 RemoveRule();
@@ -304,7 +304,7 @@ namespace BudgetAnalyser.Matching
                 EditingRule = false;
             }
 
-            MatchingRule selectedRule = SelectedRule;
+            var selectedRule = SelectedRule;
             if (!this.ruleService.RemoveRule(SelectedRule))
             {
                 return;
@@ -312,7 +312,7 @@ namespace BudgetAnalyser.Matching
 
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
 
-            EventHandler<MatchingRuleEventArgs> handler = RuleRemoved;
+            var handler = RuleRemoved;
             handler?.Invoke(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
 
             SelectedRule = null;

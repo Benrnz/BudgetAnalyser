@@ -32,7 +32,8 @@ namespace BudgetAnalyser.Statement
 
         public IEnumerable<BudgetBucket> Buckets
         {
-            [UsedImplicitly] get { return this.doNotUseBuckets; }
+            [UsedImplicitly]
+            get => this.doNotUseBuckets;
             private set
             {
                 this.doNotUseBuckets = value;
@@ -47,7 +48,7 @@ namespace BudgetAnalyser.Statement
 
         public Transaction Transaction
         {
-            get { return this.doNotUseTransaction; }
+            get => this.doNotUseTransaction;
             set
             {
                 OriginalHash = value?.GetEqualityHashCode() ?? 0;
