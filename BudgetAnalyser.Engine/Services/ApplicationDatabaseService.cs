@@ -202,9 +202,9 @@ namespace BudgetAnalyser.Engine.Services
             return this.budgetAnalyserDatabase is null
                 ? new MainApplicationState()
                 : new MainApplicationState
-            {
-                BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName
-            };
+                {
+                    BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName
+                };
         }
 
         public async Task SaveAsync()

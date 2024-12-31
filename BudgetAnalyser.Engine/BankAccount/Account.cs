@@ -40,16 +40,16 @@ namespace BudgetAnalyser.Engine.BankAccount
         public string Name { get; protected set; }
 
         /// <summary>
-        ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance. Or if the
+        ///     Determines whether the specified <see cref="object" />, is equal to this instance. Or if the
         ///     <see cref="Account" /> Equals the other <see cref="Account" />
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <param name="obj">The <see cref="object" /> to compare with this instance.</param>
         /// <returns>
-        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        ///     <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -89,10 +89,10 @@ namespace BudgetAnalyser.Engine.BankAccount
         }
 
         /// <summary>
-        ///     Returns a <see cref="System.String" /> that represents this instance.
+        ///     Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         /// <returns>
-        ///     A <see cref="System.String" /> that represents this instance.
+        ///     A <see cref="string" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -104,7 +104,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// </summary>
         protected bool Equals(Account? other)
         {
-            return other is null ? false : string.Equals(Name, other.Name);
+            return other is not null && string.Equals(Name, other.Name);
         }
     }
 }

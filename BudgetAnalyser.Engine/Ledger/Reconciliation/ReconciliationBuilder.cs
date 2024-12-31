@@ -420,11 +420,11 @@ internal class ReconciliationBuilder : IReconciliationBuilder
                                                                                                    Date = t.Date
                                                                                                }
                                                                                                : new CreditLedgerTransaction(t.Id)
-                                                                                           {
-                                                                                               Amount = t.Amount,
-                                                                                               Narrative = ExtractNarrative(t),
-                                                                                               Date = t.Date
-                                                                                           };
+                                                                                               {
+                                                                                                   Amount = t.Amount,
+                                                                                                   Narrative = ExtractNarrative(t),
+                                                                                                   Date = t.Date
+                                                                                               };
                                                                                        });
 
             return newLedgerTransactions.ToList();

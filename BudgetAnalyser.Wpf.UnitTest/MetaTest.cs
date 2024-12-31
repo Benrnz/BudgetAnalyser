@@ -10,14 +10,14 @@ namespace BudgetAnalyser.Wpf.UnitTest
         [TestMethod]
         public void ListAllTests()
         {
-            Assembly assembly = GetType().Assembly;
+            var assembly = GetType().Assembly;
             var count = 0;
-            foreach (Type type in assembly.ExportedTypes)
+            foreach (var type in assembly.ExportedTypes)
             {
                 var testClassAttrib = type.GetCustomAttribute<TestClassAttribute>();
                 if (testClassAttrib is not null)
                 {
-                    foreach (MethodInfo method in type.GetMethods())
+                    foreach (var method in type.GetMethods())
                     {
                         if (method.GetCustomAttribute<TestMethodAttribute>() is not null)
                         {
@@ -31,8 +31,8 @@ namespace BudgetAnalyser.Wpf.UnitTest
         [TestMethod]
         public void NoDecreaseInTests()
         {
-            Assembly assembly = GetType().Assembly;
-            int count = (from type in assembly.ExportedTypes
+            var assembly = GetType().Assembly;
+            var count = (from type in assembly.ExportedTypes
                          let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
                          where testClassAttrib is not null
                          select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() is not null)).Sum();

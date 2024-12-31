@@ -60,11 +60,11 @@ public partial class StatementUserControl
                     var txn = (Transaction)t;
                     return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
                 }
-                : t =>
-                {
-                    var txn = (Transaction)t;
-                    return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
-                };
+            : t =>
+            {
+                var txn = (Transaction)t;
+                return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
+            };
         }
     }
 

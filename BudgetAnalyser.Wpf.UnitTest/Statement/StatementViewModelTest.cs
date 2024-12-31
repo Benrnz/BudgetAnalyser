@@ -16,35 +16,35 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void GivenNoDataHasTransactionsShouldBeFalse()
         {
-            StatementViewModel subject = CreateSubject();
+            var subject = CreateSubject();
             Assert.IsFalse(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenNoDataStatementNameShouldBeNoTransactionsLoaded()
         {
-            StatementViewModel subject = CreateSubject();
+            var subject = CreateSubject();
             Assert.AreEqual("[No Transactions Loaded]", subject.StatementName);
         }
 
         [TestMethod]
         public void GivenTestData1HasTransactionsShouldBeTrue()
         {
-            StatementViewModel subject = Arrange();
+            var subject = Arrange();
             Assert.IsTrue(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenTestData1StatementNameShouldBeFooStatement()
         {
-            StatementViewModel subject = Arrange();
+            var subject = Arrange();
             Assert.AreEqual("FooStatement", subject.StatementName);
         }
 
         [TestMethod]
         public void GivenTestData1TotalCreditsShouldBe0()
         {
-            StatementViewModel subject = Arrange();
+            var subject = Arrange();
             Assert.AreEqual(0, subject.TotalCredits);
         }
 
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [ExpectedException(typeof(InvalidOperationException))]
         public void SetStatement_ShouldThrow_GivenInitialiseHasNotBeenCalled()
         {
-            StatementViewModel subject = CreateSubject();
+            var subject = CreateSubject();
             subject.Statement = StatementModelTestData.TestData1();
             Assert.Fail();
         }
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void TriggerRefreshTotalsRowShouldRaise10Events()
         {
-            StatementViewModel subject = Arrange();
+            var subject = Arrange();
             var eventCount = 0;
             subject.PropertyChanged += (s, e) => eventCount++;
             subject.TriggerRefreshTotalsRow();
@@ -78,7 +78,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private static Transaction GetPhoneTxnFromFullList(StatementViewModel subject)
         {
-            Transaction transactionFromFullList = subject.Statement.Transactions
+            var transactionFromFullList = subject.Statement.Transactions
                 .Single(t => t.BudgetBucket == StatementModelTestData.PhoneBucket && t.Date == new DateTime(2013, 07, 16));
             return transactionFromFullList;
         }
@@ -90,7 +90,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private StatementViewModel Arrange()
         {
-            StatementViewModel subject = CreateSubject().Initialise(this.mockTransactionService.Object);
+            var subject = CreateSubject().Initialise(this.mockTransactionService.Object);
             subject.Statement = StatementModelTestData.TestData1();
             return subject;
         }
