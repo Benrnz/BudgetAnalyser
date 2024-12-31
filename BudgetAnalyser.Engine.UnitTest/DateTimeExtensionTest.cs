@@ -110,5 +110,47 @@ namespace BudgetAnalyser.Engine.UnitTest
         {
             Assert.AreEqual(1, new DateTime(2014, 1, 15).DurationInMonths(new DateTime(2014, 2, 14)));
         }
+
+        [TestMethod]
+        public void January2014To17thMarch2014IsRoundedDownToTenWeeks()
+        {
+            Assert.AreEqual(10, new DateTime(2014, 1, 1).DurationInWeeks(new DateTime(2014, 3, 17)));
+        }
+
+        [TestMethod]
+        public void January2014To23rdMarch2014IsRoundedUpToElevenWeeks()
+        {
+            Assert.AreEqual(11, new DateTime(2014, 1, 1).DurationInWeeks(new DateTime(2014, 3, 23)));
+        }
+
+        [TestMethod]
+        public void JanuaryToJanuaryIsOneWeek()
+        {
+            Assert.AreEqual(1, new DateTime(2014, 1, 1).DurationInWeeks(new DateTime(2014, 1, 1)));
+        }
+
+        [TestMethod]
+        public void JanuaryToJuneIs21Weeks()
+        {
+            Assert.AreEqual(21, new DateTime(2014, 1, 1).DurationInWeeks(new DateTime(2014, 6, 1)));
+        }
+
+        [TestMethod]
+        public void October2013ToMarch2014Is21Weeks()
+        {
+            Assert.AreEqual(21, new DateTime(2013, 10, 1).DurationInWeeks(new DateTime(2014, 3, 1)));
+        }
+
+        [TestMethod]
+        public void OneStandardPayFortnightIsTwoWeeks1()
+        {
+            Assert.AreEqual(2, new DateTime(2024, 12, 5).DurationInWeeks(new DateTime(2024, 12, 18)));
+        }
+
+        [TestMethod]
+        public void OneStandardPayFortnightIsTwoWeeks2()
+        {
+            Assert.AreEqual(2, new DateTime(2024, 12, 19).DurationInWeeks(new DateTime(2025, 1, 1)));
+        }
     }
 }
