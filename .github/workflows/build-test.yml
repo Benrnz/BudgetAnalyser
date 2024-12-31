@@ -28,10 +28,10 @@ jobs:
         path: |
           ~/.nuget/packages
           ~/.local/share/NuGet/Cache
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/obj/project.assets.json') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-          
+
     # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v4
@@ -43,11 +43,11 @@ jobs:
 
     - name: Build
       run: dotnet build --no-restore --verbosity quiet --configuration Debug
-      
+
     # Execute all unit tests in the solution
     - name: Run unit tests
       run: dotnet test --no-build --verbosity minimal --configuration Debug
-    
+
     - name: Validate code style
       run: dotnet format --no-restore --verify-no-changes --verbosity minimal
 
