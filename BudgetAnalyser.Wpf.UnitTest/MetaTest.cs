@@ -5,7 +5,7 @@ namespace BudgetAnalyser.Wpf.UnitTest
     [TestClass]
     public class MetaTest
     {
-        private const int MinimumTestCount = 7;
+        private const int MinimumTestCount = 9;
 
         [TestMethod]
         public void ListAllTests()
