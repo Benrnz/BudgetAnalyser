@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
@@ -22,29 +21,29 @@ namespace Rees.Wpf.Converters
         /// <returns>
         ///     A converted value. If the method returns null, the valid null value is used.
         /// </returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is null)
             {
                 return Visibility.Hidden;
             }
 
-            if (value is decimal && (decimal)value == 0)
+            if (value is decimal and 0)
             {
                 return Visibility.Hidden;
             }
 
-            if (value is double && (double)value == 0)
+            if (value is double and 0)
             {
                 return Visibility.Hidden;
             }
 
-            if (value is int && (int)value == 0)
+            if (value is int and 0)
             {
                 return Visibility.Hidden;
             }
 
-            return value is long && (long)value == 0 ? Visibility.Hidden : (object)Visibility.Visible;
+            return value is long and 0 ? Visibility.Hidden : (object)Visibility.Visible;
         }
 
         /// <summary>

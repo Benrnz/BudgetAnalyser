@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Data;
 
 namespace Rees.Wpf.Converters
@@ -23,7 +22,7 @@ namespace Rees.Wpf.Converters
         /// <param name="targetType">The type of the binding target property.</param>
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is null)
             {
@@ -35,17 +34,17 @@ namespace Rees.Wpf.Converters
                 return value.ToString();
             }
 
-            if (value is DateTime)
+            if (value is DateTime dateTimeValue)
             {
-                return ((DateTime)value).ToString(parameter.ToString());
+                return dateTimeValue.ToString(parameter.ToString());
             }
 
-            if (value is int || value is long || value is ushort || value is uint || value is ulong)
+            if (value is int or long or ushort or uint or ulong)
             {
                 return System.Convert.ToInt64(value).ToString(parameter.ToString());
             }
 
-            return value is decimal || value is double || value is float
+            return value is decimal or double or float
                 ? System.Convert.ToDouble(value).ToString(parameter.ToString())
                 : (object?)value.ToString();
         }
@@ -54,7 +53,7 @@ namespace Rees.Wpf.Converters
         ///     Not Supported in this implementation.
         /// </summary>
         /// <exception cref="System.NotSupportedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

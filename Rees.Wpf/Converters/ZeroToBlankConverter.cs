@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Data;
 
 namespace Rees.Wpf.Converters
@@ -20,29 +19,29 @@ namespace Rees.Wpf.Converters
         /// <returns>
         ///     A converted value. If the method returns null, the valid null value is used.
         /// </returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is null)
             {
                 return null;
             }
 
-            if (value is decimal && (decimal)value == 0)
+            if (value is decimal and 0)
             {
                 return null;
             }
 
-            if (value is double && (double)value == 0)
+            if (value is double and 0)
             {
                 return null;
             }
 
-            if (value is int && (int)value == 0)
+            if (value is int and 0)
             {
                 return null;
             }
 
-            return value is long && (long)value == 0 ? null : value;
+            return value is long and 0 ? null : value;
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace Rees.Wpf.Converters
         ///     A converted value. If the method returns null, the valid null value is used.
         /// </returns>
         /// <exception cref="System.NotSupportedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

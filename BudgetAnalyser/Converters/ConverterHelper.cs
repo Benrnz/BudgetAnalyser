@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media;
 
@@ -76,13 +75,13 @@ namespace BudgetAnalyser.Converters
 
         public static decimal? ParseNumber(object value)
         {
-            if (value is decimal)
+            if (value is decimal decimalValue)
             {
-                return (decimal)value;
+                return decimalValue;
             }
-            if (value is double doublenumber)
+            if (value is double doubleNumber)
             {
-                return Convert.ToDecimal(doublenumber);
+                return Convert.ToDecimal(doubleNumber);
             }
             if (value is int intNumber)
             {
