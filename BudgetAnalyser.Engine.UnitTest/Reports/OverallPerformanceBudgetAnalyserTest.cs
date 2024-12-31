@@ -82,7 +82,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
-        Assert.AreEqual(8240, result.OverallPerformance);
+        Assert.AreEqual(-2760, result.OverallPerformance);
     }
 
     [TestMethod]

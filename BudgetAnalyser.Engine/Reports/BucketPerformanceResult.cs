@@ -1,80 +1,57 @@
-﻿using System;
-using System.Globalization;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Engine.Reports
+namespace BudgetAnalyser.Engine.Reports;
+
+/// <summary>
+///     A Data Transfer Object to contain the output of a bucket spending analysis.
+/// </summary>
+public class BucketPerformanceResult
 {
     /// <summary>
-    ///     A Data Transfer Object to contain the output of a bucket spending analysis.
+    ///     Gets the calculated average spend.
     /// </summary>
-    public class BucketPerformanceResult
-    {
-        /// <summary>
-        ///     Gets the calculated average spend.
-        /// </summary>
-        public decimal AverageSpend { get; internal set; }
+    public decimal AverageSpend { get; internal set; }
 
-        /// <summary>
-        ///     Gets the calculated balance.
-        /// </summary>
-        public decimal Balance { get; internal set; }
+    /// <summary>
+    ///     Gets the calculated balance.
+    /// </summary>
+    public decimal Balance { get; internal init; }
 
-        /// <summary>
-        ///     Gets the bucket.
-        /// </summary>
-        public BudgetBucket Bucket { get; internal set; }
+    /// <summary>
+    ///     Gets the bucket.
+    /// </summary>
+    public required BudgetBucket Bucket { get; set; }
 
-        /// <summary>
-        ///     Gets the budget amount.
-        /// </summary>
-        public decimal Budget { get; internal set; }
+    /// <summary>
+    ///     Gets the budget amount.
+    /// </summary>
+    public decimal Budget { get; internal init; }
 
-        /// <summary>
-        ///     Gets the calculated budget compared to average.
-        /// </summary>
-        public string BudgetComparedToAverage { get; internal set; }
+    /// <summary>
+    ///     Gets the calculated budget compared to average.
+    /// </summary>
+    public required string BudgetComparedToAverage { get; set; }
 
-        /// <summary>
-        ///     Gets the calculated budget total.
-        /// </summary>
-        public decimal BudgetTotal { get; internal set; }
+    /// <summary>
+    ///     Gets the calculated budget total.
+    /// </summary>
+    public decimal BudgetTotal { get; internal init; }
 
-        /// <summary>
-        ///     Gets the calculated percentage.
-        /// </summary>
-        public double Percent => BudgetTotal < 0.01M ? (double)Math.Round(TotalSpent / 0.01M, 2) : (double)Math.Round(TotalSpent / BudgetTotal, 2);
+    /// <summary>
+    ///     Gets the calculated percentage.
+    /// </summary>
+    public double Percent => BudgetTotal < 0.01M ? (double)Math.Round(TotalSpent / 0.01M, 2) : (double)Math.Round(TotalSpent / BudgetTotal, 2);
 
-        /// <summary>
-        ///     Gets the summary.
-        /// </summary>
-        public string Summary
-        {
-            get
-            {
-                var difference = BudgetTotal - TotalSpent;
-                return Percent > 1
-                    ? string.Format(
-                        CultureInfo.CurrentCulture,
-                        "{0:P} ({1:C}) OVER Budget of {2:C}.  Total Spent: {3:C}.  Single Month Budget: {4:C}",
-                        Percent - 1,
-                        difference,
-                        BudgetTotal,
-                        TotalSpent,
-                        Budget)
-                    : string.Format(
-                    CultureInfo.CurrentCulture,
-                    "{0:P} ({1:C}) under Budget of {2:C}.  Total Spent: {3:C}.  Single Month Budget: {4:C}",
-                    Percent,
-                    difference,
-                    BudgetTotal,
-                    TotalSpent,
-                    Budget);
-            }
-        }
+    /// <summary>
+    ///     Gets the summary.
+    /// </summary>
+    public string Summary =>
+        Percent > 1
+            ? $"{Percent - 1:P0} ({Balance:C}) OVER Budget of {BudgetTotal:C}.  Total Spent: {TotalSpent:C}.  Single Month Budget: {Budget:C}"
+            : $"{Percent:P0} ({Balance:C}) under Budget of {BudgetTotal:C}.  Total Spent: {TotalSpent:C}.  Single Month Budget: {Budget:C}";
 
-        /// <summary>
-        ///     Gets the calculated total spent.
-        /// </summary>
-        public decimal TotalSpent { get; internal set; }
-    }
+    /// <summary>
+    ///     Gets the calculated total spent.
+    /// </summary>
+    public decimal TotalSpent { get; internal set; }
 }
