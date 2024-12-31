@@ -1,28 +1,15 @@
-﻿using System;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC]
-    internal class OverallPerformanceChartService : IOverallPerformanceChartService
+    internal class OverallPerformanceChartService(OverallPerformanceBudgetAnalyser analyser) : IOverallPerformanceChartService
     {
-        private readonly OverallPerformanceBudgetAnalyser analyser;
+        private readonly OverallPerformanceBudgetAnalyser analyser = analyser ?? throw new ArgumentNullException(nameof(analyser));
 
-        public OverallPerformanceChartService([NotNull] OverallPerformanceBudgetAnalyser analyser)
-        {
-            if (analyser is null)
-            {
-                throw new ArgumentNullException(nameof(analyser));
-            }
-
-            this.analyser = analyser;
-        }
-
-        public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets,
-                                                         GlobalFilterCriteria criteria)
+        public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
             if (statementModel is null)
             {
@@ -34,9 +21,12 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(budgets));
             }
 
-            return criteria is null
-                ? throw new ArgumentNullException(nameof(criteria))
-                : this.analyser.Analyse(statementModel, budgets, criteria);
+            if (criteria is null)
+            {
+                throw new ArgumentNullException(nameof(criteria));
+            }
+
+            return this.analyser.Analyse(statementModel, budgets, criteria);
         }
     }
 }

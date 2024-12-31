@@ -1,7 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -17,7 +16,6 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="budgets">The current budgets.</param>
         /// <param name="criteria">The criteria.</param>
         /// <returns>A data result object that contains the results of the anaylsis ready for binding in the UI.</returns>
-        OverallPerformanceBudgetResult BuildChart([NotNull] StatementModel statementModel,
-                                                  [NotNull] BudgetCollection budgets, [NotNull] GlobalFilterCriteria criteria);
+        OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria);
     }
 }

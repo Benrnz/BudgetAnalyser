@@ -1,9 +1,12 @@
 ﻿<UserControl x:Class="BudgetAnalyser.ReportsCatalog.OverallPerformance.OverallPerformanceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
              xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
-             Background="{StaticResource Brush.MainBackground}">
+             xmlns:overallPerformance="clr-namespace:BudgetAnalyser.ReportsCatalog.OverallPerformance"
+             Background="{StaticResource Brush.MainBackground}"
+             d:DataContext="{d:DesignInstance overallPerformance:OverallPerformanceController}">
     <UserControl.Resources>
         <converters:PercentToColourConverter x:Key="Converter.PercentToColour" />
         <converters:BucketToVisibilityConverter x:Key="Converter.BucketToVisibility" />

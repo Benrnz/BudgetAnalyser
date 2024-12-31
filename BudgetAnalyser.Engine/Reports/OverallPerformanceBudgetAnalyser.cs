@@ -8,14 +8,9 @@ namespace BudgetAnalyser.Engine.Reports
     ///     An analyser class to build report data for the overall performance report.
     /// </summary>
     [AutoRegisterWithIoC]
-    internal class OverallPerformanceBudgetAnalyser
+    internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepository)
     {
-        private readonly IBudgetBucketRepository bucketRepository;
-
-        public OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepository)
-        {
-            this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
-        }
+        private readonly IBudgetBucketRepository bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
 
         /// <summary>
         ///     Analyses the supplied statement using the supplied budget within the criteria given to this method.
@@ -28,9 +23,9 @@ namespace BudgetAnalyser.Engine.Reports
         ///     given in the criteria.
         /// </exception>
         /// <exception cref="ArgumentException">If statement or budget is null.</exception>
-        public virtual OverallPerformanceBudgetResult Analyse(StatementModel statementModel,
-                                                              BudgetCollection budgets,
-                                                              GlobalFilterCriteria criteria)
+        public OverallPerformanceBudgetResult Analyse(StatementModel statementModel,
+                                                      BudgetCollection budgets,
+                                                      GlobalFilterCriteria criteria)
         {
             AnalysisPreconditions(criteria, statementModel, budgets, out var beginDate, out var endDate);
 

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows.Data;
+﻿using System.Windows.Data;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
@@ -11,28 +9,16 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 {
-    public class OverallPerformanceController : ControllerBase
+    public class OverallPerformanceController(IMessenger messenger, IOverallPerformanceChartService chartService) : ControllerBase(messenger)
     {
-        private readonly IOverallPerformanceChartService chartService;
-        private bool doNotUseExpenseFilter;
+        private readonly IOverallPerformanceChartService chartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
+        private bool doNotUseExpenseFilter = true;
         private bool doNotUseIncomeFilter;
 
-        public OverallPerformanceController([NotNull] IMessenger messenger, [NotNull] IOverallPerformanceChartService chartService) : base(messenger)
-        {
-            if (chartService is null)
-            {
-                throw new ArgumentNullException(nameof(chartService));
-            }
-
-            this.chartService = chartService;
-            this.doNotUseExpenseFilter = true;
-        }
-
-        public OverallPerformanceBudgetResult Analysis { get; private set; }
+        public OverallPerformanceBudgetResult? Analysis { get; private set; }
 
         public bool ExpenseFilter
         {
-            [UsedImplicitly]
             get => this.doNotUseExpenseFilter;
 
             set
@@ -57,8 +43,6 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public double OverallPerformance { [UsedImplicitly] get; private set; }
 
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
-        [UsedImplicitly]
         public string Title => "Overall Budget Performance";
 
         public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
