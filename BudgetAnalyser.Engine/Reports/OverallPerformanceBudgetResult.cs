@@ -47,6 +47,8 @@ public class OverallPerformanceBudgetResult
 
     /// <summary>
     ///     Gets the calculated overall performance rating.
+    ///     This tracks the ability to stick to the budget over the specified period. If more is spent than budgeted, this is negative.
+    ///     Surplus transactions are excluded from this.
     /// </summary>
     public decimal OverallPerformance { get; internal set; }
 

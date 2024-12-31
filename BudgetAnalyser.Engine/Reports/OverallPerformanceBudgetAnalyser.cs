@@ -243,7 +243,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
             result.TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);
         }
 
-        result.OverallPerformance = result.AverageSpend + result.TotalBudgetExpenses;
+        result.OverallPerformance = totalExpensesSpend + result.TotalBudgetExpenses;
     }
 
     private BudgetModel EvaluateBudgetsInvolved(OverallPerformanceBudgetResult result)
@@ -252,7 +252,8 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         result.UsesMultipleBudgets = budgetsInvolved.Count() > 1;
         result.ValidationMessage = result.UsesMultipleBudgets ? "Warning! This time period covers multiple budgets." : string.Empty;
 
-        // Use most recent budget as the current, I realise this isn't optimal, but better to estimate future budgets from most current budget.
+        // Use most recent budget as the current, this is only used for showing the latest budget amounts in the report.
+        // Calculation of total budgeted amount for the period is done using all budgets involved for the period.
         var currentBudget = budgetsInvolved.Last();
 
         var hasMultiplePayCycleBudgets = budgetsInvolved.Select(b => b.BudgetCycle).Distinct().Count() > 1;
@@ -263,7 +264,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         }
 
         this.budgetCycle = currentBudget.BudgetCycle;
-        result.BudgetCycle = this.budgetCycle.ToString().Replace("ly", "s");
+        result.BudgetCycle = this.budgetCycle.ToString().Replace("ly", "s"); // Hacky but it works. :)
 
         return currentBudget;
     }
