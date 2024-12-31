@@ -211,13 +211,16 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
 
     private void CalculateTotalsAndAverage(OverallPerformanceBudgetResult result)
     {
+        Func<DateTime, int, DateTime> calculateNextPeriodDate;
         switch (this.budgetCycle)
         {
             case BudgetCycle.Fortnightly:
                 result.DurationInPeriods = StatementCalculations.CalculateDurationInFortnights(this.rawCriteria, this.statement!.Transactions);
+                calculateNextPeriodDate = (d, iteration) => d.AddDays(14 * iteration);
                 break;
             case BudgetCycle.Monthly:
                 result.DurationInPeriods = StatementCalculations.CalculateDurationInMonths(this.rawCriteria, this.statement!.Transactions);
+                calculateNextPeriodDate = (d, iteration) => d.AddMonths(1 * iteration);
                 break;
             default:
                 throw new NotSupportedException("The Overall Performance Budget Analyser does not support the budget cycle type: " + this.budgetCycle);
@@ -234,9 +237,9 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         result.AverageSpend = totalExpensesSpend / result.DurationInPeriods; // Expected to be negative
         result.AverageSurplus = totalSurplusSpend / result.DurationInPeriods; // Expected to be negative
 
-        for (var month = 0; month < result.DurationInPeriods; month++)
+        for (var period = 0; period < result.DurationInPeriods; period++)
         {
-            var budget = this.budgetCollection!.ForDate(this.beginDate.AddMonths(month));
+            var budget = this.budgetCollection!.ForDate(calculateNextPeriodDate(this.beginDate, period));
             result.TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);
         }
 

@@ -15,7 +15,7 @@ public static class StatementCalculations
     public static int CalculateDurationInFortnights(GlobalFilterCriteria? criteria, IEnumerable<Transaction> transactions)
     {
         var tuple = ValidateCriteria(criteria, transactions);
-        return tuple.Item1.DurationInWeeks(tuple.Item2);
+        return tuple.Item1.DurationInWeeks(tuple.Item2) / 2;
     }
 
     /// <summary>
