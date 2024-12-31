@@ -1,5 +1,4 @@
 ﻿using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.Helper;
@@ -21,6 +20,8 @@ public class OverallPerformanceBudgetAnalyserTest
     public void TestInitialize()
     {
         this.analyser = new OverallPerformanceBudgetAnalyser(this.bucketRepository);
+        
+        // Initialise the bucket repository with the test data
         this.bucketRepository.GetByCode(StatementModelTestData.IncomeBucket.Code);
         this.bucketRepository.GetByCode(StatementModelTestData.HairBucket.Code);
         this.bucketRepository.GetByCode(StatementModelTestData.PowerBucket.Code);
