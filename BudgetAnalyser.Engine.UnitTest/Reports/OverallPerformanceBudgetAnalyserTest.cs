@@ -11,9 +11,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports;
 public class OverallPerformanceBudgetAnalyserTest
 {
     private readonly IBudgetBucketRepository bucketRepository = new BucketBucketRepoAlwaysFind();
-    private readonly BudgetCollection budgetsTestData = BudgetModelTestData.CreateCollectionWith2And5();
     private readonly StatementModel statementTestData = StatementModelTestData.TestData6();
     private OverallPerformanceBudgetAnalyser? analyser;
+    private BudgetCollection budgetsTestData = BudgetModelTestData.CreateCollectionWith2And5();
     private GlobalFilterCriteria dateCriteria = new() { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 1, 1) };
 
     [TestMethod]
@@ -53,6 +53,17 @@ public class OverallPerformanceBudgetAnalyserTest
         Assert.IsFalse(result.UsesMultipleBudgets);
     }
 
+
+    [TestMethod]
+    public void Analyse_ShouldRecogniseSingleBudget_Fortnight()
+    {
+        this.budgetsTestData[0].BudgetCycle = BudgetCycle.Fortnightly;
+        this.budgetsTestData[1].BudgetCycle = BudgetCycle.Fortnightly;
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        Assert.IsFalse(result.UsesMultipleBudgets);
+    }
+
     [TestMethod]
     public void Analyse_ShouldReturnCorrectAverageSpend()
     {
@@ -62,11 +73,44 @@ public class OverallPerformanceBudgetAnalyserTest
     }
 
     [TestMethod]
+    public void Analyse_ShouldReturnCorrectAverageSpend_Fortnight()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        AssertExtensions.AreEqualWithTolerance(-461.54M, result.AverageSpend);
+    }
+
+    [TestMethod]
     public void Analyse_ShouldReturnCorrectAverageSurplus()
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
         Assert.AreEqual(-500, result.AverageSurplus);
+    }
+
+    [TestMethod]
+    public void Analyse_ShouldReturnCorrectAverageSurplus_Fortnight()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        AssertExtensions.AreEqualWithTolerance(-230.77M, result.AverageSurplus);
+    }
+
+    [TestMethod]
+    public void Analyse_ShouldReturnCorrectNumberOfFortnights()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        Assert.AreEqual(26, result.DurationInPeriods);
     }
 
     [TestMethod]
@@ -86,11 +130,34 @@ public class OverallPerformanceBudgetAnalyserTest
     }
 
     [TestMethod]
+    public void Analyse_ShouldReturnCorrectOverallPerformanceRating_Fortnight()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        AssertExtensions.AreEqualWithTolerance(8020M, result.OverallPerformance);
+    }
+
+    [TestMethod]
     public void Analyse_ShouldReturnResultCorrectAvgForCarMtc()
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
         Assert.AreEqual(200, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.CarMtcBucket.Code).AverageSpend);
+    }
+
+    [TestMethod]
+    public void Analyse_ShouldReturnResultCorrectAvgForCarMtc_Fortnight()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+        var avgCarMtc = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.CarMtcBucket.Code).AverageSpend;
+
+        AssertExtensions.AreEqualWithTolerance(92.31M, avgCarMtc);
     }
 
     [TestMethod]
@@ -102,11 +169,35 @@ public class OverallPerformanceBudgetAnalyserTest
     }
 
     [TestMethod]
+    public void Analyse_ShouldReturnResultCorrectAvgForHair_Fortnight()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+        var avgHair = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.HairBucket.Code).AverageSpend;
+
+        AssertExtensions.AreEqualWithTolerance(138.46M, avgHair);
+    }
+
+    [TestMethod]
     public void Analyse_ShouldReturnResultCorrectAvgForPhone()
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
         Assert.AreEqual(100, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.PhoneBucket.Code).AverageSpend);
+    }
+
+    [TestMethod]
+    public void Analyse_ShouldReturnResultCorrectAvgForPhone_Fortnight()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+        var avgPhone = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.PhoneBucket.Code).AverageSpend;
+
+        AssertExtensions.AreEqualWithTolerance(46.15M, avgPhone);
     }
 
     [TestMethod]
@@ -118,11 +209,35 @@ public class OverallPerformanceBudgetAnalyserTest
     }
 
     [TestMethod]
+    public void Analyse_ShouldReturnResultCorrectAvgForPower_Fortnight()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+        var avgPower = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.PowerBucket.Code).AverageSpend;
+
+        AssertExtensions.AreEqualWithTolerance(184.62M, avgPower);
+    }
+
+    [TestMethod]
     public void Analyse_ShouldReturnResultCorrectAvgForSurplus()
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
         Assert.AreEqual(500, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.SurplusBucket.Code).AverageSpend);
+    }
+
+    [TestMethod]
+    public void Analyse_ShouldReturnResultCorrectAvgForSurplus_Fortnight()
+    {
+        this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
+        this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
+
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+        var avgSurplus = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.SurplusBucket.Code).AverageSpend;
+
+        AssertExtensions.AreEqualWithTolerance(230.77M, avgSurplus);
     }
 
     [TestMethod]
