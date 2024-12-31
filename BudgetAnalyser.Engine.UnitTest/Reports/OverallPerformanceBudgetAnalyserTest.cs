@@ -20,7 +20,7 @@ public class OverallPerformanceBudgetAnalyserTest
     public void TestInitialize()
     {
         this.analyser = new OverallPerformanceBudgetAnalyser(this.bucketRepository);
-        
+
         // Initialise the bucket repository with the test data
         this.bucketRepository.GetByCode(StatementModelTestData.IncomeBucket.Code);
         this.bucketRepository.GetByCode(StatementModelTestData.HairBucket.Code);
@@ -34,7 +34,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.statementTestData.Output(new DateTime(2013, 1, 1));
     }
-    
+
     [TestMethod]
     public void Analyse_ShouldReturnCorrectAverageSpend()
     {
@@ -66,7 +66,7 @@ public class OverallPerformanceBudgetAnalyserTest
 
         Assert.AreEqual(12, result.DurationInMonths);
     }
-    
+
     [TestMethod]
     public void Analyse_ShouldRecogniseSingleBudget()
     {

@@ -34,7 +34,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions1();
+        var transactions = CreateTransactions1();
         statement.LoadTransactions(transactions);
         return statement;
     }
@@ -51,7 +51,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions2();
+        var transactions = CreateTransactions2();
         statement.LoadTransactions(transactions);
         return statement;
     }
@@ -89,7 +89,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions3();
+        var transactions = CreateTransactions3();
         statement.LoadTransactions(transactions);
         return statement;
     }
@@ -108,7 +108,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        List<Transaction> transactions = CreateTransactions3().ToList();
+        var transactions = CreateTransactions3().ToList();
         transactions.AddRange(CreateTransactions1());
         statement.LoadTransactions(transactions);
         return statement;
@@ -129,7 +129,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 08, 15)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions5();
+        var transactions = CreateTransactions5();
         statement.LoadTransactions(transactions);
         return statement;
     }
@@ -147,7 +147,7 @@ public static class StatementModelTestData
             LastImport = new DateTime(2013, 12, 31)
         };
 
-        IEnumerable<Transaction> transactions = CreateTransactions12Months();
+        var transactions = CreateTransactions12Months();
         statement.LoadTransactions(transactions);
         return statement;
     }
@@ -156,7 +156,7 @@ public static class StatementModelTestData
     {
         foreach (var txn in instance.AllTransactions)
         {
-            PrivateAccessor.SetField(txn, "budgetBucket", null);
+            PrivateAccessor.SetField(txn, "budgetBucket", null!);
         }
 
         return instance;
@@ -603,7 +603,7 @@ public static class StatementModelTestData
         var startDate = new DateTime(2013, 1, 1);
         var transactionTypes = new BudgetBucket[] { PhoneBucket, CarMtcBucket, HairBucket, PowerBucket, IncomeBucket };
 
-        for (int month = 0; month < 12; month++)
+        for (var month = 0; month < 12; month++)
         {
             transactions.Add(new Transaction
             {
@@ -615,10 +615,10 @@ public static class StatementModelTestData
                 Reference1 = $"{month + 1}0000",
                 TransactionType = TransactionType
             });
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 var bucket = transactionTypes[i % transactionTypes.Length];
-                var amount = bucket == IncomeBucket ? 1000*(i+1) : -100*(i+1);
+                var amount = bucket == IncomeBucket ? 1000 * (i + 1) : -100 * (i + 1);
                 transactions.Add(new Transaction
                 {
                     Account = ChequeAccount,

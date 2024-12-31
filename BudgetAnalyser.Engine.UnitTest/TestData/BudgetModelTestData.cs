@@ -40,8 +40,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
                 {
                     CreateTestData5(),
                     CreateTestData2()
-                });
-            collection.StorageKey = @"C:\Temp\Foo.xaml";
+                })
+            {
+                StorageKey = @"C:\Temp\Foo.xaml"
+            };
             return collection;
         }
 

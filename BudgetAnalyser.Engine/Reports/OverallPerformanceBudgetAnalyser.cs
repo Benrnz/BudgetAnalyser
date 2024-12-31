@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Reports
 
             var result = new OverallPerformanceBudgetResult();
 
-            List<BudgetModel> budgetsInvolved = budgets.ForDates(beginDate, endDate).ToList();
+            var budgetsInvolved = budgets.ForDates(beginDate, endDate).ToList();
             result.UsesMultipleBudgets = budgetsInvolved.Count() > 1;
             var currentBudget =
                 budgetsInvolved.Last(); // Use most recent budget as the current, I realise this isn't optimal, but better to estimate future budgets from most current budget.
@@ -47,14 +47,14 @@ namespace BudgetAnalyser.Engine.Reports
 
             result.AnalysesList = new List<BucketPerformanceResult>();
             var list = new List<BucketPerformanceResult>();
-            foreach (var bucket in bucketRepository.Buckets)
+            foreach (var bucket in this.bucketRepository.Buckets)
             {
                 var bucketCopy = bucket;
-                List<Transaction> query = statementModel.Transactions.Where(t => t.BudgetBucket == bucketCopy).ToList();
+                var query = statementModel.Transactions.Where(t => t.BudgetBucket == bucketCopy).ToList();
                 var totalSpent = query.Sum(t => t.Amount);
                 var averageSpend = totalSpent / result.DurationInMonths;
 
-                if (bucket == bucketRepository.SurplusBucket)
+                if (bucket == this.bucketRepository.SurplusBucket)
                 {
                     var budgetedTotal = CalculateBudgetedTotalAmount(beginDate, b => b.Surplus, budgets, result);
                     var perMonthBudget = budgetedTotal / result.DurationInMonths;
@@ -128,17 +128,27 @@ namespace BudgetAnalyser.Engine.Reports
                                                   out DateTime beginDate,
                                                   out DateTime endDate)
         {
-            if (criteria is null) throw new ArgumentNullException(nameof(criteria));
+            if (criteria is null)
+            {
+                throw new ArgumentNullException(nameof(criteria));
+            }
 
             if (!criteria.Cleared && (criteria.BeginDate is null || criteria.EndDate is null))
+            {
                 throw new ArgumentException("The given criteria does not contain any filtering dates.");
+            }
 
             if (statement is null)
+            {
                 throw new ArgumentNullException(
                     nameof(statement),
                     "The statement supplied is null, analysis cannot proceed with no statement.");
+            }
 
-            if (budgets is null) throw new ArgumentNullException(nameof(budgets));
+            if (budgets is null)
+            {
+                throw new ArgumentNullException(nameof(budgets));
+            }
 
             if (criteria.Cleared)
             {
@@ -157,7 +167,10 @@ namespace BudgetAnalyser.Engine.Reports
             return b =>
             {
                 var first = b.Expenses.FirstOrDefault(e => e.Bucket == bucket);
-                if (first is null) return 0;
+                if (first is null)
+                {
+                    return 0;
+                }
 
                 return first.Amount;
             };
@@ -168,7 +181,10 @@ namespace BudgetAnalyser.Engine.Reports
             return b =>
             {
                 var first = b.Incomes.FirstOrDefault(e => e.Bucket == bucket);
-                if (first is null) return 0;
+                if (first is null)
+                {
+                    return 0;
+                }
 
                 return first.Amount;
             };
@@ -179,7 +195,10 @@ namespace BudgetAnalyser.Engine.Reports
                                                             BudgetCollection budgets,
                                                             OverallPerformanceBudgetResult result)
         {
-            if (!result.UsesMultipleBudgets) return whichBudgetBucket(budgets.ForDate(beginDate)) * result.DurationInMonths;
+            if (!result.UsesMultipleBudgets)
+            {
+                return whichBudgetBucket(budgets.ForDate(beginDate)) * result.DurationInMonths;
+            }
 
             decimal budgetedAmount = 0;
             for (var month = 0; month < result.DurationInMonths; month++)

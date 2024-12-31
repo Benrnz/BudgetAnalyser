@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
     public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
     {
         private readonly string projectPrefix;
-        private bool isInitialising;
+        private readonly bool isInitialising;
 
         public BucketBucketRepoAlwaysFind() : base(new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()))
         {
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
             {
                 return false;
             }
-            
+
             return true;
         }
     }
