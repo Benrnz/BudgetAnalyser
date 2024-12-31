@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Statement
         private Guid changeHash;
 
         private GlobalFilterCriteria currentFilter;
-        // Track whether Dispose has been called. 
+        // Track whether Dispose has been called.
         private bool disposed;
         private List<Transaction> doNotUseAllTransactions;
         private int doNotUseDurationInMonths;
@@ -142,41 +142,10 @@ namespace BudgetAnalyser.Engine.Statement
         {
             Dispose(true);
 
-            // Take this instance off the Finalization queue 
-            // to prevent finalization code for this object 
-            // from executing a second time. 
+            // Take this instance off the Finalization queue
+            // to prevent finalization code for this object
+            // from executing a second time.
             GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        ///     Calculates the duration in months from the beginning of the period to the end.
-        /// </summary>
-        /// <param name="criteria">
-        ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
-        ///     statement dates.
-        /// </param>
-        /// <param name="transactions">The list of transactions to use to determine duration.</param>
-        public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
-        {
-            var list = transactions.ToList();
-            DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
-
-            if (criteria is not null && !criteria.Cleared)
-            {
-                if (criteria.BeginDate is not null)
-                {
-                    minDate = criteria.BeginDate.Value;
-                    Debug.Assert(criteria.EndDate is not null);
-                    maxDate = criteria.EndDate.Value;
-                }
-            }
-            else
-            {
-                minDate = list.Min(t => t.Date);
-                maxDate = list.Max(t => t.Date);
-            }
-
-            return minDate.DurationInMonths(maxDate);
         }
 
         /// <summary>
@@ -184,7 +153,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual void Dispose(bool disposing)
         {
-            // Check to see if Dispose has already been called. 
+            // Check to see if Dispose has already been called.
             if (!this.disposed)
             {
                 UnsubscribeToTransactionChangedEvents();
@@ -236,7 +205,7 @@ namespace BudgetAnalyser.Engine.Statement
             var query = BaseFilterQuery(criteria);
 
             Transactions = query.ToList();
-            DurationInMonths = CalculateDuration(criteria, Transactions);
+            DurationInMonths = StatementCalculations.CalculateDurationInMonths(criteria, Transactions);
             this.duplicates = null;
             Filtered = true;
         }
@@ -474,8 +443,8 @@ namespace BudgetAnalyser.Engine.Statement
 
         private void UpdateDuration()
         {
-            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
-            DurationInMonths = CalculateDuration(null, Transactions);
+            this.fullDuration = StatementCalculations.CalculateDurationInMonths(new GlobalFilterCriteria(), AllTransactions);
+            DurationInMonths = StatementCalculations.CalculateDurationInMonths(null, Transactions);
         }
 
         /// <summary>
@@ -485,7 +454,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         ~StatementModel()
         {
-            // Do not re-create Dispose clean-up code here. 
+            // Do not re-create Dispose clean-up code here.
             Dispose(false);
         }
     }

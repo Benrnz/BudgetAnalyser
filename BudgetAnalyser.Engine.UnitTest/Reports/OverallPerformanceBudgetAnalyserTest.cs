@@ -10,29 +10,47 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports;
 [TestClass]
 public class OverallPerformanceBudgetAnalyserTest
 {
-    private OverallPerformanceBudgetAnalyser? analyser;
     private readonly IBudgetBucketRepository bucketRepository = new BucketBucketRepoAlwaysFind();
-    private readonly StatementModel statementTestData = StatementModelTestData.TestData6();
     private readonly BudgetCollection budgetsTestData = BudgetModelTestData.CreateCollectionWith2And5();
-    private readonly GlobalFilterCriteria dateCriteria = new() { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 1, 1) };
+    private readonly StatementModel statementTestData = StatementModelTestData.TestData6();
+    private OverallPerformanceBudgetAnalyser? analyser;
+    private GlobalFilterCriteria dateCriteria = new() { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 1, 1) };
 
-    [TestInitialize]
-    public void TestInitialize()
+    [TestMethod]
+    public void Analyse_ShouldErrorWhenMultipleBudgetsWithVariousPayCycles()
     {
-        this.analyser = new OverallPerformanceBudgetAnalyser(this.bucketRepository);
+        // Arrange
+        this.dateCriteria = new GlobalFilterCriteria { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 03, 1) };
+        this.budgetsTestData[0].BudgetCycle = BudgetCycle.Monthly;
+        this.budgetsTestData[1].BudgetCycle = BudgetCycle.Fortnightly;
 
-        // Initialise the bucket repository with the test data
-        this.bucketRepository.GetByCode(StatementModelTestData.IncomeBucket.Code);
-        this.bucketRepository.GetByCode(StatementModelTestData.HairBucket.Code);
-        this.bucketRepository.GetByCode(StatementModelTestData.PowerBucket.Code);
-        this.bucketRepository.GetByCode(StatementModelTestData.CarMtcBucket.Code);
-        this.bucketRepository.GetByCode(StatementModelTestData.PhoneBucket.Code);
+        //Act
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        Console.WriteLine(result.ValidationMessage);
+
+        Assert.IsTrue(result.Error);
+        Assert.IsTrue(result.HasValidationMessage);
     }
 
     [TestMethod]
-    public void OutputTestData()
+    public void Analyse_ShouldFunctionWhenMultipleBudgetsWithSamePayCycles()
     {
-        this.statementTestData.Output(new DateTime(2013, 1, 1));
+        this.dateCriteria = new GlobalFilterCriteria { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 03, 1) };
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        Console.WriteLine(result.ValidationMessage);
+
+        Assert.IsFalse(result.Error);
+        Assert.IsTrue(result.HasValidationMessage); // This will still have a warning.
+    }
+
+    [TestMethod]
+    public void Analyse_ShouldRecogniseSingleBudget()
+    {
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        Assert.IsFalse(result.UsesMultipleBudgets);
     }
 
     [TestMethod]
@@ -52,6 +70,14 @@ public class OverallPerformanceBudgetAnalyserTest
     }
 
     [TestMethod]
+    public void Analyse_ShouldReturnCorrectNumberOfMonths()
+    {
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        Assert.AreEqual(12, result.DurationInPeriods);
+    }
+
+    [TestMethod]
     public void Analyse_ShouldReturnCorrectOverallPerformanceRating()
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
@@ -60,27 +86,19 @@ public class OverallPerformanceBudgetAnalyserTest
     }
 
     [TestMethod]
-    public void Analyse_ShouldReturnCorrectNumberOfMonths()
+    public void Analyse_ShouldReturnResultCorrectAvgForCarMtc()
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
-        Assert.AreEqual(12, result.DurationInMonths);
+        Assert.AreEqual(200, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.CarMtcBucket.Code).AverageSpend);
     }
 
     [TestMethod]
-    public void Analyse_ShouldRecogniseSingleBudget()
+    public void Analyse_ShouldReturnResultCorrectAvgForHair()
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
-        Assert.IsFalse(result.UsesMultipleBudgets);
-    }
-
-    [TestMethod]
-    public void Analyse_ShouldReturnResultWithSingleBudget()
-    {
-        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
-
-        Assert.AreEqual(6, result.Analyses.Count());
+        Assert.AreEqual(300, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.HairBucket.Code).AverageSpend);
     }
 
     [TestMethod]
@@ -90,6 +108,15 @@ public class OverallPerformanceBudgetAnalyserTest
 
         Assert.AreEqual(100, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.PhoneBucket.Code).AverageSpend);
     }
+
+    [TestMethod]
+    public void Analyse_ShouldReturnResultCorrectAvgForPower()
+    {
+        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
+
+        Assert.AreEqual(400, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.PowerBucket.Code).AverageSpend);
+    }
+
     [TestMethod]
     public void Analyse_ShouldReturnResultCorrectAvgForSurplus()
     {
@@ -97,26 +124,13 @@ public class OverallPerformanceBudgetAnalyserTest
 
         Assert.AreEqual(500, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.SurplusBucket.Code).AverageSpend);
     }
+
     [TestMethod]
-    public void Analyse_ShouldReturnResultCorrectAvgForCarMtc()
+    public void Analyse_ShouldReturnResultWithSingleBudget()
     {
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
-        Assert.AreEqual(200, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.CarMtcBucket.Code).AverageSpend);
-    }
-    [TestMethod]
-    public void Analyse_ShouldReturnResultCorrectAvgForHair()
-    {
-        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
-
-        Assert.AreEqual(300, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.HairBucket.Code).AverageSpend);
-    }
-    [TestMethod]
-    public void Analyse_ShouldReturnResultCorrectAvgForPower()
-    {
-        var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
-
-        Assert.AreEqual(400, result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.PowerBucket.Code).AverageSpend);
+        Assert.AreEqual(6, result.Analyses.Count());
     }
 
     [TestMethod]
@@ -138,5 +152,24 @@ public class OverallPerformanceBudgetAnalyserTest
     public void Analyse_ShouldThrowArgumentNullException_WhenStatementModelIsNull()
     {
         this.analyser!.Analyse(null, this.budgetsTestData, this.dateCriteria);
+    }
+
+    [TestMethod]
+    public void OutputTestData()
+    {
+        this.statementTestData.Output(new DateTime(2013, 1, 1));
+    }
+
+    [TestInitialize]
+    public void TestInitialize()
+    {
+        this.analyser = new OverallPerformanceBudgetAnalyser(this.bucketRepository);
+
+        // Initialise the bucket repository with the test data
+        this.bucketRepository.GetByCode(StatementModelTestData.IncomeBucket.Code);
+        this.bucketRepository.GetByCode(StatementModelTestData.HairBucket.Code);
+        this.bucketRepository.GetByCode(StatementModelTestData.PowerBucket.Code);
+        this.bucketRepository.GetByCode(StatementModelTestData.CarMtcBucket.Code);
+        this.bucketRepository.GetByCode(StatementModelTestData.PhoneBucket.Code);
     }
 }

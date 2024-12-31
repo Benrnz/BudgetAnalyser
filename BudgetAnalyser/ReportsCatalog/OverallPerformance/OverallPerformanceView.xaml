@@ -84,9 +84,9 @@
         <StackPanel Margin="-1,1,1,25"
                     Orientation="Horizontal">
             <TextBlock Margin="2"
-                       Text="Duration In Months:" />
+                       Text="Duration In Periods (Months or Fortnights):" />
             <TextBlock Margin="2"
-                       Text="{Binding Analysis.DurationInMonths}" />
+                       Text="{Binding Analysis.DurationInPeriods}" />
             <RadioButton Content="Expenses"
                          GroupName="IncomeExpenseFilter"
                          IsChecked="{Binding ExpenseFilter}"
@@ -100,8 +100,8 @@
         </StackPanel>
         <TextBlock Grid.Row="1"
                    Foreground="{StaticResource Brush.ImportantHighlightLight}"
-                   Text="Warning! This time period covers multiple budgets"
-                   Visibility="{Binding Analysis.UsesMultipleBudgets, Converter={StaticResource Converter.BoolToVis}}" />
+                   Text="{Binding ValidationMessage}"
+                   Visibility="{Binding ShowValidationMessage, Converter={StaticResource Converter.BoolToVis}}" />
         <Grid Grid.Row="2"
               Height="6"
               Margin="10,20,25,0">
