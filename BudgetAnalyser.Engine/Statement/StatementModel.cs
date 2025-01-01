@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Budget;
 using JetBrains.Annotations;
-using NotNull = JetBrains.Annotations.NotNullAttribute;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -26,19 +24,14 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         private Guid changeHash;
 
-        private GlobalFilterCriteria currentFilter;
+        private GlobalFilterCriteria currentFilter = new();
         // Track whether Dispose has been called.
         private bool disposed;
-        private List<Transaction> doNotUseAllTransactions;
+        private List<Transaction> doNotUseAllTransactions= new List<Transaction>();
         private int doNotUseDurationInMonths;
-        private IEnumerable<Transaction> doNotUseTransactions;
-        private IEnumerable<IGrouping<int, Transaction>> duplicates;
+        private IEnumerable<Transaction> doNotUseTransactions = new List<Transaction>();
+        private IEnumerable<IGrouping<int, Transaction>>? duplicates;
         private int fullDuration;
-
-        internal StatementModel()
-        {
-            throw new NotSupportedException("This constructor is only used for producing mappers by reflection.");
-        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="StatementModel" /> class.
@@ -47,23 +40,16 @@ namespace BudgetAnalyser.Engine.Statement
         /// <exception cref="System.ArgumentNullException"></exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "Reviewed, ok here. Required for binding")]
-        public StatementModel([NotNull] ILogger logger)
+        public StatementModel(ILogger logger)
         {
-            if (logger is null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.changeHash = Guid.NewGuid();
-            AllTransactions = new List<Transaction>();
-            Transactions = new List<Transaction>();
         }
 
         /// <summary>
         ///     Occurs when a property value changes.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         ///     Gets all transactions ignoring any filters.
@@ -106,7 +92,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <summary>
         ///     Gets or sets the storage key.  This could be the filename for the statement's persistence, or a database unique id.
         /// </summary>
-        public string StorageKey { get; set; }
+        public string StorageKey { get; set; } = string.Empty;
 
         /// <summary>
         ///     Gets the filtered transactions.
@@ -167,14 +153,14 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             ThrowIfDisposed();
             var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        internal virtual void Filter(GlobalFilterCriteria criteria)
+        internal virtual void Filter(GlobalFilterCriteria? criteria)
         {
             ThrowIfDisposed();
             if (criteria is null)
@@ -215,12 +201,12 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         /// <param name="transactions">The transactions to load.</param>
         /// <returns>Returns this instance, to allow chaining.</returns>
-        internal virtual StatementModel LoadTransactions(IEnumerable<Transaction> transactions)
+        internal StatementModel LoadTransactions(IEnumerable<Transaction> transactions)
         {
             ThrowIfDisposed();
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
-            var listOfTransactions = transactions is null ? new List<Transaction>() : transactions.OrderBy(t => t.Date).ToList();
+            var listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
             Transactions = listOfTransactions;
             AllTransactions = Transactions;
             if (listOfTransactions.Any())
@@ -240,7 +226,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "Ok here. This methods creates the instance for use elsewhere.")]
-        internal virtual StatementModel Merge([NotNull] StatementModel additionalModel)
+        internal virtual StatementModel Merge(StatementModel additionalModel)
         {
             ThrowIfDisposed();
             if (additionalModel is null)
@@ -259,8 +245,7 @@ namespace BudgetAnalyser.Engine.Statement
             return combinedModel;
         }
 
-        internal void ReassignFixedProjectTransactions([NotNull] FixedBudgetProjectBucket bucket,
-                                                       [NotNull] BudgetBucket reassignmentBucket)
+        internal void ReassignFixedProjectTransactions(FixedBudgetProjectBucket bucket, BudgetBucket reassignmentBucket)
         {
             ThrowIfDisposed();
             if (bucket is null)
@@ -279,7 +264,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        internal virtual void RemoveTransaction([NotNull] Transaction transaction)
+        internal virtual void RemoveTransaction(Transaction transaction)
         {
             ThrowIfDisposed();
             if (transaction is null)
@@ -294,11 +279,11 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         internal virtual void SplitTransaction(
-            [NotNull] Transaction originalTransaction,
+            Transaction originalTransaction,
             decimal splinterAmount1,
             decimal splinterAmount2,
-            [NotNull] BudgetBucket splinterBucket1,
-            [NotNull] BudgetBucket splinterBucket2)
+            BudgetBucket splinterBucket1,
+            BudgetBucket splinterBucket2)
         {
             ThrowIfDisposed();
             if (originalTransaction is null)
@@ -333,12 +318,7 @@ namespace BudgetAnalyser.Engine.Statement
             RemoveTransaction(originalTransaction);
 
             this.changeHash = Guid.NewGuid();
-            if (AllTransactions is null)
-            {
-                AllTransactions = new List<Transaction>();
-            }
-            var mergedTransactions =
-                AllTransactions.ToList().Merge(new[] { splinterTransaction1, splinterTransaction2 }).ToList();
+            var mergedTransactions = AllTransactions.ToList().Merge([splinterTransaction1, splinterTransaction2]).ToList();
             AllTransactions = mergedTransactions;
             splinterTransaction1.PropertyChanged += OnTransactionPropertyChanged;
             splinterTransaction2.PropertyChanged += OnTransactionPropertyChanged;
@@ -399,7 +379,7 @@ namespace BudgetAnalyser.Engine.Statement
             return query;
         }
 
-        private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void OnTransactionPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             switch (propertyChangedEventArgs.PropertyName)
             {
@@ -413,13 +393,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private void SubscribeToTransactionChangedEvents()
         {
-            if (AllTransactions is null)
-            {
-                return;
-            }
-
-            Parallel.ForEach(AllTransactions,
-                transaction => { transaction.PropertyChanged += OnTransactionPropertyChanged; });
+            Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged += OnTransactionPropertyChanged; });
         }
 
         private void ThrowIfDisposed()
@@ -432,13 +406,12 @@ namespace BudgetAnalyser.Engine.Statement
 
         private void UnsubscribeToTransactionChangedEvents()
         {
-            if (AllTransactions is null || AllTransactions.None())
+            if (AllTransactions.None())
             {
                 return;
             }
 
-            Parallel.ForEach(AllTransactions,
-                transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
+            Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
         }
 
         private void UpdateDuration()

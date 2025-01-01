@@ -28,11 +28,7 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData1()
     {
-        var statement = new StatementModel(new FakeLogger())
-        {
-            StorageKey = @"C:\TestData1\FooStatement.csv",
-            LastImport = new DateTime(2013, 08, 15)
-        };
+        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData1\FooStatement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions1();
         statement.LoadTransactions(transactions);
@@ -45,11 +41,7 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData2()
     {
-        var statement = new StatementModel(new FakeLogger())
-        {
-            StorageKey = @"C:\TestData2\Foo2Statement.csv",
-            LastImport = new DateTime(2013, 08, 15)
-        };
+        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions2();
         statement.LoadTransactions(transactions);
@@ -63,11 +55,7 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData2A()
     {
-        var statement = new StatementModel(new FakeLogger())
-        {
-            StorageKey = @"C:\TestData2\Foo2Statement.csv",
-            LastImport = new DateTime(2013, 08, 15)
-        };
+        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         IList<Transaction> transactions = CreateTransactions2().ToList();
         var modTransaction = transactions.Single(t => t.Date == new DateTime(2013, 07, 16) && t.BudgetBucket == PhoneBucket);
@@ -83,11 +71,7 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData3()
     {
-        var statement = new StatementModel(new FakeLogger())
-        {
-            StorageKey = @"C:\TestData3\Foo2Statement.csv",
-            LastImport = new DateTime(2013, 08, 15)
-        };
+        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData3\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions3();
         statement.LoadTransactions(transactions);
@@ -102,11 +86,7 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData4()
     {
-        var statement = new StatementModel(new FakeLogger())
-        {
-            StorageKey = @"C:\TestData4\Foo2Statement.csv",
-            LastImport = new DateTime(2013, 08, 15)
-        };
+        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData4\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions3().ToList();
         transactions.AddRange(CreateTransactions1());
@@ -123,11 +103,7 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData5()
     {
-        var statement = new StatementModel(new FakeLogger())
-        {
-            StorageKey = @"C:\TestData5\Foo5Statement.csv",
-            LastImport = new DateTime(2013, 08, 15)
-        };
+        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData5\Foo5Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions5();
         statement.LoadTransactions(transactions);
@@ -141,11 +117,7 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData6()
     {
-        var statement = new StatementModel(new FakeLogger())
-        {
-            StorageKey = @"C:\TestData6\Foo6Statement.csv",
-            LastImport = new DateTime(2013, 12, 31)
-        };
+        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData6\Foo6Statement.csv", LastImport = new DateTime(2013, 12, 31) };
 
         var transactions = CreateTransactions12Months();
         statement.LoadTransactions(transactions);
@@ -237,6 +209,44 @@ public static class StatementModelTestData
                 TransactionType = TransactionType
             }
         };
+        return transactions;
+    }
+
+    private static IEnumerable<Transaction> CreateTransactions12Months()
+    {
+        var transactions = new List<Transaction>();
+        var startDate = new DateTime(2013, 1, 1);
+        var transactionTypes = new BudgetBucket[] { PhoneBucket, CarMtcBucket, HairBucket, PowerBucket, IncomeBucket };
+
+        for (var month = 0; month < 12; month++)
+        {
+            transactions.Add(new Transaction
+            {
+                Account = ChequeAccount,
+                Amount = -500,
+                BudgetBucket = SurplusBucket,
+                Date = startDate.AddMonths(month).AddDays(1),
+                Description = $"Generated Surplus Transaction {month + 1}",
+                Reference1 = $"{month + 1}0000",
+                TransactionType = TransactionType
+            });
+            for (var i = 0; i < 5; i++)
+            {
+                var bucket = transactionTypes[i % transactionTypes.Length];
+                var amount = bucket == IncomeBucket ? 1000 * (i + 1) : -100 * (i + 1);
+                transactions.Add(new Transaction
+                {
+                    Account = ChequeAccount,
+                    Amount = amount,
+                    BudgetBucket = bucket,
+                    Date = startDate.AddMonths(month).AddDays(i * 5),
+                    Description = $"Generated Transaction {month + 1}-{i + 1}",
+                    Reference1 = $"{month + 1}{i + 1}0000",
+                    TransactionType = TransactionType
+                });
+            }
+        }
+
         return transactions;
     }
 
@@ -594,44 +604,6 @@ public static class StatementModelTestData
                 TransactionType = TransactionType
             }
         };
-        return transactions;
-    }
-
-    private static IEnumerable<Transaction> CreateTransactions12Months()
-    {
-        var transactions = new List<Transaction>();
-        var startDate = new DateTime(2013, 1, 1);
-        var transactionTypes = new BudgetBucket[] { PhoneBucket, CarMtcBucket, HairBucket, PowerBucket, IncomeBucket };
-
-        for (var month = 0; month < 12; month++)
-        {
-            transactions.Add(new Transaction
-            {
-                Account = ChequeAccount,
-                Amount = -500,
-                BudgetBucket = SurplusBucket,
-                Date = startDate.AddMonths(month).AddDays(1),
-                Description = $"Generated Surplus Transaction {month + 1}",
-                Reference1 = $"{month + 1}0000",
-                TransactionType = TransactionType
-            });
-            for (var i = 0; i < 5; i++)
-            {
-                var bucket = transactionTypes[i % transactionTypes.Length];
-                var amount = bucket == IncomeBucket ? 1000 * (i + 1) : -100 * (i + 1);
-                transactions.Add(new Transaction
-                {
-                    Account = ChequeAccount,
-                    Amount = amount,
-                    BudgetBucket = bucket,
-                    Date = startDate.AddMonths(month).AddDays(i * 5),
-                    Description = $"Generated Transaction {month + 1}-{i + 1}",
-                    Reference1 = $"{month + 1}{i + 1}0000",
-                    TransactionType = TransactionType
-                });
-            }
-        }
-
         return transactions;
     }
 }
