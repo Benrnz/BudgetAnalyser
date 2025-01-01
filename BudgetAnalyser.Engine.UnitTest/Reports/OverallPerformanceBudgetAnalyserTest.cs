@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Reports;
 
@@ -80,7 +81,7 @@ public class OverallPerformanceBudgetAnalyserTest
 
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
-        AssertExtensions.AreEqualWithTolerance(-461.54M, result.AverageSpend);
+        Ensure.AreEqualWithTolerance(-461.54M, result.AverageSpend);
     }
 
     [TestMethod]
@@ -99,7 +100,7 @@ public class OverallPerformanceBudgetAnalyserTest
 
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
-        AssertExtensions.AreEqualWithTolerance(-230.77M, result.AverageSurplus);
+        Ensure.AreEqualWithTolerance(-230.77M, result.AverageSurplus);
     }
 
     [TestMethod]
@@ -137,7 +138,7 @@ public class OverallPerformanceBudgetAnalyserTest
 
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
-        AssertExtensions.AreEqualWithTolerance(8020M, result.OverallPerformance);
+        Ensure.AreEqualWithTolerance(8020M, result.OverallPerformance);
     }
 
     [TestMethod]
@@ -157,7 +158,7 @@ public class OverallPerformanceBudgetAnalyserTest
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
         var avgCarMtc = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.CarMtcBucket.Code).AverageSpend;
 
-        AssertExtensions.AreEqualWithTolerance(92.31M, avgCarMtc);
+        Ensure.AreEqualWithTolerance(92.31M, avgCarMtc);
     }
 
     [TestMethod]
@@ -177,7 +178,7 @@ public class OverallPerformanceBudgetAnalyserTest
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
         var avgHair = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.HairBucket.Code).AverageSpend;
 
-        AssertExtensions.AreEqualWithTolerance(138.46M, avgHair);
+        Ensure.AreEqualWithTolerance(138.46M, avgHair);
     }
 
     [TestMethod]
@@ -197,7 +198,7 @@ public class OverallPerformanceBudgetAnalyserTest
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
         var avgPhone = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.PhoneBucket.Code).AverageSpend;
 
-        AssertExtensions.AreEqualWithTolerance(46.15M, avgPhone);
+        Ensure.AreEqualWithTolerance(46.15M, avgPhone);
     }
 
     [TestMethod]
@@ -217,7 +218,7 @@ public class OverallPerformanceBudgetAnalyserTest
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
         var avgPower = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.PowerBucket.Code).AverageSpend;
 
-        AssertExtensions.AreEqualWithTolerance(184.62M, avgPower);
+        Ensure.AreEqualWithTolerance(184.62M, avgPower);
     }
 
     [TestMethod]
@@ -237,7 +238,7 @@ public class OverallPerformanceBudgetAnalyserTest
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
         var avgSurplus = result.Analyses.Single(b => b.Bucket.Code == StatementModelTestData.SurplusBucket.Code).AverageSpend;
 
-        AssertExtensions.AreEqualWithTolerance(230.77M, avgSurplus);
+        Ensure.AreEqualWithTolerance(230.77M, avgSurplus);
     }
 
     [TestMethod]
