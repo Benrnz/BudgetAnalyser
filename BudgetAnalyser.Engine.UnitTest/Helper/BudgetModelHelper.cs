@@ -1,60 +1,61 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Engine.UnitTest.Helper
+namespace BudgetAnalyser.Engine.UnitTest.Helper;
+
+public static class BudgetModelHelper
 {
-    public static class BudgetModelHelper
+    public static void Output(this IBudgetCurrencyContext instance)
     {
-        public static void Output(this IBudgetCurrencyContext instance)
+        Debug.WriteLine(string.Empty);
+        Debug.WriteLine("******************************* BUDGET OUTPUT ********************************");
+        Debug.WriteLine(
+            $"Budget Currency Context: {instance.FileName} Budget Name: {instance.Model.Name} Effective From: {instance.Model.EffectiveFrom:d} Effective Until: {instance.EffectiveUntil:d}");
+        if (instance.BudgetActive)
+        {
+            Debug.WriteLine("Budget is ACTIVE.");
+        }
+        else if (instance.BudgetArchived)
+        {
+            Debug.WriteLine("Budget is ARCHIVED.");
+        }
+        else if (instance.BudgetInFuture)
+        {
+            Debug.WriteLine("Budget is FUTURE.");
+        }
+
+        instance.Model.Output(false);
+    }
+
+    public static void Output(this BudgetModel instance, bool includeTitle = true)
+    {
+        if (includeTitle)
         {
             Debug.WriteLine(string.Empty);
-            Debug.WriteLine($"Budget Currency Context: {instance.FileName} Budget Name: {instance.Model.Name} Effective From: {instance.Model.EffectiveFrom:d} Effective Until: {instance.EffectiveUntil:d}");
-            if (instance.BudgetActive)
-            {
-                Debug.WriteLine("Budget is ACTIVE.");
-            }
-            else if (instance.BudgetArchived)
-            {
-                Debug.WriteLine("Budget is ARCHIVED.");
-            }
-            else if (instance.BudgetInFuture)
-            {
-                Debug.WriteLine("Budget is FUTURE.");
-            }
-            instance.Model.Output(false);
+            Debug.WriteLine($"Budget Model: '{instance.Name}' EffectiveFrom: {instance.EffectiveFrom}");
         }
 
-        public static void Output(this BudgetModel instance, bool includeTitle = true)
+        Debug.WriteLine(@"    Incomes                      Expenses");
+        Debug.WriteLine(@"    ==================================================================");
+        var incomeIndex = 0;
+        var incomeArray = instance.Incomes.ToArray();
+        foreach (var expense in instance.Expenses)
         {
-            if (includeTitle)
+            if (incomeIndex <= incomeArray.GetUpperBound(0))
             {
-                Debug.WriteLine(string.Empty);
-                Debug.WriteLine($"Budget Model: '{instance.Name}' EffectiveFrom: {instance.EffectiveFrom}");
+                Debug.Write($"    {incomeArray[incomeIndex].Bucket.Code.PadRight(10)} {incomeArray[incomeIndex].Amount:F2}");
+                Debug.WriteLine($"           {expense.Bucket.Code.PadRight(10)} {expense.Amount:F2}");
+                incomeIndex++;
             }
-            Debug.WriteLine(@"    Incomes                      Expenses");
-            Debug.WriteLine(@"    ==================================================================");
-            var incomeIndex = 0;
-            var incomeArray = instance.Incomes.ToArray();
-            foreach (var expense in instance.Expenses)
+            else
             {
-                if (incomeIndex <= incomeArray.GetUpperBound(0))
-                {
-                    Debug.Write($"    {incomeArray[incomeIndex].Bucket.Code.PadRight(10)} {incomeArray[incomeIndex].Amount:F2}");
-                    Debug.WriteLine($"           {expense.Bucket.Code.PadRight(10)} {expense.Amount:F2}");
-                    incomeIndex++;
-                }
-                else
-                {
-                    Debug.WriteLine($"                                 {expense.Bucket.Code.PadRight(10)} {expense.Amount:F2}");
-                }
+                Debug.WriteLine($"                                 {expense.Bucket.Code.PadRight(10)} {expense.Amount:F2}");
             }
-
-            Debug.WriteLine(@"    ------------------------------------------------------------------");
-            Debug.WriteLine($"    Total Income: {instance.Incomes.Sum(i => i.Amount):F2}        Total Expenses: {instance.Expenses.Sum(e => e.Amount):F2}");
-            Debug.WriteLine($"    Surplus: {instance.Surplus:F2}");
-            Debug.WriteLine(@"======================================================================");
         }
+
+        Debug.WriteLine(@"    ------------------------------------------------------------------");
+        Debug.WriteLine($"    Total Income: {instance.Incomes.Sum(i => i.Amount):F2}        Total Expenses: {instance.Expenses.Sum(e => e.Amount):F2}");
+        Debug.WriteLine($"    Surplus: {instance.Surplus:F2}");
+        Debug.WriteLine(@"======================================================================");
     }
 }
