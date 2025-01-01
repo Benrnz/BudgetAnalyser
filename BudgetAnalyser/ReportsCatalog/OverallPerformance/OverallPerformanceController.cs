@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows.Data;
+﻿using System.Windows.Data;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
@@ -9,92 +7,123 @@ using BudgetAnalyser.Engine.Statement;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
-namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
+namespace BudgetAnalyser.ReportsCatalog.OverallPerformance;
+
+public class OverallPerformanceController(IMessenger messenger, IOverallPerformanceChartService chartService) : ControllerBase(messenger)
 {
-    public class OverallPerformanceController : ControllerBase
+    private readonly IOverallPerformanceChartService chartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
+    private string doNotUseDurationLabel = string.Empty;
+    private bool doNotUseExpenseFilter = true;
+    private bool doNotUseIncomeFilter;
+    private bool doNotUseShowValidationMessage;
+    private string doNotUseValidationMessage = string.Empty;
+
+    public OverallPerformanceBudgetResult? Analysis { get; private set; }
+
+    public string DurationLabel
     {
-        private readonly IOverallPerformanceChartService chartService;
-        private bool doNotUseExpenseFilter;
-        private bool doNotUseIncomeFilter;
-
-        public OverallPerformanceController([NotNull] IMessenger messenger, [NotNull] IOverallPerformanceChartService chartService) : base(messenger)
+        get => this.doNotUseDurationLabel;
+        private set
         {
-            if (chartService is null)
+            if (value != this.doNotUseDurationLabel)
             {
-                throw new ArgumentNullException(nameof(chartService));
-            }
-
-            this.chartService = chartService;
-            this.doNotUseExpenseFilter = true;
-        }
-
-        public OverallPerformanceBudgetResult Analysis { get; private set; }
-
-        public bool ExpenseFilter
-        {
-            [UsedImplicitly]
-            get => this.doNotUseExpenseFilter;
-
-            set
-            {
-                this.doNotUseExpenseFilter = value;
+                this.doNotUseDurationLabel = value;
                 OnPropertyChanged();
-                RefreshCollection();
             }
         }
+    }
 
-        public bool IncomeFilter
+    public bool ExpenseFilter
+    {
+        get => this.doNotUseExpenseFilter;
+
+        set
         {
-            get => this.doNotUseIncomeFilter;
+            this.doNotUseExpenseFilter = value;
+            OnPropertyChanged();
+            RefreshCollection();
+        }
+    }
 
-            set
+    public bool IncomeFilter
+    {
+        get => this.doNotUseIncomeFilter;
+
+        set
+        {
+            this.doNotUseIncomeFilter = value;
+            OnPropertyChanged();
+            RefreshCollection();
+        }
+    }
+
+    public double OverallPerformance { get; private set; }
+
+    public bool ShowValidationMessage
+    {
+        get => this.doNotUseShowValidationMessage;
+        private set
+        {
+            if (value != this.doNotUseShowValidationMessage)
             {
-                this.doNotUseIncomeFilter = value;
+                this.doNotUseShowValidationMessage = value;
                 OnPropertyChanged();
-                RefreshCollection();
             }
         }
+    }
 
-        public double OverallPerformance { [UsedImplicitly] get; private set; }
+    public string Title => "Overall Budget Performance";
 
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
-        [UsedImplicitly]
-        public string Title => "Overall Budget Performance";
+    public string ValidationMessage
+    {
+        get => this.doNotUseValidationMessage;
 
-        public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
+        private set
         {
-            Analysis = this.chartService.BuildChart(statementModel, budgets, criteria);
-            OverallPerformance = (double)Analysis.OverallPerformance;
-            ExpenseFilter = true;
-            IncomeFilter = false;
-
-            OnPropertyChanged(nameof(Analysis));
-            var view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
-            view.Filter = x =>
+            if (value != this.doNotUseValidationMessage)
             {
-                if (x is not BucketPerformanceResult bucketAnalysis)
-                {
-                    return true;
-                }
-
-                if (IncomeFilter)
-                {
-                    return bucketAnalysis.Bucket is IncomeBudgetBucket;
-                }
-
-                var result = !(bucketAnalysis.Bucket is IncomeBudgetBucket);
-                return result;
-            };
+                this.doNotUseValidationMessage = value;
+                OnPropertyChanged();
+            }
         }
+    }
 
-        private void RefreshCollection()
+    public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
+    {
+        Analysis = this.chartService.BuildChart(statementModel, budgets, criteria);
+        OverallPerformance = (double)Analysis.OverallPerformance;
+        ExpenseFilter = true;
+        IncomeFilter = false;
+        ShowValidationMessage = Analysis.HasValidationMessage;
+        ValidationMessage = Analysis.ValidationMessage;
+        DurationLabel = $"Duration In {Analysis.BudgetCycle}:";
+
+        OnPropertyChanged(nameof(Analysis));
+        var view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
+        view.Filter = x =>
         {
-            if (Analysis?.Analyses is null || Analysis.Analyses.None())
+            if (x is not BucketPerformanceResult bucketAnalysis)
             {
-                return;
+                return true;
             }
 
-            CollectionViewSource.GetDefaultView(Analysis.Analyses).Refresh();
+            if (IncomeFilter)
+            {
+                return bucketAnalysis.Bucket is IncomeBudgetBucket;
+            }
+
+            var result = !(bucketAnalysis.Bucket is IncomeBudgetBucket);
+            return result;
+        };
+    }
+
+    private void RefreshCollection()
+    {
+        if (Analysis?.Analyses is null || Analysis.Analyses.None())
+        {
+            return;
         }
+
+        CollectionViewSource.GetDefaultView(Analysis.Analyses).Refresh();
     }
 }

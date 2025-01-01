@@ -107,7 +107,7 @@ namespace BudgetAnalyser.Engine.Budget
         ///     The registered bucket or null if the given code doesn't exist.
         /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public virtual BudgetBucket GetByCode(string code)
+        public virtual BudgetBucket? GetByCode(string code)
         {
             if (code is null)
             {

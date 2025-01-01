@@ -1,8 +1,13 @@
 ﻿<UserControl x:Class="BudgetAnalyser.ReportsCatalog.OverallPerformance.OverallPerformanceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
              xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
+             xmlns:view="clr-namespace:BudgetAnalyser.ReportsCatalog.OverallPerformance"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance view:OverallPerformanceController}"
              Background="{StaticResource Brush.MainBackground}">
     <UserControl.Resources>
         <converters:PercentToColourConverter x:Key="Converter.PercentToColour" />
@@ -78,10 +83,10 @@
         </Grid.ColumnDefinitions>
         <StackPanel Margin="-1,1,1,25"
                     Orientation="Horizontal">
+            <TextBlock Margin="4,2,2,2"
+                       Text="{Binding DurationLabel}" />
             <TextBlock Margin="2"
-                       Text="Duration In Months:" />
-            <TextBlock Margin="2"
-                       Text="{Binding Analysis.DurationInMonths}" />
+                       Text="{Binding Analysis.DurationInPeriods}" />
             <RadioButton Content="Expenses"
                          GroupName="IncomeExpenseFilter"
                          IsChecked="{Binding ExpenseFilter}"
@@ -95,8 +100,8 @@
         </StackPanel>
         <TextBlock Grid.Row="1"
                    Foreground="{StaticResource Brush.ImportantHighlightLight}"
-                   Text="Warning! This time period covers multiple budgets"
-                   Visibility="{Binding Analysis.UsesMultipleBudgets, Converter={StaticResource Converter.BoolToVis}}" />
+                   Text="{Binding ValidationMessage}"
+                   Visibility="{Binding ShowValidationMessage, Converter={StaticResource Converter.BoolToVis}}" />
         <Grid Grid.Row="2"
               Height="6"
               Margin="10,20,25,0">
@@ -152,25 +157,46 @@
                        StrokeThickness="1"
                        Width="1" />
         </Grid>
-        <StackPanel
+        <Grid
             Background="{Binding OverallPerformance, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Performance}"
             Grid.Row="4"
-            Margin="2,4,2,4"
-            Orientation="Horizontal"
             TextBlock.FontWeight="Bold"
             TextBlock.Foreground="{StaticResource Brush.MainBackground}">
-            <TextBlock Margin="4,4,1,4"
-                       Text="Avg Expenses " />
-            <TextBlock Margin="0,4,0,4"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0"  Grid.Row="0"  Margin="4"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Text="Avg Expense Spend per period:" />
+            <TextBlock Grid.Column="1" Grid.Row="0" Margin="4"
                        Text="{Binding Analysis.AverageSpend, StringFormat=C}" />
-            <TextBlock Margin="10,4,1,4"
-                       Text="Avg Surplus Spend " />
-            <TextBlock Margin="0,4,0,4"
+            <TextBlock Grid.Column="0" Grid.Row="1"
+                       Margin="4"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Text="Avg Surplus Spend per period:" />
+            <TextBlock Grid.Column="1"
+                       Grid.Row="1"
+                       Margin="4"
                        Text="{Binding Analysis.AverageSurplus, StringFormat=C}" />
-            <TextBlock Margin="10,4,1,4"
-                       Text="Overall Expense Performance" />
-            <TextBlock Margin="0,4,0,4"
-                       Text="{Binding Analysis.OverallPerformance, StringFormat=C}" />
-        </StackPanel>
+            <TextBlock Grid.Column="0" Grid.Row="2"
+                       Margin="4"
+                       Text="Overall Expense Performance:"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       ToolTip="This tracks the ability to stick to the budget over the specified period. If more is spent than budgeted, this is negative.  Surplus transactions are excluded from this." />
+            <TextBlock Grid.Column="1"
+                       Grid.Row="2"
+                       Margin="4"
+                       Text="{Binding Analysis.OverallPerformance, StringFormat=C}"
+                       ToolTip="This tracks the ability to stick to the budget over the specified period. If more is spent than budgeted, this is negative.  Surplus transactions are excluded from this." />
+        </Grid>
     </Grid>
 </UserControl>

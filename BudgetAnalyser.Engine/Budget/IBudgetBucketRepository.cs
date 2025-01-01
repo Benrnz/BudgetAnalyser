@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         /// <param name="code">The code, also used as a key and must be unique.</param>
         /// <returns>The registered bucket or null if the given code doesn't exist.</returns>
-        BudgetBucket GetByCode([NotNull] string code);
+        BudgetBucket? GetByCode(string code);
 
         /// <summary>
         ///     Gets the bucket by its code or creates a new one if not found.

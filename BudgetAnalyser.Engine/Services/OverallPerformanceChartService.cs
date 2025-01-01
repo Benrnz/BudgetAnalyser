@@ -1,42 +1,31 @@
-﻿using System;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Services
+namespace BudgetAnalyser.Engine.Services;
+
+[AutoRegisterWithIoC]
+internal class OverallPerformanceChartService(OverallPerformanceBudgetAnalyser analyser) : IOverallPerformanceChartService
 {
-    [AutoRegisterWithIoC]
-    internal class OverallPerformanceChartService : IOverallPerformanceChartService
+    private readonly OverallPerformanceBudgetAnalyser analyser = analyser ?? throw new ArgumentNullException(nameof(analyser));
+
+    public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
     {
-        private readonly OverallPerformanceBudgetAnalyser analyser;
-
-        public OverallPerformanceChartService([NotNull] OverallPerformanceBudgetAnalyser analyser)
+        if (statementModel is null)
         {
-            if (analyser is null)
-            {
-                throw new ArgumentNullException(nameof(analyser));
-            }
-
-            this.analyser = analyser;
+            throw new ArgumentNullException(nameof(statementModel));
         }
 
-        public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets,
-                                                         GlobalFilterCriteria criteria)
+        if (budgets is null)
         {
-            if (statementModel is null)
-            {
-                throw new ArgumentNullException(nameof(statementModel));
-            }
-
-            if (budgets is null)
-            {
-                throw new ArgumentNullException(nameof(budgets));
-            }
-
-            return criteria is null
-                ? throw new ArgumentNullException(nameof(criteria))
-                : this.analyser.Analyse(statementModel, budgets, criteria);
+            throw new ArgumentNullException(nameof(budgets));
         }
+
+        if (criteria is null)
+        {
+            throw new ArgumentNullException(nameof(criteria));
+        }
+
+        return this.analyser.Analyse(statementModel, budgets, criteria);
     }
 }
