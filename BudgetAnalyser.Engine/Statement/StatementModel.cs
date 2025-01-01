@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Statement
         private GlobalFilterCriteria currentFilter = new();
         // Track whether Dispose has been called.
         private bool disposed;
-        private List<Transaction> doNotUseAllTransactions= new List<Transaction>();
+        private List<Transaction> doNotUseAllTransactions = new List<Transaction>();
         private int doNotUseDurationInMonths;
         private IEnumerable<Transaction> doNotUseTransactions = new List<Transaction>();
         private IEnumerable<IGrouping<int, Transaction>>? duplicates;
