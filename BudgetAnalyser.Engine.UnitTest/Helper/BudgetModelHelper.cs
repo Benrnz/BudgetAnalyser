@@ -13,15 +13,15 @@ public static class BudgetModelHelper
             $"Budget Currency Context: {instance.FileName} Budget Name: {instance.Model.Name} Effective From: {instance.Model.EffectiveFrom:d} Effective Until: {instance.EffectiveUntil:d}");
         if (instance.BudgetActive)
         {
-            writer.WriteLine("Budget is ACTIVE.");
+            writer.WriteLine("{0} Budget is ACTIVE.", instance.Model.BudgetCycle);
         }
         else if (instance.BudgetArchived)
         {
-            writer.WriteLine("Budget is ARCHIVED.");
+            writer.WriteLine("{0} Budget is ARCHIVED.", instance.Model.BudgetCycle);
         }
         else if (instance.BudgetInFuture)
         {
-            writer.WriteLine("Budget is FUTURE.");
+            writer.WriteLine("{0} Budget is FUTURE.", instance.Model.BudgetCycle);
         }
 
         instance.Model.Output(false, writer);
