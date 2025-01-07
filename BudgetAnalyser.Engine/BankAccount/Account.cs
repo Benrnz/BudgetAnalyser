@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.BankAccount
             {
                 return true;
             }
-            return obj.GetType() != GetType() ? false : Equals((Account)obj);
+            return obj.GetType() == GetType() && Equals((Account)obj);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         public override int GetHashCode()
         {
             // ReSharper disable once NonReadonlyMemberInGetHashCode - Name cannot be readonly because it is set implicitly by Automapper
-            return Name?.GetHashCode() ?? 0;
+            return Name.GetHashCode();
         }
 
         /// <summary>

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
-using BudgetAnalyser.Engine;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest.Reports
 {
@@ -17,11 +14,20 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
         private SeriesData BalanceLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BalanceSeriesName);
         private BudgetModel Budget { get; set; }
         private SeriesData BudgetLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BudgetSeriesName);
-        private LedgerBook LedgerBook { get; set; }
+        private LedgerBook? LedgerBook { get; set; }
         private BurnDownChartAnalyserResult Result { get; set; }
         private StatementModel StatementModel { get; set; }
         private BurnDownChartAnalyser Subject { get; set; }
         private SeriesData ZeroLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.ZeroSeriesName);
+
+        public BurnDownGraphAnalyserTest()
+        {
+            Subject = new BurnDownChartAnalyser(new LedgerCalculation(), new FakeLogger());
+            Budget = BudgetModelTestData.CreateTestData2();
+            LedgerBook = LedgerBookTestData.TestData2();
+            StatementModel = StatementModelTestData.TestData3();
+            Result = new BurnDownChartAnalyserResult();
+        }
 
         [TestMethod]
         public void AnalyseShouldReturn31DaysOfBalanceLineElements()
@@ -54,7 +60,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
         }
 
         [TestMethod]
-        public void AnalyseShouldReturnAFirstBudgetElementEqualToTheMonthlyBudgetAmountGivenNullLedger()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void AnalyseShouldThrowGivenNullLedger()
         {
             LedgerBook = null;
             Act();
@@ -74,10 +81,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
             foreach (var transaction in Result.ReportTransactions)
             {
                 Console.WriteLine(
-                    "{0} {1} {2:N} {3:N}",
+                    "{0} {1} {2} {3:N}",
                     transaction.Date,
                     transaction.Narrative.Truncate(30).PadRight(30),
-                    transaction.Amount.ToString().Truncate(10).PadRight(10),
+                    transaction.Amount.ToString(CultureInfo.InvariantCulture).Truncate(10).PadRight(10),
                     transaction.Balance);
             }
 
@@ -111,11 +118,6 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
         [TestInitialize]
         public void TestInitialise()
         {
-            Subject = new BurnDownChartAnalyser(new LedgerCalculation(), new FakeLogger());
-            Budget = BudgetModelTestData.CreateTestData2();
-            LedgerBook = LedgerBookTestData.TestData2();
-            StatementModel = StatementModelTestData.TestData3();
-
             Act();
         }
 
@@ -126,8 +128,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
             Result = Subject.Analyse(
                 StatementModel,
                 Budget,
-                new BudgetBucket[] { StatementModelTestData.PhoneBucket, StatementModelTestData.PowerBucket, new SurplusBucket() },
-                LedgerBook,
+                [StatementModelTestData.PhoneBucket, StatementModelTestData.PowerBucket, new SurplusBucket()],
+                LedgerBook!,
                 beginDate,
                 endDate);
         }

@@ -19,4 +19,16 @@
     <PackageReference Include="Rees.TangyFruitMapper" Version="2.0.0" />
   </ItemGroup>
 
+    <!--
+    [assembly: InternalsVisibleTo("BudgetAnalyser.Engine.UnitTest")]
+    [assembly: InternalsVisibleTo("BudgetAnalyser.Wpf.UnitTest")]
+    [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
+    -->
+    <ItemGroup>
+        <InternalsVisibleTo Include="BudgetAnalyser.Engine.UnitTest" /> <!-- Same as [assembly: InternalsVisibleTo("CustomTest1")] -->
+        <InternalsVisibleTo Include="BudgetAnalyser.Engine.XUnit" />
+        <InternalsVisibleTo Include="BudgetAnalyser.Wpf.UnitTest"/>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+    </ItemGroup>
 </Project>

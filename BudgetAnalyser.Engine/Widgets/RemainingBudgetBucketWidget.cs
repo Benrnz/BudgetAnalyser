@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
@@ -16,7 +13,7 @@ namespace BudgetAnalyser.Engine.Widgets;
 public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 {
     private readonly string standardStyle;
-    private IBudgetBucketRepository bucketRepository;
+    private IBudgetBucketRepository? bucketRepository;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RemainingBudgetBucketWidget" /> class.
@@ -24,17 +21,9 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     protected RemainingBudgetBucketWidget()
     {
         Category = WidgetGroup.PeriodicTrackingSectionName;
-        Dependencies = new[]
-        {
-            typeof(IBudgetCurrencyContext),
-            typeof(StatementModel),
-            typeof(GlobalFilterCriteria),
-            typeof(IBudgetBucketRepository),
-            typeof(LedgerBook),
-            typeof(LedgerCalculation)
-        };
-        RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
-        RemainingBudgetToolTip = "Remaining Balance for period is {0:C} {1:P0}";
+        Dependencies = [typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation)];
+        RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(5);
+        RemainingBudgetToolTip = "Remaining Balance for period is {0:C2} {1:P0}";
         this.standardStyle = "WidgetStandardStyle3";
         BucketCode = "<NOT SET>";
     }
@@ -47,42 +36,47 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     /// <summary>
     ///     Gets the budget model.
     /// </summary>
-    protected IBudgetCurrencyContext Budget { get; private set; }
+    protected IBudgetCurrencyContext? Budget { get; private set; }
 
     /// <summary>
     ///     Gets or sets the dependency missing tool tip.
     /// </summary>
-    protected string DependencyMissingToolTip { get; set; }
+    protected string DependencyMissingToolTip
+    {
+        [UsedImplicitly]
+        get;
+        set;
+    } = string.Empty;
 
     /// <summary>
     ///     Gets the global filter.
     /// </summary>
-    private GlobalFilterCriteria Filter { get; set; }
+    protected GlobalFilterCriteria? Filter { get; private set; }
 
     /// <summary>
     ///     Gets the ledger book model.
     /// </summary>
-    private LedgerBook LedgerBook { get; set; }
+    private LedgerBook? LedgerBook { get; set; }
 
     /// <summary>
     ///     Gets the ledger calculator.
     /// </summary>
-    private LedgerCalculation LedgerCalculation { get; set; }
+    protected LedgerCalculation? LedgerCalculation { get; private set; }
 
     /// <summary>
     ///     Gets or sets the remaining budget tool tip.
     /// </summary>
-    protected string RemainingBudgetToolTip { get; set; }
+    protected string RemainingBudgetToolTip { get; init; }
 
     /// <summary>
     ///     Gets the statement model.
     /// </summary>
-    private StatementModel Statement { get; set; }
+    protected StatementModel? Statement { get; private set; }
 
     /// <summary>
     ///     Updates the widget with new input.
     /// </summary>
-    public override void Update([NotNull] params object[] input)
+    public override void Update(params object[] input)
     {
         if (input is null)
         {
@@ -140,7 +134,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
             return;
         }
 
-        var totalSpend = LedgerCalculation.CalculateCurrentPeriodBucketSpend(ledgerLine, Filter, Statement, BucketCode);
+        var totalSpend = CalculateTotalSpendInPeriod(ledgerLine);
 
         var remainingBalance = totalBudget + totalSpend;
         if (remainingBalance < 0)
@@ -154,18 +148,20 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         ColourStyleName = remainingBalance < 0.2M * totalBudget ? WidgetWarningStyle : this.standardStyle;
     }
 
+    protected virtual decimal CalculateTotalSpendInPeriod(LedgerEntryLine line)
+    {
+        return LedgerCalculation!.CalculateCurrentPeriodBucketSpend(line, Filter!, Statement!, BucketCode);
+    }
+
     /// <summary>
     ///     Retrieves the current ledger balance for the bucket if there is one, or the budget amount.
     /// </summary>
     protected virtual decimal LedgerBucketBalanceOrBudgetAmount()
     {
-        Debug.Assert(Filter.BeginDate is not null);
-        Debug.Assert(Filter.EndDate is not null);
-
-        var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
+        var ledgerLine = LedgerCalculation!.LocateApplicableLedgerLine(LedgerBook!, Filter!);
 
         return LedgerBook is null || ledgerLine is null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode)
-            ? Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount
+            ? Budget!.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount
             : ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
     }
 

@@ -1,34 +1,37 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Statement;
+﻿using BudgetAnalyser.Engine.Statement;
 
-namespace BudgetAnalyser.Engine.UnitTest.Helper
+namespace BudgetAnalyser.Engine.UnitTest.Helper;
+
+public static class StatementModelHelper
 {
-    public static class StatementModelHelper
+    public static void Output(this StatementModel instance, DateTime startDate, IReesTestOutput? outputWriter = null)
     {
-        public static void Output(this StatementModel instance, DateTime startDate)
+        var writer = NonNullableOutputWriter(outputWriter);
+        writer.WriteLine(string.Empty);
+        writer.WriteLine("******************************************************** STATEMENT OUTPUT ***********************************************************");
+        writer.WriteLine("Date       Description     Bucket     Reference1      Reference2          Amount Account         Id");
+        writer.WriteLine("=====================================================================================================================================");
+        foreach (var transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
         {
-            Debug.WriteLine("Date       Description     Bucket     Reference1      Reference2          Amount Account         Id");
-            Debug.WriteLine("=====================================================================================================================================");
-            foreach (var transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
-            {
-                Debug.WriteLine(
-                    "{0} {1} {2} {3} {4} {5} {6} {7}",
-                    transaction.Date.ToString("d-MMM-yy").PadRight(10),
-                    transaction.Description.Truncate(15).PadRight(15),
-                    transaction.BudgetBucket?.Code.PadRight(10) ?? string.Empty.PadRight(10),
-                    transaction.Reference1.Truncate(15).PadRight(15),
-                    transaction.Reference2.Truncate(15).PadRight(15),
-                    transaction.Amount.ToString("N").PadLeft(10),
-                    transaction.Account.Name.PadRight(15),
-                    transaction.Id);
-            }
-
-            Debug.WriteLine("=====================================================================================================================================");
-            Debug.WriteLine($"Total Transactions: {instance.AllTransactions.Count()}");
-            Debug.WriteLine(string.Empty);
+            writer.WriteLine(
+                "{0} {1} {2} {3} {4} {5} {6} {7}",
+                transaction.Date.ToString("d-MMM-yy").PadRight(10),
+                transaction.Description.Truncate(15).PadRight(15),
+                transaction.BudgetBucket?.Code.PadRight(10) ?? string.Empty.PadRight(10),
+                transaction.Reference1.Truncate(15).PadRight(15),
+                transaction.Reference2.Truncate(15).PadRight(15),
+                transaction.Amount.ToString("N").PadLeft(10),
+                transaction.Account.Name.PadRight(15),
+                transaction.Id);
         }
+
+        writer.WriteLine("=====================================================================================================================================");
+        writer.WriteLine($"Total Transactions: {instance.AllTransactions.Count()}");
+        writer.WriteLine(string.Empty);
+    }
+
+    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput? outputWriter)
+    {
+        return outputWriter ?? new DebugTestOutput();
     }
 }

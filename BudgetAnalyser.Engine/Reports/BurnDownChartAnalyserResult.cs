@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Reports
 {
@@ -30,12 +29,13 @@ namespace BudgetAnalyser.Engine.Reports
         public BurnDownChartAnalyserResult()
         {
             GraphLines = new GraphData();
+            ReportTransactions = Array.Empty<ReportTransactionWithRunningBalance>();
         }
 
         /// <summary>
         ///     Gets the chart title.
         /// </summary>
-        public string ChartTitle { get; internal set; }
+        public string ChartTitle { get; internal set; } = string.Empty;
 
         /// <summary>
         ///     Gets the series lines for the burndown graph.  It consists of three lines: Budget, Balance, and zero-line.
