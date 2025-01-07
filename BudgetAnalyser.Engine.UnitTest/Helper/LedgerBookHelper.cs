@@ -35,7 +35,7 @@ public static class LedgerBookHelper
 
         foreach (var line in book.Reconciliations)
         {
-            Output(line, ledgerOrder, outputTransactions);
+            Output(line, ledgerOrder, outputTransactions, outputWriter: writer);
         }
     }
 
@@ -53,10 +53,10 @@ public static class LedgerBookHelper
         }
 
         writer.Write($"{line.Date:d}  ");
-        foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
-        {
-            writer.Write($"{entry.NetAmount,-8:N} {entry.LedgerBucket.StoredInAccount.Name.Truncate(1)} {entry.Balance,-9:N}");
-        }
+        // foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
+        // {
+        //     writer.Write($"{entry.NetAmount,-8:N} {entry.LedgerBucket.StoredInAccount.Name.Truncate(1)} {entry.Balance,-9:N}");
+        // }
 
         writer.Write(line.CalculatedSurplus.ToString("N").PadRight(9));
         var balanceCount = 0;
@@ -64,10 +64,10 @@ public static class LedgerBookHelper
         {
             if (++balanceCount > 2)
             {
+                // Only two bank balances are shown in the test output at this stage.
                 break;
             }
 
-            // Only two bank balances are shown in the test output at this stage.
             var balanceText = $"{bankBalance.Account.Name.Truncate(1)} {bankBalance.Balance:N} ";
             writer.Write(balanceText.PadLeft(13).TruncateLeft(13));
         }
@@ -76,26 +76,27 @@ public static class LedgerBookHelper
         writer.Write(line.LedgerBalance.ToString("N").PadLeft(13).TruncateLeft(13));
         writer.WriteLine(string.Empty);
 
-        if (outputTransactions)
+        foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
         {
-            foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
+            var tab = "            ";
+            writer.WriteLine($"{tab}{entry.LedgerBucket.BudgetBucket.Code,-7} Balance:{entry.Balance:N2}");
+            if (outputTransactions)
             {
-                var tab = new string(' ', 11 + (18 * ledgerOrder[entry.LedgerBucket.BudgetBucket]));
                 foreach (var transaction in entry.Transactions)
                 {
                     writer.WriteLine(
-                        "{0} {1} {2} {3} {4} {5}",
+                        "{0}        {1:d} {2} {3} {4} {5}",
                         tab,
-                        entry.LedgerBucket.BudgetBucket.Code.PadRight(6),
+                        transaction.Date ?? line.Date,
                         transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
                         transaction.Id,
                         transaction.AutoMatchingReference,
                         transaction.Narrative.Truncate(30));
                 }
             }
-
-            writer.WriteLine("=================================================================================================================================");
         }
+
+        writer.WriteLine("=================================================================================================================================");
     }
 
     public static void Output(this LedgerBookDto book, bool outputTransactions = false, IReesTestOutput? outputWriter = null)
@@ -161,8 +162,7 @@ public static class LedgerBookHelper
 
     private static void OutputReconciliationHeader(IReesTestOutput writer)
     {
-        writer.Write("Surplus    BankBalances    Adjusts LedgerBalance");
-        writer.WriteLine(string.Empty);
+        writer.WriteLine("Surplus    BankBalances    Adjusts AdjustBalance");
         writer.WriteLine("==============================================================================================================================================");
     }
 }

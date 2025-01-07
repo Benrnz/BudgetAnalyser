@@ -36,22 +36,26 @@ public class XUnitOutputWriter(ITestOutputHelper xunitOutput) : IReesTestOutput,
     {
         if (this.lineBuilder is not null)
         {
-            xunitOutput.WriteLine(this.lineBuilder.ToString());
+            xunitOutput.WriteLine(this.lineBuilder + line);
             this.lineBuilder = null;
         }
-
-        xunitOutput.WriteLine(line);
+        else
+        {
+            xunitOutput.WriteLine(line);
+        }
     }
 
     public void WriteLine(string template, params object[] args)
     {
         if (this.lineBuilder is not null)
         {
-            xunitOutput.WriteLine(this.lineBuilder.ToString());
+            xunitOutput.WriteLine(this.lineBuilder + string.Format(template, args));
             this.lineBuilder = null;
         }
-
-        xunitOutput.WriteLine(template, args);
+        else
+        {
+            xunitOutput.WriteLine(template, args);
+        }
     }
 
     public void Dispose()

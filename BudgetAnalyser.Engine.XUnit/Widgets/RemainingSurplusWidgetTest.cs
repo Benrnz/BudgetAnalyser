@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.XUnit.Helpers;
 using FluentAssertions;
 using Xunit.Abstractions;
+#pragma warning disable CS8601 // Possible null reference assignment. // GENERATED CODE
 
 namespace BudgetAnalyser.Engine.XUnit.Widgets;
 
@@ -58,8 +59,8 @@ public class RemainingSurplusWidgetTest : IDisposable
     public void OutputTestData()
     {
         this.ledgerBookTestData.Output(true, this.outputWriter);
-        this.budgetTestData.Output();
-        this.statementTestData.Output(DateTime.MinValue);
+        this.budgetTestData.Output(this.outputWriter);
+        this.statementTestData.Output(DateTime.MinValue, this.outputWriter);
     }
 
     [Fact]
@@ -75,8 +76,8 @@ public class RemainingSurplusWidgetTest : IDisposable
 
     private static class StatementModelTestDataForThisTest
     {
-        public static IAccountTypeRepository AccountTypeRepo { get; set; }
-        public static IBudgetBucketRepository BudgetBucketRepo { get; set; }
+        public static IAccountTypeRepository AccountTypeRepo { get; set; } = null!;
+        public static IBudgetBucketRepository BudgetBucketRepo { get; set; } = null!;
 
         /// <summary>THIS IS GENERATED CODE </summary>
         [GeneratedCode("StatementModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]
