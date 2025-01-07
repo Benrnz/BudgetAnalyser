@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.XUnit.Helpers;
 using FluentAssertions;
 using Xunit.Abstractions;
+
 #pragma warning disable CS8601 // Possible null reference assignment. // GENERATED CODE
 
 namespace BudgetAnalyser.Engine.XUnit.Widgets;
@@ -21,9 +22,9 @@ public class RemainingSurplusWidgetTest : IDisposable
     private readonly GlobalFilterCriteria criteriaTestData = new() { BeginDate = new DateTime(2015, 10, 20), EndDate = new DateTime(2015, 11, 19) };
     private readonly LedgerBook ledgerBookTestData;
     private readonly LedgerCalculation ledgerCalculation;
+    private readonly XUnitOutputWriter outputWriter;
     private readonly StatementModel statementTestData;
     private readonly RemainingSurplusWidget subject = new();
-    private readonly XUnitOutputWriter outputWriter;
 
     public RemainingSurplusWidgetTest(ITestOutputHelper outputHelper)
     {
@@ -55,12 +56,51 @@ public class RemainingSurplusWidgetTest : IDisposable
         this.ledgerCalculation = new LedgerCalculation(new FakeLogger());
     }
 
+    public void Dispose()
+    {
+        this.outputWriter.Dispose();
+        this.statementTestData.Dispose();
+    }
+
     [Fact]
     public void OutputTestData()
     {
         this.ledgerBookTestData.Output(true, this.outputWriter);
         this.budgetTestData.Output(this.outputWriter);
         this.statementTestData.Output(DateTime.MinValue, this.outputWriter);
+    }
+
+    [Fact]
+    public void Update_ShouldCalculateRemainingSurplus()
+    {
+        // Remove this transaction from the test data set
+        // 23-Oct-15  Lorem Ipsum Dol SURPLUS    automatchref12                   -3,000.00 CHEQUE          c66eb722-6d03-48b2-b985-6721701a01ae
+        // Also remove all other accounts, filtering to CHEQUE only
+        // This will create a more realistic data set.
+        var removeId = Guid.Parse("c66eb722-6d03-48b2-b985-6721701a01ae");
+        var myTransactions = this.statementTestData.AllTransactions
+            .ToList()
+            .Where(t => t.Account == StatementModelTestData.ChequeAccount)
+            .Where(t => t.Id != removeId)
+            .ToList();
+        var myStatement = this.statementTestData.LoadTransactions(myTransactions);
+
+        this.ledgerBookTestData.Output(true, this.outputWriter);
+        this.budgetTestData.Output(this.outputWriter);
+        myStatement.Output(DateTime.MinValue, this.outputWriter);
+
+        this.subject.Update(this.budgetTestData, myStatement, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
+
+        this.subject.Value.Should().Be(607.73);
+        /*
+        19-Nov-15
+        Budget Surplus: $1175 - 30 - 2 - 40 - 8.50 - 27.74        = 1066.76
+        Car MTC $90 - 130                                         =  -40.00 (OVERDRAWN LEDGER)
+        PHNET  $130 - 55 - 24.10 - 444.63 - 25.30                 = -419.03 (OVERDRAWN LEDGER)
+        POWER $3000 - 17.32                                       = 2932.68
+        --------------------------------------------------------------------
+                                                                     607.73
+         */
     }
 
     [Fact]
@@ -611,11 +651,5 @@ public class RemainingSurplusWidgetTest : IDisposable
 
             return model.LoadTransactions(transactions);
         }
-    }
-
-    public void Dispose()
-    {
-        this.outputWriter.Dispose();
-        this.statementTestData.Dispose();
     }
 }
