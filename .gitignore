@@ -115,3 +115,6 @@ UpgradeLog*.XML
 /Rees.TangyFruitMapper/project.lock.json
 .idea
 *.zip
+BudgetAnalyser.Engine.UnitTest/codecoverage
+codecoverage
+coverage.json

@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine.Budget.Data;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData;
 
-internal static class BudgetModelTestData
+public static class BudgetModelTestData
 {
     public static IEnumerable<BudgetBucketDto> CreateBudgetBucketDtoTestData1()
     {
