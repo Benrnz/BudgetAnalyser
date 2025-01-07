@@ -104,14 +104,28 @@ public class RemainingSurplusWidgetTest : IDisposable
     }
 
     [Fact]
-    public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
+    public void Update_ShouldBeZero_WhenSurplusIsOverdrawnAndExcludeAutoMatchedTransactionsInCalculation()
+    {
+        this.budgetTestData.Model.Incomes.First().Amount = 2500;
+        this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
+        // Begin Date 20/10/2015 EndDate 19/11/2015
+        // Starting Surplus is: 2175.00
+        // Total Surplus transactions are: -835.69
+        // Plus any overspent ledgers (that must also come out of surplus funds): -873.38
+        // Resulting Balance = 2175 - 835.69 - 873.38 = 465.93
+        this.subject.Value.Should().Be(465.93);
+    }
+
+    [Fact]
+    public void Update_ShouldCalculate_ExcludeAutoMatchedTransactionsInCalculation()
     {
         this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
         // Begin Date 20/10/2015 EndDate 19/11/2015
         // Starting Surplus is: 1175.00
         // Total Surplus transactions are: -835.69
-        // Resulting Balance = 339.31
-        this.subject.Value.Should().Be(339.31);
+        // Plus any overspent ledgers (that must also come out of surplus funds): -873.38
+        // Resulting Balance = 1175 - 835.69 - 873.38 = -534.07 (Grim)
+        this.subject.Value.Should().Be(0);
     }
 
     private static class StatementModelTestDataForThisTest

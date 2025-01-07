@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger;
 
@@ -16,6 +12,7 @@ namespace BudgetAnalyser.Engine.Ledger;
 ///     A calculator that performs common calculations on a Ledger Book.
 /// </summary>
 [AutoRegisterWithIoC]
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global // Used by Moq
 public class LedgerCalculation
 {
     /// <summary>
@@ -46,94 +43,9 @@ public class LedgerCalculation
     }
 
     /// <summary>
-    ///     Calculates the current period ledger balances. Period is set by the two dates. In theory other periods are possible.
-    /// </summary>
-    /// <exception cref="System.ArgumentNullException"></exception>
-    public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentPeriodLedgerBalances(
-        [NotNull] LedgerEntryLine ledgerLine,
-        [NotNull] GlobalFilterCriteria filter,
-        [NotNull] StatementModel statement)
-    {
-        CheckCacheForCleanUp();
-        if (ledgerLine is null)
-        {
-            throw new ArgumentNullException(nameof(ledgerLine));
-        }
-
-        if (filter is null)
-        {
-            throw new ArgumentNullException(nameof(filter));
-        }
-
-        if (statement is null)
-        {
-            throw new ArgumentNullException(nameof(statement));
-        }
-
-        var ledgers = new Dictionary<BudgetBucket, decimal>();
-
-        if (filter.Cleared || filter.BeginDate == default || filter.EndDate == default)
-        {
-            return ledgers;
-        }
-
-        ledgers = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
-
-        // Check Surplus
-        var surplusBalance = CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statement);
-        ledgers.Add(new SurplusBucket(), surplusBalance);
-
-        return ledgers;
-    }
-
-    /// <summary>
-    ///     Calculates the current period surplus balance.  In theory other periods are possible.
-    /// </summary>
-    public virtual decimal CalculateCurrentPeriodSurplusBalance([NotNull] LedgerEntryLine ledgerLine, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
-    {
-        CheckCacheForCleanUp();
-        if (ledgerLine is null)
-        {
-            throw new ArgumentNullException(nameof(ledgerLine));
-        }
-
-        if (filter is null)
-        {
-            throw new ArgumentNullException(nameof(filter));
-        }
-
-        if (statement is null)
-        {
-            throw new ArgumentNullException(nameof(statement));
-        }
-
-        if (filter.Cleared || filter.BeginDate == default || filter.EndDate == default)
-        {
-            return 0;
-        }
-
-        var balance = ledgerLine.CalculatedSurplus;
-        // This includes transactions coded as SURPLUS. 
-        // This used to include Savings Commitment bucket transaction, a SavedUpForExpenseBucket should be used instead.
-        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, statement, ledgerLine, SurplusBucket.SurplusCode);
-
-        balance += transactionTotal;
-
-        // Find any ledgers that are overpsent and subtract them from the Surplus total.  This is actually what is happening when you overspend a ledger, it spills over and spend Surplus.
-        var ledgersSummary = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
-        balance += ledgersSummary.Where(kvp => kvp.Value < 0).Sum(kvp => kvp.Value);
-
-        return balance;
-    }
-
-    /// <summary>
     ///     Calculates the current period bucket spend.  In theory other periods are possible.
     /// </summary>
-    public virtual decimal CalculateCurrentPeriodBucketSpend(
-        [NotNull] LedgerEntryLine ledgerLine,
-        [NotNull] GlobalFilterCriteria filter,
-        [NotNull] StatementModel statement,
-        [NotNull] string bucketCode)
+    public decimal CalculateCurrentPeriodBucketSpend(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, StatementModel statement, string bucketCode)
     {
         CheckCacheForCleanUp();
         if (ledgerLine is null)
@@ -166,11 +78,88 @@ public class LedgerCalculation
     }
 
     /// <summary>
-    ///     Finds any overspent ledgers for the period and returns the date and value the of the total overspend.  This
-    ///     resulting collection can then be used to offset overdrawn balances from Surplus. (Not done here).
-    ///     Negative values indicate overdrawn ledgers.
+    ///     Calculates the current period ledger balances. Period is set by the two dates. In theory other periods are possible.
     /// </summary>
-    public virtual IEnumerable<ReportTransaction> CalculateOverSpentLedgers([NotNull] StatementModel statement, [NotNull] LedgerEntryLine ledgerLine, DateTime inclBeginDate, DateTime inclEndDate)
+    /// <exception cref="System.ArgumentNullException"></exception>
+    public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentPeriodLedgerBalances(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, StatementModel statement)
+    {
+        CheckCacheForCleanUp();
+        if (ledgerLine is null)
+        {
+            throw new ArgumentNullException(nameof(ledgerLine));
+        }
+
+        if (filter is null)
+        {
+            throw new ArgumentNullException(nameof(filter));
+        }
+
+        if (statement is null)
+        {
+            throw new ArgumentNullException(nameof(statement));
+        }
+
+        var ledgers = new Dictionary<BudgetBucket, decimal>();
+
+        if (filter.Cleared || filter.BeginDate == null || filter.EndDate == null)
+        {
+            return ledgers;
+        }
+
+        ledgers = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
+
+        // Check Surplus
+        var surplusBalance = CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statement);
+        ledgers.Add(new SurplusBucket(), surplusBalance);
+
+        return ledgers;
+    }
+
+    /// <summary>
+    ///     Calculates the current period surplus balance.  In theory other periods are possible.
+    /// </summary>
+    public decimal CalculateCurrentPeriodSurplusBalance(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, StatementModel statement)
+    {
+        CheckCacheForCleanUp();
+        if (ledgerLine is null)
+        {
+            throw new ArgumentNullException(nameof(ledgerLine));
+        }
+
+        if (filter is null)
+        {
+            throw new ArgumentNullException(nameof(filter));
+        }
+
+        if (statement is null)
+        {
+            throw new ArgumentNullException(nameof(statement));
+        }
+
+        if (filter.Cleared || filter.BeginDate == null || filter.EndDate == null)
+        {
+            return 0;
+        }
+
+        var balance = ledgerLine.CalculatedSurplus;
+        // This includes transactions coded as SURPLUS.
+        // This used to include Savings Commitment bucket transaction, a SavedUpForExpenseBucket should be used instead.
+        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, statement, ledgerLine, SurplusBucket.SurplusCode);
+
+        balance += transactionTotal;
+
+        // Find any ledgers that are overpsent and subtract them from the Surplus total.  This is actually what is happening when you overspend a ledger, it spills over and spend Surplus.
+        var ledgersSummary = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
+        balance += ledgersSummary.Where(kvp => kvp.Value < 0).Sum(kvp => kvp.Value);
+
+        return balance;
+    }
+
+    /// <summary>
+    ///     Finds any overspent ledgers for the period and returns the date and value the of the total overspend.  This resulting collection can then be used to offset overdrawn balances from
+    ///     Surplus. (Not done here). Negative values indicate overdrawn ledgers.  Only Ledgers tracked by the LedgerBook are examined for overdrawn balances.
+    /// </summary>
+    public IEnumerable<ReportTransaction> CalculateOverSpentLedgers(StatementModel statement, LedgerEntryLine ledgerLine, DateTime inclBeginDate, DateTime inclEndDate)
     {
         CheckCacheForCleanUp();
 
@@ -211,7 +200,7 @@ public class LedgerCalculation
             return overSpendTransactions;
         }
 
-        var cacheKey = BuildCacheKey(statement, ledgerLine, inclBeginDate);
+        var cacheKey = BuildCacheKey("CalculateOverSpentLedgers", statement, ledgerLine, inclBeginDate);
         return (IEnumerable<ReportTransaction>)GetOrAddFromCache(cacheKey, GetOverSpentTransactions);
     }
 
@@ -219,7 +208,7 @@ public class LedgerCalculation
     ///     Locates the most recent <see cref="LedgerEntryLine" /> for the given date filter. Note that this will only return
     ///     the most recent line that fits the criteria.
     /// </summary>
-    public virtual decimal LocateApplicableLedgerBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, string bucketCode)
+    public decimal LocateApplicableLedgerBalance(LedgerBook ledgerBook, GlobalFilterCriteria filter, string bucketCode)
     {
         CheckCacheForCleanUp();
         if (ledgerBook is null)
@@ -232,25 +221,30 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(filter));
         }
 
+        if (bucketCode.IsNothing())
+        {
+            throw new ArgumentNullException(nameof(bucketCode));
+        }
+
         var line = LocateApplicableLedgerLine(ledgerBook, filter);
         return line is null
             ? 0
             : line.Entries
-            .Where(ledgerEntry => ledgerEntry.LedgerBucket.BudgetBucket.Code == bucketCode)
-            .Select(ledgerEntry => ledgerEntry.Balance)
-            .FirstOrDefault();
+                .Where(ledgerEntry => ledgerEntry.LedgerBucket.BudgetBucket.Code == bucketCode)
+                .Select(ledgerEntry => ledgerEntry.Balance)
+                .FirstOrDefault();
     }
 
     /// <summary>
     ///     Locates the applicable ledger line.
     /// </summary>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)
+    public LedgerEntryLine? LocateApplicableLedgerLine(LedgerBook ledgerBook, GlobalFilterCriteria filter)
     {
         CheckCacheForCleanUp();
         if (ledgerBook is null)
         {
-            return null;
+            throw new ArgumentNullException(nameof(ledgerBook));
         }
 
         if (filter is null)
@@ -263,30 +257,30 @@ public class LedgerCalculation
             : LocateApplicableLedgerLine(ledgerBook, filter.BeginDate, filter.EndDate);
     }
 
-    public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime? inclBeginDate, DateTime? inclEndDate)
+    public virtual LedgerEntryLine? LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime? inclBeginDate, DateTime? inclEndDate)
     {
         CheckCacheForCleanUp();
         if (ledgerBook is null)
         {
-            return null;
+            throw new ArgumentNullException(nameof(ledgerBook));
         }
 
-        if (inclBeginDate == default || inclBeginDate.Value == DateTime.MinValue)
+        if (inclBeginDate == null || inclBeginDate.Value == DateTime.MinValue)
         {
             return null;
         }
 
-        return inclEndDate == default || inclEndDate.Value == DateTime.MinValue
+        return inclEndDate == null || inclEndDate.Value == DateTime.MinValue
             ? null
             : LocateLedgerEntryLine(ledgerBook, inclBeginDate.Value, inclEndDate.Value);
     }
 
-    private static string BuildCacheKey(object dependency1, object dependency2, DateTime dependentDate)
+    private static string BuildCacheKey(string name, object dependency1, object dependency2, DateTime dependentDate)
     {
         long key;
         unchecked
         {
-            key = dependency1?.GetHashCode() ?? 1 * dependency2?.GetHashCode() ?? 1 * dependentDate.GetHashCode();
+            key = name.GetHashCode() * dependency1.GetHashCode() * dependency2.GetHashCode() * dependentDate.GetHashCode();
         }
 
         var keyString = key.ToString(CultureInfo.InvariantCulture);
@@ -309,7 +303,7 @@ public class LedgerCalculation
     private decimal CalculateTransactionTotal(DateTime inclBeginDate, DateTime inclEndDate, StatementModel statement, LedgerEntryLine entryLine, string bucketCode)
     {
         var autoMatchLedgerTransactions = GetAutoMatchingTransactions(statement, entryLine, inclBeginDate);
-        // This needs to query .AllTransactions, not just .Transactions, when changing the date range the statement may not have had its internal filter changed when this runs. 
+        // This needs to query .AllTransactions, not just .Transactions, when changing the date range the statement may not have had its internal filter changed when this runs.
         var transactions = statement.AllTransactions
             .Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate)
             .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
@@ -317,14 +311,14 @@ public class LedgerCalculation
         if (bucketCode == SurplusBucket.SurplusCode)
         {
             // Special processing for the special Surplus bucket. This is to allow inclusion of special projects that are Surplus subclasses. t.BudgetBucket is SurplusBucket and its subclasses.
-            // Also PayCC transactions which are paid out of Surplus.
-            // In addition credits to PAYCC should not increase the Surplus balance. These funds have been moved to another ledger.
+            // Also, PayCC transactions which are paid out of Surplus.
+            // In addition, credits to PAYCC should not increase the Surplus balance. These funds have been moved to another ledger.
             transactions = transactions.Where(t => t.BudgetBucket is SurplusBucket or PayCreditCardBucket)
                 .Where(t => !(t.BudgetBucket is PayCreditCardBucket) || t.Amount < 0);
         }
         else
         {
-            transactions = transactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == bucketCode);
+            transactions = transactions.Where(t => t.BudgetBucket.Code == bucketCode);
         }
 
         this.logger.LogInfo(_ =>
@@ -355,21 +349,21 @@ public class LedgerCalculation
 
     private IEnumerable<LedgerTransaction> GetAutoMatchingTransactions(StatementModel statement, LedgerEntryLine entryLine, DateTime inclBeginDate)
     {
-        var key = BuildCacheKey(statement, entryLine, inclBeginDate);
+        var key = BuildCacheKey("GetAutoMatchingTransactions", statement, entryLine, inclBeginDate);
         var autoMatchLedgerTransactions = (List<LedgerTransaction>)GetOrAddFromCache(key, () => ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList());
 
         this.logger.LogInfo(
-                            _ =>
-                            {
-                                var builder = new StringBuilder();
-                                builder.AppendLine("Ledger Transactions found that are 'Auto-Matching-Transactions':");
-                                foreach (var txn in autoMatchLedgerTransactions)
-                                {
-                                    builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Narrative}  {txn.AutoMatchingReference}");
-                                }
+            _ =>
+            {
+                var builder = new StringBuilder();
+                builder.AppendLine("Ledger Transactions found that are 'Auto-Matching-Transactions':");
+                foreach (var txn in autoMatchLedgerTransactions)
+                {
+                    builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Narrative}  {txn.AutoMatchingReference}");
+                }
 
-                                return builder.ToString();
-                            });
+                return builder.ToString();
+            });
         return autoMatchLedgerTransactions;
     }
 
@@ -377,15 +371,15 @@ public class LedgerCalculation
     {
         CheckCacheForCleanUp();
         var wrappedFactory = new Func<object>(
-                                              () =>
-                                              {
-                                                  CacheLastUpdated = DateTime.Now;
-                                                  return factory();
-                                              });
+            () =>
+            {
+                CacheLastUpdated = DateTime.Now;
+                return factory();
+            });
         return CalculationsCache.GetOrAdd(cacheKey, _ => wrappedFactory());
     }
 
-    private static LedgerEntryLine LocateLedgerEntryLine(LedgerBook ledgerBook, DateTime inclBegin, DateTime inclEnd)
+    private static LedgerEntryLine? LocateLedgerEntryLine(LedgerBook ledgerBook, DateTime inclBegin, DateTime inclEnd)
     {
         return ledgerBook.Reconciliations.FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= inclBegin && ledgerEntryLine.Date <= inclEnd);
     }
@@ -409,51 +403,36 @@ public class LedgerCalculation
                 continue;
             }
 
+            var reportTxn = new ReportTransaction { LedgerBucket = runningBalance.Key.Code, Date = currentDate, Amount = runningBalance.Value };
             if (runningBalance.Value < 0 && previousBalance >= 0)
             {
                 // Ledger has been overdrawn today.
-                overSpendTransactions.Add(
-                                          new ReportTransaction
-                                          {
-                                              Date = currentDate,
-                                              Amount = runningBalance.Value,
-                                              Narrative = runningBalance.Key + " overdrawn - will be supplemented from Surplus."
-                                          });
+                reportTxn.Narrative = $"{runningBalance.Key} overdrawn - will be supplemented from Surplus.";
+                overSpendTransactions.Add(reportTxn);
                 continue;
             }
 
             if (runningBalance.Value < 0 && previousBalance < 0)
             {
                 // Ledger was overdrawn yesterday and is still overdrawn today. Ensure the difference is added to the overSpend.
-                var amount = -(previousBalance - runningBalance.Value);
-                overSpendTransactions.Add(
-                                          new ReportTransaction
-                                          {
-                                              Date = currentDate,
-                                              Amount = amount,
-                                              Narrative = string.Format(
-                                                                        CultureInfo.CurrentCulture,
-                                                                        "{0} was overdrawn, {1}. Will be supplemented from Surplus.",
-                                                                        runningBalance.Key,
-                                                                        amount < 0
-                                                                            ? "and has been further overdrawn"
-                                                                            : "has been credited, but is still overdrawn")
-                                          });
+                reportTxn.Amount = -(previousBalance - runningBalance.Value);
+                reportTxn.Narrative = string.Format(
+                    CultureInfo.CurrentCulture,
+                    "{0} was overdrawn, {1}. Will be supplemented from Surplus.",
+                    runningBalance.Key,
+                    reportTxn.Amount < 0
+                        ? "and has been further overdrawn"
+                        : "has been credited, but is still overdrawn");
+                overSpendTransactions.Add(reportTxn);
                 continue;
             }
 
             if (runningBalance.Value >= 0 && previousBalance < 0)
             {
                 // Ledger was overdrawn yesterday and is now back in credit.
-                overSpendTransactions.Add(
-                                          new ReportTransaction
-                                          {
-                                              Date = currentDate,
-                                              Amount = -previousBalance,
-                                              Narrative =
-                                                  runningBalance.Key +
-                                                  " was overdrawn, and has been credited back into a positive balance."
-                                          });
+                reportTxn.Amount = -previousBalance;
+                reportTxn.Narrative = $"{runningBalance.Key} was overdrawn, and has been credited back into a positive balance.";
+                overSpendTransactions.Add(reportTxn);
             }
         }
     }
