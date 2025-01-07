@@ -20,17 +20,18 @@ public static class LedgerBookHelper
         return ledgerOrder;
     }
 
-    public static void Output(this LedgerBook book, bool outputTransactions = false)
+    public static void Output(this LedgerBook book, bool outputTransactions = false, IReesTestOutput? outputWriter = null)
     {
-        Debug.WriteLine(string.Empty);
-        Debug.WriteLine("**************************** LEDGER BOOK OUTPUT *****************************");
-        Debug.WriteLine($"Name: {book.Name}");
-        Debug.WriteLine($"Filename: {book.StorageKey}");
-        Debug.WriteLine($"Modified: {book.Modified}");
-        Debug.Write("Date        ");
+        var writer = NonNullableOutputWriter(outputWriter);
+        writer.WriteLine(string.Empty);
+        writer.WriteLine("**************************** LEDGER BOOK OUTPUT *****************************");
+        writer.WriteLine($"Name: {book.Name}");
+        writer.WriteLine($"Filename: {book.StorageKey}");
+        writer.WriteLine($"Modified: {book.Modified}");
+        writer.Write("Date        ");
         var ledgerOrder = LedgerOrder(book);
 
-        OutputReconciliationHeader();
+        OutputReconciliationHeader(writer);
 
         foreach (var line in book.Reconciliations)
         {
@@ -38,20 +39,26 @@ public static class LedgerBookHelper
         }
     }
 
-    public static void Output(this LedgerEntryLine line, IDictionary<BudgetBucket, int> ledgerOrder, bool outputTransactions = false, bool outputHeader = false)
+    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput? outputWriter)
     {
+        return outputWriter ?? new DebugTestOutput();
+    }
+
+    public static void Output(this LedgerEntryLine line, IDictionary<BudgetBucket, int> ledgerOrder, bool outputTransactions = false, bool outputHeader = false, IReesTestOutput? outputWriter = null)
+    {
+        var writer = NonNullableOutputWriter(outputWriter);
         if (outputHeader)
         {
-            OutputReconciliationHeader();
+            OutputReconciliationHeader(writer);
         }
 
-        Debug.Write($"{line.Date:d}  ");
+        writer.Write($"{line.Date:d}  ");
         foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
         {
-            Debug.Write($"{entry.NetAmount.ToString("N").PadRight(8)} {entry.LedgerBucket.StoredInAccount.Name.Truncate(1)} {entry.Balance.ToString("N").PadRight(9)}");
+            writer.Write($"{entry.NetAmount,-8:N} {entry.LedgerBucket.StoredInAccount.Name.Truncate(1)} {entry.Balance,-9:N}");
         }
 
-        Debug.Write(line.CalculatedSurplus.ToString("N").PadRight(9));
+        writer.Write(line.CalculatedSurplus.ToString("N").PadRight(9));
         var balanceCount = 0;
         foreach (var bankBalance in line.BankBalances)
         {
@@ -61,13 +68,13 @@ public static class LedgerBookHelper
             }
 
             // Only two bank balances are shown in the test output at this stage.
-            var balanceText = string.Format("{0} {1} ", bankBalance.Account.Name.Truncate(1), bankBalance.Balance.ToString("N"));
-            Debug.Write(balanceText.PadLeft(13).TruncateLeft(13));
+            var balanceText = $"{bankBalance.Account.Name.Truncate(1)} {bankBalance.Balance:N} ";
+            writer.Write(balanceText.PadLeft(13).TruncateLeft(13));
         }
 
-        Debug.Write(line.TotalBalanceAdjustments.ToString("N").PadLeft(9).TruncateLeft(9));
-        Debug.Write(line.LedgerBalance.ToString("N").PadLeft(13).TruncateLeft(13));
-        Debug.WriteLine(string.Empty);
+        writer.Write(line.TotalBalanceAdjustments.ToString("N").PadLeft(9).TruncateLeft(9));
+        writer.Write(line.LedgerBalance.ToString("N").PadLeft(13).TruncateLeft(13));
+        writer.WriteLine(string.Empty);
 
         if (outputTransactions)
         {
@@ -76,7 +83,7 @@ public static class LedgerBookHelper
                 var tab = new string(' ', 11 + (18 * ledgerOrder[entry.LedgerBucket.BudgetBucket]));
                 foreach (var transaction in entry.Transactions)
                 {
-                    Debug.WriteLine(
+                    writer.WriteLine(
                         "{0} {1} {2} {3} {4} {5}",
                         tab,
                         entry.LedgerBucket.BudgetBucket.Code.PadRight(6),
@@ -87,37 +94,38 @@ public static class LedgerBookHelper
                 }
             }
 
-            Debug.WriteLine("=================================================================================================================================");
+            writer.WriteLine("=================================================================================================================================");
         }
     }
 
-    public static void Output(this LedgerBookDto book, bool outputTransactions = false)
+    public static void Output(this LedgerBookDto book, bool outputTransactions = false, IReesTestOutput? outputWriter = null)
     {
-        Debug.WriteLine("Name: {0}", book.Name);
-        Debug.WriteLine("Filename: {0}", book.StorageKey);
-        Debug.WriteLine("Modified: {0}", book.Modified);
-        Debug.Write("Date        ");
+        var writer = NonNullableOutputWriter(outputWriter);
+        writer.WriteLine("Name: {0}", book.Name);
+        writer.WriteLine("Filename: {0}", book.StorageKey);
+        writer.WriteLine("Modified: {0}", book.Modified);
+        writer.Write("Date        ");
         foreach (var ledger in book.Reconciliations.SelectMany(l => l.Entries.Select(e => e.BucketCode)))
         {
-            Debug.Write(ledger.PadRight(18));
+            writer.Write(ledger.PadRight(18));
         }
 
-        Debug.Write("Surplus  BankBalance  Adjustments LedgerBalance");
-        Debug.WriteLine(string.Empty);
-        Debug.WriteLine("====================================================================================================================");
+        writer.Write("Surplus  BankBalance  Adjustments LedgerBalance");
+        writer.WriteLine(string.Empty);
+        writer.WriteLine("====================================================================================================================");
 
         foreach (var line in book.Reconciliations)
         {
-            Debug.Write($"{line.Date:d}  ");
+            writer.Write($"{line.Date:d}  ");
             foreach (var entry in line.Entries)
             {
-                Debug.Write($"{new string(' ', 8)} {entry.Balance.ToString("N").PadRight(8)} ");
+                writer.Write($"{new string(' ', 8)} {entry.Balance,-8:N} ");
             }
 
-            Debug.Write(line.BankBalance.ToString("N").PadRight(13));
-            Debug.Write(line.BankBalanceAdjustments.Sum(t => t.Amount).ToString("N").PadRight(12));
-            Debug.Write(line.BankBalances.Sum(b => b.Balance).ToString("N").PadRight(9));
-            Debug.WriteLine(string.Empty);
+            writer.Write(line.BankBalance.ToString("N").PadRight(13));
+            writer.Write(line.BankBalanceAdjustments.Sum(t => t.Amount).ToString("N").PadRight(12));
+            writer.Write(line.BankBalances.Sum(b => b.Balance).ToString("N").PadRight(9));
+            writer.WriteLine(string.Empty);
 
             if (outputTransactions)
             {
@@ -125,11 +133,11 @@ public static class LedgerBookHelper
                 {
                     foreach (var transaction in entry.Transactions)
                     {
-                        Debug.WriteLine(
+                        writer.WriteLine(
                             "          {0} {1} {2}",
                             entry.BucketCode.PadRight(6),
                             transaction.Amount > 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
-                            transaction.Narrative);
+                            transaction.Narrative ?? string.Empty);
                     }
                 }
 
@@ -138,22 +146,23 @@ public static class LedgerBookHelper
         }
     }
 
-    public static void Output(this LedgerEntry instance)
+    public static void Output(this LedgerEntry instance, IReesTestOutput? outputWriter = null)
     {
-        Debug.WriteLine("Ledger Entry Transactions. ============================================");
+        var writer = NonNullableOutputWriter(outputWriter);
+        writer.WriteLine("Ledger Entry Transactions. ============================================");
         foreach (var transaction in instance.Transactions)
         {
-            Debug.WriteLine($"{transaction.Date:d} {transaction.Narrative} {transaction.Amount:F2}");
+            writer.WriteLine($"{transaction.Date:d} {transaction.Narrative} {transaction.Amount:F2}");
         }
 
-        Debug.WriteLine("----------------------------------------------------------------------------------------");
-        Debug.WriteLine($"{instance.Transactions.Count()} transactions. NetAmount: {instance.NetAmount:F2} ClosingBalance: {instance.Balance:F2}");
+        writer.WriteLine("----------------------------------------------------------------------------------------");
+        writer.WriteLine($"{instance.Transactions.Count()} transactions. NetAmount: {instance.NetAmount:F2} ClosingBalance: {instance.Balance:F2}");
     }
 
-    private static void OutputReconciliationHeader()
+    private static void OutputReconciliationHeader(IReesTestOutput writer)
     {
-        Debug.Write("Surplus    BankBalances    Adjusts LedgerBalance");
-        Debug.WriteLine(string.Empty);
-        Debug.WriteLine("==============================================================================================================================================");
+        writer.Write("Surplus    BankBalances    Adjusts LedgerBalance");
+        writer.WriteLine(string.Empty);
+        writer.WriteLine("==============================================================================================================================================");
     }
 }

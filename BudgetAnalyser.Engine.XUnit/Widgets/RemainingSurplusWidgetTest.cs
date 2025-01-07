@@ -7,11 +7,13 @@ using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
+using BudgetAnalyser.Engine.XUnit.Helpers;
 using FluentAssertions;
+using Xunit.Abstractions;
 
 namespace BudgetAnalyser.Engine.XUnit.Widgets;
 
-public class RemainingSurplusWidgetTest
+public class RemainingSurplusWidgetTest : IDisposable
 {
     private readonly BucketBucketRepoAlwaysFind bucketRepo = new();
     private readonly IBudgetCurrencyContext budgetTestData;
@@ -20,9 +22,11 @@ public class RemainingSurplusWidgetTest
     private readonly LedgerCalculation ledgerCalculation;
     private readonly StatementModel statementTestData;
     private readonly RemainingSurplusWidget subject = new();
+    private readonly XUnitOutputWriter outputWriter;
 
-    public RemainingSurplusWidgetTest()
+    public RemainingSurplusWidgetTest(ITestOutputHelper outputHelper)
     {
+        this.outputWriter = new XUnitOutputWriter(outputHelper);
         StatementModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
         StatementModelTestDataForThisTest.BudgetBucketRepo = this.bucketRepo;
         this.statementTestData = StatementModelTestDataForThisTest.TestDataGenerated();
@@ -53,7 +57,7 @@ public class RemainingSurplusWidgetTest
     [Fact]
     public void OutputTestData()
     {
-        this.ledgerBookTestData.Output(true);
+        this.ledgerBookTestData.Output(true, this.outputWriter);
         this.budgetTestData.Output();
         this.statementTestData.Output(DateTime.MinValue);
     }
@@ -606,5 +610,11 @@ public class RemainingSurplusWidgetTest
 
             return model.LoadTransactions(transactions);
         }
+    }
+
+    public void Dispose()
+    {
+        this.outputWriter.Dispose();
+        this.statementTestData.Dispose();
     }
 }
