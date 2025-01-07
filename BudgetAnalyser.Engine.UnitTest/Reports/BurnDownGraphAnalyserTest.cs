@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
         [TestInitialize]
         public void TestInitialise()
         {
- Act();
+            Act();
         }
 
         private void Act()

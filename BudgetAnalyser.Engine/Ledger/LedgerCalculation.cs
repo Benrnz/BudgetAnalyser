@@ -184,11 +184,11 @@ public class LedgerCalculation
             do
             {
                 var currentDateCopy = currentDate;
-                foreach (var transaction in statement.Transactions.Where(t => t.Date == currentDateCopy))
+                foreach (var transaction in statement.Transactions.Where(t => t.Date == currentDateCopy && t.BudgetBucket is not null))
                 {
-                    if (runningBalances.ContainsKey(transaction.BudgetBucket))
+                    if (runningBalances.ContainsKey(transaction.BudgetBucket!))
                     {
-                        runningBalances[transaction.BudgetBucket] += transaction.Amount;
+                        runningBalances[transaction.BudgetBucket!] += transaction.Amount;
                     }
                 }
 
@@ -318,7 +318,7 @@ public class LedgerCalculation
         }
         else
         {
-            transactions = transactions.Where(t => t.BudgetBucket.Code == bucketCode);
+            transactions = transactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == bucketCode);
         }
 
         this.logger.LogInfo(_ =>

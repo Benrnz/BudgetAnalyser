@@ -26,7 +26,7 @@
             IsDebit = isDebit;
         }
 
-        public static NamedTransaction Empty => new NamedTransaction("");
+        public static NamedTransaction Empty => new NamedTransaction("default");
 
         /// <summary>
         ///     Gets the transaction type name.
