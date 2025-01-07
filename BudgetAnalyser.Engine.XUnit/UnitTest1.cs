@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.XUnit;
 
 public class UnitTest1(MyClassFixture sharedFixture) : IClassFixture<MyClassFixture>
 {
-    private MyClassFixture fixture = sharedFixture;
+    private readonly MyClassFixture fixture = sharedFixture;
 
     [Fact]
     public void Test1()
