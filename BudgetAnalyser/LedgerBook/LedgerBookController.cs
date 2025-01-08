@@ -275,7 +275,7 @@ public class LedgerBookController : ControllerBase, IShowableController
     private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
     {
         // CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
-        // CurrentBudget should only be used for UI purposes such as an indication of current budgeted amount for something etc. 
+        // CurrentBudget should only be used for UI purposes such as an indication of current budgeted amount for something etc.
         if (message.ActiveBudget is null)
         {
             ViewModel.CurrentBudget = null;
@@ -324,7 +324,7 @@ public class LedgerBookController : ControllerBase, IShowableController
     private void OnShowLedgerBucketDetailsCommand(LedgerBucket ledgerBucket)
     {
         this.uiContext.LedgerBucketViewController.Updated += OnLedgerBucketUpdated;
-        this.uiContext.LedgerBucketViewController.ShowDialog(ViewModel.LedgerBook, ledgerBucket, ViewModel.CurrentBudget.Model);
+        this.uiContext.LedgerBucketViewController.ShowDialog(ledgerBucket, ViewModel.CurrentBudget.Model);
     }
 
     private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)

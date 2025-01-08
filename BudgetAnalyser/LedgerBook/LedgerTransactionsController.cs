@@ -22,7 +22,7 @@ namespace BudgetAnalyser.LedgerBook
     {
         private readonly ILedgerService ledgerService;
         private readonly IReconciliationService reconService;
-        private Guid dialogCorrelationId;
+        private Guid dialogCorrelationId = Guid.NewGuid();
         private bool doNotUseIsReadOnly;
         private LedgerEntry doNotUseLedgerEntry;
         private Account doNotUseNewTransactionAccount;
@@ -35,25 +35,15 @@ namespace BudgetAnalyser.LedgerBook
         private bool wasChanged;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService, [NotNull] IReconciliationService reconService) : base(uiContext.Messenger)
+        public LedgerTransactionsController(UiContext uiContext, ILedgerService ledgerService, IReconciliationService reconService) : base(uiContext.Messenger)
         {
             if (uiContext is null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (ledgerService is null)
-            {
-                throw new ArgumentNullException(nameof(ledgerService));
-            }
-
-            if (reconService is null)
-            {
-                throw new ArgumentNullException(nameof(reconService));
-            }
-
-            this.ledgerService = ledgerService;
-            this.reconService = reconService;
+            this.ledgerService = ledgerService ?? throw new ArgumentNullException(nameof(ledgerService));
+            this.reconService = reconService ?? throw new ArgumentNullException(nameof(reconService));
             Messenger.Register<LedgerTransactionsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
             Reset();
         }
