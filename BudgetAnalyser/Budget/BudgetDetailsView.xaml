@@ -4,7 +4,9 @@
              xmlns:b="clr-namespace:BudgetAnalyser.Budget"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:budget="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
              mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance budget:BudgetCurrencyContext }"
              Background="{StaticResource Brush.DialogBackground}">
     <!-- DataContext must be BudgetCurrencyContext -->
 
@@ -27,8 +29,8 @@
         <StackPanel Grid.ColumnSpan="2">
             <b:BudgetModelNameUserControl Background="{StaticResource Brush.DialogBackground}" />
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
-                       Text="{Binding FileName}"
-                       ToolTip="{Binding FileName}" />
+                       Text="{Binding StorageKey}"
+                       ToolTip="{Binding StorageKey}" />
         </StackPanel>
 
         <StackPanel Grid.Column="1"

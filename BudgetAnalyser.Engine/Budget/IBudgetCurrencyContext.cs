@@ -23,16 +23,14 @@ public interface IBudgetCurrencyContext
     bool BudgetInFuture { get; }
 
     /// <summary>
-    ///     Gets the effective until date. This is the last date the budget will be applicable before another budget comes into
-    ///     affect.
+    ///     Gets the effective until date. This is the last date the budget will be applicable before another budget comes into effect.
     /// </summary>
     DateTime? EffectiveUntil { get; }
 
     /// <summary>
     ///     Gets the name of the file.
     /// </summary>
-    // TODO This should be renamed to StorageKey
-    string FileName { get; }
+    string StorageKey { get; }
 
     /// <summary>
     ///     Gets the budget model.

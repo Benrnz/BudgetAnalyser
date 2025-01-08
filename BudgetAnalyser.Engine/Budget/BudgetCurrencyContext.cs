@@ -53,7 +53,7 @@ public class BudgetCurrencyContext : IBudgetCurrencyContext
 
     /// <summary>
     ///     Gets the effective until date. This is the last date the budget will applicable before another budget will come
-    ///     into affect.
+    ///     into effect.
     /// </summary>
     public DateTime? EffectiveUntil
     {
@@ -75,8 +75,7 @@ public class BudgetCurrencyContext : IBudgetCurrencyContext
     /// <summary>
     ///     Gets the name of the file.
     /// </summary>
-    // TODO rename this to storage key or name
-    public string FileName => BudgetCollection.StorageKey;
+    public string StorageKey => BudgetCollection.StorageKey;
 
     /// <summary>
     ///     Gets the model.

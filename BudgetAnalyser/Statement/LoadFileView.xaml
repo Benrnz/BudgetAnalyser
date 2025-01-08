@@ -1,8 +1,10 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Statement.LoadFileView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:BudgetAnalyser.Statement"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance views:LoadFileController }"
              Background="{StaticResource Brush.DialogBackground}">
-    <!-- DataContext LoadFileController -->
 
     <Grid Margin="50,0,50,0">
         <Grid.ColumnDefinitions>
@@ -37,8 +39,8 @@
                  HorizontalAlignment="Stretch"
                  Margin="3"
                  PreviewMouseUp="OnFileNameMouseUp"
-                 Text="{Binding FileName}"
-                 ToolTip="{Binding FileName}" />
+                 Text="{Binding StorageKey}"
+                 ToolTip="{Binding StorageKey}" />
         <Button Grid.Row="1"
                 Grid.Column="2"
                 Command="{Binding BrowseForFileCommand}"

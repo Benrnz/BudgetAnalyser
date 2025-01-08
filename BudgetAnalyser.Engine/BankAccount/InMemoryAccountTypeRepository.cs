@@ -12,62 +12,62 @@ public class InMemoryAccountTypeRepository : IAccountTypeRepository
 {
     private readonly ConcurrentDictionary<string, Account> repository = new(8, 5);
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="InMemoryAccountTypeRepository" /> class.
-        /// </summary>
-        public InMemoryAccountTypeRepository()
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="InMemoryAccountTypeRepository" /> class.
+    /// </summary>
+    public InMemoryAccountTypeRepository()
+    {
+        // Populate the repository with the known list of account I want for now.
+        // In a more advanced implementation these would be loaded into the repository when the StatementModel is loaded using
+        // the AccountTypes actively used by it.
+        this.repository.TryAdd(AccountTypeRepositoryConstants.Cheque,
+            new ChequeAccount(AccountTypeRepositoryConstants.Cheque));
+        this.repository.TryAdd(AccountTypeRepositoryConstants.Visa,
+            new VisaAccount(AccountTypeRepositoryConstants.Visa));
+        this.repository.TryAdd(AccountTypeRepositoryConstants.Savings,
+            new SavingsAccount(AccountTypeRepositoryConstants.Savings));
+        this.repository.TryAdd(AccountTypeRepositoryConstants.Mastercard,
+            new MastercardAccount(AccountTypeRepositoryConstants.Mastercard));
+        this.repository.TryAdd(AccountTypeRepositoryConstants.Amex,
+            new AmexAccount(AccountTypeRepositoryConstants.Amex));
+    }
+
+    /// <summary>
+    ///     Add a new <see cref="Account" /> with the given key. Will not throw if the key already exists in the
+    ///     repository.
+    /// </summary>
+    /// <param name="key">A unique key.</param>
+    /// <param name="instance">The instance to add.</param>
+    /// <returns>
+    ///     Either the
+    ///     <paramref name="instance" />
+    ///     or if the key already exists in the repository a reference to the existing <see cref="Account" />.
+    /// </returns>
+    public void Add(string key, Account instance)
+    {
+        if (instance is null)
         {
-            // Populate the repository with the known list of account I want for now.
-            // In a more advanced implementation these would be loaded into the repository when the StatementModel is loaded using
-            // the AccountTypes actively used by it.
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Cheque,
-                new ChequeAccount(AccountTypeRepositoryConstants.Cheque));
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Visa,
-                new VisaAccount(AccountTypeRepositoryConstants.Visa));
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Savings,
-                new SavingsAccount(AccountTypeRepositoryConstants.Savings));
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Mastercard,
-                new MastercardAccount(AccountTypeRepositoryConstants.Mastercard));
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Amex,
-                new AmexAccount(AccountTypeRepositoryConstants.Amex));
+            throw new ArgumentNullException(nameof(instance));
         }
 
-        /// <summary>
-        ///     Add a new <see cref="Account" /> with the given key. Will not throw if the key already exists in the
-        ///     repository.
-        /// </summary>
-        /// <param name="key">A unique key.</param>
-        /// <param name="instance">The instance to add.</param>
-        /// <returns>
-        ///     Either the
-        ///     <paramref name="instance" />
-        ///     or if the key already exists in the repository a reference to the existing <see cref="Account" />.
-        /// </returns>
-        public void Add(string key, Account instance)
+        if (key.IsNothing())
         {
-            if (instance is null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-
-            if (key.IsNothing())
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            this.repository.GetOrAdd(key.ToUpperInvariant(), instance);
+            throw new ArgumentNullException(nameof(key));
         }
 
-        /// <summary>
-        ///     Search for an existing <see cref="Account" />.
-        /// </summary>
-        /// <param name="criteria">A predicate to determine a match.</param>
-        /// <returns>The found account or null.</returns>
-        public Account Find(Predicate<Account> criteria)
-        {
-            var copy = this.repository.ToArray();
-            return copy.FirstOrDefault(x => criteria(x.Value)).Value;
-        }
+        this.repository.GetOrAdd(key.ToUpperInvariant(), instance);
+    }
+
+    /// <summary>
+    ///     Search for an existing <see cref="Account" />.
+    /// </summary>
+    /// <param name="criteria">A predicate to determine a match.</param>
+    /// <returns>The found account or null.</returns>
+    public Account Find(Predicate<Account> criteria)
+    {
+        var copy = this.repository.ToArray();
+        return copy.FirstOrDefault(x => criteria(x.Value)).Value;
+    }
 
     /// <summary>
     ///     Retrieve the <see cref="Account" /> for the given key or null if it doesn't exist in the repository.
