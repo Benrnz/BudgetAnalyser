@@ -64,25 +64,25 @@ namespace BudgetAnalyser
         /// </summary>
         public void Dispose()
         {
-            // Check to see if Dispose has already been called. 
+            // Check to see if Dispose has already been called.
             if (!this.disposed)
             {
-                // Release unmanaged resources. If disposing is false, 
-                // only the following code is executed. 
+                // Release unmanaged resources. If disposing is false,
+                // only the following code is executed.
                 this.disposables.ForEach(x => x.Dispose());
-                // Note that this is not thread safe. 
-                // Another thread could start disposing the object 
-                // after the managed resources are disposed, 
-                // but before the disposed flag is set to true. 
-                // If thread safety is necessary, it must be 
-                // implemented by the client. 
+                // Note that this is not thread safe.
+                // Another thread could start disposing the object
+                // after the managed resources are disposed,
+                // but before the disposed flag is set to true.
+                // If thread safety is necessary, it must be
+                // implemented by the client.
             }
 
             this.disposed = true;
 
-            // Take yourself off the Finalization queue 
-            // to prevent finalization code for this object 
-            // from executing a second time. 
+            // Take yourself off the Finalization queue
+            // to prevent finalization code for this object
+            // from executing a second time.
             GC.SuppressFinalize(this);
         }
 
@@ -133,7 +133,7 @@ namespace BudgetAnalyser
             var container = builder.Build();
 
             Logger = container.Resolve<ILogger>();
-            Logger.LogLevelFilter = LogLevel.Warn; // hardcoded default log level. 
+            Logger.LogLevelFilter = LogLevel.Warn; // hardcoded default log level.
 
             foreach (var assembly in assemblies)
             {
@@ -240,7 +240,6 @@ namespace BudgetAnalyser
             // Wait Cursor Builder
             builder.RegisterInstance<Func<IWaitCursor>>(() => new WpfWaitCursor());
 
-            builder.RegisterType<AppStateRecentFileManager>().As<IRecentFileManager>().SingleInstance();
             builder.RegisterType<PersistBaxAppStateAsXaml>().As<IPersistApplicationState>().SingleInstance();
             // Input Box / Message Box / Question Box / User Prompts etc
             builder.RegisterType<WpfViewLoader<InputBox>>().Named<IViewLoader>(InputBoxView);
@@ -268,9 +267,9 @@ namespace BudgetAnalyser
         /// </summary>
         ~CompositionRoot()
         {
-            // Do not re-create Dispose clean-up code here. 
-            // Calling Dispose(false) is optimal in terms of 
-            // readability and maintainability. 
+            // Do not re-create Dispose clean-up code here.
+            // Calling Dispose(false) is optimal in terms of
+            // readability and maintainability.
             Dispose();
         }
     }
