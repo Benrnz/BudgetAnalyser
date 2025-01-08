@@ -13,7 +13,7 @@ namespace Rees.Wpf
         public double? Height { get; set; }
         public double? MinHeight { get; set; }
         public double? MinWidth { get; set; }
-        protected T TargetWindow { get; set; }
+        protected T? TargetWindow { get; set; }
         public double? Width { get; set; }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Rees.Wpf
         /// <param name="context">The Data Context.</param>
         protected virtual void ConfigureWindow(object context)
         {
-            TargetWindow.DataContext = context;
+            TargetWindow!.DataContext = context;
             if (Height is not null)
             {
                 TargetWindow.Height = Height.Value;

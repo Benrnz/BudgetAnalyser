@@ -15,16 +15,6 @@ public interface IFileEncryptor
     Stream CreateWritableEncryptedStream(string fileName, SecureString passphrase);
 
     /// <summary>
-    ///     Encrypts the source file by copying its contents into a new encrypted destination file.
-    ///     The source file remains untouched.
-    /// </summary>
-    /// <param name="destinationFile">The file to write encrypted data into.</param>
-    /// <param name="passphrase">The pass phrase.</param>
-    /// <param name="sourceFile">The plain text source file.</param>
-    /// <exception cref="System.IO.FileNotFoundException">Will be thrown if the source file does not exist.</exception>
-    Task EncryptFileAsync(string sourceFile, string destinationFile, SecureString passphrase);
-
-    /// <summary>
     ///     Loads the encrypted file asynchronously and returns its contents as a string (UTF8).
     /// </summary>
     /// <param name="fileName">The path and name of the file.</param>

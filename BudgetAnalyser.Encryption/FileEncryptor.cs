@@ -20,31 +20,6 @@ internal class FileEncryptor : IFileEncryptor
         return CipherStream.Create(outputStream, SecureStringCredentialStore.SecureStringToString(passphrase));
     }
 
-    public async Task EncryptFileAsync(string sourceFile, string destinationFile, SecureString passphrase)
-    {
-        if (sourceFile.IsNothing())
-        {
-            throw new ArgumentNullException(nameof(sourceFile));
-        }
-
-        if (destinationFile.IsNothing())
-        {
-            throw new ArgumentNullException(nameof(destinationFile));
-        }
-
-        if (passphrase is null)
-        {
-            throw new ArgumentNullException(nameof(passphrase));
-        }
-
-        if (!FileExists(sourceFile))
-        {
-            throw new FileNotFoundException(sourceFile);
-        }
-
-        await Confuzzle.EncryptFile(sourceFile).WithPassword(passphrase).IntoFile(destinationFile);
-    }
-
     public async Task<string> LoadEncryptedFileAsync(string fileName, SecureString passphrase)
     {
         return await Confuzzle.DecryptFile(fileName).WithPassword(passphrase).IntoString();
