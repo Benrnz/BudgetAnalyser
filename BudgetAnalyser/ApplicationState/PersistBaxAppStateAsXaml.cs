@@ -4,7 +4,6 @@ using System.IO;
 using System.Xaml;
 using BudgetAnalyser.Engine.Persistence;
 using Rees.Wpf.Contracts;
-using BadApplicationStateFileFormatException = Rees.Wpf.ApplicationState.BadApplicationStateFileFormatException;
 
 namespace BudgetAnalyser.ApplicationState
 {
@@ -12,32 +11,28 @@ namespace BudgetAnalyser.ApplicationState
     ///     An implementation of <see cref="IPersistApplicationState" /> that saves the user meta-data as Xaml to a file on the
     ///     local disk.
     /// </summary>
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global // Used by Moq
     public class PersistBaxAppStateAsXaml : IPersistApplicationState
     {
         private const string FileName = "BudgetAnalyserAppState.xml";
         private readonly IUserMessageBox userMessageBox;
 
-        private string doNotUseFullFileName;
+        private string doNotUseFullFileName = string.Empty;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PersistBaxAppStateAsXaml" /> class.
         /// </summary>
         /// <param name="userMessageBox">A service to show the user a message box.</param>
         /// <exception cref="System.ArgumentNullException">userMessageBox cannot be null.</exception>
-        public PersistBaxAppStateAsXaml([NotNull] IUserMessageBox userMessageBox)
+        public PersistBaxAppStateAsXaml(IUserMessageBox userMessageBox)
         {
-            if (userMessageBox is null)
-            {
-                throw new ArgumentNullException(nameof(userMessageBox));
-            }
-
-            this.userMessageBox = userMessageBox;
+            this.userMessageBox = userMessageBox ?? throw new ArgumentNullException(nameof(userMessageBox));
         }
 
         /// <summary>
         ///     Gets the full name of the file to save the data into.
         ///     The file will be overwritten.
-        ///     By default this will save to the application folder with the name BudgetAnalyserAppState.xml.
+        ///     By default, this will save to the application folder with the name BudgetAnalyserAppState.xml.
         /// </summary>
         protected virtual string FullFileName
         {
@@ -61,7 +56,7 @@ namespace BudgetAnalyser.ApplicationState
         ///     An array of data objects that are self identifying. This array will need to be processed or broadcasted to the
         ///     components that consume this data.
         /// </returns>
-        /// <exception cref="Rees.Wpf.ApplicationState.BadApplicationStateFileFormatException">
+        /// <exception cref="BadApplicationStateFileFormatException">
         ///     This will be thrown if the file is
         ///     invalid.
         /// </exception>
