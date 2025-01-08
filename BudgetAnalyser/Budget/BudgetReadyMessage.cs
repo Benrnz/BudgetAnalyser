@@ -3,15 +3,9 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
 {
-    public class BudgetReadyMessage : MessageBase
+    public class BudgetReadyMessage(IBudgetCurrencyContext activeBudget, BudgetCollection? budgets = null) : MessageBase
     {
-        public BudgetReadyMessage(IBudgetCurrencyContext activeBudget, BudgetCollection budgets = null)
-        {
-            ActiveBudget = activeBudget;
-            Budgets = budgets;
-        }
-
-        public IBudgetCurrencyContext ActiveBudget { get; private set; }
-        public BudgetCollection Budgets { get; private set; }
+        public IBudgetCurrencyContext ActiveBudget { get; private set; } = activeBudget;
+        public BudgetCollection? Budgets { get; private set; } = budgets;
     }
 }

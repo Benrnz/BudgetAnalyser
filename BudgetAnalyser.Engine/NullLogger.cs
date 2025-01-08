@@ -12,9 +12,9 @@
         ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always
         ///     English.
         /// </summary>
-        public string Format(string formatTemplate, params object[] parameters)
+        public string Format(string formatTemplate, params object?[] parameters)
         {
-            return null;
+            return string.Empty;
         }
 
         /// <summary>

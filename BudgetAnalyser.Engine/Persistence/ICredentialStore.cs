@@ -1,25 +1,24 @@
-﻿namespace BudgetAnalyser.Engine.Persistence
+﻿namespace BudgetAnalyser.Engine.Persistence;
+
+/// <summary>
+///     A generic interface to store and retrieve a credential.
+/// </summary>
+public interface ICredentialStore
 {
     /// <summary>
-    ///     A generic interface to store and retrieve a credential.
+    ///     Compares the stored pass key with the provided pass key for equivalence.
     /// </summary>
-    public interface ICredentialStore
-    {
-        /// <summary>
-        ///     Retrieves the pass key.
-        /// </summary>
-        object RetrievePasskey();
+    /// <returns>Will return true if the two keys are non-null and are equivalent, otherwise false.</returns>
+    bool AreEqual(object? compareTo);
 
-        /// <summary>
-        ///     Retrieves the pass key.
-        /// </summary>
-        /// <returns>A credential object or null if no credentials have been provided by the user.</returns>
-        void SetPasskey(object passkey);
+    /// <summary>
+    ///     Retrieves the pass key.
+    /// </summary>
+    object? RetrievePasskey();
 
-        /// <summary>
-        ///     Compares the stored pass key with the provided pass key for equivalence.
-        /// </summary>
-        /// <returns>Will return true if the two keys are non-null and are equivalent, otherwise false.</returns>
-        bool AreEqual(object compareTo);
-    }
+    /// <summary>
+    ///     Retrieves the pass key.
+    /// </summary>
+    /// <returns>A credential object or null if no credentials have been provided by the user.</returns>
+    void SetPasskey(object passkey);
 }

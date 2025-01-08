@@ -10,6 +10,7 @@ namespace BudgetAnalyser.Encryption;
 ///     A utility class for encrypting files on the local disk.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
+// ReSharper disable once UnusedType.Global // Instantiated by IoC
 internal class FileEncryptor : IFileEncryptor
 {
     [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Output stream is disposed by consumer when CipherStream is disposed")]
@@ -17,31 +18,6 @@ internal class FileEncryptor : IFileEncryptor
     {
         var outputStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite, 4096, FileOptions.Asynchronous);
         return CipherStream.Create(outputStream, SecureStringCredentialStore.SecureStringToString(passphrase));
-    }
-
-    public async Task EncryptFileAsync(string sourceFile, string destinationFile, SecureString passphrase)
-    {
-        if (sourceFile.IsNothing())
-        {
-            throw new ArgumentNullException(nameof(sourceFile));
-        }
-
-        if (destinationFile.IsNothing())
-        {
-            throw new ArgumentNullException(nameof(destinationFile));
-        }
-
-        if (passphrase is null)
-        {
-            throw new ArgumentNullException(nameof(passphrase));
-        }
-
-        if (!FileExists(sourceFile))
-        {
-            throw new FileNotFoundException(sourceFile);
-        }
-
-        await Confuzzle.EncryptFile(sourceFile).WithPassword(passphrase).IntoFile(destinationFile);
     }
 
     public async Task<string> LoadEncryptedFileAsync(string fileName, SecureString passphrase)
@@ -59,7 +35,7 @@ internal class FileEncryptor : IFileEncryptor
             while (cryptoStream.CanRead)
             {
                 var buffer = new byte[4096];
-                await cryptoStream.ReadAsync(buffer, 0, 4096);
+                await cryptoStream.ReadExactlyAsync(buffer, 0, 4096);
                 await outputStream.WriteAsync(buffer, 0, 4096);
                 var chunk = Encoding.UTF8.GetChars(buffer);
                 var occurrences = chunk.Count(c => c == '\n');

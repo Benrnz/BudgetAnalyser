@@ -14,7 +14,7 @@
         ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always
         ///     English.
         /// </summary>
-        string Format(string formatTemplate, params object[] parameters);
+        string Format(string formatTemplate, params object?[] parameters);
 
         /// <summary>
         ///     Write a debug/diagnostic log entry regardless of the configured log level.

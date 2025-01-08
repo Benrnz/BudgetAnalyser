@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Wpf.UnitTest
     {
         public LogLevel LogLevelFilter { get; set; }
 
-        public string Format(string format, params object[] parameters)
+        public string Format(string format, params object?[] parameters)
         {
             return string.Format(CultureInfo.InvariantCulture, format, parameters);
         }
