@@ -9,18 +9,13 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook
 {
     [AutoRegisterWithIoC]
-    public class ReconciliationToDoListController : ControllerBase
+    public class ReconciliationToDoListController(IMessenger messenger, IApplicationDatabaseFacade applicationDatabaseService) : ControllerBase(messenger)
     {
-        private readonly IApplicationDatabaseFacade applicationDatabaseService;
+        private readonly IApplicationDatabaseFacade applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         private bool doNotUseAddingNewTask;
-        private string doNotUseNewTaskDescription;
-        private ToDoTask doNotUseSelectedTask;
-        private ToDoCollection doNotUseTasks;
-
-        public ReconciliationToDoListController([NotNull] IMessenger messenger, [NotNull] IApplicationDatabaseFacade applicationDatabaseService) : base(messenger)
-        {
-            this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
-        }
+        private string doNotUseNewTaskDescription = string.Empty;
+        private ToDoTask? doNotUseSelectedTask;
+        private ToDoCollection? doNotUseTasks;
 
         public bool AddingNewTask
         {
@@ -33,10 +28,8 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        [UsedImplicitly]
         public ICommand AddReminderCommand => new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription));
 
-        [UsedImplicitly]
         public ICommand BeginAddingReminderCommand => new RelayCommand(() => AddingNewTask = true);
 
         public string NewTaskDescription
@@ -50,14 +43,11 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        [UsedImplicitly]
         public ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t is not null);
 
-        [UsedImplicitly]
         public ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t is not null);
 
-        [UsedImplicitly]
-        public ToDoTask SelectedTask
+        public ToDoTask? SelectedTask
         {
             get => this.doNotUseSelectedTask;
             set
@@ -67,7 +57,7 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ToDoCollection Tasks
+        public ToDoCollection? Tasks
         {
             get => this.doNotUseTasks;
             private set
@@ -78,8 +68,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        [UsedImplicitly]
-        public string Title => "Reconciliation Reminders and To Do's";
+        //public string Title => "Reconciliation Reminders and To Do's";
 
         public void Close()
         {
@@ -94,18 +83,26 @@ namespace BudgetAnalyser.LedgerBook
         private void OnAddReminderCommandExecuted()
         {
             AddingNewTask = false;
-            Tasks.Add(new ToDoTask(NewTaskDescription, false, false));
+            Tasks!.Add(new ToDoTask(NewTaskDescription, false, false));
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Tasks);
         }
 
-        private void OnRemoveReminderCommandExecuted(ToDoTask task)
+        private void OnRemoveReminderCommandExecuted(ToDoTask? task)
         {
-            Tasks.RemoveReminderTask(task);
+            if (task is null)
+            {
+                return;
+            }
+            Tasks!.RemoveReminderTask(task);
         }
 
-        private void OnRemoveTaskCommandExecuted(ToDoTask task)
+        private void OnRemoveTaskCommandExecuted(ToDoTask? task)
         {
-            Tasks.Remove(task);
+            if (task is null)
+            {
+                return;
+            }
+            Tasks!.Remove(task);
         }
     }
 }
