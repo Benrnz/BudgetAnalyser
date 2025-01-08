@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine.XUnit.Helpers;
 
 public class XUnitOutputWriter(ITestOutputHelper xunitOutput) : IReesTestOutput, IDisposable
 {
-    private StringBuilder? lineBuilder = null;
+    private StringBuilder lineBuilder = null;
 
     public void Write(string text)
     {

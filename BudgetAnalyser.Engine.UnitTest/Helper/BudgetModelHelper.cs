@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper;
 
 public static class BudgetModelHelper
 {
-    public static void Output(this IBudgetCurrencyContext instance, IReesTestOutput? outputWriter = null)
+    public static void Output(this IBudgetCurrencyContext instance, IReesTestOutput outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         writer.WriteLine(string.Empty);
@@ -27,7 +27,7 @@ public static class BudgetModelHelper
         instance.Model.Output(false, writer);
     }
 
-    public static void Output(this BudgetModel instance, bool includeTitle = true, IReesTestOutput? outputWriter = null)
+    public static void Output(this BudgetModel instance, bool includeTitle = true, IReesTestOutput outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         if (includeTitle)
@@ -60,7 +60,7 @@ public static class BudgetModelHelper
         writer.WriteLine(@"======================================================================");
     }
 
-    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput? outputWriter)
+    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput outputWriter)
     {
         return outputWriter ?? new DebugTestOutput();
     }

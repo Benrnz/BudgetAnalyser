@@ -337,7 +337,7 @@ internal static class LedgerBookDtoTestData
         return line;
     }
 
-    private static void UpdateLineBalances(LedgerEntryLineDto currentLine, LedgerEntryLineDto? previousLine, decimal bankBalance)
+    private static void UpdateLineBalances(LedgerEntryLineDto currentLine, LedgerEntryLineDto previousLine, decimal bankBalance)
     {
         currentLine.BankBalance = bankBalance;
         currentLine.BankBalances.Add(new BankBalanceDto { Account = StatementModelTestData.ChequeAccount.Name, Balance = bankBalance });

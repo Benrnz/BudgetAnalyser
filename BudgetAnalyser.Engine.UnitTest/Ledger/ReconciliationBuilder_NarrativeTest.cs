@@ -8,8 +8,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 [TestClass]
 public class ReconciliationBuilderNarrativeTest
 {
-    private const string? NoDescriptionText = "[No Description]";
-    private const string? BillPaymentTransactionText = "Bill Payment";
+    private const string NoDescriptionText = "[No Description]";
+    private const string BillPaymentTransactionText = "Bill Payment";
     private const string TestDescriptionText = "My description here 123.";
     private Transaction testTransaction;
 
@@ -201,7 +201,7 @@ public class ReconciliationBuilderNarrativeTest
         };
     }
 
-    private string? ExtractNarrative()
+    private string ExtractNarrative()
     {
         return PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "ExtractNarrative", this.testTransaction);
     }

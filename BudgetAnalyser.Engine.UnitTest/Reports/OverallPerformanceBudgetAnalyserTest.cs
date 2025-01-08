@@ -13,7 +13,7 @@ public class OverallPerformanceBudgetAnalyserTest
 {
     private readonly IBudgetBucketRepository bucketRepository = new BucketBucketRepoAlwaysFind();
     private readonly StatementModel statementTestData = StatementModelTestData.TestData6();
-    private OverallPerformanceBudgetAnalyser? analyser;
+    private OverallPerformanceBudgetAnalyser analyser;
     private BudgetCollection budgetsTestData = BudgetModelTestData.CreateCollectionWith2And5();
     private GlobalFilterCriteria dateCriteria = new() { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 1, 1) };
 
