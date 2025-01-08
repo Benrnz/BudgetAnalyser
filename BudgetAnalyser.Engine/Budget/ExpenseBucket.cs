@@ -1,25 +1,24 @@
-﻿namespace BudgetAnalyser.Engine.Budget
+﻿namespace BudgetAnalyser.Engine.Budget;
+
+/// <summary>
+///     An expense bucket used to represent any expense classification.
+/// </summary>
+/// <seealso cref="BudgetAnalyser.Engine.Budget.BudgetBucket" />
+public abstract class ExpenseBucket : BudgetBucket
 {
     /// <summary>
-    ///     A expense bucket used to represent any expense classification.
+    ///     Initializes a new instance of the <see cref="ExpenseBucket" /> class.
     /// </summary>
-    /// <seealso cref="BudgetAnalyser.Engine.Budget.BudgetBucket" />
-    public abstract class ExpenseBucket : BudgetBucket
+    protected ExpenseBucket()
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ExpenseBucket" /> class.
-        /// </summary>
-        protected ExpenseBucket()
-        {
-            // Default constructor required for deserialisation.
-        }
+        // Default constructor required for deserialisation.
+    }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ExpenseBucket" /> class.
-        /// </summary>
-        protected ExpenseBucket(string code, string name)
-            : base(code, name)
-        {
-        }
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ExpenseBucket" /> class.
+    /// </summary>
+    protected ExpenseBucket(string code, string name)
+        : base(code, name)
+    {
     }
 }

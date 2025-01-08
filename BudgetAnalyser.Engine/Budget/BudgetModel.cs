@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using JetBrains.Annotations;
@@ -18,8 +15,8 @@ public class BudgetModel : INotifyPropertyChanged
     private BudgetCycle doNotUseBudgetCycle;
     private DateTime doNotUseEffectiveFrom;
     private DateTime doNotUseLastModified;
-    private string doNotUseLastModifiedComment;
-    private string doNotUseName;
+    private string doNotUseLastModifiedComment = string.Empty;
+    private string doNotUseName = string.Empty;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetModel" /> class.
@@ -37,7 +34,7 @@ public class BudgetModel : INotifyPropertyChanged
     /// <summary>
     ///     The Property Changed event for public properties
     /// </summary>
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     ///     Gets the pay cycle for this budget. Can only be set during budget creation.
@@ -166,7 +163,7 @@ public class BudgetModel : INotifyPropertyChanged
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     [NotifyPropertyChangedInvocator]
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
@@ -188,7 +185,7 @@ public class BudgetModel : INotifyPropertyChanged
         if (Expenses.Any(e => e.Bucket.Code == SurplusBucket.SurplusCode))
         {
             validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                                            "You can not use SURPLUS as an expense code.");
+                "You can not use SURPLUS as an expense code.");
             retval = false;
         }
 
@@ -200,8 +197,7 @@ public class BudgetModel : INotifyPropertyChanged
         foreach (var duplicateCode in duplicates)
         {
             retval = false;
-            validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                                            "Expense {0} is listed multiple time, each bucket must have a different name.", duplicateCode);
+            validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Expense {0} is listed multiple time, each bucket must have a different name.", duplicateCode);
         }
 
         return retval;

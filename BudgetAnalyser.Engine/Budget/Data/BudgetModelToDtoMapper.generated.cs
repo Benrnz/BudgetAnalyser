@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             ModelFactory(dto, ref model);
             if (model is null)
             {
-                model = new Expense();
+                throw new NotImplementedException("Expense ModelFactory returned null.");
             }
             var modelType = model.GetType();
             var amount13 = dto.Amount;
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             ModelFactory(dto, ref model);
             if (model is null)
             {
-                model = new Income();
+                throw new NotImplementedException("Income ModelFactory returned null.");
             }
             var modelType = model.GetType();
             var amount17 = dto.Amount;
