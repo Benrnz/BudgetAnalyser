@@ -10,6 +10,7 @@ namespace BudgetAnalyser.Encryption;
 ///     A utility class for encrypting files on the local disk.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
+// ReSharper disable once UnusedType.Global // Instantiated by IoC
 internal class FileEncryptor : IFileEncryptor
 {
     [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Output stream is disposed by consumer when CipherStream is disposed")]
@@ -59,7 +60,7 @@ internal class FileEncryptor : IFileEncryptor
             while (cryptoStream.CanRead)
             {
                 var buffer = new byte[4096];
-                await cryptoStream.ReadAsync(buffer, 0, 4096);
+                await cryptoStream.ReadExactlyAsync(buffer, 0, 4096);
                 await outputStream.WriteAsync(buffer, 0, 4096);
                 var chunk = Encoding.UTF8.GetChars(buffer);
                 var occurrences = chunk.Count(c => c == '\n');
