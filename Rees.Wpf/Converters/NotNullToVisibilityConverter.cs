@@ -1,63 +1,61 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Rees.Wpf.Converters
+namespace Rees.Wpf.Converters;
+
+/// <summary>
+///     Returns <see cref="Visibility.Visible" /> when the value is null or an empty string. Otherwise,
+///     <see cref="Visibility.Hidden" />.
+///     This is the opporsite of <see cref="NullToVisibilityConverter" />.
+/// </summary>
+public class NotNullToVisibilityConverter : IValueConverter
 {
     /// <summary>
-    ///     Returns <see cref="Visibility.Visible" /> when the value is null or an empty string. Otherwise,
-    ///     <see cref="Visibility.Hidden" />.
-    ///     This is the opporsite of <see cref="NullToVisibilityConverter" />.
+    ///     Converts a value.
     /// </summary>
-    public class NotNullToVisibilityConverter : IValueConverter
+    /// <param name="value">The value produced by the binding source.</param>
+    /// <param name="targetType">The type of the binding target property.</param>
+    /// <param name="parameter">The converter parameter to use.</param>
+    /// <param name="culture">The culture to use in the converter.</param>
+    /// <returns>
+    ///     A converted value. If the method returns null, the valid null value is used.
+    /// </returns>
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        /// <summary>
-        ///     Converts a value.
-        /// </summary>
-        /// <param name="value">The value produced by the binding source.</param>
-        /// <param name="targetType">The type of the binding target property.</param>
-        /// <param name="parameter">The converter parameter to use.</param>
-        /// <param name="culture">The culture to use in the converter.</param>
-        /// <returns>
-        ///     A converted value. If the method returns null, the valid null value is used.
-        /// </returns>
-        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        var stringParameter = parameter as string;
+        var hiddenValue = Visibility.Hidden;
+        var test = () => value is null;
+
+        if (stringParameter is not null)
         {
-            var stringParameter = parameter as string;
-            var hiddenValue = Visibility.Hidden;
-            var test = () => value is null;
-
-            if (stringParameter is not null)
+            if (value is string && (stringParameter == string.Empty || stringParameter == "Empty"))
             {
-                if (value is string && (stringParameter == string.Empty || stringParameter == "Empty"))
-                {
-                    test = () => string.IsNullOrWhiteSpace(value.ToString());
-                }
-
-                if (stringParameter == "Collapsed")
-                {
-                    hiddenValue = Visibility.Collapsed;
-                }
+                test = () => string.IsNullOrWhiteSpace(value.ToString());
             }
 
-            return test() ? Visibility.Visible : hiddenValue;
+            if (stringParameter == "Collapsed")
+            {
+                hiddenValue = Visibility.Collapsed;
+            }
         }
 
-        /// <summary>
-        ///     Not supported.
-        /// </summary>
-        /// <param name="value">The value that is produced by the binding target.</param>
-        /// <param name="targetType">The type to convert to.</param>
-        /// <param name="parameter">The converter parameter to use.</param>
-        /// <param name="culture">The culture to use in the converter.</param>
-        /// <returns>
-        ///     A converted value. If the method returns null, the valid null value is used.
-        /// </returns>
-        /// <exception cref="System.NotSupportedException"></exception>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
+        return test() ? Visibility.Visible : hiddenValue;
+    }
+
+    /// <summary>
+    ///     Not supported.
+    /// </summary>
+    /// <param name="value">The value that is produced by the binding target.</param>
+    /// <param name="targetType">The type to convert to.</param>
+    /// <param name="parameter">The converter parameter to use.</param>
+    /// <param name="culture">The culture to use in the converter.</param>
+    /// <returns>
+    ///     A converted value. If the method returns null, the valid null value is used.
+    /// </returns>
+    /// <exception cref="System.NotSupportedException"></exception>
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
     }
 }
