@@ -367,7 +367,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    private void OnShowTransactionsCompleted(object sender, LedgerTransactionEventArgs args)
+    private void OnShowTransactionsCompleted(object? sender, LedgerTransactionEventArgs? args)
     {
         this.uiContext.LedgerTransactionsController.Complete -= OnShowTransactionsCompleted;
 
@@ -382,7 +382,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         ViewModel.CurrentStatement = message.StatementModel;
     }
 
-    private void OnTransferFundsRequested(object sender, EventArgs eventArgs)
+    private void OnTransferFundsRequested(object? sender, EventArgs? eventArgs)
     {
         this.uiContext.TransferFundsController.TransferFundsRequested -= OnTransferFundsRequested;
         this.reconService.TransferFunds(ViewModel.LedgerBook, ViewModel.NewLedgerLine, this.uiContext.TransferFundsController.TransferFundsDto);

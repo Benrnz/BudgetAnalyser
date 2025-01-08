@@ -66,7 +66,9 @@ public class LedgerBucketViewController : ControllerBase
 
         var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
         {
-            CorrelationId = this.correlationId, Title = "Ledger - " + BucketBeingTracked, HelpAvailable = true
+            CorrelationId = this.correlationId,
+            Title = "Ledger - " + BucketBeingTracked,
+            HelpAvailable = true
         };
 
         Messenger.Send(dialogRequest);

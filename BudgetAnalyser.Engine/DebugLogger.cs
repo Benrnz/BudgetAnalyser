@@ -39,7 +39,7 @@ public class DebugLogger : ILogger
     ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always
     ///     English.
     /// </summary>
-    public string Format(string formatTemplate, params object[] parameters)
+    public string Format(string formatTemplate, params object?[] parameters)
     {
         return !this.isDebuggerAttached ? string.Empty : string.Format(formatTemplate, parameters);
     }
