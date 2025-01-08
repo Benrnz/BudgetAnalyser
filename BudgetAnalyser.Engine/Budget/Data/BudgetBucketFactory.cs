@@ -1,7 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
-
-namespace BudgetAnalyser.Engine.Budget.Data;
+﻿namespace BudgetAnalyser.Engine.Budget.Data;
 
 /// <summary>
 ///     Converts DTO's to models, and vice versa.
@@ -9,7 +6,7 @@ namespace BudgetAnalyser.Engine.Budget.Data;
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class BudgetBucketFactory : IBudgetBucketFactory
 {
-    public BudgetBucket BuildModel([NotNull] BudgetBucketDto dto)
+    public BudgetBucket BuildModel(BudgetBucketDto dto)
     {
         if (dto is null)
         {
@@ -47,18 +44,14 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
         BudgetBucketDto dto;
         var fixedProjectBucket = bucket as FixedBudgetProjectBucket;
         dto = fixedProjectBucket is not null
-            ? new FixedBudgetBucketDto
-            {
-                Created = fixedProjectBucket.Created,
-                FixedBudgetAmount = fixedProjectBucket.FixedBudgetAmount
-            }
+            ? new FixedBudgetBucketDto { Created = fixedProjectBucket.Created, FixedBudgetAmount = fixedProjectBucket.FixedBudgetAmount }
             : new BudgetBucketDto();
 
         dto.Type = SerialiseType(bucket);
         return dto;
     }
 
-    public BucketDtoType SerialiseType([NotNull] BudgetBucket bucket)
+    public BucketDtoType SerialiseType(BudgetBucket bucket)
     {
         if (bucket is null)
         {
