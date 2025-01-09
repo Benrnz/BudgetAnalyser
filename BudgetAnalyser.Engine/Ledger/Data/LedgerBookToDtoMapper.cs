@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Mobile;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
@@ -25,9 +20,9 @@ internal partial class MapperLedgerBookDto2LedgerBook(
     // ReSharper disable once UnusedParameter.Local - This argument is used to optionally detect elements not in array.
     private LedgerBucket GetOrAddFromCache(LedgerBucket ledger, bool throwIfNotFound = false)
     {
-        if (this.cachedLedgers.ContainsKey(ledger.BudgetBucket.Code))
+        if (this.cachedLedgers.TryGetValue(ledger.BudgetBucket.Code, out var cachedLedger))
         {
-            return this.cachedLedgers[ledger.BudgetBucket.Code];
+            return cachedLedger;
         }
 
         if (throwIfNotFound)
@@ -90,10 +85,7 @@ internal partial class MapperLedgerBookDto2LedgerBook(
 
     partial void ToDtoPreprocessing(LedgerBook model)
     {
-        if (model.MobileSettings is null)
-        {
-            model.MobileSettings = new MobileStorageSettings();
-        }
+        model.MobileSettings = new MobileStorageSettings();
     }
 
     partial void ToModelPostprocessing(LedgerBookDto dto, ref LedgerBook model)
@@ -182,6 +174,11 @@ internal partial class MapperBankBalanceDto2BankBalance(IAccountTypeRepository a
     partial void ModelFactory(BankBalanceDto dto, ref BankBalance model)
     {
         model = new BankBalance(this.accountTypeRepo.GetByKey(dto.Account), dto.Balance);
+    }
+
+    partial void DtoFactory(ref BankBalanceDto dto, BankBalance model)
+    {
+        dto = new BankBalanceDto { Account = model.Account.Name, Balance = model.Balance };
     }
 
     partial void ToDtoPostprocessing(ref BankBalanceDto dto, BankBalance model)

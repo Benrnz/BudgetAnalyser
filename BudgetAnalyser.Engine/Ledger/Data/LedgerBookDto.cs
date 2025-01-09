@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 using JetBrains.Annotations;
 
@@ -37,7 +35,7 @@ public class LedgerBookDto
     /// <summary>
     ///     The configuration for the remote mobile data storage
     /// </summary>
-    public MobileStorageSettingsDto MobileSettings { get; set; }
+    public MobileStorageSettingsDto? MobileSettings { get; set; }
 
     /// <summary>
     ///     Gets or sets the last modified date.
@@ -49,7 +47,7 @@ public class LedgerBookDto
     ///     Gets or sets the ledger book name.
     /// </summary>
     [XmlAttribute]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the reconciliations collection.
@@ -61,5 +59,5 @@ public class LedgerBookDto
     /// <summary>
     ///     Gets or sets the storage key.
     /// </summary>
-    public string StorageKey { get; set; }
+    public string StorageKey { get; set; } = string.Empty;
 }

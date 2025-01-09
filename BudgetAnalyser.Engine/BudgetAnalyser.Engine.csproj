@@ -26,4 +26,8 @@
         <InternalsVisibleTo Include="BudgetAnalyser.Wpf.UnitTest"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Ledger\Data\Data2\" />
+    </ItemGroup>
 </Project>

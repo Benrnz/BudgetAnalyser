@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             DtoFactory(ref dto, model);
             if (dto is null)
             {
-                dto = new LedgerBookDto();
+                throw new NotSupportedException("LedgerBookDto must be created by the factory.");
             }
             var mapper3 = new MapperLedgerBucketDto2LedgerBucket(this.bucketRepo, this.accountTypeRepo, this.bucketFactory);
             var ledgers7 = model.Ledgers.Select(mapper3.ToDto).ToList();
@@ -260,7 +260,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ModelFactory(dto, ref model);
             if (model is null)
             {
-                // model = new BankBalance(); 
+                throw new NotSupportedException("BankBalance must be created by the factory.");
             }
             var modelType = model.GetType();
             ToModelPostprocessing(dto, ref model);
@@ -274,7 +274,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             DtoFactory(ref dto, model);
             if (dto is null)
             {
-                dto = new BankBalanceDto();
+                throw new NotSupportedException("BankBalanceDto must be created by the factory.");
             }
             var balance46 = model.Balance;
             dto.Balance = balance46;
