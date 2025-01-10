@@ -1,4 +1,3 @@
-using System.Reflection;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Mobile;
@@ -6,15 +5,16 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger.Data.Data2;
 
-public class LedgerBookToDtoMapper2 : IDtoMapper<LedgerBookDto, LedgerBook>
+[AutoRegisterWithIoC]
+public class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
 {
+    private readonly IAccountTypeRepository accountTypeRepo;
+    private readonly Dictionary<string, LedgerBucket> cachedLedgers = new();
+    private readonly IDtoMapper<LedgerEntryLineDto, LedgerEntryLine> ledgerEntryLineMapper;
     private readonly IDtoMapper<LedgerBucketDto, LedgerBucket> ledgerMapper;
     private readonly IDtoMapper<MobileStorageSettingsDto, MobileStorageSettings> mobileSettingsMapper;
-    private readonly IDtoMapper<LedgerEntryLineDto, LedgerEntryLine> ledgerEntryLineMapper;
-    private readonly Dictionary<string, LedgerBucket> cachedLedgers = new();
-    private readonly IAccountTypeRepository accountTypeRepo;
 
-    internal LedgerBookToDtoMapper2(
+    internal MapperLedgerBookToDto2(
         IBudgetBucketRepository bucketRepo,
         IAccountTypeRepository accountTypeRepo,
         ILedgerBucketFactory bucketFactory,
@@ -36,9 +36,9 @@ public class LedgerBookToDtoMapper2 : IDtoMapper<LedgerBookDto, LedgerBook>
         }
 
         this.accountTypeRepo = accountTypeRepo ?? throw new ArgumentNullException(nameof(accountTypeRepo));
-        this.ledgerMapper = new MapperLedgerBucketDto2LedgerBucket(bucketRepo, accountTypeRepo, bucketFactory);
-        this.mobileSettingsMapper = new Mapper_MobileSettingsDto_MobileSettings();
-        this.ledgerEntryLineMapper = new MapperLedgerEntryLineDto2LedgerEntryLine(accountTypeRepo, bucketFactory, transactionFactory);
+        this.ledgerMapper = new MapperLedgerBucketToDto2(bucketRepo, accountTypeRepo, bucketFactory);
+        this.mobileSettingsMapper = new MapperMobileSettingsToDto2();
+        this.ledgerEntryLineMapper = new MapperLedgerEntryLineToDto2(accountTypeRepo, bucketFactory, transactionFactory);
     }
 
     public LedgerBookDto ToDto(LedgerBook model)
@@ -46,11 +46,12 @@ public class LedgerBookToDtoMapper2 : IDtoMapper<LedgerBookDto, LedgerBook>
         var ledgerBook = new LedgerBookDto
         {
             Ledgers = model.Ledgers.Select(this.ledgerMapper.ToDto).ToList(),
-            MobileSettings = this.mobileSettingsMapper.ToDto(model.MobileSettings),
+            MobileSettings = model.MobileSettings is null ? null : this.mobileSettingsMapper.ToDto(model.MobileSettings),
             Modified = model.Modified,
             Name = model.Name,
             Reconciliations = model.Reconciliations.Select(this.ledgerEntryLineMapper.ToDto).ToList(),
-            StorageKey = model.StorageKey,
+            StorageKey = model.StorageKey
+            // Checksum is set by the repository class when saving.
         };
 
         return ledgerBook;
@@ -63,12 +64,11 @@ public class LedgerBookToDtoMapper2 : IDtoMapper<LedgerBookDto, LedgerBook>
             Modified = dto.Modified,
             Ledgers = dto.Ledgers.Select(this.ledgerMapper.ToModel).ToList(),
             Name = dto.Name,
-            MobileSettings = dto.MobileSettings is null ? new MobileStorageSettings() : this.mobileSettingsMapper.ToModel(dto.MobileSettings)
+            MobileSettings = dto.MobileSettings is null ? null : this.mobileSettingsMapper.ToModel(dto.MobileSettings),
+            StorageKey = dto.StorageKey
         };
 
-        // Intentionally no public or internal setter for Reconciliation to ensure integrity.
-        ledgerBook.GetType().GetProperty("Reconciliations", BindingFlags.NonPublic | BindingFlags.Instance)!
-            .SetValue(ledgerBook, dto.Reconciliations.Select(this.ledgerEntryLineMapper.ToModel).ToList());
+        ledgerBook.SetReconciliations(dto.Reconciliations.Select(this.ledgerEntryLineMapper.ToModel).ToList());
 
         InitialiseAndValidateLedgerBook(ledgerBook);
 
@@ -114,7 +114,7 @@ public class LedgerBookToDtoMapper2 : IDtoMapper<LedgerBookDto, LedgerBook>
             {
                 // Ensure the ledger bucket is the same instance as listed in the book.Ledgers;
                 // If its not found thats ok, this means its a old ledger no longer declared in the LedgerBook and is archived and hidden.
-                entry.LedgerBucket = GetOrAddLedgerFromCache(entry.LedgerBucket, false);
+                entry.LedgerBucket = GetOrAddLedgerFromCache(entry.LedgerBucket);
                 if (entry.LedgerBucket is not null && entry.LedgerBucket.StoredInAccount is null)
                 {
                     entry.LedgerBucket.StoredInAccount = this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);

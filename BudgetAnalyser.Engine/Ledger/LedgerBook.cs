@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger.Reconciliation;
@@ -11,7 +8,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger;
 
 /// <summary>
-///     The top level ledger model object. Primarily it contains all reconciliations performed to date. The latest of which shows balances for the ledgers as at the <see cref="LedgerEntryLine.Date"/>.
+///     The top level ledger model object. Primarily it contains all reconciliations performed to date. The latest of which shows balances for the ledgers as at the <see cref="LedgerEntryLine.Date" />.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.IModelValidate" />
 public class LedgerBook : IModelValidate
@@ -29,7 +26,7 @@ public class LedgerBook : IModelValidate
 
     /// <summary>
     ///     A mapping of Budget Buckets to Bank Accounts used to create the next instances of the <see cref="LedgerEntry" /> class during the next reconciliation. Changing these values will only
-    ///     effect the next reconciliation, not the current collection of <see cref="LedgerEntryLine"/>s.
+    ///     effect the next reconciliation, not the current collection of <see cref="LedgerEntryLine" />s.
     /// </summary>
     public IEnumerable<LedgerBucket> Ledgers
     {
@@ -40,7 +37,7 @@ public class LedgerBook : IModelValidate
     /// <summary>
     ///     The configuration for the remote mobile data storage.
     /// </summary>
-    public MobileStorageSettings MobileSettings { get; internal set; }
+    public MobileStorageSettings? MobileSettings { get; internal set; }
 
     /// <summary>
     ///     Gets the last modified date.
@@ -55,12 +52,7 @@ public class LedgerBook : IModelValidate
     /// <summary>
     ///     Gets the monthly reconciliations collection.
     /// </summary>
-    public IEnumerable<LedgerEntryLine> Reconciliations
-    {
-        get => this.reconciliations;
-        [UsedImplicitly]
-        private set => this.reconciliations = value.ToList();
-    }
+    public IEnumerable<LedgerEntryLine> Reconciliations => this.reconciliations;
 
     /// <summary>
     ///     Gets the storage key that uniquely identifies this ledger book for storage purposes.
@@ -134,7 +126,7 @@ public class LedgerBook : IModelValidate
     }
 
     /// <summary>
-    ///     Adds a newly created reconciliation into the LedgerBook.  Reconciliations are created with <see cref="ReconciliationCreationManager"/>.
+    ///     Adds a newly created reconciliation into the LedgerBook.  Reconciliations are created with <see cref="ReconciliationCreationManager" />.
     /// </summary>
     internal virtual void Reconcile(ReconciliationResult reconciliation)
     {
@@ -158,6 +150,10 @@ public class LedgerBook : IModelValidate
         throw new InvalidOperationException("You cannot change the account in a ledger that is not in the Ledgers collection.");
     }
 
+    /// <summary>
+    ///     Used for persistence purposes only. Do not use in application code.
+    /// </summary>
+    /// <param name="lines"></param>
     internal void SetReconciliations(List<LedgerEntryLine> lines)
     {
         this.reconciliations = lines.OrderByDescending(l => l.Date).ToList();
