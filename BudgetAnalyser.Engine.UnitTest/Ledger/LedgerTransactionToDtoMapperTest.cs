@@ -1,8 +1,6 @@
-﻿using BudgetAnalyser.Engine.BankAccount;
-using BudgetAnalyser.Engine.Ledger;
+﻿using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Ledger.Data.Data2;
-using BudgetAnalyser.Engine.UnitTest.TestData;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 
@@ -17,21 +15,12 @@ public class LedgerTransactionToDtoMapperTest
     }
 
     private LedgerTransactionDto Result { get; set; }
-    private LedgerTransaction TestData { get; set; }
+    private LedgerTransaction TestData { get; }
 
     [TestMethod]
     public void ShouldMapAmount()
     {
         Assert.AreEqual(123.99M, Result.Amount);
-    }
-
-    [TestMethod]
-    public void ShouldMapBankAccount()
-    {
-        TestData = new BankBalanceAdjustmentTransaction(TransactionId) { BankAccount = new ChequeAccount("CHEQUE"), Amount = -101, Narrative = "TEsting 123" };
-        TestInitialise(); // Re-initialise to use different test data.
-
-        Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.Account);
     }
 
     [TestMethod]

@@ -8,6 +8,11 @@ internal class MapperLedgerTransactionToDto2(ILedgerTransactionFactory ledgerTra
 
     public LedgerTransactionDto ToDto(LedgerTransaction model)
     {
+        if (model is BankBalanceAdjustmentTransaction)
+        {
+            throw new NotSupportedException($"Please use the {nameof(MapperBankBalanceAdjustmentToDto2)} for BankBalanceAdjustmentTransaction.");
+        }
+
         var dto = new LedgerTransactionDto
         {
             Account = null, // Only used for type BalanceAdjustmentTransaction

@@ -68,6 +68,7 @@ public class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
             StorageKey = dto.StorageKey
         };
 
+        // TODO Can this be a ctor instead?
         ledgerBook.SetReconciliations(dto.Reconciliations.Select(this.ledgerEntryLineMapper.ToModel).ToList());
 
         InitialiseAndValidateLedgerBook(ledgerBook);

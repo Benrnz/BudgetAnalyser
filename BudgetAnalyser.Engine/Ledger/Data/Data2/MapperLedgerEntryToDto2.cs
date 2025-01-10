@@ -24,7 +24,12 @@ internal class MapperLedgerEntryToDto2(ILedgerBucketFactory bucketFactory, ILedg
     {
         var entry = new LedgerEntry();
 
-        dto.Transactions.ForEach(t => this.transactionMapper.ToModel(t));
+        dto.Transactions.ForEach(t =>
+        {
+            var ledgerTransaction = this.transactionMapper.ToModel(t);
+            entry.AddTransactionForPersistenceOnly(ledgerTransaction);
+        });
+        // TODO shouldnt this be a ctor?
         entry.Balance = dto.Balance;
         entry.LedgerBucket = this.bucketFactory.Build(dto.BucketCode, dto.StoredInAccount);
 

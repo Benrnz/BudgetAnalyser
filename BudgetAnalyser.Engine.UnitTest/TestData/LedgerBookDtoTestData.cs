@@ -330,7 +330,13 @@ internal static class LedgerBookDtoTestData
         {
             Date = lineDate,
             Remarks = "Lorem ipsum dolor. Mit solo darte.",
-            BankBalanceAdjustments = [new LedgerTransactionDto { Amount = -99M, Narrative = "The quick brown fox", TransactionType = typeof(CreditLedgerTransaction).FullName }]
+            BankBalanceAdjustments =
+            [
+                new LedgerTransactionDto
+                {
+                    Amount = -99M, Narrative = "The quick brown fox", TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName, Account = TestDataConstants.ChequeAccountName
+                }
+            ]
         };
 
         entries.Add(line);
