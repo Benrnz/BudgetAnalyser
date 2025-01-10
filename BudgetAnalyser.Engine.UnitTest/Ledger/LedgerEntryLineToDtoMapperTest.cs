@@ -1,70 +1,67 @@
-﻿using System;
-using System.Linq;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.Engine.Ledger.Data.Data2;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.Engine.UnitTest.Ledger
+namespace BudgetAnalyser.Engine.UnitTest.Ledger;
+
+[TestClass]
+public class LedgerEntryLineToDtoMapperTest
 {
-    [TestClass]
-    public class LedgerEntryLineToDtoMapperTest
+    private LedgerEntryLineDto Result { get; set; }
+
+    private LedgerEntryLine TestData
     {
-        private LedgerEntryLineDto Result { get; set; }
-
-        private LedgerEntryLine TestData
+        get
         {
-            get
-            {
-                var book = LedgerBookTestData.TestData4();
-                return book.Reconciliations.First();
-            }
+            var book = LedgerBookTestData.TestData4();
+            return book.Reconciliations.First();
         }
+    }
 
-        [TestMethod]
-        public void ShouldMapBankBalance()
-        {
-            Assert.AreEqual(2950M, Result.BankBalance);
-        }
+    [TestMethod]
+    public void ShouldMapBankBalance()
+    {
+        Assert.AreEqual(2950M, Result.BankBalance);
+    }
 
-        [TestMethod]
-        public void ShouldMapBankBalanceAdjustments()
-        {
-            Assert.AreEqual(1, Result.BankBalanceAdjustments.Count());
-        }
+    [TestMethod]
+    public void ShouldMapBankBalanceAdjustments()
+    {
+        Assert.AreEqual(1, Result.BankBalanceAdjustments.Count());
+    }
 
-        [TestMethod]
-        public void ShouldMapBankBalances()
-        {
-            Assert.AreEqual(2, Result.BankBalances.Count());
-        }
+    [TestMethod]
+    public void ShouldMapBankBalances()
+    {
+        Assert.AreEqual(2, Result.BankBalances.Count());
+    }
 
-        [TestMethod]
-        public void ShouldMapDate()
-        {
-            Assert.AreEqual(new DateTime(2013, 8, 15), Result.Date);
-        }
+    [TestMethod]
+    public void ShouldMapDate()
+    {
+        Assert.AreEqual(new DateTime(2013, 8, 15), Result.Date);
+    }
 
-        [TestMethod]
-        public void ShouldMapEntries()
-        {
-            Assert.AreEqual(3, Result.Entries.Count());
-        }
+    [TestMethod]
+    public void ShouldMapEntries()
+    {
+        Assert.AreEqual(3, Result.Entries.Count());
+    }
 
-        [TestMethod]
-        public void ShouldMapRemarks()
-        {
-            Assert.AreEqual("The quick brown fox jumped over the lazy dog", Result.Remarks);
-        }
+    [TestMethod]
+    public void ShouldMapRemarks()
+    {
+        Assert.AreEqual("The quick brown fox jumped over the lazy dog", Result.Remarks);
+    }
 
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            var accountRepo = new InMemoryAccountTypeRepository();
-            var subject = new MapperLedgerEntryLineDto2LedgerEntryLine(accountRepo, new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory());
-            Result = subject.ToDto(TestData);
-        }
+    [TestInitialize]
+    public void TestInitialise()
+    {
+        var accountRepo = new InMemoryAccountTypeRepository();
+        var subject = new MapperLedgerEntryLineToDto2(accountRepo, new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory());
+        Result = subject.ToDto(TestData);
     }
 }

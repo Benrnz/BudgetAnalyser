@@ -29,19 +29,11 @@ public class DtoToLedgerBookMapperTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(CorruptedLedgerBookException))]
     public void NullTransactionTypeShouldThrow()
     {
-        try
-        {
-            TestData.Reconciliations.First().Entries.Last().Transactions.First().TransactionType = null;
-            ArrangeAndAct();
-        }
-        catch (ArgumentNullException)
-        {
-            return;
-        }
-
-        Assert.Fail();
+        TestData.Reconciliations.First().Entries.Last().Transactions.First().TransactionType = null;
+        ArrangeAndAct();
     }
 
     [TestMethod]
