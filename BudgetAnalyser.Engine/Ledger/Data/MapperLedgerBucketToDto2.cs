@@ -19,12 +19,9 @@ internal class MapperLedgerBucketToDto2(IBudgetBucketRepository bucketRepo, IAcc
 
     public LedgerBucket ToModel(LedgerBucketDto dto)
     {
-        var storedInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount);
-        if (storedInAccount is null)
-        {
-            throw new CorruptedLedgerBookException($"Account not found for key {dto.StoredInAccount}. It appears the ledger contains data not compatible with the budget account data.");
-        }
-
+        var storedInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) ??
+                              throw new CorruptedLedgerBookException(
+                                  $"Account not found for key {dto.StoredInAccount}. It appears the ledger contains data not compatible with the budget account data.");
         var ledgerBucket = this.bucketFactory.Build(dto.BucketCode, storedInAccount);
         var budgetBucket = this.bucketRepo.GetByCode(dto.BucketCode);
         ledgerBucket.BudgetBucket = budgetBucket ??
