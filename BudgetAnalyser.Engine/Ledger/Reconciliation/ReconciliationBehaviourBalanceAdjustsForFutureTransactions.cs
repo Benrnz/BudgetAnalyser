@@ -7,10 +7,10 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 [AutoRegisterWithIoC]
 internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IReconciliationBehaviour
 {
-    public LedgerEntryLine NewReconLine { get; private set; }
+    public LedgerEntryLine? NewReconLine { get; private set; }
 
-    public StatementModel Statement { get; private set; }
-    public IList<ToDoTask> TodoTasks { get; private set; }
+    public StatementModel? Statement { get; private set; }
+    public IList<ToDoTask>? TodoTasks { get; private set; }
 
     public void Initialise(params object[] anyParameters)
     {
@@ -41,28 +41,27 @@ internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IRec
     {
         if (Statement is not null)
         {
-            AddBalanceAdjustmentsForFutureTransactions(Statement, NewReconLine.Date);
+            AddBalanceAdjustmentsForFutureTransactions(Statement, NewReconLine!, TodoTasks!);
         }
     }
 
-    private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate)
+    private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, LedgerEntryLine reconciliation, IList<ToDoTask> tasks)
     {
         var adjustmentsMade = false;
         foreach (var futureTransaction in statement.AllTransactions
-                     .Where(
-                         t =>
-                             t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate &&
-                             !(t.BudgetBucket is PayCreditCardBucket)))
+                     .Where(t => t.Account.AccountType != AccountType.CreditCard
+                                 && t.Date >= reconciliation.Date
+                                 && !(t.BudgetBucket is PayCreditCardBucket)))
         {
             adjustmentsMade = true;
-            NewReconLine.BalanceAdjustment(-futureTransaction.Amount,
+            reconciliation.BalanceAdjustment(-futureTransaction.Amount,
                 $"Remove future transaction for {futureTransaction.Date:d} {futureTransaction.Description}",
                 futureTransaction.Account);
         }
 
         if (adjustmentsMade)
         {
-            TodoTasks.Add(new ToDoTask { Description = "Check auto-generated balance adjustments for future transactions.", CanDelete = true, SystemGenerated = true });
+            tasks.Add(new ToDoTask { Description = "Check auto-generated balance adjustments for future transactions.", CanDelete = true, SystemGenerated = true });
         }
     }
 }

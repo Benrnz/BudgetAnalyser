@@ -50,7 +50,6 @@ public class ReconciliationCreationManagerTest
     {
         this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
             .Returns(this.testDataReconResult);
-        var count = this.testDataLedgerBook.Reconciliations.Count();
         var reconcileCalled = false;
         ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = _ =>
         {
@@ -58,7 +57,7 @@ public class ReconciliationCreationManagerTest
             reconcileCalled = true;
         };
 
-        var result = ActPeriodEndReconciliation();
+        ActPeriodEndReconciliation();
 
         Assert.IsTrue(reconcileCalled);
     }
@@ -81,7 +80,7 @@ public class ReconciliationCreationManagerTest
                     DestinationAccount = LedgerBookTestData.SavingsAccount,
                     SourceAccount = LedgerBookTestData.ChequeAccount
                 });
-            recon.Tasks = this.testDataToDoList;
+            this.testDataReconResult = new ReconciliationResult { Reconciliation = recon.Reconciliation, Tasks = this.testDataToDoList };
         };
 
         // Expect a call to the Rule service to create the single use rule for the transfer.
@@ -103,7 +102,7 @@ public class ReconciliationCreationManagerTest
         this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
             .Returns(this.testDataReconResult);
         var aTransaction = this.testDataStatement.AllTransactions.First();
-        PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
+        PrivateAccessor.SetField(aTransaction, "budgetBucket", null!);
 
         ActPeriodEndReconciliation(TestDataReconcileDate);
     }
@@ -122,7 +121,7 @@ public class ReconciliationCreationManagerTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(ArgumentNullException))]
     public void Reconcile_ShouldThrow_GivenNoEffectiveBudget()
     {
         var myTestDate = new DateTime(2012, 2, 20);
@@ -308,7 +307,7 @@ public class ReconciliationCreationManagerTest
         return result;
     }
 
-    private ReconciliationResult ActPeriodEndReconciliationOnTestData5(StatementModel statementModelTestData = null, bool ignoreWarnings = false)
+    private void ActPeriodEndReconciliationOnTestData5(StatementModel statementModelTestData = null, bool ignoreWarnings = false)
     {
         this.testDataBudgetCollection = BudgetModelTestData.CreateCollectionWith5();
         this.testDataBudgetModel = this.testDataBudgetCollection.ForDate(TestDataReconcileDate);
@@ -324,6 +323,5 @@ public class ReconciliationCreationManagerTest
         Console.WriteLine();
         Console.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
         result.Reconciliation.Output(LedgerBookHelper.LedgerOrder(this.testDataLedgerBook), true, true);
-        return result;
     }
 }

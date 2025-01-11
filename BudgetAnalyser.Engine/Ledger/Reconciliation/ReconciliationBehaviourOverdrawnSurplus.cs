@@ -7,9 +7,9 @@
 [AutoRegisterWithIoC]
 internal class ReconciliationBehaviourOverdrawnSurplus : IReconciliationBehaviour
 {
-    public LedgerEntryLine NewReconLine { get; private set; }
+    public LedgerEntryLine? NewReconLine { get; private set; }
 
-    public IList<ToDoTask> TodoTasks { get; private set; }
+    public IList<ToDoTask>? TodoTasks { get; private set; }
 
     public void Initialise(params object[] anyParameters)
     {
@@ -32,14 +32,14 @@ internal class ReconciliationBehaviourOverdrawnSurplus : IReconciliationBehaviou
 
     public void ApplyBehaviour()
     {
-        CreateToDoForAnyOverdrawnSurplusBalance();
+        CreateToDoForAnyOverdrawnSurplusBalance(NewReconLine!, TodoTasks!);
     }
 
-    private void CreateToDoForAnyOverdrawnSurplusBalance()
+    private void CreateToDoForAnyOverdrawnSurplusBalance(LedgerEntryLine reconciliations, IList<ToDoTask> tasks)
     {
-        foreach (var surplusBalance in NewReconLine.SurplusBalances.Where(s => s.Balance < 0))
+        foreach (var surplusBalance in reconciliations.SurplusBalances.Where(s => s.Balance < 0))
         {
-            TodoTasks.Add(
+            tasks.Add(
                 new ToDoTask
                 {
                     Description = $"{surplusBalance.Account} has a negative surplus balance {surplusBalance.Balance}, there must be one or more transfers to action.",

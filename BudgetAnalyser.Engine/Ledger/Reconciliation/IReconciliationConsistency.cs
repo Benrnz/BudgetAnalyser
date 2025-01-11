@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 
-namespace BudgetAnalyser.Engine.Ledger.Reconciliation
+internal interface IReconciliationConsistency
 {
-    internal interface IReconciliationConsistency
-    {
-        IDisposable EnsureConsistency(LedgerBook book);
-    }
+    IDisposable EnsureConsistency(LedgerBook book);
 }

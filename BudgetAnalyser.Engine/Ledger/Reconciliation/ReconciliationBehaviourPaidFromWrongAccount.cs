@@ -13,26 +13,26 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBehaviour
 {
     private const string LogPrefix = "Ledger Reconciliation - ";
-    private Dictionary<BudgetBucket, Account> ledgerBuckets;
-    private ILogger logger;
+    private Dictionary<BudgetBucket, Account> ledgerBuckets = new();
+    private ILogger? logger;
 
-    public LedgerEntryLine NewReconLine { get; private set; }
+    public LedgerEntryLine? NewReconLine { get; private set; }
 
-    public IList<ToDoTask> TodoTasks { get; private set; }
+    public IList<ToDoTask>? TodoTasks { get; private set; }
 
-    public IEnumerable<Transaction> Transactions { get; private set; }
+    public IEnumerable<Transaction>? Transactions { get; private set; }
 
     /// <inheritdoc />
     public void ApplyBehaviour()
     {
-        var wrongAccountPayments = DiscoverWrongAccountPaymentTransactions();
+        var wrongAccountPayments = DiscoverWrongAccountPaymentTransactions(Transactions!);
 
         var reference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
 
         // Remind the user to make a bank transfer to rectify the situation.
-        CreateUserTasks(wrongAccountPayments, reference);
+        CreateUserTasks(wrongAccountPayments, reference, TodoTasks!);
 
-        CreateLedgerTransactionsShowingTransfer(wrongAccountPayments, reference);
+        CreateLedgerTransactionsShowingTransfer(NewReconLine!, wrongAccountPayments, reference);
     }
 
     /// <inheritdoc />
@@ -71,7 +71,7 @@ internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBeha
             .ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
     }
 
-    private void CreateLedgerTransactionsShowingTransfer(IEnumerable<Transaction> wrongAccountPayments, string reference)
+    private void CreateLedgerTransactionsShowingTransfer(LedgerEntryLine reconciliation, IEnumerable<Transaction> wrongAccountPayments, string reference)
     {
         foreach (var transaction in wrongAccountPayments)
         {
@@ -79,37 +79,41 @@ internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBeha
             {
                 Amount = transaction.Amount, // Amount is already negative/debit
                 AutoMatchingReference = reference,
-                Date = NewReconLine.Date,
+                Date = reconciliation.Date,
                 Narrative = "Transfer to rectify payment made from wrong account."
             };
             var journal2 = new CreditLedgerTransaction
             {
-                Amount = -transaction.Amount, AutoMatchingReference = reference, Date = NewReconLine.Date, Narrative = "Transfer to rectify payment made from wrong account."
+                Amount = -transaction.Amount, AutoMatchingReference = reference, Date = reconciliation.Date, Narrative = "Transfer to rectify payment made from wrong account."
             };
-            var ledger = NewReconLine.Entries.Single(l => l.LedgerBucket.BudgetBucket == transaction.BudgetBucket);
+            var ledger = reconciliation.Entries.Single(l => l.LedgerBucket.BudgetBucket == transaction.BudgetBucket);
             var replacementTransactions = ledger.Transactions.ToList();
             replacementTransactions.Add(journal1);
             replacementTransactions.Add(journal2);
             ledger.SetTransactionsForReconciliation(replacementTransactions);
 
-            NewReconLine.BalanceAdjustment(transaction.Amount, $"Decrease balance to show transfer to rectify {ledger.LedgerBucket.BudgetBucket.Code} payment made from wrong account.",
+            reconciliation.BalanceAdjustment(
+                transaction.Amount,
+                $"Decrease balance to show transfer to rectify {ledger.LedgerBucket.BudgetBucket.Code} payment made from wrong account.",
                 ledger.LedgerBucket.StoredInAccount);
-            NewReconLine.BalanceAdjustment(-transaction.Amount, $"Increase balance to show transfer to rectify {ledger.LedgerBucket.BudgetBucket.Code} payment made from wrong account.",
+            reconciliation.BalanceAdjustment(
+                -transaction.Amount,
+                $"Increase balance to show transfer to rectify {ledger.LedgerBucket.BudgetBucket.Code} payment made from wrong account.",
                 transaction.Account);
         }
     }
 
-    private void CreateUserTasks(IEnumerable<Transaction> wrongAccountPayments, string reference)
+    private void CreateUserTasks(IEnumerable<Transaction> wrongAccountPayments, string reference, IList<ToDoTask> todoTasks)
     {
         foreach (var transaction in wrongAccountPayments)
         {
-            var ledgerAccount = this.ledgerBuckets[transaction.BudgetBucket];
-            TodoTasks.Add(
+            var ledgerAccount = this.ledgerBuckets[transaction.BudgetBucket!];
+            todoTasks.Add(
                 new TransferTask
                 {
                     CanDelete = true,
                     Description =
-                        $"A {transaction.BudgetBucket.Code} payment for {transaction.Amount:C} on the {transaction.Date:d} has been made from {transaction.Account}, but funds are stored in {ledgerAccount}. Use reference {reference}",
+                        $"A {transaction.BudgetBucket!.Code} payment for {transaction.Amount:C} on the {transaction.Date:d} has been made from {transaction.Account}, but funds are stored in {ledgerAccount}. Use reference {reference}",
                     Amount = -transaction.Amount,
                     SourceAccount = ledgerAccount,
                     DestinationAccount = transaction.Account,
@@ -119,24 +123,23 @@ internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBeha
         }
     }
 
-    private IList<Transaction> DiscoverWrongAccountPaymentTransactions()
+    private IList<Transaction> DiscoverWrongAccountPaymentTransactions(IEnumerable<Transaction> transactions)
     {
-        var debitAccountTransactionsOnly = Transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
+        var debitAccountTransactionsOnly = transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
 
         var wrongAccountPayments = new List<Transaction>();
 
-        // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be transfered from the stored-in account.
+        // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be transferred from the stored-in account.
         var syncRoot = new object();
         Parallel.ForEach(
             debitAccountTransactionsOnly.Where(t => t.Amount < 0).ToList(),
             t =>
             {
-                if (!this.ledgerBuckets.ContainsKey(t.BudgetBucket))
+                if (!this.ledgerBuckets.TryGetValue(t.BudgetBucket!, out var ledgerAccount))
                 {
                     return;
                 }
 
-                var ledgerAccount = this.ledgerBuckets[t.BudgetBucket];
                 if (t.Account != ledgerAccount)
                 {
                     lock (syncRoot)
@@ -156,10 +159,10 @@ internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBeha
                      && t.Reference1 == suspectedPaymentTransaction.Reference1);
             if (matchingTransferTransaction is null)
             {
-                // No matching transaction exists - therefore the transaction is not a journal, its a payment from the wrong account.
-                this.logger.LogInfo(l => l.Format("{0}Found a payment from an account other than where the {1} funds are stored. {2}",
+                // No matching transaction exists - therefore the transaction is not a journal, it's a payment from the wrong account.
+                this.logger?.LogInfo(l => l.Format("{0}Found a payment from an account other than where the {1} funds are stored. {2}",
                     LogPrefix,
-                    suspectedPaymentTransaction.BudgetBucket.Code,
+                    suspectedPaymentTransaction.BudgetBucket!.Code,
                     suspectedPaymentTransaction.Id));
             }
             else
