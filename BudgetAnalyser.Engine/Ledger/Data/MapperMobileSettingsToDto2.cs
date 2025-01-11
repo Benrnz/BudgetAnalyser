@@ -3,7 +3,7 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
-public class MapperMobileSettingsToDto2 : IDtoMapper<MobileStorageSettingsDto, MobileStorageSettings>
+internal class MapperMobileSettingsToDto2 : IDtoMapper<MobileStorageSettingsDto, MobileStorageSettings>
 {
     public MobileStorageSettingsDto ToDto(MobileStorageSettings model)
     {

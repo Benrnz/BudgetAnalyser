@@ -27,6 +27,7 @@ public class DtoToLedgerEntryMapperTest
         {
             Balance = 52.32M,
             BucketCode = TestDataConstants.PowerBucketCode,
+            StoredInAccount = TestDataConstants.ChequeAccountName,
             Transactions = new List<LedgerTransactionDto>
             {
                 new()

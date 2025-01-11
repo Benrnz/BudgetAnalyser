@@ -12,26 +12,37 @@ public class DtoToLedgerBookMapperTest
     private LedgerBookDto TestData { get; set; }
 
     [TestMethod]
+    [ExpectedException(typeof(DataFormatException))]
     public void InvalidTransactionTypeShouldThrow()
     {
-        try
+        var invalidTxn = new LedgerTransactionDto
         {
-            TestData.Reconciliations.First().Entries.Last().Transactions.First().TransactionType = "Foobar";
-            ArrangeAndAct();
-        }
-        catch (DataFormatException)
-        {
-            return;
-        }
+            Account = TestDataConstants.ChequeAccountName,
+            Amount = -12.45M,
+            Date = new DateTime(2013, 02, 02),
+            Id = Guid.NewGuid(),
+            Narrative = "Foo",
+            TransactionType = "Foobar"
+        };
+        TestData.Reconciliations.First().Entries.Last().Transactions.Add(invalidTxn);
 
-        Assert.Fail();
+        ArrangeAndAct();
     }
 
     [TestMethod]
     [ExpectedException(typeof(CorruptedLedgerBookException))]
     public void NullTransactionTypeShouldThrow()
     {
-        TestData.Reconciliations.First().Entries.Last().Transactions.First().TransactionType = null;
+        var invalidTxn = new LedgerTransactionDto
+        {
+            Account = TestDataConstants.ChequeAccountName,
+            Amount = -12.45M,
+            Date = new DateTime(2013, 02, 02),
+            Id = Guid.NewGuid(),
+            Narrative = "Foo",
+            TransactionType = null
+        };
+        TestData.Reconciliations.First().Entries.Last().Transactions.Add(invalidTxn);
         ArrangeAndAct();
     }
 

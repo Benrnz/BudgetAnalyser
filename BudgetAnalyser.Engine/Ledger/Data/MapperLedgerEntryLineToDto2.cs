@@ -35,8 +35,6 @@ internal class MapperLedgerEntryLineToDto2(
 
         var line = new LedgerEntryLine(bankBalanceAdjustments, bankBalances, entries) { Date = dto.Date, Remarks = dto.Remarks };
 
-        line.Lock();
-
         return line;
     }
 }

@@ -21,12 +21,12 @@ internal class MapperLedgerBucketToDto2(IBudgetBucketRepository bucketRepo, IAcc
     {
         var storedInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) ??
                               throw new CorruptedLedgerBookException(
-                                  $"Account not found for key {dto.StoredInAccount}. It appears the ledger contains data not compatible with the budget account data.");
+                                  $"Account not found for key '{dto.StoredInAccount}'. It appears the ledger contains data not compatible with the budget account data.");
         var budgetBucket = this.bucketRepo.GetByCode(dto.BucketCode);
         var ledgerBucket = this.bucketFactory.Build(dto.BucketCode, storedInAccount);
         ledgerBucket.BudgetBucket = budgetBucket ??
                                     throw new CorruptedLedgerBookException(
-                                        $"Budget bucket not found for code {dto.BucketCode}. It appears the ledger contains data not compatible with the budget data.");
+                                        $"Budget bucket not found for code '{dto.BucketCode}'. It appears the ledger contains data not compatible with the budget data.");
 
         return ledgerBucket;
     }

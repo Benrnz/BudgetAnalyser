@@ -38,6 +38,7 @@ public class LedgerEntryLine
         BankBalanceAdjustments = bankBalanceAdjustments.ToList();
         BankBalances = bankBalances.ToList();
         Entries = ledgerEntries.ToList();
+        Lock();
     }
 
     /// <summary>
@@ -212,15 +213,6 @@ public class LedgerEntryLine
         return previousEntry?.Balance ?? 0;
     }
 
-    internal void Lock()
-    {
-        IsNew = false;
-        foreach (var entry in Entries)
-        {
-            entry.Lock();
-        }
-    }
-
     /// <summary>
     ///     Sets the <see cref="LedgerEntry" /> list for this reconciliation. Used when building a new reconciliation and
     ///     populating a new <see cref="LedgerEntryLine" />. Persistence uses private setter on <see cref="LedgerEntryLine.Entries" />.
@@ -282,6 +274,15 @@ public class LedgerEntryLine
         }
 
         return result;
+    }
+
+    private void Lock()
+    {
+        IsNew = false;
+        foreach (var entry in Entries)
+        {
+            entry.Lock();
+        }
     }
 
     private decimal TotalBankBalanceAdjustmentForAccount(Account account)

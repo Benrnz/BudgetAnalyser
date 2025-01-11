@@ -33,6 +33,7 @@ internal static class LedgerBookDtoTestData
             {
                 Balance = 0, // because would go into negative
                 BucketCode = TestDataConstants.RatesBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                 [
                     new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
@@ -43,12 +44,14 @@ internal static class LedgerBookDtoTestData
             {
                 Balance = 21.15M,
                 BucketCode = TestDataConstants.RegoBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions = [new LedgerTransactionDto { Id = Id3, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 Balance = 0, // because would go into negative
                 BucketCode = TestDataConstants.CarMtcBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                 [
                     new LedgerTransactionDto { Id = Id4, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
@@ -63,18 +66,21 @@ internal static class LedgerBookDtoTestData
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RatesBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id6, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RegoBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id7, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.CarMtcBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions = [new LedgerTransactionDto { Id = Id8, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             }
         ]);
@@ -85,18 +91,21 @@ internal static class LedgerBookDtoTestData
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RatesBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id9, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RegoBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id10, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.CarMtcBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions = [new LedgerTransactionDto { Id = Id11, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             }
         ]);
@@ -107,10 +116,7 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14),
-            Name = "Test Budget Ledger Book 1",
-            StorageKey = "C:\\Folder\\FooBook.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList(),
+            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 1", StorageKey = "C:\\Folder\\FooBook.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -133,18 +139,21 @@ internal static class LedgerBookDtoTestData
             new LedgerEntryDto
             {
                 Balance = 0, // because would go into negative
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 BucketCode = TestDataConstants.RatesBucketCode,
                 Transactions = [new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 Balance = 21.15M,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 BucketCode = TestDataConstants.RegoBucketCode,
                 Transactions = [new LedgerTransactionDto { Id = Id2, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 Balance = 0, // because would go into negative
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 BucketCode = TestDataConstants.CarMtcBucketCode,
                 Transactions = [new LedgerTransactionDto { Id = Id3, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             }
@@ -156,18 +165,21 @@ internal static class LedgerBookDtoTestData
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RatesBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id4, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RegoBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id5, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.CarMtcBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions = [new LedgerTransactionDto { Id = Id6, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             }
         ]);
@@ -178,6 +190,7 @@ internal static class LedgerBookDtoTestData
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RatesBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                 [
                     new LedgerTransactionDto { Id = Id7, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
@@ -187,12 +200,14 @@ internal static class LedgerBookDtoTestData
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RegoBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id9, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.CarMtcBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                 [
                     new LedgerTransactionDto { Id = Id10, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
@@ -207,10 +222,7 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14),
-            Name = "Test Budget Ledger Book 2",
-            StorageKey = "C:\\Folder\\FooBook2.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList(),
+            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 2", StorageKey = "C:\\Folder\\FooBook2.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -234,6 +246,7 @@ internal static class LedgerBookDtoTestData
             {
                 Balance = 0, // because would go into negative
                 BucketCode = TestDataConstants.RatesBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                 [
                     new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
@@ -244,12 +257,14 @@ internal static class LedgerBookDtoTestData
             {
                 Balance = 21.15M,
                 BucketCode = TestDataConstants.RegoBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions = [new LedgerTransactionDto { Id = Id3, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 Balance = 0, // because would go into negative
                 BucketCode = TestDataConstants.CarMtcBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                 [
                     new LedgerTransactionDto { Id = Id4, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
@@ -264,18 +279,21 @@ internal static class LedgerBookDtoTestData
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RatesBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id6, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RegoBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id7, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.CarMtcBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions = [new LedgerTransactionDto { Id = Id8, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             }
         ]);
@@ -286,18 +304,21 @@ internal static class LedgerBookDtoTestData
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RatesBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id9, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.RegoBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions =
                     [new LedgerTransactionDto { Id = Id10, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             },
             new LedgerEntryDto
             {
                 BucketCode = TestDataConstants.CarMtcBucketCode,
+                StoredInAccount = TestDataConstants.ChequeAccountName,
                 Transactions = [new LedgerTransactionDto { Id = Id11, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
             }
         ]);
@@ -321,10 +342,7 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14),
-            Name = "Test Budget Ledger Book 3",
-            StorageKey = "C:\\Folder\\FooBook3.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList(),
+            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 3", StorageKey = "C:\\Folder\\FooBook3.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });

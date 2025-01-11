@@ -3,7 +3,7 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
-public class MapperBankBalanceAdjustmentToDto2(IAccountTypeRepository accountTypeRepository) : IDtoMapper<LedgerTransactionDto, BankBalanceAdjustmentTransaction>
+internal class MapperBankBalanceAdjustmentToDto2(IAccountTypeRepository accountTypeRepository) : IDtoMapper<LedgerTransactionDto, BankBalanceAdjustmentTransaction>
 {
     private readonly IAccountTypeRepository accountTypeRepo = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
 
