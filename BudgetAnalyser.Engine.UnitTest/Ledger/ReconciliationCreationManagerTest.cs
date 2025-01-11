@@ -71,7 +71,16 @@ public class ReconciliationCreationManagerTest
         ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = recon =>
         {
             this.testDataToDoList.Add(
-                new TransferTask(string.Empty, true) { Reference = "sjghsh", Amount = 12.22M, BucketCode = StatementModelTestData.CarMtcBucket.Code });
+                new TransferTask
+                {
+                    SystemGenerated = true,
+                    Description = string.Empty,
+                    Reference = "sjghsh",
+                    Amount = 12.22M,
+                    BucketCode = StatementModelTestData.CarMtcBucket.Code,
+                    DestinationAccount = LedgerBookTestData.SavingsAccount,
+                    SourceAccount = LedgerBookTestData.ChequeAccount
+                });
             recon.Tasks = this.testDataToDoList;
         };
 
