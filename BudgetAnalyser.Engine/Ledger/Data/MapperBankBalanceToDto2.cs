@@ -16,7 +16,7 @@ internal class MapperBankBalanceToDto2(IAccountTypeRepository accountTypeReposit
     public BankBalance ToModel(BankBalanceDto dto)
     {
         var account = this.accountTypeRepo.GetByKey(dto.Account) ??
-                      throw new KeyNotFoundException($"Account not found for key '{dto.Account}'. It appears the ledger contains data not compatible with the budget account data.");
+                      throw new CorruptedLedgerBookException($"Account not found for key '{dto.Account}'. It appears the ledger contains data not compatible with the budget account data.");
         var bankBalance = new BankBalance(account, dto.Balance);
         return bankBalance;
     }
