@@ -84,7 +84,10 @@ internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBeha
             };
             var journal2 = new CreditLedgerTransaction
             {
-                Amount = -transaction.Amount, AutoMatchingReference = reference, Date = reconciliation.Date, Narrative = "Transfer to rectify payment made from wrong account."
+                Amount = -transaction.Amount,
+                AutoMatchingReference = reference,
+                Date = reconciliation.Date,
+                Narrative = "Transfer to rectify payment made from wrong account."
             };
             var ledger = reconciliation.Entries.Single(l => l.LedgerBucket.BudgetBucket == transaction.BudgetBucket);
             var replacementTransactions = ledger.Transactions.ToList();

@@ -197,7 +197,8 @@ internal class ReconciliationCreationManager(
                         "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
                         ledgerTransaction.Id,
                         ledgerTransaction.AutoMatchingReference,
-                        ledgerTransaction.Amount)) { Source = "1" };
+                        ledgerTransaction.Amount))
+                { Source = "1" };
             }
         }
     }
@@ -206,12 +207,18 @@ internal class ReconciliationCreationManager(
     {
         var sourceTransaction = new CreditLedgerTransaction
         {
-            Amount = -transferDetails.TransferAmount, AutoMatchingReference = transferDetails.AutoMatchingReference, Date = ledgerEntryLine.Date, Narrative = transferDetails.Narrative
+            Amount = -transferDetails.TransferAmount,
+            AutoMatchingReference = transferDetails.AutoMatchingReference,
+            Date = ledgerEntryLine.Date,
+            Narrative = transferDetails.Narrative
         };
 
         var destinationTransaction = new CreditLedgerTransaction
         {
-            Amount = transferDetails.TransferAmount, AutoMatchingReference = transferDetails.AutoMatchingReference, Date = ledgerEntryLine.Date, Narrative = transferDetails.Narrative
+            Amount = transferDetails.TransferAmount,
+            AutoMatchingReference = transferDetails.AutoMatchingReference,
+            Date = ledgerEntryLine.Date,
+            Narrative = transferDetails.Narrative
         };
 
         if (transferDetails.BankTransferRequired)

@@ -334,7 +334,8 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
             {
                 budgetedAmount = new BudgetCreditLedgerTransaction
                 {
-                    Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0, Narrative = budgetedExpense.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
+                    Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
+                    Narrative = budgetedExpense.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
                 };
             }
             else

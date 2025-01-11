@@ -25,7 +25,8 @@ internal class MapperLedgerEntryToDto2(ILedgerBucketFactory bucketFactory, ILedg
     {
         var entry = new LedgerEntry(dto.Transactions.Select(t => this.transactionMapper.ToModel(t)))
         {
-            Balance = dto.Balance, LedgerBucket = this.bucketFactory.Build(dto.BucketCode, dto.StoredInAccount ?? AccountTypeRepositoryConstants.Cheque)
+            Balance = dto.Balance,
+            LedgerBucket = this.bucketFactory.Build(dto.BucketCode, dto.StoredInAccount ?? AccountTypeRepositoryConstants.Cheque)
         };
 
         return entry;

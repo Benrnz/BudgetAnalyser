@@ -116,7 +116,10 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 1", StorageKey = "C:\\Folder\\FooBook.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
+            Modified = new DateTime(2013, 12, 14),
+            Name = "Test Budget Ledger Book 1",
+            StorageKey = "C:\\Folder\\FooBook.xml",
+            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -222,7 +225,10 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 2", StorageKey = "C:\\Folder\\FooBook2.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
+            Modified = new DateTime(2013, 12, 14),
+            Name = "Test Budget Ledger Book 2",
+            StorageKey = "C:\\Folder\\FooBook2.xml",
+            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -342,7 +348,10 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 3", StorageKey = "C:\\Folder\\FooBook3.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
+            Modified = new DateTime(2013, 12, 14),
+            Name = "Test Budget Ledger Book 3",
+            StorageKey = "C:\\Folder\\FooBook3.xml",
+            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
