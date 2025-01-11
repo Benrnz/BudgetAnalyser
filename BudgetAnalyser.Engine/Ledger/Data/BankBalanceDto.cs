@@ -8,10 +8,10 @@ public class BankBalanceDto
     /// <summary>
     ///     Gets or sets the account.
     /// </summary>
-    public required string Account { get; set; }
+    public required string Account { get; init; }
 
     /// <summary>
     ///     Gets or sets the balance.
     /// </summary>
-    public decimal Balance { get; set; }
+    public decimal Balance { get; init; }
 }
