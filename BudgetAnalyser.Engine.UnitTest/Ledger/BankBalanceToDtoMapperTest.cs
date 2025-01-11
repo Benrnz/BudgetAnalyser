@@ -1,7 +1,6 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.Engine.Ledger.Data.Data2;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;

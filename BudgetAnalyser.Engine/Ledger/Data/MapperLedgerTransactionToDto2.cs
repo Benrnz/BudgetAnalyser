@@ -1,6 +1,6 @@
 ﻿using Rees.TangyFruitMapper;
 
-namespace BudgetAnalyser.Engine.Ledger.Data.Data2;
+namespace BudgetAnalyser.Engine.Ledger.Data;
 
 internal class MapperLedgerTransactionToDto2(ILedgerTransactionFactory ledgerTransactionFactory) : IDtoMapper<LedgerTransactionDto, LedgerTransaction>
 {

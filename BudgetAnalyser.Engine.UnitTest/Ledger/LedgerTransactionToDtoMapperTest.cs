@@ -1,6 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.Engine.Ledger.Data.Data2;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 

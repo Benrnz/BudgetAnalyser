@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Mobile;
 using Rees.TangyFruitMapper;
 
-namespace BudgetAnalyser.Engine.Ledger.Data.Data2;
+namespace BudgetAnalyser.Engine.Ledger.Data;
 
 [AutoRegisterWithIoC]
 internal class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>

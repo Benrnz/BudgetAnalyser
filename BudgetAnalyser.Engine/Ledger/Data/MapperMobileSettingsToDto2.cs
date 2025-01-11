@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.Mobile;
 using Rees.TangyFruitMapper;
 
-namespace BudgetAnalyser.Engine.Ledger.Data.Data2;
+namespace BudgetAnalyser.Engine.Ledger.Data;
 
 public class MapperMobileSettingsToDto2 : IDtoMapper<MobileStorageSettingsDto, MobileStorageSettings>
 {

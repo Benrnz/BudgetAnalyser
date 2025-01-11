@@ -1,7 +1,6 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.Engine.Ledger.Data.Data2;
 using FluentAssertions;
 using NSubstitute;
 
@@ -11,9 +10,9 @@ public class MapperBankBalanceAdjustmentToDto_ToDto_Test
 {
     private const string AccountName = "CHEQUE";
     private static readonly Guid TransactionId = new("7F921750-4467-4EA4-81E6-3EFD466341A6");
+    private readonly MapperBankBalanceAdjustmentToDto2 subject;
     private readonly BankBalanceAdjustmentTransaction testData;
     private LedgerTransactionDto result;
-    private readonly MapperBankBalanceAdjustmentToDto2 subject;
 
     public MapperBankBalanceAdjustmentToDto_ToDto_Test()
     {

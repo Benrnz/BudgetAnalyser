@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.Budget;
 using Rees.TangyFruitMapper;
 
-namespace BudgetAnalyser.Engine.Ledger.Data.Data2;
+namespace BudgetAnalyser.Engine.Ledger.Data;
 
 internal class MapperLedgerBucketToDto2(IBudgetBucketRepository bucketRepo, IAccountTypeRepository accountTypeRepo, ILedgerBucketFactory bucketFactory)
     : IDtoMapper<LedgerBucketDto, LedgerBucket>

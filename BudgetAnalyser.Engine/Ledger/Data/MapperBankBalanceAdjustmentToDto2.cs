@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
 using Rees.TangyFruitMapper;
 
-namespace BudgetAnalyser.Engine.Ledger.Data.Data2;
+namespace BudgetAnalyser.Engine.Ledger.Data;
 
 public class MapperBankBalanceAdjustmentToDto2(IAccountTypeRepository accountTypeRepository) : IDtoMapper<LedgerTransactionDto, BankBalanceAdjustmentTransaction>
 {
