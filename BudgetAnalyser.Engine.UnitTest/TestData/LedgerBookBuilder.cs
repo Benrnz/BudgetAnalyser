@@ -35,9 +35,8 @@ public class LedgerBookBuilder
 
     public LedgerBook Build()
     {
-        var book = new LedgerBook { Name = Name, Modified = Modified, StorageKey = StorageKey };
+        var book = new LedgerBook(this.reconciliations) { Name = Name, Modified = Modified, StorageKey = StorageKey };
 
-        book.SetReconciliations(this.reconciliations);
         if (book.Reconciliations.None())
         {
             this.ledgerBuckets.ForEach(l => book.AddLedger(l));
@@ -159,9 +158,7 @@ public class LedgerBookBuilder
 
     internal LedgerBookTestHarness BuildTestHarness(IReconciliationBuilder reconciliationBuilder)
     {
-        var book = new LedgerBookTestHarness { Name = Name, Modified = Modified, StorageKey = StorageKey };
-
-        book.SetReconciliations(this.reconciliations);
+        var book = new LedgerBookTestHarness(this.reconciliations) { Name = Name, Modified = Modified, StorageKey = StorageKey };
 
         LedgerBookTestData.Finalise(book, this.lockWhenFinished);
         return book;

@@ -2,7 +2,6 @@
 using System.Globalization;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger;
 
@@ -63,7 +62,7 @@ public abstract class LedgerBucket
     /// <returns>
     ///     <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
     /// </returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is null)
         {
@@ -75,7 +74,7 @@ public abstract class LedgerBucket
             return true;
         }
 
-        return obj.GetType() != GetType() ? false : Equals((LedgerBucket)obj);
+        return obj.GetType() == GetType() && Equals((LedgerBucket)obj);
     }
 
     /// <summary>
@@ -97,9 +96,19 @@ public abstract class LedgerBucket
     /// <summary>
     ///     Implements the operator ==. Delegates to Equals.
     /// </summary>
-    public static bool operator ==(LedgerBucket left, LedgerBucket right)
+    public static bool operator ==(LedgerBucket? left, LedgerBucket? right)
     {
-        return Equals(left, right);
+        if (left is null)
+        {
+            return right is null;
+        }
+
+        if (right is null)
+        {
+            return false;
+        }
+
+        return Equals(left.BudgetBucket, right.BudgetBucket) && Equals(left.StoredInAccount, right.StoredInAccount);
     }
 
     /// <summary>
@@ -124,7 +133,7 @@ public abstract class LedgerBucket
     /// <summary>
     ///     Returns true if the to ledger buckets are refering to the same bucket.
     /// </summary>
-    protected bool Equals([CanBeNull] LedgerBucket other)
+    protected bool Equals(LedgerBucket? other)
     {
         return other is null ? false : Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
     }

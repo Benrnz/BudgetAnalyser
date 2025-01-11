@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Matching;
@@ -10,7 +7,6 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UnitTestUtilities;
 
@@ -35,36 +31,6 @@ public class ReconciliationCreationManagerTest
     private ReconciliationResult testDataReconResult;
     private StatementModel testDataStatement;
     private IList<ToDoTask> testDataToDoList;
-
-    [TestMethod]
-    public void Reconcile_ShouldCreateSingleUseMatchingRulesForTransferToDos()
-    {
-        // Artificially create a transfer to do task when the reconciliation method is invoked on the LedgerBook.
-        // Remember: the subject here is the ReconciliationCreationManager not the LedgerBook.
-        ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = recon =>
-        {
-            this.testDataToDoList.Add(
-                                      new TransferTask(string.Empty, true)
-                                      {
-                                          Reference = "sjghsh",
-                                          Amount = 12.22M,
-                                          BucketCode = StatementModelTestData.CarMtcBucket.Code
-                                      });
-            recon.Tasks = this.testDataToDoList;
-        };
-
-        // Expect a call to the Rule service to create the single use rule for the transfer.
-        this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), true))
-            .Returns(new SingleUseMatchingRule(this.bucketRepo));
-
-        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
-            .Returns(this.testDataReconResult);
-
-        ActPeriodEndReconciliation();
-
-        // Ensure the rule service was called with the appropriate parameters.
-        this.mockRuleService.VerifyAll();
-    }
 
     [TestMethod]
     public void OutputTestData1()
@@ -95,6 +61,31 @@ public class ReconciliationCreationManagerTest
         var result = ActPeriodEndReconciliation();
 
         Assert.IsTrue(reconcileCalled);
+    }
+
+    [TestMethod]
+    public void Reconcile_ShouldCreateSingleUseMatchingRulesForTransferToDos()
+    {
+        // Artificially create a transfer to do task when the reconciliation method is invoked on the LedgerBook.
+        // Remember: the subject here is the ReconciliationCreationManager not the LedgerBook.
+        ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = recon =>
+        {
+            this.testDataToDoList.Add(
+                new TransferTask(string.Empty, true) { Reference = "sjghsh", Amount = 12.22M, BucketCode = StatementModelTestData.CarMtcBucket.Code });
+            recon.Tasks = this.testDataToDoList;
+        };
+
+        // Expect a call to the Rule service to create the single use rule for the transfer.
+        this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), true))
+            .Returns(new SingleUseMatchingRule(this.bucketRepo));
+
+        this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataStatement, It.IsAny<BankBalance[]>()))
+            .Returns(this.testDataReconResult);
+
+        ActPeriodEndReconciliation();
+
+        // Ensure the rule service was called with the appropriate parameters.
+        this.mockRuleService.VerifyAll();
     }
 
     [TestMethod]
@@ -153,13 +144,7 @@ public class ReconciliationCreationManagerTest
     {
         this.testDataStatement = new StatementModelBuilder()
             .TestData1()
-            .AppendTransaction(new Transaction
-            {
-                Account = StatementModelTestData.ChequeAccount,
-                Amount = 12.45M,
-                Date = TestDataReconcileDate.AddDays(-1),
-                Description = "Foo bar"
-            })
+            .AppendTransaction(new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = 12.45M, Date = TestDataReconcileDate.AddDays(-1), Description = "Foo bar" })
             .Build();
         try
         {
@@ -215,13 +200,7 @@ public class ReconciliationCreationManagerTest
         // First the statement has a transaction that is not classified with a bucket.
         this.testDataStatement = new StatementModelBuilder()
             .TestData1()
-            .AppendTransaction(new Transaction
-            {
-                Account = StatementModelTestData.ChequeAccount,
-                Amount = 12.45M,
-                Date = TestDataReconcileDate.AddDays(-1),
-                Description = "Foo bar"
-            })
+            .AppendTransaction(new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = 12.45M, Date = TestDataReconcileDate.AddDays(-1), Description = "Foo bar" })
             .Build();
         try
         {
@@ -294,15 +273,11 @@ public class ReconciliationCreationManagerTest
 
         this.subject = new ReconciliationCreationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, this.mockReconciliationBuilder.Object, new FakeLogger());
 
-        this.testDataLedgerBook = LedgerBookTestData.TestData5(() => new LedgerBookTestHarness());
+        this.testDataLedgerBook = LedgerBookTestData.TestData5(recons => new LedgerBookTestHarness(recons));
 
         this.mockReconciliationConsistency.Setup(m => m.EnsureConsistency(It.IsAny<LedgerBook>())).Returns(new Mock<IDisposable>().Object);
 
-        this.testDataReconResult = new ReconciliationResult
-        {
-            Tasks = this.testDataToDoList,
-            Reconciliation = new LedgerEntryLine(TestDataReconcileDate, TestDataBankBalances)
-        };
+        this.testDataReconResult = new ReconciliationResult { Tasks = this.testDataToDoList, Reconciliation = new LedgerEntryLine(TestDataReconcileDate, TestDataBankBalances) };
     }
 
     private ReconciliationResult ActPeriodEndReconciliation(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null, bool ignoreWarnings = false)
@@ -313,11 +288,11 @@ public class ReconciliationCreationManagerTest
         this.testDataLedgerBook.Output(true);
 
         var result = this.subject.PeriodEndReconciliation(this.testDataLedgerBook,
-                                                          reconciliationDate ?? TestDataReconcileDate,
-                                                          this.testDataBudgetCollection,
-                                                          this.testDataStatement,
-                                                          ignoreWarnings,
-                                                          this.currentBankBalances.ToArray());
+            reconciliationDate ?? TestDataReconcileDate,
+            this.testDataBudgetCollection,
+            this.testDataStatement,
+            ignoreWarnings,
+            this.currentBankBalances.ToArray());
         Console.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
         result.Reconciliation.Output(LedgerBookHelper.LedgerOrder(this.testDataLedgerBook), true, true);
 
@@ -334,12 +309,8 @@ public class ReconciliationCreationManagerTest
         this.testDataStatement.Output(TestDataReconcileDate.AddMonths(-1));
         this.testDataLedgerBook.Output(true);
 
-        var result = ActPeriodEndReconciliation(bankBalances: new[]
-                                                {
-                                                    new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M),
-                                                    new BankBalance(StatementModelTestData.SavingsAccount, 1200M)
-                                                },
-                                                ignoreWarnings: ignoreWarnings);
+        var result = ActPeriodEndReconciliation(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) },
+            ignoreWarnings: ignoreWarnings);
 
         Console.WriteLine();
         Console.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");

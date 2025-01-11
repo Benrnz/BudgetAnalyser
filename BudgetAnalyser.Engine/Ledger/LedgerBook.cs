@@ -13,8 +13,8 @@ namespace BudgetAnalyser.Engine.Ledger;
 /// <seealso cref="BudgetAnalyser.Engine.IModelValidate" />
 public class LedgerBook : IModelValidate
 {
+    private readonly List<LedgerEntryLine> reconciliations;
     private List<LedgerBucket> ledgersColumns = new();
-    private List<LedgerEntryLine> reconciliations;
 
     /// <summary>
     ///     Constructs a new instance of the <see cref="LedgerBook" /> class.  The Persistence system calls this constructor, not the IoC system.
@@ -25,8 +25,16 @@ public class LedgerBook : IModelValidate
     }
 
     /// <summary>
+    ///     Constructor for persistence purposes only. Do not use in application code.
+    /// </summary>
+    internal LedgerBook(IEnumerable<LedgerEntryLine> reconciliations) : this()
+    {
+        this.reconciliations = reconciliations.OrderByDescending(r => r.Date).ToList();
+    }
+
+    /// <summary>
     ///     A mapping of Budget Buckets to Bank Accounts used to create the next instances of the <see cref="LedgerEntry" /> class during the next reconciliation. Changing these values will only
-    ///     effect the next reconciliation, not the current collection of <see cref="LedgerEntryLine" />s.
+    ///     affect the next reconciliation, not the current collection of <see cref="LedgerEntryLine" />s.
     /// </summary>
     public IEnumerable<LedgerBucket> Ledgers
     {
@@ -148,15 +156,6 @@ public class LedgerBook : IModelValidate
         }
 
         throw new InvalidOperationException("You cannot change the account in a ledger that is not in the Ledgers collection.");
-    }
-
-    /// <summary>
-    ///     Used for persistence purposes only. Do not use in application code.
-    /// </summary>
-    /// <param name="lines"></param>
-    internal void SetReconciliations(List<LedgerEntryLine> lines)
-    {
-        this.reconciliations = lines.OrderByDescending(l => l.Date).ToList();
     }
 
     /// <summary>

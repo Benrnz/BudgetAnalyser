@@ -1,4 +1,5 @@
-﻿using Rees.TangyFruitMapper;
+﻿using BudgetAnalyser.Engine.BankAccount;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger.Data.Data2;
 
@@ -22,16 +23,10 @@ internal class MapperLedgerEntryToDto2(ILedgerBucketFactory bucketFactory, ILedg
 
     public LedgerEntry ToModel(LedgerEntryDto dto)
     {
-        var entry = new LedgerEntry();
-
-        dto.Transactions.ForEach(t =>
+        var entry = new LedgerEntry(dto.Transactions.Select(t => this.transactionMapper.ToModel(t)))
         {
-            var ledgerTransaction = this.transactionMapper.ToModel(t);
-            entry.AddTransactionForPersistenceOnly(ledgerTransaction);
-        });
-        // TODO shouldnt this be a ctor?
-        entry.Balance = dto.Balance;
-        entry.LedgerBucket = this.bucketFactory.Build(dto.BucketCode, dto.StoredInAccount);
+            Balance = dto.Balance, LedgerBucket = this.bucketFactory.Build(dto.BucketCode, dto.StoredInAccount ?? AccountTypeRepositoryConstants.Cheque)
+        };
 
         return entry;
     }
