@@ -23,8 +23,8 @@ public static class LedgerBookTestData
         HairLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow."), StoredInAccount = ChequeAccount };
         ClothesLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", ""), StoredInAccount = ChequeAccount };
         DocLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, ""), StoredInAccount = ChequeAccount };
-        SurplusLedger = new SurplusLedger { StoredInAccount = ChequeAccount };
-        SavingsSurplusLedger = new SurplusLedger { StoredInAccount = SavingsAccount };
+        SurplusLedger = new SurplusLedger { StoredInAccount = ChequeAccount, BudgetBucket = StatementModelTestData.SurplusBucket};
+        SavingsSurplusLedger = new SurplusLedger { StoredInAccount = SavingsAccount, BudgetBucket = StatementModelTestData.SurplusBucket };
         SavingsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.SavingsBucketCode, "Savings"), StoredInAccount = ChequeAccount };
     }
 
@@ -442,7 +442,7 @@ public static class LedgerBookTestData
         line.BalanceAdjustment(-550, "Credit card payment yet to go out.", ChequeAccount);
         list.Add(line);
 
-        var book = ctor is not null ? ctor(list) : new LedgerBook(list);
+        var book = ctor is not null ? ctor(list) : new LedgerBook(list) { StorageKey = "Test Ledger Book.xaml" };
         book.Name = "Test Data 5 Book";
         book.Modified = new DateTime(2013, 12, 16);
         book.StorageKey = "C:\\Folder\\book5.xml";
@@ -515,7 +515,7 @@ public static class LedgerBookTestData
                         })
                 }));
 
-        var book = ctor is not null ? ctor(list) : new LedgerBook(list);
+        var book = ctor is not null ? ctor(list) : new LedgerBook(list) { StorageKey = "Test Ledger Book.xaml" };
         book.Name = "Test Data 6 Book";
         book.Modified = new DateTime(2013, 08, 15);
         book.StorageKey = "C:\\FakeFolder\\book6.xml";

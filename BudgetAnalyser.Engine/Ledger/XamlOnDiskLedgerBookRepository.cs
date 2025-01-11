@@ -2,7 +2,6 @@
 using System.Text;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 using Portable.Xaml;
 using Rees.TangyFruitMapper;
 
@@ -13,21 +12,15 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     /// <seealso cref="ILedgerBookRepository" />
     [AutoRegisterWithIoC(SingleInstance = true)]
-    internal class XamlOnDiskLedgerBookRepository : ILedgerBookRepository
+    internal class XamlOnDiskLedgerBookRepository(
+        IDtoMapper<LedgerBookDto, LedgerBook> mapper,
+        BankImportUtilities importUtilities,
+        IReaderWriterSelector readerWriterSelector)
+        : ILedgerBookRepository
     {
-        private readonly BankImportUtilities importUtilities;
-        private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper;
-        private readonly IReaderWriterSelector readerWriterSelector;
-
-        public XamlOnDiskLedgerBookRepository(
-            [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper,
-            [NotNull] BankImportUtilities importUtilities,
-            [NotNull] IReaderWriterSelector readerWriterSelector)
-        {
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this.importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
-            this.readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
-        }
+        private readonly BankImportUtilities importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
+        private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly IReaderWriterSelector readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
 
         public async Task<LedgerBook> CreateNewAndSaveAsync(string storageKey)
         {
@@ -142,10 +135,10 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             var result = await reader.LoadFromDiskAsync(fileName);
-            return Deserialise(result) as LedgerBookDto;
+            return Deserialise(result) as LedgerBookDto ?? throw new CorruptedLedgerBookException($"Unable to deserialise ledger book data into correct type.");
         }
 
-        protected virtual async Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity, bool isEncrypted)
+        protected virtual async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity, bool isEncrypted)
         {
             if (dataEntity is null)
             {

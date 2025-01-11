@@ -319,7 +319,7 @@ public class ReconciliationBuilderTest
                         Description = "Last transaction"
                     })
                     .Build();
-                this.subject.LedgerBook = ledgerBook ?? LedgerBookTestData.TestData5(recons => new LedgerBookTestHarness(recons));
+                this.subject.LedgerBook = ledgerBook ?? LedgerBookTestData.TestData5(recons => new LedgerBookTestHarness(recons) { StorageKey = "Test Ledger Book.xaml" });
                 break;
         }
     }

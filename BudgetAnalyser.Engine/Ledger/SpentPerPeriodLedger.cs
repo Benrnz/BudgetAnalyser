@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -75,11 +72,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            throw new NotSupportedException(
-                "Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
+            throw new NotSupportedException("Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
         }
 
-        private static LedgerTransaction RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
+        private static LedgerTransaction? RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
         {
             return closingBalance - budgetAmount == 0
                 ? null
@@ -91,7 +87,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 };
         }
 
-        private static LedgerTransaction RemoveExcessToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
+        private static LedgerTransaction? RemoveExcessToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
         {
             return closingBalance - openingBalance == 0
                 ? null
@@ -103,7 +99,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 };
         }
 
-        private static LedgerTransaction SupplementToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
+        private static LedgerTransaction? SupplementToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
         {
             return budgetAmount - closingBalance == 0
                 ? null
@@ -115,7 +111,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 };
         }
 
-        private static LedgerTransaction SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
+        private static LedgerTransaction? SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
         {
             return openingBalance - closingBalance == 0
                 ? null
@@ -127,7 +123,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 };
         }
 
-        private static CreditLedgerTransaction SupplementToZero(decimal closingBalance, DateTime reconciliationDate)
+        private static CreditLedgerTransaction? SupplementToZero(decimal closingBalance, DateTime reconciliationDate)
         {
             return closingBalance == 0
                 ? null

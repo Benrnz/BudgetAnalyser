@@ -19,6 +19,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         /// Used in response to <see cref="LedgerCalculation.CalculateCurrentPeriodLedgerBalances"/>
         /// </summary>
         private IDictionary<BudgetBucket, decimal> LedgerBalancesFake { get; set; }
+
         private LedgerBook LedgerBook { get; set; }
         private LedgerCalculation LedgerCalculator { get; set; }
         private StatementModel Statement { get; set; }
@@ -29,8 +30,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         {
             Statement = StatementModelTestData.TestData2A();
 
-            // Mocking out the Calculator means we dont need the LedgerBook
-            LedgerBook = new LedgerBookTestHarness();
+            // Mocking out the Calculator means we don't need the LedgerBook
+            LedgerBook = new LedgerBookTestHarness { StorageKey = "Test Ledger Book.xaml" };
             SetLedgerBalancesFakeDataSomeOverspentBuckets();
 
             Subject = new OverspentWarning(new FakeLogger());
@@ -116,16 +117,16 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
             // Mocking out the Calculator means we dont need the LedgerBook
             var ledgerCalculatorMock = new Mock<LedgerCalculation>();
             ledgerCalculatorMock.Setup(m => m.CalculateCurrentPeriodLedgerBalances(
-                                                                                   It.IsAny<LedgerEntryLine>(),
-                                                                                   It.IsAny<GlobalFilterCriteria>(),
-                                                                                   It.IsAny<StatementModel>())).Returns(LedgerBalancesFake);
+                It.IsAny<LedgerEntryLine>(),
+                It.IsAny<GlobalFilterCriteria>(),
+                It.IsAny<StatementModel>())).Returns(LedgerBalancesFake);
 
-            // Create a stubbed LedgerEntryLine to satisfy LocateApplicableLedgerLine.  This stub is passed into the mock calculator above. 
+            // Create a stubbed LedgerEntryLine to satisfy LocateApplicableLedgerLine.  This stub is passed into the mock calculator above.
             var ledgerReconLine = new LedgerEntryLine();
             ledgerCalculatorMock.Setup(m => m.LocateApplicableLedgerLine(
-                It.IsAny<LedgerBook>(),
-                It.IsInRange<DateTime>(DateTime.MinValue, DateTime.MaxValue, Range.Inclusive),
-                It.IsInRange<DateTime>(DateTime.MinValue, DateTime.MaxValue, Range.Inclusive)))
+                    It.IsAny<LedgerBook>(),
+                    It.IsInRange<DateTime>(DateTime.MinValue, DateTime.MaxValue, Range.Inclusive),
+                    It.IsInRange<DateTime>(DateTime.MinValue, DateTime.MaxValue, Range.Inclusive)))
                 .Returns(ledgerReconLine);
             LedgerCalculator = ledgerCalculatorMock.Object;
 
@@ -153,10 +154,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
 
             LedgerBalancesFake = new Dictionary<BudgetBucket, decimal>
             {
-                { StatementModelTestData.CarMtcBucket, 10 },
-                { StatementModelTestData.HairBucket, -10.01M },
-                { StatementModelTestData.PowerBucket, 0 },
-                { StatementModelTestData.RegoBucket, -3 }
+                { StatementModelTestData.CarMtcBucket, 10 }, { StatementModelTestData.HairBucket, -10.01M }, { StatementModelTestData.PowerBucket, 0 }, { StatementModelTestData.RegoBucket, -3 }
             };
         }
     }

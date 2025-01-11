@@ -2,7 +2,7 @@
 
 /// <summary>
 ///     The surplus budget bucket.  There can be only one Surplus bucket.  This is a special system bucket that contains
-///     any left over funds after filling all the other buckets.
+///     any leftover funds after filling all the other buckets.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Budget.BudgetBucket" />
 public class SurplusBucket : BudgetBucket
@@ -33,7 +33,7 @@ public class SurplusBucket : BudgetBucket
     }
 
     /// <summary>
-    ///     Gets a description of this type of bucket. By default this is the <see cref="System.Type.Name" />
+    ///     Gets a description of this type of bucket. By default, this is the <see cref="System.Type.Name" />
     /// </summary>
     public override string TypeDescription => "Calculated Surplus";
 }

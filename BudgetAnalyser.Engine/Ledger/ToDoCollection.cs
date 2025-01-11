@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger;
 
@@ -13,21 +12,21 @@ public class ToDoCollection : ObservableCollection<ToDoTask>
     ///     UI.
     /// </summary>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public new bool Remove([NotNull] ToDoTask task)
+    public new bool Remove(ToDoTask task)
     {
         if (task is null)
         {
             throw new ArgumentNullException(nameof(task));
         }
 
-        return task.CanDelete ? base.Remove(task) : false;
+        return task.CanDelete && base.Remove(task);
     }
 
     /// <summary>
     ///     Forced removal of a task.
     /// </summary>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public bool RemoveReminderTask([NotNull] ToDoTask task)
+    public bool RemoveReminderTask(ToDoTask task)
     {
         if (task is null)
         {

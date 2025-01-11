@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -21,8 +19,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
-        public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
-                                                          decimal openingBalance)
+        public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
         {
             return false;
         }
@@ -42,8 +39,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            throw new NotSupportedException(
-                "Invalid budget bucket used, only the Surplus bucket can be used with an instance of Surplus-Ledger.");
+            throw new NotSupportedException("Invalid budget bucket used, only the Surplus bucket can be used with an instance of Surplus-Ledger.");
         }
     }
 }

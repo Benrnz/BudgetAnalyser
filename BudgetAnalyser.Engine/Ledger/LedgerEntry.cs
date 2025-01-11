@@ -63,7 +63,7 @@ public class LedgerEntry
     ///     Note that this may be different to the master mapping in <see cref="LedgerBook.Ledgers" />. This is because this instance shows which account stored the funds at the date in the
     ///     parent <see cref="LedgerEntryLine" />.
     /// </summary>
-    public LedgerBucket LedgerBucket { get; internal set; }
+    public required LedgerBucket LedgerBucket { get; init; }
 
     /// <summary>
     ///     The total net affect of all transactions in this entry.  Debits will be negative.
@@ -122,7 +122,7 @@ public class LedgerEntry
     }
 
     /// <summary>
-    ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions. <see cref="AddTransactionForPersistenceOnly" /> must not be called in conjunction with this.
+    ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions.
     /// </summary>
     /// <param name="newTransactions">The list of new transactions for this entry. This includes the period budgeted amount.</param>
     internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions)
@@ -138,23 +138,9 @@ public class LedgerEntry
     internal bool Validate(StringBuilder validationMessages, decimal openingBalance)
     {
         var result = true;
-        if (LedgerBucket is null)
-        {
-            validationMessages.AppendLine("Ledger Bucket cannot be null on " + this);
-            return false;
-        }
-
-        if (LedgerBucket.BudgetBucket is null)
-        {
-            validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
-            result = false;
-        }
-
         if (openingBalance + Transactions.Sum(t => t.Amount) != Balance)
         {
-            validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
+            validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
             result = false;
         }
 

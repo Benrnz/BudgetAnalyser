@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BudgetAnalyser.Engine.Ledger
+﻿namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
     ///     A Ledger transactions that represents a credit value with a positive number and debit values with a negative number.

@@ -159,7 +159,7 @@ public class BudgetModel : INotifyPropertyChanged
     }
 
     /// <summary>
-    ///     Called to to raise the <see cref="PropertyChanged" /> event.
+    ///     Called to raise the <see cref="PropertyChanged" /> event.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     [NotifyPropertyChangedInvocator]

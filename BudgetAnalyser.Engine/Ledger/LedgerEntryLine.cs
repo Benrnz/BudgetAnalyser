@@ -15,14 +15,11 @@ namespace BudgetAnalyser.Engine.Ledger;
 public class LedgerEntryLine
 {
     private List<BankBalanceAdjustmentTransaction> bankBalanceAdjustments = new();
-    private List<BankBalance> bankBalancesList;
+    private List<BankBalance> bankBalancesList = new();
     private List<LedgerEntry> entries = new();
 
     /// <summary>
     ///     Constructs a new instance of <see cref="LedgerEntryLine" />.
-    ///     Only AutoMapper uses this constructor.  It it easier for AutoMapper configuration. Date and BankBalances are set
-    ///     implicitly using the
-    ///     private and internal setters.
     /// </summary>
     internal LedgerEntryLine()
     {
@@ -47,7 +44,7 @@ public class LedgerEntryLine
     /// </summary>
     /// <param name="reconciliationDate">The date of the line</param>
     /// <param name="bankBalances">The bank balances for this date.</param>
-    internal LedgerEntryLine(DateTime reconciliationDate, [NotNull] IEnumerable<BankBalance> bankBalances)
+    internal LedgerEntryLine(DateTime reconciliationDate, IEnumerable<BankBalance> bankBalances)
         : this()
     {
         if (bankBalances is null)
@@ -131,7 +128,7 @@ public class LedgerEntryLine
     /// <summary>
     ///     Gets the user remarks for this reconciliation.
     /// </summary>
-    public string Remarks { get; internal set; }
+    public string Remarks { get; internal set; } = string.Empty;
 
     /// <summary>
     ///     The individual surplus balance in each bank account being tracked by the Ledger book.  These will add up to the
@@ -197,7 +194,7 @@ public class LedgerEntryLine
         }
     }
 
-    internal static decimal FindPreviousEntryClosingBalance([CanBeNull] LedgerEntryLine previousLine, [NotNull] LedgerBucket ledgerBucket)
+    internal static decimal FindPreviousEntryClosingBalance(LedgerEntryLine? previousLine, LedgerBucket ledgerBucket)
     {
         if (ledgerBucket is null)
         {
@@ -231,18 +228,15 @@ public class LedgerEntryLine
         }
     }
 
-    internal bool UpdateRemarks(string remarks)
+    internal void UpdateRemarks(string remarks)
     {
         if (IsNew)
         {
             Remarks = remarks;
-            return true;
         }
-
-        return false;
     }
 
-    internal bool Validate([NotNull] StringBuilder validationMessages, [CanBeNull] LedgerEntryLine previousLine)
+    internal bool Validate(StringBuilder validationMessages, LedgerEntryLine? previousLine)
     {
         if (validationMessages is null)
         {

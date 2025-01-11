@@ -281,7 +281,7 @@ public class ReconciliationCreationManagerTest
 
         this.subject = new ReconciliationCreationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, this.mockReconciliationBuilder.Object, new FakeLogger());
 
-        this.testDataLedgerBook = LedgerBookTestData.TestData5(recons => new LedgerBookTestHarness(recons));
+        this.testDataLedgerBook = LedgerBookTestData.TestData5(recons => new LedgerBookTestHarness(recons) { StorageKey = "Test Ledger Book.xaml" });
 
         this.mockReconciliationConsistency.Setup(m => m.EnsureConsistency(It.IsAny<LedgerBook>())).Returns(new Mock<IDisposable>().Object);
 

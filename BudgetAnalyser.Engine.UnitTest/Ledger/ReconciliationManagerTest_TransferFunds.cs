@@ -33,11 +33,11 @@ public class ReconciliationManagerTest_TransferFunds
         this.mockReconciliationBuilder = new Mock<IReconciliationBuilder>();
         this.subject = new ReconciliationCreationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, this.mockReconciliationBuilder.Object, new FakeLogger());
 
-        this.testDataLedgerBook = LedgerBookTestData.TestData5(recons => new LedgerBookTestHarness(recons));
+        this.testDataLedgerBook = LedgerBookTestData.TestData5(recons => new LedgerBookTestHarness(recons) { StorageKey = "Test Ledger Book.xaml" });
         this.testDataEntryLine = this.testDataLedgerBook.Reconciliations.First();
         this.testDataEntryLine.Unlock();
 
-        this.surplusChqLedger = new SurplusLedger { StoredInAccount = StatementModelTestData.ChequeAccount };
+        this.surplusChqLedger = new SurplusLedger { StoredInAccount = StatementModelTestData.ChequeAccount, BudgetBucket = StatementModelTestData.SurplusBucket};
         this.insHomeSavLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.InsHomeBucket);
         this.phNetChqLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.PhoneBucket);
     }

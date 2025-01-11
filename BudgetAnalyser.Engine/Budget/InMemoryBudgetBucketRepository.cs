@@ -36,7 +36,7 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
     /// <summary>
     ///     Gets the surplus bucket. This is for convenience only, it also exists in the <see cref="Buckets" /> collection
     /// </summary>
-    public BudgetBucket SurplusBucket { get; protected set; }
+    public BudgetBucket SurplusBucket { get; protected init; }
 
     /// <summary>
     ///     Creates the new fixed budget project.
@@ -44,7 +44,6 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
     /// <param name="bucketCode">The bucket code.</param>
     /// <param name="description">The description.</param>
     /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
-    /// <returns></returns>
     /// <exception cref="ArgumentNullException">
     /// </exception>
     /// <exception cref="ArgumentException">

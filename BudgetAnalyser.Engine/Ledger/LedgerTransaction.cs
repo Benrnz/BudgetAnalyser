@@ -1,7 +1,5 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -42,7 +40,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <value>
         ///     The automatic matching reference.
         /// </value>
-        public string AutoMatchingReference { get; internal set; }
+        public string? AutoMatchingReference { get; internal set; }
 
         /// <summary>
         ///     Gets or sets the transaction date.
@@ -59,7 +57,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Gets the transaction narrative.
         /// </summary>
-        public string Narrative { get; internal set; }
+        public string Narrative { get; internal set; } = string.Empty;
 
         /// <summary>
         ///     Returns a string that represents the current object.
@@ -79,14 +77,9 @@ namespace BudgetAnalyser.Engine.Ledger
             return this;
         }
 
-        internal virtual LedgerTransaction WithNarrative([NotNull] string narrative)
+        internal virtual LedgerTransaction WithNarrative(string narrative)
         {
-            if (narrative is null)
-            {
-                throw new ArgumentNullException(nameof(narrative));
-            }
-
-            Narrative = narrative;
+            Narrative = narrative ?? throw new ArgumentNullException(nameof(narrative));
             return this;
         }
     }

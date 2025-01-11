@@ -23,15 +23,15 @@ public abstract class LedgerBucket
     /// </summary>
     protected const string SupplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
 
-    private BudgetBucket budgetBucket;
+    private BudgetBucket? budgetBucket;
 
     /// <summary>
     ///     Gets or sets the Budget Bucket this ledger column is tracking.
     /// </summary>
-    public BudgetBucket BudgetBucket
+    public required BudgetBucket BudgetBucket
     {
-        get => this.budgetBucket;
-        internal set
+        get => this.budgetBucket!;
+        set
         {
             ValidateBucketSet(value);
             this.budgetBucket = value;
@@ -83,7 +83,7 @@ public abstract class LedgerBucket
         unchecked
         {
             // ReSharper disable NonReadonlyMemberInGetHashCode - Properties are only set by persistence
-            return ((BudgetBucket?.GetHashCode() ?? 0) * 397) ^ (StoredInAccount?.GetHashCode() ?? 0);
+            return (BudgetBucket.GetHashCode() * 397) ^ StoredInAccount.GetHashCode();
             // ReSharper restore NonReadonlyMemberInGetHashCode
         }
     }

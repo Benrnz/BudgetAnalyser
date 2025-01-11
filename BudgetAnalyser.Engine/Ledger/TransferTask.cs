@@ -18,7 +18,7 @@ public class TransferTask : ToDoTask
     public required string BucketCode { get; init; }
 
     /// <summary>
-    ///     Funds need to be transfered into this account. This is where the <see cref="LedgerBucket" /> is stored.
+    ///     Funds need to be transferred into this account. This is where the <see cref="LedgerBucket" /> is stored.
     /// </summary>
     public required Account DestinationAccount { get; init; }
 

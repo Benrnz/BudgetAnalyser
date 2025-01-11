@@ -1,10 +1,7 @@
-﻿using System.Threading.Tasks;
-using JetBrains.Annotations;
-
-namespace BudgetAnalyser.Engine.Ledger
+﻿namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     An interface to provide access to retreive, store, and create <see cref="LedgerBook" />s.
+    ///     An interface to provide access to retrieve, store, and create <see cref="LedgerBook" />s.
     /// </summary>
     public interface ILedgerBookRepository
     {
@@ -15,7 +12,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     load the new <see cref="LedgerBook" />.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Will be thrown if arguments are null.</exception>
-        Task<LedgerBook> CreateNewAndSaveAsync([NotNull] string storageKey);
+        Task<LedgerBook> CreateNewAndSaveAsync(string storageKey);
 
         /// <summary>
         ///     Loads the Ledger Book from persistent storage.
@@ -30,7 +27,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Or the file format is invalid.
         ///     Or the Ledger Book has been tampered with based on the checksum.
         /// </exception>
-        Task<LedgerBook> LoadAsync([NotNull] string storageKey, bool isEncrypted);
+        Task<LedgerBook> LoadAsync(string storageKey, bool isEncrypted);
 
         /// <summary>
         ///     Saves the Ledger Book to the location indicated by the storage key. Any existing Ledger Book at that location will
@@ -40,6 +37,6 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="storageKey">The unique storage identifier</param>
         /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
         /// <exception cref="System.ArgumentNullException">Will be thrown if arguments are null.</exception>
-        Task SaveAsync([NotNull] LedgerBook book, [NotNull] string storageKey, bool isEncrypted);
+        Task SaveAsync(LedgerBook book, string storageKey, bool isEncrypted);
     }
 }

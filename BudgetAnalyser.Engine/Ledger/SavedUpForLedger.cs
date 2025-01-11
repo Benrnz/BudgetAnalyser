@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger;
 
@@ -23,7 +20,7 @@ public class SavedUpForLedger : LedgerBucket
             throw new ArgumentNullException(nameof(transactions));
         }
 
-        LedgerTransaction zeroingTransaction = null;
+        LedgerTransaction? zeroingTransaction = null;
         var netAmount = transactions.Sum(t => t.Amount);
 
         // This ledger can accumulate a balance but cannot be negative.
