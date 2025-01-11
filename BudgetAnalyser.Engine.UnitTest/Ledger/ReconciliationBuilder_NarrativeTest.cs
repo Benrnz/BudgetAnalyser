@@ -8,24 +8,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 [TestClass]
 public class ReconciliationBuilderNarrativeTest
 {
-    private const string NoDescriptionText = "[No Description]";
     private const string BillPaymentTransactionText = "Bill Payment";
     private const string TestDescriptionText = "My description here 123.";
     private Transaction testTransaction;
-
-    [TestMethod]
-    public void ExtractNarrative_EmptyDescEmptyRefNoType_ShouldReturnNoDescription()
-    {
-        this.testTransaction.TransactionType = null;
-        this.testTransaction.Description = string.Empty;
-        this.testTransaction.Reference1 = string.Empty;
-        this.testTransaction.Reference2 = string.Empty;
-        this.testTransaction.Reference3 = string.Empty;
-
-        var result = ExtractNarrative();
-
-        Assert.AreEqual(NoDescriptionText, result);
-    }
 
     [TestMethod]
     public void ExtractNarrative_EmptyDescEmptyRefWithTxnType_ShouldReturnTxnType()
@@ -41,15 +26,6 @@ public class ReconciliationBuilderNarrativeTest
     }
 
     [TestMethod]
-    public void ExtractNarrative_NoDescNoRefNoType_ShouldReturnNoDescription()
-    {
-        this.testTransaction.TransactionType = null;
-        var result = ExtractNarrative();
-
-        Assert.AreEqual(NoDescriptionText, result);
-    }
-
-    [TestMethod]
     public void ExtractNarrative_NoDescNoRefWithTxnType_ShouldReturnTxnType()
     {
         var result = ExtractNarrative();
@@ -60,10 +36,7 @@ public class ReconciliationBuilderNarrativeTest
     [TestMethod]
     public void ExtractNarrative_ShouldUseDescIfNotNull()
     {
-        this.testTransaction = new Transaction
-        {
-            Description = "Test Description1"
-        };
+        this.testTransaction = new Transaction { Description = "Test Description1" };
 
         var result = ExtractNarrative();
 
@@ -73,13 +46,7 @@ public class ReconciliationBuilderNarrativeTest
     [TestMethod]
     public void ExtractNarrative_ShouldUseNoDescriptionIfNull()
     {
-        this.testTransaction = new Transaction
-        {
-            Description = null,
-            Reference1 = "Ref123",
-            Reference2 = "Ref456",
-            Reference3 = "Ref789"
-        };
+        this.testTransaction = new Transaction { Description = null, Reference1 = "Ref123", Reference2 = "Ref456", Reference3 = "Ref789" };
 
         var result = ExtractNarrative();
 
@@ -89,11 +56,7 @@ public class ReconciliationBuilderNarrativeTest
     [TestMethod]
     public void ExtractNarrative_ShouldUseRef1IfNotNull()
     {
-        this.testTransaction = new Transaction
-        {
-            Description = "Test Description1",
-            Reference1 = "Ref123"
-        };
+        this.testTransaction = new Transaction { Description = "Test Description1", Reference1 = "Ref123" };
 
         var result = ExtractNarrative();
 
@@ -103,12 +66,7 @@ public class ReconciliationBuilderNarrativeTest
     [TestMethod]
     public void ExtractNarrative_ShouldUseRef2IfNotNull()
     {
-        this.testTransaction = new Transaction
-        {
-            Description = "Test Description1",
-            Reference1 = "Ref123",
-            Reference2 = "Ref456"
-        };
+        this.testTransaction = new Transaction { Description = "Test Description1", Reference1 = "Ref123", Reference2 = "Ref456" };
 
         var result = ExtractNarrative();
 
@@ -118,13 +76,7 @@ public class ReconciliationBuilderNarrativeTest
     [TestMethod]
     public void ExtractNarrative_ShouldUseRef3IfNotNull()
     {
-        this.testTransaction = new Transaction
-        {
-            Description = "Test Description1",
-            Reference1 = "Ref123",
-            Reference2 = "Ref456",
-            Reference3 = "Ref789"
-        };
+        this.testTransaction = new Transaction { Description = "Test Description1", Reference1 = "Ref123", Reference2 = "Ref456", Reference3 = "Ref789" };
 
         var result = ExtractNarrative();
 
@@ -136,10 +88,10 @@ public class ReconciliationBuilderNarrativeTest
     {
         this.testTransaction = new Transaction
         {
-            Description = null,
-            Reference1 = null,
-            Reference2 = null,
-            Reference3 = null,
+            Description = null!,
+            Reference1 = null!,
+            Reference2 = null!,
+            Reference3 = null!,
             TransactionType = new NamedTransaction("Foo")
         };
 
@@ -165,7 +117,7 @@ public class ReconciliationBuilderNarrativeTest
     public void ExtractNarrative_WithDescMixedRefWithType()
     {
         this.testTransaction.Description = TestDescriptionText;
-        this.testTransaction.Reference1 = null;
+        this.testTransaction.Reference1 = null!;
         this.testTransaction.Reference2 = TestDescriptionText;
         this.testTransaction.Reference3 = string.Empty;
 

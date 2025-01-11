@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.Ledger;
+﻿using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 
@@ -14,7 +10,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 public class LedgerBook_ReconcileTest
 {
     private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
-    private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
+    private static readonly DateTime ReconcileDate = new(2013, 09, 15);
 
     private LedgerBook subject;
     private ReconciliationResult testDataReconResult;
@@ -66,7 +62,7 @@ public class LedgerBook_ReconcileTest
     public void TestInitialise()
     {
         this.subject = LedgerBookTestData.TestData1();
-        this.testDataReconResult = new ReconciliationResult { Reconciliation = new LedgerEntryLine(ReconcileDate, NextReconcileBankBalance) };
+        this.testDataReconResult = new ReconciliationResult { Reconciliation = new LedgerEntryLine(ReconcileDate, NextReconcileBankBalance), Tasks = Array.Empty<ToDoTask>() };
     }
 
     private void Act()

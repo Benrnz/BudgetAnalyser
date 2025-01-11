@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BudgetAnalyser.Engine.Ledger.Data;
+﻿namespace BudgetAnalyser.Engine.Ledger.Data;
 
 /// <summary>
 ///     A Factory to build <see cref="LedgerTransaction" />s based on a string transaction type name stored in DTO objects.
@@ -16,9 +14,7 @@ internal class LedgerTransactionFactory : ILedgerTransactionFactory
     /// <exception cref="DataFormatException">Invalid transaction type encountered:  + transactionTypeName</exception>
     public LedgerTransaction Build(string transactionTypeName, Guid id)
     {
-        var type = Type.GetType(transactionTypeName);
-        return type is null
-            ? throw new DataFormatException("Invalid transaction type encountered: " + transactionTypeName)
-            : Activator.CreateInstance(type, id) as LedgerTransaction;
+        var type = Type.GetType(transactionTypeName) ?? throw new DataFormatException($"Invalid transaction type encountered: '{transactionTypeName}'");
+        return Activator.CreateInstance(type, id) as LedgerTransaction ?? throw new DataFormatException($"Invalid constructor found for transaction type :'{transactionTypeName}'");
     }
 }

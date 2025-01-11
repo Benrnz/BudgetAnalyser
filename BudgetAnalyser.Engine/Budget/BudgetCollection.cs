@@ -49,7 +49,7 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     ///     Gets the current active budget.
     /// </summary>
     public BudgetModel? CurrentActiveBudget => this.OrderByDescending(b => b.EffectiveFrom)
-                                            .FirstOrDefault(b => b.EffectiveFrom <= DateTime.Now);
+        .FirstOrDefault(b => b.EffectiveFrom <= DateTime.Now);
 
     internal BudgetModel this[int index] => this.budgetStorage.ElementAt(index).Value;
 
@@ -166,9 +166,8 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     ///     Determines whether [is future budget] [the specified budget].
     /// </summary>
     /// <exception cref="ArgumentNullException"></exception>
-    [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
-        Justification = "Better for consistency with other methods here")]
-    public bool IsFutureBudget([NotNull] BudgetModel budget)
+    [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Better for consistency with other methods here")]
+    public bool IsFutureBudget(BudgetModel budget)
     {
         return budget is null ? throw new ArgumentNullException(nameof(budget)) : budget.EffectiveFrom > DateTime.Now;
     }

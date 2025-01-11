@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
              xmlns:budget="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
-             xmlns:budget1="clr-namespace:BudgetAnalyser.Budget"
+             xmlns:views="clr-namespace:BudgetAnalyser.Budget"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance views:BudgetSelectionViewModel}"
              DataContextChanged="OnDataContextChanged">
-
-    <!-- DataContext must be BudgetSelectionViewModel -->
 
     <UserControl.Resources>
         <converters:BudgetNameViewModelConverter x:Key="Converter.BudgetNameViewModel" />
@@ -17,18 +19,18 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <budget1:BudgetModelNameUserControl>
-                    <budget1:BudgetModelNameUserControl.DataContext>
+                <views:BudgetModelNameUserControl>
+                    <views:BudgetModelNameUserControl.DataContext>
                         <MultiBinding Converter="{StaticResource Converter.BudgetNameViewModel}">
                             <MultiBinding.Bindings>
                                 <Binding Path="." />
                                 <Binding
-                                    RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=budget1:BudgetSelectionView}"
+                                    RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=views:BudgetSelectionView}"
                                     Path="DataContext.Budgets" />
                             </MultiBinding.Bindings>
                         </MultiBinding>
-                    </budget1:BudgetModelNameUserControl.DataContext>
-                </budget1:BudgetModelNameUserControl>
+                    </views:BudgetModelNameUserControl.DataContext>
+                </views:BudgetModelNameUserControl>
                 <TextBlock Grid.Row="1"
                            FontSize="10"
                            Text="{Binding EffectiveFrom, StringFormat=D}" />
@@ -48,7 +50,7 @@
 
         <StackPanel>
             <TextBlock Text="All budgets from the file:" />
-            <TextBlock Text="{Binding Budgets.FileName}"
+            <TextBlock Text="{Binding Budgets.StorageKey}"
                        FontSize="10"
                        Width="475"
                        HorizontalAlignment="Left"

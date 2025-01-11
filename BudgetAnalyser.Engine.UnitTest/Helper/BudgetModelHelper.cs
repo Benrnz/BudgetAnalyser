@@ -10,7 +10,7 @@ public static class BudgetModelHelper
         writer.WriteLine(string.Empty);
         writer.WriteLine("******************************* BUDGET OUTPUT ********************************");
         writer.WriteLine(
-            $"Budget Currency Context: {instance.FileName} Budget Name: {instance.Model.Name} Effective From: {instance.Model.EffectiveFrom:d} Effective Until: {instance.EffectiveUntil:d}");
+            $"Budget Currency Context: {instance.StorageKey} Budget Name: {instance.Model.Name} Effective From: {instance.Model.EffectiveFrom:d} Effective Until: {instance.EffectiveUntil:d}");
         if (instance.BudgetActive)
         {
             writer.WriteLine("{0} Budget is ACTIVE.", instance.Model.BudgetCycle);

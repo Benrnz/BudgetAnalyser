@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
@@ -29,16 +26,12 @@ public class LedgerEntryLineDto
     /// <summary>
     ///     Gets or sets the bank balance adjustments.
     /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-    public List<LedgerTransactionDto> BankBalanceAdjustments { get; set; }
+    public List<LedgerTransactionDto> BankBalanceAdjustments { get; init; }
 
     /// <summary>
     ///     Gets or sets the bank balances.
     /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-    public List<BankBalanceDto> BankBalances { get; set; }
+    public List<BankBalanceDto> BankBalances { get; init; }
 
     /// <summary>
     ///     Gets or sets the date of the reconciliation.
@@ -49,12 +42,10 @@ public class LedgerEntryLineDto
     /// <summary>
     ///     Gets or sets the entries.
     /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-    public List<LedgerEntryDto> Entries { get; set; }
+    public List<LedgerEntryDto> Entries { get; init; }
 
     /// <summary>
     ///     Gets or sets the remarks.
     /// </summary>
-    public string Remarks { get; set; }
+    public string Remarks { get; init; } = string.Empty;
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger;
 
@@ -15,15 +12,16 @@ public class SavedUpForLedger : LedgerBucket
     ///     Allows ledger bucket specific behaviour during reconciliation.
     /// </summary>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
-                                                      decimal openingBalance)
+    public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions,
+        DateTime reconciliationDate,
+        decimal openingBalance)
     {
         if (transactions is null)
         {
             throw new ArgumentNullException(nameof(transactions));
         }
 
-        LedgerTransaction zeroingTransaction = null;
+        LedgerTransaction? zeroingTransaction = null;
         var netAmount = transactions.Sum(t => t.Amount);
 
         // This ledger can accumulate a balance but cannot be negative.
@@ -42,12 +40,7 @@ public class SavedUpForLedger : LedgerBucket
         }
         else if (closingBalance < 0)
         {
-            zeroingTransaction = new CreditLedgerTransaction
-            {
-                Date = reconciliationDate,
-                Amount = -closingBalance,
-                Narrative = SupplementOverdrawnText
-            };
+            zeroingTransaction = new CreditLedgerTransaction { Date = reconciliationDate, Amount = -closingBalance, Narrative = SupplementOverdrawnText };
         }
 
         if (zeroingTransaction is not null)

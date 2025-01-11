@@ -1,7 +1,5 @@
-﻿using System;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
@@ -10,21 +8,14 @@ namespace BudgetAnalyser.Engine.Ledger.Data;
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Ledger.Data.ILedgerBucketFactory" />
 [AutoRegisterWithIoC]
-internal class LedgerBucketFactory : ILedgerBucketFactory
+internal class LedgerBucketFactory(IBudgetBucketRepository bucketRepo, IAccountTypeRepository accountRepo) : ILedgerBucketFactory
 {
-    private readonly IAccountTypeRepository accountRepo;
-    private readonly IBudgetBucketRepository bucketRepo;
-
-    public LedgerBucketFactory([NotNull] IBudgetBucketRepository bucketRepo,
-                               [NotNull] IAccountTypeRepository accountRepo)
-    {
-        this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-        this.accountRepo = accountRepo ?? throw new ArgumentNullException(nameof(accountRepo));
-    }
+    private readonly IAccountTypeRepository accountRepo = accountRepo ?? throw new ArgumentNullException(nameof(accountRepo));
+    private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
 
     public LedgerBucket Build(string bucketCode, string accountName)
     {
-        var account = this.accountRepo.GetByKey(accountName);
+        var account = this.accountRepo.GetByKey(accountName) ?? throw new CorruptedLedgerBookException($"Provided account '${accountName}' does not exist.");
         return Build(bucketCode, account);
     }
 
@@ -36,8 +27,11 @@ internal class LedgerBucketFactory : ILedgerBucketFactory
             return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
         }
 
-        return bucket is SpentPerPeriodExpenseBucket
-            ? (LedgerBucket)new SpentPerPeriodLedger { BudgetBucket = bucket, StoredInAccount = account }
-            : throw new NotSupportedException($"Unsupported budget bucket {bucketCode} with type {bucket.GetType().Name}, found in ledger book");
+        if (bucket is SpentPerPeriodExpenseBucket)
+        {
+            return new SpentPerPeriodLedger { BudgetBucket = bucket, StoredInAccount = account };
+        }
+
+        throw new CorruptedLedgerBookException($"Unsupported budget bucket '{bucketCode}', found in ledger book");
     }
 }

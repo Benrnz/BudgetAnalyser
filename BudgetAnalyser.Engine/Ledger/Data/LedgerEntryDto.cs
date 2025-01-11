@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
-
-namespace BudgetAnalyser.Engine.Ledger.Data;
+﻿namespace BudgetAnalyser.Engine.Ledger.Data;
 
 /// <summary>
 ///     A Dto for <see cref="LedgerEntry" />.
@@ -27,17 +23,15 @@ public class LedgerEntryDto
     ///     The LedgerBucketDto type was intentionally not used here, to prevent the same instance being used between ledger
     ///     lines and the "next reconciliation" mapping at the LedgerBookDto level.
     /// </summary>
-    public string BucketCode { get; set; }
+    public required string BucketCode { get; init; }
 
     /// <summary>
     ///     The account in which the Ledger was stored in at the time of the month end reconciliation for this line.
     /// </summary>
-    public string StoredInAccount { get; [UsedImplicitly] set; }
+    public required string StoredInAccount { get; init; }
 
     /// <summary>
     ///     Gets or sets the transactions.
     /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-    public List<LedgerTransactionDto> Transactions { get; set; }
+    public List<LedgerTransactionDto> Transactions { get; init; }
 }

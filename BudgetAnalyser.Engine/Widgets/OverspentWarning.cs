@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -28,10 +25,7 @@ public class OverspentWarning : Widget
     {
         Category = WidgetGroup.PeriodicTrackingSectionName;
         this.logger = new NullLogger();
-        Dependencies = new[]
-        {
-            typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation)
-        };
+        Dependencies = new[] { typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
         DetailedText = "Overspent";
         ImageResourceName = null;
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
@@ -95,7 +89,7 @@ public class OverspentWarning : Widget
         if (!RemainingBudgetBucketWidget.ValidatePeriod(budget.Model.BudgetCycle, filter.BeginDate.Value, filter.EndDate.Value, out var validationMessage))
         {
             this.logger.LogInfo(l =>
-                                    l.Format("Difference in months between begin and end != 1 month. BeginDate: {0}, EndDate: {1}", filter.BeginDate.Value, filter.EndDate.Value));
+                l.Format("Difference in months between begin and end != 1 month. BeginDate: {0}, EndDate: {1}", filter.BeginDate.Value, filter.EndDate.Value));
             Enabled = false;
             ToolTip = validationMessage;
             return;
@@ -160,7 +154,7 @@ public class OverspentWarning : Widget
         var warnings = 0;
         var transactions = statement.Transactions.Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate).ToList();
         this.logger.LogInfo(l => l.Format("SearchForOtherNonLedgerBookOverSpentBuckets: {0} statement transactions found.", transactions.Count()));
-        foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
+        foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is ExpenseBucket))
         {
             if (currentLedgerBalances.ContainsKey(expense.Bucket))
             {

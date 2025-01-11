@@ -1,18 +1,17 @@
-﻿namespace BudgetAnalyser.Engine.Budget.Data
+﻿namespace BudgetAnalyser.Engine.Budget.Data;
+
+/// <summary>
+///     A Dto persistence class to store an Income object.
+/// </summary>
+public class IncomeDto
 {
     /// <summary>
-    ///     A Dto persistence class to store an Income object.
+    ///     Gets or sets the income amount.
     /// </summary>
-    public class IncomeDto
-    {
-        /// <summary>
-        ///     Gets or sets the income amount.
-        /// </summary>
-        public decimal Amount { get; set; }
+    public decimal Amount { get; set; }
 
-        /// <summary>
-        ///     Gets or sets the budget bucket textual code.
-        /// </summary>
-        public string BudgetBucketCode { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the budget bucket textual code.
+    /// </summary>
+    public string BudgetBucketCode { get; set; } = string.Empty;
 }

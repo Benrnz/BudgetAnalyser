@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -10,8 +7,6 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 
@@ -109,10 +104,10 @@ public class ReconciliationBuilderTest
         // 150 Balance Adjustment expected in Savings
         // Power 175 goes in Chq
         TestIntialise(1, new LedgerBookBuilder()
-                          .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.CarMtcBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
-                          .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.HairBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
-                          .IncludeLedger(LedgerBookTestData.PowerLedger)
-                          .Build());
+            .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.CarMtcBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
+            .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.HairBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
+            .IncludeLedger(LedgerBookTestData.PowerLedger)
+            .Build());
 
         var result = ActPeriodEndReconciliation();
 
@@ -258,9 +253,9 @@ public class ReconciliationBuilderTest
         this.subject.LedgerBook.Output(true);
 
         var result = this.subject.CreateNewMonthlyReconciliation(reconciliationDate ?? TestDataReconcileDate,
-                                                                 this.testDataBudgetContext.Model,
-                                                                 this.testDataStatement,
-                                                                 this.currentBankBalances.ToArray());
+            this.testDataBudgetContext.Model,
+            this.testDataStatement,
+            this.currentBankBalances.ToArray());
 
         Debug.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
         result.Reconciliation.Output(LedgerBookHelper.LedgerOrder(this.subject.LedgerBook), true, true);
@@ -274,12 +269,8 @@ public class ReconciliationBuilderTest
         this.testDataBudgetContext = new BudgetCurrencyContext(budgetCollection, budgetCollection.CurrentActiveBudget);
         this.testDataStatement = statementModelTestData ?? StatementModelTestData.TestData5();
 
-        var result = ActPeriodEndReconciliation(bankBalances: new[]
-                                                {
-                                                    new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M),
-                                                    new BankBalance(StatementModelTestData.SavingsAccount, 1200M)
-                                                },
-                                                ignoreWarnings: ignoreWarnings);
+        var result = ActPeriodEndReconciliation(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) },
+            ignoreWarnings: ignoreWarnings);
 
         return result;
     }
@@ -291,12 +282,12 @@ public class ReconciliationBuilderTest
         foreach (var task in tasks)
         {
             Console.WriteLine(
-                              "{0} {1} {2} {3} {4}",
-                              task.GetType().Name.PadRight(10).Truncate(10),
-                              task.SystemGenerated.ToString().PadRight(10),
-                              (task as TransferTask)?.Reference?.PadRight(10).Truncate(10) ?? "          ",
-                              (task as TransferTask)?.Amount.ToString("C").PadRight(10).Truncate(10) ?? "          ",
-                              task.Description);
+                "{0} {1} {2} {3} {4}",
+                task.GetType().Name.PadRight(10).Truncate(10),
+                task.SystemGenerated.ToString().PadRight(10),
+                (task as TransferTask)?.Reference?.PadRight(10).Truncate(10) ?? "          ",
+                (task as TransferTask)?.Amount.ToString("C").PadRight(10).Truncate(10) ?? "          ",
+                task.Description);
         }
     }
 
@@ -328,7 +319,7 @@ public class ReconciliationBuilderTest
                         Description = "Last transaction"
                     })
                     .Build();
-                this.subject.LedgerBook = ledgerBook ?? LedgerBookTestData.TestData5(() => new LedgerBookTestHarness());
+                this.subject.LedgerBook = ledgerBook ?? LedgerBookTestData.TestData5(recons => new LedgerBookTestHarness(recons) { StorageKey = "Test Ledger Book.xaml" });
                 break;
         }
     }

@@ -121,7 +121,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     ///     The unique identifier for the transaction.  Ideally this should not be public settable, but this is used during
     ///     serialisation.
     /// </summary>
-    public Guid Id { get; internal set; }
+    public Guid Id { get; init; }
 
     /// <summary>
     ///     Gets a value indicating whether this transaction is a suspected duplicate.

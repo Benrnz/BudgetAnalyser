@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Budget.Data;
 
@@ -25,7 +23,7 @@ public class BudgetModelDto
     /// </summary>
     [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Necessary for serialisation")]
     [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for serialisation")]
-    public List<ExpenseDto> Expenses { get; set; }
+    public List<ExpenseDto> Expenses { get; set; } = new();
 
     /// <summary>
     ///     No need for a data type for <see cref="Income" />, <see cref="Expenses" />, <see cref="BudgetItem" />,
@@ -33,7 +31,7 @@ public class BudgetModelDto
     /// </summary>
     [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Necessary for serialisation")]
     [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for serialisation")]
-    public List<IncomeDto> Incomes { get; set; }
+    public List<IncomeDto> Incomes { get; set; } = new();
 
     /// <summary>
     ///     Gets the date and time the budget model was last modified by the user.
@@ -43,10 +41,10 @@ public class BudgetModelDto
     /// <summary>
     ///     Gets an optional comment than can be given when a change is made to the budget model.
     /// </summary>
-    public string LastModifiedComment { get; set; }
+    public string LastModifiedComment { get; set; } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the name of the Budget Model.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

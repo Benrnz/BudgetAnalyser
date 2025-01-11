@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Xml.Serialization;
-using JetBrains.Annotations;
+﻿using System.Xml.Serialization;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 
@@ -28,16 +24,12 @@ public class LedgerBookDto
     /// <summary>
     ///     The ledger to Bucket mapping for when a new reconciliation creates a new instances of LedgerEntry's.
     /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Scope = "member", Target = "BudgetAnalyser.Engine.Ledger.Data.LedgerBookDto.#Ledgers",
-                     Justification = "Required for serialisation")]
-    [UsedImplicitly]
-    public List<LedgerBucketDto> Ledgers { get; set; }
+    public List<LedgerBucketDto> Ledgers { get; init; }
 
     /// <summary>
     ///     The configuration for the remote mobile data storage
     /// </summary>
-    public MobileStorageSettingsDto MobileSettings { get; set; }
+    public MobileStorageSettingsDto? MobileSettings { get; init; }
 
     /// <summary>
     ///     Gets or sets the last modified date.
@@ -49,17 +41,15 @@ public class LedgerBookDto
     ///     Gets or sets the ledger book name.
     /// </summary>
     [XmlAttribute]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the reconciliations collection.
     /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-    public List<LedgerEntryLineDto> Reconciliations { get; set; }
+    public List<LedgerEntryLineDto> Reconciliations { get; init; }
 
     /// <summary>
     ///     Gets or sets the storage key.
     /// </summary>
-    public string StorageKey { get; set; }
+    public string StorageKey { get; set; } = string.Empty;
 }

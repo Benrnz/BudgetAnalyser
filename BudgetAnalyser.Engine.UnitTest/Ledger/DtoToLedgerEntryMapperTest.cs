@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.Engine.UnitTest.Ledger
-{
-    [TestClass]
-    public class DtoToLedgerEntryMapperTest
-    {
-        private LedgerEntry Control { get; set; }
-        private LedgerEntry Result { get; set; }
+namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 
-        private LedgerEntryDto TestData =>
-                /*
+[TestClass]
+public class DtoToLedgerEntryMapperTest
+{
+    private LedgerEntry Control { get; set; }
+    private LedgerEntry Result { get; set; }
+
+    private LedgerEntryDto TestData =>
+        /*
 <LedgerEntryDto Balance="52.32" BucketCode="POWER">
 <LedgerEntryDto.Transactions>
 <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
@@ -27,70 +23,70 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 </scg:List>
 </LedgerEntryDto.Transactions>
 </LedgerEntryDto>                 */
-                new LedgerEntryDto
+        new()
+        {
+            Balance = 52.32M,
+            BucketCode = TestDataConstants.PowerBucketCode,
+            StoredInAccount = TestDataConstants.ChequeAccountName,
+            Transactions = new List<LedgerTransactionDto>
+            {
+                new()
                 {
-                    Balance = 52.32M,
-                    BucketCode = TestDataConstants.PowerBucketCode,
-                    Transactions = new List<LedgerTransactionDto>
-                    {
-                        new LedgerTransactionDto
-                        {
-                            Account = StatementModelTestData.ChequeAccount.Name,
-                            Amount = 140M,
-                            Id = Guid.NewGuid(),
-                            Narrative = "Foo...",
-                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
-                        },
-                        new LedgerTransactionDto
-                        {
-                            Account = StatementModelTestData.ChequeAccount.Name,
-                            Amount = -98.56M,
-                            Id = Guid.NewGuid(),
-                            Narrative = "Bar...",
-                            TransactionType = typeof(CreditLedgerTransaction).FullName
-                        }
-                    }
-                };
+                    Account = StatementModelTestData.ChequeAccount.Name,
+                    Amount = 140M,
+                    Id = Guid.NewGuid(),
+                    Narrative = "Foo...",
+                    TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
+                },
+                new()
+                {
+                    Account = StatementModelTestData.ChequeAccount.Name,
+                    Amount = -98.56M,
+                    Id = Guid.NewGuid(),
+                    Narrative = "Bar...",
+                    TransactionType = typeof(CreditLedgerTransaction).FullName
+                }
+            }
+        };
 
-        [TestMethod]
-        public void ShouldMapBalance()
-        {
-            Assert.AreEqual(Control.Balance, Result.Balance);
-        }
+    [TestMethod]
+    public void ShouldMapBalance()
+    {
+        Assert.AreEqual(Control.Balance, Result.Balance);
+    }
 
-        [TestMethod]
-        public void ShouldMapBucketCode()
-        {
-            Assert.AreEqual(TestDataConstants.PowerBucketCode, Result.LedgerBucket.BudgetBucket.Code);
-        }
+    [TestMethod]
+    public void ShouldMapBucketCode()
+    {
+        Assert.AreEqual(TestDataConstants.PowerBucketCode, Result.LedgerBucket.BudgetBucket.Code);
+    }
 
-        [TestMethod]
-        public void ShouldMapCorrectNumberOfTransactions()
-        {
-            Assert.AreEqual(2, Result.Transactions.Count());
-        }
+    [TestMethod]
+    public void ShouldMapCorrectNumberOfTransactions()
+    {
+        Assert.AreEqual(2, Result.Transactions.Count());
+    }
 
-        [TestMethod]
-        public void ShouldMapNetAmount()
-        {
-            Assert.AreEqual(Control.NetAmount, Result.NetAmount);
-        }
+    [TestMethod]
+    public void ShouldMapNetAmount()
+    {
+        Assert.AreEqual(Control.NetAmount, Result.NetAmount);
+    }
 
-        [TestMethod]
-        public void ShouldSetIsNewToFalse()
-        {
-            Assert.IsFalse((bool)PrivateAccessor.GetField(Result, "isNew"));
-        }
+    [TestMethod]
+    public void ShouldSetIsNewToFalse()
+    {
+        Assert.IsFalse((bool)PrivateAccessor.GetField(Result, "isNew"));
+    }
 
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            var accountRepo = new InMemoryAccountTypeRepository();
-            var subject = new MapperLedgerEntryDto2LedgerEntry(new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory(), accountRepo);
-            Result = subject.ToModel(TestData);
+    [TestInitialize]
+    public void TestInitialise()
+    {
+        var accountRepo = new InMemoryAccountTypeRepository();
+        var subject = new MapperLedgerEntryToDto2(new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory());
+        Result = subject.ToModel(TestData);
 
-            var book = LedgerBookTestData.TestData2();
-            Control = book.Reconciliations.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-        }
+        var book = LedgerBookTestData.TestData2();
+        Control = book.Reconciliations.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
     }
 }

@@ -13,6 +13,10 @@ public class LedgerBookTestHarness : LedgerBook
     {
     }
 
+    public LedgerBookTestHarness(IEnumerable<LedgerEntryLine> reconciliations) : base(reconciliations)
+    {
+    }
+
     public Action<ReconciliationResult> ReconcileOverride { get; set; } = _ => { };
 
     internal override void Reconcile(ReconciliationResult newRecon)

@@ -2,7 +2,6 @@
 using System.Globalization;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger;
 
@@ -24,25 +23,20 @@ public abstract class LedgerBucket
     /// </summary>
     protected const string SupplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
 
-    private BudgetBucket budgetBucket;
+    private BudgetBucket? budgetBucket;
 
     /// <summary>
     ///     Gets or sets the Budget Bucket this ledger column is tracking.
     /// </summary>
-    public BudgetBucket BudgetBucket
+    public required BudgetBucket BudgetBucket
     {
-        get => this.budgetBucket;
-        internal set
+        get => this.budgetBucket!;
+        set
         {
             ValidateBucketSet(value);
             this.budgetBucket = value;
         }
     }
-
-    /// <summary>
-    ///     A unique token to identify the bucket when using the code is not appropriate.
-    /// </summary>
-    public Guid Id { get; internal set; }
 
     /// <summary>
     ///     Gets or sets the Account in which this ledger's funds are stored.
@@ -63,7 +57,7 @@ public abstract class LedgerBucket
     /// <returns>
     ///     <c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.
     /// </returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is null)
         {
@@ -75,7 +69,7 @@ public abstract class LedgerBucket
             return true;
         }
 
-        return obj.GetType() != GetType() ? false : Equals((LedgerBucket)obj);
+        return obj.GetType() == GetType() && Equals((LedgerBucket)obj);
     }
 
     /// <summary>
@@ -89,7 +83,7 @@ public abstract class LedgerBucket
         unchecked
         {
             // ReSharper disable NonReadonlyMemberInGetHashCode - Properties are only set by persistence
-            return ((BudgetBucket?.GetHashCode() ?? 0) * 397) ^ (StoredInAccount?.GetHashCode() ?? 0);
+            return (BudgetBucket.GetHashCode() * 397) ^ StoredInAccount.GetHashCode();
             // ReSharper restore NonReadonlyMemberInGetHashCode
         }
     }
@@ -97,9 +91,19 @@ public abstract class LedgerBucket
     /// <summary>
     ///     Implements the operator ==. Delegates to Equals.
     /// </summary>
-    public static bool operator ==(LedgerBucket left, LedgerBucket right)
+    public static bool operator ==(LedgerBucket? left, LedgerBucket? right)
     {
-        return Equals(left, right);
+        if (left is null)
+        {
+            return right is null;
+        }
+
+        if (right is null)
+        {
+            return false;
+        }
+
+        return Equals(left.BudgetBucket, right.BudgetBucket) && Equals(left.StoredInAccount, right.StoredInAccount);
     }
 
     /// <summary>
@@ -124,7 +128,7 @@ public abstract class LedgerBucket
     /// <summary>
     ///     Returns true if the to ledger buckets are refering to the same bucket.
     /// </summary>
-    protected bool Equals([CanBeNull] LedgerBucket other)
+    protected bool Equals(LedgerBucket? other)
     {
         return other is null ? false : Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
     }

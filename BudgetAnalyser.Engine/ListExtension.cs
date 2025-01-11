@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using JetBrains.Annotations;
-
-namespace BudgetAnalyser.Engine
+﻿namespace BudgetAnalyser.Engine
 {
     /// <summary>
     ///     An extension class to extend <see cref="IList{T}" />.
@@ -14,8 +10,8 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         /// <typeparam name="T">Any type</typeparam>
         /// <param name="instance">The target collection</param>
-        /// <param name="newElement">The new element to add if its not null.</param>
-        public static bool AddIfSomething<T>([NotNull] this IList<T> instance, T newElement) where T : class
+        /// <param name="newElement">The new element to add if it's not null.</param>
+        public static bool AddIfSomething<T>(this IList<T> instance, T? newElement) where T : class
         {
             if (instance is null)
             {
