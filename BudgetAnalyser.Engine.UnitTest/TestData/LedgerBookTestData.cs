@@ -23,7 +23,7 @@ public static class LedgerBookTestData
         HairLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow."), StoredInAccount = ChequeAccount };
         ClothesLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", ""), StoredInAccount = ChequeAccount };
         DocLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, ""), StoredInAccount = ChequeAccount };
-        SurplusLedger = new SurplusLedger { StoredInAccount = ChequeAccount, BudgetBucket = StatementModelTestData.SurplusBucket};
+        SurplusLedger = new SurplusLedger { StoredInAccount = ChequeAccount, BudgetBucket = StatementModelTestData.SurplusBucket };
         SavingsSurplusLedger = new SurplusLedger { StoredInAccount = SavingsAccount, BudgetBucket = StatementModelTestData.SurplusBucket };
         SavingsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.SavingsBucketCode, "Savings"), StoredInAccount = ChequeAccount };
     }

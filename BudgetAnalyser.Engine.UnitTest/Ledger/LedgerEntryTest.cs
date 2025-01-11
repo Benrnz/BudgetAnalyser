@@ -21,7 +21,7 @@ public class LedgerEntryTest
         var newTransaction = new CreditLedgerTransaction { Amount = -100 };
         this.testTransactions.Add(newTransaction);
 
-        this.subject = new LedgerEntry(this.testTransactions){LedgerBucket = LedgerBookTestData.PowerLedger};
+        this.subject = new LedgerEntry(this.testTransactions) { LedgerBucket = LedgerBookTestData.PowerLedger };
 
         Assert.AreEqual(20M, this.subject.Balance);
     }
@@ -32,7 +32,7 @@ public class LedgerEntryTest
         var newTransaction = new CreditLedgerTransaction { Amount = -100 };
         this.testTransactions.Add(newTransaction);
 
-        this.subject = new LedgerEntry(this.testTransactions) {LedgerBucket = LedgerBookTestData.PowerLedger};
+        this.subject = new LedgerEntry(this.testTransactions) { LedgerBucket = LedgerBookTestData.PowerLedger };
 
         Assert.AreEqual(20M, this.subject.NetAmount);
     }
@@ -58,7 +58,7 @@ public class LedgerEntryTest
     [TestInitialize]
     public void TestInitialise()
     {
-        this.subject = new LedgerEntry(true) { Balance = 120, LedgerBucket = LedgerBookTestData.PowerLedger};
+        this.subject = new LedgerEntry(true) { Balance = 120, LedgerBucket = LedgerBookTestData.PowerLedger };
         this.subject.SetTransactionsForReconciliation(this.testTransactions);
     }
 }

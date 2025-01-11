@@ -115,7 +115,7 @@ public class LedgerBook : IModelValidate
         var accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
         foreach (var account in accounts)
         {
-            ledgers.Insert(0, new SurplusLedger { StoredInAccount = account, BudgetBucket = new SurplusBucket()});
+            ledgers.Insert(0, new SurplusLedger { StoredInAccount = account, BudgetBucket = new SurplusBucket() });
         }
 
         return ledgers;

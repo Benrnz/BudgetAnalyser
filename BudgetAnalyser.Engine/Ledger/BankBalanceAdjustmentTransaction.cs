@@ -26,6 +26,6 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Transactions.
         ///     In the case of <see cref="LedgerEntry" /> transactions it is set by the <see cref="LedgerEntry.LedgerBucket" />.
         /// </summary>
-        public required Account BankAccount { get;  init; }
+        public required Account BankAccount { get; init; }
     }
 }
