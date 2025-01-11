@@ -3,215 +3,214 @@ using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Budget;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger;
+
+/// <summary>
+///     An object to encapsulate all necessary data to perform a transfer operation in a <see cref="LedgerEntry" />.
+/// </summary>
+/// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+public class TransferFundsCommand : INotifyPropertyChanged
 {
+    private string doNotUseAutoMatchingReference = string.Empty;
+    private bool doNotUseBankTransferRequired;
+    private LedgerBucket? doNotUseFromLedger;
+    private string doNotUseNarrative = string.Empty;
+    private LedgerBucket? doNotUseToLedger;
+    private decimal doNotUseTransferAmount;
+    private bool isValid;
+
     /// <summary>
-    ///     An object to encapsulate all necessary data to perform a transfer operation in a <see cref="LedgerEntry" />.
+    ///     Occurs when a property value changes.
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
-    public class TransferFundsCommand : INotifyPropertyChanged
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    ///     Gets or sets the automatic matching reference.
+    /// </summary>
+    /// <value>
+    ///     The automatic matching reference.
+    /// </value>
+    public string AutoMatchingReference
     {
-        private string doNotUseAutoMatchingReference = string.Empty;
-        private bool doNotUseBankTransferRequired;
-        private LedgerBucket? doNotUseFromLedger;
-        private LedgerBucket? doNotUseToLedger;
-        private string doNotUseNarrative = string.Empty;
-        private decimal doNotUseTransferAmount;
-        private bool isValid;
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        ///     Gets or sets the automatic matching reference.
-        /// </summary>
-        /// <value>
-        ///     The automatic matching reference.
-        /// </value>
-        public string AutoMatchingReference
+        get => this.doNotUseAutoMatchingReference;
+        set
         {
-            get => this.doNotUseAutoMatchingReference;
-            set
+            if (value == this.doNotUseAutoMatchingReference)
             {
-                if (value == this.doNotUseAutoMatchingReference)
-                {
-                    return;
-                }
+                return;
+            }
 
-                this.doNotUseAutoMatchingReference = value;
-                OnPropertyChanged();
+            this.doNotUseAutoMatchingReference = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether a bank transfer is required.
+    ///     Used to highlight to the user in the UI that a bank transfer needs to be performed for this transfer to be
+    ///     complete.
+    /// </summary>
+    public bool BankTransferRequired
+    {
+        get => this.doNotUseBankTransferRequired;
+        set
+        {
+            if (value == this.doNotUseBankTransferRequired)
+            {
+                return;
+            }
+
+            this.doNotUseBankTransferRequired = value;
+            OnPropertyChanged();
+            if (BankTransferRequired && AutoMatchingReference.IsNothing())
+            {
+                AutoMatchingReference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
             }
         }
+    }
 
-        /// <summary>
-        ///     Gets or sets a value indicating whether a bank transfer is required.
-        ///     Used to highlight to the user in the UI that a bank transfer needs to be performed for this transfer to be
-        ///     complete.
-        /// </summary>
-        public bool BankTransferRequired
+    /// <summary>
+    ///     Gets or sets the source ledger to transfer from.
+    /// </summary>
+    public LedgerBucket? FromLedger
+    {
+        get => this.doNotUseFromLedger;
+        set
         {
-            get => this.doNotUseBankTransferRequired;
-            set
+            if (Equals(value, this.doNotUseFromLedger))
             {
-                if (value == this.doNotUseBankTransferRequired)
-                {
-                    return;
-                }
+                return;
+            }
 
-                this.doNotUseBankTransferRequired = value;
-                OnPropertyChanged();
-                if (BankTransferRequired && AutoMatchingReference.IsNothing())
-                {
-                    AutoMatchingReference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
-                }
+            this.doNotUseFromLedger = value;
+            OnPropertyChanged();
+            SetBankTransferRequired();
+            if (IsValid != this.isValid)
+            {
+                this.isValid = !this.isValid;
+                OnPropertyChanged(nameof(IsValid));
             }
         }
+    }
 
-        /// <summary>
-        ///     Gets or sets the source ledger to transfer from.
-        /// </summary>
-        public LedgerBucket? FromLedger
+    /// <summary>
+    ///     Returns true if the transfer is valid.
+    /// </summary>
+    public bool IsValid
+    {
+        get
         {
-            get => this.doNotUseFromLedger;
-            set
+            var valid = Narrative.IsSomething()
+                        && FromLedger is not null
+                        && ToLedger is not null
+                        && FromLedger != ToLedger
+                        && TransferAmount >= 0.01M;
+            if (!valid)
             {
-                if (Equals(value, this.doNotUseFromLedger))
-                {
-                    return;
-                }
+                return false;
+            }
 
-                this.doNotUseFromLedger = value;
-                OnPropertyChanged();
-                SetBankTransferRequired();
-                if (IsValid != this.isValid)
-                {
-                    this.isValid = !this.isValid;
-                    OnPropertyChanged(nameof(IsValid));
-                }
+            if (BankTransferRequired)
+            {
+                valid = AutoMatchingReference.IsSomething();
+            }
+
+            if (FromLedger!.BudgetBucket is SurplusBucket
+                && ToLedger!.BudgetBucket is SurplusBucket
+                && FromLedger.StoredInAccount == ToLedger.StoredInAccount)
+            {
+                valid = false;
+            }
+
+            return valid;
+        }
+    }
+
+    /// <summary>
+    ///     Gets or sets the transfer narrative. This will be used on both transactions.
+    /// </summary>
+    public string Narrative
+    {
+        get => this.doNotUseNarrative;
+        set
+        {
+            if (value == this.doNotUseNarrative)
+            {
+                return;
+            }
+
+            this.doNotUseNarrative = value;
+            OnPropertyChanged();
+            if (IsValid != this.isValid)
+            {
+                this.isValid = !this.isValid;
+                OnPropertyChanged(nameof(IsValid));
             }
         }
+    }
 
-        /// <summary>
-        ///     Gets or sets the transfer narrative. This will be used on both transactions.
-        /// </summary>
-        public string Narrative
+    /// <summary>
+    ///     Gets or sets the destination ledger to transfer into.
+    /// </summary>
+    public LedgerBucket? ToLedger
+    {
+        get => this.doNotUseToLedger;
+        set
         {
-            get => this.doNotUseNarrative;
-            set
+            if (Equals(value, this.doNotUseToLedger))
             {
-                if (value == this.doNotUseNarrative)
-                {
-                    return;
-                }
+                return;
+            }
 
-                this.doNotUseNarrative = value;
-                OnPropertyChanged();
-                if (IsValid != this.isValid)
-                {
-                    this.isValid = !this.isValid;
-                    OnPropertyChanged(nameof(IsValid));
-                }
+            this.doNotUseToLedger = value;
+            OnPropertyChanged();
+            SetBankTransferRequired();
+            if (IsValid != this.isValid)
+            {
+                this.isValid = !this.isValid;
+                OnPropertyChanged(nameof(IsValid));
             }
         }
+    }
 
-        /// <summary>
-        ///     Gets or sets the destination ledger to transfer into.
-        /// </summary>
-        public LedgerBucket? ToLedger
+    /// <summary>
+    ///     Gets or sets the transfer amount.
+    /// </summary>
+    public decimal TransferAmount
+    {
+        get => this.doNotUseTransferAmount;
+        set
         {
-            get => this.doNotUseToLedger;
-            set
+            if (value == this.doNotUseTransferAmount)
             {
-                if (Equals(value, this.doNotUseToLedger))
-                {
-                    return;
-                }
+                return;
+            }
 
-                this.doNotUseToLedger = value;
-                OnPropertyChanged();
-                SetBankTransferRequired();
-                if (IsValid != this.isValid)
-                {
-                    this.isValid = !this.isValid;
-                    OnPropertyChanged(nameof(IsValid));
-                }
+            this.doNotUseTransferAmount = value;
+            OnPropertyChanged();
+            if (IsValid != this.isValid)
+            {
+                this.isValid = !this.isValid;
+                OnPropertyChanged(nameof(IsValid));
             }
         }
+    }
 
-        /// <summary>
-        ///     Gets or sets the transfer amount.
-        /// </summary>
-        public decimal TransferAmount
+    /// <summary>
+    ///     Called when a property has changed.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    [NotifyPropertyChangedInvocator]
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void SetBankTransferRequired()
+    {
+        if (FromLedger is not null && ToLedger is not null)
         {
-            get => this.doNotUseTransferAmount;
-            set
-            {
-                if (value == this.doNotUseTransferAmount)
-                {
-                    return;
-                }
-
-                this.doNotUseTransferAmount = value;
-                OnPropertyChanged();
-                if (IsValid != this.isValid)
-                {
-                    this.isValid = !this.isValid;
-                    OnPropertyChanged(nameof(IsValid));
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Returns true if the transfer is valid.
-        /// </summary>
-        public bool IsValid
-        {
-            get
-            {
-                var valid = Narrative.IsSomething()
-                            && FromLedger is not null
-                            && ToLedger is not null
-                            && FromLedger != ToLedger
-                            && TransferAmount >= 0.01M;
-                if (!valid)
-                {
-                    return false;
-                }
-
-                if (BankTransferRequired)
-                {
-                    valid = AutoMatchingReference.IsSomething();
-                }
-
-                if (FromLedger!.BudgetBucket is SurplusBucket
-                    && ToLedger!.BudgetBucket is SurplusBucket
-                    && FromLedger.StoredInAccount == ToLedger.StoredInAccount)
-                {
-                    valid = false;
-                }
-
-                return valid;
-            }
-        }
-
-        /// <summary>
-        ///     Called when a property has changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void SetBankTransferRequired()
-        {
-            if (FromLedger is not null && ToLedger is not null)
-            {
-                BankTransferRequired = FromLedger.StoredInAccount != ToLedger.StoredInAccount;
-            }
+            BankTransferRequired = FromLedger.StoredInAccount != ToLedger.StoredInAccount;
         }
     }
 }
