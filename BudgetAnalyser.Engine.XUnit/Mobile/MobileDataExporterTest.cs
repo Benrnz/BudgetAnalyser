@@ -120,7 +120,7 @@ public class MobileDataExporterTests
     [Fact]
     public async Task SaveCopyAsync_ShouldCallWriteToDiskAsync()
     {
-        var dataObject = new SummarisedLedgerMobileData { Exported = DateTime.Now, LastTransactionImport = DateTime.Now };
+        var dataObject = new SummarisedLedgerMobileData { Exported = DateTime.Now, LastTransactionImport = DateTime.Now, Title = BudgetModelTestData.CreateTestData5().Name };
 
         await this.exporter.SaveCopyAsync(dataObject);
 

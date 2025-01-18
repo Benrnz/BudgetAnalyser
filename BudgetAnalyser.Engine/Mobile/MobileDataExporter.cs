@@ -11,6 +11,7 @@ namespace BudgetAnalyser.Engine.Mobile;
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class MobileDataExporter : IMobileDataExporter
 {
+    internal const string MobileDataExportName = "MobileDataExport.json";
     private readonly LedgerCalculation calculator;
     private readonly IEnvironmentFolders environmentFolders;
     private readonly IReaderWriterSelector readerWriterSelector;
@@ -122,6 +123,6 @@ internal class MobileDataExporter : IMobileDataExporter
 
     private async Task<string> GetFileName()
     {
-        return Path.Combine(await this.environmentFolders.ApplicationDataFolder(), "MobileDataExport.json");
+        return Path.Combine(await this.environmentFolders.ApplicationDataFolder(), MobileDataExportName);
     }
 }
