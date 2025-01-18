@@ -60,7 +60,7 @@ public class MapperMatchingRuleToDto2Test
         dto.BucketCode.ShouldBe(SurplusBucket.SurplusCode);
         dto.Description.ShouldBe("McDonalds");
         dto.Created.ShouldBe(new DateTime(2025, 1, 18));
-        dto.LastMatch.ShouldBe(new DateTime(2025, 1,1));
+        dto.LastMatch.ShouldBe(new DateTime(2025, 1, 1));
         dto.MatchCount.ShouldBe(1);
         dto.Reference1.ShouldBe("Pakuranga");
         dto.Reference2.ShouldBe("Ref2");
@@ -78,7 +78,7 @@ public class MapperMatchingRuleToDto2Test
         dto.BucketCode.ShouldBe(SurplusBucket.SurplusCode);
         dto.Description.ShouldBe("McDonalds");
         dto.Created.ShouldBe(new DateTime(2025, 1, 18));
-        dto.LastMatch.ShouldBe(new DateTime(2025, 1,1));
+        dto.LastMatch.ShouldBe(new DateTime(2025, 1, 1));
         dto.MatchCount.ShouldBe(1);
         dto.Reference1.ShouldBe("Pakuranga");
         dto.Reference2.ShouldBe("Ref2");
