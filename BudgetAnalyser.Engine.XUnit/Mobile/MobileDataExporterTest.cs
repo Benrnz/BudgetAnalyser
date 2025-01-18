@@ -35,7 +35,10 @@ public class MobileDataExporterTests
     {
         var expected = new SummarisedLedgerMobileData
         {
-            Exported = new DateTime(2025, 1, 1), Title = "Test Data 3 Budget", LastTransactionImport = new DateTime(2013, 08, 15), StartOfMonth = new DateTime(2013, 7, 15)
+            Exported = new DateTime(2025, 1, 1),
+            Title = "Test Data 3 Budget",
+            LastTransactionImport = new DateTime(2013, 08, 15),
+            StartOfMonth = new DateTime(2013, 7, 15)
         };
         expected.LedgerBuckets.AddRange([
             new SummarisedLedgerBucket
