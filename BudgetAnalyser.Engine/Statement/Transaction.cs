@@ -14,9 +14,7 @@ namespace BudgetAnalyser.Engine.Statement;
 /// <seealso cref="System.IComparable" />
 /// <seealso cref="BudgetAnalyser.Engine.ICloneable{Transaction}" />
 [SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes",
-    Justification =
-        "IComparable is implemented for sorting only. One transactions is not considered < or > than another. Also Equals is not overiden."
-)]
+    Justification = "IComparable is implemented for sorting only. One transactions is not considered < or > than another. Also Equals is not overriden.")]
 public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Transaction>
 {
     private BudgetBucket? budgetBucket;
@@ -213,16 +211,13 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
 
     /// <summary>
     ///     Get a hash code that will indicate value based equivalence with another instance of <see cref="Transaction" />.
-    ///     <see cref="object.GetHashCode" /> cannot be used because it is intended to show instance reference equivalence. It
-    ///     will give a different value (and it should) for every instance. If overriden changing hashcodes will cause problems
-    ///     with
-    ///     UI controls such as ListBox.
+    ///     <see cref="object.GetHashCode" /> cannot be used because it is intended to show instance reference equivalence. It will give a different value (and it should) for every instance.
+    ///     If overriden changing hashcodes will cause problems with UI controls such as ListBox.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-        Justification = "Following GetHashCode")]
+    [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Following GetHashCode")]
     public int GetEqualityHashCode()
     {
-        // WARNING: Do not add Bucket to this change detection.  It will interfer with finding transactions and duplicate detection.
+        // WARNING: Do not add Bucket to this change detection.  It will interfere with finding transactions and duplicate detection.
         unchecked
         {
             var result = 37; // prime
@@ -276,8 +271,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </returns>
     public override string ToString()
     {
-        return string.Format(CultureInfo.CurrentUICulture, "Transaction: ({0} {1:N} {2} {3} {4} {5})", Date, Amount,
-            Description, BudgetBucket?.Code, Reference1, Id);
+        return string.Format(CultureInfo.CurrentUICulture, "Transaction: ({0} {1:N} {2} {3} {4})", Date, Amount, BudgetBucket?.Code, Reference1, Id);
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

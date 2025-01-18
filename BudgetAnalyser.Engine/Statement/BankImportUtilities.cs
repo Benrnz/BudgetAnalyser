@@ -1,182 +1,174 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using BudgetAnalyser.Engine.Budget;
-using JetBrains.Annotations;
-using NotNull = JetBrains.Annotations.NotNullAttribute;
 
-namespace BudgetAnalyser.Engine.Statement
+namespace BudgetAnalyser.Engine.Statement;
+
+/// <summary>
+///     A set of utilities used when importing bank data
+/// </summary>
+[AutoRegisterWithIoC]
+internal class BankImportUtilities
 {
+    private readonly ILogger logger;
+    private CultureInfo locale;
+
     /// <summary>
-    ///     A set of utilities used when importing bank data
+    ///     Initializes a new instance of the <see cref="BankImportUtilities" /> class.
     /// </summary>
-    [AutoRegisterWithIoC]
-    internal class BankImportUtilities
+    /// <param name="logger">The logger.</param>
+    /// <exception cref="System.ArgumentNullException"></exception>
+    public BankImportUtilities(ILogger logger)
     {
-        private readonly ILogger logger;
-        private CultureInfo locale;
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.locale = CultureInfo.CurrentCulture;
+    }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="BankImportUtilities" /> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public BankImportUtilities([NotNull] ILogger logger)
+    internal virtual void AbortIfFileDoesntExist(string fileName)
+    {
+        if (!File.Exists(fileName))
         {
-            if (logger is null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
+            throw new FileNotFoundException("File not found.", fileName);
+        }
+    }
 
-            this.logger = logger;
-            this.locale = CultureInfo.CurrentCulture;
+    internal void ConfigureLocale(CultureInfo culture)
+    {
+        this.locale = culture;
+    }
+
+    internal BudgetBucket? FetchBudgetBucket(string[] array, int index, IBudgetBucketRepository bucketRepository)
+    {
+        if (array is null)
+        {
+            throw new ArgumentNullException(nameof(array));
         }
 
-        internal virtual void AbortIfFileDoesntExist(string fileName)
+        if (bucketRepository is null)
         {
-            if (!File.Exists(fileName))
-            {
-                throw new FileNotFoundException("File not found.", fileName);
-            }
+            throw new ArgumentNullException(nameof(bucketRepository));
         }
 
-        internal void ConfigureLocale(CultureInfo culture)
+        var stringType = FetchString(array, index);
+        if (string.IsNullOrWhiteSpace(stringType))
         {
-            this.locale = culture;
+            return null;
         }
 
-        internal BudgetBucket FetchBudgetBucket([NotNull] string[] array, int index, [NotNull] IBudgetBucketRepository bucketRepository)
+        stringType = stringType.ToUpperInvariant();
+
+        return bucketRepository.GetByCode(stringType);
+    }
+
+    internal DateTime FetchDate(string[] array, int index)
+    {
+        if (array is null)
         {
-            if (array is null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            if (bucketRepository is null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-
-            var stringType = FetchString(array, index);
-            if (string.IsNullOrWhiteSpace(stringType))
-            {
-                return null;
-            }
-
-            stringType = stringType.ToUpperInvariant();
-
-            return bucketRepository.GetByCode(stringType);
+            throw new ArgumentNullException(nameof(array));
         }
 
-        internal DateTime FetchDate([NotNull] string[] array, int index)
+        if (index > array.Length - 1 || index < 0)
         {
-            if (array is null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            if (index > array.Length - 1 || index < 0)
-            {
-                ThrowIndexOutOfRangeException(array, index);
-            }
-
-            var stringToParse = array[index];
-            if (!DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var retval))
-            {
-                this.logger.LogError(l => "BankImportUtilities: Unable to parse date: " + stringToParse);
-                throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
-            }
-
-            return retval;
+            ThrowIndexOutOfRangeException(array, index);
         }
 
-        internal decimal FetchDecimal([NotNull] string[] array, int index)
+        var stringToParse = array[index];
+        if (!DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result))
         {
-            if (array is null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            if (index > array.Length - 1 || index < 0)
-            {
-                ThrowIndexOutOfRangeException(array, index);
-            }
-
-            var stringToParse = array[index];
-            if (!decimal.TryParse(stringToParse, out var retval))
-            {
-                this.logger.LogError(l => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
-                throw new InvalidDataException("Expected decimal, but provided data is invalid. " + stringToParse);
-            }
-
-            return retval;
+            this.logger.LogError(_ => "BankImportUtilities: Unable to parse date: " + stringToParse);
+            throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
-        internal Guid FetchGuid([NotNull] string[] array, int index)
+        return result;
+    }
+
+    internal decimal FetchDecimal(string[] array, int index)
+    {
+        if (array is null)
         {
-            if (array is null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            if (index > array.Length - 1 || index < 0)
-            {
-                ThrowIndexOutOfRangeException(array, index);
-            }
-
-            var stringToParse = array[index];
-            if (!Guid.TryParse(stringToParse, out var result))
-            {
-                this.logger.LogError(l => "BankImportUtilities: Unable to parse Guid: " + stringToParse);
-                throw new InvalidDataException("Expected Guid, but provided data is invalid. " + stringToParse);
-            }
-
-            return result;
+            throw new ArgumentNullException(nameof(array));
         }
 
-        internal long FetchLong([NotNull] string[] array, int index)
+        if (index > array.Length - 1 || index < 0)
         {
-            if (array is null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            if (index > array.Length - 1 || index < 0)
-            {
-                ThrowIndexOutOfRangeException(array, index);
-            }
-
-            var stringToParse = array[index];
-            if (!long.TryParse(stringToParse, out var retval))
-            {
-                this.logger.LogError(l => "BankImportUtilities: Unable to parse long: " + stringToParse);
-                throw new InvalidDataException("Expected long, but provided data is invalid. " + stringToParse);
-            }
-
-            return retval;
+            ThrowIndexOutOfRangeException(array, index);
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
-        internal string FetchString([NotNull] string[] array, int index)
+        var stringToParse = array[index];
+        if (!decimal.TryParse(stringToParse, out var result))
         {
-            if (array is null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            if (index > array.Length - 1 || index < 0)
-            {
-                ThrowIndexOutOfRangeException(array, index);
-            }
-
-            var result = array[index].Trim();
-            var chars = result.ToCharArray();
-            return chars.Length > 0 && chars[0] == '"' ? result.Replace("\"", string.Empty) : result;
+            this.logger.LogError(_ => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
+            throw new InvalidDataException("Expected decimal, but provided data is invalid. " + stringToParse);
         }
 
-        private static void ThrowIndexOutOfRangeException(string[] array, int index)
+        return result;
+    }
+
+    [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
+    internal Guid FetchGuid(string[] array, int index)
+    {
+        if (array is null)
         {
-            throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));
+            throw new ArgumentNullException(nameof(array));
         }
+
+        if (index > array.Length - 1 || index < 0)
+        {
+            ThrowIndexOutOfRangeException(array, index);
+        }
+
+        var stringToParse = array[index];
+        if (!Guid.TryParse(stringToParse, out var result))
+        {
+            this.logger.LogError(_ => "BankImportUtilities: Unable to parse Guid: " + stringToParse);
+            throw new InvalidDataException("Expected Guid, but provided data is invalid. " + stringToParse);
+        }
+
+        return result;
+    }
+
+    internal long FetchLong(string[] array, int index)
+    {
+        if (array is null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+
+        if (index > array.Length - 1 || index < 0)
+        {
+            ThrowIndexOutOfRangeException(array, index);
+        }
+
+        var stringToParse = array[index];
+        if (!long.TryParse(stringToParse, out var result))
+        {
+            this.logger.LogError(_ => "BankImportUtilities: Unable to parse long: " + stringToParse);
+            throw new InvalidDataException("Expected long, but provided data is invalid. " + stringToParse);
+        }
+
+        return result;
+    }
+
+    [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
+    internal string FetchString(string[] array, int index)
+    {
+        if (array is null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+
+        if (index > array.Length - 1 || index < 0)
+        {
+            ThrowIndexOutOfRangeException(array, index);
+        }
+
+        var result = array[index].Trim();
+        var chars = result.ToCharArray();
+        return chars.Length > 0 && chars[0] == '"' ? result.Replace("\"", string.Empty) : result;
+    }
+
+    private static void ThrowIndexOutOfRangeException(string[] array, int index)
+    {
+        throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));
     }
 }

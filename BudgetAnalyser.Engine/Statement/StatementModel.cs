@@ -12,8 +12,7 @@ namespace BudgetAnalyser.Engine.Statement;
 /// <seealso cref="INotifyPropertyChanged" />
 /// <seealso cref="IDataChangeDetection" />
 /// <seealso cref="IDisposable" />
-[SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly",
-    Justification = "There are no native resources to clean up. Unnecessary complexity.")]
+[SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "There are no native resources to clean up. Unnecessary complexity.")]
 public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDisposable
 {
     private readonly ILogger logger;
@@ -39,8 +38,7 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     /// </summary>
     /// <param name="logger">The logger.</param>
     /// <exception cref="System.ArgumentNullException"></exception>
-    [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-        Justification = "Reviewed, ok here. Required for binding")]
+    [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here. Required for binding")]
     public StatementModel(ILogger logger)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -88,7 +86,7 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     /// <summary>
     ///     Gets the last imported date and time.
     /// </summary>
-    public DateTime LastImport { get; internal set; }
+    public DateTime LastImport { get; internal init; }
 
     /// <summary>
     ///     Gets or sets the storage key.  This could be the filename for the statement's persistence, or a database unique id.
@@ -111,8 +109,7 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     }
 
     /// <summary>
-    ///     Calcuates a hash that represents a data state for the current instance.  When the data state changes the hash will
-    ///     change.
+    ///     Calculates a hash that represents a data state for the current instance.  When the data state changes the hash will change.
     /// </summary>
     public long SignificantDataChangeHash()
     {
@@ -121,17 +118,13 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     }
 
     /// <summary>
-    ///     Implement IDisposable.
-    ///     Do not make this method virtual.
-    ///     A derived class should not be able to override this method
+    ///     Implement IDisposable. Do not make this method virtual. A derived class should not be able to override this method
     /// </summary>
     public void Dispose()
     {
         Dispose(true);
 
-        // Take this instance off the Finalization queue
-        // to prevent finalization code for this object
-        // from executing a second time.
+        // Take this instance off the Finalization queue to prevent finalization code for this object from executing a second time.
         GC.SuppressFinalize(this);
     }
 
@@ -210,11 +203,9 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     }
 
     /// <summary>
-    ///     Merges the provided model with this one and returns a new combined model. This model or the supplied one are not
-    ///     changed.
+    ///     Merges the provided model with this one and returns a new combined model. This model or the supplied one are not changed.
     /// </summary>
-    [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
-        Justification = "Ok here. This methods creates the instance for use elsewhere.")]
+    [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Ok here. This methods creates the instance for use elsewhere.")]
     internal virtual StatementModel Merge(StatementModel additionalModel)
     {
         ThrowIfDisposed();
@@ -418,8 +409,7 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     }
 
     /// <summary>
-    ///     Finalizes an instance of the <see cref="StatementModel" /> class.
-    ///     This destructor will run only if the Dispose method does not get called.
+    ///     Finalizes an instance of the <see cref="StatementModel" /> class. This destructor will run only if the Dispose method does not get called.
     ///     Do not provide destructors in types derived from this class.
     /// </summary>
     ~StatementModel()
