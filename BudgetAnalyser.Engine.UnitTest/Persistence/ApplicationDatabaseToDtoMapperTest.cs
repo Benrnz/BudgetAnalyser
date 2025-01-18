@@ -52,7 +52,7 @@ public class ApplicationDatabaseToDtoMapperTest
         PrivateAccessor.SetProperty(this.testData, "StatementModelStorageKey", "Statement.xml");
         PrivateAccessor.SetProperty(this.testData, "LedgerReconciliationToDoCollection", todoCollection);
 
-        var subject = new MapperBudgetAnalyserStorageRoot2ApplicationDatabase();
+        var subject = new MapperApplicationDatabaseToStorageRoot2();
         this.result = subject.ToDto(this.testData);
     }
 }
