@@ -48,6 +48,11 @@ namespace BudgetAnalyser.LedgerBook
 
         public TransferFundsCommand TransferFundsDto { get; set; }
 
+        public void RequerySuggested()
+        {
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        }
+
         public void ShowDialog(IEnumerable<LedgerBucket> ledgerBuckets)
         {
             Reset();
