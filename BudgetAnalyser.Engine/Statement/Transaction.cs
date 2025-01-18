@@ -23,10 +23,10 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     private Account doNotUseAccount = new ChequeAccount(string.Empty);
     private decimal doNotUseAmount;
     private DateTime doNotUseDate;
-    private string doNotUseDescription = string.Empty;
-    private string doNotUseReference1 = string.Empty;
-    private string doNotUseReference2 = string.Empty;
-    private string doNotUseReference3 = string.Empty;
+    private string? doNotUseDescription;
+    private string? doNotUseReference1 = string.Empty;
+    private string? doNotUseReference2 = string.Empty;
+    private string? doNotUseReference3 = string.Empty;
     private TransactionType doNotUseTransactionType = NamedTransaction.Empty;
 
     /// <summary>
@@ -107,7 +107,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// <summary>
     ///     Gets or sets the transaction description.
     /// </summary>
-    public string Description
+    public string? Description
     {
         get => this.doNotUseDescription;
         set
@@ -134,7 +134,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// <summary>
     ///     Gets or sets the transaction reference1.
     /// </summary>
-    public string Reference1
+    public string? Reference1
     {
         // Please make this non-nullable defaulting to string.empty
         get => this.doNotUseReference1;
@@ -148,7 +148,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// <summary>
     ///     Gets or sets the transaction reference2.
     /// </summary>
-    public string Reference2
+    public string? Reference2
     {
         get => this.doNotUseReference2;
         set
@@ -161,7 +161,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// <summary>
     ///     Gets or sets the transaction reference3.
     /// </summary>
-    public string Reference3
+    public string? Reference3
     {
         get => this.doNotUseReference3;
         set

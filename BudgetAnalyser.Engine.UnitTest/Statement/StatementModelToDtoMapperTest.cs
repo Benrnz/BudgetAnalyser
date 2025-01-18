@@ -1,70 +1,65 @@
-﻿using System;
-using System.Linq;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.Engine.UnitTest.Statement
+namespace BudgetAnalyser.Engine.UnitTest.Statement;
+
+[TestClass]
+public class StatementModelToDtoMapperTest
 {
-    [TestClass]
-    public class StatementModelToDtoMapperTest
+    private TransactionSetDto Result { get; set; }
+    private StatementModel TestData => StatementModelTestData.TestData2();
+
+    [TestMethod]
+    public void ShouldMapAllTransactions()
     {
-        private TransactionSetDto Result { get; set; }
-        private StatementModel TestData => StatementModelTestData.TestData2();
+        Assert.AreEqual(TestData.AllTransactions.Count(), Result.Transactions.Count());
+    }
 
-        [TestMethod]
-        public void ShouldMapAllTransactions()
-        {
-            Assert.AreEqual(TestData.AllTransactions.Count(), Result.Transactions.Count());
-        }
+    [TestMethod]
+    public void ShouldMapAllTransactionsAndHaveSameSum()
+    {
+        Assert.AreEqual(TestData.AllTransactions.Sum(t => t.Amount), Result.Transactions.Sum(t => t.Amount));
+        Assert.AreEqual(TestData.AllTransactions.Sum(t => t.Date.Ticks), Result.Transactions.Sum(t => t.Date.Ticks));
+    }
 
-        [TestMethod]
-        public void ShouldMapAllTransactionsAndHaveSameSum()
-        {
-            Assert.AreEqual(TestData.AllTransactions.Sum(t => t.Amount), Result.Transactions.Sum(t => t.Amount));
-            Assert.AreEqual(TestData.AllTransactions.Sum(t => t.Date.Ticks), Result.Transactions.Sum(t => t.Date.Ticks));
-        }
+    [TestMethod]
+    public void ShouldMapAllTransactionsEvenWhenFiltered()
+    {
+        var testData = TestData;
+        testData.Filter(new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 20), EndDate = new DateTime(2013, 08, 19) });
+        Act(testData);
 
-        [TestMethod]
-        public void ShouldMapAllTransactionsEvenWhenFiltered()
-        {
-            var testData = TestData;
-            testData.Filter(new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 20), EndDate = new DateTime(2013, 08, 19) });
-            Act(testData);
+        Assert.AreEqual(TestData.AllTransactions.Count(), Result.Transactions.Count);
+    }
 
-            Assert.AreEqual(TestData.AllTransactions.Count(), Result.Transactions.Count);
-        }
+    [TestMethod]
+    public void ShouldMapFileName()
+    {
+        Assert.AreEqual(TestData.StorageKey, Result.StorageKey);
+    }
 
-        [TestMethod]
-        public void ShouldMapFileName()
-        {
-            Assert.AreEqual(TestData.StorageKey, Result.StorageKey);
-        }
+    [TestMethod]
+    public void ShouldMapLastImport()
+    {
+        Assert.AreEqual(TestData.LastImport, Result.LastImport);
+    }
 
-        [TestMethod]
-        public void ShouldMapLastImport()
-        {
-            Assert.AreEqual(TestData.LastImport, Result.LastImport);
-        }
+    [TestInitialize]
+    public void TestInitialise()
+    {
+        Act(TestData);
+    }
 
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            Act(TestData);
-        }
-
-        private void Act(StatementModel testData)
-        {
-            var subject = new MapperTransactionSetDto2StatementModel(
-                new FakeLogger(),
-                new MapperTransactionDto2Transaction(
-                    new InMemoryAccountTypeRepository(),
-                    new BucketBucketRepoAlwaysFind(),
-                    new InMemoryTransactionTypeRepository()));
-            Result = subject.ToDto(testData);
-        }
+    private void Act(StatementModel testData)
+    {
+        var subject = new MapperStatementModelToDto2(
+            new InMemoryAccountTypeRepository(),
+            new BucketBucketRepoAlwaysFind(),
+            new InMemoryTransactionTypeRepository(),
+            new FakeLogger());
+        Result = subject.ToDto(testData);
     }
 }
