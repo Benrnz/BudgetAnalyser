@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.XUnit.Helpers;
-using FluentAssertions;
+using Shouldly;
 using Xunit.Abstractions;
 
 #pragma warning disable CS8601 // Possible null reference assignment. // GENERATED CODE
@@ -91,7 +91,7 @@ public class RemainingSurplusWidgetTest : IDisposable
 
         this.subject.Update(this.budgetTestData, myStatement, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
 
-        this.subject.Value.Should().Be(607.73);
+        this.subject.Value.ShouldBe(607.73);
         /*
         19-Nov-15
         Budget Surplus: $1175 - 30 - 2 - 40 - 8.50 - 27.74        = 1066.76
@@ -113,7 +113,7 @@ public class RemainingSurplusWidgetTest : IDisposable
         // Total Surplus transactions are: -835.69
         // Plus any overspent ledgers (that must also come out of surplus funds): -873.38
         // Resulting Balance = 2175 - 835.69 - 873.38 = 465.93
-        this.subject.Value.Should().Be(465.93);
+        this.subject.Value.ShouldBe(465.93);
     }
 
     [Fact]
@@ -125,7 +125,7 @@ public class RemainingSurplusWidgetTest : IDisposable
         // Total Surplus transactions are: -835.69
         // Plus any overspent ledgers (that must also come out of surplus funds): -873.38
         // Resulting Balance = 1175 - 835.69 - 873.38 = -534.07 (Grim)
-        this.subject.Value.Should().Be(0);
+        this.subject.Value.ShouldBe(0);
     }
 
     private static class StatementModelTestDataForThisTest

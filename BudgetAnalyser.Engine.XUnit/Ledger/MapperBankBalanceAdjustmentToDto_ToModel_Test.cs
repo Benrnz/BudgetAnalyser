@@ -1,8 +1,8 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using FluentAssertions;
 using NSubstitute;
+using Shouldly;
 
 namespace BudgetAnalyser.Engine.XUnit.Ledger;
 
@@ -35,35 +35,35 @@ public class MapperBankBalanceAdjustmentToDto_ToModel_Test
     public void ShouldMapAccount()
     {
         Act();
-        this.result.BankAccount.Should().BeEquivalentTo(this.account);
+        this.result.BankAccount.ShouldBeEquivalentTo(this.account);
     }
 
     [Fact]
     public void ShouldMapAmount()
     {
         Act();
-        this.result.Amount.Should().Be(-123.99M);
+        this.result.Amount.ShouldBe(-123.99M);
     }
 
     [Fact]
     public void ShouldMapId()
     {
         Act();
-        this.result.Id.Should().Be(TransactionId);
+        this.result.Id.ShouldBe(TransactionId);
     }
 
     [Fact]
     public void ShouldMapNarrative()
     {
         Act();
-        this.result.Narrative.Should().Be("Foo bar.");
+        this.result.Narrative.ShouldBe("Foo bar.");
     }
 
     [Fact]
     public void ShouldMapTransactionType()
     {
         Act();
-        this.result.Should().BeOfType<BankBalanceAdjustmentTransaction>();
+        this.result.ShouldBeOfType<BankBalanceAdjustmentTransaction>();
     }
 
     private void Act()
