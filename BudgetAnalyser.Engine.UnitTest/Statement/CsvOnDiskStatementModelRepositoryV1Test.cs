@@ -226,28 +226,23 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task WrittenDataShouldAutomaticallyStripCommas()
         {
             var subject = Arrange();
-            var dto = BudgetAnalyserRawCsvTestDataV1.TransactionSetDtoTestData1();
-            dto.Transactions.Last().Reference3 = "corrupted,comma,data,for,csv";
+            var dto = BudgetAnalyserRawCsvTestDataV1.BadTestData_CorruptedCommaFormat();
             await using var stream = new MemoryStream();
-            await using (var writer = new StreamWriter(stream, Encoding.UTF8))
+            await using var writer = new StreamWriter(stream, Encoding.UTF8);
+            await subject.WriteToStreamTest(dto, writer);
+            stream.Position = 0;
+            using var reader = new StreamReader(stream);
+            var lineNumber = 0;
+            while (!reader.EndOfStream)
             {
-                await subject.WriteToStreamTest(dto, writer);
-                stream.Position = 0;
-                using (var reader = new StreamReader(stream))
+                lineNumber++;
+                var line = await reader.ReadLineAsync();
+                if (lineNumber == 1)
                 {
-                    var lineNumber = 0;
-                    while (!reader.EndOfStream)
-                    {
-                        lineNumber++;
-                        var line = reader.ReadLine();
-                        if (lineNumber == 1)
-                        {
-                            continue;
-                        }
-
-                        Assert.AreEqual(10, line.ToCharArray().Count(c => c == ','), $"Too many commas on line {lineNumber}: {line}");
-                    }
+                    continue;
                 }
+
+                Assert.AreEqual(10, line!.ToCharArray().Count(c => c == ','), $"Too many commas on line {lineNumber}: {line}");
             }
         }
 
