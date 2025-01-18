@@ -3,20 +3,13 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Matching.Data;
 
-[AutoRegisterWithIoC]
-public class MapperMatchingRuleToDto2(IBudgetBucketRepository bucketRepo) : IDtoMapper<MatchingRuleDto, MatchingRule>
+public class MapperSingleUseMatchingRuleToDto2(IBudgetBucketRepository bucketRepo) : IDtoMapper<SingleUseMatchingRuleDto, SingleUseMatchingRule>
 {
     private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-    private readonly IDtoMapper<SingleUseMatchingRuleDto, SingleUseMatchingRule> singleUseMapper = new MapperSingleUseMatchingRuleToDto2(bucketRepo);
 
-    public MatchingRuleDto ToDto(MatchingRule model)
+    public SingleUseMatchingRuleDto ToDto(SingleUseMatchingRule model)
     {
-        if (model is SingleUseMatchingRule singleUseModel)
-        {
-            return this.singleUseMapper.ToDto(singleUseModel);
-        }
-
-        var dto = new MatchingRuleDto
+        var dto = new SingleUseMatchingRuleDto
         {
             BucketCode = model.BucketCode,
             RuleId = model.RuleId,
@@ -35,14 +28,9 @@ public class MapperMatchingRuleToDto2(IBudgetBucketRepository bucketRepo) : IDto
         return dto;
     }
 
-    public MatchingRule ToModel(MatchingRuleDto dto)
+    public SingleUseMatchingRule ToModel(SingleUseMatchingRuleDto dto)
     {
-        if (dto is SingleUseMatchingRuleDto singleUseDto)
-        {
-            return this.singleUseMapper.ToModel(singleUseDto);
-        }
-
-        var model = new MatchingRule(this.bucketRepo)
+        var model = new SingleUseMatchingRule(this.bucketRepo)
         {
             Amount = dto.Amount,
             And = dto.And,

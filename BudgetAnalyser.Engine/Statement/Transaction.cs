@@ -136,6 +136,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </summary>
     public string Reference1
     {
+        // Please make this non-nullable defaulting to string.empty
         get => this.doNotUseReference1;
         set
         {

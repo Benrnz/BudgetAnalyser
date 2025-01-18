@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using Xunit.Abstractions;
 
 namespace BudgetAnalyser.Engine.XUnit;
 
 public class MetaTest(ITestOutputHelper testOutputHelper)
 {
-    private const int MinimumTestCount = 3;
+    private const int MinimumTestCount = 20;
 
     [Fact]
     public void ListAllTests()
@@ -18,7 +18,7 @@ public class MetaTest(ITestOutputHelper testOutputHelper)
     [Fact]
     public void NoDecreaseInTests()
     {
-        DiscoverTestCount().Should().BeGreaterOrEqualTo(MinimumTestCount);
+        DiscoverTestCount().ShouldBeGreaterThan(MinimumTestCount);
     }
 
     private int DiscoverTestCount()

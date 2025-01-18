@@ -110,5 +110,13 @@
             Assert.AreEqual("Testing Format var1: 1; var2: 2;", result);
         }
 
+        [TestMethod]
+        public void LoggingShouldNotEvalStringInterolationWhenNotLogging()
+        {
+            var didLog = false;
+            this.debugLogger.LogLevelFilter = LogLevel.Error; // Log errors only
+            this.debugLogger.LogInfo(_ => $"My string {(didLog = true).ToString()}");
+            Assert.AreEqual(false, didLog);
+        }
     }
 }
