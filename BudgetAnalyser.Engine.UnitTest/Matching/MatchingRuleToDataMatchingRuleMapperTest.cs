@@ -1,122 +1,119 @@
-﻿using System;
-using BudgetAnalyser.Engine.Matching;
+﻿using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.Engine.UnitTest.Matching
+namespace BudgetAnalyser.Engine.UnitTest.Matching;
+
+[TestClass]
+public class MatchingRuleToDataMatchingRuleMapperTest
 {
-    [TestClass]
-    public class MatchingRuleToDataMatchingRuleMapperTest
+    private MatchingRule TestData { get; set; }
+
+    [TestMethod]
+    public void AmountShouldBeMapped()
     {
-        private MatchingRule TestData { get; set; }
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.Amount, result.Amount);
+    }
 
-        [TestMethod]
-        public void AmountShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Amount, result.Amount);
-        }
+    [TestMethod]
+    public void BucketCodeShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.BucketCode, result.BucketCode);
+    }
 
-        [TestMethod]
-        public void BucketCodeShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.BucketCode, result.BucketCode);
-        }
+    [TestMethod]
+    public void CreatedDatesShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.Created, result.Created);
+    }
 
-        [TestMethod]
-        public void CreatedDatesShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Created, result.Created);
-        }
+    [TestMethod]
+    public void DescriptionShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.Description, result.Description);
+    }
 
-        [TestMethod]
-        public void DescriptionShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Description, result.Description);
-        }
+    [TestMethod]
+    public void LastMatchShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.LastMatch, result.LastMatch);
+    }
 
-        [TestMethod]
-        public void LastMatchShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.LastMatch, result.LastMatch);
-        }
+    [TestMethod]
+    public void MatchCountShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.MatchCount, result.MatchCount);
+    }
 
-        [TestMethod]
-        public void MatchCountShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.MatchCount, result.MatchCount);
-        }
+    [TestMethod]
+    [Description("A test designed to break when new propperties are added to the MatchingRuleDto. This is a trigger to update the mappers.")]
+    public void NumberOfDataMatchingRulePropertiesShouldBe12()
+    {
+        var dataProperties = typeof(MatchingRuleDto).CountProperties();
+        Assert.AreEqual(12, dataProperties);
+    }
 
-        [TestMethod]
-        [Description("A test designed to break when new propperties are added to the MatchingRuleDto. This is a trigger to update the mappers.")]
-        public void NumberOfDataMatchingRulePropertiesShouldBe12()
-        {
-            var dataProperties = typeof(MatchingRuleDto).CountProperties();
-            Assert.AreEqual(12, dataProperties);
-        }
+    [TestMethod]
+    public void Reference1ShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.Reference1, result.Reference1);
+    }
 
-        [TestMethod]
-        public void Reference1ShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reference1, result.Reference1);
-        }
+    [TestMethod]
+    public void Reference2ShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.Reference2, result.Reference2);
+    }
 
-        [TestMethod]
-        public void Reference2ShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reference2, result.Reference2);
-        }
+    [TestMethod]
+    public void Reference3ShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.Reference3, result.Reference3);
+    }
 
-        [TestMethod]
-        public void Reference3ShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reference3, result.Reference3);
-        }
+    [TestMethod]
+    public void RuleIdShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.RuleId, result.RuleId);
+    }
 
-        [TestMethod]
-        public void RuleIdShouldBeMapped()
+    [TestInitialize]
+    public void TestInitialise()
+    {
+        TestData = new MatchingRule(new BucketBucketRepoAlwaysFind())
         {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.RuleId, result.RuleId);
-        }
+            Amount = 123.45M,
+            BucketCode = "CARMTC",
+            Description = "Testing Description",
+            LastMatch = new DateTime(2014, 06, 22),
+            MatchCount = 2,
+            Reference1 = "Testing Reference1",
+            Reference2 = "Testing Reference2",
+            Reference3 = "Testing Reference3",
+            TransactionType = "Testing TransactionType"
+        };
+    }
 
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            TestData = new MatchingRule(new BucketBucketRepoAlwaysFind())
-            {
-                Amount = 123.45M,
-                BucketCode = "CARMTC",
-                Description = "Testing Description",
-                LastMatch = new DateTime(2014, 06, 22),
-                MatchCount = 2,
-                Reference1 = "Testing Reference1",
-                Reference2 = "Testing Reference2",
-                Reference3 = "Testing Reference3",
-                TransactionType = "Testing TransactionType"
-            };
-        }
+    [TestMethod]
+    public void TransactionTypeShouldBeMapped()
+    {
+        var result = ArrangeAndAct();
+        Assert.AreEqual(TestData.TransactionType, result.TransactionType);
+    }
 
-        [TestMethod]
-        public void TransactionTypeShouldBeMapped()
-        {
-            var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.TransactionType, result.TransactionType);
-        }
-
-        private MatchingRuleDto ArrangeAndAct()
-        {
-            var subject = new MapperMatchingRuleDto2MatchingRule(new BucketBucketRepoAlwaysFind());
-            return subject.ToDto(TestData);
-        }
+    private MatchingRuleDto ArrangeAndAct()
+    {
+        var subject = new MapperMatchingRuleToDto2(new BucketBucketRepoAlwaysFind());
+        return subject.ToDto(TestData);
     }
 }
