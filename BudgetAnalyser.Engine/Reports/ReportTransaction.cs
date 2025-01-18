@@ -18,6 +18,7 @@ public class ReportTransaction
     /// <summary>
     ///     Gets or sets the ledger bucket code.
     /// </summary>
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global // Debugging, testing and Future use
     public string LedgerBucket { get; set; } = string.Empty;
 
     /// <summary>

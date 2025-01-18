@@ -16,6 +16,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
     private BudgetCycle budgetCycle = BudgetCycle.Monthly;
     private Func<DateTime, int, DateTime> calculateNextPeriodDate = (_, _) => throw new NotSupportedException();
     private DateTime endDate;
+    private BudgetModel? latestBudget;
     private GlobalFilterCriteria? rawCriteria;
     private StatementModel? statement;
 
@@ -41,7 +42,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
 
         var result = new OverallPerformanceBudgetResult();
 
-        var currentBudget = EvaluateBudgetsInvolved(result);
+        this.latestBudget = EvaluateBudgetsInvolved(result);
         if (result.Error)
         {
             return result;
@@ -66,7 +67,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
             }
 
             // If the most recent budget does not contain this expense bucket, then skip it.
-            if (currentBudget.Expenses.Any(e => e.Bucket == bucket))
+            if (this.latestBudget.Expenses.Any(e => e.Bucket == bucket))
             {
                 list.Add(
                     CalculateBucketStatistics(
@@ -78,7 +79,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
             }
 
             // If the most recent budget does not contain this income bucket, then skip it.
-            if (currentBudget.Incomes.Any(i => i.Bucket == bucket))
+            if (this.latestBudget.Incomes.Any(i => i.Bucket == bucket))
             {
                 var incomeAnalysis =
                     CalculateBucketStatistics(
@@ -188,13 +189,14 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
     {
         if (!multipleBudgets)
         {
-            return getBudgetedAmount(this.budgetCollection!.ForDate(this.beginDate)) * durationInPeriods;
+            return getBudgetedAmount(this.latestBudget!) * durationInPeriods;
         }
 
         decimal budgetedAmount = 0;
         for (var period = 0; period < durationInPeriods; period++)
         {
-            var budget = this.budgetCollection!.ForDate(this.calculateNextPeriodDate(this.beginDate, period));
+            var budget = this.budgetCollection!.ForDate(this.calculateNextPeriodDate(this.beginDate, period))
+                         ?? this.latestBudget!;
             budgetedAmount += getBudgetedAmount(budget);
         }
 
@@ -230,7 +232,8 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
 
         for (var period = 0; period < result.DurationInPeriods; period++)
         {
-            var budget = this.budgetCollection!.ForDate(this.calculateNextPeriodDate(this.beginDate, period));
+            var budget = this.budgetCollection!.ForDate(this.calculateNextPeriodDate(this.beginDate, period))
+                         ?? this.latestBudget!;
             result.TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);
         }
 
