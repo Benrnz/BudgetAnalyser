@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using BudgetAnalyser.Engine.Statement;
+﻿using BudgetAnalyser.Engine.Statement;
 
-namespace BudgetAnalyser.Engine.Matching
+namespace BudgetAnalyser.Engine.Matching;
+
+internal interface IMatchmaker
 {
-    internal interface IMatchmaker
-    {
-        bool Match(IEnumerable<Transaction> transactions, IEnumerable<MatchingRule> rules);
-    }
+    bool Match(IEnumerable<Transaction> transactions, IEnumerable<MatchingRule> rules);
 }

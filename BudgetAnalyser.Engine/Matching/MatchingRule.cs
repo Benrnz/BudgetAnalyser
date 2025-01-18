@@ -368,7 +368,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     [NotifyPropertyChangedInvocator]
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         var handler = PropertyChanged;
         handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
