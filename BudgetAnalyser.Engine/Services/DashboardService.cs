@@ -40,7 +40,7 @@ internal class DashboardService : IDashboardService
     }
 
     /// <inheritdoc />
-    public Widget CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
+    public void CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {
@@ -58,11 +58,11 @@ internal class DashboardService : IDashboardService
         }
 
         var widget = this.widgetService.CreateFixedBudgetMonitorWidget(bucketCode, typeof(FixedBudgetMonitorWidget).FullName!, fixedBudgetAmount);
-        return UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
     /// <inheritdoc />
-    public Widget CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
+    public void CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {
@@ -78,7 +78,7 @@ internal class DashboardService : IDashboardService
         var paymentWidget = (SurprisePaymentWidget)widget;
         paymentWidget.StartPaymentDate = paymentDate;
         paymentWidget.Frequency = frequency;
-        return UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
     /// <inheritdoc />

@@ -1,14 +1,13 @@
 ﻿namespace BudgetAnalyser.Engine.Services;
 
 /// <summary>
-///     An interface to expose notifications for the UI Controllers so they can update when database changes have occured.
+///     An interface to expose notifications for the UI Controllers so they can update when database changes have occured. Service classes can optionally implement this interface to indicate they
+///     can notify the UI of changes.
 /// </summary>
 public interface INotifyDatabaseChanges
 {
     /// <summary>
-    ///     Occurs when the underlying storage for transactions is closed.
-    ///     This allows the UI to update and clear accordingly.
-    ///     Opening and closing files is controlled centrally, not by this service.
+    ///     Occurs when the underlying storage for transactions is closed. This allows the UI to update and clear accordingly. Opening and closing files is controlled centrally, not by this service.
     /// </summary>
     event EventHandler Closed;
 
@@ -28,8 +27,7 @@ public interface INotifyDatabaseChanges
     event EventHandler<ValidatingEventArgs> Saving;
 
     /// <summary>
-    ///     Occurs just before Validating the model.  Can be used to ensure the UI Controller has updated any necessary
-    ///     information with its service.
+    ///     Occurs just before Validating the model.  Can be used to ensure the UI Controller has updated any necessary information with its service.
     /// </summary>
     event EventHandler<ValidatingEventArgs> Validating;
 }

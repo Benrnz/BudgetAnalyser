@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using BudgetAnalyser.Engine.Persistence;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services;
 
@@ -21,16 +20,15 @@ public interface IApplicationDatabaseService : IServiceFoundation
 
     /// <summary>
     ///     Closes the currently loaded Budget Analyser file, and therefore any other application data is also closed.
-    ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
-    ///     calling this method.
+    ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before calling this method.
     /// </summary>
     ApplicationDatabase? Close();
 
     /// <summary>
     ///     Creates a new application database storage.
     /// </summary>
-    /// <param name="storageKey">The storage key.</param>
-    Task<ApplicationDatabase> CreateNewDatabaseAsync([NotNull] string storageKey);
+    /// <param name="storageKey">The storage key (for example, the file name).</param>
+    Task<ApplicationDatabase> CreateNewDatabaseAsync(string storageKey);
 
     /// <summary>
     ///     Decrypt the underlying data files.
@@ -43,39 +41,24 @@ public interface IApplicationDatabaseService : IServiceFoundation
     ///     Encrypts the underlying data files.
     /// </summary>
     /// <exception cref="EncryptionKeyNotProvidedException">
-    ///     Will be thrown if the data files are encrypted and no credentials
-    ///     are provided. See <see cref="ICredentialStore" /> to provide credentials.
+    ///     Will be thrown if the data files are encrypted and no credentials are provided. See <see cref="ICredentialStore" /> to provide credentials.
     /// </exception>
     Task EncryptFilesAsync();
 
     /// <summary>
-    ///     Loads the specified Budget Analyser file by file name. This will also trigger a load on all subordinate
-    ///     data contained within and referenced by the top level application database.
+    ///     Loads the specified Budget Analyser file by file name. This will also trigger a load on all subordinate data contained within and referenced by the top level application database.
     ///     No warning will be given if there is any unsaved data. This should be checked before calling this method.
     /// </summary>
     /// <param name="storageKey">Name and path to the file.</param>
     /// <exception cref="ArgumentNullException">Will be thrown if <paramref name="storageKey" /> is null or empty.</exception>
     /// <exception cref="EncryptionKeyNotProvidedException">
-    ///     Will be thrown if the data files are encrypted and no credentials
-    ///     are provided. See <see cref="ICredentialStore" /> to provide credentials.
+    ///     Will be thrown if the data files are encrypted and no credentials are provided. See <see cref="ICredentialStore" /> to provide credentials.
     /// </exception>
-    /// <exception cref="EncryptionKeyIncorrectException">
-    ///     Will be thrown if the data files are encrypted and the credentials
-    ///     supplied are incorrect.
-    /// </exception>
-    /// <exception cref="DataFormatException">
-    ///     Will be thrown if an underlying data file is in an incorrect format. Can occur if
-    ///     file format is out of date and no longer supported.
-    /// </exception>
-    /// <exception cref="KeyNotFoundException">
-    ///     Will be thrown if the specified storage cannot be found based on the
-    ///     <paramref name="storageKey" /> provided.
-    /// </exception>
-    /// <exception cref="NotSupportedException ">
-    ///     Will be thrown if an underlying data file is completely the wrong format. Most
-    ///     likely not a Budget Analyser file.
-    /// </exception>
-    Task<ApplicationDatabase> LoadAsync([NotNull] string storageKey);
+    /// <exception cref="EncryptionKeyIncorrectException">Will be thrown if the data files are encrypted and the credentials supplied are incorrect.</exception>
+    /// <exception cref="DataFormatException">Will be thrown if an underlying data file is in an incorrect format. Can occur if file format is out of date and no longer supported.</exception>
+    /// <exception cref="KeyNotFoundException">Will be thrown if the specified storage cannot be found based on the<paramref name="storageKey" /> provided.</exception>
+    /// <exception cref="NotSupportedException">Will be thrown if an underlying data file is completely the wrong format. Most likely not a Budget Analyser file.</exception>
+    Task<ApplicationDatabase> LoadAsync(string storageKey);
 
     /// <summary>
     ///     Notifies the service that data has changed and will need to be saved.
@@ -83,7 +66,7 @@ public interface IApplicationDatabaseService : IServiceFoundation
     void NotifyOfChange(ApplicationDataType dataType);
 
     /// <summary>
-    ///     Prepares the persistent data for saving into permenant storage.
+    ///     Prepares the persistent data for saving into permanent storage.
     /// </summary>
     MainApplicationState PreparePersistentStateData();
 
@@ -94,16 +77,14 @@ public interface IApplicationDatabaseService : IServiceFoundation
     Task SaveAsync();
 
     /// <summary>
-    ///     Sets the credential that will be used when underlying data files are encrypted.
-    ///     If data files are not encrypted this does not need to be called.
+    ///     Sets the credential that will be used when underlying data files are encrypted. If data files are not encrypted this does not need to be called.
     ///     The claim can be removed by calling with a null claim value. Only one claim is stored.
     /// </summary>
     /// <param name="claim">The password claim.</param>
     void SetCredential(object claim);
 
     /// <summary>
-    ///     Validates all models in the application database.
-    ///     This method does not use <see cref="ValidationWarningException" /> to return any validation messages.
+    ///     Validates all models in the application database. This method does not use <see cref="ValidationWarningException" /> to return any validation messages.
     /// </summary>
     /// <param name="messages">Will append any validation messages found.</param>
     /// <returns>True if valid, otherwise false.</returns>

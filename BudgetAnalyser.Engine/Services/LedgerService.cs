@@ -85,7 +85,7 @@ internal class LedgerService : ILedgerService, ISupportsModelPersistence
         LedgerBook.Name = newName;
     }
 
-    public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
+    public void TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
     {
         if (bucket is null)
         {
@@ -98,7 +98,7 @@ internal class LedgerService : ILedgerService, ISupportsModelPersistence
         }
 
         var newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
-        return LedgerBook.AddLedger(newLedger);
+        LedgerBook.AddLedger(newLedger);
     }
 
     public IEnumerable<Account> ValidLedgerAccounts()

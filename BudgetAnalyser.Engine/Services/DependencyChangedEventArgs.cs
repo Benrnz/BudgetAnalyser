@@ -1,14 +1,6 @@
-﻿using System;
+﻿namespace BudgetAnalyser.Engine.Services;
 
-namespace BudgetAnalyser.Engine.Services
+internal class DependencyChangedEventArgs(Type dependencyType) : EventArgs
 {
-    internal class DependencyChangedEventArgs : EventArgs
-    {
-        public DependencyChangedEventArgs(Type dependencyType)
-        {
-            DependencyType = dependencyType;
-        }
-
-        public Type DependencyType { get; private set; }
-    }
+    public Type DependencyType { get; private set; } = dependencyType;
 }

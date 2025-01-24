@@ -36,15 +36,19 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         InitialiseDirtyDataTable();
     }
 
+    /// <inheritdoc />
     public bool HasUnsavedChanges => this.dirtyData.Values.Any(v => v);
 
+    /// <inheritdoc />
     public bool IsEncrypted => this.budgetAnalyserDatabase is not null && this.budgetAnalyserDatabase.IsEncrypted;
 
+    /// <inheritdoc />
     public void SetCredential(object? claim)
     {
         this.credentialStore.SetPasskey(claim);
     }
 
+    /// <inheritdoc />
     public ApplicationDatabase? Close()
     {
         if (this.budgetAnalyserDatabase is null)
@@ -67,6 +71,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         return this.budgetAnalyserDatabase;
     }
 
+    /// <inheritdoc />
     public async Task<ApplicationDatabase> CreateNewDatabaseAsync(string storageKey)
     {
         if (storageKey.IsNothing())
@@ -85,6 +90,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         return this.budgetAnalyserDatabase;
     }
 
+    /// <inheritdoc />
     public async Task EncryptFilesAsync()
     {
         if (this.budgetAnalyserDatabase is null)
@@ -104,6 +110,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         await SaveAsync();
     }
 
+    /// <inheritdoc />
     public async Task DecryptFilesAsync(object confirmCredentialsClaim)
     {
         if (this.budgetAnalyserDatabase is null)
@@ -132,6 +139,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         SetCredential(null);
     }
 
+    /// <inheritdoc />
     public async Task<ApplicationDatabase> LoadAsync(string storageKey)
     {
         if (storageKey.IsNothing())
@@ -176,12 +184,14 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         return this.budgetAnalyserDatabase;
     }
 
+    /// <inheritdoc />
     public void NotifyOfChange(ApplicationDataType dataType)
     {
         this.dirtyData[dataType] = true;
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
+    /// <inheritdoc />
     public MainApplicationState PreparePersistentStateData()
     {
         if (this.budgetAnalyserDatabase is null)
@@ -197,6 +207,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         return new MainApplicationState { BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName };
     }
 
+    /// <inheritdoc />
     public async Task SaveAsync()
     {
         if (this.budgetAnalyserDatabase is null)
@@ -239,6 +250,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
+    /// <inheritdoc />
     public bool ValidateAll(StringBuilder messages)
     {
         if (messages is null)

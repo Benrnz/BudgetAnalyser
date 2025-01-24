@@ -6,8 +6,7 @@ using BudgetAnalyser.Engine.Persistence;
 namespace BudgetAnalyser.Engine.Services;
 
 /// <summary>
-///     A service to provide maintenance support for budget models and collections.
-///     This class is stateful and is intended to be used as a single instance.
+///     A service to provide maintenance support for budget models and collections. This class is stateful and is intended to be used as a single instance.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsModelPersistence
@@ -33,14 +32,28 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         Budgets = this.budgetRepository.CreateNew();
     }
 
+    /// <inheritdoc />
     public event EventHandler? Closed;
+
+    /// <inheritdoc />
     public event EventHandler? NewDataSourceAvailable;
+
+    /// <inheritdoc />
     public event EventHandler? Saved;
+
+    /// <inheritdoc />
     public event EventHandler<ValidatingEventArgs>? Saving;
+
+    /// <inheritdoc />
     public event EventHandler<ValidatingEventArgs>? Validating;
+
+    /// <inheritdoc />
     public IBudgetBucketRepository BudgetBucketRepository { get; }
+
+    /// <inheritdoc />
     public BudgetCollection Budgets { get; private set; }
 
+    /// <inheritdoc />
     public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom, BudgetCycle budgetCycle)
     {
         if (sourceBudget is null)
@@ -79,6 +92,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         return newBudget;
     }
 
+    /// <inheritdoc />
     public void UpdateIncomesAndExpenses(BudgetModel model, IEnumerable<Income> allIncomes, IEnumerable<Expense> allExpenses)
     {
         if (model is null)
@@ -90,9 +104,13 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         model.Update(allIncomes, allExpenses);
     }
 
+    /// <inheritdoc />
     public ApplicationDataType DataType => ApplicationDataType.Budget;
+
+    /// <inheritdoc />
     public int LoadSequence => 5;
 
+    /// <inheritdoc />
     public void Close()
     {
         Budgets = this.budgetRepository.CreateNew();
@@ -100,6 +118,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         handler?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public async Task CreateAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase.BudgetCollectionStorageKey.IsNothing())
@@ -111,6 +130,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         await LoadAsync(applicationDatabase);
     }
 
+    /// <inheritdoc />
     public async Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase is null)
@@ -123,6 +143,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public async Task SaveAsync(ApplicationDatabase applicationDatabase)
     {
         EnsureAllBucketsUsedAreInBucketRepo();
@@ -140,12 +161,14 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         throw new ValidationWarningException("Unable to save Budget:\n" + messages);
     }
 
+    /// <inheritdoc />
     public void SavePreview()
     {
         var args = new ValidatingEventArgs();
         Saving?.Invoke(this, args);
     }
 
+    /// <inheritdoc />
     public bool ValidateModel(StringBuilder messages)
     {
         var handler = Validating;
