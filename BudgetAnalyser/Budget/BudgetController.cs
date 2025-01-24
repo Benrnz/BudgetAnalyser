@@ -36,9 +36,9 @@ public class BudgetController : ControllerBase, IShowableController
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public BudgetController(
-        [NotNull] UiContext uiContext,
-        [NotNull] IBudgetMaintenanceService maintenanceService,
-        [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
+        UiContext uiContext,
+        IBudgetMaintenanceService maintenanceService,
+        IApplicationDatabaseFacade applicationDatabaseService)
         : base(uiContext.Messenger)
     {
         if (uiContext is null)
@@ -115,7 +115,7 @@ public class BudgetController : ControllerBase, IShowableController
                 OnPropertyChanged(nameof(Expenses));
                 OnExpenseAmountPropertyChanged(null, EventArgs.Empty);
                 OnIncomeAmountPropertyChanged(null, EventArgs.Empty);
-                OnPropertyChanged(nameof(CurrentBudget));
+                OnPropertyChanged();
             }
             finally
             {
@@ -396,10 +396,9 @@ public class BudgetController : ControllerBase, IShowableController
         Dirty = false;
     }
 
-    private void OnSavingNotificationReceived(object sender, AdditionalInformationRequestedEventArgs args)
+    private void OnSavingNotificationReceived(object sender, ValidatingEventArgs args)
     {
         SyncDataToBudgetService();
-        args.Context = CurrentBudget.Model;
     }
 
     private void OnShowAllCommandExecuted()
@@ -440,10 +439,7 @@ public class BudgetController : ControllerBase, IShowableController
     private void SelectOtherBudget()
     {
         this.dialogCorrelationId = Guid.NewGuid();
-        var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok)
-        {
-            CorrelationId = this.dialogCorrelationId
-        };
+        var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok) { CorrelationId = this.dialogCorrelationId };
         Messenger.Send(popUpRequest);
     }
 

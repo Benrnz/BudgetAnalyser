@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services;
 
@@ -26,28 +21,25 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     /// </summary>
     /// <exception cref="System.ArgumentNullException">budgetRepository</exception>
     public BudgetMaintenanceService(
-        [NotNull] IBudgetRepository budgetRepository,
-        [NotNull] IBudgetBucketRepository bucketRepo,
-        [NotNull] ILogger logger,
-        [NotNull] MonitorableDependencies monitorableDependencies)
+        IBudgetRepository budgetRepository,
+        IBudgetBucketRepository bucketRepo,
+        ILogger logger,
+        MonitorableDependencies monitorableDependencies)
     {
         this.budgetRepository = budgetRepository ?? throw new ArgumentNullException(nameof(budgetRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
         BudgetBucketRepository = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-        CreateNewBudgetCollection();
+        Budgets = this.budgetRepository.CreateNew();
     }
 
-    public event EventHandler Closed;
-    public event EventHandler NewDataSourceAvailable;
-    public event EventHandler Saved;
-    public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
-    public event EventHandler<ValidatingEventArgs> Validating;
+    public event EventHandler? Closed;
+    public event EventHandler? NewDataSourceAvailable;
+    public event EventHandler? Saved;
+    public event EventHandler<ValidatingEventArgs>? Saving;
+    public event EventHandler<ValidatingEventArgs>? Validating;
     public IBudgetBucketRepository BudgetBucketRepository { get; }
     public BudgetCollection Budgets { get; private set; }
-
-    public ApplicationDataType DataType => ApplicationDataType.Budget;
-    public int LoadSequence => 5;
 
     public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom, BudgetCycle budgetCycle)
     {
@@ -70,15 +62,10 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         if (!sourceBudget.Validate(validationMessages))
         {
             throw new ValidationWarningException(string.Format(CultureInfo.CurrentCulture, "The source budget is currently in an invalid state, unable to clone it at this time.\n{0}",
-                                                               validationMessages));
+                validationMessages));
         }
 
-        var newBudget = new BudgetModel
-        {
-            EffectiveFrom = newBudgetEffectiveFrom,
-            Name = string.Format(CultureInfo.CurrentCulture, "Copy of {0}", sourceBudget.Name),
-            BudgetCycle = budgetCycle
-        };
+        var newBudget = new BudgetModel { EffectiveFrom = newBudgetEffectiveFrom, Name = string.Format(CultureInfo.CurrentCulture, "Copy of {0}", sourceBudget.Name), BudgetCycle = budgetCycle };
         newBudget.Update(CloneBudgetIncomes(sourceBudget), CloneBudgetExpenses(sourceBudget));
 
         if (!newBudget.Validate(validationMessages))
@@ -92,10 +79,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         return newBudget;
     }
 
-    public void UpdateIncomesAndExpenses(
-        [NotNull] BudgetModel model,
-        IEnumerable<Income> allIncomes,
-        IEnumerable<Expense> allExpenses)
+    public void UpdateIncomesAndExpenses(BudgetModel model, IEnumerable<Income> allIncomes, IEnumerable<Expense> allExpenses)
     {
         if (model is null)
         {
@@ -106,9 +90,12 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         model.Update(allIncomes, allExpenses);
     }
 
+    public ApplicationDataType DataType => ApplicationDataType.Budget;
+    public int LoadSequence => 5;
+
     public void Close()
     {
-        CreateNewBudgetCollection();
+        Budgets = this.budgetRepository.CreateNew();
         var handler = Closed;
         handler?.Invoke(this, EventArgs.Empty);
     }
@@ -155,7 +142,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
 
     public void SavePreview()
     {
-        var args = new AdditionalInformationRequestedEventArgs();
+        var args = new ValidatingEventArgs();
         Saving?.Invoke(this, args);
     }
 
@@ -171,26 +158,13 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     private static IEnumerable<Expense> CloneBudgetExpenses(BudgetModel source)
     {
         return source.Expenses.Select(
-                                      sourceExpense => new Expense
-                                      {
-                                          Amount = sourceExpense.Amount,
-                                          Bucket = sourceExpense.Bucket
-                                      }).ToList();
+            sourceExpense => new Expense { Amount = sourceExpense.Amount, Bucket = sourceExpense.Bucket }).ToList();
     }
 
     private static IEnumerable<Income> CloneBudgetIncomes(BudgetModel source)
     {
         return source.Incomes.Select(
-                                     sourceExpense => new Income
-                                     {
-                                         Amount = sourceExpense.Amount,
-                                         Bucket = sourceExpense.Bucket
-                                     }).ToList();
-    }
-
-    private void CreateNewBudgetCollection()
-    {
-        Budgets = this.budgetRepository.CreateNew();
+            sourceExpense => new Income { Amount = sourceExpense.Amount, Bucket = sourceExpense.Bucket }).ToList();
     }
 
     private void EnsureAllBucketsUsedAreInBucketRepo()
@@ -210,7 +184,8 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     private void UpdateServiceMonitor()
     {
         this.monitorableDependencies.NotifyOfDependencyChange(BudgetBucketRepository);
-        this.monitorableDependencies.NotifyOfDependencyChange<IBudgetCurrencyContext>(new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget));
+        var current = Budgets.CurrentActiveBudget ?? Budgets.First();
+        this.monitorableDependencies.NotifyOfDependencyChange<IBudgetCurrencyContext>(new BudgetCurrencyContext(Budgets, current));
         this.monitorableDependencies.NotifyOfDependencyChange(Budgets);
     }
 }
