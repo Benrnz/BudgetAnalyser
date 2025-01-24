@@ -71,9 +71,9 @@ public interface IReconciliationService
     void TransferFunds(LedgerBook ledgerBook, LedgerEntryLine reconciliation, TransferFundsCommand transferDetails);
 
     /// <summary>
-    ///     Unlocks the current month after it has been saved and locked.
+    ///     Unlocks the current month after it has been saved and locked. Will return null if there is no recent line (eq. New).
     /// </summary>
-    LedgerEntryLine UnlockCurrentPeriod(LedgerBook ledgerBook);
+    LedgerEntryLine? UnlockCurrentPeriod(LedgerBook ledgerBook);
 
     /// <summary>
     ///     Updates the remarks for the given Ledger Entry Line.

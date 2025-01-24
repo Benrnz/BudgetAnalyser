@@ -15,7 +15,7 @@ public interface IBudgetMaintenanceService : INotifyDatabaseChanges, IServiceFou
     /// <summary>
     ///     Gets the currently loaded budgets collection.
     /// </summary>
-    BudgetCollection Budgets { get; }
+    BudgetCollection? Budgets { get; }
 
     /// <summary>
     ///     Clones the given <see cref="BudgetModel" /> to create a new budget with a future effective date.

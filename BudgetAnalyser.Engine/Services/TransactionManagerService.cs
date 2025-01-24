@@ -1,11 +1,9 @@
 ﻿using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services;
 
@@ -21,10 +19,10 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     private readonly ILogger logger;
     private readonly MonitorableDependencies monitorableDependencies;
     private readonly IStatementRepository statementRepository;
-    private BudgetCollection budgetCollection;
+    private BudgetCollection? budgetCollection;
     private int budgetHash;
     private bool sortedByBucket;
-    private ObservableCollection<Transaction> transactions;
+    private ObservableCollection<Transaction> transactions = new();
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="TransactionManagerService" /> class.
@@ -33,85 +31,37 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <param name="statementRepository">The statement repository.</param>
     /// <param name="logger">The logger.</param>
     /// <param name="monitorableDependencies">The dependency monitor manager</param>
-    /// <exception cref="System.ArgumentNullException">
-    /// </exception>
-    public TransactionManagerService(
-        [NotNull]
-        IBudgetBucketRepository bucketRepository,
-        [NotNull]
-        IStatementRepository statementRepository,
-        [NotNull]
-        ILogger logger,
-        [NotNull]
-        MonitorableDependencies monitorableDependencies)
+    /// <exception cref="System.ArgumentNullException"></exception>
+    public TransactionManagerService(IBudgetBucketRepository bucketRepository, IStatementRepository statementRepository, ILogger logger, MonitorableDependencies monitorableDependencies)
     {
-        if (bucketRepository is null)
-        {
-            throw new ArgumentNullException(nameof(bucketRepository));
-        }
-
-        if (statementRepository is null)
-        {
-            throw new ArgumentNullException(nameof(statementRepository));
-        }
-
-        if (logger is null)
-        {
-            throw new ArgumentNullException(nameof(logger));
-        }
-
-        if (monitorableDependencies is null)
-        {
-            throw new ArgumentNullException(nameof(monitorableDependencies));
-        }
-
-        this.bucketRepository = bucketRepository;
-        this.statementRepository = statementRepository;
-        this.logger = logger;
-        this.monitorableDependencies = monitorableDependencies;
+        this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
+        this.statementRepository = statementRepository ?? throw new ArgumentNullException(nameof(statementRepository));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
     }
 
-    /// <summary>
-    ///     Occurs when the underlying storage for transactions is closed.
-    ///     This allows the UI to update and clear accordingly.
-    ///     Opening and closing files is controlled centrally, not by this service.
-    /// </summary>
-    public event EventHandler Closed;
+    /// <inheritdoc />
+    public event EventHandler? Closed;
 
-    /// <summary>
-    ///     Occurs when a new data source has been loaded and is now available for use.
-    /// </summary>
-    public event EventHandler NewDataSourceAvailable;
+    /// <inheritdoc />
+    public event EventHandler? NewDataSourceAvailable;
 
-    /// <summary>
-    ///     Occurs when the service has finished saving data. This allows the controller to update any clientside view-models.
-    /// </summary>
-    public event EventHandler Saved;
+    /// <inheritdoc />
+    public event EventHandler? Saved;
 
-    /// <summary>
-    ///     Occurs just before Saving the model. Can be used to request more information from the UI Controllers.
-    /// </summary>
-    public event EventHandler<ValidatingEventArgs> Saving;
+    /// <inheritdoc />
+    public event EventHandler<ValidatingEventArgs>? Saving;
 
-    /// <summary>
-    ///     Occurs just before Validating the model.  Can be used to ensure the UI Controller has updated any necessary
-    ///     information with its service.
-    /// </summary>
-    public event EventHandler<ValidatingEventArgs> Validating;
+    /// <inheritdoc />
+    public event EventHandler<ValidatingEventArgs>? Validating;
 
-    /// <summary>
-    ///     Gets the type of the data the implementation deals with.
-    /// </summary>
+    /// <inheritdoc />
     public ApplicationDataType DataType => ApplicationDataType.Transactions;
 
-    /// <summary>
-    ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-    /// </summary>
+    /// <inheritdoc />
     public int LoadSequence => 10;
 
-    /// <summary>
-    ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
-    /// </summary>
+    /// <inheritdoc />
     public void Close()
     {
         this.transactions = new ObservableCollection<Transaction>();
@@ -123,10 +73,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         handler?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>
-    ///     Create a new <see cref="StatementModel" />.
-    /// </summary>
-    /// <exception cref="System.ArgumentNullException"></exception>
+    /// <inheritdoc />
     public async Task CreateAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase.StatementModelStorageKey.IsNothing())
@@ -138,11 +85,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         await LoadAsync(applicationDatabase);
     }
 
-    /// <summary>
-    ///     Loads a data source with the provided database reference data asynchronously.
-    /// </summary>
-    /// <exception cref="System.ArgumentNullException"></exception>
-    /// <exception cref="DataFormatException">Statement Model data is corrupt and has been tampered with. Unable to load.</exception>
+    /// <inheritdoc />
     public async Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase is null)
@@ -163,13 +106,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         NewDataAvailable();
     }
 
-    /// <summary>
-    ///     Saves the application database asynchronously. This may be called using a background worker thread.
-    /// </summary>
-    /// <exception cref="ValidationWarningException">
-    ///     Unable to save transactions at this time, some data is invalid.  +
-    ///     messages
-    /// </exception>
+    /// <inheritdoc />
     public async Task SaveAsync(ApplicationDatabase applicationDatabase)
     {
         if (StatementModel is null)
@@ -192,20 +129,12 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         Saved?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>
-    ///     Called before Save is called. This will be called on the UI Thread.
-    ///     Objects can optionally add some context data that will be passed to the <see cref="SaveAsync" /> method call.
-    ///     This can be used to finalise any edits or prompt the user for closing data, ie, a "what-did-you-change" comment;
-    ///     this
-    ///     can't be done during save as it may not be called using the UI Thread.
-    /// </summary>
+    /// <inheritdoc />
     public void SavePreview()
     {
     }
 
-    /// <summary>
-    ///     Validates the model owned by the service.
-    /// </summary>
+    /// <inheritdoc />
     public bool ValidateModel(StringBuilder messages)
     {
         Validating?.Invoke(this, new ValidatingEventArgs());
@@ -214,91 +143,58 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         return true;
     }
 
-    /// <summary>
-    ///     Gets the calculated average debit.
-    /// </summary>
-    public decimal AverageDebit => this.transactions is null || this.transactions.None()
-        ? 0
-        : this.transactions.Where(t => t.Amount < 0).SafeAverage(t => t.Amount);
+    /// <inheritdoc />
+    public decimal AverageDebit => this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount < 0).SafeAverage(t => t.Amount);
 
-    /// <summary>
-    ///     Gets the statement model.
-    /// </summary>
-    public StatementModel StatementModel { get; private set; }
+    /// <inheritdoc />
+    public StatementModel? StatementModel { get; private set; }
 
-    /// <summary>
-    ///     Gets the calculated total count.
-    /// </summary>
-    public decimal TotalCount => this.transactions is null || this.transactions.None() ? 0 : this.transactions.Count();
+    /// <inheritdoc />
+    public decimal TotalCount => this.transactions.None() ? 0 : this.transactions.Count();
 
-    /// <summary>
-    ///     Gets the calculated total credits.
-    /// </summary>
-    public decimal TotalCredits => this.transactions is null || this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
+    /// <inheritdoc />
+    public decimal TotalCredits => this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
 
-    /// <summary>
-    ///     Gets the calculated total debits.
-    /// </summary>
-    public decimal TotalDebits => this.transactions is null || this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
+    /// <inheritdoc />
+    public decimal TotalDebits => this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
 
-    /// <summary>
-    ///     Clears the bucket and text filters.
-    /// </summary>
+    /// <inheritdoc />
     public ObservableCollection<Transaction> ClearBucketAndTextFilters()
     {
         ResetTransactionsCollection();
         return this.transactions;
     }
 
-    /// <summary>
-    ///     Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for
-    ///     displaying in the UI. Each individual duplicate transactions will be flagged by the
-    ///     <see cref="Transaction.IsSuspectedDuplicate" /> property.
-    /// </summary>
-    /// <returns>
-    ///     A textual summary of duplicates found. Null if none are detected or no statement is loaded.
-    /// </returns>
+    /// <inheritdoc />
     public string DetectDuplicateTransactions()
     {
         if (StatementModel is null)
         {
-            return null;
+            return string.Empty;
         }
 
         var duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
-        return duplicates.Any()
-            ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!",
-                duplicates.Sum(group => group.Count()))
-            : null;
+        return duplicates.Any() ? $"{duplicates.Sum(group => group.Count())} suspected duplicates!" : string.Empty;
     }
 
-    /// <summary>
-    ///     Provides a list of buckets for display purposes for filtering the transactions shown. This list will include a
-    ///     blank item to represent no filtering, and a [Uncategorised] to represent a filter to show only transactions with no
-    ///     bucket allocation.
-    /// </summary>
-    /// <returns>
-    ///     A string list of bucket codes.
-    /// </returns>
+    /// <inheritdoc />
     public IEnumerable<string> FilterableBuckets()
     {
         return this.bucketRepository.Buckets
             .Where(b => b.Active)
             .Select(b => b.Code)
-            .Union(new[] { string.Empty, TransactionConstants.UncategorisedFilter })
+            .Union([string.Empty, TransactionConstants.UncategorisedFilter])
             .OrderBy(b => b);
     }
 
-    /// <summary>
-    ///     Returns a filtered list of <see cref="Transaction" />s by bucket code.
-    /// </summary>
-    /// <param name="bucketCode">
-    ///     The bucket code as text. This can be null or return all, and
-    ///     <see cref="TransactionConstants.UncategorisedFilter" /> to
-    ///     only return transactions without a bucket classification.
-    /// </param>
-    public ObservableCollection<Transaction> FilterByBucket(string bucketCode)
+    /// <inheritdoc />
+    public ObservableCollection<Transaction> FilterByBucket(string? bucketCode)
     {
+        if (StatementModel is null)
+        {
+            throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+        }
+
         if (bucketCode == TransactionConstants.UncategorisedFilter)
         {
             return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket is null));
@@ -315,14 +211,15 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => paternityTest.OfSameBucketFamily(t.BudgetBucket, bucket)));
     }
 
-    /// <summary>
-    ///     Returns a filtered list of <see cref="Transaction" />s using the provided search text.  All following transaction
-    ///     fields are searched: Description, Reference1, Reference2, Reference3.
-    /// </summary>
-    /// <param name="searchText">The search text. Minimum 3 characters. A Null value clears the search.</param>
+    /// <inheritdoc />
     public ObservableCollection<Transaction> FilterBySearchText(string? searchText)
     {
-        if (searchText.IsNothing())
+        if (StatementModel is null)
+        {
+            throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+        }
+
+        if (string.IsNullOrWhiteSpace(searchText))
         {
             return ClearBucketAndTextFilters();
         }
@@ -332,19 +229,21 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             return ClearBucketAndTextFilters();
         }
 
-        this.transactions = new ObservableCollection<Transaction>(
-            StatementModel.Transactions.Where(t => MatchTransactionText(t, searchText))
-                .AsParallel()
-                .ToList());
+        this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions
+            .Where(t => MatchTransactionText(t, searchText))
+            .AsParallel()
+            .ToList());
         return this.transactions;
     }
 
-    /// <summary>
-    ///     Filters the transactions using the filter object provided.
-    /// </summary>
-    /// <exception cref="System.ArgumentNullException"></exception>
+    /// <inheritdoc />
     public void FilterTransactions(GlobalFilterCriteria criteria)
     {
+        if (StatementModel is null)
+        {
+            throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+        }
+
         if (criteria is null)
         {
             throw new ArgumentNullException(nameof(criteria));
@@ -354,18 +253,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         StatementModel.Filter(criteria);
     }
 
-    /// <summary>
-    ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement.
-    ///     This method should not be used without a <see cref="StatementModel" /> loaded.
-    ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
-    /// </summary>
-    /// <exception cref="System.ArgumentNullException">
-    /// </exception>
-    /// <exception cref="System.InvalidOperationException">
-    ///     There are no transactions loaded, you must first load an existing
-    ///     file or create a new one.
-    /// </exception>
-    /// <exception cref="BudgetAnalyser.Engine.Statement.TransactionsAlreadyImportedException"></exception>
+    /// <inheritdoc />
     public async Task ImportAndMergeBankStatementAsync(string storageKey, Account account)
     {
         if (storageKey.IsNothing())
@@ -380,8 +268,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         if (StatementModel is null)
         {
-            throw new InvalidOperationException(
-                "There are no transactions loaded, you must first load an existing file or create a new one.");
+            throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
 
         var additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
@@ -399,11 +286,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         NewDataAvailable();
     }
 
-    /// <summary>
-    ///     Parses and loads the persisted state data from the provided object.
-    /// </summary>
-    /// <param name="stateData">The state data loaded from persistent storage.</param>
-    /// <exception cref="System.ArgumentNullException"></exception>
+    /// <inheritdoc />
     public void Initialise(StatementApplicationState stateData)
     {
         if (stateData is null)
@@ -415,21 +298,20 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         this.sortedByBucket = stateData.SortByBucket ?? false;
     }
 
-    /// <summary>
-    ///     Prepares the persistent state data to save to storage.
-    /// </summary>
+    /// <inheritdoc />
     public StatementApplicationState PreparePersistentStateData()
     {
         return new StatementApplicationState { SortByBucket = this.sortedByBucket };
     }
 
-    /// <summary>
-    ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.
-    /// </summary>
-    /// <param name="transactionToRemove">The transaction to remove.</param>
-    /// <exception cref="System.ArgumentNullException"></exception>
+    /// <inheritdoc />
     public void RemoveTransaction(Transaction transactionToRemove)
     {
+        if (StatementModel is null)
+        {
+            throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+        }
+
         if (transactionToRemove is null)
         {
             throw new ArgumentNullException(nameof(transactionToRemove));
@@ -438,18 +320,14 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         StatementModel.RemoveTransaction(transactionToRemove);
     }
 
-    /// <summary>
-    ///     Splits the provided transaction into two. The provided transactions is removed, and two new transactions are
-    ///     created. Both transactions must add up to the existing transaction amount.
-    /// </summary>
-    /// <exception cref="System.ArgumentNullException">
-    /// </exception>
-    public void SplitTransaction(Transaction originalTransaction,
-        decimal splinterAmount1,
-        decimal splinterAmount2,
-        BudgetBucket splinterBucket1,
-        BudgetBucket splinterBucket2)
+    /// <inheritdoc />
+    public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
     {
+        if (StatementModel is null)
+        {
+            throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+        }
+
         if (originalTransaction is null)
         {
             throw new ArgumentNullException(nameof(originalTransaction));
@@ -473,23 +351,8 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             splinterBucket2);
     }
 
-    /// <summary>
-    ///     Validates the currently loaded <see cref="StatementModel" /> against the provided budgets and ensures all buckets
-    ///     used by the transactions
-    ///     exist in the budgets.  This is performed asynchronously.
-    ///     This method can be called when a budget is loaded or changed or when a new Budget Analyser Statement is loaded.
-    /// </summary>
-    /// <param name="budgets">
-    ///     The current budgets. This must be provided at least once. It can be omitted when
-    ///     calling this method after the statement model has changed if the budget was previously provided.
-    /// </param>
-    /// <returns>
-    ///     A task that will result in true if all buckets used, are present in the budgets, otherwise false.
-    ///     If false, this indicates that some transactions may have their bucket allocation removed possibly resulting in
-    ///     unintended data loss.
-    /// </returns>
-    /// <exception cref="System.ArgumentNullException"></exception>
-    public async Task<bool> ValidateWithCurrentBudgetsAsync(BudgetCollection budgets = null)
+    /// <inheritdoc />
+    public async Task<bool> ValidateWithCurrentBudgetsAsync(BudgetCollection? budgets = null)
     {
         // This method must be called at least once with a budget collection.  Second and subsequent times do not require the budget.
         if (this.budgetCollection is null && budgets is null)
@@ -499,7 +362,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         this.budgetCollection = budgets ?? this.budgetCollection;
 
-        if (StatementModel is null)
+        if (StatementModel is null || this.budgetCollection is null)
         {
             // Can't check yet, statement hasn't been loaded yet. Everything is ok for now.
             return true;
@@ -522,7 +385,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
                     .All(
                         t =>
                         {
-                            var bucketExists = allBuckets.Contains(t.BudgetBucket);
+                            var bucketExists = allBuckets.Contains(t.BudgetBucket!);
                             if (!bucketExists)
                             {
                                 t.BudgetBucket = null;
@@ -583,8 +446,6 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
     private void ResetTransactionsCollection()
     {
-        this.transactions = StatementModel is null
-            ? new ObservableCollection<Transaction>()
-            : new ObservableCollection<Transaction>(StatementModel.Transactions);
+        this.transactions = StatementModel is null ? new ObservableCollection<Transaction>() : new ObservableCollection<Transaction>(StatementModel.Transactions);
     }
 }

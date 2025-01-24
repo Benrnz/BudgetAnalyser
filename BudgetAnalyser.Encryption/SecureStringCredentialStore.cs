@@ -25,10 +25,10 @@ internal sealed class SecureStringCredentialStore : ICredentialStore, IDisposabl
     /// <summary>
     ///     Sets the pass key.
     /// </summary>
-    public void SetPasskey(object passkey)
+    public void SetPasskey(object? passkey)
     {
         this.passPhrase.Dispose();
-        this.passPhrase = (SecureString)passkey;
+        this.passPhrase = passkey is null ? new SecureString() : (SecureString)passkey;
     }
 
     [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SecureStrings")]

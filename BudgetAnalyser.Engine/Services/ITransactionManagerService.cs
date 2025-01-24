@@ -18,7 +18,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     /// <summary>
     ///     Gets the statement model.
     /// </summary>
-    StatementModel StatementModel { get; }
+    StatementModel? StatementModel { get; }
 
     /// <summary>
     ///     Gets the calculated total count.

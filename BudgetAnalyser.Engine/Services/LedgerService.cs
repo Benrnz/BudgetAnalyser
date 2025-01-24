@@ -9,57 +9,38 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Services;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class LedgerService : ILedgerService, ISupportsModelPersistence
+[UsedImplicitly] // Used by IoC
+internal class LedgerService(
+    ILedgerBookRepository ledgerRepository,
+    IAccountTypeRepository accountTypeRepository,
+    ILedgerBucketFactory ledgerBucketFactory,
+    MonitorableDependencies monitorableDependencies)
+    : ILedgerService, ISupportsModelPersistence
 {
-    private readonly IAccountTypeRepository accountTypeRepository;
-    private readonly ILedgerBucketFactory ledgerBucketFactory;
-    private readonly ILedgerBookRepository ledgerRepository;
-    private readonly MonitorableDependencies monitorableDependencies;
+    private readonly IAccountTypeRepository accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
+    private readonly ILedgerBucketFactory ledgerBucketFactory = ledgerBucketFactory ?? throw new ArgumentNullException(nameof(ledgerBucketFactory));
+    private readonly ILedgerBookRepository ledgerRepository = ledgerRepository ?? throw new ArgumentNullException(nameof(ledgerRepository));
+    private readonly MonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
 
-    public LedgerService(
-        [NotNull]
-        ILedgerBookRepository ledgerRepository,
-        [NotNull]
-        IAccountTypeRepository accountTypeRepository,
-        [NotNull]
-        ILedgerBucketFactory ledgerBucketFactory,
-        [NotNull]
-        MonitorableDependencies monitorableDependencies)
-    {
-        if (ledgerRepository is null)
-        {
-            throw new ArgumentNullException(nameof(ledgerRepository));
-        }
+    /// <inheritdoc />
+    public event EventHandler? Closed;
 
-        if (accountTypeRepository is null)
-        {
-            throw new ArgumentNullException(nameof(accountTypeRepository));
-        }
+    /// <inheritdoc />
+    public event EventHandler? NewDataSourceAvailable;
 
-        if (ledgerBucketFactory is null)
-        {
-            throw new ArgumentNullException(nameof(ledgerBucketFactory));
-        }
+    /// <inheritdoc />
+    public event EventHandler? Saved;
 
-        if (monitorableDependencies is null)
-        {
-            throw new ArgumentNullException(nameof(monitorableDependencies));
-        }
+    /// <inheritdoc />
+    public event EventHandler<ValidatingEventArgs>? Saving;
 
-        this.ledgerRepository = ledgerRepository;
-        this.accountTypeRepository = accountTypeRepository;
-        this.ledgerBucketFactory = ledgerBucketFactory;
-        this.monitorableDependencies = monitorableDependencies;
-    }
+    /// <inheritdoc />
+    public event EventHandler<ValidatingEventArgs>? Validating;
 
-    public event EventHandler Closed;
-    public event EventHandler NewDataSourceAvailable;
-    public event EventHandler Saved;
-    public event EventHandler<ValidatingEventArgs> Saving;
-    public event EventHandler<ValidatingEventArgs> Validating;
+    /// <inheritdoc />
+    public LedgerBook? LedgerBook { get; private set; }
 
-    public LedgerBook LedgerBook { get; private set; }
-
+    /// <inheritdoc />
     public void MoveLedgerToAccount(LedgerBucket ledger, Account storedInAccount)
     {
         if (ledger is null)
@@ -72,11 +53,22 @@ internal class LedgerService : ILedgerService, ISupportsModelPersistence
             throw new ArgumentNullException(nameof(storedInAccount));
         }
 
+        if (LedgerBook is null)
+        {
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
+        }
+
         LedgerBook.SetLedgerAccount(ledger, storedInAccount);
     }
 
+    /// <inheritdoc />
     public void RenameLedgerBook(string newName)
     {
+        if (LedgerBook is null)
+        {
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
+        }
+
         if (newName is null)
         {
             throw new ArgumentNullException(nameof(newName));
@@ -85,8 +77,14 @@ internal class LedgerService : ILedgerService, ISupportsModelPersistence
         LedgerBook.Name = newName;
     }
 
+    /// <inheritdoc />
     public void TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
     {
+        if (LedgerBook is null)
+        {
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
+        }
+
         if (bucket is null)
         {
             throw new ArgumentNullException(nameof(bucket));
@@ -101,20 +99,26 @@ internal class LedgerService : ILedgerService, ISupportsModelPersistence
         LedgerBook.AddLedger(newLedger);
     }
 
+    /// <inheritdoc />
     public IEnumerable<Account> ValidLedgerAccounts()
     {
         return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
     }
 
+    /// <inheritdoc />
     public ApplicationDataType DataType => ApplicationDataType.Ledger;
+
+    /// <inheritdoc />
     public int LoadSequence => 50;
 
+    /// <inheritdoc />
     public void Close()
     {
         LedgerBook = null;
         Closed?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public async Task CreateAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase.LedgerBookStorageKey.IsNothing())
@@ -126,6 +130,7 @@ internal class LedgerService : ILedgerService, ISupportsModelPersistence
         await LoadAsync(applicationDatabase);
     }
 
+    /// <inheritdoc />
     public async Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase is null)
@@ -139,8 +144,14 @@ internal class LedgerService : ILedgerService, ISupportsModelPersistence
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public async Task SaveAsync(ApplicationDatabase applicationDatabase)
     {
+        if (LedgerBook is null)
+        {
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
+        }
+
         Saving?.Invoke(this, new ValidatingEventArgs());
 
         var messages = new StringBuilder();
@@ -154,12 +165,19 @@ internal class LedgerService : ILedgerService, ISupportsModelPersistence
         Saved?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public void SavePreview()
     {
     }
 
+    /// <inheritdoc />
     public bool ValidateModel(StringBuilder messages)
     {
+        if (LedgerBook is null)
+        {
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
+        }
+
         var handler = Validating;
         handler?.Invoke(this, new ValidatingEventArgs());
 

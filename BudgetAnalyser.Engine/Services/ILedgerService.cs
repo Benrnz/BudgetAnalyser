@@ -12,7 +12,7 @@ public interface ILedgerService : INotifyDatabaseChanges, IServiceFoundation
     /// <summary>
     ///     Gets the ledger book model.
     /// </summary>
-    LedgerBook LedgerBook { get; }
+    LedgerBook? LedgerBook { get; }
 
     /// <summary>
     ///     Moves the specified ledger to the specified account.

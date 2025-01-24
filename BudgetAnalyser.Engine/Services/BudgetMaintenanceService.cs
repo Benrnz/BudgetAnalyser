@@ -51,7 +51,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     public IBudgetBucketRepository BudgetBucketRepository { get; }
 
     /// <inheritdoc />
-    public BudgetCollection Budgets { get; private set; }
+    public BudgetCollection? Budgets { get; private set; }
 
     /// <inheritdoc />
     public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom, BudgetCycle budgetCycle)
@@ -69,6 +69,11 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         if (newBudgetEffectiveFrom <= DateTime.Today)
         {
             throw new ArgumentException("The effective date of the new budget must be a future date.", nameof(newBudgetEffectiveFrom));
+        }
+
+        if (Budgets is null)
+        {
+            throw new InvalidOperationException("No Budget file is loaded.");
         }
 
         var validationMessages = new StringBuilder();
@@ -113,7 +118,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     /// <inheritdoc />
     public void Close()
     {
-        Budgets = this.budgetRepository.CreateNew();
+        Budgets = null;
         var handler = Closed;
         handler?.Invoke(this, EventArgs.Empty);
     }
@@ -146,6 +151,11 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     /// <inheritdoc />
     public async Task SaveAsync(ApplicationDatabase applicationDatabase)
     {
+        if (Budgets is null)
+        {
+            throw new InvalidOperationException("No Budget file is loaded.");
+        }
+
         EnsureAllBucketsUsedAreInBucketRepo();
 
         var messages = new StringBuilder();
@@ -171,6 +181,11 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     /// <inheritdoc />
     public bool ValidateModel(StringBuilder messages)
     {
+        if (Budgets is null)
+        {
+            throw new InvalidOperationException("No Budget file is loaded.");
+        }
+
         var handler = Validating;
         var args = new ValidatingEventArgs();
         handler?.Invoke(this, args);
@@ -193,8 +208,8 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     private void EnsureAllBucketsUsedAreInBucketRepo()
     {
         // Make sure all buckets are in the bucket repo.
-        var buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
-            .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
+        var buckets = Budgets!.SelectMany(b => b.Expenses.Select(e => e.Bucket))
+            .Union(Budgets!.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
             .Distinct();
 
         foreach (var budgetBucket in buckets)
@@ -207,7 +222,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     private void UpdateServiceMonitor()
     {
         this.monitorableDependencies.NotifyOfDependencyChange(BudgetBucketRepository);
-        var current = Budgets.CurrentActiveBudget ?? Budgets.First();
+        var current = Budgets!.CurrentActiveBudget ?? Budgets.First();
         this.monitorableDependencies.NotifyOfDependencyChange<IBudgetCurrencyContext>(new BudgetCurrencyContext(Budgets, current));
         this.monitorableDependencies.NotifyOfDependencyChange(Budgets);
     }
