@@ -53,9 +53,9 @@ public abstract class Widget : INotifyPropertyChanged
     private bool doNotUseEnabled;
     private string? doNotUseImageResourceName;
     private string? doNotUseImageResourceName2;
-    private string doNotUseLargeNumber = NotSet;
+    private string doNotUseLargeNumber = string.Empty;
     private WidgetSize doNotUseSize;
-    private string doNotUseToolTip = string.Empty;
+    private string? doNotUseToolTip;
     private bool doNotUseVisibility;
 
     /// <summary>

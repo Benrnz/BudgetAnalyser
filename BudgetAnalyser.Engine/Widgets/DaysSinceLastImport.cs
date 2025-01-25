@@ -19,7 +19,6 @@ public class DaysSinceLastImport : Widget
         Category = WidgetGroup.OverviewSectionName;
         Dependencies = [typeof(StatementModel)];
         DetailedText = "Days since last import";
-        ImageResourceName = string.Empty;
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
         Clickable = true;
     }
