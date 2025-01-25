@@ -14,6 +14,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 {
     private readonly string standardStyle;
     private IBudgetBucketRepository? bucketRepository;
+
     private ILogger? logger;
 
     /// <summary>
