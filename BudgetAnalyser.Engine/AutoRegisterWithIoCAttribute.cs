@@ -1,10 +1,9 @@
 ﻿namespace BudgetAnalyser.Engine;
 
 /// <summary>
-///     An attribute to decorate any class that should be automatically registered with the IoC Container. If <see cref="AutoRegisterWithIoCAttribute.RegisterAs" /> is not specified all
-///     implemented interfaces will be registered as well as the class type itself. By default, only one type is expected to be registered per interface/abstract class, although no checking is
-///     done, last in wins. To register multiple types against a single interface/abstract class use the <see cref="AutoRegisterWithIoCAttribute.Named" /> property to specify a unique name for
-///     each one.
+///     An attribute to decorate any class that should be automatically registered with the IoC Container. By default, only one type is expected to be registered per interface/abstract class,
+///     although no checking is done, last in wins. To register multiple types against a single interface/abstract class use the <see cref="AutoRegisterWithIoCAttribute.Named" /> property to specify
+///     a unique name for each one.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class AutoRegisterWithIoCAttribute : Attribute

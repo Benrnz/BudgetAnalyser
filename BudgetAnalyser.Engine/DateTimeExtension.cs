@@ -6,9 +6,7 @@
 public static class DateTimeExtension
 {
     /// <summary>
-    ///     Works out the duration in whole months between the two dates.  The end date must be at least one whole calendar
-    ///     month
-    ///     ahead of the instance date to deemed one month.
+    ///     Works out the duration in whole months between the two dates.  The end date must be at least one whole calendar month ahead of the instance date to deemed one month.
     /// </summary>
     /// <returns>An integer number of whole calendar months.</returns>
     public static int DurationInMonths(this DateTime minDate, DateTime maxDate)
@@ -23,9 +21,7 @@ public static class DateTimeExtension
     }
 
     /// <summary>
-    ///     Works out the duration in whole months between the two dates.  The end date must be at least one whole calendar
-    ///     month
-    ///     ahead of the instance date to deemed one month.
+    ///     Works out the duration in whole months between the two dates.  The end date must be at least one whole calendar month ahead of the instance date to deemed one month.
     /// </summary>
     /// <param name="minDate">The Start Date, inclusive</param>
     /// <param name="maxDate">The End Date, inclusive</param>
@@ -46,7 +42,7 @@ public static class DateTimeExtension
     /// </summary>
     public static DateTime FindNextWeekday(this DateTime instance)
     {
-        while (instance.DayOfWeek == DayOfWeek.Saturday || instance.DayOfWeek == DayOfWeek.Sunday)
+        while (instance.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
         {
             instance = instance.AddDays(1);
         }

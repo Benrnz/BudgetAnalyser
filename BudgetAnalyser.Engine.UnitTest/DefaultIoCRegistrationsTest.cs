@@ -119,7 +119,8 @@ public class DefaultIoCRegistrationsTest
     public void RegisterAutoMappings_ShouldReturnTwoGivenThisAssembly()
     {
         var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
-        Assert.AreEqual(2, result.Count());
+        Assert.AreEqual(3, result.Count());
+        // EmbeddedResourceReaderWriter, EmbeddedResourceReaderWriterEncrypted, FakeLogger
     }
 
     [TestMethod]
