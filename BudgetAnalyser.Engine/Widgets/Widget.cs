@@ -45,18 +45,18 @@ public abstract class Widget : INotifyPropertyChanged
 
     private bool clickableWhenEnabled;
 
-    private string doNotUseCategory;
+    private readonly string doNotUseCategory = string.Empty;
     private bool doNotUseClickable;
-    private string doNotUseColour;
-    private string doNotUseDetailedText;
+    private string doNotUseColour = string.Empty;
+    private string doNotUseDetailedText = NotSet;
     private bool doNotUseEnabled;
     private string? doNotUseImageResourceName;
-    private string doNotUseImageResourceName2;
-    private string doNotUseLargeNumber;
+    private string? doNotUseImageResourceName2;
+    private string doNotUseLargeNumber = NotSet;
     private WidgetSize doNotUseSize;
-    private string doNotUseToolTip;
+    private string doNotUseToolTip = string.Empty;
     private bool doNotUseVisibility;
-    private string doNotUseWidgetStyle;
+    private readonly string doNotUseWidgetStyle = string.Empty;
 
     /// <summary>
     ///     Constructs a new instance of the <see cref="Widget" /> class.
@@ -77,19 +77,9 @@ public abstract class Widget : INotifyPropertyChanged
     }
 
     /// <summary>
-    ///     Occurs when the colour style has changed.
-    /// </summary>
-    public event EventHandler ColourStyleChanged;
-
-    /// <summary>
     ///     Occurs when a property value changes.
     /// </summary>
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    /// <summary>
-    ///     Occurs when the widget style has changed.
-    /// </summary>
-    public event EventHandler WidgetStyleChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     ///     Gets or sets the grouping category.
@@ -97,7 +87,7 @@ public abstract class Widget : INotifyPropertyChanged
     public string Category
     {
         get => this.doNotUseCategory;
-        protected set
+        protected init
         {
             this.doNotUseCategory = value;
             OnPropertyChanged();
@@ -125,13 +115,8 @@ public abstract class Widget : INotifyPropertyChanged
         get => this.doNotUseColour;
         protected set
         {
-            var changed = value != this.doNotUseColour;
             this.doNotUseColour = value;
             OnPropertyChanged();
-            if (changed)
-            {
-                ColourStyleChanged?.Invoke(this, EventArgs.Empty);
-            }
         }
     }
 
@@ -139,7 +124,7 @@ public abstract class Widget : INotifyPropertyChanged
     ///     Gets or sets the dependencies for this widget to function. See
     ///     <see cref="MonitorableDependencies" /> for a full list of supported dependency types.
     /// </summary>
-    public IEnumerable<Type> Dependencies { get; protected set; }
+    public IEnumerable<Type> Dependencies { get; protected init; } = Array.Empty<Type>();
 
     /// <summary>
     ///     Gets or sets the detailed text to show in the widget UI tile.
@@ -192,7 +177,7 @@ public abstract class Widget : INotifyPropertyChanged
     /// <summary>
     ///     Gets or sets the secondary image resource name.
     /// </summary>
-    public string ImageResourceName2
+    public string? ImageResourceName2
     {
         get => this.doNotUseImageResourceName2;
         set
@@ -218,17 +203,17 @@ public abstract class Widget : INotifyPropertyChanged
     /// <summary>
     ///     Gets or sets the name of the widget.
     /// </summary>
-    public string Name { get; protected set; }
+    public string Name { get; protected init; }
 
     /// <summary>
     ///     Gets or sets the recommended time interval update.
     /// </summary>
-    public TimeSpan? RecommendedTimeIntervalUpdate { get; protected set; }
+    public TimeSpan? RecommendedTimeIntervalUpdate { get; protected init; }
 
     /// <summary>
     ///     Gets or sets the sequence used to order the widgets in the UI.
     /// </summary>
-    public int Sequence { get; protected set; }
+    public int Sequence { get; protected init; }
 
     /// <summary>
     ///     Gets or sets the relative widget size.
@@ -257,7 +242,7 @@ public abstract class Widget : INotifyPropertyChanged
     }
 
     /// <summary>
-    ///     Gets or sets a value indicating whether this <see cref="Widget" /> is visibile. Ie: Has the user opted to hide this
+    ///     Gets or sets a value indicating whether this <see cref="Widget" /> is visible. Ie: Has the user opted to hide this
     ///     widget.
     /// </summary>
     public bool Visibility
@@ -276,15 +261,10 @@ public abstract class Widget : INotifyPropertyChanged
     public string WidgetStyle
     {
         get => this.doNotUseWidgetStyle;
-        protected set
+        protected init
         {
-            var changed = value != this.doNotUseWidgetStyle;
             this.doNotUseWidgetStyle = value;
             OnPropertyChanged();
-            if (changed)
-            {
-                WidgetStyleChanged?.Invoke(this, EventArgs.Empty);
-            }
         }
     }
 
@@ -298,7 +278,7 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     [NotifyPropertyChangedInvocator]
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         var handler = PropertyChanged;
         handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -308,13 +288,8 @@ public abstract class Widget : INotifyPropertyChanged
     ///     Validates the updated input to ensure it is compliant with this widget dependency requirements.
     ///     Called from <see cref="Update" />
     /// </summary>
-    protected bool ValidateUpdateInput(object[] input)
+    protected bool ValidateUpdateInput(object?[] input)
     {
-        if (input is null)
-        {
-            return false;
-        }
-
         var dependencies = Dependencies.ToList();
         if (dependencies.Count() > input.Length)
         {
@@ -327,7 +302,7 @@ public abstract class Widget : INotifyPropertyChanged
             var dependencyInstance = input[index++];
             if (dependencyInstance is null)
             {
-                // Allow this to continue, because nulls are valid when the dependency isnt available yet.
+                // Allow this to continue, because nulls are valid when the dependency isn't available yet.
                 nullCount++;
                 continue;
             }

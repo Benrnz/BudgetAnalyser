@@ -31,18 +31,17 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <summary>
         ///     Gets or sets the group heading.
         /// </summary>
-        public string Heading { get; set; }
+        public required string Heading { get; init; } = string.Empty;
 
         /// <summary>
         ///     Gets or sets the sequence.
         /// </summary>
-        public int Sequence { get; set; }
+        public int Sequence { get; init; }
 
         /// <summary>
         ///     Gets or sets the widgets in this group.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-            Justification = "Required for UI Binding.")]
-        public ObservableCollection<Widget> Widgets { get; set; }
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for UI Binding.")]
+        public required ObservableCollection<Widget> Widgets { get; init; }
     }
 }

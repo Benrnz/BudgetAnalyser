@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BudgetAnalyser.Engine.Widgets
+﻿namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
     ///     A Dto to persist a <see cref="SurprisePaymentWidget" />
@@ -11,11 +9,11 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <summary>
         ///     Gets or sets the frequency of the payment.
         /// </summary>
-        public WeeklyOrFortnightly Frequency { get; set; }
+        public WeeklyOrFortnightly Frequency { get; init; }
 
         /// <summary>
         ///     Gets or sets the payment start date.
         /// </summary>
-        public DateTime PaymentStartDate { get; set; }
+        public DateTime PaymentStartDate { get; init; }
     }
 }

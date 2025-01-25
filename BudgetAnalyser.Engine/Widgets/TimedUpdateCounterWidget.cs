@@ -9,6 +9,7 @@ namespace BudgetAnalyser.Engine.Widgets
     /// <summary>
     ///     A widget to counter and test the scheduled updates that should occur at defined regular time intervals.
     /// </summary>
+    [UsedImplicitly] // Instantiated by Widget Service / Repo
     public class TimedUpdateCounterWidget : Widget
     {
         private int refreshCount;
@@ -19,8 +20,8 @@ namespace BudgetAnalyser.Engine.Widgets
         public TimedUpdateCounterWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[]
-            {
+            Dependencies =
+            [
                 typeof(StatementModel),
                 typeof(BudgetCollection),
                 typeof(IBudgetCurrencyContext),
@@ -28,7 +29,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 typeof(IBudgetBucketRepository),
                 typeof(GlobalFilterCriteria),
                 typeof(LedgerCalculation)
-            };
+            ];
             RecommendedTimeIntervalUpdate = TimeSpan.FromSeconds(100);
             DetailedText = "Refresh Count";
             Name = "Refresh Interval Counter";
@@ -38,8 +39,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <summary>
         ///     Updates the widget with new input.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public override void Update([NotNull] params object[] input)
+        public override void Update(params object[] input)
         {
             if (input is null)
             {

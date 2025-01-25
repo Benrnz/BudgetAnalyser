@@ -1,5 +1,4 @@
-﻿using System;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
@@ -10,6 +9,7 @@ namespace BudgetAnalyser.Engine.Widgets
     ///     Exports summarised data from Ledger and Transactions to a file and uploads it to web storage.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
+    [UsedImplicitly] // Instantiated by Widget Service / Repo
     public sealed class UpdateMobileDataWidget : Widget
     {
         private const string WidgetLabel = "Upload mobile data";
@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public UpdateMobileDataWidget()
         {
             Category = WidgetGroup.PeriodicTrackingSectionName;
-            Dependencies = new[] { typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection), typeof(GlobalFilterCriteria) };
+            Dependencies = [typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection), typeof(GlobalFilterCriteria)];
             DetailedText = WidgetLabel;
             Sequence = 10;
             Clickable = true;
@@ -31,22 +31,22 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <summary>
         ///     The current Budget Collection held by this widget
         /// </summary>
-        public BudgetCollection BudgetCollection { get; private set; }
+        public BudgetCollection? BudgetCollection { get; private set; }
 
         /// <summary>
         ///     The current filter as held by this widget
         /// </summary>
-        public GlobalFilterCriteria Filter { get; private set; }
+        public GlobalFilterCriteria? Filter { get; private set; }
 
         /// <summary>
         ///     The current Ledger Book held by this widget
         /// </summary>
-        public LedgerBook LedgerBook { get; private set; }
+        public LedgerBook? LedgerBook { get; private set; }
 
         /// <summary>
         ///     The current Statement Model held by this widget
         /// </summary>
-        public StatementModel StatementModel { get; private set; }
+        public StatementModel? StatementModel { get; private set; }
 
         private bool lockActive;
 
@@ -63,8 +63,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <summary>
         ///     Updates the widget with new input.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public override void Update([NotNull] params object[] input)
+        public override void Update(params object[] input)
         {
             if (input is null)
             {

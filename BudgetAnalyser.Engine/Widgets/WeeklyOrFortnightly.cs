@@ -1,5 +1,4 @@
-﻿namespace BudgetAnalyser.Engine.Widgets
-{
+﻿namespace BudgetAnalyser.Engine.Widgets;
     /// <summary>
     ///     Represents a frequency
     /// </summary>
@@ -15,4 +14,3 @@
         /// </summary>
         Fortnightly
     }
-}
