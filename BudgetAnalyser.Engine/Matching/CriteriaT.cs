@@ -85,7 +85,7 @@ public class StringCriteria : Criteria<string>
     /// <summary>
     ///     Determines whether the value is equal to the <paramref name="operand2" /> but not neither can be blank nor null.
     /// </summary>
-    public override bool IsEqualButNotBlank(string operand2)
+    public override bool IsEqualButNotBlank(string? operand2)
     {
         if (string.IsNullOrWhiteSpace(Value) || string.IsNullOrWhiteSpace(operand2))
         {

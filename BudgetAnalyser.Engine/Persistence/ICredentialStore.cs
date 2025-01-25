@@ -20,5 +20,5 @@ public interface ICredentialStore
     ///     Retrieves the pass key.
     /// </summary>
     /// <returns>A credential object or null if no credentials have been provided by the user.</returns>
-    void SetPasskey(object passkey);
+    void SetPasskey(object? passkey);
 }

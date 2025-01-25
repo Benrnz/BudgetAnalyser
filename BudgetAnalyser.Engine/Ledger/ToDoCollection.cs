@@ -26,14 +26,14 @@ public class ToDoCollection : ObservableCollection<ToDoTask>
     ///     Forced removal of a task.
     /// </summary>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public bool RemoveReminderTask(ToDoTask task)
+    public void RemoveReminderTask(ToDoTask task)
     {
         if (task is null)
         {
             throw new ArgumentNullException(nameof(task));
         }
 
-        return Remove(task);
+        Remove(task);
     }
 
     /// <summary>

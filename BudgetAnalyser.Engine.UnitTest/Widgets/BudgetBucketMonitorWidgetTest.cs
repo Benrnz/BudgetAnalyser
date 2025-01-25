@@ -125,7 +125,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Widgets
         [Description("A transfer has taken place from InsHome in Savings, to Phone in Cheque for $100. This should be excluded from running balance of both buckets.")]
         public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
         {
-            this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
+            this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
 
             // Starting Phone Balance is Budget Amount: 150.00
             // Total Phone Statement transactions are: -20.00

@@ -89,7 +89,7 @@ public class RemainingSurplusWidgetTest : IDisposable
         this.budgetTestData.Output(this.outputWriter);
         myStatement.Output(DateTime.MinValue, this.outputWriter);
 
-        this.subject.Update(this.budgetTestData, myStatement, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
+        this.subject.Update(this.budgetTestData, myStatement, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
 
         this.subject.Value.ShouldBe(607.73);
         /*
@@ -107,7 +107,7 @@ public class RemainingSurplusWidgetTest : IDisposable
     public void Update_ShouldBeZero_WhenSurplusIsOverdrawnAndExcludeAutoMatchedTransactionsInCalculation()
     {
         this.budgetTestData.Model.Incomes.First().Amount = 2500;
-        this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
+        this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
         // Begin Date 20/10/2015 EndDate 19/11/2015
         // Starting Surplus is: 2175.00
         // Total Surplus transactions are: -835.69

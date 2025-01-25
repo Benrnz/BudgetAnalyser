@@ -4,8 +4,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services;
 
 /// <summary>
-///     An interface describing how to maintain <see cref="MatchingRule" />s.
-///     The collections are owned by the consumer and passed into this service to be manipulated.
+///     An interface describing how to maintain <see cref="MatchingRule" />s. The collections are owned by the consumer and passed into this service to be manipulated.
 ///     This service is designed to be stateful.
 /// </summary>
 public interface ITransactionRuleService : INotifyDatabaseChanges, IServiceFoundation
@@ -29,8 +28,8 @@ public interface ITransactionRuleService : INotifyDatabaseChanges, IServiceFound
     /// <param name="transactionTypeName">Name of the transaction type to match. If null, it will not be used to match.</param>
     /// <param name="amount">The exact amount to match.</param>
     /// <param name="andMatching">
-    ///     If true, they are matched using an AND operator and all elements must be matched for the rule to match the
-    ///     transaction. Otherwise, chosen elements are matched using an OR operator.
+    ///     If true, they are matched using an AND operator and all elements must be matched for the rule to match the transaction. Otherwise, chosen elements are matched using an OR
+    ///     operator.
     /// </param>
     /// <returns>The new matching rule.</returns>
     MatchingRule CreateNewRule(
@@ -50,8 +49,8 @@ public interface ITransactionRuleService : INotifyDatabaseChanges, IServiceFound
     /// <param name="transactionTypeName">Name of the transaction type to match. If null, it will not be used to match.</param>
     /// <param name="amount">The exact amount to match.</param>
     /// <param name="andMatching">
-    ///     If true, they are matched using an AND operator and all elements must be matched for the rule to match the
-    ///     transaction. Otherwise, chosen elements are matched using an OR operator.
+    ///     If true, they are matched using an AND operator and all elements must be matched for the rule to match the transaction. Otherwise, chosen elements are matched using an OR
+    ///     operator.
     /// </param>
     /// <returns>The new matching rule.</returns>
     SingleUseMatchingRule CreateNewSingleUseRule(
@@ -93,9 +92,6 @@ public interface ITransactionRuleService : INotifyDatabaseChanges, IServiceFound
     /// <exception cref="System.ArgumentNullException">
     ///     <paramref name="ruleToRemove" />
     /// </exception>
-    /// <exception cref="System.InvalidOperationException">
-    ///     Will be thrown when the service has not yet been initialised by calling
-    ///     <see cref="ISupportsModelPersistence.LoadAsync" />
-    /// </exception>
+    /// <exception cref="System.InvalidOperationException">Will be thrown when the service has not yet been initialised by calling<see cref="ISupportsModelPersistence.LoadAsync" /></exception>
     bool RemoveRule(MatchingRule ruleToRemove);
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -9,158 +6,181 @@ using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Services
+namespace BudgetAnalyser.Engine.Services;
+
+[AutoRegisterWithIoC(SingleInstance = true)]
+[UsedImplicitly] // Used by IoC
+internal class LedgerService(
+    ILedgerBookRepository ledgerRepository,
+    IAccountTypeRepository accountTypeRepository,
+    ILedgerBucketFactory ledgerBucketFactory,
+    MonitorableDependencies monitorableDependencies)
+    : ILedgerService, ISupportsModelPersistence
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
-    internal class LedgerService : ILedgerService, ISupportsModelPersistence
+    private readonly IAccountTypeRepository accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
+    private readonly ILedgerBucketFactory ledgerBucketFactory = ledgerBucketFactory ?? throw new ArgumentNullException(nameof(ledgerBucketFactory));
+    private readonly ILedgerBookRepository ledgerRepository = ledgerRepository ?? throw new ArgumentNullException(nameof(ledgerRepository));
+    private readonly MonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
+
+    /// <inheritdoc />
+    public event EventHandler? Closed;
+
+    /// <inheritdoc />
+    public event EventHandler? NewDataSourceAvailable;
+
+    /// <inheritdoc />
+    public event EventHandler? Saved;
+
+    /// <inheritdoc />
+    public event EventHandler<ValidatingEventArgs>? Saving;
+
+    /// <inheritdoc />
+    public event EventHandler<ValidatingEventArgs>? Validating;
+
+    /// <inheritdoc />
+    public LedgerBook? LedgerBook { get; private set; }
+
+    /// <inheritdoc />
+    public void MoveLedgerToAccount(LedgerBucket ledger, Account storedInAccount)
     {
-        private readonly IAccountTypeRepository accountTypeRepository;
-        private readonly ILedgerBucketFactory ledgerBucketFactory;
-        private readonly ILedgerBookRepository ledgerRepository;
-        private readonly MonitorableDependencies monitorableDependencies;
-
-        public LedgerService(
-            [NotNull] ILedgerBookRepository ledgerRepository,
-            [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] ILedgerBucketFactory ledgerBucketFactory,
-            [NotNull] MonitorableDependencies monitorableDependencies)
+        if (ledger is null)
         {
-            if (ledgerRepository is null)
-            {
-                throw new ArgumentNullException(nameof(ledgerRepository));
-            }
-
-            if (accountTypeRepository is null)
-            {
-                throw new ArgumentNullException(nameof(accountTypeRepository));
-            }
-
-            if (ledgerBucketFactory is null)
-            {
-                throw new ArgumentNullException(nameof(ledgerBucketFactory));
-            }
-
-            if (monitorableDependencies is null)
-            {
-                throw new ArgumentNullException(nameof(monitorableDependencies));
-            }
-
-            this.ledgerRepository = ledgerRepository;
-            this.accountTypeRepository = accountTypeRepository;
-            this.ledgerBucketFactory = ledgerBucketFactory;
-            this.monitorableDependencies = monitorableDependencies;
+            throw new ArgumentNullException(nameof(ledger));
         }
 
-        public event EventHandler Closed;
-        public event EventHandler NewDataSourceAvailable;
-        public event EventHandler Saved;
-        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
-        public event EventHandler<ValidatingEventArgs> Validating;
-
-        public ApplicationDataType DataType => ApplicationDataType.Ledger;
-
-        public LedgerBook LedgerBook { get; private set; }
-        public int LoadSequence => 50;
-
-        public void MoveLedgerToAccount(LedgerBucket ledger, Account storedInAccount)
+        if (storedInAccount is null)
         {
-            if (ledger is null)
-            {
-                throw new ArgumentNullException(nameof(ledger));
-            }
-            if (storedInAccount is null)
-            {
-                throw new ArgumentNullException(nameof(storedInAccount));
-            }
-
-            LedgerBook.SetLedgerAccount(ledger, storedInAccount);
+            throw new ArgumentNullException(nameof(storedInAccount));
         }
 
-        public void RenameLedgerBook(string newName)
+        if (LedgerBook is null)
         {
-            if (newName is null)
-            {
-                throw new ArgumentNullException(nameof(newName));
-            }
-
-            LedgerBook.Name = newName;
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
         }
 
-        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
-        {
-            if (bucket is null)
-            {
-                throw new ArgumentNullException(nameof(bucket));
-            }
-            if (storeInThisAccount is null)
-            {
-                throw new ArgumentNullException(nameof(storeInThisAccount));
-            }
+        LedgerBook.SetLedgerAccount(ledger, storedInAccount);
+    }
 
-            var newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
-            return LedgerBook.AddLedger(newLedger);
+    /// <inheritdoc />
+    public void RenameLedgerBook(string newName)
+    {
+        if (LedgerBook is null)
+        {
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
         }
 
-        public IEnumerable<Account> ValidLedgerAccounts()
+        if (newName is null)
         {
-            return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
+            throw new ArgumentNullException(nameof(newName));
         }
 
-        public void Close()
+        LedgerBook.Name = newName;
+    }
+
+    /// <inheritdoc />
+    public void TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
+    {
+        if (LedgerBook is null)
         {
-            LedgerBook = null;
-            Closed?.Invoke(this, EventArgs.Empty);
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
         }
 
-        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+        if (bucket is null)
         {
-            if (applicationDatabase.LedgerBookStorageKey.IsNothing())
-            {
-                throw new ArgumentNullException(nameof(applicationDatabase));
-            }
-
-            await this.ledgerRepository.CreateNewAndSaveAsync(applicationDatabase.LedgerBookStorageKey);
-            await LoadAsync(applicationDatabase);
+            throw new ArgumentNullException(nameof(bucket));
         }
 
-        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
+        if (storeInThisAccount is null)
         {
-            if (applicationDatabase is null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabase));
-            }
-
-            LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey), applicationDatabase.IsEncrypted);
-
-            this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
-            NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
+            throw new ArgumentNullException(nameof(storeInThisAccount));
         }
 
-        public async Task SaveAsync(ApplicationDatabase applicationDatabase)
+        var newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
+        LedgerBook.AddLedger(newLedger);
+    }
+
+    /// <inheritdoc />
+    public IEnumerable<Account> ValidLedgerAccounts()
+    {
+        return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
+    }
+
+    /// <inheritdoc />
+    public ApplicationDataType DataType => ApplicationDataType.Ledger;
+
+    /// <inheritdoc />
+    public int LoadSequence => 50;
+
+    /// <inheritdoc />
+    public void Close()
+    {
+        LedgerBook = null;
+        Closed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <inheritdoc />
+    public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+    {
+        if (applicationDatabase.LedgerBookStorageKey.IsNothing())
         {
-            Saving?.Invoke(this, new AdditionalInformationRequestedEventArgs());
-
-            var messages = new StringBuilder();
-            if (!LedgerBook.Validate(messages))
-            {
-                throw new ValidationWarningException("Ledger Book is invalid, cannot save at this time:\n" + messages);
-            }
-
-            await this.ledgerRepository.SaveAsync(LedgerBook, applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey), applicationDatabase.IsEncrypted);
-            this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
-            Saved?.Invoke(this, EventArgs.Empty);
+            throw new ArgumentNullException(nameof(applicationDatabase));
         }
 
-        public void SavePreview()
+        await this.ledgerRepository.CreateNewAndSaveAsync(applicationDatabase.LedgerBookStorageKey);
+        await LoadAsync(applicationDatabase);
+    }
+
+    /// <inheritdoc />
+    public async Task LoadAsync(ApplicationDatabase applicationDatabase)
+    {
+        if (applicationDatabase is null)
         {
+            throw new ArgumentNullException(nameof(applicationDatabase));
         }
 
-        public bool ValidateModel(StringBuilder messages)
-        {
-            var handler = Validating;
-            handler?.Invoke(this, new ValidatingEventArgs());
+        LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey), applicationDatabase.IsEncrypted);
 
-            return LedgerBook.Validate(messages);
+        this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
+        NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <inheritdoc />
+    public async Task SaveAsync(ApplicationDatabase applicationDatabase)
+    {
+        if (LedgerBook is null)
+        {
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
         }
+
+        Saving?.Invoke(this, new ValidatingEventArgs());
+
+        var messages = new StringBuilder();
+        if (!LedgerBook.Validate(messages))
+        {
+            throw new ValidationWarningException("Ledger Book is invalid, cannot save at this time:\n" + messages);
+        }
+
+        await this.ledgerRepository.SaveAsync(LedgerBook, applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey), applicationDatabase.IsEncrypted);
+        this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
+        Saved?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <inheritdoc />
+    public void SavePreview()
+    {
+    }
+
+    /// <inheritdoc />
+    public bool ValidateModel(StringBuilder messages)
+    {
+        if (LedgerBook is null)
+        {
+            throw new InvalidOperationException("Ledger Book file has not been loaded.");
+        }
+
+        var handler = Validating;
+        handler?.Invoke(this, new ValidatingEventArgs());
+
+        return LedgerBook.Validate(messages);
     }
 }

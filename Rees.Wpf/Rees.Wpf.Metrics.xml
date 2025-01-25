@@ -1,0 +1,2173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeMetricsReport Version="1.0">
+  <Targets>
+    <Target Name="Rees.Wpf.csproj">
+      <Assembly Name="Rees.Wpf, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Metrics>
+          <Metric Name="MaintainabilityIndex" Value="83" />
+          <Metric Name="CyclomaticComplexity" Value="206" />
+          <Metric Name="ClassCoupling" Value="52" />
+          <Metric Name="DepthOfInheritance" Value="7" />
+          <Metric Name="SourceLines" Value="1661" />
+          <Metric Name="ExecutableLines" Value="267" />
+        </Metrics>
+        <Namespaces>
+          <Namespace Name="Rees.Wpf">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="90" />
+              <Metric Name="CyclomaticComplexity" Value="29" />
+              <Metric Name="ClassCoupling" Value="15" />
+              <Metric Name="DepthOfInheritance" Value="7" />
+              <Metric Name="SourceLines" Value="193" />
+              <Metric Name="ExecutableLines" Value="38" />
+            </Metrics>
+            <Types>
+              <NamedType Name="BubbleScrollEventBehaviour">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="80" />
+                  <Metric Name="CyclomaticComplexity" Value="3" />
+                  <Metric Name="ClassCoupling" Value="7" />
+                  <Metric Name="DepthOfInheritance" Value="7" />
+                  <Metric Name="SourceLines" Value="25" />
+                  <Metric Name="ExecutableLines" Value="7" />
+                </Metrics>
+                <Members>
+                  <Method Name="void BubbleScrollEventBehaviour.OnAttached()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\BubbleScrollEventBehaviour.cs" Line="10">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="86" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void BubbleScrollEventBehaviour.OnDetaching()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\BubbleScrollEventBehaviour.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="86" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void BubbleScrollEventBehaviour.AssociatedObject_PreviewMouseWheel(object sender, MouseWheelEventArgs e)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\BubbleScrollEventBehaviour.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="76" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="ControllerBase">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="95" />
+                  <Metric Name="CyclomaticComplexity" Value="2" />
+                  <Metric Name="ClassCoupling" Value="3" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
+                  <Metric Name="SourceLines" Value="22" />
+                  <Metric Name="ExecutableLines" Value="1" />
+                </Metrics>
+                <Members>
+                  <Method Name="ControllerBase.ControllerBase(IMessenger messenger)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\ControllerBase.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Property Name="Dispatcher ControllerBase.Dispatcher" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\ControllerBase.cs" Line="27">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="Dispatcher ControllerBase.Dispatcher.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\ControllerBase.cs" Line="27">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                </Members>
+              </NamedType>
+              <NamedType Name="IInitializableController">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="100" />
+                  <Metric Name="CyclomaticComplexity" Value="1" />
+                  <Metric Name="ClassCoupling" Value="0" />
+                  <Metric Name="DepthOfInheritance" Value="0" />
+                  <Metric Name="SourceLines" Value="12" />
+                  <Metric Name="ExecutableLines" Value="0" />
+                </Metrics>
+                <Members>
+                  <Method Name="void IInitializableController.Initialize()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\IInitializableController.cs" Line="13">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="MessageBase">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="100" />
+                  <Metric Name="CyclomaticComplexity" Value="2" />
+                  <Metric Name="ClassCoupling" Value="0" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="18" />
+                  <Metric Name="ExecutableLines" Value="0" />
+                </Metrics>
+                <Members>
+                  <Method Name="MessageBase.MessageBase()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\MessageBase.cs" Line="8">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Property Name="object? MessageBase.Sender" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\MessageBase.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="object? MessageBase.Sender.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\MessageBase.cs" Line="17">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                </Members>
+              </NamedType>
+              <NamedType Name="WpfViewLoader&lt;T&gt;">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="77" />
+                  <Metric Name="CyclomaticComplexity" Value="21" />
+                  <Metric Name="ClassCoupling" Value="5" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="103" />
+                  <Metric Name="ExecutableLines" Value="30" />
+                </Metrics>
+                <Members>
+                  <Property Name="double? WpfViewLoader&lt;T&gt;.Height" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="13">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="double? WpfViewLoader&lt;T&gt;.Height.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="13">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WpfViewLoader&lt;T&gt;.Height.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="13">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="double? WpfViewLoader&lt;T&gt;.MinHeight" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="14">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="double? WpfViewLoader&lt;T&gt;.MinHeight.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="14">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WpfViewLoader&lt;T&gt;.MinHeight.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="14">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="double? WpfViewLoader&lt;T&gt;.MinWidth" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="double? WpfViewLoader&lt;T&gt;.MinWidth.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="15">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WpfViewLoader&lt;T&gt;.MinWidth.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="15">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="T? WpfViewLoader&lt;T&gt;.TargetWindow" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="T? WpfViewLoader&lt;T&gt;.TargetWindow.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="16">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WpfViewLoader&lt;T&gt;.TargetWindow.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="16">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="double? WpfViewLoader&lt;T&gt;.Width" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="double? WpfViewLoader&lt;T&gt;.Width.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="17">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WpfViewLoader&lt;T&gt;.Width.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="17">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Method Name="void WpfViewLoader&lt;T&gt;.Close()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="79" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void WpfViewLoader&lt;T&gt;.Show(object context)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="37">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="67" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="26" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="bool? WpfViewLoader&lt;T&gt;.ShowDialog(object context)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="66">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void WpfViewLoader&lt;T&gt;.ConfigureWindow(object context)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="78">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="59" />
+                      <Metric Name="CyclomaticComplexity" Value="5" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="27" />
+                      <Metric Name="ExecutableLines" Value="13" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="T WpfViewLoader&lt;T&gt;.CreateWindow()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\WpfViewLoader.cs" Line="105">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="Rees.Wpf.Contracts">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="95" />
+              <Metric Name="CyclomaticComplexity" Value="32" />
+              <Metric Name="ClassCoupling" Value="4" />
+              <Metric Name="DepthOfInheritance" Value="0" />
+              <Metric Name="SourceLines" Value="191" />
+              <Metric Name="ExecutableLines" Value="8" />
+            </Metrics>
+            <Types>
+              <NamedType Name="IUserInputBox">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="87" />
+                  <Metric Name="CyclomaticComplexity" Value="1" />
+                  <Metric Name="ClassCoupling" Value="0" />
+                  <Metric Name="DepthOfInheritance" Value="0" />
+                  <Metric Name="SourceLines" Value="14" />
+                  <Metric Name="ExecutableLines" Value="2" />
+                </Metrics>
+                <Members>
+                  <Method Name="string IUserInputBox.Show(string heading, string question, string defaultInput = &quot;&quot;)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserInputBox.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="87" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="IUserMessageBox">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="86" />
+                  <Metric Name="CyclomaticComplexity" Value="3" />
+                  <Metric Name="ClassCoupling" Value="2" />
+                  <Metric Name="DepthOfInheritance" Value="0" />
+                  <Metric Name="SourceLines" Value="30" />
+                  <Metric Name="ExecutableLines" Value="4" />
+                </Metrics>
+                <Members>
+                  <Method Name="void IUserMessageBox.Show(string message, string headingCaption = &quot;&quot;)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserMessageBox.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void IUserMessageBox.Show(string headingCaption, string format, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserMessageBox.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void IUserMessageBox.Show(Exception ex, string message)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserMessageBox.cs" Line="33">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="IUserPromptOpenFile">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="100" />
+                  <Metric Name="CyclomaticComplexity" Value="12" />
+                  <Metric Name="ClassCoupling" Value="1" />
+                  <Metric Name="DepthOfInheritance" Value="0" />
+                  <Metric Name="SourceLines" Value="44" />
+                  <Metric Name="ExecutableLines" Value="0" />
+                </Metrics>
+                <Members>
+                  <Property Name="bool? IUserPromptOpenFile.AddExtension" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="11">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? IUserPromptOpenFile.AddExtension.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="11">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptOpenFile.AddExtension.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="11">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="bool? IUserPromptOpenFile.CheckFileExists" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? IUserPromptOpenFile.CheckFileExists.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="16">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptOpenFile.CheckFileExists.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="16">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string IUserPromptOpenFile.DefaultExt" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="21">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string IUserPromptOpenFile.DefaultExt.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="21">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptOpenFile.DefaultExt.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="21">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string IUserPromptOpenFile.FileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string IUserPromptOpenFile.FileName.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="26">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string IUserPromptOpenFile.Filter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="31">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string IUserPromptOpenFile.Filter.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="31">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptOpenFile.Filter.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="31">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string IUserPromptOpenFile.Title" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="36">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string IUserPromptOpenFile.Title.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="36">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptOpenFile.Title.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="36">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Method Name="bool? IUserPromptOpenFile.ShowDialog()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptOpenFile.cs" Line="45">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="IUserPromptSaveFile">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="100" />
+                  <Metric Name="CyclomaticComplexity" Value="12" />
+                  <Metric Name="ClassCoupling" Value="1" />
+                  <Metric Name="DepthOfInheritance" Value="0" />
+                  <Metric Name="SourceLines" Value="44" />
+                  <Metric Name="ExecutableLines" Value="0" />
+                </Metrics>
+                <Members>
+                  <Property Name="bool? IUserPromptSaveFile.AddExtension" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="11">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? IUserPromptSaveFile.AddExtension.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="11">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptSaveFile.AddExtension.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="11">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="bool? IUserPromptSaveFile.CheckPathExists" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? IUserPromptSaveFile.CheckPathExists.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="16">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptSaveFile.CheckPathExists.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="16">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string IUserPromptSaveFile.DefaultExt" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="21">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string IUserPromptSaveFile.DefaultExt.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="21">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptSaveFile.DefaultExt.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="21">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string IUserPromptSaveFile.FileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string IUserPromptSaveFile.FileName.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="26">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string IUserPromptSaveFile.Filter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="31">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string IUserPromptSaveFile.Filter.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="31">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptSaveFile.Filter.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="31">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string IUserPromptSaveFile.Title" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="36">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string IUserPromptSaveFile.Title.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="36">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void IUserPromptSaveFile.Title.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="36">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Method Name="bool? IUserPromptSaveFile.ShowDialog()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserPromptSaveFile.cs" Line="45">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="IUserQuestionBoxYesNo">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="93" />
+                  <Metric Name="CyclomaticComplexity" Value="2" />
+                  <Metric Name="ClassCoupling" Value="1" />
+                  <Metric Name="DepthOfInheritance" Value="0" />
+                  <Metric Name="SourceLines" Value="23" />
+                  <Metric Name="ExecutableLines" Value="2" />
+                </Metrics>
+                <Members>
+                  <Method Name="bool? IUserQuestionBoxYesNo.Show(string question, string heading = &quot;&quot;)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserQuestionBoxYesNo.cs" Line="14">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="87" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="bool? IUserQuestionBoxYesNo.Show(string heading, string questionFormat, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IUserQuestionBoxYesNo.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="IViewLoader">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="100" />
+                  <Metric Name="CyclomaticComplexity" Value="1" />
+                  <Metric Name="ClassCoupling" Value="1" />
+                  <Metric Name="DepthOfInheritance" Value="0" />
+                  <Metric Name="SourceLines" Value="15" />
+                  <Metric Name="ExecutableLines" Value="0" />
+                </Metrics>
+                <Members>
+                  <Method Name="bool? IViewLoader.ShowDialog(object context)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Contracts\IViewLoader.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="IWaitCursor">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="100" />
+                  <Metric Name="CyclomaticComplexity" Value="1" />
+                  <Metric Name="ClassCoupling" Value="1" />
+                  <Metric Name="DepthOfInheritance" Value="0" />
+                  <Metric Name="SourceLines" Value="6" />
+                  <Metric Name="ExecutableLines" Value="0" />
+                </Metrics>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="Rees.Wpf.Converters">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="81" />
+              <Metric Name="CyclomaticComplexity" Value="56" />
+              <Metric Name="ClassCoupling" Value="13" />
+              <Metric Name="DepthOfInheritance" Value="1" />
+              <Metric Name="SourceLines" Value="663" />
+              <Metric Name="ExecutableLines" Value="92" />
+            </Metrics>
+            <Types>
+              <NamedType Name="BoolToVisibility2Converter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="86" />
+                  <Metric Name="CyclomaticComplexity" Value="4" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="42" />
+                  <Metric Name="ExecutableLines" Value="4" />
+                </Metrics>
+                <Members>
+                  <Method Name="object BoolToVisibility2Converter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\BoolToVisibility2Converter.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="3" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="19" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object BoolToVisibility2Converter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\BoolToVisibility2Converter.cs" Line="45">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="ConvertToStringConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="70" />
+                  <Metric Name="CyclomaticComplexity" Value="6" />
+                  <Metric Name="ClassCoupling" Value="8" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="55" />
+                  <Metric Name="ExecutableLines" Value="13" />
+                </Metrics>
+                <Members>
+                  <Method Name="object? ConvertToStringConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\ConvertToStringConverter.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="62" />
+                      <Metric Name="CyclomaticComplexity" Value="5" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="37" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object ConvertToStringConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\ConvertToStringConverter.cs" Line="56">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="DebuggerConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="90" />
+                  <Metric Name="CyclomaticComplexity" Value="2" />
+                  <Metric Name="ClassCoupling" Value="4" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="36" />
+                  <Metric Name="ExecutableLines" Value="4" />
+                </Metrics>
+                <Members>
+                  <Method Name="object? DebuggerConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\DebuggerConverter.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object? DebuggerConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\DebuggerConverter.cs" Line="37">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="MultiBoolAndBoolConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="81" />
+                  <Metric Name="CyclomaticComplexity" Value="3" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="55" />
+                  <Metric Name="ExecutableLines" Value="7" />
+                </Metrics>
+                <Members>
+                  <Method Name="object MultiBoolAndBoolConverter.Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\MultiBoolAndBoolConverter.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="74" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="29" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object[] MultiBoolAndBoolConverter.ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\MultiBoolAndBoolConverter.cs" Line="57">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="18" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="MultiBoolToVisibilityConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="80" />
+                  <Metric Name="CyclomaticComplexity" Value="4" />
+                  <Metric Name="ClassCoupling" Value="7" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="64" />
+                  <Metric Name="ExecutableLines" Value="7" />
+                </Metrics>
+                <Members>
+                  <Method Name="object MultiBoolToVisibilityConverter.Convert(object[]? values, Type targetType, object parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\MultiBoolToVisibilityConverter.cs" Line="35">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="3" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="38" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object[] MultiBoolToVisibilityConverter.ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\MultiBoolToVisibilityConverter.cs" Line="66">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="18" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="NotBoolToVisibilityConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="86" />
+                  <Metric Name="CyclomaticComplexity" Value="4" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="42" />
+                  <Metric Name="ExecutableLines" Value="4" />
+                </Metrics>
+                <Members>
+                  <Method Name="object NotBoolToVisibilityConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NotBoolToVisibilityConverter.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="3" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="19" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object NotBoolToVisibilityConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NotBoolToVisibilityConverter.cs" Line="45">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="NotNullToBoolConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="93" />
+                  <Metric Name="CyclomaticComplexity" Value="2" />
+                  <Metric Name="ClassCoupling" Value="5" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="37" />
+                  <Metric Name="ExecutableLines" Value="3" />
+                </Metrics>
+                <Members>
+                  <Method Name="object NotNullToBoolConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NotNullToBoolConverter.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="89" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="14" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object NotNullToBoolConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NotNullToBoolConverter.cs" Line="38">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="NotNullToVisibilityConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="68" />
+                  <Metric Name="CyclomaticComplexity" Value="8" />
+                  <Metric Name="ClassCoupling" Value="8" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="55" />
+                  <Metric Name="ExecutableLines" Value="13" />
+                </Metrics>
+                <Members>
+                  <Method Name="object NotNullToVisibilityConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NotNullToVisibilityConverter.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="60" />
+                      <Metric Name="CyclomaticComplexity" Value="7" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="31" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object NotNullToVisibilityConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NotNullToVisibilityConverter.cs" Line="57">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="NullToBoolConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="97" />
+                  <Metric Name="CyclomaticComplexity" Value="2" />
+                  <Metric Name="ClassCoupling" Value="5" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="37" />
+                  <Metric Name="ExecutableLines" Value="2" />
+                </Metrics>
+                <Members>
+                  <Method Name="object NullToBoolConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NullToBoolConverter.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="96" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="14" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object NullToBoolConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NullToBoolConverter.cs" Line="38">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="NullToVisibilityConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="68" />
+                  <Metric Name="CyclomaticComplexity" Value="8" />
+                  <Metric Name="ClassCoupling" Value="8" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="55" />
+                  <Metric Name="ExecutableLines" Value="13" />
+                </Metrics>
+                <Members>
+                  <Method Name="object NullToVisibilityConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NullToVisibilityConverter.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="60" />
+                      <Metric Name="CyclomaticComplexity" Value="7" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="31" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object NullToVisibilityConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\NullToVisibilityConverter.cs" Line="57">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="TextToResourceControlTemplateConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="87" />
+                  <Metric Name="CyclomaticComplexity" Value="3" />
+                  <Metric Name="ClassCoupling" Value="7" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="39" />
+                  <Metric Name="ExecutableLines" Value="3" />
+                </Metrics>
+                <Members>
+                  <Method Name="object? TextToResourceControlTemplateConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\TextToResourceControlTemplateConverter.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="82" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object TextToResourceControlTemplateConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\TextToResourceControlTemplateConverter.cs" Line="42">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="TextToStaticResourceConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="79" />
+                  <Metric Name="CyclomaticComplexity" Value="3" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="49" />
+                  <Metric Name="ExecutableLines" Value="6" />
+                </Metrics>
+                <Members>
+                  <Method Name="object? TextToStaticResourceConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\TextToStaticResourceConverter.cs" Line="29">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="21" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object TextToStaticResourceConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\TextToStaticResourceConverter.cs" Line="52">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="ZeroToVisibilityConverter">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="71" />
+                  <Metric Name="CyclomaticComplexity" Value="7" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="58" />
+                  <Metric Name="ExecutableLines" Value="13" />
+                </Metrics>
+                <Members>
+                  <Method Name="object ZeroToVisibilityConverter.Convert(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\ZeroToVisibilityConverter.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="63" />
+                      <Metric Name="CyclomaticComplexity" Value="6" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="34" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object ZeroToVisibilityConverter.ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\Converters\ZeroToVisibilityConverter.cs" Line="60">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="Rees.Wpf.UserInteraction">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="76" />
+              <Metric Name="CyclomaticComplexity" Value="78" />
+              <Metric Name="ClassCoupling" Value="30" />
+              <Metric Name="DepthOfInheritance" Value="2" />
+              <Metric Name="SourceLines" Value="524" />
+              <Metric Name="ExecutableLines" Value="115" />
+            </Metrics>
+            <Types>
+              <NamedType Name="MessageBoxBase">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="81" />
+                  <Metric Name="CyclomaticComplexity" Value="8" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="76" />
+                  <Metric Name="ExecutableLines" Value="12" />
+                </Metrics>
+                <Members>
+                  <Method Name="void MessageBoxBase.Show(string message, string headingCaption = &quot;&quot;)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\MessageBoxBase.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MessageBoxBase.Show(string headingCaption, string format, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\MessageBoxBase.cs" Line="27">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MessageBoxBase.Show(string format, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\MessageBoxBase.cs" Line="35">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MessageBoxBase.Show(Exception ex, string message)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\MessageBoxBase.cs" Line="42">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MessageBoxBase.Show(Exception ex, string format, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\MessageBoxBase.cs" Line="51">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="object[] MessageBoxBase.PrependElement(object newElement, object[] existingArray)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\MessageBoxBase.cs" Line="60">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="3" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="28" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="WindowsInputBox">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="75" />
+                  <Metric Name="CyclomaticComplexity" Value="10" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="61" />
+                  <Metric Name="ExecutableLines" Value="17" />
+                </Metrics>
+                <Members>
+                  <Field Name="IViewLoader WindowsInputBox.viewLoader" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="11">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="WindowsInputBox.WindowsInputBox(IViewLoader viewLoader)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="92" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Property Name="string WindowsInputBox.Heading" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsInputBox.Heading.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="26">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsInputBox.Heading.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="26">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsInputBox.Input" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="32">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsInputBox.Input.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="32">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsInputBox.Input.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="32">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsInputBox.Question" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="37">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsInputBox.Question.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="37">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsInputBox.Question.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="37">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Method Name="string WindowsInputBox.Show(string heading, string question, string defaultInput = &quot;&quot;)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsInputBox.cs" Line="48">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="59" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="26" />
+                      <Metric Name="ExecutableLines" Value="13" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="WindowsMessageBox">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="70" />
+                  <Metric Name="CyclomaticComplexity" Value="14" />
+                  <Metric Name="ClassCoupling" Value="10" />
+                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="SourceLines" Value="121" />
+                  <Metric Name="ExecutableLines" Value="28" />
+                </Metrics>
+                <Members>
+                  <Method Name="void WindowsMessageBox.Show(string message, string headingCaption = &quot;&quot;)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsMessageBox.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="55" />
+                      <Metric Name="CyclomaticComplexity" Value="6" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="48" />
+                      <Metric Name="ExecutableLines" Value="16" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void WindowsMessageBox.Show(Exception? ex, string message)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsMessageBox.cs" Line="66">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="CyclomaticComplexity" Value="3" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="21" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void WindowsMessageBox.Show(string format, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsMessageBox.cs" Line="89">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void WindowsMessageBox.Show(string headingCaption, string format, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsMessageBox.cs" Line="101">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="89" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void WindowsMessageBox.Show(Exception ex, string format, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsMessageBox.cs" Line="113">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="89" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="string WindowsMessageBox.RationaliseMessage(string message)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsMessageBox.cs" Line="118">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="77" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="WindowsOpenFileDialog">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="77" />
+                  <Metric Name="CyclomaticComplexity" Value="21" />
+                  <Metric Name="ClassCoupling" Value="5" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="90" />
+                  <Metric Name="ExecutableLines" Value="24" />
+                </Metrics>
+                <Members>
+                  <Property Name="bool? WindowsOpenFileDialog.AddExtension" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? WindowsOpenFileDialog.AddExtension.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="15">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsOpenFileDialog.AddExtension.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="15">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="bool? WindowsOpenFileDialog.CheckFileExists" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? WindowsOpenFileDialog.CheckFileExists.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="20">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsOpenFileDialog.CheckFileExists.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="20">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="bool? WindowsOpenFileDialog.CheckPathExists" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? WindowsOpenFileDialog.CheckPathExists.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="25">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsOpenFileDialog.CheckPathExists.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="25">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsOpenFileDialog.DefaultExt" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="30">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsOpenFileDialog.DefaultExt.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="30">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsOpenFileDialog.DefaultExt.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="30">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsOpenFileDialog.FileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="35">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsOpenFileDialog.FileName.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="35">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsOpenFileDialog.FileName.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="35">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsOpenFileDialog.Filter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="40">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsOpenFileDialog.Filter.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="40">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsOpenFileDialog.Filter.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="40">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="int? WindowsOpenFileDialog.FilterIndex" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="45">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="int? WindowsOpenFileDialog.FilterIndex.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="45">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsOpenFileDialog.FilterIndex.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="45">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsOpenFileDialog.Title" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="50">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsOpenFileDialog.Title.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="50">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsOpenFileDialog.Title.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="50">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Method Name="bool? WindowsOpenFileDialog.ShowDialog()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsOpenFileDialog.cs" Line="59">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="52" />
+                      <Metric Name="CyclomaticComplexity" Value="5" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="44" />
+                      <Metric Name="ExecutableLines" Value="20" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="WindowsQuestionBoxYesNo">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="76" />
+                  <Metric Name="CyclomaticComplexity" Value="5" />
+                  <Metric Name="ClassCoupling" Value="8" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="44" />
+                  <Metric Name="ExecutableLines" Value="5" />
+                </Metrics>
+                <Members>
+                  <Method Name="bool? WindowsQuestionBoxYesNo.Show(string question, string heading = &quot;&quot;)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsQuestionBoxYesNo.cs" Line="23">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="4" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="23" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="bool? WindowsQuestionBoxYesNo.Show(string heading, string questionFormat, object argument1, params object[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsQuestionBoxYesNo.cs" Line="47">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="89" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="14" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="WindowsSaveFileDialog">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="77" />
+                  <Metric Name="CyclomaticComplexity" Value="18" />
+                  <Metric Name="ClassCoupling" Value="5" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="80" />
+                  <Metric Name="ExecutableLines" Value="21" />
+                </Metrics>
+                <Members>
+                  <Property Name="bool? WindowsSaveFileDialog.AddExtension" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? WindowsSaveFileDialog.AddExtension.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="15">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsSaveFileDialog.AddExtension.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="15">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="bool? WindowsSaveFileDialog.CheckPathExists" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="bool? WindowsSaveFileDialog.CheckPathExists.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="20">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsSaveFileDialog.CheckPathExists.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="20">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsSaveFileDialog.DefaultExt" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsSaveFileDialog.DefaultExt.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="25">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsSaveFileDialog.DefaultExt.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="25">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsSaveFileDialog.FileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="30">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsSaveFileDialog.FileName.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="30">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsSaveFileDialog.FileName.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="30">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsSaveFileDialog.Filter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="35">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsSaveFileDialog.Filter.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="35">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsSaveFileDialog.Filter.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="35">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="int? WindowsSaveFileDialog.FilterIndex" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="40">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="int? WindowsSaveFileDialog.FilterIndex.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="40">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsSaveFileDialog.FilterIndex.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="40">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Property Name="string WindowsSaveFileDialog.Title" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="45">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string WindowsSaveFileDialog.Title.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="45">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void WindowsSaveFileDialog.Title.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="45">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Method Name="bool? WindowsSaveFileDialog.ShowDialog()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WindowsSaveFileDialog.cs" Line="54">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="55" />
+                      <Metric Name="CyclomaticComplexity" Value="4" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="39" />
+                      <Metric Name="ExecutableLines" Value="17" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="WpfWaitCursor">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="74" />
+                  <Metric Name="CyclomaticComplexity" Value="2" />
+                  <Metric Name="ClassCoupling" Value="9" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="31" />
+                  <Metric Name="ExecutableLines" Value="8" />
+                </Metrics>
+                <Members>
+                  <Field Name="Dispatcher WpfWaitCursor.dispatcher" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WpfWaitCursor.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="WpfWaitCursor.WpfWaitCursor()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WpfWaitCursor.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="84" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void WpfWaitCursor.Dispose()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\UserInteraction\WpfWaitCursor.cs" Line="33">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="74" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="Rees.Wpf.ValidationRules">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="72" />
+              <Metric Name="CyclomaticComplexity" Value="11" />
+              <Metric Name="ClassCoupling" Value="6" />
+              <Metric Name="DepthOfInheritance" Value="2" />
+              <Metric Name="SourceLines" Value="90" />
+              <Metric Name="ExecutableLines" Value="14" />
+            </Metrics>
+            <Types>
+              <NamedType Name="GreaterThanOrEqualToZeroRule">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="68" />
+                  <Metric Name="CyclomaticComplexity" Value="4" />
+                  <Metric Name="ClassCoupling" Value="5" />
+                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="SourceLines" Value="29" />
+                  <Metric Name="ExecutableLines" Value="6" />
+                </Metrics>
+                <Members>
+                  <Method Name="ValidationResult GreaterThanOrEqualToZeroRule.Validate(object? value, CultureInfo cultureInfo)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\ValidationRules\GreaterThanOrEqualToZeroRule.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="4" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="23" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="NotEqualToZeroRule">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="68" />
+                  <Metric Name="CyclomaticComplexity" Value="4" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="SourceLines" Value="29" />
+                  <Metric Name="ExecutableLines" Value="6" />
+                </Metrics>
+                <Members>
+                  <Method Name="ValidationResult NotEqualToZeroRule.Validate(object? value, CultureInfo cultureInfo)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\ValidationRules\NotEqualToZeroRule.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="4" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="23" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="StringNotNullAndNotBlankRule">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="81" />
+                  <Metric Name="CyclomaticComplexity" Value="3" />
+                  <Metric Name="ClassCoupling" Value="3" />
+                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="SourceLines" Value="23" />
+                  <Metric Name="ExecutableLines" Value="2" />
+                </Metrics>
+                <Members>
+                  <Method Name="ValidationResult StringNotNullAndNotBlankRule.Validate(object? value, CultureInfo cultureInfo)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\Rees.Wpf\ValidationRules\StringNotNullAndNotBlankRule.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="81" />
+                      <Metric Name="CyclomaticComplexity" Value="3" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+        </Namespaces>
+      </Assembly>
+    </Target>
+  </Targets>
+</CodeMetricsReport>

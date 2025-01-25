@@ -26,7 +26,7 @@ public class BudgetController : ControllerBase, IShowableController
     private string budgetMenuItemName;
     private Guid dialogCorrelationId;
     private bool doNotUseDirty;
-    private BudgetCurrencyContext doNotUseModel;
+    private BudgetCurrencyContext? doNotUseModel;
     private bool doNotUseShownBudget;
     private decimal expenseTotal;
     private decimal incomeTotal;
@@ -36,9 +36,9 @@ public class BudgetController : ControllerBase, IShowableController
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public BudgetController(
-        [NotNull] UiContext uiContext,
-        [NotNull] IBudgetMaintenanceService maintenanceService,
-        [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
+        UiContext uiContext,
+        IBudgetMaintenanceService maintenanceService,
+        IApplicationDatabaseFacade applicationDatabaseService)
         : base(uiContext.Messenger)
     {
         if (uiContext is null)
@@ -87,7 +87,7 @@ public class BudgetController : ControllerBase, IShowableController
         }
     }
 
-    public BudgetCollection Budgets { get; private set; }
+    public BudgetCollection? Budgets { get; private set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public BudgetCurrencyContext? CurrentBudget
@@ -99,12 +99,12 @@ public class BudgetController : ControllerBase, IShowableController
             try
             {
                 this.isLoadingBudgetModel = true;
-                this.doNotUseModel = value;
                 ReleaseListBindingEvents();
+                this.doNotUseModel = value;
                 if (this.doNotUseModel is null)
                 {
-                    Incomes = null;
-                    Expenses = null;
+                    Incomes = new BindingList<Income>();
+                    Expenses = new BindingList<Expense>();
                 }
                 else
                 {
@@ -115,7 +115,7 @@ public class BudgetController : ControllerBase, IShowableController
                 OnPropertyChanged(nameof(Expenses));
                 OnExpenseAmountPropertyChanged(null, EventArgs.Empty);
                 OnIncomeAmountPropertyChanged(null, EventArgs.Empty);
-                OnPropertyChanged(nameof(CurrentBudget));
+                OnPropertyChanged();
             }
             finally
             {
@@ -212,7 +212,7 @@ public class BudgetController : ControllerBase, IShowableController
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public string TruncatedFileName => Budgets.StorageKey.TruncateLeft(100, true);
+    public string? TruncatedFileName => Budgets?.StorageKey.TruncateLeft(100, true);
 
     public bool Shown
     {
@@ -305,11 +305,20 @@ public class BudgetController : ControllerBase, IShowableController
 
     private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
     {
-        CurrentBudget = new BudgetCurrencyContext(this.maintenanceService.Budgets, this.maintenanceService.Budgets.CurrentActiveBudget);
-        Budgets = CurrentBudget.BudgetCollection;
-        BudgetBucketBindingSource.BucketRepository = this.maintenanceService.BudgetBucketRepository;
+        if (this.maintenanceService.Budgets is null)
+        {
+            CurrentBudget = null;
+            Budgets = null;
+        }
+        else
+        {
+            CurrentBudget = new BudgetCurrencyContext(this.maintenanceService.Budgets, this.maintenanceService.Budgets.CurrentActiveBudget);
+            Budgets = CurrentBudget.BudgetCollection;
+            BudgetBucketBindingSource.BucketRepository = this.maintenanceService.BudgetBucketRepository;
+            Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
+        }
+
         OnPropertyChanged(nameof(TruncatedFileName));
-        Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
     }
 
     private void OnDeleteBudgetItemCommandExecute(object budgetItem)
@@ -396,10 +405,9 @@ public class BudgetController : ControllerBase, IShowableController
         Dirty = false;
     }
 
-    private void OnSavingNotificationReceived(object sender, AdditionalInformationRequestedEventArgs args)
+    private void OnSavingNotificationReceived(object sender, ValidatingEventArgs args)
     {
         SyncDataToBudgetService();
-        args.Context = CurrentBudget.Model;
     }
 
     private void OnShowAllCommandExecuted()
@@ -417,6 +425,11 @@ public class BudgetController : ControllerBase, IShowableController
 
     private void ReleaseListBindingEvents()
     {
+        if (CurrentBudget is null)
+        {
+            return;
+        }
+
         CurrentBudget.Model.PropertyChanged -= BudgetModelOnPropertyChanged;
         if (Incomes is not null)
         {
@@ -440,10 +453,7 @@ public class BudgetController : ControllerBase, IShowableController
     private void SelectOtherBudget()
     {
         this.dialogCorrelationId = Guid.NewGuid();
-        var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok)
-        {
-            CorrelationId = this.dialogCorrelationId
-        };
+        var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok) { CorrelationId = this.dialogCorrelationId };
         Messenger.Send(popUpRequest);
     }
 
