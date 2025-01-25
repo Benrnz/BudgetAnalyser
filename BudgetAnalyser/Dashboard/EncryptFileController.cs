@@ -245,6 +245,7 @@ namespace BudgetAnalyser.Dashboard
             if (message.Response == ShellDialogButton.Cancel)
             {
                 this.password?.Dispose();
+                this.password = new SecureString();
                 return;
             }
 
