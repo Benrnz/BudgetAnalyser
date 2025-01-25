@@ -1,18 +1,17 @@
-﻿namespace BudgetAnalyser.Engine.Widgets
+﻿namespace BudgetAnalyser.Engine.Widgets;
+
+/// <summary>
+///     Represents a frequency
+/// </summary>
+public enum WeeklyOrFortnightly
 {
     /// <summary>
-    ///     Represents a frequency
+    ///     Occurs weekly
     /// </summary>
-    public enum WeeklyOrFortnightly
-    {
-        /// <summary>
-        ///     Occurs weekly
-        /// </summary>
-        Weekly,
+    Weekly,
 
-        /// <summary>
-        ///     Occurs fortnightly
-        /// </summary>
-        Fortnightly
-    }
+    /// <summary>
+    ///     Occurs fortnightly
+    /// </summary>
+    Fortnightly
 }

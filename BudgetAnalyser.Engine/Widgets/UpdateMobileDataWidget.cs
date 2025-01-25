@@ -1,94 +1,92 @@
-﻿using System;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Widgets
+namespace BudgetAnalyser.Engine.Widgets;
+
+/// <summary>
+///     Exports summarised data from Ledger and Transactions to a file and uploads it to web storage.
+/// </summary>
+/// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
+[UsedImplicitly] // Instantiated by Widget Service / Repo
+public sealed class UpdateMobileDataWidget : Widget
 {
+    private const string WidgetLabel = "Upload mobile data";
+
+    private bool lockActive;
+
     /// <summary>
-    ///     Exports summarised data from Ledger and Transactions to a file and uploads it to web storage.
+    ///     Initializes a new instance of the <see cref="CurrentFileWidget" /> class.
     /// </summary>
-    /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
-    public sealed class UpdateMobileDataWidget : Widget
+    public UpdateMobileDataWidget()
     {
-        private const string WidgetLabel = "Upload mobile data";
+        Category = WidgetGroup.PeriodicTrackingSectionName;
+        Dependencies = [typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection), typeof(GlobalFilterCriteria)];
+        DetailedText = WidgetLabel;
+        Sequence = 10;
+        Clickable = true;
+        Enabled = false;
+        ImageResourceName = "MobileImage";
+    }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="CurrentFileWidget" /> class.
-        /// </summary>
-        public UpdateMobileDataWidget()
+    /// <summary>
+    ///     The current Budget Collection held by this widget
+    /// </summary>
+    public BudgetCollection? BudgetCollection { get; private set; }
+
+    /// <summary>
+    ///     The current filter as held by this widget
+    /// </summary>
+    public GlobalFilterCriteria? Filter { get; private set; }
+
+    /// <summary>
+    ///     The current Ledger Book held by this widget
+    /// </summary>
+    public LedgerBook? LedgerBook { get; private set; }
+
+    /// <summary>
+    ///     The current Statement Model held by this widget
+    /// </summary>
+    public StatementModel? StatementModel { get; private set; }
+
+    /// <summary>
+    ///     This method is used to disable the widget while upload is active.
+    /// </summary>
+    public void LockWhileUploading(bool @lock)
+    {
+        this.lockActive = @lock;
+        Enabled = !this.lockActive;
+        DetailedText = this.lockActive ? "Uploading..." : WidgetLabel;
+    }
+
+    /// <summary>
+    ///     Updates the widget with new input.
+    /// </summary>
+    public override void Update(params object[] input)
+    {
+        if (input is null)
         {
-            Category = WidgetGroup.PeriodicTrackingSectionName;
-            Dependencies = new[] { typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection), typeof(GlobalFilterCriteria) };
-            DetailedText = WidgetLabel;
-            Sequence = 10;
-            Clickable = true;
-            Enabled = false;
-            ImageResourceName = "MobileImage";
+            throw new ArgumentNullException(nameof(input));
         }
 
-        /// <summary>
-        ///     The current Budget Collection held by this widget
-        /// </summary>
-        public BudgetCollection BudgetCollection { get; private set; }
+        Enabled = false;
 
-        /// <summary>
-        ///     The current filter as held by this widget
-        /// </summary>
-        public GlobalFilterCriteria Filter { get; private set; }
-
-        /// <summary>
-        ///     The current Ledger Book held by this widget
-        /// </summary>
-        public LedgerBook LedgerBook { get; private set; }
-
-        /// <summary>
-        ///     The current Statement Model held by this widget
-        /// </summary>
-        public StatementModel StatementModel { get; private set; }
-
-        private bool lockActive;
-
-        /// <summary>
-        /// This method is used to disable the widget while upload is active.
-        /// </summary>
-        public void LockWhileUploading(bool @lock)
+        if (!ValidateUpdateInput(input))
         {
-            this.lockActive = @lock;
-            Enabled = !this.lockActive;
-            DetailedText = this.lockActive ? "Uploading..." : WidgetLabel;
+            return;
         }
 
-        /// <summary>
-        ///     Updates the widget with new input.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public override void Update([NotNull] params object[] input)
+        LedgerBook = (LedgerBook)input[0];
+        StatementModel = (StatementModel)input[1];
+        BudgetCollection = (BudgetCollection)input[2];
+        Filter = (GlobalFilterCriteria)input[3];
+
+        if (LedgerBook is null || StatementModel is null || BudgetCollection is null || Filter is null)
         {
-            if (input is null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-
-            Enabled = false;
-
-            if (!ValidateUpdateInput(input))
-            {
-                return;
-            }
-
-            LedgerBook = (LedgerBook)input[0];
-            StatementModel = (StatementModel)input[1];
-            BudgetCollection = (BudgetCollection)input[2];
-            Filter = (GlobalFilterCriteria)input[3];
-
-            if (LedgerBook is null || StatementModel is null || BudgetCollection is null || Filter is null)
-            {
-                return;
-            }
-
-            Enabled = true;
+            return;
         }
+
+        Enabled = true;
     }
 }
