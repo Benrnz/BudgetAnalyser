@@ -3,7 +3,6 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services;
 
@@ -24,22 +23,15 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
     private readonly MonitorableDependencies monitorableDependencies;
     private readonly IMatchingRuleFactory ruleFactory;
     private readonly IMatchingRuleRepository ruleRepository;
-    private string rulesStorageKey;
+    private string rulesStorageKey = string.Empty;
 
     public TransactionRuleService(
-        [NotNull]
         IMatchingRuleRepository ruleRepository,
-        [NotNull]
         ILogger logger,
-        [NotNull]
         IMatchmaker matchmaker,
-        [NotNull]
         IMatchingRuleFactory ruleFactory,
-        [NotNull]
         IEnvironmentFolders environmentFolders,
-        [NotNull]
         MonitorableDependencies monitorableDependencies,
-        [NotNull]
         IBudgetBucketRepository bucketRepo)
     {
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
@@ -54,18 +46,18 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         this.matchingRulesGroupedByBucket = new List<RulesGroupedByBucket>();
     }
 
-    public event EventHandler Closed;
-    public event EventHandler NewDataSourceAvailable;
-    public event EventHandler Saved;
-    public event EventHandler<ValidatingEventArgs> Saving;
-    public event EventHandler<ValidatingEventArgs> Validating;
+    public event EventHandler? Closed;
+    public event EventHandler? NewDataSourceAvailable;
+    public event EventHandler? Saved;
+    public event EventHandler<ValidatingEventArgs>? Saving;
+    public event EventHandler<ValidatingEventArgs>? Validating;
 
     public ApplicationDataType DataType => ApplicationDataType.MatchingRules;
     public int LoadSequence => 50;
 
     public void Close()
     {
-        this.rulesStorageKey = null;
+        this.rulesStorageKey = string.Empty;
         this.matchingRulesGroupedByBucket.Clear();
         this.matchingRules.Clear();
         var handler = Closed;
@@ -141,7 +133,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
     public IEnumerable<MatchingRule> MatchingRules => this.matchingRules;
     public IEnumerable<RulesGroupedByBucket> MatchingRulesGroupedByBucket => this.matchingRulesGroupedByBucket;
 
-    public MatchingRule CreateNewRule(string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
+    public MatchingRule CreateNewRule(string bucketCode, string? description, string[] references, string? transactionTypeName, decimal? amount, bool andMatching)
     {
         var rule = this.ruleFactory.CreateNewRule(bucketCode, description, references, transactionTypeName, amount, andMatching);
         AddRule(rule);
@@ -149,9 +141,9 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
     }
 
     public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode,
-        string description,
+        string? description,
         string[] references,
-        string transactionTypeName,
+        string? transactionTypeName,
         decimal? amount,
         bool andMatching)
     {
@@ -209,7 +201,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
     public bool Match(IEnumerable<Transaction> transactions)
     {
         var matchesMade = this.matchmaker.Match(transactions, MatchingRules);
-        this.logger.LogInfo(l => "TransactionRuleService: Removing any SingleUseRules that have been used.");
+        this.logger.LogInfo(_ => "TransactionRuleService: Removing any SingleUseRules that have been used.");
         foreach (var rule in MatchingRules.OfType<SingleUseMatchingRule>().ToList())
         {
             if (rule.MatchCount > 0)
@@ -298,14 +290,14 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
             // Add to existing group object.
             if (existingGroup.Rules.Contains(ruleToAdd))
             {
-                this.logger.LogWarning(l => "Attempt to add new rule failed. Rule already exists in Grouped collection. " + ruleToAdd);
+                this.logger.LogWarning(_ => "Attempt to add new rule failed. Rule already exists in Grouped collection. " + ruleToAdd);
                 return;
             }
 
             existingGroup.Rules.Add(ruleToAdd);
             if (MatchingRules.Contains(ruleToAdd))
             {
-                this.logger.LogWarning(l => "Attempt to add new rule failed. Rule already exists in main collection. " + ruleToAdd);
+                this.logger.LogWarning(_ => "Attempt to add new rule failed. Rule already exists in main collection. " + ruleToAdd);
                 return;
             }
 
@@ -320,7 +312,6 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         this.matchingRules.AddRange(repoRules);
 
         IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)
-            .Where(group => group.Key is not null)
             // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
             .Select(group => new RulesGroupedByBucket(group.Key, group))
             .OrderBy(group => group.Bucket.Code);

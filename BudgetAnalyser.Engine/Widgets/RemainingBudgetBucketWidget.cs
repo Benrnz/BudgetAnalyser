@@ -126,6 +126,12 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         Enabled = true;
         var totalBudget = LedgerBucketBalanceOrBudgetAmount();
         Maximum = Convert.ToDouble(totalBudget);
+        if (totalBudget == 0)
+        {
+            // This can happen when creating a new budget analysis file and no data is populated yet.
+            Enabled = false;
+            return;
+        }
 
         var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
         if (ledgerLine is null)
