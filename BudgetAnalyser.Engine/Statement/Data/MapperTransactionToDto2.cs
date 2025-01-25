@@ -32,14 +32,14 @@ public class MapperTransactionToDto2(IAccountTypeRepository accountRepo, IBudget
     {
         var txn = new Transaction
         {
-            Account = this.accountRepo.GetByKey(dto.Account) ?? throw new NotSupportedException($"Statement file data contains unsupported Account '{dto.Account}"),
+            Account = this.accountRepo.GetByKey(dto.Account) ?? throw new DataFormatException($"Statement file data contains unsupported Account '{dto.Account}"),
             Amount = dto.Amount,
             Date = dto.Date,
             Description = dto.Description,
             BudgetBucket = string.IsNullOrWhiteSpace(dto.BudgetBucketCode)
                 ? null
                 : this.bucketRepo.GetByCode(dto.BudgetBucketCode) ??
-                  throw new NotSupportedException($"Statement file data contains a unsupported BucketCode '{dto.BudgetBucketCode}' compared to Budget file."),
+                  throw new DataFormatException($"Statement file data contains a unsupported BucketCode '{dto.BudgetBucketCode}' compared to Budget file."),
             Id = dto.Id,
             Reference1 = dto.Reference1,
             Reference2 = dto.Reference2,

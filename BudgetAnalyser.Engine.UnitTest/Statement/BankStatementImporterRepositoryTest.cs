@@ -34,7 +34,7 @@ public class BankStatementImporterRepositoryTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NotSupportedException))]
+    [ExpectedException(typeof(DataFormatException))]
     public async Task ImportShouldThrowGivenNoImportersCanImport()
     {
         var model = await Subject.ImportAsync("Foo.bar", new ChequeAccount("Cheque"));

@@ -76,7 +76,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// <summary>
     ///     Gets the bucket to assign the transaction to if it matches the criteria specified in this rule.
     /// </summary>
-    public BudgetBucket Bucket => this.bucketRepository.GetByCode(BucketCode) ?? throw new NotSupportedException($"Bucket code '{BucketCode}' not supported");
+    public BudgetBucket Bucket => this.bucketRepository.GetByCode(BucketCode) ?? throw new DataFormatException($"Bucket code '{BucketCode}' not supported");
 
     /// <summary>
     ///     Gets or sets the bucket code. Used only in persisting the rule. The <see cref="Bucket" /> property is lazy loaded

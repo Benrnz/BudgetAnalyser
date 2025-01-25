@@ -12,6 +12,6 @@ internal partial class MapperExpenseDto2Expense(IBudgetBucketRepository bucketRe
 
     partial void ToModelPostprocessing(ExpenseDto dto, ref Expense model)
     {
-        model.Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) ?? throw new NotSupportedException($"Budget bucket {dto.BudgetBucketCode} from data file not found in budget repository.");
+        model.Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) ?? throw new DataFormatException($"Budget bucket {dto.BudgetBucketCode} from data file not found in budget repository.");
     }
 }

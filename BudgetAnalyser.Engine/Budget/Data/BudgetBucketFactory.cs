@@ -32,7 +32,7 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
                 var f = (FixedBudgetBucketDto)dto;
                 return new FixedBudgetProjectBucket(f.Code, f.Description, f.FixedBudgetAmount, f.Created);
             default:
-                throw new NotSupportedException("Unsupported Bucket type detected: " + dto);
+                throw new DataFormatException("Unsupported Bucket type detected: " + dto);
         }
     }
 
@@ -89,6 +89,6 @@ internal class BudgetBucketFactory : IBudgetBucketFactory
             return BucketDtoType.SpentPeriodicallyExpense;
         }
 
-        throw new NotSupportedException("Unsupported bucket type detected: " + bucket.GetType().FullName);
+        throw new DataFormatException("Unsupported bucket type detected: " + bucket.GetType().FullName);
     }
 }

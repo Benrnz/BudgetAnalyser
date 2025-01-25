@@ -41,6 +41,6 @@ public class BankStatementImporterRepository : IBankStatementImporterRepository
             }
         }
 
-        throw new NotSupportedException("The requested file name cannot be loaded. It is not of any known format.");
+        throw new DataFormatException("The requested file name cannot be loaded. It is not of any known format.");
     }
 }
