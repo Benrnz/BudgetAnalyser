@@ -1,9 +1,6 @@
-﻿using System;
-using System.Globalization;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets;
 
@@ -13,14 +10,14 @@ namespace BudgetAnalyser.Engine.Widgets;
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.ProgressBarWidget" />
 public class RemainingActualSurplusWidget : ProgressBarWidget
 {
-    private readonly string standardStyle;
-    private GlobalFilterCriteria filter;
-    private LedgerBook ledgerBook;
-    private LedgerCalculation ledgerCalculator;
-    private StatementModel statement;
-    private IBudgetCurrencyContext budget;
-    private ILogger logger;
     private readonly ILogger nullLogger = new NullLogger();
+    private readonly string standardStyle;
+    private IBudgetCurrencyContext? budget;
+    private GlobalFilterCriteria? filter;
+    private LedgerBook? ledgerBook;
+    private LedgerCalculation? ledgerCalculator;
+    private ILogger? logger;
+    private StatementModel? statement;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RemainingActualSurplusWidget" /> class.
@@ -30,16 +27,16 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         Category = WidgetGroup.PeriodicTrackingSectionName;
         DetailedText = "Bank Surplus";
         Name = "Surplus A";
-        Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation), typeof(IBudgetCurrencyContext), typeof(ILogger) };
+        Dependencies = [typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation), typeof(IBudgetCurrencyContext), typeof(ILogger)];
         this.standardStyle = "WidgetStandardStyle3";
     }
 
-    private ILogger Logger => this.logger == this.nullLogger ? null : this.logger;
+    private ILogger Logger => this.logger ?? this.nullLogger;
 
     /// <summary>
     ///     Updates the widget with new input.
     /// </summary>
-    public override void Update([NotNull] params object[] input)
+    public override void Update(params object[] input)
     {
         if (input is null)
         {
@@ -48,21 +45,21 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
 
         if (!ValidateUpdateInput(input))
         {
-
             Enabled = false;
             return;
         }
 
-        this.statement = (StatementModel)input[0];
-        this.filter = (GlobalFilterCriteria)input[1];
-        this.ledgerBook = (LedgerBook)input[2];
-        this.ledgerCalculator = (LedgerCalculation)input[3];
-        this.budget = (IBudgetCurrencyContext)input[4];
-        this.logger = (ILogger)input[5];
+        this.statement = input[0] as StatementModel;
+        this.filter = input[1] as GlobalFilterCriteria;
+        this.ledgerBook = input[2] as LedgerBook;
+        this.ledgerCalculator = input[3] as LedgerCalculation;
+        this.budget = input[4] as IBudgetCurrencyContext;
+        this.logger = input[5] as ILogger;
 
         if (this.ledgerBook is null
             || this.budget is null
             || this.statement is null
+            || this.ledgerCalculator is null
             || this.filter is null
             || this.filter.Cleared
             || this.filter.BeginDate is null
@@ -81,22 +78,22 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         }
 
         Enabled = true;
-        Logger.LogInfo(l => "Dependencies are valid, enabled == true");
+        Logger.LogInfo(_ => "Dependencies are valid, enabled == true");
         var openingBalance = CalculateOpeningBalance();
-        Logger.LogInfo(l => l.Format("Opening Balance = {0:C}", openingBalance));
+        Logger.LogInfo(_ => $"Opening Balance = {openingBalance:C}");
         var ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter.BeginDate.Value, this.filter.EndDate.Value);
         if (ledgerLine is null)
         {
             ToolTip = "No ledger entries can be found in the date range.";
             Enabled = false;
-            Logger.LogInfo(l => l.Format("No LedgerLine was found for the date range {0:d} and {1:d}", this.filter.BeginDate.Value, this.filter.EndDate.Value));
+            Logger.LogInfo(_ => $"No LedgerLine was found for the date range {this.filter.BeginDate.Value:d} and {this.filter.EndDate.Value:d}");
             return;
         }
 
-        Logger.LogInfo(l => l.Format("LedgerLine: {0:d} TotalBankBalance {1:C}", ledgerLine.Date, ledgerLine.TotalBankBalance));
+        Logger.LogInfo(_ => $"LedgerLine: {ledgerLine.Date:d} TotalBankBalance {ledgerLine.TotalBankBalance:C}");
 
         var remainingBalance = this.ledgerCalculator.CalculateCurrentPeriodSurplusBalance(ledgerLine, this.filter, this.statement);
-        Logger.LogInfo(l => l.Format("Remaining period surplus balance is: {0:C}", remainingBalance));
+        Logger.LogInfo(_ => $"Remaining period surplus balance is: {remainingBalance:C}");
 
         Maximum = Convert.ToDouble(openingBalance);
         Value = Convert.ToDouble(remainingBalance);
@@ -108,7 +105,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
 
     private decimal CalculateOpeningBalance()
     {
-        var line = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
+        var line = this.ledgerCalculator!.LocateApplicableLedgerLine(this.ledgerBook!, this.filter!);
         return line?.CalculatedSurplus ?? 0;
     }
 }

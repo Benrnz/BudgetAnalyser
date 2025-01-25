@@ -22,7 +22,8 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     protected RemainingBudgetBucketWidget()
     {
         Category = WidgetGroup.PeriodicTrackingSectionName;
-        Dependencies = [
+        Dependencies =
+        [
             typeof(IBudgetCurrencyContext),
             typeof(StatementModel),
             typeof(GlobalFilterCriteria),
@@ -184,7 +185,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
         catch (InvalidOperationException ex)
         {
-            this.logger?.LogError(ex, _ => $"Failed to initialise RemainingBudgetWidget for bucket {BucketCode}. Likely due to the budget being empty.");
+            this.logger?.LogError(ex, _ => $"Failed to initialise RemainingBudgetWidget for bucket '{BucketCode}'. Likely due to the budget being empty.");
             return -1;
         }
     }

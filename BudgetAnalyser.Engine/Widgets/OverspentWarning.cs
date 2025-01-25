@@ -3,56 +3,46 @@ using System.Text;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets;
 
 /// <summary>
-///     A widget to show the number of overspent buckets for the month. Compares actual spent transactions against a ledger
-///     in the ledgerbook, if there is one, or the current Budget if there isn't.
-///     The budget used is the currently selected budget from the <see cref="BudgetCurrencyContext" /> instance given.  It
-///     may not be the current one as compared to today's date.
+///     A widget to show the number of overspent buckets for the month. Compares actual spent transactions against a ledger in the ledger book, if there is one, or the current Budget if there isn't.
+///     The budget used is the currently selected budget from the <see cref="BudgetCurrencyContext" /> instance given.  It may not be the current one as compared to today's date.
 /// </summary>
 public class OverspentWarning : Widget
 {
     private readonly ILogger logger;
-    private decimal tolerance;
+
+    private readonly decimal tolerance;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="OverspentWarning" /> class.
     /// </summary>
+    // ReSharper disable once MemberCanBePrivate.Global // Instantiated by the Widget Service / Repo.
     public OverspentWarning()
     {
         Category = WidgetGroup.PeriodicTrackingSectionName;
         this.logger = new NullLogger();
-        Dependencies = new[] { typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
+        Dependencies = [typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation)];
         DetailedText = "Overspent";
         ImageResourceName = null;
-        RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
-        Tolerance = 10; // By default must be overspent by 10 dollars to be considered overspent.
+        RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(15);
+        this.tolerance = 10; // By default, must be overspent by 10 dollars to be considered overspent.
     }
 
     public OverspentWarning(ILogger logger) : this()
     {
+        // Only used in unit tests currently.
         this.logger = logger;
     }
 
-    internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; }
-
-    /// <summary>
-    ///     Gets or sets the tolerance dollar value.
-    ///     By default must be overspent by 10 dollars to be considered overspent.
-    /// </summary>
-    public decimal Tolerance
-    {
-        get => this.tolerance;
-        set => this.tolerance = Math.Abs(value);
-    }
+    internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; } = Array.Empty<KeyValuePair<BudgetBucket, decimal>>();
 
     /// <summary>
     ///     Updates the widget with new input.
     /// </summary>
-    public override void Update([NotNull] params object[] input)
+    public override void Update(params object[] input)
     {
         if (input is null)
         {
@@ -66,21 +56,16 @@ public class OverspentWarning : Widget
             return;
         }
 
-        var statement = (StatementModel)input[0];
-        var budget = (IBudgetCurrencyContext)input[1];
-        var filter = (GlobalFilterCriteria)input[2];
-        var ledgerBook = (LedgerBook)input[3];
-        var ledgerCalculator = (LedgerCalculation)input[4];
-
-        if (budget is null
-            || ledgerBook is null
-            || statement is null
-            || filter is null
+        if (input[1] is not IBudgetCurrencyContext budget
+            || input[3] is not LedgerBook ledgerBook
+            || input[0] is not StatementModel statement
+            || input[4] is not LedgerCalculation ledgerCalculator
+            || input[2] is not GlobalFilterCriteria filter
             || filter.Cleared
             || filter.BeginDate is null
             || filter.EndDate is null)
         {
-            this.logger.LogInfo(_ => "Statement, budget, ledgerbook, or ledgercalculator are null. Or date filter is invalid.");
+            this.logger.LogInfo(_ => "Statement, budget, ledger book, or ledger calculator are null. Or date filter is invalid.");
             Enabled = false;
             ToolTip = "LedgerBook, Statement, or Filter are not set/loaded.";
             return;
@@ -88,8 +73,7 @@ public class OverspentWarning : Widget
 
         if (!RemainingBudgetBucketWidget.ValidatePeriod(budget.Model.BudgetCycle, filter.BeginDate.Value, filter.EndDate.Value, out var validationMessage))
         {
-            this.logger.LogInfo(l =>
-                l.Format("Difference in months between begin and end != 1 month. BeginDate: {0}, EndDate: {1}", filter.BeginDate.Value, filter.EndDate.Value));
+            this.logger.LogInfo(_ => $"Difference in months between begin and end != 1 month. BeginDate: {filter.BeginDate.Value}, EndDate: {filter.EndDate.Value}");
             Enabled = false;
             ToolTip = validationMessage;
             return;
@@ -103,7 +87,7 @@ public class OverspentWarning : Widget
         }
 
         Enabled = true;
-        this.logger.LogInfo(l => l.Format("Using this LedgerEntryLine: {0}", ledgerLine?.Date));
+        this.logger.LogInfo(l => l.Format("Using this LedgerEntryLine: {0}", ledgerLine.Date));
         var currentLedgerBalances = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, statement);
         this.logger.LogInfo(l =>
         {
@@ -114,9 +98,9 @@ public class OverspentWarning : Widget
 
             return builder.ToString();
         });
-        var warnings = currentLedgerBalances.Count(balance => balance.Value < -Tolerance);
+        var warnings = currentLedgerBalances.Count(balance => balance.Value < -this.tolerance);
         var logWarning = warnings;
-        this.logger.LogInfo(l => l.Format("{0} overspent ledgers within tolerance {1} detected.", logWarning, Tolerance));
+        this.logger.LogInfo(l => l.Format("{0} overspent ledgers within tolerance {1} detected.", logWarning, this.tolerance));
         // Check other budget buckets that are not represented in the ledger book.
         warnings += SearchForOtherNonLedgerBookOverspentBuckets(statement, filter.BeginDate.Value, filter.EndDate.Value, budget, currentLedgerBalances);
 
@@ -125,7 +109,7 @@ public class OverspentWarning : Widget
             this.logger.LogInfo(l => l.Format("{0} total warnings found, updating UI.", warnings));
             LargeNumber = warnings.ToString(CultureInfo.CurrentCulture);
             var builder = new StringBuilder();
-            OverSpentSummary = currentLedgerBalances.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key);
+            OverSpentSummary = currentLedgerBalances.Where(kvp => kvp.Value < -this.tolerance).OrderBy(kvp => kvp.Key);
             foreach (var ledger in OverSpentSummary)
             {
                 builder.AppendFormat(CultureInfo.CurrentCulture, "{0} is overspent by {1:C}", ledger.Key, ledger.Value);
@@ -165,7 +149,7 @@ public class OverspentWarning : Widget
             var bucketBalance = expense.Amount + transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
             currentLedgerBalances.Add(expense.Bucket, bucketBalance);
             this.logger.LogInfo(l => l.Format("Found non-LedgerBook Bucket: {0} Bucket calc'd balance {1}", expense.Bucket.Code, bucketBalance));
-            if (bucketBalance < -Tolerance)
+            if (bucketBalance < -this.tolerance)
             {
                 this.logger.LogInfo(_ => "Bucket balance less than tolerance... Adding warning.");
                 warnings++;

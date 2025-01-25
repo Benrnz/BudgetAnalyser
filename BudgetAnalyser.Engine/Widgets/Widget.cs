@@ -50,7 +50,7 @@ public abstract class Widget : INotifyPropertyChanged
     private string doNotUseColour;
     private string doNotUseDetailedText;
     private bool doNotUseEnabled;
-    private string doNotUseImageResourceName;
+    private string? doNotUseImageResourceName;
     private string doNotUseImageResourceName2;
     private string doNotUseLargeNumber;
     private WidgetSize doNotUseSize;
@@ -179,7 +179,7 @@ public abstract class Widget : INotifyPropertyChanged
     /// <summary>
     ///     Gets or sets the name of the image resource used by this widget.
     /// </summary>
-    public string ImageResourceName
+    public string? ImageResourceName
     {
         get => this.doNotUseImageResourceName;
         protected set
