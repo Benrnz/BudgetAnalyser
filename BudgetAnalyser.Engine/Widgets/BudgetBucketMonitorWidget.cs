@@ -1,7 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
-
-namespace BudgetAnalyser.Engine.Widgets;
+﻿namespace BudgetAnalyser.Engine.Widgets;
 
 /// <summary>
 ///     A widget that monitors a bucket and tracks total spent for the month against funds available from the current
@@ -12,7 +9,7 @@ namespace BudgetAnalyser.Engine.Widgets;
 public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUserDefinedWidget
 {
     private readonly string disabledToolTip;
-    private string doNotUseId;
+    private string doNotUseId = "<NOT SET>";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetBucketMonitorWidget" /> class.
@@ -30,6 +27,10 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
         get => this.doNotUseId;
         set
         {
+            if (value == this.doNotUseId)
+            {
+                return;
+            }
             this.doNotUseId = value;
             OnPropertyChanged();
             BucketCode = Id;
@@ -46,6 +47,8 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     /// </summary>
     public void Initialise(MultiInstanceWidgetState state, ILogger logger)
     {
+        logger.LogInfo(_ => $"BudgetBucketMonitorWidget Initialised for Bucket:'{Id}'. Provided state Id is: {state.Id}");
+        Id = state.Id;
     }
 
     /// <summary>

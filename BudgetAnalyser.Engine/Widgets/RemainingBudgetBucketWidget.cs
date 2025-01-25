@@ -14,6 +14,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 {
     private readonly string standardStyle;
     private IBudgetBucketRepository? bucketRepository;
+    private ILogger? logger;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RemainingBudgetBucketWidget" /> class.
@@ -21,7 +22,15 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     protected RemainingBudgetBucketWidget()
     {
         Category = WidgetGroup.PeriodicTrackingSectionName;
-        Dependencies = [typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation)];
+        Dependencies = [
+            typeof(IBudgetCurrencyContext),
+            typeof(StatementModel),
+            typeof(GlobalFilterCriteria),
+            typeof(IBudgetBucketRepository),
+            typeof(LedgerBook),
+            typeof(LedgerCalculation),
+            typeof(ILogger)
+        ];
         RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(5);
         RemainingBudgetToolTip = "Remaining Balance for period is {0:C2} {1:P0}";
         this.standardStyle = "WidgetStandardStyle3";
@@ -95,6 +104,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         this.bucketRepository = (IBudgetBucketRepository)input[3];
         LedgerBook = (LedgerBook)input[4];
         LedgerCalculation = (LedgerCalculation)input[5];
+        this.logger = input[6] as ILogger;
 
         if (Statement is null
             || Budget is null
@@ -166,9 +176,17 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     {
         var ledgerLine = LedgerCalculation!.LocateApplicableLedgerLine(LedgerBook!, Filter!);
 
-        return LedgerBook is null || ledgerLine is null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode)
-            ? Budget!.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount
-            : ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
+        try
+        {
+            return LedgerBook is null || ledgerLine is null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode)
+                ? Budget!.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount
+                : ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
+        }
+        catch (InvalidOperationException ex)
+        {
+            this.logger?.LogError(ex, _ => $"Failed to initialise RemainingBudgetWidget for bucket {BucketCode}. Likely due to the budget being empty.");
+            return -1;
+        }
     }
 
     internal static bool ValidatePeriod(BudgetCycle budgetCycle, DateTime inclBeginDate, DateTime inclEndDate, out string validationMessage)
