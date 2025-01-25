@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Widgets
         string Id { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="IUserDefinedWidget" /> is visibile. Ie: It has been hidden
+        ///     Gets or sets a value indicating whether this <see cref="IUserDefinedWidget" /> is visible. Ie: It has been hidden
         ///     by the user.
         /// </summary>
         bool Visibility { get; set; }
