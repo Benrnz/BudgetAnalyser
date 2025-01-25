@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services;
 
@@ -8,6 +9,7 @@ namespace BudgetAnalyser.Engine.Services;
 ///     A service class to retrieve and prepare the Widgets and arrange them in a grouped fashion for display in the UI.
 /// </summary>
 [AutoRegisterWithIoC]
+[UsedImplicitly] // Used by IoC
 internal class WidgetService : IWidgetService
 {
     private static readonly Dictionary<string, int> GroupSequence = new()
@@ -16,27 +18,16 @@ internal class WidgetService : IWidgetService
     };
 
     private readonly IBudgetBucketRepository bucketRepository;
-    private readonly IBudgetRepository budgetRepo;
     private readonly IApplicationDatabaseService dbService;
-
     private readonly ILogger logger;
     private readonly IWidgetRepository widgetRepo;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="WidgetService" /> class.
     /// </summary>
-    /// <param name="widgetRepo">The widget repository.</param>
-    /// <param name="logger">The logger.</param>
-    /// <exception cref="System.ArgumentNullException">
-    /// </exception>
-    public WidgetService(IApplicationDatabaseService dbService,
-        IBudgetRepository budgetRepo,
-        IBudgetBucketRepository bucketRepository,
-        IWidgetRepository widgetRepo,
-        ILogger logger)
+    public WidgetService(IApplicationDatabaseService dbService, IBudgetBucketRepository bucketRepository, IWidgetRepository widgetRepo, ILogger logger)
     {
         this.dbService = dbService ?? throw new ArgumentNullException(nameof(dbService));
-        this.budgetRepo = budgetRepo ?? throw new ArgumentNullException(nameof(budgetRepo));
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.widgetRepo = widgetRepo ?? throw new ArgumentNullException(nameof(widgetRepo));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -46,7 +37,7 @@ internal class WidgetService : IWidgetService
     ///     Prepares the widgets.
     /// </summary>
     /// <param name="storedStates">The stored application state for widgets.</param>
-    public IEnumerable<WidgetGroup> PrepareWidgets(IEnumerable<WidgetPersistentState> storedStates)
+    public IEnumerable<WidgetGroup> PrepareWidgets(IEnumerable<WidgetPersistentState>? storedStates)
     {
         if (storedStates is not null)
         {
@@ -115,7 +106,7 @@ internal class WidgetService : IWidgetService
     public IUserDefinedWidget Create(string fullName, string bucketCode)
     {
         var bucket = this.bucketRepository.GetByCode(bucketCode) ?? throw new ArgumentException($"No Bucket with code {bucketCode} exists", nameof(bucketCode));
-        return this.widgetRepo.Create(fullName, bucketCode);
+        return this.widgetRepo.Create(fullName, bucket.Code);
     }
 
     private void CreateMultiInstanceWidget(MultiInstanceWidgetState multiInstanceState)

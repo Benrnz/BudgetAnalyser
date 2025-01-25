@@ -12,49 +12,49 @@ namespace BudgetAnalyser.Engine.Services;
 /// <seealso cref="BudgetAnalyser.Engine.Services.ITransactionRuleService" />
 /// <seealso cref="BudgetAnalyser.Engine.Services.ISupportsModelPersistence" />
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class TransactionRuleService : ITransactionRuleService, ISupportsModelPersistence
+internal class TransactionRuleService(
+    IMatchingRuleRepository ruleRepository,
+    ILogger logger,
+    IMatchmaker matchmaker,
+    IMatchingRuleFactory ruleFactory,
+    IEnvironmentFolders environmentFolders,
+    MonitorableDependencies monitorableDependencies,
+    IBudgetBucketRepository bucketRepo)
+    : ITransactionRuleService, ISupportsModelPersistence
 {
-    private readonly IBudgetBucketRepository bucketRepo;
-    private readonly IEnvironmentFolders environmentFolders;
-    private readonly ILogger logger;
-    private readonly List<MatchingRule> matchingRules;
-    private readonly List<RulesGroupedByBucket> matchingRulesGroupedByBucket;
-    private readonly IMatchmaker matchmaker;
-    private readonly MonitorableDependencies monitorableDependencies;
-    private readonly IMatchingRuleFactory ruleFactory;
-    private readonly IMatchingRuleRepository ruleRepository;
+    private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
+    private readonly IEnvironmentFolders environmentFolders = environmentFolders ?? throw new ArgumentNullException(nameof(environmentFolders));
+    private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly List<MatchingRule> matchingRules = new();
+    private readonly List<RulesGroupedByBucket> matchingRulesGroupedByBucket = new();
+    private readonly IMatchmaker matchmaker = matchmaker ?? throw new ArgumentNullException(nameof(matchmaker));
+    private readonly MonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
+    private readonly IMatchingRuleFactory ruleFactory = ruleFactory ?? throw new ArgumentNullException(nameof(ruleFactory));
+    private readonly IMatchingRuleRepository ruleRepository = ruleRepository ?? throw new ArgumentNullException(nameof(ruleRepository));
     private string rulesStorageKey = string.Empty;
 
-    public TransactionRuleService(
-        IMatchingRuleRepository ruleRepository,
-        ILogger logger,
-        IMatchmaker matchmaker,
-        IMatchingRuleFactory ruleFactory,
-        IEnvironmentFolders environmentFolders,
-        MonitorableDependencies monitorableDependencies,
-        IBudgetBucketRepository bucketRepo)
-    {
-        this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-        this.ruleRepository = ruleRepository ?? throw new ArgumentNullException(nameof(ruleRepository));
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.matchmaker = matchmaker ?? throw new ArgumentNullException(nameof(matchmaker));
-        this.ruleFactory = ruleFactory ?? throw new ArgumentNullException(nameof(ruleFactory));
-        this.environmentFolders = environmentFolders ?? throw new ArgumentNullException(nameof(environmentFolders));
-        this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
-
-        this.matchingRules = new List<MatchingRule>();
-        this.matchingRulesGroupedByBucket = new List<RulesGroupedByBucket>();
-    }
-
+    /// <inheritdoc />
     public event EventHandler? Closed;
+
+    /// <inheritdoc />
     public event EventHandler? NewDataSourceAvailable;
+
+    /// <inheritdoc />
     public event EventHandler? Saved;
+
+    /// <inheritdoc />
     public event EventHandler<ValidatingEventArgs>? Saving;
+
+    /// <inheritdoc />
     public event EventHandler<ValidatingEventArgs>? Validating;
 
+    /// <inheritdoc />
     public ApplicationDataType DataType => ApplicationDataType.MatchingRules;
+
+    /// <inheritdoc />
     public int LoadSequence => 50;
 
+    /// <inheritdoc />
     public void Close()
     {
         this.rulesStorageKey = string.Empty;
@@ -64,6 +64,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         handler?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public async Task CreateAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase.MatchingRulesCollectionStorageKey.IsNothing())
@@ -75,6 +76,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         await LoadAsync(applicationDatabase);
     }
 
+    /// <inheritdoc />
     public async Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
         this.matchingRules.Clear();
@@ -100,6 +102,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public async Task SaveAsync(ApplicationDatabase applicationDatabase)
     {
         var messages = new StringBuilder();
@@ -117,12 +120,14 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         Saved?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc />
     public void SavePreview()
     {
         var handler = Saving;
         handler?.Invoke(this, new ValidatingEventArgs());
     }
 
+    /// <inheritdoc />
     public bool ValidateModel(StringBuilder messages)
     {
         var handler = Validating;
@@ -130,9 +135,13 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         return true;
     }
 
+    /// <inheritdoc />
     public IEnumerable<MatchingRule> MatchingRules => this.matchingRules;
+
+    /// <inheritdoc />
     public IEnumerable<RulesGroupedByBucket> MatchingRulesGroupedByBucket => this.matchingRulesGroupedByBucket;
 
+    /// <inheritdoc />
     public MatchingRule CreateNewRule(string bucketCode, string? description, string[] references, string? transactionTypeName, decimal? amount, bool andMatching)
     {
         var rule = this.ruleFactory.CreateNewRule(bucketCode, description, references, transactionTypeName, amount, andMatching);
@@ -140,24 +149,16 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         return rule;
     }
 
-    public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode,
-        string? description,
-        string[] references,
-        string? transactionTypeName,
-        decimal? amount,
-        bool andMatching)
+    /// <inheritdoc />
+    public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string? description, string[] references, string? transactionTypeName, decimal? amount, bool andMatching)
     {
-        var rule = this.ruleFactory.CreateNewSingleUseRule(bucketCode, description, references, transactionTypeName,
-            amount, andMatching);
+        var rule = this.ruleFactory.CreateNewSingleUseRule(bucketCode, description, references, transactionTypeName, amount, andMatching);
         AddRule(rule);
         return rule;
     }
 
-    public bool IsRuleSimilar(SimilarMatchedRule rule,
-        DecimalCriteria amount,
-        StringCriteria description,
-        StringCriteria[] references,
-        StringCriteria transactionTypeName)
+    /// <inheritdoc />
+    public bool IsRuleSimilar(SimilarMatchedRule rule, DecimalCriteria amount, StringCriteria description, StringCriteria[] references, StringCriteria transactionTypeName)
     {
         IsSimilarRulePreconditions(rule, amount, description, references, transactionTypeName);
 
@@ -178,8 +179,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
 
         if (match)
         {
-            this.logger.LogInfo(
-                l => l.Format("Rule Match: {0} Existing Rule:{1} Criteria:{2}", match, rule, description));
+            this.logger.LogInfo(l => l.Format("Rule Match: {0} Existing Rule:{1} Criteria:{2}", match, rule, description));
             rule.AmountMatched = matchedByResults[0] && amount.Applicable;
             rule.DescriptionMatched = matchedByResults[1] && description.Applicable;
             rule.Reference1Matched = matchedByResults[2] && references[0].Applicable;
@@ -198,6 +198,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         return false;
     }
 
+    /// <inheritdoc />
     public bool Match(IEnumerable<Transaction> transactions)
     {
         var matchesMade = this.matchmaker.Match(transactions, MatchingRules);
@@ -213,6 +214,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         return matchesMade;
     }
 
+    /// <inheritdoc />
     public bool RemoveRule(MatchingRule ruleToRemove)
     {
         if (ruleToRemove is null)
@@ -222,8 +224,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
 
         if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
         {
-            throw new InvalidOperationException(
-                "Unable to remove a matching rule at this time, the service has not yet loaded a matching rule set.");
+            throw new InvalidOperationException("Unable to remove a matching rule at this time, the service has not yet loaded a matching rule set.");
         }
 
         var existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(g => g.Bucket == ruleToRemove.Bucket);
@@ -239,23 +240,15 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         this.logger.LogInfo(_ => "Matching Rule is being Removed: " + removedRule);
         if (!success1)
         {
-            this.logger.LogWarning(
-                _ => "Matching Rule was not removed successfully from the Grouped list: " + removedRule);
+            this.logger.LogWarning(_ => "Matching Rule was not removed successfully from the Grouped list: " + removedRule);
         }
 
         if (!success2)
         {
-            this.logger.LogWarning(
-                _ => "Matching Rule was not removed successfully from the flat list: " + removedRule);
+            this.logger.LogWarning(_ => "Matching Rule was not removed successfully from the flat list: " + removedRule);
         }
 
         return true;
-    }
-
-    protected virtual async Task<string> BuildDefaultFileName()
-    {
-        var path = await this.environmentFolders.ApplicationDataFolder();
-        return Path.Combine(path, "MatchingRules.xml");
     }
 
     private void AddRule(MatchingRule ruleToAdd)
@@ -307,6 +300,12 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         this.logger.LogInfo(_ => "Matching Rule Added: " + ruleToAdd);
     }
 
+    private async Task<string> BuildDefaultFileName()
+    {
+        var path = await this.environmentFolders.ApplicationDataFolder();
+        return Path.Combine(path, "MatchingRules.xml");
+    }
+
     private void InitialiseTheRulesCollections(List<MatchingRule> repoRules)
     {
         this.matchingRules.AddRange(repoRules);
@@ -314,7 +313,8 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)
             // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
             .Select(group => new RulesGroupedByBucket(group.Key, group))
-            .OrderBy(group => group.Bucket.Code);
+            .OrderBy(group => group.Bucket.Code)
+            .ToList();
 
         var allBuckets = this.bucketRepo.Buckets.OrderBy(b => b);
         foreach (var bucket in allBuckets)
@@ -332,11 +332,7 @@ internal class TransactionRuleService : ITransactionRuleService, ISupportsModelP
         }
     }
 
-    private static void IsSimilarRulePreconditions(SimilarMatchedRule rule,
-        DecimalCriteria amount,
-        StringCriteria description,
-        StringCriteria[] references,
-        StringCriteria transactionType)
+    private static void IsSimilarRulePreconditions(SimilarMatchedRule rule, DecimalCriteria amount, StringCriteria description, StringCriteria[] references, StringCriteria transactionType)
     {
         if (rule is null)
         {
