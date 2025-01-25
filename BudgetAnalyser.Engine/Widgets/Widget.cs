@@ -43,9 +43,10 @@ public abstract class Widget : INotifyPropertyChanged
 
     protected const string NotSet = "<NOT SET>";
 
-    private bool clickableWhenEnabled;
-
     private readonly string doNotUseCategory = string.Empty;
+    private readonly string doNotUseWidgetStyle = string.Empty;
+
+    private bool clickableWhenEnabled;
     private bool doNotUseClickable;
     private string doNotUseColour = string.Empty;
     private string doNotUseDetailedText = NotSet;
@@ -56,7 +57,6 @@ public abstract class Widget : INotifyPropertyChanged
     private WidgetSize doNotUseSize;
     private string doNotUseToolTip = string.Empty;
     private bool doNotUseVisibility;
-    private readonly string doNotUseWidgetStyle = string.Empty;
 
     /// <summary>
     ///     Constructs a new instance of the <see cref="Widget" /> class.

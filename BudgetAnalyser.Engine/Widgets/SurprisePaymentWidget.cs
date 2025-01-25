@@ -13,7 +13,8 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
 {
     private const int FortnightlyPaymentsInOneNormalMonth = 2;
 
-    private const string ToolTipPrefix = "Given payments happen on the same day every week, this widget shows which months will require 5 weekly payments instead of 4, or 3 fortnightly payments instead of 2. (Does account for NZ public holidays.)\n";
+    private const string ToolTipPrefix =
+        "Given payments happen on the same day every week, this widget shows which months will require 5 weekly payments instead of 4, or 3 fortnightly payments instead of 2. (Does account for NZ public holidays.)\n";
 
     private const int WeeklyPaymentsInOneNormalMonth = 4;
     private IBudgetBucketRepository? bucketRepository;
@@ -57,6 +58,11 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     }
 
     /// <summary>
+    ///     Gets or sets the start payment date.
+    /// </summary>
+    public DateTime StartPaymentDate { get; set; }
+
+    /// <summary>
     ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
     /// </summary>
     public string Id
@@ -68,11 +74,6 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
             OnPropertyChanged();
         }
     }
-
-    /// <summary>
-    ///     Gets or sets the start payment date.
-    /// </summary>
-    public DateTime StartPaymentDate { get; set; }
 
     /// <summary>
     ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
@@ -110,7 +111,6 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
 
         this.bucketRepository = (IBudgetBucketRepository)input[0];
         this.filter = input[1] as GlobalFilterCriteria;
-        var budgetCollection = input[2] as BudgetCollection;
 
         if (this.filter is null
             || this.filter.Cleared
@@ -125,7 +125,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
             return;
         }
 
-        if (budgetCollection is null)
+        if (input[2] is not BudgetCollection budgetCollection)
         {
             Enabled = false;
             ToolTip = "The budget collection is empty or null.";
@@ -162,11 +162,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         var currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
         var content = new StringBuilder();
         // Ignore start date in filter and force it to be one month prior to end date in filter.
-        var currentMonthTally = new NextOccurance
-        {
-            StartDate = this.filter.EndDate.Value.AddDays(1).AddMonths(-1),
-            EndDate = this.filter.EndDate.Value
-        };
+        var currentMonthTally = new NextOccurance { StartDate = this.filter.EndDate.Value.AddDays(1).AddMonths(-1), EndDate = this.filter.EndDate.Value };
         var alert = false;
         NextOccurance? firstOccurance = null;
         do
@@ -297,6 +293,6 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     private record PaymentDate(DateTime Date)
     {
         public DateTime Date { get; set; } = Date;
-        public DateTime ScheduledDate { get; set; } = Date;
+        public DateTime ScheduledDate { get; } = Date;
     }
 }
