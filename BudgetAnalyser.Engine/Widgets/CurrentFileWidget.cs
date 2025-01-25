@@ -1,72 +1,70 @@
-﻿using System;
-using System.IO;
-using BudgetAnalyser.Engine.Persistence;
+﻿using BudgetAnalyser.Engine.Persistence;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Widgets
+namespace BudgetAnalyser.Engine.Widgets;
+
+/// <summary>
+///     Monitors the currently loaded Budget Analyser file and shows the file name.
+/// </summary>
+/// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
+[UsedImplicitly] // Instantiated by Widget Service/Repo
+public class CurrentFileWidget : Widget
 {
     /// <summary>
-    ///     Monitors the currently loaded Budget Analyser file and shows the file name.
+    ///     Initializes a new instance of the <see cref="CurrentFileWidget" /> class.
     /// </summary>
-    /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
-    public class CurrentFileWidget : Widget
+    public CurrentFileWidget()
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="CurrentFileWidget" /> class.
-        /// </summary>
-        public CurrentFileWidget()
+        Category = WidgetGroup.OverviewSectionName;
+        Dependencies = [typeof(ApplicationDatabase)];
+        Size = WidgetSize.Medium;
+        WidgetStyle = "ModernTileMediumStyle1";
+        Clickable = true;
+        DetailedText = "Loading...";
+        ColourStyleName = WidgetWarningStyle;
+        ImageResourceName = "FolderOpenImage";
+        Sequence = 20;
+    }
+
+    /// <summary>
+    ///     Updates the widget with new input.
+    /// </summary>
+    /// <exception cref="System.ArgumentNullException"></exception>
+    public override void Update(params object[] input)
+    {
+        if (input is null)
         {
-            Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[] { typeof(ApplicationDatabase) };
-            Size = WidgetSize.Medium;
-            WidgetStyle = "ModernTileMediumStyle1";
-            Clickable = true;
-            DetailedText = "Loading...";
+            throw new ArgumentNullException(nameof(input));
+        }
+
+        if (input[0] is not ApplicationDatabase appDb || string.IsNullOrEmpty(appDb.FileName))
+        {
             ColourStyleName = WidgetWarningStyle;
-            ImageResourceName = "FolderOpenImage";
-            Sequence = 20;
+            DetailedText = "Open";
+            ToolTip = "Open an existing Budget Analyser File.";
         }
-
-        /// <summary>
-        ///     Updates the widget with new input.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public override void Update([NotNull] params object[] input)
+        else
         {
-            if (input is null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-
-            if (input[0] is not ApplicationDatabase appDb || appDb.FileName.IsNothing())
-            {
-                ColourStyleName = WidgetWarningStyle;
-                DetailedText = "Open";
-                ToolTip = "Open an existing Budget Analyser File.";
-            }
-            else
-            {
-                ColourStyleName = WidgetStandardStyle;
-                DetailedText = ShortenFileName(appDb.FileName);
-                ToolTip = appDb.FileName;
-            }
+            ColourStyleName = WidgetStandardStyle;
+            DetailedText = ShortenFileName(appDb.FileName);
+            ToolTip = appDb.FileName;
         }
+    }
 
-        private static string ShortenFileName([NotNull] string fileName)
+    private static string ShortenFileName(string fileName)
+    {
+        if (fileName is null)
         {
-            if (fileName is null)
-            {
-                throw new ArgumentNullException(nameof(fileName));
-            }
-
-            if (fileName.Length < 30)
-            {
-                return fileName;
-            }
-
-            var proposed = Path.GetFileName(fileName);
-            var drive = Path.GetPathRoot(fileName);
-            return proposed.Length < 30 ? drive + "...\\" + proposed : drive + "...\\" + proposed.Substring(proposed.Length - 30);
+            throw new ArgumentNullException(nameof(fileName));
         }
+
+        if (fileName.Length < 30)
+        {
+            return fileName;
+        }
+
+        var proposed = Path.GetFileName(fileName);
+        var drive = Path.GetPathRoot(fileName);
+        return proposed.Length < 30 ? drive + "...\\" + proposed : drive + "...\\" + proposed.Substring(proposed.Length - 30);
     }
 }

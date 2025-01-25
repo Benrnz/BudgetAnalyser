@@ -1,79 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.Matching;
+﻿using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
+using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Widgets
+namespace BudgetAnalyser.Engine.Widgets;
+
+/// <summary>
+///     Monitors the number disused matching rules.  The more matching rules there are the slower the auto matching process
+///     is. This widget helps find unused rules so they can be cleaned up.
+/// </summary>
+/// <seealso cref="Widget" />
+[UsedImplicitly] // Instantiated by Widget Service/Repo
+public class DisusedMatchingRuleWidget : Widget
 {
     /// <summary>
-    ///     Monitors the number disused matching rules.  The more matching rules there are the slower the auto matching process
-    ///     is. This widget helps find unused rules so they can be cleaned up.
+    ///     Initializes a new instance of the <see cref="DisusedMatchingRuleWidget" /> class.
     /// </summary>
-    /// <seealso cref="Widget" />
-    public class DisusedMatchingRuleWidget : Widget
+    public DisusedMatchingRuleWidget()
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DisusedMatchingRuleWidget" /> class.
-        /// </summary>
-        public DisusedMatchingRuleWidget()
+        Category = WidgetGroup.OverviewSectionName;
+        Dependencies = [typeof(ITransactionRuleService)];
+        DetailedText = "Disused Matching Rules";
+        ImageResourceName = string.Empty;
+        RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(1);
+        Clickable = true;
+    }
+
+    private static DateTime CutOffDate { get; set; }
+
+    /// <summary>
+    ///     Gets the list of disused matching rules.
+    /// </summary>
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global Used in Xaml binding
+    public IEnumerable<MatchingRule> DisusedMatchingRules { get; private set; } = Array.Empty<MatchingRule>();
+
+    /// <summary>
+    ///     Returns a query that filters to disused rules
+    /// </summary>
+    public static IEnumerable<MatchingRule> QueryRules(IEnumerable<MatchingRule> allRules)
+    {
+        return allRules.Where(r => (r.MatchCount == 0 && r.Created < CutOffDate) || (r.MatchCount > 0 && r.LastMatch < CutOffDate));
+    }
+
+    /// <summary>
+    ///     Updates the widget with new input.
+    /// </summary>
+    /// <exception cref="System.ArgumentNullException" />
+    public override void Update(params object[] input)
+    {
+        if (input is null)
         {
-            Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[] { typeof(ITransactionRuleService) };
-            DetailedText = "Disused Matching Rules";
-            ImageResourceName = null;
-            RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(1);
-            Clickable = true;
+            throw new ArgumentNullException(nameof(input));
         }
 
-        private static DateTime CutOffDate { get; set; }
-
-        /// <summary>
-        ///     Gets the list of disused matching rules.
-        /// </summary>
-        public IEnumerable<MatchingRule> DisusedMatchingRules { get; private set; }
-
-        /// <summary>
-        ///     Returns a query that filters to disused rules
-        /// </summary>
-        public static IEnumerable<MatchingRule> QueryRules(IEnumerable<MatchingRule> allRules)
+        if (!ValidateUpdateInput(input))
         {
-            return allRules.Where(r => (r.MatchCount == 0 && r.Created < CutOffDate) || (r.MatchCount > 0 && r.LastMatch < CutOffDate));
+            Enabled = false;
+            return;
         }
 
-        /// <summary>
-        ///     Updates the widget with new input.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public override void Update(params object[] input)
+        Enabled = true;
+
+        if (input[0] is not ITransactionRuleService ruleService)
         {
-            if (input is null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-
-            if (!ValidateUpdateInput(input))
-            {
-                Enabled = false;
-                return;
-            }
-
-            Enabled = true;
-            var ruleService = (ITransactionRuleService)input[0];
-
-            if (ruleService is null)
-            {
-                Enabled = false;
-                return;
-            }
-
-            CutOffDate = DateTime.Today.AddMonths(-18);
-            var rulesList = QueryRules(ruleService.MatchingRules).ToList();
-            DisusedMatchingRules = rulesList;
-            var count = rulesList.Count();
-            LargeNumber = count.ToString();
-            ToolTip = $"{count}/{ruleService.MatchingRules.Count()} Rules that have not been used for more than a year.";
-            ColourStyleName = count >= 20 ? WidgetWarningStyle : WidgetStandardStyle;
+            Enabled = false;
+            return;
         }
+
+        CutOffDate = DateTime.Today.AddMonths(-18);
+        var rulesList = QueryRules(ruleService.MatchingRules).ToList();
+        DisusedMatchingRules = rulesList;
+        var count = rulesList.Count();
+        LargeNumber = count.ToString();
+        ToolTip = $"{count}/{ruleService.MatchingRules.Count()} Rules that have not been used for more than a year.";
+        ColourStyleName = count >= 20 ? WidgetWarningStyle : WidgetStandardStyle;
     }
 }

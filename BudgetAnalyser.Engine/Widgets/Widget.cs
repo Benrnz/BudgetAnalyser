@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Services;
 using JetBrains.Annotations;
@@ -43,6 +40,8 @@ public abstract class Widget : INotifyPropertyChanged
     ///     A constant for the warning widget style
     /// </summary>
     protected const string WidgetWarningStyle = "WidgetWarningStyle";
+
+    protected const string NotSet = "<NOT SET>";
 
     private bool clickableWhenEnabled;
 
