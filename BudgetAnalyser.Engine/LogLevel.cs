@@ -1,10 +1,9 @@
-﻿namespace BudgetAnalyser.Engine
+﻿namespace BudgetAnalyser.Engine;
+
+public enum LogLevel
 {
-    public enum LogLevel
-    {
-        Always,
-        Info,
-        Warn,
-        Error
-    }
+    Always,
+    Info,
+    Warn,
+    Error
 }

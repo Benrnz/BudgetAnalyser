@@ -1,7 +1,6 @@
-﻿namespace BudgetAnalyser.Engine
+﻿namespace BudgetAnalyser.Engine;
+
+internal interface ICloneable<out T>
 {
-    internal interface ICloneable<T>
-    {
-        T Clone();
-    }
+    T Clone();
 }
