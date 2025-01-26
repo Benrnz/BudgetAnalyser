@@ -45,25 +45,25 @@ internal class Matchmaker(ILogger logger, IBudgetBucketRepository bucketRepo) : 
 
     private bool AutoMatchBasedOnReference(Transaction transaction)
     {
-        var reference1 = transaction.Reference1.Trim();
-        var reference2 = transaction.Reference2.Trim();
-        var reference3 = transaction.Reference3.Trim();
+        var reference1 = transaction.Reference1?.Trim();
+        var reference2 = transaction.Reference2?.Trim();
+        var reference3 = transaction.Reference3?.Trim();
 
-        if (this.bucketRepo.IsValidCode(reference1))
+        if (reference1 is not null && this.bucketRepo.IsValidCode(reference1))
         {
             this.logger.LogInfo(l => l.Format("{0} Transaction '{1}' auto-matched by reference '{2}'", LogPrefix, transaction.Id, reference1));
             transaction.BudgetBucket = this.bucketRepo.GetByCode(reference1);
             return true;
         }
 
-        if (this.bucketRepo.IsValidCode(reference2))
+        if (reference2 is not null && this.bucketRepo.IsValidCode(reference2))
         {
             this.logger.LogInfo(l => l.Format("{0} Transaction '{1}' auto-matched by reference '{2}'", LogPrefix, transaction.Id, reference2));
             transaction.BudgetBucket = this.bucketRepo.GetByCode(reference2);
             return true;
         }
 
-        if (this.bucketRepo.IsValidCode(reference3))
+        if (reference3 is not null && this.bucketRepo.IsValidCode(reference3))
         {
             this.logger.LogInfo(l => l.Format("{0} Transaction '{1}' auto-matched by reference '{2}'", LogPrefix, transaction.Id, reference3));
             transaction.BudgetBucket = this.bucketRepo.GetByCode(reference3);

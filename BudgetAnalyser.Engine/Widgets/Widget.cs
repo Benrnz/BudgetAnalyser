@@ -231,7 +231,7 @@ public abstract class Widget : INotifyPropertyChanged
     /// <summary>
     ///     Gets or sets the tool tip.
     /// </summary>
-    public string ToolTip
+    public string? ToolTip
     {
         get => this.doNotUseToolTip;
         protected set

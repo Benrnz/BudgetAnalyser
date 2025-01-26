@@ -77,7 +77,7 @@ public static class StringExtension
     ///     Truncates the right of a string to the specified length, but only if it exceeds that length. Optionally the
     ///     returned string can include ellipses.
     /// </summary>
-    public static string Truncate(this string instance, int truncateToLength, bool useEllipses = false)
+    public static string Truncate(this string? instance, int truncateToLength, bool useEllipses = false)
     {
         if (string.IsNullOrWhiteSpace(instance))
         {

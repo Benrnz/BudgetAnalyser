@@ -99,12 +99,17 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
         }
     }
 
-    internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
+    internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string? autoMatchingReference)
     {
+        if (autoMatchingReference is null)
+        {
+            return new List<Transaction>();
+        }
+
         var sortedTransactions = transactions.Where(t =>
-                t.Reference1.TrimEnd() == autoMatchingReference
-                || t.Reference2.TrimEnd() == autoMatchingReference
-                || t.Reference3.TrimEnd() == autoMatchingReference)
+                t.Reference1?.TrimEnd() == autoMatchingReference
+                || t.Reference2?.TrimEnd() == autoMatchingReference
+                || t.Reference3?.TrimEnd() == autoMatchingReference)
             .OrderBy(t => t.Amount);
         return sortedTransactions;
     }
@@ -193,7 +198,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
                 ledgerTxn.Id = matchingStatementTransaction.Id; // Allows user to click and link back to statement transaction.
 
                 // Don't auto-match if it has already been auto-matched
-                if (!ledgerTxn.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal))
+                if (ledgerTxn.AutoMatchingReference is not null && !ledgerTxn.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal))
                 {
                     // There will be two statement transactions but only one ledger transaction to match to.
                     checkMatchCount++;
@@ -261,22 +266,22 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
     private static string ExtractNarrative(Transaction t)
     {
         var peices = new List<string>(); // In priority order
-        if (t.Description.IsSomething())
+        if (!string.IsNullOrWhiteSpace(t.Description))
         {
             peices.Add(t.Description);
         }
 
-        if (t.Reference1.IsSomething())
+        if (!string.IsNullOrWhiteSpace(t.Reference1))
         {
             peices.Add(t.Reference1);
         }
 
-        if (t.Reference2.IsSomething())
+        if (!string.IsNullOrWhiteSpace(t.Reference2))
         {
             peices.Add(t.Reference2);
         }
 
-        if (t.Reference3.IsSomething())
+        if (!string.IsNullOrWhiteSpace(t.Reference3))
         {
             peices.Add(t.Reference3);
         }
@@ -319,7 +324,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
         return includeMatchedTransactions
             ? ledgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference))
             : ledgerEntry.Transactions.Where(t =>
-                t.AutoMatchingReference.IsSomething()
+                !string.IsNullOrWhiteSpace(t.AutoMatchingReference)
                 && !t.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal));
     }
 

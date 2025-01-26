@@ -78,7 +78,7 @@ public class MonitorableDependencies
         return NotifyOfDependencyChange(dependency, typeof(T));
     }
 
-    internal virtual object? RetrieveDependency(Type key)
+    internal virtual object RetrieveDependency(Type key)
     {
         if (!this.availableDependencies.TryGetValue(key, out var retrievedObject))
         {
@@ -86,7 +86,7 @@ public class MonitorableDependencies
             throw new NotSupportedException(string.Format(CultureInfo.CurrentCulture, "The requested dependency {0} is not supported.", key.Name));
         }
 
-        return retrievedObject;
+        return retrievedObject!;
     }
 
     private bool HasDependencySignificantlyChanged(object dependency, Type typeKey)
