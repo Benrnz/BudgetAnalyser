@@ -20,7 +20,6 @@ public class DisusedMatchingRuleWidget : Widget
         Category = WidgetGroup.OverviewSectionName;
         Dependencies = [typeof(ITransactionRuleService)];
         DetailedText = "Disused Matching Rules";
-        ImageResourceName = string.Empty;
         RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(1);
         Clickable = true;
     }

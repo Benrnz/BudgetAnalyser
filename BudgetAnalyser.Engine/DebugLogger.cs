@@ -3,8 +3,7 @@
 namespace BudgetAnalyser.Engine;
 
 /// <summary>
-///     A logging implementation that simply outputs to the Debug stream <see cref="System.Diagnostics.Debug" />. Only if
-///     the debugger is attached, otherwise does nothing.
+///     A logging implementation that simply outputs to the Debug stream <see cref="System.Diagnostics.Debug" />. Only if the debugger is attached, otherwise does nothing.
 /// </summary>
 public class DebugLogger : ILogger
 {
@@ -12,8 +11,7 @@ public class DebugLogger : ILogger
     private LogLevel logLevelFilter = LogLevel.Always;
 
     /// <summary>
-    ///     A logging implementation that simply outputs to the Debug stream <see cref="System.Diagnostics.Debug" />. Only if
-    ///     the debugger is attached, otherwise does nothing.
+    ///     A logging implementation that simply outputs to the Debug stream <see cref="System.Diagnostics.Debug" />. Only if the debugger is attached, otherwise does nothing.
     /// </summary>
     public DebugLogger(bool? debuggerAttached = null)
     {
@@ -36,8 +34,7 @@ public class DebugLogger : ILogger
     }
 
     /// <summary>
-    ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always
-    ///     English.
+    ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always English.
     /// </summary>
     public string Format(string formatTemplate, params object?[] parameters)
     {

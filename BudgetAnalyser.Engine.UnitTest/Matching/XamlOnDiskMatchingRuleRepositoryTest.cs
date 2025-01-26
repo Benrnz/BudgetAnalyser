@@ -116,7 +116,7 @@ public class XamlOnDiskMatchingRuleRepositoryTest
         return new XamlOnDiskMatchingRuleRepositoryTestHarness(
             new MapperMatchingRuleToDto2(new BucketBucketRepoAlwaysFind()),
             new LocalDiskReaderWriterSelector(
-                new[] { new EmbeddedResourceFileReaderWriter() }));
+                [new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]));
     }
 
     private XamlOnDiskMatchingRuleRepositoryTestHarness ArrangeUsingMocks()

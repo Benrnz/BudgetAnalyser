@@ -1,30 +1,29 @@
-﻿namespace BudgetAnalyser.Engine
+﻿namespace BudgetAnalyser.Engine;
+
+/// <summary>
+///     An extension class to extend <see cref="IList{T}" />.
+/// </summary>
+public static class ListExtension
 {
     /// <summary>
-    ///     An extension class to extend <see cref="IList{T}" />.
+    ///     Will add the <paramref name="newElement" /> only if it is not null.
     /// </summary>
-    public static class ListExtension
+    /// <typeparam name="T">Any type</typeparam>
+    /// <param name="instance">The target collection</param>
+    /// <param name="newElement">The new element to add if it's not null.</param>
+    public static bool AddIfSomething<T>(this IList<T> instance, T? newElement) where T : class
     {
-        /// <summary>
-        ///     Will add the <paramref name="newElement" /> only if it is not null.
-        /// </summary>
-        /// <typeparam name="T">Any type</typeparam>
-        /// <param name="instance">The target collection</param>
-        /// <param name="newElement">The new element to add if it's not null.</param>
-        public static bool AddIfSomething<T>(this IList<T> instance, T? newElement) where T : class
+        if (instance is null)
         {
-            if (instance is null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-
-            if (newElement is not null)
-            {
-                instance.Add(newElement);
-                return true;
-            }
-
-            return false;
+            throw new ArgumentNullException(nameof(instance));
         }
+
+        if (newElement is not null)
+        {
+            instance.Add(newElement);
+            return true;
+        }
+
+        return false;
     }
 }

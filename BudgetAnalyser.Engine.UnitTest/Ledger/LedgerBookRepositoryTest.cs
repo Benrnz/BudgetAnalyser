@@ -241,7 +241,7 @@ public class LedgerBookRepositoryTest
             // Use real classes to operation very closely to live mode.
             return new XamlOnDiskLedgerBookRepositoryTestHarness(
                 this.mapper,
-                new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter()]));
+                new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]));
         }
 
         // Use fake and mock objects where possible to better isolate testing.

@@ -12,6 +12,6 @@ internal partial class MapperIncomeDto2Income(IBudgetBucketRepository bucketRepo
 
     partial void ToModelPostprocessing(IncomeDto dto, ref Income model)
     {
-        model.Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) ?? throw new NotSupportedException($"Budget bucket {dto.BudgetBucketCode} from data file not found in budget repository.");
+        model.Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) ?? throw new DataFormatException($"Budget bucket {dto.BudgetBucketCode} from data file not found in budget repository.");
     }
 }

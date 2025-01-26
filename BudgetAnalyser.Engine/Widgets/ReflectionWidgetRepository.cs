@@ -35,10 +35,10 @@ public class ReflectionWidgetRepository : IWidgetRepository
     [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IUserDefinedWidget")]
     public IUserDefinedWidget Create(string widgetType, string id)
     {
-        var type = Type.GetType(widgetType) ?? throw new NotSupportedException($"The widget type specified {widgetType} is not found in any known type library.");
+        var type = Type.GetType(widgetType) ?? throw new DataFormatException($"The widget type specified {widgetType} is not found in any known type library.");
         if (!typeof(IUserDefinedWidget).IsAssignableFrom(type))
         {
-            throw new NotSupportedException($"The widget type specified {widgetType} is not a IUserDefinedWidget");
+            throw new DataFormatException($"The widget type specified {widgetType} is not a IUserDefinedWidget");
         }
 
         var widget = Activator.CreateInstance(type) as IUserDefinedWidget;
@@ -71,7 +71,7 @@ public class ReflectionWidgetRepository : IWidgetRepository
                          .Where(t => !typeof(IUserDefinedWidget).IsAssignableFrom(t))
                          .Select(widgetType => Activator.CreateInstance(widgetType) as Widget))
             {
-                var w = widget ?? throw new NotSupportedException("Widget could not be created.");
+                var w = widget ?? throw new DataFormatException("Widget could not be created.");
                 this.cachedWidgets.Add(w.Category + w.Name, w);
             }
         }

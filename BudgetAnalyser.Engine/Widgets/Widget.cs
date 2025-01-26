@@ -53,9 +53,9 @@ public abstract class Widget : INotifyPropertyChanged
     private bool doNotUseEnabled;
     private string? doNotUseImageResourceName;
     private string? doNotUseImageResourceName2;
-    private string doNotUseLargeNumber = NotSet;
+    private string doNotUseLargeNumber = string.Empty;
     private WidgetSize doNotUseSize;
-    private string doNotUseToolTip = string.Empty;
+    private string? doNotUseToolTip;
     private bool doNotUseVisibility;
 
     /// <summary>
@@ -231,7 +231,7 @@ public abstract class Widget : INotifyPropertyChanged
     /// <summary>
     ///     Gets or sets the tool tip.
     /// </summary>
-    public string ToolTip
+    public string? ToolTip
     {
         get => this.doNotUseToolTip;
         protected set

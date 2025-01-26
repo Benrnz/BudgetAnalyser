@@ -53,7 +53,7 @@ internal class CsvOnDiskStatementModelRepositoryV1(
 
         if (!await IsStatementModelAsync(storageKey, isEncrypted))
         {
-            throw new NotSupportedException("The CSV file is not supported by this version of the Budget Analyser.");
+            throw new DataFormatException("The CSV file is not supported by this version of the Budget Analyser.");
         }
 
         var allLines = (await ReadLinesAsync(storageKey, isEncrypted)).ToList();

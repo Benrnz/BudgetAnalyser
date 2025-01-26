@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
 
 namespace BudgetAnalyser.Engine;
 
@@ -7,23 +7,38 @@ namespace BudgetAnalyser.Engine;
 /// </summary>
 public static class ReferenceNumberGenerator
 {
-    private static readonly string[] DisallowedChars = ["\\", "{", "}", "[", "]", "^", "=", "/", ";", ".", ",", "-", "+"];
+    private static readonly char[] DisallowedChars = ['\\', '{', '}', '[', ']', '^', '=', '/', ';', '.', ',', '-', '+'];
 
     /// <summary>
-    ///     Create a small concise reference number thats 8 characters long.
+    ///     Create a small concise reference number that's 8 characters long.
     /// </summary>
     public static string IssueTransactionReferenceNumber()
     {
-        var reference = new StringBuilder();
+        var finalReference = new char[8];
+        var acceptedChars = 0;
+        var rng = RandomNumberGenerator.Create();
         do
         {
-            reference.Append(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
-            foreach (var disallowedChar in DisallowedChars)
-            {
-                reference.Replace(disallowedChar, string.Empty);
-            }
-        } while (reference.Length < 8);
+            var randomBytes = new byte[24];
+            rng.GetNonZeroBytes(randomBytes);
+            var base64CharArray = new char[32];
+            Convert.ToBase64CharArray(randomBytes, 0, randomBytes.Length, base64CharArray, 0);
 
-        return reference.ToString().Substring(0, 7);
+            for (var index = 0; index < 24; index++)
+            {
+                if (DisallowedChars.Contains(base64CharArray[index]))
+                {
+                    continue;
+                }
+
+                finalReference[acceptedChars++] = base64CharArray[index];
+                if (acceptedChars >= 8)
+                {
+                    break;
+                }
+            }
+        } while (acceptedChars < 8);
+
+        return new string(finalReference);
     }
 }

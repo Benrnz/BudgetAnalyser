@@ -30,7 +30,7 @@ internal partial class MapperExpenseDto2Expense
 {
     partial void ModelFactory(ExpenseDto dto, ref Expense model)
     {
-        var bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) ?? throw new NotSupportedException($"Budget Bucket {dto.BudgetBucketCode} not found in budget model.");
+        var bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) ?? throw new DataFormatException($"Budget Bucket {dto.BudgetBucketCode} not found in budget model.");
         model = new Expense { Bucket = bucket };
     }
 }
@@ -39,7 +39,7 @@ internal partial class MapperIncomeDto2Income
 {
     partial void ModelFactory(IncomeDto dto, ref Income model)
     {
-        var bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) ?? throw new NotSupportedException($"Budget Bucket {dto.BudgetBucketCode} not found in budget model.");
+        var bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) ?? throw new DataFormatException($"Budget Bucket {dto.BudgetBucketCode} not found in budget model.");
         model = new Income { Bucket = bucket };
     }
 }

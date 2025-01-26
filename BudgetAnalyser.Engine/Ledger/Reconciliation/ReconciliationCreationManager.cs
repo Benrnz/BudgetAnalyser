@@ -182,8 +182,7 @@ internal class ReconciliationCreationManager(
         var statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
         foreach (var ledgerTransaction in unmatchedTxns)
         {
-            var statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet,
-                ledgerTransaction.AutoMatchingReference);
+            var statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference!);
             if (statementTxns.None())
             {
                 this.logger.LogWarning(
