@@ -15,7 +15,7 @@ public class WidgetToDtoMapper(IWidgetRepository widgetRepository) : IDtoMapper<
                 return new SurprisePaymentWidgetDto(
                     s.Category,
                     s.Visibility,
-                    s.GetType().Name,
+                    s.GetType().FullName!,
                     s.Frequency,
                     s.BucketCode,
                     DateOnly.FromDateTime(s.StartPaymentDate));
@@ -24,27 +24,27 @@ public class WidgetToDtoMapper(IWidgetRepository widgetRepository) : IDtoMapper<
                 return new MultiInstanceWidgetDto(
                     b.Category,
                     b.Visibility,
-                    b.GetType().Name,
+                    b.GetType().FullName!,
                     b.BucketCode);
 
             case FixedBudgetMonitorWidget f:
                 return new MultiInstanceWidgetDto(
                     f.Category,
                     f.Visibility,
-                    f.GetType().Name,
+                    f.GetType().FullName!,
                     f.BucketCode);
 
 
             default:
                 // CurrentFileWidget, DateFilterWidget, DaysSinceLastImport, DisusedMatchingRuleWidget, EncryptWidget, NewFileWidget, OverspentWarning, RemainingActualSurplusWidget,
                 // RemainingSurplusWidget, SaveWidget, TimedUpdateCounterWidget, UpdateMobileDataWidget
-                return new WidgetDto(model.Category, model.Visibility, model.GetType().Name);
+                return new WidgetDto(model.Category, model.Visibility, model.GetType().FullName!);
         }
     }
 
     public Widget ToModel(WidgetDto dto)
     {
-        Widget? widget = null;
+        Widget widget;
         if (dto is MultiInstanceWidgetDto m)
         {
             var type = Type.GetType(dto.WidgetType) ?? throw new DataFormatException($"The widget type specified {dto.WidgetType} is not found in any known type library.");
@@ -61,13 +61,14 @@ public class WidgetToDtoMapper(IWidgetRepository widgetRepository) : IDtoMapper<
             }
 
             widget = (Widget)multiInstanceWidget;
-        } else if (dto is SurprisePaymentWidgetDto s)
+        }
+        else if (dto is SurprisePaymentWidgetDto s)
         {
             widget = new SurprisePaymentWidget { Frequency = s.Frequency, Id = s.BucketCode, StartPaymentDate = s.PaymentStartDate.ToDateTime(TimeOnly.MinValue) };
         }
         else
         {
-            widget = this.widgetRepository.GetAll().Single(w => w.GetType().Name == dto.WidgetType);
+            widget = this.widgetRepository.GetAll().Single(w => w.GetType().FullName == dto.WidgetType);
         }
 
         widget.Visibility = dto.Visible;
