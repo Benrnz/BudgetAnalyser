@@ -1,15 +1,13 @@
 ﻿namespace BudgetAnalyser.Engine.Widgets;
 
 /// <summary>
-///     A widget that monitors a bucket and tracks total spent for the month against funds available from the current
-///     ledger book.
+///     A widget that monitors a bucket and tracks total spent for the month against funds available from the current ledger book.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.RemainingBudgetBucketWidget" />
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.IUserDefinedWidget" />
 public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUserDefinedWidget
 {
     private readonly string disabledToolTip;
-    private string doNotUseId = "<NOT SET>";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetBucketMonitorWidget" /> class.
@@ -24,16 +22,11 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     /// </summary>
     public string Id
     {
-        get => this.doNotUseId;
+        get => BucketCode;
         set
         {
-            if (value == this.doNotUseId)
-            {
-                return;
-            }
-            this.doNotUseId = value;
+            BucketCode = value;
             OnPropertyChanged();
-            BucketCode = Id;
         }
     }
 
