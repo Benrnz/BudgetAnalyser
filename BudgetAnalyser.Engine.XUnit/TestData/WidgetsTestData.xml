@@ -1,0 +1,10 @@
+﻿<List x:TypeArguments="w:WidgetDto" Capacity="30"
+      xmlns="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+      xmlns:w="clr-namespace:BudgetAnalyser.Engine.Widget.Data;assembly=BudgetAnalyser.Engine"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <w:WidgetDto WidgetGroup="GlobalFilter" Visible="True" WidgetType="BudgetAnalyser.Engine.Widgets.DateFilterWidget"/>
+    <w:WidgetDto WidgetGroup="Tracking" Visible="False" WidgetType="BudgetAnalyser.Engine.Widgets.BudgetBucketMonitorWidget" BucketCode="FOOD"/>
+    <w:WidgetDto WidgetGroup="Overview" Visible="True" WidgetType="BudgetAnalyser.Engine.Widgets.SurprisePaymentWidget" Frequency="Fortnightly" BucketCode="MTG" PaymentStartDate="2014-05-18"/>
+    <w:WidgetDto WidgetGroup="Projects" Visible="False" WidgetType="BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget" BucketCode="SURPLUS.FENCE"/>
+</List>
