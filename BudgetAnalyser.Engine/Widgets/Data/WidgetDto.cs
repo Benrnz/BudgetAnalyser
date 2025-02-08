@@ -1,8 +1,20 @@
 ﻿namespace BudgetAnalyser.Engine.Widgets.Data;
 
-public record WidgetDto(string WidgetGroup, bool Visible, string WidgetType);
+public class WidgetDto
+{
+    public required bool Visible { get; init; }
+    public required string WidgetGroup { get; init; }
+    public required string WidgetType { get; init; }
+}
 
-public record SurprisePaymentWidgetDto(string WidgetGroup, bool Visible, string WidgetType, WeeklyOrFortnightly Frequency, string BucketCode, DateOnly PaymentStartDate)
-    : WidgetDto(WidgetGroup, Visible, WidgetType);
+public class SurprisePaymentWidgetDto : WidgetDto
+{
+    public required string BucketCode { get; init; }
+    public required WeeklyOrFortnightly Frequency { get; init; }
+    public required DateOnly PaymentStartDate { get; init; }
+}
 
-public record MultiInstanceWidgetDto(string WidgetGroup, bool Visible, string WidgetType, string BucketCode) : WidgetDto(WidgetGroup, Visible, WidgetType);
+public class MultiInstanceWidgetDto : WidgetDto
+{
+    public required string BucketCode { get; init; }
+}

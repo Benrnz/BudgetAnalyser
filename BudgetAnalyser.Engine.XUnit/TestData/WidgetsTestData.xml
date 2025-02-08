@@ -1,10 +1,25 @@
-﻿<List x:TypeArguments="w:WidgetDto" Capacity="30"
+﻿<List x:TypeArguments="w:WidgetDto"
+      Capacity="12"
       xmlns="clr-namespace:System.Collections.Generic;assembly=mscorlib"
-      xmlns:w="clr-namespace:BudgetAnalyser.Engine.Widget.Data;assembly=BudgetAnalyser.Engine"
+      xmlns:w="clr-namespace:BudgetAnalyser.Engine.Widgets.Data;assembly=BudgetAnalyser.Engine"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <w:WidgetDto Visible="True" WidgetGroup="Overview" WidgetType="BudgetAnalyser.Engine.Widgets.EncryptWidget"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Tracking" WidgetType="BudgetAnalyser.Engine.Widgets.OverspentWarning"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Overview" WidgetType="BudgetAnalyser.Engine.Widgets.SaveWidget"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Overview" WidgetType="BudgetAnalyser.Engine.Widgets.CurrentFileWidget"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Global Filter" WidgetType="BudgetAnalyser.Engine.Widgets.DateFilterWidget"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Overview" WidgetType="BudgetAnalyser.Engine.Widgets.NewFileWidget"/>
+    <w:WidgetDto Visible="False" WidgetGroup="Tracking" WidgetType="BudgetAnalyser.Engine.Widgets.RemainingSurplusWidget"/>
+    <w:SurprisePaymentWidgetDto BucketCode="RENT" Frequency="Fortnightly" PaymentStartDate="2013-07-01" Visible="True" WidgetGroup="Overview"
+                                WidgetType="BudgetAnalyser.Engine.Widgets.SurprisePaymentWidget"/>
+    <w:MultiInstanceWidgetDto BucketCode="FOOD" Visible="True" WidgetGroup="Tracking" WidgetType="BudgetAnalyser.Engine.Widgets.BudgetBucketMonitorWidget"/>
+    <w:MultiInstanceWidgetDto BucketCode="HAIRCUT" Visible="True" WidgetGroup="Tracking" WidgetType="BudgetAnalyser.Engine.Widgets.BudgetBucketMonitorWidget"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Overview" WidgetType="BudgetAnalyser.Engine.Widgets.DaysSinceLastImport"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Overview" WidgetType="BudgetAnalyser.Engine.Widgets.DisusedMatchingRuleWidget"/>
+    <w:MultiInstanceWidgetDto BucketCode="SURPLUS.FENCE" Visible="False" WidgetGroup="Projects" WidgetType="BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget"/>
+    <w:MultiInstanceWidgetDto BucketCode="SURPLUS.KITCHEN" Visible="True" WidgetGroup="Projects" WidgetType="BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Tracking" WidgetType="BudgetAnalyser.Engine.Widgets.RemainingActualSurplusWidget"/>
+    <w:WidgetDto Visible="False" WidgetGroup="Overview" WidgetType="BudgetAnalyser.Engine.Widgets.TimedUpdateCounterWidget"/>
+    <w:WidgetDto Visible="True" WidgetGroup="Tracking" WidgetType="BudgetAnalyser.Engine.Widgets.UpdateMobileDataWidget"/>
 
-    <w:WidgetDto WidgetGroup="GlobalFilter" Visible="True" WidgetType="BudgetAnalyser.Engine.Widgets.DateFilterWidget"/>
-    <w:WidgetDto WidgetGroup="Tracking" Visible="False" WidgetType="BudgetAnalyser.Engine.Widgets.BudgetBucketMonitorWidget" BucketCode="FOOD"/>
-    <w:WidgetDto WidgetGroup="Overview" Visible="True" WidgetType="BudgetAnalyser.Engine.Widgets.SurprisePaymentWidget" Frequency="Fortnightly" BucketCode="MTG" PaymentStartDate="2014-05-18"/>
-    <w:WidgetDto WidgetGroup="Projects" Visible="False" WidgetType="BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget" BucketCode="SURPLUS.FENCE"/>
 </List>

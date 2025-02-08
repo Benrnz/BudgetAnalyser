@@ -3,42 +3,35 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Widgets.Data;
 
-public class WidgetToDtoMapper(IWidgetRepository widgetRepository) : IDtoMapper<WidgetDto, Widget>
+public class MapperWidgetToDto(IStandardWidgetCatalog widgetCatalog) : IDtoMapper<WidgetDto, Widget>
 {
-    private readonly IWidgetRepository widgetRepository = widgetRepository ?? throw new ArgumentNullException(nameof(widgetRepository));
+    private readonly IStandardWidgetCatalog widgetCatalog = widgetCatalog ?? throw new ArgumentNullException(nameof(widgetCatalog));
 
     public WidgetDto ToDto(Widget model)
     {
         switch (model)
         {
             case SurprisePaymentWidget s:
-                return new SurprisePaymentWidgetDto(
-                    s.Category,
-                    s.Visibility,
-                    s.GetType().FullName!,
-                    s.Frequency,
-                    s.BucketCode,
-                    DateOnly.FromDateTime(s.StartPaymentDate));
+                return new SurprisePaymentWidgetDto
+                {
+                    WidgetGroup = s.Category,
+                    Visible = s.Visibility,
+                    WidgetType = s.GetType().FullName!,
+                    Frequency = s.Frequency,
+                    BucketCode = s.BucketCode,
+                    PaymentStartDate = DateOnly.FromDateTime(s.StartPaymentDate)
+                };
 
             case BudgetBucketMonitorWidget b:
-                return new MultiInstanceWidgetDto(
-                    b.Category,
-                    b.Visibility,
-                    b.GetType().FullName!,
-                    b.BucketCode);
+                return new MultiInstanceWidgetDto { WidgetGroup = b.Category, Visible = b.Visibility, WidgetType = b.GetType().FullName!, BucketCode = b.BucketCode };
 
             case FixedBudgetMonitorWidget f:
-                return new MultiInstanceWidgetDto(
-                    f.Category,
-                    f.Visibility,
-                    f.GetType().FullName!,
-                    f.BucketCode);
-
+                return new MultiInstanceWidgetDto { WidgetGroup = f.Category, Visible = f.Visibility, WidgetType = f.GetType().FullName!, BucketCode = f.BucketCode };
 
             default:
                 // CurrentFileWidget, DateFilterWidget, DaysSinceLastImport, DisusedMatchingRuleWidget, EncryptWidget, NewFileWidget, OverspentWarning, RemainingActualSurplusWidget,
                 // RemainingSurplusWidget, SaveWidget, TimedUpdateCounterWidget, UpdateMobileDataWidget
-                return new WidgetDto(model.Category, model.Visibility, model.GetType().FullName!);
+                return new WidgetDto { Visible = model.Visibility, WidgetGroup = model.Category, WidgetType = model.GetType().FullName! };
         }
     }
 
@@ -68,7 +61,8 @@ public class WidgetToDtoMapper(IWidgetRepository widgetRepository) : IDtoMapper<
         }
         else
         {
-            widget = this.widgetRepository.GetAll().Single(w => w.GetType().FullName == dto.WidgetType);
+            widget = this.widgetCatalog.FindWidget(dto.WidgetType) ??
+                     throw new DataFormatException($"The standard widget type specified {dto.WidgetType} is not found in the standard widget catalog.");
         }
 
         widget.Visibility = dto.Visible;

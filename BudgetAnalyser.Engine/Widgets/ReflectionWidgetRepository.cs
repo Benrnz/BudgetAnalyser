@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets;
@@ -13,14 +12,15 @@ namespace BudgetAnalyser.Engine.Widgets;
 [UsedImplicitly] // Used by IoC
 public class ReflectionWidgetRepository : IWidgetRepository
 {
-    private readonly SortedList<string, Widget> cachedWidgets;
+    private readonly SortedList<string, Widget> cachedWidgets = new();
+    private readonly IStandardWidgetCatalog catalog;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ReflectionWidgetRepository" /> class.
     /// </summary>
-    public ReflectionWidgetRepository()
+    public ReflectionWidgetRepository(IStandardWidgetCatalog catalog)
     {
-        this.cachedWidgets = new SortedList<string, Widget>();
+        this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
     }
 
     /// <summary>
@@ -63,16 +63,9 @@ public class ReflectionWidgetRepository : IWidgetRepository
     {
         if (this.cachedWidgets.None())
         {
-            var widgetTypes = GetType().GetTypeInfo().Assembly.GetExportedTypes()
-                .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract)
-                .ToList();
-
-            foreach (var widget in widgetTypes
-                         .Where(t => !typeof(IUserDefinedWidget).IsAssignableFrom(t))
-                         .Select(widgetType => Activator.CreateInstance(widgetType) as Widget))
+            foreach (var widget in this.catalog.GetAll())
             {
-                var w = widget ?? throw new DataFormatException("Widget could not be created.");
-                this.cachedWidgets.Add(w.Category + w.Name, w);
+                this.cachedWidgets.Add(widget.Category + widget.Name, widget);
             }
         }
 

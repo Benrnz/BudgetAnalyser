@@ -1,53 +1,52 @@
 ﻿using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.Widgets.Data;
-using NSubstitute;
 using Shouldly;
 
 namespace BudgetAnalyser.Engine.XUnit.Widgets;
 
 public class MapperWidgetToDtoTest
 {
-    private readonly IWidgetRepository mockWidgetRepo = Substitute.For<IWidgetRepository>();
-    private readonly WidgetToDtoMapper subject;
+    private readonly MapperWidgetToDto subject;
+    private readonly IStandardWidgetCatalog widgetCatalog = new WidgetCatalog();
 
     public MapperWidgetToDtoTest()
     {
-        this.subject = new WidgetToDtoMapper(this.mockWidgetRepo);
+        this.subject = new MapperWidgetToDto(this.widgetCatalog);
     }
 
     public static IEnumerable<object[]> AllStandardWidgetDtos()
     {
-        yield return [new WidgetDto(WidgetGroup.OverviewSectionName, true, typeof(CurrentFileWidget).FullName!), true, typeof(CurrentFileWidget)];
         yield return
         [
-            new MultiInstanceWidgetDto(
-                WidgetGroup.PeriodicTrackingSectionName,
-                false,
-                typeof(BudgetBucketMonitorWidget).FullName!,
-                TestDataConstants.FoodBucketCode),
+            new WidgetDto { WidgetGroup = WidgetGroup.OverviewSectionName, Visible = true, WidgetType = typeof(CurrentFileWidget).FullName! }, true, typeof(CurrentFileWidget)
+        ];
+        yield return
+        [
+            new MultiInstanceWidgetDto
+            {
+                WidgetGroup = WidgetGroup.PeriodicTrackingSectionName, Visible = false, WidgetType = typeof(BudgetBucketMonitorWidget).FullName!, BucketCode = TestDataConstants.FoodBucketCode
+            },
             false,
             typeof(BudgetBucketMonitorWidget)
         ];
         yield return
         [
-            new MultiInstanceWidgetDto(
-                WidgetGroup.ProjectsSectionName,
-                true,
-                typeof(FixedBudgetMonitorWidget).FullName!,
-                "SURPLUS.SPEC2"),
+            new MultiInstanceWidgetDto { BucketCode = "SURPLUS.SPEC2", WidgetGroup = WidgetGroup.ProjectsSectionName, Visible = true, WidgetType = typeof(FixedBudgetMonitorWidget).FullName! },
             true,
             typeof(FixedBudgetMonitorWidget)
         ];
         yield return
         [
-            new SurprisePaymentWidgetDto(
-                WidgetGroup.ProjectsSectionName,
-                true,
-                typeof(SurprisePaymentWidget).FullName!,
-                WeeklyOrFortnightly.Fortnightly,
-                TestDataConstants.FoodBucketCode,
-                new DateOnly(2013, 8, 1)),
+            new SurprisePaymentWidgetDto
+            {
+                Frequency = WeeklyOrFortnightly.Fortnightly,
+                BucketCode = TestDataConstants.FoodBucketCode,
+                PaymentStartDate = new DateOnly(2013, 8, 1),
+                WidgetGroup = WidgetGroup.ProjectsSectionName,
+                Visible = true,
+                WidgetType = typeof(SurprisePaymentWidget).FullName!
+            },
             true,
             typeof(SurprisePaymentWidget)
         ];
@@ -74,16 +73,15 @@ public class MapperWidgetToDtoTest
     {
         var model = new BudgetBucketMonitorWidget { Visibility = false, BucketCode = TestDataConstants.DoctorBucketCode, Value = 12.45, Clickable = true };
         var dto = this.subject.ToDto(model);
-
         dto.ShouldBeOfType<MultiInstanceWidgetDto>();
         var surpriseDto = (MultiInstanceWidgetDto)dto;
-
-        var expected = new MultiInstanceWidgetDto(
-            WidgetGroup.PeriodicTrackingSectionName,
-            false,
-            "BudgetAnalyser.Engine.Widgets.BudgetBucketMonitorWidget",
-            TestDataConstants.DoctorBucketCode);
-
+        var expected = new MultiInstanceWidgetDto
+        {
+            WidgetGroup = WidgetGroup.PeriodicTrackingSectionName,
+            Visible = false,
+            WidgetType = "BudgetAnalyser.Engine.Widgets.BudgetBucketMonitorWidget",
+            BucketCode = TestDataConstants.DoctorBucketCode
+        };
         surpriseDto.ShouldBeEquivalentTo(expected);
     }
 
@@ -92,16 +90,12 @@ public class MapperWidgetToDtoTest
     {
         var model = new FixedBudgetMonitorWidget { Id = "SURPLUS.SPEC1", Visibility = true };
         var dto = this.subject.ToDto(model);
-
         dto.ShouldBeOfType<MultiInstanceWidgetDto>();
         var surpriseDto = (MultiInstanceWidgetDto)dto;
-
-        var expected = new MultiInstanceWidgetDto(
-            WidgetGroup.ProjectsSectionName,
-            true,
-            "BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget",
-            "SURPLUS.SPEC1");
-
+        var expected = new MultiInstanceWidgetDto
+        {
+            WidgetGroup = WidgetGroup.ProjectsSectionName, Visible = true, WidgetType = "BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget", BucketCode = "SURPLUS.SPEC1"
+        };
         surpriseDto.ShouldBeEquivalentTo(expected);
     }
 
@@ -110,18 +104,17 @@ public class MapperWidgetToDtoTest
     {
         var model = new SurprisePaymentWidget { Id = TestDataConstants.FoodBucketCode, StartPaymentDate = new DateTime(2013, 7, 1), Frequency = WeeklyOrFortnightly.Fortnightly, Visibility = false };
         var dto = this.subject.ToDto(model);
-
         dto.ShouldBeOfType<SurprisePaymentWidgetDto>();
         var surpriseDto = (SurprisePaymentWidgetDto)dto;
-
-        var expected = new SurprisePaymentWidgetDto(
-            WidgetGroup.OverviewSectionName,
-            false,
-            "BudgetAnalyser.Engine.Widgets.SurprisePaymentWidget",
-            WeeklyOrFortnightly.Fortnightly,
-            TestDataConstants.FoodBucketCode,
-            new DateOnly(2013, 7, 1));
-
+        var expected = new SurprisePaymentWidgetDto
+        {
+            WidgetGroup = WidgetGroup.OverviewSectionName,
+            Visible = false,
+            WidgetType = "BudgetAnalyser.Engine.Widgets.SurprisePaymentWidget",
+            Frequency = WeeklyOrFortnightly.Fortnightly,
+            BucketCode = TestDataConstants.FoodBucketCode,
+            PaymentStartDate = new DateOnly(2013, 7, 1)
+        };
         surpriseDto.ShouldBeEquivalentTo(expected);
     }
 
@@ -132,16 +125,9 @@ public class MapperWidgetToDtoTest
         // Standard Widgets that can't really have any persisted state aside from Visibility.
         // CurrentFileWidget, DateFilterWidget, DaysSinceLastImport, DisusedMatchingRuleWidget, EncryptWidget, NewFileWidget, OverspentWarning, RemainingActualSurplusWidget,
         // RemainingSurplusWidget, SaveWidget, TimedUpdateCounterWidget, UpdateMobileDataWidget
-
         var dto = this.subject.ToDto(model);
-
         dto.ShouldBeOfType<WidgetDto>();
-
-        var expected = new WidgetDto(
-            expectedCategory,
-            expectedVisibility,
-            model.GetType().FullName!);
-
+        var expected = new WidgetDto { WidgetGroup = expectedCategory, Visible = expectedVisibility, WidgetType = model.GetType().FullName! };
         dto.ShouldBeEquivalentTo(expected);
     }
 
@@ -149,7 +135,6 @@ public class MapperWidgetToDtoTest
     [MemberData(nameof(AllStandardWidgetDtos))]
     public void MapToWidgetModel(WidgetDto dto, bool expectedVisibility, Type expectedType)
     {
-        this.mockWidgetRepo.GetAll().Returns([new CurrentFileWidget()]);
         var model = this.subject.ToModel(dto);
         model.ShouldBeOfType(expectedType);
         model.Visibility.ShouldBe(expectedVisibility);

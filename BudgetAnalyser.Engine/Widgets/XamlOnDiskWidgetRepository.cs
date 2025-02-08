@@ -77,11 +77,11 @@ internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
         return realModel.ToList();
     }
 
-    public async Task SaveAsync(IEnumerable<Widget> rules, string storageKey, bool isEncrypted)
+    public async Task SaveAsync(IEnumerable<Widget> widgets, string storageKey, bool isEncrypted)
     {
-        if (rules is null)
+        if (widgets is null)
         {
-            throw new ArgumentNullException(nameof(rules));
+            throw new ArgumentNullException(nameof(widgets));
         }
 
         if (storageKey is null)
@@ -89,7 +89,7 @@ internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        var dataEntities = rules.Select(r => this.mapper.ToDto(r));
+        var dataEntities = widgets.Select(r => this.mapper.ToDto(r));
         await SaveToDiskAsync(storageKey, dataEntities, isEncrypted);
     }
 
@@ -112,8 +112,8 @@ internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
         await writer.WriteToDiskAsync(fileName, Serialise(dataEntities));
     }
 
-    protected virtual string Serialise(IEnumerable<WidgetDto> dataEntity)
+    protected virtual string Serialise(IEnumerable<WidgetDto> dataEntities)
     {
-        return dataEntity is null ? throw new ArgumentNullException(nameof(dataEntity)) : XamlServices.Save(dataEntity.ToList());
+        return dataEntities is null ? throw new ArgumentNullException(nameof(dataEntities)) : XamlServices.Save(dataEntities.ToList());
     }
 }

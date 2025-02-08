@@ -22,16 +22,16 @@ internal class XamlOnDiskWidgetRepositoryTestHarness(IDtoMapper<WidgetDto, Widge
     {
         if (SaveToDiskOveride is null)
         {
-            await Task.CompletedTask;
+            await base.SaveToDiskAsync(fileName, dataEntities, isEncrypted);
             return;
         }
 
         await Task.Run(() => SaveToDiskOveride(fileName, dataEntities));
     }
 
-    protected override string Serialise(IEnumerable<WidgetDto> dataEntity)
+    protected override string Serialise(IEnumerable<WidgetDto> dataEntities)
     {
-        SerialisedData = base.Serialise(dataEntity);
+        SerialisedData = base.Serialise(dataEntities);
         return SerialisedData;
     }
 }
