@@ -27,9 +27,35 @@ public class XamlOnDiskWidgetRepositoryTest
     }
 
     [Fact]
+    public async Task CreateShouldSerialiseAndWriteGivenFilename()
+    {
+        var subject = ArrangeUsingMocks();
+        var serialised = string.Empty;
+        this.mockReaderWriter.WriteToDiskAsync("foo.bar", Arg.Do<string>(s => serialised = s)).Returns(Task.CompletedTask);
+        await subject.CreateNewAndSaveAsync("foo.bar");
+        await this.mockReaderWriter.Received(1).WriteToDiskAsync("foo.bar", Arg.Any<string>());
+
+        serialised.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task CreateShouldThrowGivenEmptyFileName()
+    {
+        var subject = ArrangeUsingEmbeddedResources();
+        await Should.ThrowAsync<ArgumentNullException>(async () => await subject.CreateNewAndSaveAsync(string.Empty));
+    }
+
+    [Fact]
+    public async Task CreateShouldThrowGivenNullFileName()
+    {
+        var subject = ArrangeUsingEmbeddedResources();
+        await Should.ThrowAsync<ArgumentNullException>(async () => await subject.CreateNewAndSaveAsync(null!));
+    }
+
+    [Fact]
     public void CtorShouldThrowWhenGivenNullMapper()
     {
-        Should.Throw<ArgumentNullException>(() => new XamlOnDiskWidgetRepository(null!, new XUnitLogger(this.output), this.mockSelector));
+        Should.Throw<ArgumentNullException>(() => new XamlOnDiskWidgetRepository(null!, new XUnitLogger(this.output), this.mockSelector, new WidgetCatalog()));
     }
 
     [Fact]
@@ -122,11 +148,12 @@ public class XamlOnDiskWidgetRepositoryTest
         return new XamlOnDiskWidgetRepository(
             new MapperWidgetToDto(new WidgetCatalog()),
             new XUnitLogger(this.output),
-            new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]));
+            new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]),
+            new WidgetCatalog());
     }
 
     private XamlOnDiskWidgetRepository ArrangeUsingMocks()
     {
-        return new XamlOnDiskWidgetRepository(new MapperWidgetToDto(this.mockWidgetCatalog), new XUnitLogger(this.output), this.mockSelector);
+        return new XamlOnDiskWidgetRepository(new MapperWidgetToDto(this.mockWidgetCatalog), new XUnitLogger(this.output), this.mockSelector, new WidgetCatalog());
     }
 }

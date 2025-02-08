@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using BudgetAnalyser.Engine.Widgets.Data;
+﻿using BudgetAnalyser.Engine.Widgets.Data;
 using Portable.Xaml;
 using Rees.TangyFruitMapper;
 
@@ -9,31 +8,12 @@ namespace BudgetAnalyser.Engine.Widgets;
 ///     A Repository to persistently store widgets in Xaml format on local disk.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, ILogger logger, IReaderWriterSelector readerWriterSelector)
+internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, ILogger logger, IReaderWriterSelector readerWriterSelector, IStandardWidgetCatalog catalog) : IWidgetRepository
 {
+    private readonly IStandardWidgetCatalog catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
     private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IDtoMapper<WidgetDto, Widget> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     private readonly IReaderWriterSelector readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
-
-    public IEnumerable<Widget> CreateNew()
-    {
-        var widgetTypes = GetType().GetTypeInfo().Assembly.GetExportedTypes()
-            .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
-
-        var widgets = widgetTypes
-            .Where(t => !typeof(IUserDefinedWidget).IsAssignableFrom(t))
-            .Select(widgetType => Activator.CreateInstance(widgetType) as Widget)
-            .ToList();
-
-        if (widgets.Any(w => w is null))
-        {
-            throw new DataFormatException("Code Error: Widget could not be created.");
-        }
-
-        return widgets.Where(w => w is not null)
-            .Cast<Widget>()
-            .ToList();
-    }
 
     public async Task CreateNewAndSaveAsync(string storageKey)
     {
@@ -42,7 +22,7 @@ internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        await SaveAsync(new List<Widget>(), storageKey, false);
+        await SaveAsync(CreateNewUsingDefaultSetOfWidgets(), storageKey, false);
     }
 
     public async Task<IEnumerable<Widget>> LoadAsync(string storageKey, bool isEncrypted)
@@ -99,6 +79,11 @@ internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
         var dataEntities = widgets.Select(r => this.mapper.ToDto(r));
         await SaveToDiskAsync(storageKey, dataEntities, isEncrypted);
         this.logger.LogInfo(_ => $"{nameof(XamlOnDiskWidgetRepository)} Saved Widgets to: {storageKey}");
+    }
+
+    private IEnumerable<Widget> CreateNewUsingDefaultSetOfWidgets()
+    {
+        return this.catalog.GetAll();
     }
 
     private object Deserialise(string xaml)

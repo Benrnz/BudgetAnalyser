@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
 using JetBrains.Annotations;
@@ -12,25 +13,28 @@ namespace BudgetAnalyser.Engine.Services;
 [UsedImplicitly] // Used by IoC
 internal class WidgetService : IWidgetService
 {
+    // TODO move this to WidgetGroup
     private static readonly Dictionary<string, int> GroupSequence = new()
     {
         { WidgetGroup.OverviewSectionName, 1 }, { WidgetGroup.GlobalFilterSectionName, 2 }, { WidgetGroup.PeriodicTrackingSectionName, 3 }, { WidgetGroup.ProjectsSectionName, 4 }
     };
 
     private readonly IBudgetBucketRepository bucketRepository;
+
+    private readonly SortedList<string, Widget> cachedWidgets = new();
+    private readonly IStandardWidgetCatalog catalog;
     private readonly IApplicationDatabaseService dbService;
     private readonly ILogger logger;
-    private readonly IWidgetRepository widgetRepo;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="WidgetService" /> class.
     /// </summary>
-    public WidgetService(IApplicationDatabaseService dbService, IBudgetBucketRepository bucketRepository, IWidgetRepository widgetRepo, ILogger logger)
+    public WidgetService(IApplicationDatabaseService dbService, IBudgetBucketRepository bucketRepository, ILogger logger, IStandardWidgetCatalog catalog)
     {
         this.dbService = dbService ?? throw new ArgumentNullException(nameof(dbService));
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
-        this.widgetRepo = widgetRepo ?? throw new ArgumentNullException(nameof(widgetRepo));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
     }
 
     /// <summary>
@@ -41,7 +45,7 @@ internal class WidgetService : IWidgetService
     {
         if (storedStates is not null)
         {
-            var widgets = this.widgetRepo.GetAll().ToList();
+            var widgets = GetAll();
             foreach (var widgetState in storedStates)
             {
                 var stateClone = widgetState;
@@ -61,7 +65,7 @@ internal class WidgetService : IWidgetService
             }
         }
 
-        return this.widgetRepo.GetAll()
+        return GetAll()
             .GroupBy(w => w.Category)
             .Select(
                 group => new WidgetGroup { Heading = group.Key, Widgets = new ObservableCollection<Widget>(group.OrderBy(w => w.Sequence)), Sequence = GroupSequence[group.Key] })
@@ -87,7 +91,7 @@ internal class WidgetService : IWidgetService
             return;
         }
 
-        this.widgetRepo.Remove(widget);
+        this.cachedWidgets.Remove(BuildMultiUseWidgetKey(widget));
     }
 
     public IUserDefinedWidget CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
@@ -106,14 +110,52 @@ internal class WidgetService : IWidgetService
     public IUserDefinedWidget Create(string fullName, string bucketCode)
     {
         var bucket = this.bucketRepository.GetByCode(bucketCode) ?? throw new ArgumentException($"No Bucket with code {bucketCode} exists", nameof(bucketCode));
-        return this.widgetRepo.Create(fullName, bucket.Code);
+
+        var type = Type.GetType(fullName) ?? throw new DataFormatException($"The widget type specified {fullName} is not found in any known type library.");
+        if (!typeof(IUserDefinedWidget).IsAssignableFrom(type))
+        {
+            throw new DataFormatException($"The widget type specified {fullName} is not a IUserDefinedWidget");
+        }
+
+        var widget = Activator.CreateInstance(type) as IUserDefinedWidget;
+        Debug.Assert(widget is not null);
+        widget.Id = bucket.Code;
+        var key = BuildMultiUseWidgetKey(widget);
+
+        if (this.cachedWidgets.ContainsKey(key))
+        {
+            throw new ArgumentException("A widget with this key already exists.", nameof(bucket.Code));
+        }
+
+        var baseWidget = (Widget)widget;
+        this.cachedWidgets.Add(key, baseWidget);
+        return widget;
+    }
+
+    private static string BuildMultiUseWidgetKey(IUserDefinedWidget widget)
+    {
+        var baseWidget = (Widget)widget;
+        return baseWidget.Category + baseWidget.Name + widget.Id;
     }
 
     private void CreateMultiInstanceWidget(MultiInstanceWidgetState multiInstanceState)
     {
         // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
-        var newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
+        var newIdWidget = Create(multiInstanceState.WidgetType, multiInstanceState.Id);
         newIdWidget.Visibility = multiInstanceState.Visible;
         newIdWidget.Initialise(multiInstanceState, this.logger);
+    }
+
+    private IList<Widget> GetAll()
+    {
+        if (this.cachedWidgets.None())
+        {
+            foreach (var widget in this.catalog.GetAll())
+            {
+                this.cachedWidgets.Add(widget.Category + widget.Name, widget);
+            }
+        }
+
+        return this.cachedWidgets.Values;
     }
 }
