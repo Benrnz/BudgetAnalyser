@@ -5,6 +5,8 @@ using BudgetAnalyser.Engine.Widgets.Data;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using NSubstitute.ReturnsExtensions;
 using Shouldly;
 using Xunit.Abstractions;
 
@@ -27,7 +29,7 @@ public class XamlOnDiskWidgetRepositoryTest
     [Fact]
     public void CtorShouldThrowWhenGivenNullMapper()
     {
-        Should.Throw<ArgumentNullException>(() => new XamlOnDiskWidgetRepository(null, new XUnitLogger(this.output), this.mockSelector));
+        Should.Throw<ArgumentNullException>(() => new XamlOnDiskWidgetRepository(null!, new XUnitLogger(this.output), this.mockSelector));
     }
 
     [Fact]
@@ -36,87 +38,95 @@ public class XamlOnDiskWidgetRepositoryTest
         var subject = ArrangeUsingEmbeddedResources();
         var results = await subject.LoadAsync(TestDataConstants.TestDataWidgetsFileName, false);
 
-        results.ShouldNotBeNull();
-        results.Any().ShouldBeTrue();
-    }
-
-    [Fact]
-    public async Task LoadShouldReturnWidgets()
-    {
-        var subject = ArrangeUsingEmbeddedResources();
-        subject.LoadFromDiskOveride = fileName => WidgetsTestData.RawDtoTestData1().ToList();
-        var results = await subject.LoadAsync("foo.bar", false);
-
-        results.ShouldNotBeNull();
         results.Any().ShouldBeTrue();
     }
 
     [Fact]
     public async Task LoadShouldThrowGivenBadFileFormat()
     {
-        var subject = ArrangeUsingEmbeddedResources();
-        subject.LoadFromDiskOveride = fileName => throw new Exception();
+        var subject = ArrangeUsingMocks();
+        // If any exception is thrown during loading and parsing the file, it should be caught and rethrown as a DataFormatException.
+        this.mockReaderWriter.FileExists("foo.bar").Returns(true);
+        this.mockReaderWriter.LoadFromDiskAsync("foo.bar").ThrowsAsync<Exception>();
         await Should.ThrowAsync<DataFormatException>(async () => await subject.LoadAsync("foo.bar", false));
     }
 
     [Fact]
-    public async Task LoadShouldThrowGivenNullFileName()
+    public async Task LoadShouldThrowGivenEmptyFileName()
+    {
+        var subject = ArrangeUsingMocks();
+        this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(false);
+        await Should.ThrowAsync<KeyNotFoundException>(async () => await subject.LoadAsync(string.Empty, false));
+    }
+
+    [Fact]
+    public async Task LoadShouldThrowGivenNullFileName1()
     {
         var subject = ArrangeUsingEmbeddedResources();
-        await Should.ThrowAsync<KeyNotFoundException>(async () => await subject.LoadAsync(null, false));
+        await Should.ThrowAsync<KeyNotFoundException>(async () => await subject.LoadAsync(null!, false));
+    }
+
+    [Fact]
+    public async Task LoadShouldThrowGivenNullFileName2()
+    {
+        var subject = ArrangeUsingMocks();
+        await Should.ThrowAsync<KeyNotFoundException>(async () => await subject.LoadAsync(null!, false));
     }
 
     [Fact]
     public async Task LoadShouldThrowIfFileNotFound()
     {
         var subject = ArrangeUsingMocks();
-        subject.ExistsOveride = filename => false;
+        this.mockReaderWriter.FileExists("Foo.bar").Returns(false);
         await Should.ThrowAsync<KeyNotFoundException>(async () => await subject.LoadAsync("Foo.bar", false));
     }
 
     [Fact]
     public async Task LoadShouldThrowIfLoadedNullFile()
     {
-        var subject = ArrangeUsingEmbeddedResources();
-        subject.LoadFromDiskOveride = fileName => null;
+        var subject = ArrangeUsingMocks();
+        this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
+        this.mockReaderWriter.LoadFromDiskAsync("foo.bar").ReturnsNull();
         await Should.ThrowAsync<DataFormatException>(async () => await subject.LoadAsync("foo.bar", false));
+    }
+
+    [Fact]
+    public async Task SaveShouldSerialiseAndWriteGivenValidModel()
+    {
+        var subject = ArrangeUsingMocks();
+        var serialised = string.Empty;
+        this.mockReaderWriter.WriteToDiskAsync("foo.bar", Arg.Do<string>(s => serialised = s)).Returns(Task.CompletedTask);
+        var models = WidgetsTestData.ModelTestData1();
+        await subject.SaveAsync(models, "foo.bar", false);
+        await this.mockReaderWriter.Received(1).WriteToDiskAsync("foo.bar", Arg.Any<string>());
+
+        serialised.ShouldNotBeEmpty();
     }
 
     [Fact]
     public async Task SaveShouldThrowGivenNullFileName()
     {
         var subject = ArrangeUsingEmbeddedResources();
-        await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(WidgetsTestData.ModelTestData1(), null, false));
+        await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(WidgetsTestData.ModelTestData1(), null!, false));
     }
 
     [Fact]
     public async Task SaveShouldThrowGivenNullWidgetsList()
     {
         var subject = ArrangeUsingEmbeddedResources();
-        await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(null, "Foo.bar", false));
+        await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(null!, "Foo.bar", false));
     }
 
-    [Fact]
-    public async Task SaveTest()
+    private XamlOnDiskWidgetRepository ArrangeUsingEmbeddedResources()
     {
-        var subject = ArrangeUsingMocks();
-        var models = WidgetsTestData.ModelTestData1();
-        await subject.SaveAsync(models, "foo.bar", false);
-        await this.mockReaderWriter.Received(1).WriteToDiskAsync("foo.bar", Arg.Any<string>());
-
-        subject.SerialisedData.ShouldNotBeEmpty();
-    }
-
-    private XamlOnDiskWidgetRepositoryTestHarness ArrangeUsingEmbeddedResources()
-    {
-        return new XamlOnDiskWidgetRepositoryTestHarness(
+        return new XamlOnDiskWidgetRepository(
             new MapperWidgetToDto(new WidgetCatalog()),
-            new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]),
-            this.output);
+            new XUnitLogger(this.output),
+            new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]));
     }
 
-    private XamlOnDiskWidgetRepositoryTestHarness ArrangeUsingMocks()
+    private XamlOnDiskWidgetRepository ArrangeUsingMocks()
     {
-        return new XamlOnDiskWidgetRepositoryTestHarness(new MapperWidgetToDto(this.mockWidgetCatalog), this.mockSelector, this.output);
+        return new XamlOnDiskWidgetRepository(new MapperWidgetToDto(this.mockWidgetCatalog), new XUnitLogger(this.output), this.mockSelector);
     }
 }
