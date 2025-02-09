@@ -1,26 +1,32 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Text;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 // ReSharper disable once UnusedType.Global // Instantiated by IoC
-internal class DashboardService : IDashboardService
+internal class DashboardService : IDashboardService, ISupportsModelPersistence
 {
     private readonly ILogger logger;
     private readonly MonitorableDependencies monitoringServices;
+    private readonly IWidgetRepository widgetRepo;
     private readonly IWidgetService widgetService;
+    private readonly CancellationTokenSource scheduledTaskCancellation = new();
     private ObservableCollection<WidgetGroup> widgetGroups = new();
 
     public DashboardService(
         IWidgetService widgetService,
         ILogger logger,
-        MonitorableDependencies monitorableDependencies)
+        MonitorableDependencies monitorableDependencies,
+        IWidgetRepository widgetRepo)
     {
         this.widgetService = widgetService ?? throw new ArgumentNullException(nameof(widgetService));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.monitoringServices = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
+        this.widgetRepo = widgetRepo ?? throw new ArgumentNullException(nameof(widgetRepo));
         this.monitoringServices.DependencyChanged += OnMonitoringServicesDependencyChanged;
     }
 
@@ -93,10 +99,11 @@ internal class DashboardService : IDashboardService
         UpdateAllWidgets();
         foreach (var group in this.widgetGroups)
         {
+            var token = this.scheduledTaskCancellation.Token;
             foreach (var widget in group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate is not null))
             {
                 // Run the scheduling on a different thread.
-                Task.Run(() => ScheduledWidgetUpdate(widget));
+                Task.Run(() => ScheduledWidgetUpdate(widget, token), token);
             }
         }
 
@@ -129,6 +136,40 @@ internal class DashboardService : IDashboardService
             .ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
     }
 
+    public ApplicationDataType DataType => ApplicationDataType.Widgets;
+
+    public int LoadSequence => 99;
+
+    public void Close()
+    {
+        this.scheduledTaskCancellation.Cancel();
+    }
+
+    public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+    {
+        await this.widgetRepo.CreateNewAndSaveAsync(applicationDatabase.WidgetsCollectionStorageKey);
+    }
+
+    public Task LoadAsync(ApplicationDatabase applicationDatabase)
+    {
+        // TODO Do nothing at this stage
+        return Task.CompletedTask;
+    }
+
+    public async Task SaveAsync(ApplicationDatabase applicationDatabase)
+    {
+        await this.widgetRepo.SaveAsync(this.widgetGroups.SelectMany(g => g.Widgets), applicationDatabase.WidgetsCollectionStorageKey, applicationDatabase.IsEncrypted);
+    }
+
+    public void SavePreview()
+    {
+    }
+
+    public bool ValidateModel(StringBuilder messages)
+    {
+        return true;
+    }
+
     private static WidgetPersistentState CreateWidgetState(Widget widget)
     {
         if (widget is IUserDefinedWidget multiInstanceWidget)
@@ -158,14 +199,14 @@ internal class DashboardService : IDashboardService
         UpdateAllWidgets(dependencyChangedEventArgs.DependencyType);
     }
 
-    private async Task ScheduledWidgetUpdate(Widget widget)
+    private async Task ScheduledWidgetUpdate(Widget widget, CancellationToken token)
     {
         Debug.Assert(widget.RecommendedTimeIntervalUpdate is not null);
         this.logger.LogInfo(_ => $"Scheduling \"{widget.Name}\" widget to update every {widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes} minutes.");
 
-        while (true)
+        while (!token.IsCancellationRequested)
         {
-            await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
+            await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value, token);
             this.logger.LogInfo(_ => $"Scheduled Update for \"{widget.Name}\" widget. Will run again after {widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes} minutes.");
             UpdateWidget(widget);
         }

@@ -242,9 +242,9 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         {
             await service.SaveAsync(this.budgetAnalyserDatabase);
         }
-        //await this.databaseDependents
-        //    .Where(service => this.dirtyData[service.DataType])
-        //    .Select(service => await service.SaveAsync(this.budgetAnalyserDatabase));
+
+        // TODO Temporary while testing new widget persistence
+        await this.databaseDependents.OfType<DashboardService>().First().SaveAsync(this.budgetAnalyserDatabase);
 
         ClearDirtyDataFlags();
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);

@@ -29,10 +29,8 @@ public class BudgetAnalyserStorageRoot
     /// <summary>
     ///     Gets or sets the ledger reconciliation to-do task collection.
     /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-        Justification = "Required for serialisation")]
-    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
-        Justification = "Required for serialisation")]
+    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
+    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
     public List<ToDoTaskDto> LedgerReconciliationToDoCollection { get; init; } = new();
 
     /// <summary>
@@ -44,4 +42,9 @@ public class BudgetAnalyserStorageRoot
     ///     Gets or sets the statement model root dto.
     /// </summary>
     public required StorageBranch StatementModelRootDto { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the Widget Collection root dto.
+    /// </summary>
+    public required StorageBranch WidgetCollectionRootDto { get; init; }
 }

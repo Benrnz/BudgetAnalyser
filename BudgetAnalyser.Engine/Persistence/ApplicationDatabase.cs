@@ -2,6 +2,7 @@
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Persistence;
 
@@ -69,6 +70,11 @@ public class ApplicationDatabase
     ///     Gets the storage path that identifies this budget analyser file.
     /// </summary>
     private string StoragePath => Path.GetDirectoryName(FileName) ?? ".\\";
+
+    /// <summary>
+    ///     Gets the widgets collection storage key. This is used to locate and load the collection of <see cref="Widget" />.
+    /// </summary>
+    public string WidgetsCollectionStorageKey { get; internal set; } = string.Empty;
 
     /// <summary>
     ///     Closes this instance.

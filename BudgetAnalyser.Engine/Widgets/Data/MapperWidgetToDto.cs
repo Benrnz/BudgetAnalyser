@@ -3,6 +3,7 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Widgets.Data;
 
+[AutoRegisterWithIoC]
 public class MapperWidgetToDto(IStandardWidgetCatalog widgetCatalog) : IDtoMapper<WidgetDto, Widget>
 {
     private readonly IStandardWidgetCatalog widgetCatalog = widgetCatalog ?? throw new ArgumentNullException(nameof(widgetCatalog));

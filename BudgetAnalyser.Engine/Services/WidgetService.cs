@@ -22,16 +22,17 @@ internal class WidgetService : IWidgetService
     private readonly IBudgetBucketRepository bucketRepository;
 
     private readonly SortedList<string, Widget> cachedWidgets = new();
+
     private readonly IStandardWidgetCatalog catalog;
-    private readonly IApplicationDatabaseService dbService;
+
+    // TODO private IApplicationDatabaseService? dbService;
     private readonly ILogger logger;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="WidgetService" /> class.
     /// </summary>
-    public WidgetService(IApplicationDatabaseService dbService, IBudgetBucketRepository bucketRepository, ILogger logger, IStandardWidgetCatalog catalog)
+    public WidgetService(IBudgetBucketRepository bucketRepository, ILogger logger, IStandardWidgetCatalog catalog)
     {
-        this.dbService = dbService ?? throw new ArgumentNullException(nameof(dbService));
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
@@ -87,7 +88,7 @@ internal class WidgetService : IWidgetService
 
             projectBucket.Active = false;
             fixedProjectWidget.Visibility = false;
-            this.dbService.NotifyOfChange(ApplicationDataType.Budget);
+            // TODO this.dbService.NotifyOfChange(ApplicationDataType.Budget);
             return;
         }
 
@@ -97,7 +98,7 @@ internal class WidgetService : IWidgetService
     public IUserDefinedWidget CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
     {
         var bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
-        this.dbService.NotifyOfChange(ApplicationDataType.Budget);
+        // TODO this.dbService.NotifyOfChange(ApplicationDataType.Budget);
         return Create(description, bucket.Code);
     }
 
@@ -109,7 +110,24 @@ internal class WidgetService : IWidgetService
     /// <param name="bucketCode">A unique identifier for the instance</param>
     public IUserDefinedWidget Create(string fullName, string bucketCode)
     {
-        var bucket = this.bucketRepository.GetByCode(bucketCode) ?? throw new ArgumentException($"No Bucket with code {bucketCode} exists", nameof(bucketCode));
+        return CreateInternal(fullName, bucketCode, false);
+    }
+
+    private static string BuildMultiUseWidgetKey(IUserDefinedWidget widget)
+    {
+        var baseWidget = (Widget)widget;
+        return baseWidget.Category + baseWidget.Name + widget.Id;
+    }
+
+    private IUserDefinedWidget CreateInternal(string fullName, string bucketCode, bool byPassValidation)
+    {
+        if (!byPassValidation)
+        {
+            if (this.bucketRepository.GetByCode(bucketCode) is null)
+            {
+                throw new ArgumentException($"No Bucket with code {bucketCode} exists", nameof(bucketCode));
+            }
+        }
 
         var type = Type.GetType(fullName) ?? throw new DataFormatException($"The widget type specified {fullName} is not found in any known type library.");
         if (!typeof(IUserDefinedWidget).IsAssignableFrom(type))
@@ -119,12 +137,12 @@ internal class WidgetService : IWidgetService
 
         var widget = Activator.CreateInstance(type) as IUserDefinedWidget;
         Debug.Assert(widget is not null);
-        widget.Id = bucket.Code;
+        widget.Id = bucketCode;
         var key = BuildMultiUseWidgetKey(widget);
 
         if (this.cachedWidgets.ContainsKey(key))
         {
-            throw new ArgumentException("A widget with this key already exists.", nameof(bucket.Code));
+            throw new ArgumentException("A widget with this key already exists.", nameof(bucketCode));
         }
 
         var baseWidget = (Widget)widget;
@@ -132,16 +150,11 @@ internal class WidgetService : IWidgetService
         return widget;
     }
 
-    private static string BuildMultiUseWidgetKey(IUserDefinedWidget widget)
-    {
-        var baseWidget = (Widget)widget;
-        return baseWidget.Category + baseWidget.Name + widget.Id;
-    }
-
     private void CreateMultiInstanceWidget(MultiInstanceWidgetState multiInstanceState)
     {
         // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
-        var newIdWidget = Create(multiInstanceState.WidgetType, multiInstanceState.Id);
+        // Bypass validating the bucket code if reading it from a persisted state.
+        var newIdWidget = CreateInternal(multiInstanceState.WidgetType, multiInstanceState.Id, true);
         newIdWidget.Visibility = multiInstanceState.Visible;
         newIdWidget.Initialise(multiInstanceState, this.logger);
     }

@@ -94,7 +94,10 @@ public class MapperWidgetToDtoTest
         var surpriseDto = (MultiInstanceWidgetDto)dto;
         var expected = new MultiInstanceWidgetDto
         {
-            WidgetGroup = WidgetGroup.ProjectsSectionName, Visible = true, WidgetType = "BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget", BucketCode = "SURPLUS.SPEC1"
+            WidgetGroup = WidgetGroup.ProjectsSectionName,
+            Visible = true,
+            WidgetType = "BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget",
+            BucketCode = "SURPLUS.SPEC1"
         };
         surpriseDto.ShouldBeEquivalentTo(expected);
     }

@@ -15,6 +15,7 @@ internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
     private readonly IDtoMapper<WidgetDto, Widget> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     private readonly IReaderWriterSelector readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
 
+    /// <inheritdoc />
     public async Task CreateNewAndSaveAsync(string storageKey)
     {
         if (storageKey.IsNothing())
@@ -25,6 +26,7 @@ internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
         await SaveAsync(CreateNewUsingDefaultSetOfWidgets(), storageKey, false);
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<Widget>> LoadAsync(string storageKey, bool isEncrypted)
     {
         this.logger.LogInfo(_ => $"{nameof(XamlOnDiskWidgetRepository)} Loading Widgets from: {storageKey}");
@@ -63,6 +65,7 @@ internal class XamlOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
         return realModel.ToList();
     }
 
+    /// <inheritdoc />
     public async Task SaveAsync(IEnumerable<Widget> widgets, string storageKey, bool isEncrypted)
     {
         if (widgets is null)
