@@ -14,7 +14,8 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     /// </summary>
     public BudgetBucketMonitorWidget()
     {
-        this.disabledToolTip = "Either a Statement or Budget are not present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget cannot be calculated.";
+        this.disabledToolTip =
+            "Either a Statement or Budget are not present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget cannot be calculated.";
     }
 
     /// <summary>
@@ -34,15 +35,6 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     ///     Gets the type of the widget. In this case same as GetType().Name
     /// </summary>
     public Type WidgetType => GetType();
-
-    /// <summary>
-    ///     Initialises the widget and optionally offers it some state and a logger.
-    /// </summary>
-    public void Initialise(MultiInstanceWidgetState state, ILogger logger)
-    {
-        logger.LogInfo(_ => $"BudgetBucketMonitorWidget Initialised for Bucket:'{Id}'. Provided state Id is: {state.Id}");
-        Id = state.Id;
-    }
 
     /// <summary>
     ///     Updates the widget values with updated input.

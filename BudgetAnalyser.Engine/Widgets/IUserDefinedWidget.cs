@@ -20,9 +20,4 @@ public interface IUserDefinedWidget
     ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in the user interface.
     /// </summary>
     Type WidgetType { get; }
-
-    /// <summary>
-    ///     Initialises the widget and optionally offers it some state and a logger.
-    /// </summary>
-    void Initialise(MultiInstanceWidgetState state, ILogger logger);
 }

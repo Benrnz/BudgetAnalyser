@@ -30,7 +30,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     public SurprisePaymentWidget()
     {
         Category = WidgetGroup.OverviewSectionName;
-        Dependencies = [typeof(IBudgetBucketRepository), typeof(GlobalFilterCriteria), typeof(BudgetCollection)];
+        Dependencies = [typeof(IBudgetBucketRepository), typeof(GlobalFilterCriteria), typeof(BudgetCollection), typeof(ILogger)];
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
         ToolTip = ToolTipPrefix;
         Size = WidgetSize.Medium;
@@ -82,17 +82,6 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     public Type WidgetType => GetType();
 
     /// <summary>
-    ///     Initialises the widget and optionally offers it some state and a logger.
-    /// </summary>
-    public void Initialise(MultiInstanceWidgetState state, ILogger logger)
-    {
-        var myState = (SurprisePaymentWidgetPersistentState)state;
-        StartPaymentDate = myState.PaymentStartDate;
-        Frequency = myState.Frequency;
-        this.diagLogger = logger;
-    }
-
-    /// <summary>
     ///     Updates the widget with new input.
     /// </summary>
     [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
@@ -131,6 +120,8 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
             ToolTip = "The budget collection is empty or null.";
             return;
         }
+
+        this.diagLogger = input[3] as ILogger;
 
         var budgetModel = budgetCollection.CurrentActiveBudget;
         if (budgetModel is null)

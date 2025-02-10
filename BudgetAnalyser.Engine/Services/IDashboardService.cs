@@ -35,18 +35,6 @@ public interface IDashboardService : IServiceFoundation
     void CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
 
     /// <summary>
-    ///     Initialises and returns the widget groups to view in the UI. This must be called first before other methods of this service can be used.
-    ///     The collection of widget groups is cached inside the service for use by the other methods.
-    /// </summary>
-    /// <param name="storedState">The persisted widget application state data object.</param>
-    ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationState storedState);
-
-    /// <summary>
-    ///     Prepares the persistent data for saving into permanent storage.
-    /// </summary>
-    WidgetsApplicationState PreparePersistentStateData();
-
-    /// <summary>
     ///     Removes a multi-instance widget from the widget groups.
     /// </summary>
     /// <param name="widgetToRemove">The widget to remove.</param>
@@ -56,4 +44,11 @@ public interface IDashboardService : IServiceFoundation
     ///     Makes all widgets visible.
     /// </summary>
     void ShowAllWidgets();
+
+    /// <summary>
+    ///     Initialises and returns the widget groups to view in the UI. This must be called first before other methods of this service can be used.
+    ///     The collection of widget groups is cached inside the service for use by the other methods.
+    /// </summary>
+    /// <param name="storedState">The persisted widget application state data object.</param>
+    ObservableCollection<WidgetGroup> WidgetsToDisplay(WidgetsApplicationState storedState);
 }

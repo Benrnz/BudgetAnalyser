@@ -12,9 +12,9 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
 {
     private readonly ILogger logger;
     private readonly MonitorableDependencies monitoringServices;
+    private readonly CancellationTokenSource scheduledTaskCancellation = new();
     private readonly IWidgetRepository widgetRepo;
     private readonly IWidgetService widgetService;
-    private readonly CancellationTokenSource scheduledTaskCancellation = new();
     private ObservableCollection<WidgetGroup> widgetGroups = new();
 
     public DashboardService(
@@ -41,7 +41,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
             return null;
         }
 
-        var widget = this.widgetService.Create(typeof(BudgetBucketMonitorWidget).FullName!, bucketCode);
+        var widget = this.widgetService.CreateUserDefinedWidget(typeof(BudgetBucketMonitorWidget).FullName!, bucketCode);
         return UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
@@ -80,7 +80,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
             throw new ArgumentException("Payment date is not set.", nameof(paymentDate));
         }
 
-        var widget = this.widgetService.Create(typeof(SurprisePaymentWidget).FullName!, bucketCode);
+        var widget = this.widgetService.CreateUserDefinedWidget(typeof(SurprisePaymentWidget).FullName!, bucketCode);
         var paymentWidget = (SurprisePaymentWidget)widget;
         paymentWidget.StartPaymentDate = paymentDate;
         paymentWidget.Frequency = frequency;
@@ -88,39 +88,15 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
     }
 
     /// <inheritdoc />
-    public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationState storedState)
+    public ObservableCollection<WidgetGroup> WidgetsToDisplay(WidgetsApplicationState storedState)
     {
-        if (storedState is null)
-        {
-            throw new ArgumentNullException(nameof(storedState));
-        }
-
-        this.widgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
-        UpdateAllWidgets();
-        foreach (var group in this.widgetGroups)
-        {
-            var token = this.scheduledTaskCancellation.Token;
-            foreach (var widget in group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate is not null))
-            {
-                // Run the scheduling on a different thread.
-                Task.Run(() => ScheduledWidgetUpdate(widget, token), token);
-            }
-        }
-
         return this.widgetGroups;
-    }
-
-    /// <inheritdoc />
-    public WidgetsApplicationState PreparePersistentStateData()
-    {
-        IEnumerable<WidgetGroup> widgetStates = this.widgetGroups.ToList();
-        return new WidgetsApplicationState { WidgetStates = widgetStates.SelectMany(group => group.Widgets).Select(CreateWidgetState).ToList() };
     }
 
     /// <inheritdoc />
     public void RemoveUserDefinedWidget(IUserDefinedWidget widgetToRemove)
     {
-        this.widgetService.Remove(widgetToRemove);
+        this.widgetService.RemoveUserDefinedWidget(widgetToRemove);
 
         var baseWidget = (Widget)widgetToRemove;
         var widgetGroup = this.widgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
@@ -150,10 +126,23 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         await this.widgetRepo.CreateNewAndSaveAsync(applicationDatabase.WidgetsCollectionStorageKey);
     }
 
-    public Task LoadAsync(ApplicationDatabase applicationDatabase)
+    public async Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
-        // TODO Do nothing at this stage
-        return Task.CompletedTask;
+        var widgets = await this.widgetRepo.LoadAsync(applicationDatabase.WidgetsCollectionStorageKey, applicationDatabase.IsEncrypted);
+        this.widgetService.Initialise(widgets);
+        this.widgetGroups = this.widgetService.ArrangeWidgetsForDisplay();
+        UpdateAllWidgets();
+
+        // Schedule widgets that want to do regular timed updates.
+        var token = this.scheduledTaskCancellation.Token;
+        foreach (var group in this.widgetGroups)
+        {
+            foreach (var widget in group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate is not null))
+            {
+                // Run the scheduling on a different thread.
+                _ = Task.Run(() => ScheduledWidgetUpdate(widget, token), token);
+            }
+        }
     }
 
     public async Task SaveAsync(ApplicationDatabase applicationDatabase)
@@ -168,25 +157,6 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
     public bool ValidateModel(StringBuilder messages)
     {
         return true;
-    }
-
-    private static WidgetPersistentState CreateWidgetState(Widget widget)
-    {
-        if (widget is IUserDefinedWidget multiInstanceWidget)
-        {
-            return multiInstanceWidget is not SurprisePaymentWidget surprisePaymentWidget
-                ? new MultiInstanceWidgetState { Id = multiInstanceWidget.Id, Visible = multiInstanceWidget.Visibility, WidgetType = multiInstanceWidget.WidgetType.FullName! }
-                : (WidgetPersistentState)new SurprisePaymentWidgetPersistentState
-                {
-                    Id = surprisePaymentWidget.Id,
-                    Visible = surprisePaymentWidget.Visibility,
-                    WidgetType = surprisePaymentWidget.WidgetType.FullName!,
-                    PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
-                    Frequency = surprisePaymentWidget.Frequency
-                };
-        }
-
-        return new WidgetPersistentState { Visible = widget.Visibility, WidgetType = widget.GetType().FullName! };
     }
 
     private void OnMonitoringServicesDependencyChanged(object? sender, DependencyChangedEventArgs? dependencyChangedEventArgs)
@@ -208,7 +178,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         {
             await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value, token);
             this.logger.LogInfo(_ => $"Scheduled Update for \"{widget.Name}\" widget. Will run again after {widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes} minutes.");
-            UpdateWidget(widget);
+            UpdateWidgetData(widget);
         }
         // ReSharper disable once FunctionNeverReturns - intentional timer tick infinite loop
     }
@@ -223,20 +193,34 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
 
         if (filterDependencyTypes.Length > 0)
         {
-            // targeted update
+            // targeted update - Eg. If only the LedgerBook has changed only Widgets that depend on LedgerBook should be updated.
             this.widgetGroups.SelectMany(group => group.Widgets)
                 .Where(w => w.Dependencies.Any(filterDependencyTypes.Contains))
                 .ToList()
-                .ForEach(UpdateWidget);
+                .ForEach(UpdateWidgetData);
         }
         else
         {
             // update all
-            this.widgetGroups.SelectMany(group => group.Widgets).ToList().ForEach(UpdateWidget);
+            this.widgetGroups.SelectMany(group => group.Widgets).ToList().ForEach(UpdateWidgetData);
         }
     }
 
-    private void UpdateWidget(Widget widget)
+    private Widget UpdateWidgetCollectionWithNewAddition(Widget baseWidget)
+    {
+        var widgetGroup = this.widgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
+        if (widgetGroup is null)
+        {
+            widgetGroup = new WidgetGroup { Heading = baseWidget.Category, Widgets = new ObservableCollection<Widget>() };
+            this.widgetGroups.Add(widgetGroup);
+        }
+
+        widgetGroup.Widgets.Add(baseWidget);
+        UpdateAllWidgets();
+        return baseWidget;
+    }
+
+    private void UpdateWidgetData(Widget widget)
     {
         if (widget.Dependencies.None())
         {
@@ -260,19 +244,5 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         }
 
         widget.Update(parameters);
-    }
-
-    private Widget UpdateWidgetCollectionWithNewAddition(Widget baseWidget)
-    {
-        var widgetGroup = this.widgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
-        if (widgetGroup is null)
-        {
-            widgetGroup = new WidgetGroup { Heading = baseWidget.Category, Widgets = new ObservableCollection<Widget>() };
-            this.widgetGroups.Add(widgetGroup);
-        }
-
-        widgetGroup.Widgets.Add(baseWidget);
-        UpdateAllWidgets();
-        return baseWidget;
     }
 }
