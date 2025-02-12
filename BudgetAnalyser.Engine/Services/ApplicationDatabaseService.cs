@@ -243,9 +243,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             await service.SaveAsync(this.budgetAnalyserDatabase);
         }
 
-        // TODO Temporary while testing new widget persistence - force widgets to be saved every time.
-        await this.databaseDependents.OfType<DashboardService>().First().SaveAsync(this.budgetAnalyserDatabase);
-
         ClearDirtyDataFlags();
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }

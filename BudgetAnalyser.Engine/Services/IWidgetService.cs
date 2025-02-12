@@ -15,6 +15,11 @@ public interface IWidgetService
     ObservableCollection<WidgetGroup> ArrangeWidgetsForDisplay();
 
     /// <summary>
+    ///     Cancels all scheduled widget data update tasks. Used when closing the application or file.
+    /// </summary>
+    void CancelScheduledUpdates();
+
+    /// <summary>
     ///     Create a new Fixed Budget Monitor Widget with the provided parameters. Returns null if the specified bucket code already exists.
     /// </summary>
     IUserDefinedWidget? CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount);
@@ -41,4 +46,9 @@ public interface IWidgetService
     ///     Removes the specified widget.
     /// </summary>
     void RemoveUserDefinedWidget(IUserDefinedWidget widget);
+
+    /// <summary>
+    ///     Force an update for the provided widget to refresh its data and update its values to display.
+    /// </summary>
+    void UpdateWidgetData(Widget widget);
 }

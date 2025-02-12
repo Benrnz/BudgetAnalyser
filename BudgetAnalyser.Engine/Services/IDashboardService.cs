@@ -44,9 +44,7 @@ public interface IDashboardService : IServiceFoundation
     void ShowAllWidgets();
 
     /// <summary>
-    ///     Initialises and returns the widget groups to view in the UI. This must be called first before other methods of this service can be used.
-    ///     The collection of widget groups is cached inside the service for use by the other methods.
+    ///     Returns a collection of widgets to display in the UI.  Data must be loaded from persistence first.
     /// </summary>
-    /// <param name="storedState">The persisted widget application state data object.</param>
-    ObservableCollection<WidgetGroup> WidgetsToDisplay(WidgetsApplicationState storedState);
+    ObservableCollection<WidgetGroup> WidgetsToDisplay();
 }

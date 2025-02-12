@@ -90,11 +90,13 @@ public sealed class DashboardController : ControllerBase, IShowableController
         }
     }
 
-    // TODO How to pass the data into this controller?
-    // WidgetCommands.DeregisterForWidgetChanges(WidgetGroups);
-    // WidgetGroups = this.dashboardService.WidgetsToDisplay(storedWidgetsState);
-    // WidgetCommands.ListenForWidgetChanges(WidgetGroups);
-
+    public void Show()
+    {
+        // TODO How to pass the data into this controller?
+        WidgetCommands.DeregisterForWidgetChanges(WidgetGroups);
+        WidgetGroups = this.dashboardService.WidgetsToDisplay();
+        WidgetCommands.ListenForWidgetChanges(WidgetGroups);
+    }
 
     private void OnBudgetBucketChosenForNewBucketMonitor(object sender, BudgetBucketChosenEventArgs args)
     {

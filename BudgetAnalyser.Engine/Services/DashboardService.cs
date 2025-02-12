@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Text;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Widgets;
@@ -11,8 +10,6 @@ namespace BudgetAnalyser.Engine.Services;
 internal class DashboardService : IDashboardService, ISupportsModelPersistence
 {
     private readonly ILogger logger;
-    private readonly MonitorableDependencies monitoringServices;
-    private readonly CancellationTokenSource scheduledTaskCancellation = new();
     private readonly IWidgetRepository widgetRepo;
     private readonly IWidgetService widgetService;
     private ObservableCollection<WidgetGroup> widgetGroups = new();
@@ -20,14 +17,11 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
     public DashboardService(
         IWidgetService widgetService,
         ILogger logger,
-        MonitorableDependencies monitorableDependencies,
         IWidgetRepository widgetRepo)
     {
         this.widgetService = widgetService ?? throw new ArgumentNullException(nameof(widgetService));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.monitoringServices = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
         this.widgetRepo = widgetRepo ?? throw new ArgumentNullException(nameof(widgetRepo));
-        this.monitoringServices.DependencyChanged += OnMonitoringServicesDependencyChanged;
     }
 
     /// <inheritdoc />
@@ -100,7 +94,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
     }
 
     /// <inheritdoc />
-    public ObservableCollection<WidgetGroup> WidgetsToDisplay(WidgetsApplicationState storedState)
+    public ObservableCollection<WidgetGroup> WidgetsToDisplay()
     {
         return this.widgetGroups;
     }
@@ -135,7 +129,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
     /// <inheritdoc />
     public void Close()
     {
-        this.scheduledTaskCancellation.Cancel();
+        this.widgetService.CancelScheduledUpdates();
     }
 
     /// <inheritdoc />
@@ -150,18 +144,6 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         var widgets = await this.widgetRepo.LoadAsync(applicationDatabase.WidgetsCollectionStorageKey, applicationDatabase.IsEncrypted);
         this.widgetService.Initialise(widgets);
         this.widgetGroups = this.widgetService.ArrangeWidgetsForDisplay();
-        UpdateAllWidgets();
-
-        // Schedule widgets that want to do regular timed updates.
-        var token = this.scheduledTaskCancellation.Token;
-        foreach (var group in this.widgetGroups)
-        {
-            foreach (var widget in group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate is not null))
-            {
-                // Run the scheduling on a different thread.
-                _ = Task.Run(() => ScheduledWidgetUpdate(widget, token), token);
-            }
-        }
     }
 
     /// <inheritdoc />
@@ -181,53 +163,6 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         return true;
     }
 
-    private void OnMonitoringServicesDependencyChanged(object? sender, DependencyChangedEventArgs? dependencyChangedEventArgs)
-    {
-        if (dependencyChangedEventArgs is null)
-        {
-            return;
-        }
-
-        UpdateAllWidgets(dependencyChangedEventArgs.DependencyType);
-    }
-
-    private async Task ScheduledWidgetUpdate(Widget widget, CancellationToken token)
-    {
-        Debug.Assert(widget.RecommendedTimeIntervalUpdate is not null);
-        this.logger.LogInfo(_ => $"Scheduling \"{widget.Name}\" widget to update every {widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes} minutes.");
-
-        while (!token.IsCancellationRequested)
-        {
-            await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value, token);
-            this.logger.LogInfo(_ => $"Scheduled Update for \"{widget.Name}\" widget. Will run again after {widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes} minutes.");
-            UpdateWidgetData(widget);
-        }
-        // ReSharper disable once FunctionNeverReturns - intentional timer tick infinite loop
-    }
-
-    private void UpdateAllWidgets(params Type[] filterDependencyTypes)
-    {
-        if (this.widgetGroups.None())
-        {
-            // Widget Groups have not yet been initialised and persistent state has not yet been loaded.
-            return;
-        }
-
-        if (filterDependencyTypes.Length > 0)
-        {
-            // targeted update - Eg. If only the LedgerBook has changed only Widgets that depend on LedgerBook should be updated.
-            this.widgetGroups.SelectMany(group => group.Widgets)
-                .Where(w => w.Dependencies.Any(filterDependencyTypes.Contains))
-                .ToList()
-                .ForEach(UpdateWidgetData);
-        }
-        else
-        {
-            // update all
-            this.widgetGroups.SelectMany(group => group.Widgets).ToList().ForEach(UpdateWidgetData);
-        }
-    }
-
     private Widget UpdateWidgetCollectionWithNewAddition(Widget baseWidget)
     {
         var widgetGroup = this.widgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
@@ -239,33 +174,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
 
         widgetGroup.Widgets.Add(baseWidget);
         // TODO Signal dirty data
-        UpdateWidgetData(baseWidget);
+        this.widgetService.UpdateWidgetData(baseWidget);
         return baseWidget;
-    }
-
-    private void UpdateWidgetData(Widget widget)
-    {
-        if (widget.Dependencies.None())
-        {
-            widget.Update();
-            return;
-        }
-
-        var parameters = new object[widget.Dependencies.Count()];
-        var index = 0;
-        foreach (var dependencyType in widget.Dependencies)
-        {
-            try
-            {
-                parameters[index++] = this.monitoringServices.RetrieveDependency(dependencyType);
-            }
-            catch (NotSupportedException ex)
-            {
-                // If you get an exception here first check the MonitorableDependencies.ctor method.
-                throw new NotSupportedException($"The requested dependency {dependencyType.Name} for the widget {widget.Name} is not supported.", ex);
-            }
-        }
-
-        widget.Update(parameters);
     }
 }
