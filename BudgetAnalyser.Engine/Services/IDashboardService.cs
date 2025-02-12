@@ -11,6 +11,11 @@ namespace BudgetAnalyser.Engine.Services;
 public interface IDashboardService : IServiceFoundation
 {
     /// <summary>
+    ///     An event that will be raised when a new data source has finished loading within the DashboardService.
+    /// </summary>
+    event EventHandler? NewDataSourceAvailable;
+
+    /// <summary>
     ///     Creates a new bucket monitor widget and adds it to the tracked widgetGroups collection. Duplicates are not allowed in the collection and will not be added.
     /// </summary>
     /// <param name="bucketCode">The bucket code to create a new monitor widget for.</param>

@@ -9,6 +9,7 @@ namespace BudgetAnalyser.Engine.Services;
 // ReSharper disable once UnusedType.Global // Instantiated by IoC
 internal class DashboardService : IDashboardService, ISupportsModelPersistence
 {
+    private readonly IDirtyDataService dirtyDataService;
     private readonly ILogger logger;
     private readonly IWidgetRepository widgetRepo;
     private readonly IWidgetService widgetService;
@@ -17,12 +18,16 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
     public DashboardService(
         IWidgetService widgetService,
         ILogger logger,
-        IWidgetRepository widgetRepo)
+        IWidgetRepository widgetRepo,
+        IDirtyDataService dirtyDataService)
     {
         this.widgetService = widgetService ?? throw new ArgumentNullException(nameof(widgetService));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.widgetRepo = widgetRepo ?? throw new ArgumentNullException(nameof(widgetRepo));
+        this.dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
     }
+
+    public event EventHandler? NewDataSourceAvailable;
 
     /// <inheritdoc />
     public Widget? CreateNewBucketMonitorWidget(string bucketCode)
@@ -108,7 +113,11 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         var widgetGroup = this.widgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
 
         widgetGroup?.Widgets.Remove(baseWidget);
-        //TODO Signal dirty data
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Widgets);
+        if (widgetToRemove is FixedBudgetMonitorWidget)
+        {
+            this.dirtyDataService.NotifyOfChange(ApplicationDataType.Budget);
+        }
     }
 
     /// <inheritdoc />
@@ -117,7 +126,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         this.widgetGroups
             .ToList()
             .ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
-        //TODO Signal dirty data
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Widgets);
     }
 
     /// <inheritdoc />
@@ -136,6 +145,11 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
     public async Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
         await this.widgetRepo.CreateNewAndSaveAsync(applicationDatabase.WidgetsCollectionStorageKey);
+        var handler = NewDataSourceAvailable;
+        if (handler is not null)
+        {
+            handler(this, EventArgs.Empty);
+        }
     }
 
     /// <inheritdoc />
@@ -144,6 +158,12 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         var widgets = await this.widgetRepo.LoadAsync(applicationDatabase.WidgetsCollectionStorageKey, applicationDatabase.IsEncrypted);
         this.widgetService.Initialise(widgets);
         this.widgetGroups = this.widgetService.ArrangeWidgetsForDisplay();
+
+        var handler = NewDataSourceAvailable;
+        if (handler is not null)
+        {
+            handler(this, EventArgs.Empty);
+        }
     }
 
     /// <inheritdoc />
@@ -173,7 +193,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         }
 
         widgetGroup.Widgets.Add(baseWidget);
-        // TODO Signal dirty data
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Widgets);
         this.widgetService.UpdateWidgetData(baseWidget);
         return baseWidget;
     }

@@ -39,6 +39,7 @@ public sealed class DashboardController : ControllerBase, IShowableController
 
         this.uiContext = uiContext;
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
+        this.dashboardService.NewDataSourceAvailable += OnNewDataSourceAvailable;
 
         this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
         this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;
@@ -88,14 +89,6 @@ public sealed class DashboardController : ControllerBase, IShowableController
             this.doNotUseShown = value;
             OnPropertyChanged();
         }
-    }
-
-    public void Show()
-    {
-        // TODO How to pass the data into this controller?
-        WidgetCommands.DeregisterForWidgetChanges(WidgetGroups);
-        WidgetGroups = this.dashboardService.WidgetsToDisplay();
-        WidgetCommands.ListenForWidgetChanges(WidgetGroups);
     }
 
     private void OnBudgetBucketChosenForNewBucketMonitor(object sender, BudgetBucketChosenEventArgs args)
@@ -157,5 +150,12 @@ public sealed class DashboardController : ControllerBase, IShowableController
         {
             this.uiContext.UserPrompts.MessageBox.Show(ex.Message, "Unable to create new surprise payment monitor widget.");
         }
+    }
+
+    private void OnNewDataSourceAvailable(object? sender, EventArgs? eventArgs)
+    {
+        WidgetCommands.DeregisterForWidgetChanges(WidgetGroups);
+        WidgetGroups = this.dashboardService.WidgetsToDisplay();
+        WidgetCommands.ListenForWidgetChanges(WidgetGroups);
     }
 }

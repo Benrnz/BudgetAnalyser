@@ -13,6 +13,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services;
 public class ApplicationDatabaseServiceTest
 {
     private Mock<ICredentialStore> mockCredentials;
+    private Mock<IDirtyDataService> mockDirtyService;
     private Mock<IApplicationDatabaseRepository> mockRepo;
     private Mock<ISupportsModelPersistence> mockService1;
     private Mock<ISupportsModelPersistence> mockService2;
@@ -105,14 +106,14 @@ public class ApplicationDatabaseServiceTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void Ctor_ShouldThrow_GivenNullRepo()
     {
-        new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
+        new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger(), new Mock<IDirtyDataService>().Object);
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void Ctor_ShouldThrow_GivenNullServices()
     {
-        new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
+        new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger(), new Mock<IDirtyDataService>().Object);
     }
 
     [TestMethod]
@@ -286,7 +287,15 @@ public class ApplicationDatabaseServiceTest
         this.mockCredentials = new Mock<ICredentialStore>();
 
         this.mockServices = new[] { this.mockService1.Object, this.mockService2.Object };
-        this.subject = new ApplicationDatabaseService(this.mockRepo.Object, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
+        this.mockDirtyService = new Mock<IDirtyDataService>();
+        this.subject = new ApplicationDatabaseService(
+            this.mockRepo.Object,
+            this.mockServices,
+            new FakeMonitorableDependencies(),
+            this.mockCredentials.Object,
+            new FakeLogger(),
+            this
+                .mockDirtyService.Object);
     }
 
     private void CreateNewDatabaseSetup()

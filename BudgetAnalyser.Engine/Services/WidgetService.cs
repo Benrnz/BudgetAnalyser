@@ -17,14 +17,11 @@ internal class WidgetService : IWidgetService
 
     private readonly SortedList<string, Widget> cachedWidgets = new();
 
-    // TODO private IApplicationDatabaseService? dbService; // Used to signal changes have been made to widgets than need to be persisted.
     private readonly ILogger logger;
     private readonly MonitorableDependencies monitoringServices;
     private readonly CancellationTokenSource scheduledTaskCancellation = new();
 
-    public WidgetService(IBudgetBucketRepository bucketRepository,
-        MonitorableDependencies monitorableDependencies,
-        ILogger logger)
+    public WidgetService(IBudgetBucketRepository bucketRepository, MonitorableDependencies monitorableDependencies, ILogger logger)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -74,12 +71,11 @@ internal class WidgetService : IWidgetService
             // Reassign transactions to Surplus
             if (this.bucketRepository.GetByCode(fixedProjectWidget.BucketCode) is not FixedBudgetProjectBucket projectBucket)
             {
-                throw new InvalidOperationException("The fixed project bucket provided doesn't actually appear to be a Fixed Budget Project Bucket");
+                throw new InvalidOperationException("The widget provided doesn't appear to be a Fixed Budget Project Bucket");
             }
 
             projectBucket.Active = false;
             fixedProjectWidget.Visibility = false;
-            // TODO this.dbService.NotifyOfChange(ApplicationDataType.Budget);
             return;
         }
 
@@ -119,7 +115,6 @@ internal class WidgetService : IWidgetService
             return null;
         }
 
-        // TODO this.dbService.NotifyOfChange(ApplicationDataType.Budget);
         return CreateUserDefinedWidget(description, bucket.Code);
     }
 
