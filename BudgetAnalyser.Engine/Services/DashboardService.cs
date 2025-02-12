@@ -42,11 +42,16 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         }
 
         var widget = this.widgetService.CreateUserDefinedWidget(typeof(BudgetBucketMonitorWidget).FullName!, bucketCode);
+        if (widget is null)
+        {
+            return null;
+        }
+
         return UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
     /// <inheritdoc />
-    public void CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
+    public Widget? CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {
@@ -64,11 +69,16 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         }
 
         var widget = this.widgetService.CreateFixedBudgetMonitorWidget(bucketCode, typeof(FixedBudgetMonitorWidget).FullName!, fixedBudgetAmount);
-        UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        if (widget is null)
+        {
+            return null;
+        }
+
+        return UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
     /// <inheritdoc />
-    public void CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
+    public Widget? CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {
@@ -80,11 +90,13 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
             throw new ArgumentException("Payment date is not set.", nameof(paymentDate));
         }
 
-        var widget = this.widgetService.CreateUserDefinedWidget(typeof(SurprisePaymentWidget).FullName!, bucketCode);
-        var paymentWidget = (SurprisePaymentWidget)widget;
-        paymentWidget.StartPaymentDate = paymentDate;
-        paymentWidget.Frequency = frequency;
-        UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        var widget = this.widgetService.CreateNewSurprisePaymentWidget(bucketCode, paymentDate, frequency);
+        if (widget is null)
+        {
+            return null;
+        }
+
+        return UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
     /// <inheritdoc />
@@ -102,6 +114,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         var widgetGroup = this.widgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
 
         widgetGroup?.Widgets.Remove(baseWidget);
+        //TODO Signal dirty data
     }
 
     /// <inheritdoc />
@@ -110,22 +123,28 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         this.widgetGroups
             .ToList()
             .ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
+        //TODO Signal dirty data
     }
 
+    /// <inheritdoc />
     public ApplicationDataType DataType => ApplicationDataType.Widgets;
 
+    /// <inheritdoc />
     public int LoadSequence => 99;
 
+    /// <inheritdoc />
     public void Close()
     {
         this.scheduledTaskCancellation.Cancel();
     }
 
-    public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+    /// <inheritdoc />
+    public async Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
         await this.widgetRepo.CreateNewAndSaveAsync(applicationDatabase.WidgetsCollectionStorageKey);
     }
 
+    /// <inheritdoc />
     public async Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
         var widgets = await this.widgetRepo.LoadAsync(applicationDatabase.WidgetsCollectionStorageKey, applicationDatabase.IsEncrypted);
@@ -145,17 +164,20 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         }
     }
 
+    /// <inheritdoc />
     public async Task SaveAsync(ApplicationDatabase applicationDatabase)
     {
         await this.widgetRepo.SaveAsync(this.widgetGroups.SelectMany(g => g.Widgets), applicationDatabase.WidgetsCollectionStorageKey, applicationDatabase.IsEncrypted);
     }
 
+    /// <inheritdoc />
     public void SavePreview()
     {
     }
 
     public bool ValidateModel(StringBuilder messages)
     {
+        // Nothing to validate - all new additions are validated when created.
         return true;
     }
 
@@ -216,7 +238,8 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         }
 
         widgetGroup.Widgets.Add(baseWidget);
-        UpdateAllWidgets();
+        // TODO Signal dirty data
+        UpdateWidgetData(baseWidget);
         return baseWidget;
     }
 

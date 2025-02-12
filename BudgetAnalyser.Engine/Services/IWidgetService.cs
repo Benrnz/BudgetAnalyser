@@ -14,15 +14,23 @@ public interface IWidgetService
     /// <returns></returns>
     ObservableCollection<WidgetGroup> ArrangeWidgetsForDisplay();
 
-    IUserDefinedWidget CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount);
+    /// <summary>
+    ///     Create a new Fixed Budget Monitor Widget with the provided parameters. Returns null if the specified bucket code already exists.
+    /// </summary>
+    IUserDefinedWidget? CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount);
+
+    /// <summary>
+    ///     Create a new Surprise Payment Widget with the provided parameters. Returns null if the specified bucket code already exists.
+    /// </summary>
+    Widget? CreateNewSurprisePaymentWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
 
     /// <summary>
     ///     Create a new widget with the given parameters. This is used to instantiate the <see cref="IUserDefinedWidget" />s.
-    ///     These can only be created after receiving the application state.
+    ///     These can only be created after receiving the application state. Will return null if a widget already exists for the provided bucket code.
     /// </summary>
     /// <param name="fullName">The full type name of the widget type.</param>
     /// <param name="bucketCode">A unique identifier for the instance</param>
-    IUserDefinedWidget CreateUserDefinedWidget(string fullName, string bucketCode);
+    IUserDefinedWidget? CreateUserDefinedWidget(string fullName, string bucketCode);
 
     /// <summary>
     ///     Initialise the service with widgets freshly loaded from persistence. This must be called first before other methods.

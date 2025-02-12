@@ -20,13 +20,12 @@ public interface IBudgetBucketRepository
     BudgetBucket SurplusBucket { get; }
 
     /// <summary>
-    ///     Creates the new fixed budget project.
+    ///     Creates the new fixed budget project. Returns null if the bucket code already exists.
     /// </summary>
     /// <param name="bucketCode">The bucket code.</param>
     /// <param name="description">The description.</param>
     /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
-    /// <exception cref="ArgumentException">Will be thrown if the bucket code already exists.</exception>
-    FixedBudgetProjectBucket CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount);
+    FixedBudgetProjectBucket? CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount);
 
     /// <summary>
     ///     Gets a bucket by its code.

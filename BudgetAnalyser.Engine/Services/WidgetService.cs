@@ -17,18 +17,16 @@ internal class WidgetService : IWidgetService
 
     private readonly SortedList<string, Widget> cachedWidgets = new();
 
-    // TODO private IApplicationDatabaseService? dbService;
+    // TODO private IApplicationDatabaseService? dbService; // Used to signal changes have been made to widgets than need to be persisted.
     private readonly ILogger logger;
 
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="WidgetService" /> class.
-    /// </summary>
     public WidgetService(IBudgetBucketRepository bucketRepository, ILogger logger)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    /// <inheritdoc />
     public void Initialise(IEnumerable<Widget> widgetsFromPersistence)
     {
         if (widgetsFromPersistence is null)
@@ -52,9 +50,7 @@ internal class WidgetService : IWidgetService
         }
     }
 
-    /// <summary>
-    ///     Removes the specified widget.
-    /// </summary>
+    /// <inheritdoc />
     public void RemoveUserDefinedWidget(IUserDefinedWidget widget)
     {
         if (widget is FixedBudgetMonitorWidget fixedProjectWidget)
@@ -74,6 +70,22 @@ internal class WidgetService : IWidgetService
         this.cachedWidgets.Remove(BuildMultiUseWidgetKey(widget));
     }
 
+    /// <inheritdoc />
+    public Widget? CreateNewSurprisePaymentWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
+    {
+        var widget = CreateUserDefinedWidget(typeof(SurprisePaymentWidget).FullName!, bucketCode);
+        if (widget is null)
+        {
+            return null;
+        }
+
+        var surpriseWidget = (SurprisePaymentWidget)widget;
+        surpriseWidget.StartPaymentDate = paymentDate;
+        surpriseWidget.Frequency = frequency;
+        return surpriseWidget;
+    }
+
+    /// <inheritdoc />
     public ObservableCollection<WidgetGroup> ArrangeWidgetsForDisplay()
     {
         var widgetGroups = this.cachedWidgets.Values
@@ -82,20 +94,21 @@ internal class WidgetService : IWidgetService
         return new ObservableCollection<WidgetGroup>(widgetGroups);
     }
 
-    public IUserDefinedWidget CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
+    /// <inheritdoc />
+    public IUserDefinedWidget? CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
     {
         var bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
+        if (bucket is null)
+        {
+            return null;
+        }
+
         // TODO this.dbService.NotifyOfChange(ApplicationDataType.Budget);
         return CreateUserDefinedWidget(description, bucket.Code);
     }
 
-    /// <summary>
-    ///     Create a new widget with the given parameters. This is used to instantiate the <see cref="IUserDefinedWidget" />s.
-    ///     These can only be created after receiving the application state.
-    /// </summary>
-    /// <param name="fullName">The full type name of the widget type.</param>
-    /// <param name="bucketCode">A unique identifier for the instance</param>
-    public IUserDefinedWidget CreateUserDefinedWidget(string fullName, string bucketCode)
+    /// <inheritdoc />
+    public IUserDefinedWidget? CreateUserDefinedWidget(string fullName, string bucketCode)
     {
         if (this.bucketRepository.GetByCode(bucketCode) is null)
         {
@@ -115,7 +128,7 @@ internal class WidgetService : IWidgetService
 
         if (this.cachedWidgets.ContainsKey(key))
         {
-            throw new ArgumentException("A widget with this key already exists.", nameof(bucketCode));
+            return null;
         }
 
         var baseWidget = (Widget)widget;

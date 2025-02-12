@@ -83,7 +83,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.budgetAnalyserDatabase = await this.applicationRepository.CreateNewAsync(storageKey);
         foreach (var service in this.databaseDependents)
         {
-            await service.CreateAsync(this.budgetAnalyserDatabase);
+            await service.CreateNewAsync(this.budgetAnalyserDatabase);
         }
 
         this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
@@ -243,7 +243,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             await service.SaveAsync(this.budgetAnalyserDatabase);
         }
 
-        // TODO Temporary while testing new widget persistence
+        // TODO Temporary while testing new widget persistence - force widgets to be saved every time.
         await this.databaseDependents.OfType<DashboardService>().First().SaveAsync(this.budgetAnalyserDatabase);
 
         ClearDirtyDataFlags();

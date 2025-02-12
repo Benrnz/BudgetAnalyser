@@ -124,7 +124,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     }
 
     /// <inheritdoc />
-    public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+    public async Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase.BudgetCollectionStorageKey.IsNothing())
         {

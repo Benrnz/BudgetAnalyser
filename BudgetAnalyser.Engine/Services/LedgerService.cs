@@ -119,7 +119,7 @@ internal class LedgerService(
     }
 
     /// <inheritdoc />
-    public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+    public async Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase.LedgerBookStorageKey.IsNothing())
         {

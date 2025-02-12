@@ -57,8 +57,8 @@ public class ApplicationDatabaseServiceTest
 
         var appDb = await this.subject.CreateNewDatabaseAsync("Foo");
 
-        this.mockService1.Verify(m => m.CreateAsync(It.IsAny<ApplicationDatabase>()));
-        this.mockService2.Verify(m => m.CreateAsync(It.IsAny<ApplicationDatabase>()));
+        this.mockService1.Verify(m => m.CreateNewAsync(It.IsAny<ApplicationDatabase>()));
+        this.mockService2.Verify(m => m.CreateNewAsync(It.IsAny<ApplicationDatabase>()));
     }
 
     [TestMethod]

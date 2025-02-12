@@ -161,7 +161,7 @@ internal class ReconciliationService(IReconciliationCreationManager reconciliati
     }
 
     /// <inheritdoc />
-    public Task CreateAsync(ApplicationDatabase applicationDatabase)
+    public Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
         // Nothing needs to be done here.
         return Task.CompletedTask;

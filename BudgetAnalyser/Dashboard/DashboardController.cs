@@ -126,16 +126,13 @@ public sealed class DashboardController : ControllerBase, IShowableController
         }
 
         CorrelationId = Guid.NewGuid();
-        try
+        var widget = this.dashboardService.CreateNewFixedBudgetMonitorWidget(
+            this.createNewFixedBudgetController.Code,
+            this.createNewFixedBudgetController.Description,
+            this.createNewFixedBudgetController.Amount);
+        if (widget is null)
         {
-            this.dashboardService.CreateNewFixedBudgetMonitorWidget(
-                this.createNewFixedBudgetController.Code,
-                this.createNewFixedBudgetController.Description,
-                this.createNewFixedBudgetController.Amount);
-        }
-        catch (ArgumentException ex)
-        {
-            this.uiContext.UserPrompts.MessageBox.Show(ex.Message, "Unable to create new fixed budget project");
+            this.uiContext.UserPrompts.MessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {this.createNewFixedBudgetController.Code} already exists.");
         }
     }
 

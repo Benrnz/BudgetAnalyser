@@ -74,7 +74,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     }
 
     /// <inheritdoc />
-    public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+    public async Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
         if (applicationDatabase.StatementModelStorageKey.IsNothing())
         {

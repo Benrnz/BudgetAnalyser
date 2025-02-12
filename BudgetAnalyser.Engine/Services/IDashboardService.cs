@@ -19,20 +19,18 @@ public interface IDashboardService : IServiceFoundation
 
     /// <summary>
     ///     Creates the new fixed budget monitor widget. Also creates all supporting background infrastructure to support the project including a subclass of Surplus.
+    ///     Returns null is the bucket code already exists.
     /// </summary>
     /// <param name="bucketCode">The code to use for a <see cref="BudgetBucket" /> bucket code. This will be a bucket that inherits from Surplus.</param>
     /// <param name="description">The description.</param>
     /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
-    /// <exception cref="ArgumentException">Will be thrown if the bucket code already exists.</exception>
-    void CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount);
+    Widget? CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount);
 
     /// <summary>
     ///     Creates the new surprise payment monitor widget. This is a widget that shows which months require extra payments because four weeks do not perfectly divide into every month.
+    ///     Returns null if the bucket code already has a Surprise Payment Monitor widget.
     /// </summary>
-    /// <param name="bucketCode">The bucket code.</param>
-    /// <param name="paymentDate">The payment date.</param>
-    /// <param name="frequency">The frequency.</param>
-    void CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
+    Widget? CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
 
     /// <summary>
     ///     Removes a multi-instance widget from the widget groups.
