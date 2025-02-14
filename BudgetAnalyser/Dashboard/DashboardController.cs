@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Threading;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
@@ -156,6 +157,7 @@ public sealed class DashboardController : ControllerBase, IShowableController
     {
         WidgetCommands.DeregisterForWidgetChanges(WidgetGroups);
         WidgetGroups = this.dashboardService.WidgetsToDisplay();
+        OnPropertyChanged(nameof(WidgetGroups));
         WidgetCommands.ListenForWidgetChanges(WidgetGroups);
     }
 }

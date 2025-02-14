@@ -108,7 +108,8 @@ internal class WidgetService : IWidgetService
     {
         var widgetGroups = this.cachedWidgets.Values
             .GroupBy(w => w.Category)
-            .Select(group => new WidgetGroup { Heading = group.Key, Widgets = new ObservableCollection<Widget>(group.OrderBy(w => w.Sequence)), Sequence = WidgetGroup.GroupSequence[group.Key] });
+            .Select(group => new WidgetGroup { Heading = group.Key, Widgets = new ObservableCollection<Widget>(group.OrderBy(w => w.Sequence)), Sequence = WidgetGroup.GroupSequence[group.Key] })
+            .OrderBy(group => group.Sequence);
         return new ObservableCollection<WidgetGroup>(widgetGroups);
     }
 
