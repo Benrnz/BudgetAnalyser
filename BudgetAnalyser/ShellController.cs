@@ -189,12 +189,7 @@ namespace BudgetAnalyser
 
         private static IList<IPersistentApplicationStateObject> CreateNewDefaultApplicationState()
         {
-            // Widget persistent state object is required to draw the widgets, even the ones that should be there by default.
-            // The widgets must be drawn so a user can open or create a new file. 
-            var appState = new List<IPersistentApplicationStateObject>
-            {
-                new WidgetsApplicationState()
-            };
+            var appState = new List<IPersistentApplicationStateObject>();
             return appState;
         }
 
