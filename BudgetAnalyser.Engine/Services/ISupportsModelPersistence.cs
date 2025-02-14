@@ -28,7 +28,7 @@ public interface ISupportsModelPersistence
     /// <summary>
     ///     Create a new file specific for that service's data.
     /// </summary>
-    Task CreateAsync(ApplicationDatabase applicationDatabase);
+    Task CreateNewAsync(ApplicationDatabase applicationDatabase);
 
     /// <summary>
     ///     Loads a data source with the provided database reference data asynchronously.

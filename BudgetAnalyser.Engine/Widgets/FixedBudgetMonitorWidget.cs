@@ -74,13 +74,6 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     public Type WidgetType => GetType();
 
     /// <summary>
-    ///     Initialises the widget and optionally offers it some state and a logger.
-    /// </summary>
-    public void Initialise(MultiInstanceWidgetState state, ILogger logger)
-    {
-    }
-
-    /// <summary>
     ///     Updates the widget with new input.
     /// </summary>
     /// <exception cref="System.ArgumentNullException"></exception>

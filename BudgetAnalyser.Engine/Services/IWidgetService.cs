@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Widgets;
+﻿using System.Collections.ObjectModel;
+using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services;
 
@@ -8,23 +9,46 @@ namespace BudgetAnalyser.Engine.Services;
 public interface IWidgetService
 {
     /// <summary>
+    ///     Arranges the widgets into groups for display in the UI.
+    /// </summary>
+    /// <returns></returns>
+    ObservableCollection<WidgetGroup> ArrangeWidgetsForDisplay();
+
+    /// <summary>
+    ///     Cancels all scheduled widget data update tasks. Used when closing the application or file.
+    /// </summary>
+    void CancelScheduledUpdates();
+
+    /// <summary>
+    ///     Create a new Fixed Budget Monitor Widget with the provided parameters. Returns null if the specified bucket code already exists.
+    /// </summary>
+    IUserDefinedWidget? CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount);
+
+    /// <summary>
+    ///     Create a new Surprise Payment Widget with the provided parameters. Returns null if the specified bucket code already exists.
+    /// </summary>
+    Widget? CreateNewSurprisePaymentWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
+
+    /// <summary>
     ///     Create a new widget with the given parameters. This is used to instantiate the <see cref="IUserDefinedWidget" />s.
-    ///     These can only be created after receiving the application state.
+    ///     These can only be created after receiving the application state. Will return null if a widget already exists for the provided bucket code.
     /// </summary>
     /// <param name="fullName">The full type name of the widget type.</param>
     /// <param name="bucketCode">A unique identifier for the instance</param>
-    IUserDefinedWidget Create(string fullName, string bucketCode);
-
-    IUserDefinedWidget CreateFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount);
+    IUserDefinedWidget? CreateUserDefinedWidget(string fullName, string bucketCode);
 
     /// <summary>
-    ///     Arranges the widgets into groups for display in the UI.
+    ///     Initialise the service with widgets freshly loaded from persistence. This must be called first before other methods.
     /// </summary>
-    /// <param name="storedStates">The stored states.</param>
-    IEnumerable<WidgetGroup> PrepareWidgets(IEnumerable<WidgetPersistentState>? storedStates);
+    void Initialise(IEnumerable<Widget> widgetsFromPersistence);
 
     /// <summary>
     ///     Removes the specified widget.
     /// </summary>
-    void Remove(IUserDefinedWidget widget);
+    void RemoveUserDefinedWidget(IUserDefinedWidget widget);
+
+    /// <summary>
+    ///     Force an update for the provided widget to refresh its data and update its values to display.
+    /// </summary>
+    void UpdateWidgetData(Widget widget);
 }

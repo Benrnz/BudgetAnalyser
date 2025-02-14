@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace BudgetAnalyser.Engine.Widgets;
+﻿namespace BudgetAnalyser.Engine.Widgets;
 
 /// <summary>
 ///     A repository to get, create, and remove widgets
@@ -8,20 +6,17 @@ namespace BudgetAnalyser.Engine.Widgets;
 public interface IWidgetRepository
 {
     /// <summary>
-    ///     Create a new widget with the given parameters. This is used to instantiate the <see cref="IUserDefinedWidget" />s. These can only be created after receiving the application state.
+    ///     Creates a new widget file with a default set of widgets and saves it.
     /// </summary>
-    /// <param name="widgetType">The full type name of the widget type.</param>
-    /// <param name="id">A unique identifier for the instance</param>
-    IUserDefinedWidget Create(string widgetType, string id);
+    Task CreateNewAndSaveAsync(string storageKey);
 
     /// <summary>
-    ///     Gets all the available widgets.
+    ///     Loads the widgets from the provided storage key (filename).
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Preferred term in repository")]
-    IEnumerable<Widget> GetAll();
+    Task<IEnumerable<Widget>> LoadAsync(string storageKey, bool isEncrypted);
 
     /// <summary>
-    ///     Removes the specified widget.
+    ///     Saves the widget collection to the provided storage key (filename).
     /// </summary>
-    void Remove(IUserDefinedWidget widget);
+    Task SaveAsync(IEnumerable<Widget> widgets, string storageKey, bool isEncrypted);
 }

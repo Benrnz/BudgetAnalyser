@@ -36,4 +36,8 @@
       <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="TestData\WidgetsTestData.xml" />
+    </ItemGroup>
+
 </Project>

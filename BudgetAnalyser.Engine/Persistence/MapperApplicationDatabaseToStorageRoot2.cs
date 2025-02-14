@@ -18,6 +18,7 @@ public class MapperApplicationDatabaseToStorageRoot2 : IDtoMapper<BudgetAnalyser
             StatementModelRootDto = new StorageBranch { Source = model.StatementModelStorageKey },
             LedgerReconciliationToDoCollection = this.todoMapper.ToDto(model.LedgerReconciliationToDoCollection),
             MatchingRulesCollectionRootDto = new StorageBranch { Source = model.MatchingRulesCollectionStorageKey },
+            WidgetCollectionRootDto = new StorageBranch { Source = model.WidgetsCollectionStorageKey },
             IsEncrypted = model.IsEncrypted
         };
         return dto;
@@ -32,7 +33,8 @@ public class MapperApplicationDatabaseToStorageRoot2 : IDtoMapper<BudgetAnalyser
             StatementModelStorageKey = dto.StatementModelRootDto.Source,
             MatchingRulesCollectionStorageKey = dto.MatchingRulesCollectionRootDto.Source,
             IsEncrypted = dto.IsEncrypted,
-            LedgerReconciliationToDoCollection = this.todoMapper.ToModel(dto.LedgerReconciliationToDoCollection)
+            LedgerReconciliationToDoCollection = this.todoMapper.ToModel(dto.LedgerReconciliationToDoCollection),
+            WidgetsCollectionStorageKey = dto.WidgetCollectionRootDto.Source
         };
         return baxModel;
     }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Widgets;
 
@@ -28,6 +27,11 @@ public class WidgetGroup
     /// </summary>
     public const string ProjectsSectionName = "Projects";
 
+    internal static readonly Dictionary<string, int> GroupSequence = new()
+    {
+        { OverviewSectionName, 1 }, { GlobalFilterSectionName, 2 }, { PeriodicTrackingSectionName, 3 }, { ProjectsSectionName, 4 }
+    };
+
     /// <summary>
     ///     Gets or sets the group heading.
     /// </summary>
@@ -41,6 +45,5 @@ public class WidgetGroup
     /// <summary>
     ///     Gets or sets the widgets in this group.
     /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for UI Binding.")]
     public required ObservableCollection<Widget> Widgets { get; init; }
 }

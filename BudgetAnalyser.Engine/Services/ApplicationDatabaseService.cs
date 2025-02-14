@@ -9,18 +9,19 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     private readonly IApplicationDatabaseRepository applicationRepository;
     private readonly ICredentialStore credentialStore;
     private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
-    private readonly Dictionary<ApplicationDataType, bool> dirtyData = new();
+    private readonly IDirtyDataService dirtyDataService;
     private readonly ILogger logger;
-    private readonly MonitorableDependencies monitorableDependencies;
+    private readonly IMonitorableDependencies monitorableDependencies;
 
     private ApplicationDatabase? budgetAnalyserDatabase;
 
     public ApplicationDatabaseService(
         IApplicationDatabaseRepository applicationRepository,
         IEnumerable<ISupportsModelPersistence> databaseDependents,
-        MonitorableDependencies monitorableDependencies,
+        IMonitorableDependencies monitorableDependencies,
         ICredentialStore credentialStore,
-        ILogger logger)
+        ILogger logger,
+        IDirtyDataService dirtyDataService)
     {
         if (databaseDependents is null)
         {
@@ -31,13 +32,12 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
         this.credentialStore = credentialStore ?? throw new ArgumentNullException(nameof(credentialStore));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
         this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
-        InitialiseDirtyDataTable();
     }
 
-    /// <inheritdoc />
-    public bool HasUnsavedChanges => this.dirtyData.Values.Any(v => v);
+    public bool HasUnsavedChanges => this.dirtyDataService.HasUnsavedChanges;
 
     /// <inheritdoc />
     public bool IsEncrypted => this.budgetAnalyserDatabase is not null && this.budgetAnalyserDatabase.IsEncrypted;
@@ -63,7 +63,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             service.Close();
         }
 
-        ClearDirtyDataFlags();
+        this.dirtyDataService.ClearAllDirtyDataFlags();
 
         this.budgetAnalyserDatabase.Close();
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
@@ -79,11 +79,11 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        ClearDirtyDataFlags();
+        this.dirtyDataService.ClearAllDirtyDataFlags();
         this.budgetAnalyserDatabase = await this.applicationRepository.CreateNewAsync(storageKey);
         foreach (var service in this.databaseDependents)
         {
-            await service.CreateAsync(this.budgetAnalyserDatabase);
+            await service.CreateNewAsync(this.budgetAnalyserDatabase);
         }
 
         this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
@@ -105,7 +105,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
 
         await CreateBackup(); // Ensure data is not corrupted and lost when encrypting files
 
-        SetAllDirtyFlags(); // Ensure all files are marked as requiring a save.
+        this.dirtyDataService.SetAllDirtyFlags(); // Ensure all files are marked as requiring a save.
         this.budgetAnalyserDatabase.IsEncrypted = true;
         await SaveAsync();
     }
@@ -130,7 +130,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
 
         await CreateBackup(); // Ensure data is not corrupted and lost when encrypting files
 
-        SetAllDirtyFlags(); // Ensure all files are marked as requiring a save.
+        this.dirtyDataService.SetAllDirtyFlags(); // Ensure all files are marked as requiring a save.
         this.budgetAnalyserDatabase.IsEncrypted = false;
 
         await SaveAsync();
@@ -147,7 +147,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        ClearDirtyDataFlags();
+        this.dirtyDataService.ClearAllDirtyDataFlags();
         var encryptionKey = this.credentialStore.RetrievePasskey();
         this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
         if (this.budgetAnalyserDatabase.IsEncrypted && encryptionKey is null)
@@ -187,7 +187,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     /// <inheritdoc />
     public void NotifyOfChange(ApplicationDataType dataType)
     {
-        this.dirtyData[dataType] = true;
+        this.dirtyDataService.NotifyOfChange(dataType);
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
@@ -227,7 +227,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         this.databaseDependents
-            .Where(service => this.dirtyData[service.DataType])
+            .Where(service => this.dirtyDataService.IsDirty(service.DataType))
             .ToList()
             .ForEach(service => service.SavePreview());
 
@@ -238,15 +238,12 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
 
         // Save all remaining service's data.
-        foreach (var service in this.databaseDependents.Where(s => this.dirtyData[s.DataType]))
+        foreach (var service in this.databaseDependents.Where(s => this.dirtyDataService.IsDirty(s.DataType)))
         {
             await service.SaveAsync(this.budgetAnalyserDatabase);
         }
-        //await this.databaseDependents
-        //    .Where(service => this.dirtyData[service.DataType])
-        //    .Select(service => await service.SaveAsync(this.budgetAnalyserDatabase));
 
-        ClearDirtyDataFlags();
+        this.dirtyDataService.ClearAllDirtyDataFlags();
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
@@ -275,14 +272,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         return valid;
     }
 
-    private void ClearDirtyDataFlags()
-    {
-        foreach (var key in this.dirtyData.Keys.ToList())
-        {
-            this.dirtyData[key] = false;
-        }
-    }
-
     private async Task CreateBackup()
     {
         if (this.budgetAnalyserDatabase is null)
@@ -290,7 +279,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             throw new ArgumentException("There is no budget analyser files loaded");
         }
 
-        SetAllDirtyFlags();
+        this.dirtyDataService.SetAllDirtyFlags();
 
         var backupSuffix = ".backup";
         var budgetStorageKey = this.budgetAnalyserDatabase.BudgetCollectionStorageKey;
@@ -311,23 +300,5 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.budgetAnalyserDatabase.LedgerBookStorageKey = ledgerStorageKey;
         this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey = matchingRuleStorageKey;
         this.budgetAnalyserDatabase.StatementModelStorageKey = statementStorageKey;
-    }
-
-    private void InitialiseDirtyDataTable()
-    {
-        foreach (int value in Enum.GetValues(typeof(ApplicationDataType)))
-        {
-            var enumValue = (ApplicationDataType)value;
-            this.dirtyData.Add(enumValue, false);
-        }
-    }
-
-    private void SetAllDirtyFlags()
-    {
-        // Ensure all data types are marked as requiring a save.
-        foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
-        {
-            this.dirtyData[(ApplicationDataType)dataType] = true;
-        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using BudgetAnalyser.Engine.Budget.Data;
+﻿using BudgetAnalyser.Engine.Budget.Data;
 using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Budget;
@@ -16,11 +15,6 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
     private readonly object syncRoot = new();
     private Dictionary<string, BudgetBucket> lookupTable = new();
 
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="InMemoryBudgetBucketRepository" /> class.
-    /// </summary>
-    /// <exception cref="ArgumentNullException">
-    /// </exception>
     public InMemoryBudgetBucketRepository(IDtoMapper<BudgetBucketDto, BudgetBucket> mapper)
     {
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -28,30 +22,14 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
         InitialiseMandatorySpecialBuckets();
     }
 
-    /// <summary>
-    ///     Gets all known budget buckets.
-    /// </summary>
+    /// <inheritdoc />
     public virtual IEnumerable<BudgetBucket> Buckets => this.lookupTable.Values.OrderBy(b => b.Code).ToList();
 
-    /// <summary>
-    ///     Gets the surplus bucket. This is for convenience only, it also exists in the <see cref="Buckets" /> collection
-    /// </summary>
+    /// <inheritdoc />
     public BudgetBucket SurplusBucket { get; protected init; }
 
-    /// <summary>
-    ///     Creates the new fixed budget project.
-    /// </summary>
-    /// <param name="bucketCode">The bucket code.</param>
-    /// <param name="description">The description.</param>
-    /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
-    /// <exception cref="ArgumentNullException">
-    /// </exception>
-    /// <exception cref="ArgumentException">
-    ///     The fixed budget amount must be greater than zero.
-    ///     or
-    ///     A new fixed budget project bucket cannot be created, because the code  + bucketCode +  already exists.
-    /// </exception>
-    public FixedBudgetProjectBucket CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount)
+    /// <inheritdoc />
+    public virtual FixedBudgetProjectBucket? CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {
@@ -71,14 +49,14 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
         var upperCode = FixedBudgetProjectBucket.CreateCode(bucketCode);
         if (IsValidCode(upperCode))
         {
-            throw new ArgumentException($"A new fixed budget project bucket cannot be created, because the code {bucketCode} already exists.", bucketCode);
+            return null;
         }
 
         lock (this.syncRoot)
         {
             if (IsValidCode(upperCode))
             {
-                throw new ArgumentException($"A new fixed budget project bucket cannot be created, because the code {bucketCode} already exists.", bucketCode);
+                return null;
             }
 
             var bucket = new FixedBudgetProjectBucket(bucketCode, description, fixedBudgetAmount);
@@ -87,14 +65,7 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
         }
     }
 
-    /// <summary>
-    ///     Gets a bucket by its code.
-    /// </summary>
-    /// <param name="code">The code, also used as a key and must be unique.</param>
-    /// <returns>
-    ///     The registered bucket or null if the given code doesn't exist.
-    /// </returns>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <inheritdoc />
     public virtual BudgetBucket? GetByCode(string code)
     {
         if (code is null)
@@ -106,13 +77,7 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
         return IsValidCode(upperCode) ? this.lookupTable[upperCode] : null;
     }
 
-    /// <summary>
-    ///     Gets the bucket by its code or creates a new one if not found.
-    /// </summary>
-    /// <param name="code">The code, also used as a key and must be unique.</param>
-    /// <param name="factory">The factory to create the new bucket if not already registered.</param>
-    /// <exception cref="ArgumentNullException">
-    /// </exception>
+    /// <inheritdoc />
     public virtual BudgetBucket GetOrCreateNew(string code, Func<BudgetBucket> factory)
     {
         if (code is null)
@@ -139,10 +104,7 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
         }
     }
 
-    /// <summary>
-    ///     Initialises the buckets from the provided data.  Used by persistence.
-    /// </summary>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <inheritdoc />
     public virtual void Initialise(IEnumerable<BudgetBucketDto> buckets)
     {
         if (buckets is null)
@@ -162,23 +124,12 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
         }
     }
 
-    /// <summary>
-    ///     Determines whether the bucket code is registered in this repository.
-    /// </summary>
-    /// <param name="code">The code, also used as a key and must be unique.</param>
-    /// <returns>
-    ///     True if found, otherwise false.
-    /// </returns>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <inheritdoc />
     public virtual bool IsValidCode(string code)
     {
         return code is null ? throw new ArgumentNullException(nameof(code)) : ContainsKeyInternal(code);
     }
 
-    /// <summary>
-    ///     Adds the bucket.
-    /// </summary>
-    /// <exception cref="ArgumentNullException"></exception>
     protected void AddBucket(BudgetBucket bucket)
     {
         if (bucket is null)
@@ -202,10 +153,6 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
         }
     }
 
-    /// <summary>
-    ///     Determines whether [contains key internal] [the specified code].
-    /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Already validated upstream")]
     protected bool ContainsKeyInternal(string code)
     {
         return this.lookupTable.ContainsKey(code.ToUpperInvariant());

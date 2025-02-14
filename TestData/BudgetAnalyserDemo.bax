@@ -27,4 +27,7 @@
     </scg:List>
   </BudgetAnalyserStorageRoot.LedgerReconciliationToDoCollection>
 
+  <BudgetAnalyserStorageRoot.WidgetCollectionRootDto>
+    <StorageBranch Source="Widgets.xml" />
+  </BudgetAnalyserStorageRoot.WidgetCollectionRootDto>
 </BudgetAnalyserStorageRoot>

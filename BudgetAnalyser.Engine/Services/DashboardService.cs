@@ -1,28 +1,33 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Text;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 // ReSharper disable once UnusedType.Global // Instantiated by IoC
-internal class DashboardService : IDashboardService
+internal class DashboardService : IDashboardService, ISupportsModelPersistence
 {
+    private readonly IDirtyDataService dirtyDataService;
     private readonly ILogger logger;
-    private readonly MonitorableDependencies monitoringServices;
+    private readonly IWidgetRepository widgetRepo;
     private readonly IWidgetService widgetService;
     private ObservableCollection<WidgetGroup> widgetGroups = new();
 
     public DashboardService(
         IWidgetService widgetService,
         ILogger logger,
-        MonitorableDependencies monitorableDependencies)
+        IWidgetRepository widgetRepo,
+        IDirtyDataService dirtyDataService)
     {
         this.widgetService = widgetService ?? throw new ArgumentNullException(nameof(widgetService));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.monitoringServices = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
-        this.monitoringServices.DependencyChanged += OnMonitoringServicesDependencyChanged;
+        this.widgetRepo = widgetRepo ?? throw new ArgumentNullException(nameof(widgetRepo));
+        this.dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
     }
+
+    public event EventHandler? NewDataSourceAvailable;
 
     /// <inheritdoc />
     public Widget? CreateNewBucketMonitorWidget(string bucketCode)
@@ -35,12 +40,17 @@ internal class DashboardService : IDashboardService
             return null;
         }
 
-        var widget = this.widgetService.Create(typeof(BudgetBucketMonitorWidget).FullName!, bucketCode);
+        var widget = this.widgetService.CreateUserDefinedWidget(typeof(BudgetBucketMonitorWidget).FullName!, bucketCode);
+        if (widget is null)
+        {
+            return null;
+        }
+
         return UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
     /// <inheritdoc />
-    public void CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
+    public Widget? CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {
@@ -58,11 +68,16 @@ internal class DashboardService : IDashboardService
         }
 
         var widget = this.widgetService.CreateFixedBudgetMonitorWidget(bucketCode, typeof(FixedBudgetMonitorWidget).FullName!, fixedBudgetAmount);
-        UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        if (widget is null)
+        {
+            return null;
+        }
+
+        return UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
     /// <inheritdoc />
-    public void CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
+    public Widget? CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {
@@ -74,51 +89,35 @@ internal class DashboardService : IDashboardService
             throw new ArgumentException("Payment date is not set.", nameof(paymentDate));
         }
 
-        var widget = this.widgetService.Create(typeof(SurprisePaymentWidget).FullName!, bucketCode);
-        var paymentWidget = (SurprisePaymentWidget)widget;
-        paymentWidget.StartPaymentDate = paymentDate;
-        paymentWidget.Frequency = frequency;
-        UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        var widget = this.widgetService.CreateNewSurprisePaymentWidget(bucketCode, paymentDate, frequency);
+        if (widget is null)
+        {
+            return null;
+        }
+
+        return UpdateWidgetCollectionWithNewAddition((Widget)widget);
     }
 
     /// <inheritdoc />
-    public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationState storedState)
+    public ObservableCollection<WidgetGroup> WidgetsToDisplay()
     {
-        if (storedState is null)
-        {
-            throw new ArgumentNullException(nameof(storedState));
-        }
-
-        this.widgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
-        UpdateAllWidgets();
-        foreach (var group in this.widgetGroups)
-        {
-            foreach (var widget in group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate is not null))
-            {
-                // Run the scheduling on a different thread.
-                Task.Run(() => ScheduledWidgetUpdate(widget));
-            }
-        }
-
         return this.widgetGroups;
-    }
-
-    /// <inheritdoc />
-    public WidgetsApplicationState PreparePersistentStateData()
-    {
-        IEnumerable<WidgetGroup> widgetStates = this.widgetGroups.ToList();
-        return new WidgetsApplicationState { WidgetStates = widgetStates.SelectMany(group => group.Widgets).Select(CreateWidgetState).ToList() };
     }
 
     /// <inheritdoc />
     public void RemoveUserDefinedWidget(IUserDefinedWidget widgetToRemove)
     {
-        this.widgetService.Remove(widgetToRemove);
+        this.widgetService.RemoveUserDefinedWidget(widgetToRemove);
 
         var baseWidget = (Widget)widgetToRemove;
         var widgetGroup = this.widgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
 
         widgetGroup?.Widgets.Remove(baseWidget);
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Widgets);
+        if (widgetToRemove is FixedBudgetMonitorWidget)
+        {
+            this.dirtyDataService.NotifyOfChange(ApplicationDataType.Budget);
+        }
     }
 
     /// <inheritdoc />
@@ -127,98 +126,61 @@ internal class DashboardService : IDashboardService
         this.widgetGroups
             .ToList()
             .ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Widgets);
     }
 
-    private static WidgetPersistentState CreateWidgetState(Widget widget)
-    {
-        if (widget is IUserDefinedWidget multiInstanceWidget)
-        {
-            return multiInstanceWidget is not SurprisePaymentWidget surprisePaymentWidget
-                ? new MultiInstanceWidgetState { Id = multiInstanceWidget.Id, Visible = multiInstanceWidget.Visibility, WidgetType = multiInstanceWidget.WidgetType.FullName! }
-                : (WidgetPersistentState)new SurprisePaymentWidgetPersistentState
-                {
-                    Id = surprisePaymentWidget.Id,
-                    Visible = surprisePaymentWidget.Visibility,
-                    WidgetType = surprisePaymentWidget.WidgetType.FullName!,
-                    PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
-                    Frequency = surprisePaymentWidget.Frequency
-                };
-        }
+    /// <inheritdoc />
+    public ApplicationDataType DataType => ApplicationDataType.Widgets;
 
-        return new WidgetPersistentState { Visible = widget.Visibility, WidgetType = widget.GetType().FullName! };
+    /// <inheritdoc />
+    public int LoadSequence => 99;
+
+    /// <inheritdoc />
+    public void Close()
+    {
+        this.widgetService.CancelScheduledUpdates();
     }
 
-    private void OnMonitoringServicesDependencyChanged(object? sender, DependencyChangedEventArgs? dependencyChangedEventArgs)
+    /// <inheritdoc />
+    public async Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
-        if (dependencyChangedEventArgs is null)
+        await this.widgetRepo.CreateNewAndSaveAsync(applicationDatabase.WidgetsCollectionStorageKey);
+        var handler = NewDataSourceAvailable;
+        if (handler is not null)
         {
-            return;
-        }
-
-        UpdateAllWidgets(dependencyChangedEventArgs.DependencyType);
-    }
-
-    private async Task ScheduledWidgetUpdate(Widget widget)
-    {
-        Debug.Assert(widget.RecommendedTimeIntervalUpdate is not null);
-        this.logger.LogInfo(_ => $"Scheduling \"{widget.Name}\" widget to update every {widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes} minutes.");
-
-        while (true)
-        {
-            await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
-            this.logger.LogInfo(_ => $"Scheduled Update for \"{widget.Name}\" widget. Will run again after {widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes} minutes.");
-            UpdateWidget(widget);
-        }
-        // ReSharper disable once FunctionNeverReturns - intentional timer tick infinite loop
-    }
-
-    private void UpdateAllWidgets(params Type[] filterDependencyTypes)
-    {
-        if (this.widgetGroups.None())
-        {
-            // Widget Groups have not yet been initialised and persistent state has not yet been loaded.
-            return;
-        }
-
-        if (filterDependencyTypes.Length > 0)
-        {
-            // targeted update
-            this.widgetGroups.SelectMany(group => group.Widgets)
-                .Where(w => w.Dependencies.Any(filterDependencyTypes.Contains))
-                .ToList()
-                .ForEach(UpdateWidget);
-        }
-        else
-        {
-            // update all
-            this.widgetGroups.SelectMany(group => group.Widgets).ToList().ForEach(UpdateWidget);
+            handler(this, EventArgs.Empty);
         }
     }
 
-    private void UpdateWidget(Widget widget)
+    /// <inheritdoc />
+    public async Task LoadAsync(ApplicationDatabase applicationDatabase)
     {
-        if (widget.Dependencies.None())
-        {
-            widget.Update();
-            return;
-        }
+        var widgets = await this.widgetRepo.LoadAsync(applicationDatabase.WidgetsCollectionStorageKey, applicationDatabase.IsEncrypted);
+        this.widgetService.Initialise(widgets);
+        this.widgetGroups = this.widgetService.ArrangeWidgetsForDisplay();
 
-        var parameters = new object[widget.Dependencies.Count()];
-        var index = 0;
-        foreach (var dependencyType in widget.Dependencies)
+        var handler = NewDataSourceAvailable;
+        if (handler is not null)
         {
-            try
-            {
-                parameters[index++] = this.monitoringServices.RetrieveDependency(dependencyType);
-            }
-            catch (NotSupportedException ex)
-            {
-                // If you get an exception here first check the MonitorableDependencies.ctor method.
-                throw new NotSupportedException($"The requested dependency {dependencyType.Name} for the widget {widget.Name} is not supported.", ex);
-            }
+            handler(this, EventArgs.Empty);
         }
+    }
 
-        widget.Update(parameters);
+    /// <inheritdoc />
+    public async Task SaveAsync(ApplicationDatabase applicationDatabase)
+    {
+        await this.widgetRepo.SaveAsync(this.widgetGroups.SelectMany(g => g.Widgets), applicationDatabase.WidgetsCollectionStorageKey, applicationDatabase.IsEncrypted);
+    }
+
+    /// <inheritdoc />
+    public void SavePreview()
+    {
+    }
+
+    public bool ValidateModel(StringBuilder messages)
+    {
+        // Nothing to validate - all new additions are validated when created.
+        return true;
     }
 
     private Widget UpdateWidgetCollectionWithNewAddition(Widget baseWidget)
@@ -231,7 +193,8 @@ internal class DashboardService : IDashboardService
         }
 
         widgetGroup.Widgets.Add(baseWidget);
-        UpdateAllWidgets();
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Widgets);
+        this.widgetService.UpdateWidgetData(baseWidget);
         return baseWidget;
     }
 }

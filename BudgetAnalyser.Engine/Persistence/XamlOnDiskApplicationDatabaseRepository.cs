@@ -41,7 +41,8 @@ public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
             LedgerBookRootDto = new StorageBranch { Source = path + ".LedgerBook.xml" },
             LedgerReconciliationToDoCollection = new List<ToDoTaskDto>(),
             MatchingRulesCollectionRootDto = new StorageBranch { Source = path + ".MatchingRules.xml" },
-            StatementModelRootDto = new StorageBranch { Source = path + ".Transactions.csv" }
+            StatementModelRootDto = new StorageBranch { Source = path + ".Transactions.csv" },
+            WidgetCollectionRootDto = new StorageBranch { Source = path + ".Widgets.xml" }
         };
         var serialised = Serialise(storageRoot);
         await WriteToDiskAsync(storageKey, serialised);

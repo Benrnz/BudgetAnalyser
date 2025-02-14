@@ -48,6 +48,7 @@ public class DtoToApplicationDatabaseMapperTest
             LedgerBookRootDto = new StorageBranch { Source = "Ledger.xml" },
             MatchingRulesCollectionRootDto = new StorageBranch { Source = "Rules.xml" },
             StatementModelRootDto = new StorageBranch { Source = "Statement.xml" },
+            WidgetCollectionRootDto = new StorageBranch { Source = "Widgets.xml" },
             LedgerReconciliationToDoCollection = new List<ToDoTaskDto>
             {
                 new() { CanDelete = true, Description = "Foo1", SystemGenerated = false }, new() { CanDelete = false, Description = "Foo2", SystemGenerated = true }

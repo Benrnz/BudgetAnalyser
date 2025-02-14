@@ -48,13 +48,12 @@ public class InMemoryBudgetBucketRepositoryTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void CreateNewFixedBudgetProjectShouldThrowGivenCodeAlreadyExists()
     {
         var subject = CreateSubject();
         subject.GetOrCreateNew(FixedBudgetProjectBucket.CreateCode("Foo"), () => new FixedBudgetProjectBucket("Foo", "Foo bajh", 2000));
-        subject.CreateNewFixedBudgetProject("Foo", "Foo var", 1000);
-        Assert.Fail();
+        var result = subject.CreateNewFixedBudgetProject("Foo", "Foo var", 1000);
+        Assert.IsNull(result);
     }
 
     [TestMethod]

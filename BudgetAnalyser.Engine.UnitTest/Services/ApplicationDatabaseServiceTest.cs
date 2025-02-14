@@ -13,6 +13,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services;
 public class ApplicationDatabaseServiceTest
 {
     private Mock<ICredentialStore> mockCredentials;
+    private Mock<IDirtyDataService> mockDirtyService;
     private Mock<IApplicationDatabaseRepository> mockRepo;
     private Mock<ISupportsModelPersistence> mockService1;
     private Mock<ISupportsModelPersistence> mockService2;
@@ -35,6 +36,8 @@ public class ApplicationDatabaseServiceTest
     {
         this.mockRepo.Setup(m => m.CreateNewAsync(It.IsAny<string>()))
             .Returns(Task.FromResult(new ApplicationDatabase()));
+        var index = 0;
+        this.mockDirtyService.Setup(m => m.HasUnsavedChanges).Returns(() => index++ == 0);
 
         await this.subject.CreateNewDatabaseAsync("Foo");
         this.subject.NotifyOfChange(ApplicationDataType.Budget);
@@ -57,8 +60,8 @@ public class ApplicationDatabaseServiceTest
 
         var appDb = await this.subject.CreateNewDatabaseAsync("Foo");
 
-        this.mockService1.Verify(m => m.CreateAsync(It.IsAny<ApplicationDatabase>()));
-        this.mockService2.Verify(m => m.CreateAsync(It.IsAny<ApplicationDatabase>()));
+        this.mockService1.Verify(m => m.CreateNewAsync(It.IsAny<ApplicationDatabase>()));
+        this.mockService2.Verify(m => m.CreateNewAsync(It.IsAny<ApplicationDatabase>()));
     }
 
     [TestMethod]
@@ -105,14 +108,14 @@ public class ApplicationDatabaseServiceTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void Ctor_ShouldThrow_GivenNullRepo()
     {
-        new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
+        new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger(), new Mock<IDirtyDataService>().Object);
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void Ctor_ShouldThrow_GivenNullServices()
     {
-        new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
+        new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger(), new Mock<IDirtyDataService>().Object);
     }
 
     [TestMethod]
@@ -220,17 +223,6 @@ public class ApplicationDatabaseServiceTest
     }
 
     [TestMethod]
-    public void NotifyOfChange_ShouldIndicateUnsavedChanges()
-    {
-        foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
-        {
-            this.subject.NotifyOfChange((ApplicationDataType)dataType);
-            Assert.IsTrue(this.subject.HasUnsavedChanges);
-            TestInitialise();
-        }
-    }
-
-    [TestMethod]
     public async Task Save_ShouldCallSaveOnAllServices()
     {
         SaveSetup();
@@ -247,15 +239,6 @@ public class ApplicationDatabaseServiceTest
         await this.subject.SaveAsync();
 
         this.mockRepo.Verify(m => m.SaveAsync(It.IsAny<ApplicationDatabase>()));
-    }
-
-    [TestMethod]
-    public async Task Save_ShouldResetUnSavedChanges()
-    {
-        SaveSetup();
-        await this.subject.SaveAsync();
-
-        Assert.IsFalse(this.subject.HasUnsavedChanges);
     }
 
     [TestMethod]
@@ -286,7 +269,14 @@ public class ApplicationDatabaseServiceTest
         this.mockCredentials = new Mock<ICredentialStore>();
 
         this.mockServices = new[] { this.mockService1.Object, this.mockService2.Object };
-        this.subject = new ApplicationDatabaseService(this.mockRepo.Object, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
+        this.mockDirtyService = new Mock<IDirtyDataService>();
+        this.subject = new ApplicationDatabaseService(
+            this.mockRepo.Object,
+            this.mockServices,
+            new FakeMonitorableDependencies(),
+            this.mockCredentials.Object,
+            new FakeLogger(),
+            this.mockDirtyService.Object);
     }
 
     private void CreateNewDatabaseSetup()
@@ -306,7 +296,8 @@ public class ApplicationDatabaseServiceTest
         PrivateAccessor.SetField(this.subject, "budgetAnalyserDatabase", new Mock<ApplicationDatabase>().Object);
         this.mockService1.Setup(m => m.ValidateModel(It.IsAny<StringBuilder>())).Returns(true);
         this.mockService2.Setup(m => m.ValidateModel(It.IsAny<StringBuilder>())).Returns(true);
-
+        this.mockDirtyService.Setup(m => m.HasUnsavedChanges).Returns(true);
+        this.mockDirtyService.Setup(m => m.IsDirty(ApplicationDataType.Budget)).Returns(true);
         this.subject.NotifyOfChange(ApplicationDataType.Budget);
     }
 }
