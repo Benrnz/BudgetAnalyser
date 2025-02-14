@@ -17,7 +17,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 {
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly ILogger logger;
-    private readonly MonitorableDependencies monitorableDependencies;
+    private readonly IMonitorableDependencies monitorableDependencies;
     private readonly IStatementRepository statementRepository;
     private BudgetCollection? budgetCollection;
     private int budgetHash;
@@ -32,7 +32,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <param name="logger">The logger.</param>
     /// <param name="monitorableDependencies">The dependency monitor manager</param>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public TransactionManagerService(IBudgetBucketRepository bucketRepository, IStatementRepository statementRepository, ILogger logger, MonitorableDependencies monitorableDependencies)
+    public TransactionManagerService(IBudgetBucketRepository bucketRepository, IStatementRepository statementRepository, ILogger logger, IMonitorableDependencies monitorableDependencies)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.statementRepository = statementRepository ?? throw new ArgumentNullException(nameof(statementRepository));

@@ -13,7 +13,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
 {
     private readonly IBudgetRepository budgetRepository;
     private readonly ILogger logger;
-    private readonly MonitorableDependencies monitorableDependencies;
+    private readonly IMonitorableDependencies monitorableDependencies;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetMaintenanceService" /> class.
@@ -23,7 +23,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         IBudgetRepository budgetRepository,
         IBudgetBucketRepository bucketRepo,
         ILogger logger,
-        MonitorableDependencies monitorableDependencies)
+        IMonitorableDependencies monitorableDependencies)
     {
         this.budgetRepository = budgetRepository ?? throw new ArgumentNullException(nameof(budgetRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

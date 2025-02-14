@@ -18,7 +18,7 @@ internal class TransactionRuleService(
     IMatchmaker matchmaker,
     IMatchingRuleFactory ruleFactory,
     IEnvironmentFolders environmentFolders,
-    MonitorableDependencies monitorableDependencies,
+    IMonitorableDependencies monitorableDependencies,
     IBudgetBucketRepository bucketRepo)
     : ITransactionRuleService, ISupportsModelPersistence
 {
@@ -28,7 +28,7 @@ internal class TransactionRuleService(
     private readonly List<MatchingRule> matchingRules = new();
     private readonly List<RulesGroupedByBucket> matchingRulesGroupedByBucket = new();
     private readonly IMatchmaker matchmaker = matchmaker ?? throw new ArgumentNullException(nameof(matchmaker));
-    private readonly MonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
+    private readonly IMonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
     private readonly IMatchingRuleFactory ruleFactory = ruleFactory ?? throw new ArgumentNullException(nameof(ruleFactory));
     private readonly IMatchingRuleRepository ruleRepository = ruleRepository ?? throw new ArgumentNullException(nameof(ruleRepository));
     private string rulesStorageKey = string.Empty;

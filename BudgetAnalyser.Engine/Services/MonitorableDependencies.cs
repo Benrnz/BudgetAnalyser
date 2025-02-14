@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Services;
 ///     A class that contains references to services that can be used as dependencies for the Dashboard Service.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class MonitorableDependencies
+internal class MonitorableDependencies : IMonitorableDependencies
 {
     private readonly IDictionary<Type, object?> availableDependencies;
     private readonly Dictionary<Type, long> changesHashes = new();
@@ -37,12 +37,34 @@ public class MonitorableDependencies
         };
     }
 
-    internal event EventHandler<DependencyChangedEventArgs>? DependencyChanged;
+    public event EventHandler<DependencyChangedEventArgs>? DependencyChanged;
 
     /// <summary>
     ///     Gets a list of supported types
     /// </summary>
-    internal virtual IEnumerable<Type> SupportedWidgetDependencyTypes => this.availableDependencies.Keys;
+    public virtual IEnumerable<Type> SupportedWidgetDependencyTypes => this.availableDependencies.Keys;
+
+    /// <summary>
+    ///     Notifies this service of dependency that has changed.
+    /// </summary>
+    /// <param name="dependency">The dependency.</param>
+    /// <returns>A boolean value indicating if the dependency has significantly changed, true if so, otherwise false.</returns>
+    [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Preferred method of passing type parameter")]
+    public virtual bool NotifyOfDependencyChange<T>(T? dependency)
+    {
+        return NotifyOfDependencyChange(dependency, typeof(T));
+    }
+
+    public virtual object RetrieveDependency(Type key)
+    {
+        if (!this.availableDependencies.TryGetValue(key, out var retrievedObject))
+        {
+            // If you get an exception here first check the Constructor for the types available.
+            throw new NotSupportedException(string.Format(CultureInfo.CurrentCulture, "The requested dependency {0} is not supported.", key.Name));
+        }
+
+        return retrievedObject!;
+    }
 
     /// <summary>
     ///     Notifies this service of dependency that has changed.
@@ -67,28 +89,6 @@ public class MonitorableDependencies
         return false;
     }
 
-    /// <summary>
-    ///     Notifies this service of dependency that has changed.
-    /// </summary>
-    /// <param name="dependency">The dependency.</param>
-    /// <returns>A boolean value indicating if the dependency has significantly changed, true if so, otherwise false.</returns>
-    [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Preferred method of passing type parameter")]
-    internal virtual bool NotifyOfDependencyChange<T>(T? dependency)
-    {
-        return NotifyOfDependencyChange(dependency, typeof(T));
-    }
-
-    internal virtual object RetrieveDependency(Type key)
-    {
-        if (!this.availableDependencies.TryGetValue(key, out var retrievedObject))
-        {
-            // If you get an exception here first check the Constructor for the types available.
-            throw new NotSupportedException(string.Format(CultureInfo.CurrentCulture, "The requested dependency {0} is not supported.", key.Name));
-        }
-
-        return retrievedObject!;
-    }
-
     private bool HasDependencySignificantlyChanged(object dependency, Type typeKey)
     {
         if (dependency is not IDataChangeDetection supportsDataChangeDetection)
@@ -98,13 +98,13 @@ public class MonitorableDependencies
         }
 
         var newHash = supportsDataChangeDetection.SignificantDataChangeHash();
-        if (!this.changesHashes.ContainsKey(typeKey))
+        if (!this.changesHashes.TryGetValue(typeKey, out var hash))
         {
             this.changesHashes.Add(typeKey, newHash);
             return true;
         }
 
-        var result = this.changesHashes[typeKey] != newHash;
+        var result = hash != newHash;
         this.changesHashes[typeKey] = newHash;
         return result;
     }

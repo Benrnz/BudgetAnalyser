@@ -40,13 +40,17 @@ public class XamlOnDiskApplicationDatabaseRepositoryTest
         Assert.AreEqual("DemoTransactions.csv", this.result.StatementModelStorageKey);
     }
 
+    [TestMethod]
+    public void LoadShouldSetWidgetStorageKeyGivenDemoFile()
+    {
+        Assert.AreEqual("Widgets.xml", this.result.WidgetsCollectionStorageKey);
+    }
+
     [TestInitialize]
-    public void TestInitialise()
+    public async Task TestInitialise()
     {
         this.subject = new XamlOnDiskApplicationDatabaseRepositoryTestHarness(new MapperApplicationDatabaseToStorageRoot2()) { FileExistsOverride = fileName => true };
 
-        var task = this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
-        task.Wait();
-        this.result = task.Result;
+        this.result = await this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
     }
 }

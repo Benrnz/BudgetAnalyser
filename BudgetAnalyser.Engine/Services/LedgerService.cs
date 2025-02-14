@@ -14,13 +14,13 @@ internal class LedgerService(
     ILedgerBookRepository ledgerRepository,
     IAccountTypeRepository accountTypeRepository,
     ILedgerBucketFactory ledgerBucketFactory,
-    MonitorableDependencies monitorableDependencies)
+    IMonitorableDependencies monitorableDependencies)
     : ILedgerService, ISupportsModelPersistence
 {
     private readonly IAccountTypeRepository accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
     private readonly ILedgerBucketFactory ledgerBucketFactory = ledgerBucketFactory ?? throw new ArgumentNullException(nameof(ledgerBucketFactory));
     private readonly ILedgerBookRepository ledgerRepository = ledgerRepository ?? throw new ArgumentNullException(nameof(ledgerRepository));
-    private readonly MonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
+    private readonly IMonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
 
     /// <inheritdoc />
     public event EventHandler? Closed;

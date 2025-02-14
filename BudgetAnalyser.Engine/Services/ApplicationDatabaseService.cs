@@ -11,14 +11,14 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
     private readonly IDirtyDataService dirtyDataService;
     private readonly ILogger logger;
-    private readonly MonitorableDependencies monitorableDependencies;
+    private readonly IMonitorableDependencies monitorableDependencies;
 
     private ApplicationDatabase? budgetAnalyserDatabase;
 
     public ApplicationDatabaseService(
         IApplicationDatabaseRepository applicationRepository,
         IEnumerable<ISupportsModelPersistence> databaseDependents,
-        MonitorableDependencies monitorableDependencies,
+        IMonitorableDependencies monitorableDependencies,
         ICredentialStore credentialStore,
         ILogger logger,
         IDirtyDataService dirtyDataService)

@@ -36,6 +36,8 @@ public class ApplicationDatabaseServiceTest
     {
         this.mockRepo.Setup(m => m.CreateNewAsync(It.IsAny<string>()))
             .Returns(Task.FromResult(new ApplicationDatabase()));
+        var index = 0;
+        this.mockDirtyService.Setup(m => m.HasUnsavedChanges).Returns(() => index++ == 0);
 
         await this.subject.CreateNewDatabaseAsync("Foo");
         this.subject.NotifyOfChange(ApplicationDataType.Budget);
@@ -221,17 +223,6 @@ public class ApplicationDatabaseServiceTest
     }
 
     [TestMethod]
-    public void NotifyOfChange_ShouldIndicateUnsavedChanges()
-    {
-        foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
-        {
-            this.subject.NotifyOfChange((ApplicationDataType)dataType);
-            Assert.IsTrue(this.subject.HasUnsavedChanges);
-            TestInitialise();
-        }
-    }
-
-    [TestMethod]
     public async Task Save_ShouldCallSaveOnAllServices()
     {
         SaveSetup();
@@ -248,15 +239,6 @@ public class ApplicationDatabaseServiceTest
         await this.subject.SaveAsync();
 
         this.mockRepo.Verify(m => m.SaveAsync(It.IsAny<ApplicationDatabase>()));
-    }
-
-    [TestMethod]
-    public async Task Save_ShouldResetUnSavedChanges()
-    {
-        SaveSetup();
-        await this.subject.SaveAsync();
-
-        Assert.IsFalse(this.subject.HasUnsavedChanges);
     }
 
     [TestMethod]
@@ -294,8 +276,7 @@ public class ApplicationDatabaseServiceTest
             new FakeMonitorableDependencies(),
             this.mockCredentials.Object,
             new FakeLogger(),
-            this
-                .mockDirtyService.Object);
+            this.mockDirtyService.Object);
     }
 
     private void CreateNewDatabaseSetup()
@@ -315,7 +296,8 @@ public class ApplicationDatabaseServiceTest
         PrivateAccessor.SetField(this.subject, "budgetAnalyserDatabase", new Mock<ApplicationDatabase>().Object);
         this.mockService1.Setup(m => m.ValidateModel(It.IsAny<StringBuilder>())).Returns(true);
         this.mockService2.Setup(m => m.ValidateModel(It.IsAny<StringBuilder>())).Returns(true);
-
+        this.mockDirtyService.Setup(m => m.HasUnsavedChanges).Returns(true);
+        this.mockDirtyService.Setup(m => m.IsDirty(ApplicationDataType.Budget)).Returns(true);
         this.subject.NotifyOfChange(ApplicationDataType.Budget);
     }
 }

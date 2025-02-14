@@ -18,10 +18,10 @@ internal class WidgetService : IWidgetService
     private readonly SortedList<string, Widget> cachedWidgets = new();
 
     private readonly ILogger logger;
-    private readonly MonitorableDependencies monitoringServices;
+    private readonly IMonitorableDependencies monitoringServices;
     private readonly CancellationTokenSource scheduledTaskCancellation = new();
 
-    public WidgetService(IBudgetBucketRepository bucketRepository, MonitorableDependencies monitorableDependencies, ILogger logger)
+    public WidgetService(IBudgetBucketRepository bucketRepository, IMonitorableDependencies monitorableDependencies, ILogger logger)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -37,7 +37,13 @@ internal class WidgetService : IWidgetService
             throw new ArgumentNullException(nameof(widgetsFromPersistence));
         }
 
-        foreach (var widget in widgetsFromPersistence)
+        var widgets = widgetsFromPersistence.ToList();
+        if (widgets.None())
+        {
+            throw new ArgumentException("The widgets collection should never be empty, it must contain a default set of widgets.", nameof(widgetsFromPersistence));
+        }
+
+        foreach (var widget in widgets)
         {
             string key;
             if (widget is IUserDefinedWidget userDefinedWidget)
@@ -115,7 +121,7 @@ internal class WidgetService : IWidgetService
             return null;
         }
 
-        return CreateUserDefinedWidget(description, bucket.Code);
+        return CreateUserDefinedWidget(typeof(FixedBudgetMonitorWidget).FullName!, bucket.Code);
     }
 
     /// <inheritdoc />

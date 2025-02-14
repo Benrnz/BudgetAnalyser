@@ -18,6 +18,11 @@ public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
         this.isInitialising = false;
     }
 
+    public override FixedBudgetProjectBucket CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount)
+    {
+        return base.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
+    }
+
     public override BudgetBucket GetByCode(string code)
     {
         if (code is null)

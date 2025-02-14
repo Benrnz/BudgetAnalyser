@@ -1,5 +1,6 @@
 ﻿namespace BudgetAnalyser.Engine.Services;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 internal class DirtyDataService : IDirtyDataService
 {
     private readonly Dictionary<ApplicationDataType, bool> dirtyData = new();

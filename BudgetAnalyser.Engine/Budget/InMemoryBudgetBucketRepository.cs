@@ -29,7 +29,7 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
     public BudgetBucket SurplusBucket { get; protected init; }
 
     /// <inheritdoc />
-    public FixedBudgetProjectBucket? CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount)
+    public virtual FixedBudgetProjectBucket? CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {

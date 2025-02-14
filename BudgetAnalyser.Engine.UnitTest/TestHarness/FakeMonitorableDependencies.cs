@@ -15,7 +15,22 @@ internal class FakeMonitorableDependencies : MonitorableDependencies
     /// <summary>
     ///     Gets a list of supported types
     /// </summary>
-    internal override IEnumerable<Type> SupportedWidgetDependencyTypes => new List<Type>();
+    public override IEnumerable<Type> SupportedWidgetDependencyTypes => new List<Type>();
+
+    /// <summary>
+    ///     Notifies this service of dependency that has changed.
+    /// </summary>
+    /// <param name="dependency">The dependency.</param>
+    /// <returns>A boolean value indicating if the dependency has significantly change, true if so, otherwise false.</returns>
+    public override bool NotifyOfDependencyChange<T>(T dependency)
+    {
+        return true;
+    }
+
+    public override object RetrieveDependency(Type key)
+    {
+        return null;
+    }
 
     /// <summary>
     ///     Notifies this service of dependency that has changed.
@@ -26,20 +41,5 @@ internal class FakeMonitorableDependencies : MonitorableDependencies
     protected override bool NotifyOfDependencyChange(object dependency, Type typeKey)
     {
         return true;
-    }
-
-    /// <summary>
-    ///     Notifies this service of dependency that has changed.
-    /// </summary>
-    /// <param name="dependency">The dependency.</param>
-    /// <returns>A boolean value indicating if the dependency has significantly change, true if so, otherwise false.</returns>
-    internal override bool NotifyOfDependencyChange<T>(T dependency)
-    {
-        return true;
-    }
-
-    internal override object RetrieveDependency(Type key)
-    {
-        return null;
     }
 }
