@@ -6,13 +6,6 @@
 public enum BucketDtoType
 {
     /// <summary>
-    ///     A spent monthly expense bucket. <seealso cref="SpentPerPeriodExpenseBucket" />
-    ///     OBSOLETE DO NOT USE THIS.  Kept only for backwards compatibility.  When deserialising this will be automatically
-    ///     changed to SpentPeriodicallyExpense.
-    /// </summary>
-    SpentMonthlyExpense,
-
-    /// <summary>
     ///     A saved up for expense bucket. <seealso cref="SavedUpForExpenseBucket" />
     /// </summary>
     SavedUpForExpense,
@@ -31,12 +24,6 @@ public enum BucketDtoType
     ///     An income bucket. <seealso cref="IncomeBudgetBucket" />
     /// </summary>
     Income,
-
-    /// <summary>
-    ///     A savings commitment bucket. 
-    ///     OBSOLETE DO NOT USE THIS. Use SavedUpForExpenseBucket instead.
-    /// </summary>
-    SavingsCommitment,
 
     /// <summary>
     ///     A fixed budget project bucket. <seealso cref="FixedBudgetProjectBucket" />
