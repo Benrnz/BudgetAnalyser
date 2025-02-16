@@ -8,7 +8,7 @@ public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
     private readonly bool isInitialising;
     private readonly string projectPrefix;
 
-    public BucketBucketRepoAlwaysFind() : base(new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()))
+    public BucketBucketRepoAlwaysFind() : base(new MapperBudgetBucketToDto2())
     {
         this.isInitialising = true;
         SurplusBucket = new SurplusBucket();

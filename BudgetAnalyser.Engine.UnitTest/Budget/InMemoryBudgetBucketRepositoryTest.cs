@@ -269,7 +269,7 @@ public class InMemoryBudgetBucketRepositoryTest
 
     private InMemoryBudgetBucketRepository CreateSubject()
     {
-        return new InMemoryBudgetBucketRepository(new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()));
+        return new InMemoryBudgetBucketRepository(new MapperBudgetBucketToDto2());
     }
 
     private void ThreadSafetyCheckOneThread(object subject)

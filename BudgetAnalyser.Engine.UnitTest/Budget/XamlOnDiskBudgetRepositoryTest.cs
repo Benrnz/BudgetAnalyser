@@ -228,16 +228,10 @@ public class XamlOnDiskBudgetRepositoryTest
     {
         if (bucketRepo is null)
         {
-            bucketRepo = new InMemoryBudgetBucketRepository(new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()));
+            bucketRepo = new InMemoryBudgetBucketRepository(new MapperBudgetBucketToDto2());
         }
 
-        return new XamlOnDiskBudgetRepository(
-            bucketRepo,
-            new MapperBudgetCollectionDtoBudgetCollection(
-                bucketRepo,
-                new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()),
-                new MapperBudgetModelDtoBudgetModel(bucketRepo)),
-            this.mockFileSelector.Object);
+        return new XamlOnDiskBudgetRepository(bucketRepo, new MapperBudgetCollectionToDto2(bucketRepo), this.mockFileSelector.Object);
     }
 
     private static BudgetCollectionDto OnLoadFromDiskMock(string f)

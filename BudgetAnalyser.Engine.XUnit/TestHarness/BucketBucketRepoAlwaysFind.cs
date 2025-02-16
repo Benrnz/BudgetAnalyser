@@ -8,7 +8,7 @@ public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
     private readonly bool isInitialising;
     private readonly string projectPrefix;
 
-    public BucketBucketRepoAlwaysFind() : base(new MapperBudgetBucketDtoBudgetBucket(new BudgetBucketFactory()))
+    public BucketBucketRepoAlwaysFind() : base(new MapperBudgetBucketToDto2())
     {
         this.isInitialising = true;
         SurplusBucket = new SurplusBucket();
@@ -16,11 +16,6 @@ public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
         AddBucket(new PayCreditCardBucket(PayCreditCardBucket.PayCreditCardCode, "A special bucket to allocate internal transfers."));
         this.projectPrefix = string.Format(FixedBudgetProjectBucket.ProjectCodeTemplateWithPrefix, string.Empty);
         this.isInitialising = false;
-    }
-
-    public override FixedBudgetProjectBucket CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount)
-    {
-        return base.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
     }
 
     public override BudgetBucket GetByCode(string code)
