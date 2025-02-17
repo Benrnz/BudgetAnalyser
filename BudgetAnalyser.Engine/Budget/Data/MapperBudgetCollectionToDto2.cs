@@ -3,11 +3,11 @@
 namespace BudgetAnalyser.Engine.Budget.Data;
 
 [AutoRegisterWithIoC]
-public class MapperBudgetCollectionToDto2(IBudgetBucketRepository bucketRepo) : IDtoMapper<BudgetCollectionDto, BudgetCollection>
+public class MapperBudgetCollectionToDto2(IBudgetBucketRepository bucketRepo, IDtoMapper<BudgetModelDto, BudgetModel> budgetModelMapper) : IDtoMapper<BudgetCollectionDto, BudgetCollection>
 {
     private readonly IDtoMapper<BudgetBucketDto, BudgetBucket> bucketMapper = new MapperBudgetBucketToDto2();
     private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-    private readonly IDtoMapper<BudgetModelDto, BudgetModel> budgetModelMapper = new MapperBudgetModelToDto2(bucketRepo);
+    private readonly IDtoMapper<BudgetModelDto, BudgetModel> budgetModelMapper = budgetModelMapper ?? throw new ArgumentNullException(nameof(budgetModelMapper));
 
     public BudgetCollectionDto ToDto(BudgetCollection model)
     {

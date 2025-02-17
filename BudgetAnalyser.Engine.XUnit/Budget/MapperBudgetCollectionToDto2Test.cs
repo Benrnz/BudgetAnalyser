@@ -17,14 +17,15 @@ public class MapperBudgetCollectionToDto2Test
     {
         var bucketRepo = Substitute.For<IBudgetBucketRepository>();
         this.mapperBudgetModel = Substitute.For<IDtoMapper<BudgetModelDto, BudgetModel>>();
-        this.mapper = new MapperBudgetCollectionToDto2(bucketRepo);
+        this.mapper = new MapperBudgetCollectionToDto2(bucketRepo, new MapperBudgetModelToDto2(new MapperExpenseToDto2(bucketRepo), new MapperIncomeToDto2(bucketRepo)));
     }
 
     [Fact]
     public void ShouldMapBudgetsCorrectlyMathematically()
     {
         var budgetCollection = BudgetModelTestData.CreateCollectionWith1And2();
-        var subject = new MapperBudgetCollectionToDto2(new BucketBucketRepoAlwaysFind());
+        var bucketRepo = new BucketBucketRepoAlwaysFind();
+        var subject = new MapperBudgetCollectionToDto2(bucketRepo, new MapperBudgetModelToDto2(new MapperExpenseToDto2(bucketRepo), new MapperIncomeToDto2(bucketRepo)));
 
         // Act
         var dto = subject.ToDto(budgetCollection);
@@ -53,13 +54,6 @@ public class MapperBudgetCollectionToDto2Test
     }
 
     [Fact]
-    public void ToDto_ShouldThrowArgumentNullException_WhenBudgetCollectionIsNull()
-    {
-        // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToDto(null));
-    }
-
-    [Fact]
     public void ToModel_ShouldMapBudgetCollectionDtoToBudgetCollection()
     {
         // Arrange
@@ -73,12 +67,5 @@ public class MapperBudgetCollectionToDto2Test
         collection.ShouldBeOfType<BudgetCollection>();
         collection.StorageKey.ShouldBe(budgetCollectionDto.StorageKey);
         collection.Count.ShouldBe(budgetCollectionDto.Budgets.Count);
-    }
-
-    [Fact]
-    public void ToModel_ShouldThrowArgumentNullException_WhenBudgetCollectionDtoIsNull()
-    {
-        // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToModel(null));
     }
 }

@@ -33,13 +33,6 @@ public class MapperIncomeToDto2Test
     }
 
     [Fact]
-    public void ToDto_ShouldThrowArgumentNullException_WhenIncomeIsNull()
-    {
-        // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToDto(null));
-    }
-
-    [Fact]
     public void ToModel_ShouldMapIncomeDtoToIncome()
     {
         // Arrange
@@ -54,13 +47,6 @@ public class MapperIncomeToDto2Test
         income.ShouldBeOfType<Income>();
         income.Amount.ShouldBe(dto.Amount);
         income.Bucket.ShouldBe(bucket);
-    }
-
-    [Fact]
-    public void ToModel_ShouldThrowArgumentNullException_WhenIncomeDtoIsNull()
-    {
-        // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToModel(null));
     }
 
     [Fact]

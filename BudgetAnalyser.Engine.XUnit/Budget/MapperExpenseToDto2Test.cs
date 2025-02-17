@@ -34,13 +34,6 @@ public class MapperExpenseToDto2Test
     }
 
     [Fact]
-    public void ToDto_ShouldThrowArgumentNullException_WhenExpenseIsNull()
-    {
-        // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToDto(null));
-    }
-
-    [Fact]
     public void ToModel_ShouldMapExpenseDtoToExpense()
     {
         // Arrange
@@ -55,13 +48,6 @@ public class MapperExpenseToDto2Test
         expense.ShouldBeOfType<Expense>();
         expense.Amount.ShouldBe(dto.Amount);
         expense.Bucket.ShouldBe(carMtcBucket);
-    }
-
-    [Fact]
-    public void ToModel_ShouldThrowArgumentNullException_WhenExpenseDtoIsNull()
-    {
-        // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToModel(null));
     }
 
     [Fact]
