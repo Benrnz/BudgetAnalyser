@@ -2,6 +2,9 @@
 
 public static class TestDataConstants
 {
+    public const string Budget1Name = "Test Data 1 Budget";
+    public const string Budget2Name = "Test Data 2 Budget";
+    public const string Budget5Name = "Test Data 3 Budget";
     public const string BudgetCollectionTestDataFileName = @"BudgetAnalyser.Engine.UnitTest.TestData.BudgetCollectionTestData.xml";
     public const string DemoBudgetAnalyserFileName = @"BudgetAnalyser.Engine.UnitTest.TestData.BudgetAnalyserDemo.bax";
     public const string DemoBudgetFileName = @"BudgetAnalyser.Engine.UnitTest.TestData.DemoBudget.xml";

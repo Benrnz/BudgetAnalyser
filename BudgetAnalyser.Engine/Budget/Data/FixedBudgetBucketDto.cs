@@ -9,12 +9,12 @@ public class FixedBudgetBucketDto : BudgetBucketDto
     /// <summary>
     ///     Gets or sets the created date.
     /// </summary>
-    public DateTime Created { get; set; }
+    public DateTime Created { get; init; }
 
     /// <summary>
     ///     Gets or sets the fixed budget amount.
     /// </summary>
-    public decimal FixedBudgetAmount { get; set; }
+    public decimal FixedBudgetAmount { get; init; }
 
     /// <summary>
     ///     Gets or sets the simple persistence bucket type.
@@ -22,6 +22,6 @@ public class FixedBudgetBucketDto : BudgetBucketDto
     public override BucketDtoType Type
     {
         get => BucketDtoType.FixedBudgetProject;
-        set { }
+        init { }
     }
 }
