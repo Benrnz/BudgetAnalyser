@@ -75,7 +75,8 @@ public class BudgetModel : INotifyPropertyChanged
     /// <summary>
     ///     Gets the expenses collection.
     /// </summary>
-    public IEnumerable<Expense> Expenses { get; internal set; }
+    // ReSharper disable once VirtualMemberNeverOverridden.Global Unit testing overrides this to mock the BudgetModel
+    public virtual IEnumerable<Expense> Expenses { get; internal set; }
 
     /// <summary>
     ///     Gets the incomes collection.
