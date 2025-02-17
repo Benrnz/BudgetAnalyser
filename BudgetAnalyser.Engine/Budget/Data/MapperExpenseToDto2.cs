@@ -2,6 +2,7 @@
 
 namespace BudgetAnalyser.Engine.Budget.Data;
 
+[AutoRegisterWithIoC]
 public class MapperExpenseToDto2(IBudgetBucketRepository bucketRepo) : IDtoMapper<ExpenseDto, Expense>
 {
     private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));

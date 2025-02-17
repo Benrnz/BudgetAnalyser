@@ -21,8 +21,9 @@ public class MapperBudgetCollectionToDto2(IBudgetBucketRepository bucketRepo, ID
 
     public BudgetCollection ToModel(BudgetCollectionDto dto)
     {
+        // Note budget buckets from the top of the DTO are not mapped here, as this mapper is only concerned with the BudgetCollection type.
+        // Budget Buckets are created and mapped from the XamlOnDiskBudgetRepository directly into the InMemoryBudgetBucketRepository.
         var model = new BudgetCollection { StorageKey = dto.StorageKey };
-        dto.Buckets.ForEach(x => this.bucketRepo.GetOrCreateNew(x.Code, () => this.bucketMapper.ToModel(x)));
         dto.Budgets.ForEach(x => model.Add(this.budgetModelMapper.ToModel(x)));
         return model;
     }

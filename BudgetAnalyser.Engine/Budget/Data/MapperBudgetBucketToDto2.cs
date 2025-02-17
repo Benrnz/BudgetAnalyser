@@ -2,6 +2,7 @@
 
 namespace BudgetAnalyser.Engine.Budget.Data;
 
+[AutoRegisterWithIoC]
 public class MapperBudgetBucketToDto2 : IDtoMapper<BudgetBucketDto, BudgetBucket>
 {
     public BudgetBucketDto ToDto(BudgetBucket model)

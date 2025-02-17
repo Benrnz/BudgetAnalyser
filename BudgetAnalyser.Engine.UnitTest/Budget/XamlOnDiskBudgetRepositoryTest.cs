@@ -233,7 +233,7 @@ public class XamlOnDiskBudgetRepositoryTest
 
         return new XamlOnDiskBudgetRepository(
             bucketRepo,
-            new MapperBudgetCollectionToDto2(bucketRepo,  new MapperBudgetModelToDto2(new MapperExpenseToDto2(bucketRepo), new MapperIncomeToDto2(bucketRepo))),
+            new MapperBudgetCollectionToDto2(bucketRepo, new MapperBudgetModelToDto2(new MapperExpenseToDto2(bucketRepo), new MapperIncomeToDto2(bucketRepo))),
             this.mockFileSelector.Object);
     }
 
