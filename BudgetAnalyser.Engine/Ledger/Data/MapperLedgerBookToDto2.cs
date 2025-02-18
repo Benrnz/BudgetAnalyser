@@ -1,7 +1,7 @@
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Mobile;
-using Rees.TangyFruitMapper;
+using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 

@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement.Data;
-using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Statement;
 

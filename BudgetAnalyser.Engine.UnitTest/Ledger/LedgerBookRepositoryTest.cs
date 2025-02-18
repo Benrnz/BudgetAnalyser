@@ -9,7 +9,6 @@ using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Moq;
-using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 

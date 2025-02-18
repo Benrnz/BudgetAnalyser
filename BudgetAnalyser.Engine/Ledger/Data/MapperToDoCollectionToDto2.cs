@@ -1,4 +1,4 @@
-﻿using Rees.TangyFruitMapper;
+﻿using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Ledger.Data;
 

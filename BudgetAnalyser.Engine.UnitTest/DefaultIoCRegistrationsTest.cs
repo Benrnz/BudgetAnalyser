@@ -6,7 +6,6 @@ using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
-using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest;
 
