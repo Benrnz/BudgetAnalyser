@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.Text;
 using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using Portable.Xaml;
-using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger;
 

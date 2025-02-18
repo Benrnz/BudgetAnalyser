@@ -19,7 +19,6 @@
         <PackageReference Include="Microsoft.CodeAnalysis.Metrics" Version="3.3.4"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="Portable.Xaml" Version="0.26.0"/>
-        <PackageReference Include="Rees.TangyFruitMapper" Version="2.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -28,4 +27,7 @@
         <InternalsVisibleTo Include="BudgetAnalyser.Wpf.UnitTest"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>
+
+
+
 </Project>

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Rees.TangyFruitMapper;
+using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Widgets.Data;
 

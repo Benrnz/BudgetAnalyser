@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.Matching.Data;
+using BudgetAnalyser.Engine.Persistence;
 using Portable.Xaml;
-using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Matching;
 

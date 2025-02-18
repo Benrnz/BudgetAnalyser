@@ -16,7 +16,6 @@
         <PackageReference Include="ConfuzzleCore" Version="3.0.2"/>
         <PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
         <PackageReference Include="Microsoft.CodeAnalysis.Metrics" Version="3.3.4"/>
-        <PackageReference Include="Rees.TangyFruitMapper" Version="2.0.0"/>
     </ItemGroup>
 
     <ItemGroup>

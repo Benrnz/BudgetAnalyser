@@ -1,6 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Ledger.Data;
 using Portable.Xaml;
-using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Persistence;
 

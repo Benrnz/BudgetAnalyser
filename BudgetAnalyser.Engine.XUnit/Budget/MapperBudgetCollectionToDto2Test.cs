@@ -1,9 +1,9 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
-using Rees.TangyFruitMapper;
 using Shouldly;
 
 namespace BudgetAnalyser.Engine.XUnit.Budget;

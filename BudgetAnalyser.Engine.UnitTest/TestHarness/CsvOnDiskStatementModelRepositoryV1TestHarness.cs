@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
-using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness;
 

@@ -1,10 +1,10 @@
 ﻿using System.Text;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Moq;
-using Rees.TangyFruitMapper;
 using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Statement;
