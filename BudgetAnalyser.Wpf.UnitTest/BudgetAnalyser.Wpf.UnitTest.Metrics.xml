@@ -65,7 +65,7 @@
                   <Metric Name="ExecutableLines" Value="14" />
                 </Metrics>
                 <Members>
-                  <Property Name="LogLevel FakeLogger.LogLevelFilter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="10">
+                  <Property Name="LogLevel FakeLogger.LogLevelFilter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="10">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -74,7 +74,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                     <Accessors>
-                      <Method Name="LogLevel FakeLogger.LogLevelFilter.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="10">
+                      <Method Name="LogLevel FakeLogger.LogLevelFilter.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="10">
                         <Metrics>
                           <Metric Name="MaintainabilityIndex" Value="100" />
                           <Metric Name="CyclomaticComplexity" Value="1" />
@@ -83,7 +83,7 @@
                           <Metric Name="ExecutableLines" Value="0" />
                         </Metrics>
                       </Method>
-                      <Method Name="void FakeLogger.LogLevelFilter.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="10">
+                      <Method Name="void FakeLogger.LogLevelFilter.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="10">
                         <Metrics>
                           <Metric Name="MaintainabilityIndex" Value="100" />
                           <Metric Name="CyclomaticComplexity" Value="1" />
@@ -94,7 +94,7 @@
                       </Method>
                     </Accessors>
                   </Property>
-                  <Method Name="string FakeLogger.Format(string format, params object?[] parameters)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="12">
+                  <Method Name="string FakeLogger.Format(string format, params object?[] parameters)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="12">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="92" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -103,7 +103,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Method>
-                  <Method Name="void FakeLogger.LogAlways(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="17">
+                  <Method Name="void FakeLogger.LogAlways(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="17">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="90" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -112,7 +112,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void FakeLogger.LogError(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="23">
+                  <Method Name="void FakeLogger.LogError(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="23">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="90" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -121,7 +121,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void FakeLogger.LogError(Exception ex, Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="29">
+                  <Method Name="void FakeLogger.LogError(Exception ex, Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="29">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="84" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -130,7 +130,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void FakeLogger.LogInfo(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="36">
+                  <Method Name="void FakeLogger.LogInfo(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="36">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="90" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -139,7 +139,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void FakeLogger.LogWarning(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="42">
+                  <Method Name="void FakeLogger.LogWarning(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\FakeLogger.cs" Line="42">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="90" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -160,7 +160,7 @@
                   <Metric Name="ExecutableLines" Value="21" />
                 </Metrics>
                 <Members>
-                  <Field Name="int MetaTest.MinimumTestCount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\MetaTest.cs" Line="8">
+                  <Field Name="int MetaTest.MinimumTestCount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\MetaTest.cs" Line="8">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -169,7 +169,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Method Name="void MetaTest.ListAllTests()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\MetaTest.cs" Line="11">
+                  <Method Name="void MetaTest.ListAllTests()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\MetaTest.cs" Line="11">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="62" />
                       <Metric Name="CyclomaticComplexity" Value="5" />
@@ -178,7 +178,7 @@
                       <Metric Name="ExecutableLines" Value="10" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MetaTest.NoDecreaseInTests()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\MetaTest.cs" Line="32">
+                  <Method Name="void MetaTest.NoDecreaseInTests()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\MetaTest.cs" Line="32">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="65" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -211,7 +211,7 @@
                   <Metric Name="ExecutableLines" Value="32" />
                 </Metrics>
                 <Members>
-                  <Field Name="Mock&lt;ITransactionManagerService&gt; StatementViewModelTest.mockTransactionService" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="13">
+                  <Field Name="Mock&lt;ITransactionManagerService&gt; StatementViewModelTest.mockTransactionService" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="13">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -220,7 +220,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Field Name="Mock&lt;IUiContext&gt; StatementViewModelTest.mockUiContext" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="14">
+                  <Field Name="Mock&lt;IUiContext&gt; StatementViewModelTest.mockUiContext" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="14">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -229,7 +229,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Method Name="void StatementViewModelTest.GivenNoDataHasTransactionsShouldBeFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="17">
+                  <Method Name="void StatementViewModelTest.GivenNoDataHasTransactionsShouldBeFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="17">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="86" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -238,7 +238,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void StatementViewModelTest.GivenNoDataStatementNameShouldBeNoTransactionsLoaded()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="24">
+                  <Method Name="void StatementViewModelTest.GivenNoDataStatementNameShouldBeNoTransactionsLoaded()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="24">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -247,7 +247,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void StatementViewModelTest.GivenTestData1HasTransactionsShouldBeTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="31">
+                  <Method Name="void StatementViewModelTest.GivenTestData1HasTransactionsShouldBeTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="31">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="86" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -256,7 +256,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void StatementViewModelTest.GivenTestData1StatementNameShouldBeFooStatement()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="38">
+                  <Method Name="void StatementViewModelTest.GivenTestData1StatementNameShouldBeFooStatement()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="38">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -265,7 +265,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void StatementViewModelTest.GivenTestData1TotalCreditsShouldBe0()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="45">
+                  <Method Name="void StatementViewModelTest.GivenTestData1TotalCreditsShouldBe0()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="45">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -274,7 +274,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void StatementViewModelTest.SetStatement_ShouldThrow_GivenInitialiseHasNotBeenCalled()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="53">
+                  <Method Name="void StatementViewModelTest.SetStatement_ShouldThrow_GivenInitialiseHasNotBeenCalled()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="53">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="77" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -283,7 +283,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="void StatementViewModelTest.TestInitialise()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="61">
+                  <Method Name="void StatementViewModelTest.TestInitialise()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="61">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="74" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -292,7 +292,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="void StatementViewModelTest.TriggerRefreshTotalsRowShouldRaise10Events()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="69">
+                  <Method Name="void StatementViewModelTest.TriggerRefreshTotalsRowShouldRaise10Events()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="69">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -301,7 +301,7 @@
                       <Metric Name="ExecutableLines" Value="6" />
                     </Metrics>
                   </Method>
-                  <Method Name="Transaction StatementViewModelTest.GetPhoneTxnFromFullList(StatementViewModel subject)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="79">
+                  <Method Name="Transaction StatementViewModelTest.GetPhoneTxnFromFullList(StatementViewModel subject)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="79">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="77" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -310,7 +310,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="IWaitCursor StatementViewModelTest.WaitCursorFactory()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="86">
+                  <Method Name="IWaitCursor StatementViewModelTest.WaitCursorFactory()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="86">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="95" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -319,7 +319,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Method>
-                  <Method Name="StatementViewModel StatementViewModelTest.Arrange()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="91">
+                  <Method Name="StatementViewModel StatementViewModelTest.Arrange()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="91">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="78" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -328,7 +328,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="StatementViewModel StatementViewModelTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="98">
+                  <Method Name="StatementViewModel StatementViewModelTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\Statement\StatementViewModelTest.cs" Line="98">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="90" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -361,7 +361,7 @@
                   <Metric Name="ExecutableLines" Value="41" />
                 </Metrics>
                 <Members>
-                  <Field Name="SavedUpForExpenseBucket StatementModelTestData.CarMtcBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="10">
+                  <Field Name="SavedUpForExpenseBucket StatementModelTestData.CarMtcBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="10">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -370,7 +370,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="ChequeAccount StatementModelTestData.ChequeAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="11">
+                  <Field Name="ChequeAccount StatementModelTestData.ChequeAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="11">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -379,7 +379,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="SavedUpForExpenseBucket StatementModelTestData.HairBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="12">
+                  <Field Name="SavedUpForExpenseBucket StatementModelTestData.HairBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="12">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -388,7 +388,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="IncomeBudgetBucket StatementModelTestData.IncomeBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="13">
+                  <Field Name="IncomeBudgetBucket StatementModelTestData.IncomeBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="13">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -397,7 +397,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="SavedUpForExpenseBucket StatementModelTestData.InsHomeBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="14">
+                  <Field Name="SavedUpForExpenseBucket StatementModelTestData.InsHomeBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="14">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -406,7 +406,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="SpentPerPeriodExpenseBucket StatementModelTestData.PhoneBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="15">
+                  <Field Name="SpentPerPeriodExpenseBucket StatementModelTestData.PhoneBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="15">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -415,7 +415,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="SpentPerPeriodExpenseBucket StatementModelTestData.PowerBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="16">
+                  <Field Name="SpentPerPeriodExpenseBucket StatementModelTestData.PowerBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="16">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -424,7 +424,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="SpentPerPeriodExpenseBucket StatementModelTestData.RegoBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="17">
+                  <Field Name="SpentPerPeriodExpenseBucket StatementModelTestData.RegoBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="17">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -433,7 +433,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="PayCreditCardBucket StatementModelTestData.PayCreditCard" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="18">
+                  <Field Name="PayCreditCardBucket StatementModelTestData.PayCreditCard" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="18">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -442,7 +442,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="SavedUpForExpenseBucket StatementModelTestData.SavingsBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="19">
+                  <Field Name="SavedUpForExpenseBucket StatementModelTestData.SavingsBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="19">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -451,7 +451,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="SurplusBucket StatementModelTestData.SurplusBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="20">
+                  <Field Name="SurplusBucket StatementModelTestData.SurplusBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="20">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -460,7 +460,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="SavingsAccount StatementModelTestData.SavingsAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="21">
+                  <Field Name="SavingsAccount StatementModelTestData.SavingsAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="21">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -469,7 +469,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="NamedTransaction StatementModelTestData.TransactionType" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="22">
+                  <Field Name="NamedTransaction StatementModelTestData.TransactionType" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="22">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -478,7 +478,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="VisaAccount StatementModelTestData.VisaAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="23">
+                  <Field Name="VisaAccount StatementModelTestData.VisaAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="23">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -487,7 +487,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Method Name="StatementModel StatementModelTestData.TestData1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="28">
+                  <Method Name="StatementModel StatementModelTestData.TestData1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="28">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="74" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -496,7 +496,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="StatementModel StatementModelTestData.TestData2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="45">
+                  <Method Name="StatementModel StatementModelTestData.TestData2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="45">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="74" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -505,7 +505,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="StatementModel StatementModelTestData.TestData2A()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="63">
+                  <Method Name="StatementModel StatementModelTestData.TestData2A()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="63">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="66" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -514,7 +514,7 @@
                       <Metric Name="ExecutableLines" Value="7" />
                     </Metrics>
                   </Method>
-                  <Method Name="StatementModel StatementModelTestData.TestData3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="83">
+                  <Method Name="StatementModel StatementModelTestData.TestData3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="83">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="74" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -523,7 +523,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="StatementModel StatementModelTestData.TestData4()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="102">
+                  <Method Name="StatementModel StatementModelTestData.TestData4()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="102">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -532,7 +532,7 @@
                       <Metric Name="ExecutableLines" Value="5" />
                     </Metrics>
                   </Method>
-                  <Method Name="StatementModel StatementModelTestData.TestData5()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="123">
+                  <Method Name="StatementModel StatementModelTestData.TestData5()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="123">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="74" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -541,7 +541,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="StatementModel StatementModelTestData.WithNullBudgetBuckets(StatementModel instance)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="136">
+                  <Method Name="StatementModel StatementModelTestData.WithNullBudgetBuckets(StatementModel instance)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="136">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="80" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -550,7 +550,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="IEnumerable&lt;Transaction&gt; StatementModelTestData.CreateTransactions1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="146">
+                  <Method Name="IEnumerable&lt;Transaction&gt; StatementModelTestData.CreateTransactions1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="146">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="73" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -559,7 +559,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="IEnumerable&lt;Transaction&gt; StatementModelTestData.CreateTransactions2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="224">
+                  <Method Name="IEnumerable&lt;Transaction&gt; StatementModelTestData.CreateTransactions2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="224">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="72" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -568,7 +568,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="IEnumerable&lt;Transaction&gt; StatementModelTestData.CreateTransactions3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="332">
+                  <Method Name="IEnumerable&lt;Transaction&gt; StatementModelTestData.CreateTransactions3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="332">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="72" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -577,7 +577,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="IEnumerable&lt;Transaction&gt; StatementModelTestData.CreateTransactions5()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="440">
+                  <Method Name="IEnumerable&lt;Transaction&gt; StatementModelTestData.CreateTransactions5()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\StatementModelTestData.cs" Line="440">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -598,7 +598,7 @@
                   <Metric Name="ExecutableLines" Value="2" />
                 </Metrics>
                 <Members>
-                  <Field Name="string TestDataConstants.Budget1Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="5">
+                  <Field Name="string TestDataConstants.Budget1Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="5">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -607,7 +607,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.Budget2Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="6">
+                  <Field Name="string TestDataConstants.Budget2Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="6">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -616,7 +616,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.Budget5Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="7">
+                  <Field Name="string TestDataConstants.Budget5Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="7">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -625,7 +625,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.BudgetCollectionTestDataFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="8">
+                  <Field Name="string TestDataConstants.BudgetCollectionTestDataFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="8">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -634,7 +634,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.CarMtcBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="9">
+                  <Field Name="string TestDataConstants.CarMtcBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="9">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -643,7 +643,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.ChequeAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="10">
+                  <Field Name="string TestDataConstants.ChequeAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="10">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -652,7 +652,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.DemoBudgetAnalyserFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="11">
+                  <Field Name="string TestDataConstants.DemoBudgetAnalyserFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="11">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -661,7 +661,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.DemoBudgetFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="12">
+                  <Field Name="string TestDataConstants.DemoBudgetFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="12">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -670,7 +670,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.DemoLedgerBookFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="13">
+                  <Field Name="string TestDataConstants.DemoLedgerBookFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="13">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -679,7 +679,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.DemoRulesFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="14">
+                  <Field Name="string TestDataConstants.DemoRulesFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="14">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -688,7 +688,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.DemoTransactionsFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="15">
+                  <Field Name="string TestDataConstants.DemoTransactionsFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="15">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -697,7 +697,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.DoctorBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="16">
+                  <Field Name="string TestDataConstants.DoctorBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="16">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -706,7 +706,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.EmptyBudgetFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="17">
+                  <Field Name="string TestDataConstants.EmptyBudgetFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="17">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -715,7 +715,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.FoodBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="18">
+                  <Field Name="string TestDataConstants.FoodBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="18">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -724,7 +724,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.HairBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="19">
+                  <Field Name="string TestDataConstants.HairBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="19">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -733,7 +733,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.IncomeBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="20">
+                  <Field Name="string TestDataConstants.IncomeBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="20">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -742,7 +742,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.InsuranceHomeBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="21">
+                  <Field Name="string TestDataConstants.InsuranceHomeBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="21">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -751,7 +751,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.PayCreditCardBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="22">
+                  <Field Name="string TestDataConstants.PayCreditCardBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="22">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -760,7 +760,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.PhoneBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="23">
+                  <Field Name="string TestDataConstants.PhoneBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="23">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -769,7 +769,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.PowerBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="24">
+                  <Field Name="string TestDataConstants.PowerBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="24">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -778,7 +778,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.RatesBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="25">
+                  <Field Name="string TestDataConstants.RatesBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="25">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -787,7 +787,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.RegoBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="26">
+                  <Field Name="string TestDataConstants.RegoBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="26">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -796,7 +796,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.RentBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="27">
+                  <Field Name="string TestDataConstants.RentBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="27">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -805,7 +805,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.SavingsAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="28">
+                  <Field Name="string TestDataConstants.SavingsAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="28">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -814,7 +814,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.SavingsBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="29">
+                  <Field Name="string TestDataConstants.SavingsBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="29">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -823,7 +823,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.VisaAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="30">
+                  <Field Name="string TestDataConstants.VisaAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="30">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -832,7 +832,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string TestDataConstants.WaterBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="31">
+                  <Field Name="string TestDataConstants.WaterBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.UnitTest\TestData\TestDataConstants.cs" Line="31">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />

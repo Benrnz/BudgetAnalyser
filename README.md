@@ -89,3 +89,8 @@ Projects
 * _Fixed Amount Project Tiles_
 
 These are configurable tiles where you have an on-going project that you do not want to spend more than a certain amount on.  For example the MASTERBED project is a renovation project to repaint and decorate a master bedroom. The screen shot shows the spending to date has reached the budgeted amount. The PS3 Project hasn't had any spending allocated against it yet, so its bar graph is showing a full bucket.
+
+Useful Commandlines to remember
+-------------------------------
+`dotnet build -t:Metrics`
+This will update the metrics xml files for each project. Useful to keep track of the size, complexity, and maintainability index of the code.
