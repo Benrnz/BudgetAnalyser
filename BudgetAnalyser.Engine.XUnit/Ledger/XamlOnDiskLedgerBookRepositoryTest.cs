@@ -22,6 +22,7 @@ public class XamlOnDiskLedgerBookRepositoryTest : IDisposable
     private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper;
     private readonly Mock<IFileReaderWriter> mockReaderWriter;
     private readonly Mock<IReaderWriterSelector> mockReaderWriterSelector;
+    private readonly Stopwatch stopwatch;
 
     public XamlOnDiskLedgerBookRepositoryTest(ITestOutputHelper output)
     {
@@ -32,10 +33,13 @@ public class XamlOnDiskLedgerBookRepositoryTest : IDisposable
         this.mockReaderWriterSelector = new Mock<IReaderWriterSelector>();
         this.mockReaderWriter = new Mock<IFileReaderWriter>();
         this.mockReaderWriterSelector.Setup(m => m.SelectReaderWriter(It.IsAny<bool>())).Returns(this.mockReaderWriter.Object);
+
+        this.stopwatch = Stopwatch.StartNew();
     }
 
     public void Dispose()
     {
+        this.outputter?.WriteLine($"TOTAL TIME: {this.stopwatch.Elapsed}");
         this.outputter?.Dispose();
     }
 
@@ -64,6 +68,8 @@ public class XamlOnDiskLedgerBookRepositoryTest : IDisposable
         reserialisedDto.Output(true, this.outputter);
 
         reserialisedDto.Checksum.ShouldBe(fileChecksum);
+
+        this.stopwatch.Stop();
     }
 
     [Fact]
