@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Statement;
 
-namespace BudgetAnalyser.Engine.UnitTest.TestHarness;
+namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
 internal class BankImportUtilitiesTestHarness() : BankImportUtilities(new FakeLogger())
 {
