@@ -16,6 +16,11 @@ internal class EncryptedLocalDiskReaderWriter(IFileEncryptor fileEncryptor, ICre
         return this.fileEncryptor.CreateWritableEncryptedStream(fileName, RetrievePassword());
     }
 
+    public Stream CreateReadableStream(string fileName)
+    {
+        return this.fileEncryptor.CreateReadableEncryptedStream(fileName, RetrievePassword());
+    }
+
     /// <summary>
     ///     Files the exists.
     /// </summary>

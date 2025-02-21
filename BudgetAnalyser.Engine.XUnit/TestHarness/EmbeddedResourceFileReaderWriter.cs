@@ -24,6 +24,11 @@ public class EmbeddedResourceFileReaderWriter : IFileReaderWriter
         throw new NotSupportedException("Implement these when required");
     }
 
+    public Stream CreateReadableStream(string fileName)
+    {
+        throw new NotSupportedException("Implement these when required");
+    }
+
     /// <summary>
     ///     Files the exists.
     /// </summary>

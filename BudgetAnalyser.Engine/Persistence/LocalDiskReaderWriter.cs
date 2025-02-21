@@ -18,6 +18,11 @@ internal class LocalDiskReaderWriter : IFileReaderWriter
         return new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous);
     }
 
+    public Stream CreateReadableStream(string fileName)
+    {
+        return new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous);
+    }
+
     public bool FileExists(string fileName)
     {
         return fileName.IsNothing() ? throw new ArgumentNullException(nameof(fileName)) : File.Exists(fileName);

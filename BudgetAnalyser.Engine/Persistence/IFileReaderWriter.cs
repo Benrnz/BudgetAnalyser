@@ -6,6 +6,13 @@
 public interface IFileReaderWriter
 {
     /// <summary>
+    ///     Creates a readable stream to read the data into.
+    ///     This is an alternative to <see cref="LoadFromDiskAsync" />
+    /// </summary>
+    /// <param name="fileName">Full path and filename of the file.</param>
+    Stream CreateReadableStream(string fileName);
+
+    /// <summary>
     ///     Creates a writable stream to write data into.
     ///     This is an alternative to <see cref="WriteToDiskAsync" />
     /// </summary>

@@ -8,6 +8,13 @@ namespace BudgetAnalyser.Encryption;
 public interface IFileEncryptor
 {
     /// <summary>
+    ///     Creates a readable stream to load and read the data from the disk.
+    /// </summary>
+    /// <param name="fileName">Full path and filename of the file.</param>
+    /// <param name="passphrase">The pass phrase.</param>
+    Stream CreateReadableEncryptedStream(string fileName, SecureString passphrase);
+
+    /// <summary>
     ///     Creates a writable stream to write data into.
     /// </summary>
     /// <param name="fileName">Full path and filename of the file.</param>
