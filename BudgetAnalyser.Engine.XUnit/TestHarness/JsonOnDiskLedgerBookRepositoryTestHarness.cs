@@ -16,7 +16,21 @@ internal class JsonOnDiskLedgerBookRepositoryTestHarness : JsonOnDiskLedgerBookR
     {
     }
 
+    public LedgerBookDto Dto { get; private set; }
+
     public string SerialisedData { get; private set; }
+
+    protected override async Task<LedgerBookDto> LoadJsonFromDiskAsync(string fileName, bool isEncrypted)
+    {
+        Dto = await base.LoadJsonFromDiskAsync(fileName, isEncrypted);
+        return Dto;
+    }
+
+    protected override LedgerBookDto MapToDto(LedgerBook book)
+    {
+        Dto = base.MapToDto(book);
+        return Dto;
+    }
 
     protected override async Task SerialiseAndWriteToStream(Stream stream, LedgerBookDto dataEntity)
     {

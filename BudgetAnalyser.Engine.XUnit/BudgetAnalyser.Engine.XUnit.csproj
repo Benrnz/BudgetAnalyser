@@ -52,4 +52,10 @@
         </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json">
+            <Link>TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

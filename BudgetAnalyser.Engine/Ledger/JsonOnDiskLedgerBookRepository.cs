@@ -107,7 +107,7 @@ internal class JsonOnDiskLedgerBookRepository(
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        var dataEntity = this.mapper.ToDto(book);
+        var dataEntity = MapToDto(book);
         book.StorageKey = storageKey;
         dataEntity.StorageKey = storageKey;
         dataEntity.Checksum = CalculateChecksum(book);
@@ -125,13 +125,18 @@ internal class JsonOnDiskLedgerBookRepository(
         return ledgerBookDto ?? throw new CorruptedLedgerBookException("Unable to deserialise ledger book data into correct type.");
     }
 
+    protected virtual LedgerBookDto MapToDto(LedgerBook book)
+    {
+        return this.mapper.ToDto(book);
+    }
+
     protected virtual async Task SerialiseAndWriteToStream(Stream stream, LedgerBookDto dataEntity)
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
         await JsonSerializer.SerializeAsync(stream, dataEntity, options);
     }
 
-    private static double CalculateChecksum(LedgerBook dataEntity)
+    private double CalculateChecksum(LedgerBook dataEntity)
     {
         // ReSharper disable once EnumerableSumInExplicitUncheckedContext - Used to calculate a checksum and revolving (overflowing) integers are ok here.
         return dataEntity.Reconciliations.Sum(
