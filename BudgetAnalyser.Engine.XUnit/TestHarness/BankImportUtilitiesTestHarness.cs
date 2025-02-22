@@ -2,8 +2,16 @@
 
 namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
-internal class BankImportUtilitiesTestHarness() : BankImportUtilities(new FakeLogger())
+internal class BankImportUtilitiesTestHarness : BankImportUtilities
 {
+    public BankImportUtilitiesTestHarness(ILogger logger) : base(logger)
+    {
+    }
+
+    public BankImportUtilitiesTestHarness() : base(new FakeLogger())
+    {
+    }
+
     public Action<string> AbortIfFileDoesntExistOverride { get; set; }
 
     internal override void AbortIfFileDoesntExist(string fileName)

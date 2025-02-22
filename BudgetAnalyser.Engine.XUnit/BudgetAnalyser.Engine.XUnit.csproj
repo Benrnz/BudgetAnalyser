@@ -46,4 +46,10 @@
         <EmbeddedResource Include="TestData\WidgetsTestData.xml"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="..\TestData\DemoLedgerBook.json">
+            <Link>TestData\DemoLedgerBook.json</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

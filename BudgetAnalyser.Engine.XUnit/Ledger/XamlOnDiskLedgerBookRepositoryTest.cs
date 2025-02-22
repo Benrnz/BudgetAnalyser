@@ -17,11 +17,11 @@ namespace BudgetAnalyser.Engine.XUnit.Ledger;
 public class XamlOnDiskLedgerBookRepositoryTest : IDisposable
 {
     private const string LoadFileName = @"BudgetAnalyser.Engine.XUnit.TestData.LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml";
-    private readonly XUnitOutputWriter outputter;
 
     private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper;
     private readonly Mock<IFileReaderWriter> mockReaderWriter;
     private readonly Mock<IReaderWriterSelector> mockReaderWriterSelector;
+    private readonly XUnitOutputWriter outputter;
     private readonly Stopwatch stopwatch;
 
     public XamlOnDiskLedgerBookRepositoryTest(ITestOutputHelper output)
@@ -249,7 +249,7 @@ public class XamlOnDiskLedgerBookRepositoryTest : IDisposable
     {
         if (real)
         {
-            // Use real classes to operation very closely to live mode.
+            // Use real classes to operate very closely to live mode.
             return new XamlOnDiskLedgerBookRepositoryTestHarness(
                 this.mapper,
                 new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]));

@@ -1,0 +1,256 @@
+{
+    "Checksum": 2728.88,
+    "Ledgers": [
+        {
+            "BucketCode": "DOC",
+            "StoredInAccount": "CHEQUE"
+        },
+        {
+            "BucketCode": "INSHOME",
+            "StoredInAccount": "CHEQUE"
+        },
+        {
+            "BucketCode": "RENT",
+            "StoredInAccount": "CHEQUE"
+        },
+        {
+            "BucketCode": "WATER",
+            "StoredInAccount": "CHEQUE"
+        }
+    ],
+    "MobileSettings": null,
+    "Modified": "2013-12-29T15:31:03.5480436+13:00",
+    "Name": "Demo LedgerBook",
+    "Reconciliations": [
+        {
+            "BankBalance": 0,
+            "BankBalanceAdjustments": [
+                {
+                    "Account": "CHEQUE",
+                    "Amount": -100,
+                    "AutoMatchingReference": "",
+                    "Date": null,
+                    "Id": "e70314e0-aaab-455a-90d8-b0d456e4de6a",
+                    "Narrative": "Visa payment, not yet reflected in bank balance.",
+                    "TransactionType": "BudgetAnalyser.Engine.Ledger.BankBalanceAdjustmentTransaction"
+                },
+                {
+                    "Account": "CHEQUE",
+                    "Amount": -50,
+                    "AutoMatchingReference": "",
+                    "Date": null,
+                    "Id": "bc344b4a-6ff7-4511-90d1-bdea709034ce",
+                    "Narrative": "Savings yet to go out not reflected in bank balance",
+                    "TransactionType": "BudgetAnalyser.Engine.Ledger.BankBalanceAdjustmentTransaction"
+                }
+            ],
+            "BankBalances": [],
+            "Date": "2013-10-20T00:00:00",
+            "Entries": [
+                {
+                    "Balance": 37.00,
+                    "BucketCode": "WATER",
+                    "StoredInAccount": "CHEQUE",
+                    "Transactions": [
+                        {
+                            "Account": null,
+                            "Amount": 37.00,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "b050ccf4-2f6f-413d-ae9d-dbfe1ca6c39e",
+                            "Narrative": "Budgeted Amount",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
+                        },
+                        {
+                            "Account": null,
+                            "Amount": -34.17,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "500debc5-7f72-4071-be68-1961b7341fb2",
+                            "Narrative": "Watercare Services",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        },
+                        {
+                            "Account": null,
+                            "Amount": -2.83,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "2bf7a802-8de5-49b8-bac4-e43a2c812070",
+                            "Narrative": "Zero the remainder - no need to accumulate.",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        }
+                    ]
+                },
+                {
+                    "Balance": 100.00,
+                    "BucketCode": "INSHOME",
+                    "StoredInAccount": "CHEQUE",
+                    "Transactions": [
+                        {
+                            "Account": null,
+                            "Amount": 100.00,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "a7d8dc68-8cc5-4fa2-b2e7-939226b4f997",
+                            "Narrative": "Budgeted Amount",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
+                        },
+                        {
+                            "Account": null,
+                            "Amount": -100.96,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "8f606d2f-b569-4bf6-af6f-a10b48f69d95",
+                            "Narrative": "Pay home and contents to Foo Insurance Ltd",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        },
+                        {
+                            "Account": null,
+                            "Amount": 0.96,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "6aa34d0f-9d26-4e31-abe8-be9019ad2601",
+                            "Narrative": "Zero the remainder - supplement shortfall from surplus.",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        }
+                    ]
+                },
+                {
+                    "Balance": 217.44,
+                    "BucketCode": "DOC",
+                    "StoredInAccount": "CHEQUE",
+                    "Transactions": [
+                        {
+                            "Account": null,
+                            "Amount": 95.00,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "97adeaf4-5c5a-4aa0-90c8-d5c2938df1d0",
+                            "Narrative": "Budgeted Amount",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
+                        },
+                        {
+                            "Account": null,
+                            "Amount": -89.00,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "6a1f1045-0740-4b53-a6d0-fecfbb6d693d",
+                            "Narrative": "Life Pharmacy Sylvia Pk  Sylvia Park  Nz",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        }
+                    ]
+                },
+                {
+                    "Balance": 1200,
+                    "BucketCode": "RENT",
+                    "StoredInAccount": "CHEQUE",
+                    "Transactions": [
+                        {
+                            "Account": null,
+                            "Amount": 1200.00,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "7c518808-c57e-4d4f-9f8f-d790273fcc08",
+                            "Narrative": "Budgeted Amount",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
+                        },
+                        {
+                            "Account": null,
+                            "Amount": -1200.00,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "0bf223a0-d618-441e-88bf-1d7427e3b5e1",
+                            "Narrative": "Rent to Rentals R Us",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        }
+                    ]
+                }
+            ],
+            "Remarks": "Not a full pay this month, some unpaid leave."
+        },
+        {
+            "BankBalance": 0,
+            "BankBalanceAdjustments": [
+                {
+                    "Account": "CHEQUE",
+                    "Amount": -37,
+                    "AutoMatchingReference": "",
+                    "Date": null,
+                    "Id": "bc344b4a-6ff7-4511-90d1-bdea709034bb",
+                    "Narrative": "Starting balance",
+                    "TransactionType": "BudgetAnalyser.Engine.Ledger.BankBalanceAdjustmentTransaction"
+                }
+            ],
+            "BankBalances": [],
+            "Date": "2013-09-20T00:00:00",
+            "Entries": [
+                {
+                    "Balance": 37.00,
+                    "BucketCode": "WATER",
+                    "StoredInAccount": "CHEQUE",
+                    "Transactions": [
+                        {
+                            "Account": null,
+                            "Amount": 37.00,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "b050ccf4-2f6f-413d-ae9d-dbfe1ca6c3bb",
+                            "Narrative": "Starting balance",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        }
+                    ]
+                },
+                {
+                    "Balance": 100.00,
+                    "BucketCode": "INSHOME",
+                    "StoredInAccount": "CHEQUE",
+                    "Transactions": [
+                        {
+                            "Account": null,
+                            "Amount": 100.00,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "a7d8dc68-8cc5-4fa2-b2e7-939226b4f9bb",
+                            "Narrative": "Starting balance",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        }
+                    ]
+                },
+                {
+                    "Balance": 211.44,
+                    "BucketCode": "DOC",
+                    "StoredInAccount": "CHEQUE",
+                    "Transactions": [
+                        {
+                            "Account": null,
+                            "Amount": 211.44,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "97adeaf4-5c5a-4aa0-90c8-d5c2938bb1bb",
+                            "Narrative": "Starting balance",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        }
+                    ]
+                },
+                {
+                    "Balance": 1200,
+                    "BucketCode": "RENT",
+                    "StoredInAccount": "CHEQUE",
+                    "Transactions": [
+                        {
+                            "Account": null,
+                            "Amount": 1200,
+                            "AutoMatchingReference": "",
+                            "Date": null,
+                            "Id": "0bf223a0-d618-441e-88bf-1d7427e3b5e1",
+                            "Narrative": "Rent to Rentals R Us",
+                            "TransactionType": "BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction"
+                        }
+                    ]
+                }
+            ],
+            "Remarks": "Started using LedgerBook - Opening balances"
+        }
+    ],
+    "StorageKey": "BudgetAnalyser.Engine.XUnit.TestData.DemoLedgerBook.xml"
+}

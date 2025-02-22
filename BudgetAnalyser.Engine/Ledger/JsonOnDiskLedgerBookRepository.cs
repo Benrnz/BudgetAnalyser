@@ -15,10 +15,12 @@ namespace BudgetAnalyser.Engine.Ledger;
 internal class JsonOnDiskLedgerBookRepository(
     IDtoMapper<LedgerBookDto, LedgerBook> mapper,
     BankImportUtilities importUtilities,
-    IReaderWriterSelector readerWriterSelector)
+    IReaderWriterSelector readerWriterSelector,
+    ILogger logger)
     : ILedgerBookRepository
 {
     private readonly BankImportUtilities importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
+    private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     private readonly IReaderWriterSelector readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
 
@@ -50,19 +52,19 @@ internal class JsonOnDiskLedgerBookRepository(
         }
         catch (FileNotFoundException ex)
         {
+            this.logger.LogError(ex, _ => $"File not found: {storageKey}");
             throw new KeyNotFoundException("Data file can not be found: " + storageKey, ex);
         }
         catch (Exception ex)
         {
-            throw new DataFormatException(
-                "Deserialisation Ledger Book file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.",
-                ex);
+            this.logger.LogError(ex, _ => $"General Error loading and deserialising, likely invalid file format: {storageKey}");
+            throw new DataFormatException("Deserialisation Ledger Book file failed, an exception was thrown by the Json deserialiser, the file format is invalid.", ex);
         }
 
         if (dataEntity is null)
         {
-            throw new DataFormatException(string.Format(CultureInfo.CurrentCulture,
-                "The specified file {0} is not of type Data-Ledger-Book", storageKey));
+            this.logger.LogError(_ => $"General Error loading and deserialising, likely invalid file format: {storageKey}");
+            throw new DataFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", storageKey));
         }
 
         dataEntity.StorageKey = storageKey;
@@ -71,6 +73,7 @@ internal class JsonOnDiskLedgerBookRepository(
         var messages = new StringBuilder();
         if (!book.Validate(messages))
         {
+            this.logger.LogError(_ => $"The ledger book failed validation after deserialisation: {storageKey}. Validation messages: {messages}");
             throw new DataFormatException(messages.ToString());
         }
 
@@ -84,8 +87,8 @@ internal class JsonOnDiskLedgerBookRepository(
             var calculatedChecksum = CalculateChecksum(book);
             if (Math.Abs(calculatedChecksum - dataEntity.Checksum) > 0.0001)
             {
-                throw new DataFormatException("The Ledger Book has been tampered with, checksum should be " +
-                                              calculatedChecksum);
+                this.logger.LogError(_ => $"The ledger book failed checksum validation: {storageKey}. Expected: {dataEntity.Checksum}, Actual: {calculatedChecksum}");
+                throw new DataFormatException("The Ledger Book has been tampered with, checksum should be " + calculatedChecksum);
             }
         }
 
@@ -108,6 +111,7 @@ internal class JsonOnDiskLedgerBookRepository(
         book.StorageKey = storageKey;
         dataEntity.StorageKey = storageKey;
         dataEntity.Checksum = CalculateChecksum(book);
+        this.logger.LogInfo(_ => $"Saving Ledger Book to disk: {storageKey}. Checksum is: {dataEntity.Checksum}");
 
         await SaveDtoToDiskAsync(dataEntity, isEncrypted);
     }
@@ -121,15 +125,8 @@ internal class JsonOnDiskLedgerBookRepository(
         return ledgerBookDto ?? throw new CorruptedLedgerBookException("Unable to deserialise ledger book data into correct type.");
     }
 
-    protected virtual async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity, bool isEncrypted)
+    protected virtual async Task SerialiseAndWriteToStream(Stream stream, LedgerBookDto dataEntity)
     {
-        if (dataEntity is null)
-        {
-            throw new ArgumentNullException(nameof(dataEntity));
-        }
-
-        var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = writer.CreateWritableStream(dataEntity.StorageKey);
         var options = new JsonSerializerOptions { WriteIndented = true };
         await JsonSerializer.SerializeAsync(stream, dataEntity, options);
     }
@@ -142,5 +139,17 @@ internal class JsonOnDiskLedgerBookRepository(
                 (double)l.LedgerBalance
                 + l.BankBalanceAdjustments.Sum(b => (double)b.Amount)
                 + l.Entries.Sum(e => (double)e.Balance));
+    }
+
+    private async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity, bool isEncrypted)
+    {
+        if (dataEntity is null)
+        {
+            throw new ArgumentNullException(nameof(dataEntity));
+        }
+
+        var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+        await using var stream = writer.CreateWritableStream(dataEntity.StorageKey);
+        await SerialiseAndWriteToStream(stream, dataEntity);
     }
 }
