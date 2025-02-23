@@ -58,4 +58,10 @@
         </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="..\TestData\DemoLedgerBook.json.secure">
+        <Link>TestData\DemoLedgerBook.json.secure</Link>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

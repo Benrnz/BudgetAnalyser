@@ -1,16 +1,9 @@
 ﻿using System.Reflection;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Persistence;
-using JetBrains.Annotations;
 using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.XUnit.TestHarness;
-
-[AutoRegisterWithIoC(Named = StorageConstants.EncryptedInstanceName)]
-[UsedImplicitly]
-public class EmbeddedResourceFileReaderWriterEncrypted : EmbeddedResourceFileReaderWriter
-{
-}
 
 [AutoRegisterWithIoC(Named = StorageConstants.UnprotectedInstanceName)]
 public class EmbeddedResourceFileReaderWriter : IFileReaderWriter

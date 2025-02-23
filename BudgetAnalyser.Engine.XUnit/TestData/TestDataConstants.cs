@@ -11,6 +11,7 @@ public static class TestDataConstants
     public const string TestDataWidgetsFileName = @"BudgetAnalyser.Engine.XUnit.TestData.WidgetsTestData.xml";
     public const string DemoLedgerBookFileName = @"BudgetAnalyser.Engine.XUnit.TestData.DemoLedgerBook.xml";
     public const string DemoLedgerBookFileNameJson = @"BudgetAnalyser.Engine.XUnit.TestData.DemoLedgerBook.json";
+    public const string DemoEncryptedFilePassword = "Password99";
     public const string DemoRulesFileName = @"BudgetAnalyser.Engine.XUnit.TestData.DemoMatchingRules.xml";
     public const string DemoTransactionsFileName = @"BudgetAnalyser.Engine.XUnit.TestData.DemoTransactions.csv";
     public const string EmptyBudgetFileName = @"BudgetAnalyser.Engine.XUnit.TestData.BudgetModel.xml";

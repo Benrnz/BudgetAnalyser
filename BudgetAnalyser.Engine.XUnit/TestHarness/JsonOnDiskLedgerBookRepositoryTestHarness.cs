@@ -16,7 +16,7 @@ internal class JsonOnDiskLedgerBookRepositoryTestHarness : JsonOnDiskLedgerBookR
     {
     }
 
-    public LedgerBookDto Dto { get; private set; }
+    public LedgerBookDto Dto { get; set; }
 
     public string SerialisedData { get; private set; }
 

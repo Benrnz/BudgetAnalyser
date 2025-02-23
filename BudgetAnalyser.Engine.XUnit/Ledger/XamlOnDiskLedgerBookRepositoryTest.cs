@@ -214,8 +214,8 @@ public class XamlOnDiskLedgerBookRepositoryTest : IDisposable
         await subject1.SaveAsync(LedgerBookTestData.TestData2(), "Foo2.xml", false);
         var serialisedData = subject1.SerialisedData;
 
-        Debug.WriteLine("Saved / Serialised Xml:");
-        Debug.WriteLine(serialisedData);
+        // Debug.WriteLine("Saved / Serialised Xml:");
+        // Debug.WriteLine(serialisedData);
 
         LedgerBookDto bookDto;
         var subject2 = CreateSubject();
