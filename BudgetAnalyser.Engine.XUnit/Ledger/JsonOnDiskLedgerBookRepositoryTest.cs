@@ -18,12 +18,12 @@ namespace BudgetAnalyser.Engine.XUnit.Ledger;
 public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
 {
     private const string LoadFileName = @"BudgetAnalyser.Engine.XUnit.TestData.LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json";
+    private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter = new();
     private readonly ILogger logger;
 
     private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper;
     private readonly IFileReaderWriter mockReaderWriter = Substitute.For<IFileReaderWriter>();
     private readonly IReaderWriterSelector mockReaderWriterSelector = Substitute.For<IReaderWriterSelector>();
-    private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter = new();
     private readonly XUnitOutputWriter outputter;
     private readonly Stopwatch stopwatch;
 
@@ -66,40 +66,6 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         await subject.SaveAsync(ledgerBook, TestDataConstants.DemoLedgerBookFileName, false);
 
         this.outputter.WriteLine(subject.SerialisedData);
-        this.stopwatch.Stop();
-    }
-
-    [Fact]
-    public async Task LoadAndSave_ShouldNotChangeChecksum_GivenDemoBook()
-    {
-        var subject = CreateSubject(true);
-        LedgerBookDto loadedDto = null;
-        LedgerBookDto savedDto = null;
-
-        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson, false);
-        loadedDto = subject.Dto;
-        loadedDto.Output(true, this.outputter);
-
-        await subject.SaveAsync(book, book.StorageKey, false);
-        savedDto = subject.Dto;
-        subject.Dto = null;
-        savedDto.Output(true, this.outputter);
-
-        savedDto.Checksum.ShouldBe(loadedDto.Checksum);
-
-        this.stopwatch.Stop();
-    }
-
-    [Fact]
-    public async Task LoadAndOutput_ShouldOutputRehydratedLedgerBook_GivenJsonTestData()
-    {
-        var subject = CreateSubject(true);
-        var book = await subject.LoadAsync(LoadFileName, false);
-
-        // Visual compare these two - should be the same
-        LedgerBookTestData.TestData2().Output(outputWriter: this.outputter);
-
-        book.Output(outputWriter: this.outputter);
         this.stopwatch.Stop();
     }
 
@@ -186,6 +152,17 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     }
 
     [Fact]
+    public async Task Load_ShouldLoadDemoLedgerBookFile_GivenDemoBook()
+    {
+        var subject = CreateSubject(true);
+
+        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson, false);
+        book.Output(true, this.outputter);
+        book.ShouldNotBeNull();
+        this.stopwatch.Stop();
+    }
+
+    [Fact]
     public async Task Load_ShouldLoadTheJsonFile_GivenJsonTestData()
     {
         var subject = CreateSubject(true);
@@ -196,13 +173,47 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     }
 
     [Fact]
-    public async Task Load_ShouldLoadDemoLedgerBookFile_GivenDemoBook()
+    public async Task LoadAndOutput_ShouldOutputRehydratedLedgerBook_GivenJsonTestData()
     {
         var subject = CreateSubject(true);
+        var book = await subject.LoadAsync(LoadFileName, false);
+
+        // Visual compare these two - should be the same
+        LedgerBookTestData.TestData2().Output(outputWriter: this.outputter);
+
+        book.Output(outputWriter: this.outputter);
+        this.stopwatch.Stop();
+    }
+
+    [Fact]
+    public async Task LoadAndSave_ShouldNotChangeChecksum_GivenDemoBook()
+    {
+        var subject = CreateSubject(true);
+        LedgerBookDto loadedDto = null;
+        LedgerBookDto savedDto = null;
 
         var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson, false);
-        book.Output(true, this.outputter);
-        book.ShouldNotBeNull();
+        loadedDto = subject.Dto;
+        loadedDto.Output(true, this.outputter);
+
+        await subject.SaveAsync(book, book.StorageKey, false);
+        savedDto = subject.Dto;
+        subject.Dto = null;
+        savedDto.Output(true, this.outputter);
+
+        savedDto.Checksum.ShouldBe(loadedDto.Checksum);
+
+        this.stopwatch.Stop();
+    }
+
+    [Fact]
+    public async Task LoadEncrypted_ShouldHaveCheckSumOf2728_88()
+    {
+        var subject = CreateSubject(true);
+        this.encryptedReaderWriter.InputStream = GetType().Assembly.GetManifestResourceStream(TestDataConstants.DemoLedgerBookFileNameJson + ".secure");
+
+        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson + ".secure", true);
+        subject.Dto.Checksum.ShouldBe(2728.88);
         this.stopwatch.Stop();
     }
 
@@ -215,17 +226,6 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson + ".secure", true);
         book.Output(true, this.outputter);
         book.ShouldNotBeNull();
-        this.stopwatch.Stop();
-    }
-
-    [Fact]
-    public async Task LoadEncrypted_ShouldHaveCheckSumOf2728_88()
-    {
-        var subject = CreateSubject(true);
-        this.encryptedReaderWriter.InputStream = GetType().Assembly.GetManifestResourceStream(TestDataConstants.DemoLedgerBookFileNameJson + ".secure");
-
-        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson + ".secure", true);
-        subject.Dto.Checksum.ShouldBe(2728.88);
         this.stopwatch.Stop();
     }
 
@@ -250,16 +250,21 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     }
 
     [Fact]
-    public async Task SaveEncrypted_ShouldSaveTheJsonFile_GivenTestData2()
+    public async Task Save_ShouldProduceKnownJson_GivenTestData2()
     {
-        var fileName = @"CompleteSmellyFoo.json";
-
+        // Save TestData2 to produce the serialised data.
         var subject = CreateSubject(true);
+        await subject.SaveAsync(LedgerBookTestData.TestData2(), LoadFileName, false);
+        var serialisedData = subject.SerialisedData;
+        this.outputter.WriteLine(serialisedData);
+        serialisedData.Length.ShouldBeGreaterThan(100);
 
-        var testData = LedgerBookTestData.TestData2();
-        await subject.SaveAsync(testData, fileName, true);
+        // Load the serialised data from a known good data file for comparison.
+        this.outputter.WriteLine("===================================== EXPECTED TEXT =====================================");
+        var expectedText = GetType().Assembly.ExtractEmbeddedResourceAsText(LoadFileName).Trim();
+        this.outputter.WriteLine(expectedText);
 
-        subject.SerialisedData.ShouldNotBeNullOrWhiteSpace();
+        serialisedData.ShouldBe(expectedText);
         this.stopwatch.Stop();
     }
 
@@ -289,6 +294,20 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     }
 
     [Fact]
+    public async Task SaveEncrypted_ShouldSaveTheJsonFile_GivenTestData2()
+    {
+        var fileName = @"CompleteSmellyFoo.json";
+
+        var subject = CreateSubject(true);
+
+        var testData = LedgerBookTestData.TestData2();
+        await subject.SaveAsync(testData, fileName, true);
+
+        subject.SerialisedData.ShouldNotBeNullOrWhiteSpace();
+        this.stopwatch.Stop();
+    }
+
+    [Fact]
     public async Task SavingAndLoading_ShouldProduceTheSameCheckSum_GivenTestData2()
     {
         var subject1 = CreateSubject(true);
@@ -306,25 +325,6 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         var bookDto = subject2.Dto;
 
         bookDto.Checksum.ShouldBe(ExtractCheckSum(serialisedData));
-        this.stopwatch.Stop();
-    }
-
-    [Fact]
-    public async Task Save_ShouldProduceKnownJson_GivenTestData2()
-    {
-        // Save TestData2 to produce the serialised data.
-        var subject = CreateSubject(true);
-        await subject.SaveAsync(LedgerBookTestData.TestData2(), "Leonard Nimoy.json", false);
-        var serialisedData = subject.SerialisedData;
-        this.outputter.WriteLine(serialisedData);
-        serialisedData.Length.ShouldBeGreaterThan(100);
-
-        // Load the serialised data from a known good data file for comparison.
-        this.outputter.WriteLine("===================================== EXPECTED TEXT =====================================");
-        var expectedText = GetType().Assembly.ExtractEmbeddedResourceAsText(LoadFileName);
-        this.outputter.WriteLine(expectedText);
-
-        serialisedData.ShouldBe(expectedText);
         this.stopwatch.Stop();
     }
 

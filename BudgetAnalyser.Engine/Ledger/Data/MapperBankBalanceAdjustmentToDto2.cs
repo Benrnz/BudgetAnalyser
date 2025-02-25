@@ -34,7 +34,7 @@ internal class MapperBankBalanceAdjustmentToDto2(IAccountTypeRepository accountT
         var balanceAdjustment = new BankBalanceAdjustmentTransaction
         {
             Amount = dto.Amount,
-            AutoMatchingReference = dto.AutoMatchingReference ?? string.Empty,
+            AutoMatchingReference = dto.AutoMatchingReference,
             Date = dto.Date,
             Id = dto.Id,
             Narrative = dto.Narrative ?? string.Empty,

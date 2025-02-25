@@ -150,17 +150,20 @@ public static class LedgerBookTestData
                         CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
-                                new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
+                                new BudgetCreditLedgerTransaction(new Guid("2bb9eb7f-5d8c-4df6-aafc-0e9b86bf0c80")) { Amount = 55M, Narrative = "Budgeted amount" },
+                                new CreditLedgerTransaction(new Guid("bfc60265-50ce-4266-be0f-db7f5bcbcec3")) { Amount = -45M, Narrative = "Hair cut" }
                             }),
                         CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
-                                new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
+                                new BudgetCreditLedgerTransaction(new Guid("413d4b91-de3d-499d-a01d-439b6569cb80")) { Amount = 140M, Narrative = "Budgeted amount" },
+                                new CreditLedgerTransaction(new Guid("712c8ea5-b0e6-41bc-af92-2bec1c76f18a")) { Amount = -123.56M, Narrative = "Power bill" }
                             }),
                         CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
-                                new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones" }
+                                new BudgetCreditLedgerTransaction(new Guid("425ab322-4aec-4110-9902-beb7f140736c")) { Amount = 95M, Narrative = "Budgeted amount" },
+                                new CreditLedgerTransaction(new Guid("880df398-7230-4e1a-9a8f-51022dea9891")) { Amount = -86.43M, Narrative = "Pay phones" }
                             })
                     })
         };
@@ -175,16 +178,18 @@ public static class LedgerBookTestData
                     <LedgerEntry>
                     {
                         CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
-                            new List<LedgerTransaction> { new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" } }),
+                            new List<LedgerTransaction> { new BudgetCreditLedgerTransaction(new Guid("ff039680-30e2-457d-8c1d-019291c730f5")) { Amount = 55M, Narrative = "Budgeted amount" } }),
                         CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
-                                new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" }
+                                new BudgetCreditLedgerTransaction(new Guid("2fe5421c-c24c-48d9-a400-110dffc3a063")) { Amount = 140M, Narrative = "Budgeted amount" },
+                                new CreditLedgerTransaction(new Guid("05a934b2-f86f-4b82-8b5f-861c7253458a")) { Amount = -145.56M, Narrative = "Power bill" }
                             }),
                         CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
-                                new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -66.43M, Narrative = "Pay phones" }
+                                new BudgetCreditLedgerTransaction(new Guid("dd9e9228-07d6-42a4-9ac9-ef609770d5b6")) { Amount = 95M, Narrative = "Budgeted amount" },
+                                new CreditLedgerTransaction(new Guid("777052bf-cc02-4ee2-87c6-2d2a8f3959f0")) { Amount = -66.43M, Narrative = "Pay phones" }
                             })
                     }));
 
@@ -199,19 +204,21 @@ public static class LedgerBookTestData
             new List<LedgerEntry>
             {
                 CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
-                    new List<LedgerTransaction> { new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" } }),
+                    new List<LedgerTransaction> { new BudgetCreditLedgerTransaction(new Guid("f34e277c-59cf-4f2a-9efc-d94532a987e9")) { Amount = 55M, Narrative = "Budgeted amount" } }),
                 CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                     new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill" }
+                        new BudgetCreditLedgerTransaction(new Guid("39f4583a-7a8a-4fe6-ad6a-7dcbf1b2a6be")) { Amount = 140M, Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction(new Guid("d40c1a3e-54e1-4193-9ba4-f4ea0ba258b7")) { Amount = -98.56M, Narrative = "Power bill" }
                     }),
                 CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                     new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones" }
+                        new BudgetCreditLedgerTransaction(new Guid("42187a77-d844-4a13-8304-f0c0f43650a3")) { Amount = 95M, Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction(new Guid("12106c1c-9950-4942-b7eb-2575522ff0f2")) { Amount = -67.43M, Narrative = "Pay phones" }
                     })
             });
-        line.BalanceAdjustment(-550, "Credit card payment yet to go out.", StatementModelTestData.ChequeAccount);
+        line.BalanceAdjustment(-550, "Credit card payment yet to go out.", StatementModelTestData.ChequeAccount, new Guid("63f3a7f8-48b4-4690-ab5c-e7ef66ed2b13"));
         list.Add(line);
 
         var book = new LedgerBook(list) { Name = "Test Data 2 Book", Modified = new DateTime(2013, 12, 16), StorageKey = "C:\\Folder\\book1.xml" };
