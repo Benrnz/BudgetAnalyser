@@ -246,6 +246,9 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         var expectedText = GetType().Assembly.ExtractEmbeddedResourceAsText(LoadFileName).Trim();
         this.outputter.WriteLine(expectedText);
 
+        expectedText = JsonHelper.MinifyJson(expectedText);
+        serialisedData = JsonHelper.MinifyJson(serialisedData);
+
         serialisedData.ShouldBe(expectedText);
         this.stopwatch.Stop();
     }
