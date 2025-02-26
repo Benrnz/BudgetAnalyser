@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger;
 ///     A repository for Ledger Books that persists to local disk in Xaml format.
 /// </summary>
 /// <seealso cref="ILedgerBookRepository" />
-//[AutoRegisterWithIoC(SingleInstance = true)]
+[AutoRegisterWithIoC(SingleInstance = true)]
 internal class JsonOnDiskLedgerBookRepository(
     IDtoMapper<LedgerBookDto, LedgerBook> mapper,
     BankImportUtilities importUtilities,

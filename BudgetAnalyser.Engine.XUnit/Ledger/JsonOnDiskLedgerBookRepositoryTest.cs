@@ -51,24 +51,6 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         this.encryptedReaderWriter.OutputStream?.Dispose();
     }
 
-    [Fact(Skip = "This test is for manual use only")]
-    public async Task ConvertDemoFrom_DemoLedgerBookJson()
-    {
-        var xamlRepo = new XamlOnDiskLedgerBookRepositoryTestHarness(
-            this.mapper,
-            new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]));
-        var ledgerBook = await xamlRepo.LoadAsync(@"BudgetAnalyser.Engine.XUnit.TestData.LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json", false);
-
-        var subject = CreateSubject();
-        this.mockReaderWriterSelector.SelectReaderWriter(Arg.Any<bool>()).Returns(this.mockReaderWriter);
-        var myStream = new MemoryStream();
-        this.mockReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(myStream);
-        await subject.SaveAsync(ledgerBook, TestDataConstants.DemoLedgerBookFileName, false);
-
-        this.outputter.WriteLine(subject.SerialisedData);
-        this.stopwatch.Stop();
-    }
-
     [Fact]
     public async Task Load_ShouldCreateBookThatValidates_GivenJsonTestData()
     {
