@@ -1,7 +1,7 @@
-﻿using BudgetAnalyser.Engine.Budget;
+﻿using System.Text.Json;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
-using Newtonsoft.Json;
 
 namespace BudgetAnalyser.Engine.Mobile;
 
@@ -118,7 +118,7 @@ internal class MobileDataExporter : IMobileDataExporter
 
     public string Serialise(SummarisedLedgerMobileData dataExport)
     {
-        return JsonConvert.SerializeObject(dataExport);
+        return JsonSerializer.Serialize(dataExport, new JsonSerializerOptions());
     }
 
     private async Task<string> GetFileName()
