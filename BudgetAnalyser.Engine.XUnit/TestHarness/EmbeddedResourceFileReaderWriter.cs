@@ -20,12 +20,7 @@ public class EmbeddedResourceFileReaderWriter : IFileReaderWriter
     public Stream CreateReadableStream(string fileName)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        var stream = assembly.GetManifestResourceStream(fileName);
-        if (stream == null)
-        {
-            throw new FileNotFoundException($"Embedded resource not found: {fileName}");
-        }
-
+        var stream = assembly.GetManifestResourceStream(fileName) ?? throw new FileNotFoundException($"Embedded resource not found: {fileName}");
         return stream;
     }
 
