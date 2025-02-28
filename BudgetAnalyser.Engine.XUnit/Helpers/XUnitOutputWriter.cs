@@ -1,12 +1,20 @@
 using System.Text;
-using BudgetAnalyser.Engine.UnitTest.Helper;
 using Xunit.Abstractions;
 
 namespace BudgetAnalyser.Engine.XUnit.Helpers;
 
 public class XUnitOutputWriter(ITestOutputHelper xunitOutput) : IReesTestOutput, IDisposable
 {
-    private StringBuilder lineBuilder = null;
+    private StringBuilder lineBuilder;
+
+    public void Dispose()
+    {
+        if (this.lineBuilder is not null)
+        {
+            xunitOutput.WriteLine(this.lineBuilder.ToString());
+            this.lineBuilder = null;
+        }
+    }
 
     public void Write(string text)
     {
@@ -55,15 +63,6 @@ public class XUnitOutputWriter(ITestOutputHelper xunitOutput) : IReesTestOutput,
         else
         {
             xunitOutput.WriteLine(template, args);
-        }
-    }
-
-    public void Dispose()
-    {
-        if (this.lineBuilder is not null)
-        {
-            xunitOutput.WriteLine(this.lineBuilder.ToString());
-            this.lineBuilder = null;
         }
     }
 }

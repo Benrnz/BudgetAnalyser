@@ -20,6 +20,12 @@ internal class FileEncryptor : IFileEncryptor
         return CipherStream.Create(outputStream, SecureStringCredentialStore.SecureStringToString(passphrase));
     }
 
+    public Stream CreateReadableEncryptedStream(string fileName, SecureString passphrase)
+    {
+        var inputStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous);
+        return CipherStream.Open(inputStream, SecureStringCredentialStore.SecureStringToString(passphrase));
+    }
+
     public async Task<string> LoadEncryptedFileAsync(string fileName, SecureString passphrase)
     {
         return await Confuzzle.DecryptFile(fileName).WithPassword(passphrase).IntoString();

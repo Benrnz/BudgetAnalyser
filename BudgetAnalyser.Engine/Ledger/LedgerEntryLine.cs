@@ -162,7 +162,7 @@ public class LedgerEntryLine
     /// </summary>
     public decimal TotalBankBalance => this.bankBalancesList.Sum(b => b.Balance);
 
-    internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative, Account account)
+    internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative, Account account, Guid? id = null)
     {
         if (!IsNew)
         {
@@ -174,7 +174,9 @@ public class LedgerEntryLine
             throw new ArgumentException("The balance adjustment amount cannot be zero.", nameof(adjustment));
         }
 
-        var newAdjustment = new BankBalanceAdjustmentTransaction { Date = Date, Narrative = narrative, Amount = adjustment, BankAccount = account };
+        var newAdjustment = id is null
+            ? new BankBalanceAdjustmentTransaction { Date = Date, Narrative = narrative, Amount = adjustment, BankAccount = account }
+            : new BankBalanceAdjustmentTransaction(id.Value) { Date = Date, Narrative = narrative, Amount = adjustment, BankAccount = account };
 
         this.bankBalanceAdjustments.Add(newAdjustment);
         return newAdjustment;

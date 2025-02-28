@@ -25,9 +25,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="..\TestData\DemoBudget.xml" Link="TestData\DemoBudget.xml" />
-    <EmbeddedResource Include="..\TestData\DemoLedgerBook.xml" Link="TestData\DemoLedgerBook.xml" />
     <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml" Link="TestData\DemoMatchingRules.xml" />
-    <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml" Link="TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml" />
   </ItemGroup>
 
   <ItemGroup>
