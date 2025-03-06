@@ -1,0 +1,28 @@
+{
+  "Buckets": [
+    {
+      "Active": true,
+      "Code": "PAYCC",
+      "Description": "A special bucket to allocate internal transfers.",
+      "Type": 2
+    },
+    {
+      "Active": true,
+      "Code": "SURPLUS",
+      "Description": "A special bucket to allocate against any discretionary spending.",
+      "Type": 1
+    }
+  ],
+  "Budgets": [
+    {
+      "BudgetCycle": 0,
+      "EffectiveFrom": "2025-03-06T22:41:09.903768+13:00",
+      "Expenses": [],
+      "Incomes": [],
+      "LastModified": "2025-03-06T22:41:09.9037668+13:00",
+      "LastModifiedComment": "",
+      "Name": ""
+    }
+  ],
+  "StorageKey": "BudgetAnalyser.Engine.XUnit.TestData.EmptyBudget.json"
+}

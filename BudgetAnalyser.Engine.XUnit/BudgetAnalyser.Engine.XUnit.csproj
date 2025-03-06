@@ -53,9 +53,27 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="..\TestData\DemoLedgerBook.json.secure">
-        <Link>TestData\DemoLedgerBook.json.secure</Link>
-      </EmbeddedResource>
+        <EmbeddedResource Include="..\TestData\DemoLedgerBook.json.secure">
+            <Link>TestData\DemoLedgerBook.json.secure</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\TestData\BudgetCollectionTestData.json">
+            <Link>TestData\BudgetCollectionTestData.json</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\TestData\DemoBudget.json">
+            <Link>TestData\DemoBudget.json</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\TestData\EmptyBudget.json">
+            <Link>TestData\EmptyBudget.json</Link>
+        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

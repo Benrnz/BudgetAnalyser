@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Budget;
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Budget.IBudgetRepository" />
 // [AutoRegisterWithIoC(SingleInstance = true)]
-internal class JsonOnDiskBudgetRepository : IBudgetRepository
+public class JsonOnDiskBudgetRepository : IBudgetRepository
 {
     private readonly IBudgetBucketRepository budgetBucketRepository;
     private readonly IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper;
@@ -124,9 +124,23 @@ internal class JsonOnDiskBudgetRepository : IBudgetRepository
         }
 
         this.currentBudgetCollection.StorageKey = storageKey;
-        var dto = this.mapper.ToDto(this.currentBudgetCollection);
+        var dto = MapToDto(this.currentBudgetCollection);
         await SaveDtoToDiskAsync(dto, isEncrypted);
         this.isEncryptedAtLastAccess = isEncrypted;
+    }
+
+    protected virtual async Task<BudgetCollectionDto> LoadJsonFromDiskAsync(string fileName, bool isEncrypted)
+    {
+        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+        await using var stream = reader.CreateReadableStream(fileName);
+        var dto = await JsonSerializer.DeserializeAsync<BudgetCollectionDto>(stream);
+
+        return dto ?? throw new DataFormatException("Unable to deserialise Budget into correct type. File is corrupt.");
+    }
+
+    protected virtual BudgetCollectionDto MapToDto(BudgetCollection book)
+    {
+        return this.mapper.ToDto(this.currentBudgetCollection);
     }
 
     protected virtual async Task SerialiseAndWriteToStream(Stream stream, BudgetCollectionDto dataEntity)
@@ -145,14 +159,5 @@ internal class JsonOnDiskBudgetRepository : IBudgetRepository
         var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
         await using var stream = writer.CreateWritableStream(dataEntity.StorageKey);
         await SerialiseAndWriteToStream(stream, dataEntity);
-    }
-
-    protected virtual async Task<BudgetCollectionDto> LoadJsonFromDiskAsync(string fileName, bool isEncrypted)
-    {
-        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = reader.CreateReadableStream(fileName);
-        var dto = await JsonSerializer.DeserializeAsync<BudgetCollectionDto>(stream);
-
-        return dto ?? throw new DataFormatException("Unable to deserialise Budget into correct type. File is corrupt.");
     }
 }
