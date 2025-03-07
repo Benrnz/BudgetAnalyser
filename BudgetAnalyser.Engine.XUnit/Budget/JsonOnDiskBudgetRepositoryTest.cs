@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
@@ -8,12 +9,13 @@ using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Rees.UnitTestUtilities;
 using Shouldly;
 using Xunit.Abstractions;
 
 namespace BudgetAnalyser.Engine.XUnit.Budget;
 
-public class JsonOnDiskBudgetRepositoryTest
+public class JsonOnDiskBudgetRepositoryTest : IDisposable
 {
     private readonly BucketBucketRepoAlwaysFind bucketRepo = new();
     private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter = new();
@@ -33,8 +35,15 @@ public class JsonOnDiskBudgetRepositoryTest
         this.mapper = new MapperBudgetCollectionToDto2(this.bucketRepo, new MapperBudgetModelToDto2(new MapperExpenseToDto2(this.bucketRepo), new MapperIncomeToDto2(this.bucketRepo)));
     }
 
+    public void Dispose()
+    {
+        this.outputter?.Dispose();
+        this.encryptedReaderWriter.InputStream?.Dispose();
+        this.encryptedReaderWriter.OutputStream?.Dispose();
+    }
+
     [Fact]
-    public async Task CreateNewShouldPopulateFileName()
+    public async Task CreateNew_ShouldPopulateFileName()
     {
         var subject = CreateSubject();
         var filename = "FooBar.xml";
@@ -45,7 +54,18 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task CreateNewShouldReturnCollectionWithOneBudgetInIt()
+    public async Task CreateNew_ShouldReturnCollectionThatIsValid()
+    {
+        var subject = CreateSubject();
+        var filename = "FooBar.xml";
+        using var myStream = new MemoryStream();
+        this.mockReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(myStream);
+        var collection = await subject.CreateNewAndSaveAsync(filename);
+        collection.Validate(new StringBuilder()).ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task CreateNew_ShouldReturnCollectionWithOneBudgetInIt()
     {
         var subject = CreateSubject();
         var filename = "FooBar.xml";
@@ -56,21 +76,21 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task CreateNewShouldThrowGivenEmptyFileName()
+    public async Task CreateNew_ShouldThrow_GivenEmptyFileName()
     {
         var subject = CreateSubject();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.CreateNewAndSaveAsync(string.Empty));
     }
 
     [Fact]
-    public async Task CreateNewShouldThrowGivenNullFileName()
+    public async Task CreateNew_ShouldThrow_GivenNullFileName()
     {
         var subject = CreateSubject();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.CreateNewAndSaveAsync(null));
     }
 
     [Fact]
-    public async Task CreateNewShouldWriteToDisk()
+    public async Task CreateNew_ShouldWriteToDisk()
     {
         var subject = CreateSubject();
         var filename = "FooBar.xml";
@@ -84,7 +104,7 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task CtorShouldThrowGivenNullMapper()
+    public async Task Ctor_ShouldThrow_GivenNullMapper()
     {
         await Should.ThrowAsync<ArgumentNullException>(async () =>
             new XamlOnDiskBudgetRepository(
@@ -94,7 +114,7 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task CtorShouldThrowWhenBucketRepositoryIsNull()
+    public async Task Ctor_ShouldThrow_WhenBucketRepositoryIsNull()
     {
         await Should.ThrowAsync<ArgumentNullException>(async () =>
             new JsonOnDiskBudgetRepository(
@@ -104,7 +124,7 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task LoadShouldCallInitialiseOnTheBucketRepository()
+    public async Task Load_ShouldCallInitialiseOnTheBucketRepository()
     {
         var mockBucketRepository = Substitute.For<IBudgetBucketRepository>();
 
@@ -114,6 +134,30 @@ public class JsonOnDiskBudgetRepositoryTest
 
         budgetCollection.ShouldNotBeNull();
         mockBucketRepository.Received().Initialise(Arg.Any<IEnumerable<BudgetBucketDto>>());
+    }
+
+    [Fact]
+    public async Task Load_ShouldLoad_GivenDemoBudgetFile()
+    {
+        var subject = CreateSubject(true);
+        this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
+
+        var collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileNameJson, false);
+
+        collection.StorageKey.ShouldBe(TestDataConstants.DemoBudgetFileNameJson);
+        collection.Count.ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task Load_ShouldLoad_GivenEmptyBudgetFile()
+    {
+        var subject = CreateSubject(true);
+        this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
+
+        var collection = await subject.LoadAsync(TestDataConstants.EmptyBudgetFileName, false);
+
+        collection.StorageKey.ShouldBe(TestDataConstants.EmptyBudgetFileName);
+        collection.Count.ShouldBe(1);
     }
 
     // [Fact]
@@ -131,7 +175,7 @@ public class JsonOnDiskBudgetRepositoryTest
     // }
 
     [Fact]
-    public async Task LoadShouldReturnACollectionAndSetFileName()
+    public async Task Load_ShouldReturnACollectionAndSetFileName()
     {
         var subject = CreateSubject(true);
         this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
@@ -142,7 +186,18 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task LoadShouldThrowIfAnyOtherExceptionIsThrownAndWrapItIntoFileFormatException()
+    public async Task Load_ShouldReturnValidCollection_GivenDemoBudgetFile()
+    {
+        var subject = CreateSubject(true);
+        this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
+
+        var collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileNameJson, false);
+
+        collection.Validate(new StringBuilder()).ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Load_ShouldThrow_WhenAnyOtherExceptionIsThrownAndWrapItIntoFileFormatException()
     {
         var subject = CreateSubject();
         this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
@@ -151,7 +206,7 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task LoadShouldThrowIfDeserialisedObjectIsNotBudgetCollection()
+    public async Task Load_ShouldThrow_WhenDeserialisedObjectIsNotBudgetCollection()
     {
         var subject = CreateSubject();
         this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
@@ -161,14 +216,14 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task LoadShouldThrowIfFileDoesntExist()
+    public async Task Load_ShouldThrow_WhenFileDoesntExist()
     {
         var subject = CreateSubject();
         await Should.ThrowAsync<KeyNotFoundException>(async () => await subject.LoadAsync("SmellyPoo.xml", false));
     }
 
     [Fact]
-    public async Task LoadShouldThrowIfFileFormatIsInvalid()
+    public async Task Load_ShouldThrow_WhenFileFormatIsInvalid()
     {
         var subject = CreateSubject();
         this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
@@ -178,31 +233,21 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task MustBeAbleToLoadDemoBudgetFile()
+    public async Task LoadAndSave_ShouldProduceSaveJson()
     {
         var subject = CreateSubject(true);
-        this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
-
         var collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileNameJson, false);
 
-        collection.StorageKey.ShouldBe(TestDataConstants.DemoBudgetFileNameJson);
-        collection.Count.ShouldBe(1);
+        await subject.SaveAsync(TestDataConstants.DemoBudgetFileNameJson, false);
+        var serialisedData = JsonHelper.MinifyJson(subject.SerialisedData);
+        var expectedData = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoBudgetFileNameJson);
+        expectedData = JsonHelper.MinifyJson(expectedData);
+
+        serialisedData.ShouldBe(expectedData);
     }
 
     [Fact]
-    public async Task MustBeAbleToLoadEmptyBudgetFile()
-    {
-        var subject = CreateSubject(true);
-        this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
-
-        var collection = await subject.LoadAsync(TestDataConstants.EmptyBudgetFileName, false);
-
-        collection.StorageKey.ShouldBe(TestDataConstants.EmptyBudgetFileName);
-        collection.Count.ShouldBe(1);
-    }
-
-    [Fact]
-    public async Task SaveShouldNotThrowIfLoadHasntBeenCalled()
+    public async Task Save_ShouldSave_WhenLoadHasntBeenCalled()
     {
         using var myStream = new MemoryStream();
         this.mockReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(myStream);
@@ -212,7 +257,7 @@ public class JsonOnDiskBudgetRepositoryTest
     }
 
     [Fact]
-    public async Task SaveShouldWriteToDisk()
+    public async Task Save_ShouldWriteToDisk_GivenNewModel()
     {
         using var myStream = new MemoryStream();
         this.mockReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(myStream);

@@ -91,7 +91,6 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     /// <summary>
     ///     Adds the specified item.
     /// </summary>
-    /// <exception cref="ArgumentNullException"></exception>
     public void Add(BudgetModel item)
     {
         if (item is null)
