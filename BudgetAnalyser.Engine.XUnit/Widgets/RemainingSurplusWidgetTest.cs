@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.XUnit.Widgets;
 
 public class RemainingSurplusWidgetTest : IDisposable
 {
-    private readonly BucketBucketRepoAlwaysFind bucketRepo = new();
+    private readonly BudgetBucketRepoAlwaysFind bucketRepo = new();
     private readonly IBudgetCurrencyContext budgetTestData;
     private readonly GlobalFilterCriteria criteriaTestData = new() { BeginDate = new DateTime(2015, 10, 20), EndDate = new DateTime(2015, 11, 19) };
     private readonly LedgerBook ledgerBookTestData;

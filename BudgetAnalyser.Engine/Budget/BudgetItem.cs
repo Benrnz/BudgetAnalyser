@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
@@ -9,6 +10,7 @@ namespace BudgetAnalyser.Engine.Budget;
 ///     A budget line in a budget. This can represent an expense or an income.
 /// </summary>
 /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+[DebuggerDisplay("{GetType().Name} {Bucket.Code} ${Amount}")]
 public abstract class BudgetItem : INotifyPropertyChanged
 {
     private decimal doNotUseAmount;

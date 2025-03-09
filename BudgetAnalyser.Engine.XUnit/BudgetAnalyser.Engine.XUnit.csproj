@@ -76,4 +76,10 @@
         </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="..\TestData\DemoBudget.json.secure">
+            <Link>TestData\DemoBudget.json.secure</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

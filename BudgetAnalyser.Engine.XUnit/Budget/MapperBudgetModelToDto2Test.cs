@@ -15,7 +15,7 @@ public class MapperBudgetModelToDto2Test
 
     public MapperBudgetModelToDto2Test()
     {
-        var bucketRepo = new BucketBucketRepoAlwaysFind();
+        var bucketRepo = new BudgetBucketRepoAlwaysFind();
         this.mapperExpense = new MapperExpenseToDto2(bucketRepo);
         this.mapperIncome = new MapperIncomeToDto2(bucketRepo);
         this.mapper = new MapperBudgetModelToDto2(this.mapperExpense, this.mapperIncome);
@@ -33,7 +33,7 @@ public class MapperBudgetModelToDto2Test
     [Fact]
     public void ExpensesSumShouldBeMappedThereAndBack()
     {
-        var bucketRepo = new BucketBucketRepoAlwaysFind();
+        var bucketRepo = new BudgetBucketRepoAlwaysFind();
         this.mapper = new MapperBudgetModelToDto2(new MapperExpenseToDto2(bucketRepo), new MapperIncomeToDto2(bucketRepo));
         var budgetModel = BudgetModelTestData.CreateTestData1();
         var dto = this.mapper.ToDto(budgetModel);

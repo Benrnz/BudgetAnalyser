@@ -30,7 +30,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     public JsonOnDiskLedgerBookRepositoryTest(ITestOutputHelper output)
     {
         this.outputter = new XUnitOutputWriter(output);
-        var bucketRepo = new BucketBucketRepoAlwaysFind();
+        var bucketRepo = new BudgetBucketRepoAlwaysFind();
         var accountRepo = new InMemoryAccountTypeRepository();
         this.mapper = new MapperLedgerBookToDto2(
             bucketRepo,

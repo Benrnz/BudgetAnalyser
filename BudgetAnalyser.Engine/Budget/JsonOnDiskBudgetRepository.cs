@@ -143,13 +143,7 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
         return this.mapper.ToDto(this.currentBudgetCollection);
     }
 
-    protected virtual async Task SerialiseAndWriteToStream(Stream stream, BudgetCollectionDto dataEntity)
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        await JsonSerializer.SerializeAsync(stream, dataEntity, options);
-    }
-
-    private async Task SaveDtoToDiskAsync(BudgetCollectionDto dataEntity, bool isEncrypted)
+    protected virtual async Task SaveDtoToDiskAsync(BudgetCollectionDto dataEntity, bool isEncrypted)
     {
         if (dataEntity is null)
         {
@@ -159,5 +153,11 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
         var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
         await using var stream = writer.CreateWritableStream(dataEntity.StorageKey);
         await SerialiseAndWriteToStream(stream, dataEntity);
+    }
+
+    protected virtual async Task SerialiseAndWriteToStream(Stream stream, BudgetCollectionDto dataEntity)
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        await JsonSerializer.SerializeAsync(stream, dataEntity, options);
     }
 }

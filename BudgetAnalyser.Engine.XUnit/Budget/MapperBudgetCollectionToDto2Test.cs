@@ -24,7 +24,7 @@ public class MapperBudgetCollectionToDto2Test
     public void ShouldMapBudgetsCorrectlyMathematically()
     {
         var budgetCollection = BudgetModelTestData.CreateCollectionWith1And2();
-        var bucketRepo = new BucketBucketRepoAlwaysFind();
+        var bucketRepo = new BudgetBucketRepoAlwaysFind();
         var subject = new MapperBudgetCollectionToDto2(bucketRepo, new MapperBudgetModelToDto2(new MapperExpenseToDto2(bucketRepo), new MapperIncomeToDto2(bucketRepo)));
 
         // Act

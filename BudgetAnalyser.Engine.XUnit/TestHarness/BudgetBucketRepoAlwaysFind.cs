@@ -3,12 +3,12 @@ using BudgetAnalyser.Engine.Budget.Data;
 
 namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
-public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
+public class BudgetBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
 {
     private readonly bool isInitialising;
     private readonly string projectPrefix;
 
-    public BucketBucketRepoAlwaysFind() : base(new MapperBudgetBucketToDto2())
+    public BudgetBucketRepoAlwaysFind() : base(new MapperBudgetBucketToDto2())
     {
         this.isInitialising = true;
         SurplusBucket = new SurplusBucket();
