@@ -107,7 +107,7 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
     public async Task Ctor_ShouldThrow_GivenNullMapper()
     {
         await Should.ThrowAsync<ArgumentNullException>(async () =>
-            new XamlOnDiskBudgetRepository(
+            new JsonOnDiskBudgetRepository(
                 new BudgetBucketRepoAlwaysFind(),
                 null,
                 this.mockFileSelector));

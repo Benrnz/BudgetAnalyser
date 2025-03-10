@@ -33,9 +33,9 @@ public class JsonOnDiskBudgetRepositoryTestHarness : JsonOnDiskBudgetRepository
         return Dto;
     }
 
-    protected override BudgetCollectionDto MapToDto(BudgetCollection book)
+    protected override BudgetCollectionDto MapToDto()
     {
-        Dto = base.MapToDto(book);
+        Dto = base.MapToDto();
         return Dto;
     }
 

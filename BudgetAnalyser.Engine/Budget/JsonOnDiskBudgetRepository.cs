@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Budget;
 ///     A repository to store the budget collections on local disk as a Json file.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Budget.IBudgetRepository" />
-// [AutoRegisterWithIoC(SingleInstance = true)]
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class JsonOnDiskBudgetRepository : IBudgetRepository
 {
     private readonly IBudgetBucketRepository budgetBucketRepository;
@@ -124,7 +124,7 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
         }
 
         this.currentBudgetCollection.StorageKey = storageKey;
-        var dto = MapToDto(this.currentBudgetCollection);
+        var dto = MapToDto();
         await SaveDtoToDiskAsync(dto, isEncrypted);
         this.isEncryptedAtLastAccess = isEncrypted;
     }
@@ -138,7 +138,7 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
         return dto ?? throw new DataFormatException("Unable to deserialise Budget into correct type. File is corrupt.");
     }
 
-    protected virtual BudgetCollectionDto MapToDto(BudgetCollection book)
+    protected virtual BudgetCollectionDto MapToDto()
     {
         return this.mapper.ToDto(this.currentBudgetCollection);
     }
