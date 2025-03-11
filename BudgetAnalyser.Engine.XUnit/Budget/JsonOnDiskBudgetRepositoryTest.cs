@@ -246,7 +246,7 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
     }
 
     [Fact]
-    public async Task LoadAndSave_ShouldProduceSaveJson()
+    public async Task LoadAndSave_ShouldProduceSameJson()
     {
         var subject = CreateSubject(true);
         var collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileName, false);

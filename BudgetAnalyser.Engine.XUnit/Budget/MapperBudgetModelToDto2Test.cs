@@ -56,8 +56,8 @@ public class MapperBudgetModelToDto2Test
         dto.ShouldBeOfType<BudgetModelDto>();
         dto.Name.ShouldBe(budgetModel.Name);
         dto.BudgetCycle.ShouldBe(budgetModel.BudgetCycle);
-        dto.EffectiveFrom.ShouldBe(budgetModel.EffectiveFrom);
-        dto.LastModified.ShouldBe(budgetModel.LastModified);
+        dto.EffectiveFrom.ShouldBe(budgetModel.EffectiveFrom.ToUniversalTime());
+        dto.LastModified.ShouldBe(budgetModel.LastModified.ToUniversalTime());
         dto.LastModifiedComment.ShouldBe(budgetModel.LastModifiedComment);
         dto.Expenses.Count.ShouldBe(budgetModel.Expenses.Count());
         dto.Incomes.Count.ShouldBe(budgetModel.Incomes.Count());

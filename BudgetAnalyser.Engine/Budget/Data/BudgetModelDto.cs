@@ -13,7 +13,7 @@ public class BudgetModelDto
     public BudgetCycle BudgetCycle { get; set; }
 
     /// <summary>
-    ///     Gets or sets the effective from date.
+    ///     Gets or sets the effective from date as UTC
     /// </summary>
     public DateTime EffectiveFrom { get; set; }
 
@@ -34,7 +34,7 @@ public class BudgetModelDto
     public List<IncomeDto> Incomes { get; set; } = new();
 
     /// <summary>
-    ///     Gets the date and time the budget model was last modified by the user.
+    ///     Gets the date and time the budget model was last modified by the user as UTC.
     /// </summary>
     public DateTime? LastModified { get; set; }
 

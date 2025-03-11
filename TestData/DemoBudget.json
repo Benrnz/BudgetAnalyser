@@ -16,10 +16,10 @@
   "Budgets": [
     {
       "BudgetCycle": 0,
-      "EffectiveFrom": "2025-03-06T22:35:56.670194+13:00",
+      "EffectiveFrom": "2025-03-06T22:35:56.670194Z",
       "Expenses": [],
       "Incomes": [],
-      "LastModified": "2025-03-06T22:35:56.6701928+13:00",
+      "LastModified": "2025-03-06T22:35:56.6701928Z",
       "LastModifiedComment": "",
       "Name": ""
     }
