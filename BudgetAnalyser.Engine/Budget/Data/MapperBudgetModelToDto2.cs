@@ -17,8 +17,8 @@ public class MapperBudgetModelToDto2(IDtoMapper<ExpenseDto, Expense> mapperExpen
             Incomes = model.Incomes.Select(this.mapperIncome.ToDto).ToList(),
             Name = model.Name,
             BudgetCycle = model.BudgetCycle,
-            EffectiveFrom = model.EffectiveFrom,
-            LastModified = model.LastModified,
+            EffectiveFrom = model.EffectiveFrom.ToUniversalTime(),
+            LastModified = model.LastModified.ToUniversalTime(),
             LastModifiedComment = model.LastModifiedComment
         };
     }
@@ -28,8 +28,8 @@ public class MapperBudgetModelToDto2(IDtoMapper<ExpenseDto, Expense> mapperExpen
         return new BudgetModel
         {
             BudgetCycle = dto.BudgetCycle,
-            EffectiveFrom = dto.EffectiveFrom,
-            LastModified = dto.LastModified ?? DateTime.Now,
+            EffectiveFrom = dto.EffectiveFrom.ToLocalTime(),
+            LastModified = dto.LastModified?.ToLocalTime() ?? DateTime.Now,
             LastModifiedComment = dto.LastModifiedComment,
             Name = dto.Name,
             Incomes = dto.Incomes.Select(this.mapperIncome.ToModel),

@@ -2,15 +2,15 @@
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using ConfuzzleCore;
-using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
 [AutoRegisterWithIoC(Named = StorageConstants.EncryptedInstanceName)]
 public class EmbeddedResourceFileReaderWriterEncrypted : IFileReaderWriter
 {
-    public Stream InputStream { get; set; } = null;
-    public MemoryStream OutputStream { get; set; } = new();
+    public Func<string, bool> FileExistsOverride { get; set; }
+    public Stream InputStream { get; set; }
+    public Stream OutputStream { get; set; } = new MemoryStream();
 
     public string Password { get; set; } = TestDataConstants.DemoEncryptedFilePassword;
 
@@ -18,7 +18,7 @@ public class EmbeddedResourceFileReaderWriterEncrypted : IFileReaderWriter
     {
         if (InputStream is null)
         {
-            throw new ArgumentNullException(nameof(InputStream));
+            InputStream = GetType().Assembly.GetManifestResourceStream(fileName) ?? throw new FileNotFoundException($"Embedded resource not found: {fileName}");
         }
 
         return CipherStream.Open(InputStream, Password);
@@ -28,7 +28,7 @@ public class EmbeddedResourceFileReaderWriterEncrypted : IFileReaderWriter
     {
         if (OutputStream is null)
         {
-            throw new ArgumentNullException(nameof(InputStream));
+            throw new ArgumentNullException(nameof(OutputStream));
         }
 
         return CipherStream.Create(OutputStream, Password);
@@ -36,7 +36,13 @@ public class EmbeddedResourceFileReaderWriterEncrypted : IFileReaderWriter
 
     public bool FileExists(string fileName)
     {
-        throw new NotImplementedException();
+        if (FileExistsOverride is not null)
+        {
+            return FileExistsOverride(fileName);
+        }
+
+        using var manifestResourceStream = GetType().Assembly.GetManifestResourceStream(fileName);
+        return manifestResourceStream is not null;
     }
 
     public Task<string> LoadFirstLinesFromDiskAsync(string fileName, int lineCount)

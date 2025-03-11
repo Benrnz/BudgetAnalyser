@@ -30,7 +30,8 @@ public class EmbeddedResourceFileReaderWriter : IFileReaderWriter
     /// <param name="fileName">Full path and filename of the file.</param>
     public bool FileExists(string fileName)
     {
-        return true;
+        using var manifestResourceStream = GetType().Assembly.GetManifestResourceStream(fileName);
+        return manifestResourceStream is not null;
     }
 
     /// <summary>

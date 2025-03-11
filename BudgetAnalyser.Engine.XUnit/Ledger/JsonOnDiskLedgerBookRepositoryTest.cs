@@ -30,7 +30,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     public JsonOnDiskLedgerBookRepositoryTest(ITestOutputHelper output)
     {
         this.outputter = new XUnitOutputWriter(output);
-        var bucketRepo = new BucketBucketRepoAlwaysFind();
+        var bucketRepo = new BudgetBucketRepoAlwaysFind();
         var accountRepo = new InMemoryAccountTypeRepository();
         this.mapper = new MapperLedgerBookToDto2(
             bucketRepo,
@@ -138,7 +138,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     {
         var subject = CreateSubject(true);
 
-        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson, false);
+        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName, false);
         book.Output(true, this.outputter);
         book.ShouldNotBeNull();
         this.stopwatch.Stop();
@@ -174,7 +174,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         LedgerBookDto loadedDto = null;
         LedgerBookDto savedDto = null;
 
-        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson, false);
+        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName, false);
         loadedDto = subject.Dto;
         loadedDto.Output(true, this.outputter);
 
@@ -192,9 +192,9 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     public async Task LoadEncrypted_ShouldHaveCheckSumOf2728_88()
     {
         var subject = CreateSubject(true);
-        this.encryptedReaderWriter.InputStream = GetType().Assembly.GetManifestResourceStream(TestDataConstants.DemoLedgerBookFileNameJson + ".secure");
+        this.encryptedReaderWriter.InputStream = GetType().Assembly.GetManifestResourceStream(TestDataConstants.DemoLedgerBookFileName + ".secure");
 
-        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson + ".secure", true);
+        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName + ".secure", true);
         subject.Dto.Checksum.ShouldBe(2728.88);
         this.stopwatch.Stop();
     }
@@ -203,9 +203,9 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     public async Task LoadEncrypted_ShouldLoadDemoLedgerBookFile_GivenDemoBook()
     {
         var subject = CreateSubject(true);
-        this.encryptedReaderWriter.InputStream = GetType().Assembly.GetManifestResourceStream(TestDataConstants.DemoLedgerBookFileNameJson + ".secure");
+        this.encryptedReaderWriter.InputStream = GetType().Assembly.GetManifestResourceStream(TestDataConstants.DemoLedgerBookFileName + ".secure");
 
-        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson + ".secure", true);
+        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName + ".secure", true);
         book.Output(true, this.outputter);
         book.ShouldNotBeNull();
         this.stopwatch.Stop();
@@ -218,8 +218,8 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         LedgerBookDto loadedDto = null;
         LedgerBookDto savedDto = null;
 
-        this.encryptedReaderWriter.InputStream = GetType().Assembly.GetManifestResourceStream(TestDataConstants.DemoLedgerBookFileNameJson + ".secure");
-        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileNameJson + ".secure", true);
+        this.encryptedReaderWriter.InputStream = GetType().Assembly.GetManifestResourceStream(TestDataConstants.DemoLedgerBookFileName + ".secure");
+        var book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName + ".secure", true);
         loadedDto = subject.Dto;
         subject.Dto = null;
 

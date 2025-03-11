@@ -1,68 +1,62 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
 
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-    <LangVersion>default</LangVersion>
-  </PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="TestData\AnzChequeCsvFileExportFormat.csv" />
-    <None Remove="TestData\AnzVisaCsvFileExportFormat.csv" />
-    <None Remove="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
-    <None Remove="TestData\BudgetCollectionTestData.xml" />
-    <None Remove="TestData\MatchingRulesTestData.xml" />
-    <None Remove="TestData\WestpacChequeCsvFileExportFormat.csv" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="TestData\AnzChequeCsvFileExportFormat.csv"/>
+        <None Remove="TestData\AnzVisaCsvFileExportFormat.csv"/>
+        <None Remove="TestData\BudgetAnalyserTransactionFileFormatV1.csv"/>
+        <None Remove="TestData\BudgetCollectionTestData.xml"/>
+        <None Remove="TestData\MatchingRulesTestData.xml"/>
+        <None Remove="TestData\WestpacChequeCsvFileExportFormat.csv"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="..\TestData\BudgetModel.xml" Link="TestData\BudgetModel.xml" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml" Link="TestData\DemoMatchingRules.xml"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="..\TestData\DemoBudget.xml" Link="TestData\DemoBudget.xml" />
-    <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml" Link="TestData\DemoMatchingRules.xml" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv"/>
+        <EmbeddedResource Include="TestData\AnzVisaCsvFileExportFormat.csv"/>
+        <EmbeddedResource Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv"/>
+        <EmbeddedResource Include="TestData\MatchingRulesTestData.xml"/>
+        <EmbeddedResource Include="TestData\WestpacChequeCsvFileExportFormat.csv"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv" />
-    <EmbeddedResource Include="TestData\AnzVisaCsvFileExportFormat.csv" />
-    <EmbeddedResource Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
-    <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml" />
-    <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />
-    <EmbeddedResource Include="TestData\WestpacChequeCsvFileExportFormat.csv" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax" Link="TestData\BudgetAnalyserDemo.bax"/>
+        <EmbeddedResource Include="..\TestData\DemoTransactions.csv" Link="TestData\DemoTransactions.csv"/>
+        <EmbeddedResource Include="..\TestData\DuplicateTxnTest.csv" Link="TestData\DuplicateTxnTest.csv"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax" Link="TestData\BudgetAnalyserDemo.bax" />
-    <EmbeddedResource Include="..\TestData\DemoTransactions.csv" Link="TestData\DemoTransactions.csv" />
-    <EmbeddedResource Include="..\TestData\DuplicateTxnTest.csv" Link="TestData\DuplicateTxnTest.csv" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
+        <PackageReference Include="Moq" Version="4.20.72"/>
+        <PackageReference Include="MSTest.TestAdapter" Version="3.7.0"/>
+        <PackageReference Include="MSTest.TestFramework" Version="3.7.0"/>
+        <PackageReference Include="Portable.Xaml" Version="0.26.0"/>
+        <PackageReference Include="Rees.UnitTestUtilities" Version="2.0.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.7.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.7.0" />
-    <PackageReference Include="Portable.Xaml" Version="0.26.0" />
-    <PackageReference Include="Rees.UnitTestUtilities" Version="2.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj"/>
+        <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj" />
-    <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
+    </ItemGroup>
 
 </Project>
