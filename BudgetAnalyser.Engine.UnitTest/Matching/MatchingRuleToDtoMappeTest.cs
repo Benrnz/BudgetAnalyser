@@ -47,7 +47,7 @@ public class MatchingRuleToDtoMapperTest
     [TestMethod]
     public void ShouldMapCreated()
     {
-        Assert.AreEqual(TestData.Created, Result.Created);
+        Assert.AreEqual(TestData.Created, Result.Created?.ToLocalTime());
     }
 
     [TestMethod]
@@ -65,7 +65,7 @@ public class MatchingRuleToDtoMapperTest
     [TestMethod]
     public void ShouldMapLastMatch()
     {
-        Assert.AreEqual(TestData.LastMatch, Result.LastMatch);
+        Assert.AreEqual(TestData.LastMatch, Result.LastMatch?.ToLocalTime());
     }
 
     [TestMethod]

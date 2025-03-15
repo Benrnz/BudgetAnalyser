@@ -27,7 +27,7 @@ public class DataMatchingRuleToMatchingRuleMapperTest
     public void CreatedDatesShouldBeMapped()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Created, result.Created);
+        Assert.AreEqual(TestData.Created?.ToLocalTime(), result.Created);
     }
 
     [TestMethod]
@@ -41,7 +41,7 @@ public class DataMatchingRuleToMatchingRuleMapperTest
     public void LastMatchShouldBeMapped()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.LastMatch, result.LastMatch);
+        Assert.AreEqual(TestData.LastMatch?.ToLocalTime(), result.LastMatch);
     }
 
     [TestMethod]
