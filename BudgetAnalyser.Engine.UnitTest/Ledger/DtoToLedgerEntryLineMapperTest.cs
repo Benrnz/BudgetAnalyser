@@ -35,7 +35,7 @@ public class DtoToLedgerEntryLineMapperTest
     [TestMethod]
     public void ShouldMapDate()
     {
-        Assert.AreEqual(new DateTime(2014, 2, 20), Result.Date);
+        Assert.AreEqual(new DateTime(new DateOnly(2014, 2, 20), TimeOnly.MinValue, DateTimeKind.Utc).ToLocalTime(), Result.Date);
     }
 
     [TestMethod]

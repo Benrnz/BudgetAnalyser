@@ -50,7 +50,7 @@ internal class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
         {
             Ledgers = model.Ledgers.Select(this.ledgerMapper.ToDto).ToList(),
             MobileSettings = model.MobileSettings is null ? null : this.mobileSettingsMapper.ToDto(model.MobileSettings),
-            Modified = model.Modified,
+            Modified = model.Modified.ToUniversalTime(),
             Name = model.Name,
             Reconciliations = model.Reconciliations.Select(this.ledgerEntryLineMapper.ToDto).ToList(),
             StorageKey = model.StorageKey
@@ -64,7 +64,7 @@ internal class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
     {
         var ledgerBook = new LedgerBook(dto.Reconciliations.Select(this.ledgerEntryLineMapper.ToModel))
         {
-            Modified = dto.Modified,
+            Modified = dto.Modified.ToLocalTime(),
             Ledgers = dto.Ledgers.Select(this.ledgerMapper.ToModel).ToList(),
             Name = dto.Name,
             MobileSettings = dto.MobileSettings is null ? null : this.mobileSettingsMapper.ToModel(dto.MobileSettings),

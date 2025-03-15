@@ -147,7 +147,7 @@ public class DtoToLedgerBookMapperTest
     {
         var result = ArrangeAndAct();
         var subject = result.Reconciliations.First().Date;
-        Assert.AreEqual(TestData.Reconciliations.First().Date, subject);
+        Assert.AreEqual(TestData.Reconciliations.First().Date.ToLocalTime(), subject);
         Assert.AreNotEqual(DateTime.MinValue, subject);
     }
 
@@ -209,7 +209,7 @@ public class DtoToLedgerBookMapperTest
     public void ShouldMapModifiedDate()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Modified, result.Modified);
+        Assert.AreEqual(TestData.Modified.ToLocalTime(), result.Modified);
         Assert.AreNotEqual(DateTime.MinValue, result.Modified);
     }
 

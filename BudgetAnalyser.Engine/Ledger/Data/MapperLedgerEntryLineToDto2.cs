@@ -19,7 +19,7 @@ internal class MapperLedgerEntryLineToDto2(
             BankBalance = model.TotalBankBalance,
             BankBalanceAdjustments = model.BankBalanceAdjustments.Select(this.bankAdjustmentMapper.ToDto).ToList(),
             BankBalances = model.BankBalances.Select(this.bankBalanceMapper.ToDto).ToList(),
-            Date = model.Date,
+            Date = model.Date.ToUniversalTime(),
             Remarks = model.Remarks,
             Entries = model.Entries.Select(this.ledgerEntriesMapper.ToDto).ToList()
         };
@@ -33,7 +33,7 @@ internal class MapperLedgerEntryLineToDto2(
         var bankBalances = dto.BankBalances.Select(this.bankBalanceMapper.ToModel);
         var entries = dto.Entries.Select(this.ledgerEntriesMapper.ToModel);
 
-        var line = new LedgerEntryLine(bankBalanceAdjustments, bankBalances, entries) { Date = dto.Date, Remarks = dto.Remarks };
+        var line = new LedgerEntryLine(bankBalanceAdjustments, bankBalances, entries) { Date = dto.Date.ToLocalTime(), Remarks = dto.Remarks };
 
         return line;
     }

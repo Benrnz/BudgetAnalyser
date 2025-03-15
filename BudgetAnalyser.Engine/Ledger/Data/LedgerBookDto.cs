@@ -1,6 +1,4 @@
-﻿using System.Xml.Serialization;
-
-namespace BudgetAnalyser.Engine.Ledger.Data;
+﻿namespace BudgetAnalyser.Engine.Ledger.Data;
 
 /// <summary>
 ///     A Dto for <see cref="LedgerBook" />
@@ -34,13 +32,11 @@ public class LedgerBookDto
     /// <summary>
     ///     Gets or sets the last modified date.
     /// </summary>
-    [XmlAttribute]
     public DateTime Modified { get; set; }
 
     /// <summary>
     ///     Gets or sets the ledger book name.
     /// </summary>
-    [XmlAttribute]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>

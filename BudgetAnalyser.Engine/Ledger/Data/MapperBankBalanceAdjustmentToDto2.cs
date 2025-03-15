@@ -15,7 +15,7 @@ internal class MapperBankBalanceAdjustmentToDto2(IAccountTypeRepository accountT
             TransactionType = model.GetType().FullName,
             Amount = model.Amount,
             AutoMatchingReference = model.AutoMatchingReference,
-            Date = model.Date,
+            Date = model.Date?.ToUniversalTime(),
             Id = model.Id,
             Narrative = model.Narrative
         };
@@ -35,7 +35,7 @@ internal class MapperBankBalanceAdjustmentToDto2(IAccountTypeRepository accountT
         {
             Amount = dto.Amount,
             AutoMatchingReference = dto.AutoMatchingReference,
-            Date = dto.Date,
+            Date = dto.Date?.ToLocalTime(),
             Id = dto.Id,
             Narrative = dto.Narrative ?? string.Empty,
             BankAccount = bankAccount ??

@@ -21,7 +21,7 @@ public class LedgerBookToDtoMapperTest2
     [TestMethod]
     public void ShouldMapModified()
     {
-        Assert.AreEqual(new DateTime(2013, 12, 16), Result.Modified);
+        Assert.AreEqual(new DateTime(2013, 12, 16), Result.Modified.ToLocalTime());
     }
 
     [TestMethod]

@@ -29,7 +29,7 @@ public class LedgerBookToDtoMapperTest
     public void FirstDatedEntryShouldHaveSameDate()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Reconciliations.First().Date, result.Reconciliations.First().Date);
+        Assert.AreEqual(TestData.Reconciliations.First().Date, result.Reconciliations.First().Date.ToLocalTime());
     }
 
     [TestMethod]
@@ -140,7 +140,7 @@ public class LedgerBookToDtoMapperTest
     public void ModifiedDateShouldBeMapped()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Modified, result.Modified);
+        Assert.AreEqual(TestData.Modified, result.Modified.ToLocalTime());
     }
 
     [TestMethod]

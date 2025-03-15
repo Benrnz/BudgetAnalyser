@@ -18,7 +18,7 @@ internal class MapperLedgerTransactionToDto2(ILedgerTransactionFactory ledgerTra
             Account = null, // Only used for type BalanceAdjustmentTransaction
             Amount = model.Amount,
             AutoMatchingReference = model.AutoMatchingReference,
-            Date = model.Date,
+            Date = model.Date?.ToUniversalTime(),
             Id = model.Id,
             Narrative = model.Narrative,
             TransactionType = model.GetType().FullName
@@ -37,7 +37,7 @@ internal class MapperLedgerTransactionToDto2(ILedgerTransactionFactory ledgerTra
         transaction.Amount = dto.Amount;
         transaction.Narrative = dto.Narrative ?? string.Empty;
         transaction.AutoMatchingReference = dto.AutoMatchingReference ?? string.Empty;
-        transaction.Date = dto.Date;
+        transaction.Date = dto.Date?.ToLocalTime();
 
         return transaction;
     }

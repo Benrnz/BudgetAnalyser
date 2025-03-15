@@ -17,7 +17,7 @@ public class MapperBudgetBucketToDto2Test
     public void ToDto_ShouldMapFixedBudgetProjectBucketToFixedBudgetBucketDto()
     {
         // Arrange
-        var bucket = new FixedBudgetProjectBucket("CODE", "Description", 1000, DateTime.Now) { Active = true };
+        var bucket = new FixedBudgetProjectBucket("CODE", "Description", 1000, DateTime.Now.ToUniversalTime()) { Active = true };
 
         // Act
         var dto = this.mapper.ToDto(bucket);
