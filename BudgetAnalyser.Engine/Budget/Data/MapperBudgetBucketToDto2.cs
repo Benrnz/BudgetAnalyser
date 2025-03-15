@@ -14,7 +14,7 @@ public class MapperBudgetBucketToDto2 : IDtoMapper<BudgetBucketDto, BudgetBucket
                 Active = model.Active,
                 Code = model.Code,
                 Description = model.Description,
-                Created = fixedProjectBucket.Created,
+                Created = fixedProjectBucket.Created.ToUniversalTime(),
                 FixedBudgetAmount = fixedProjectBucket.FixedBudgetAmount
             }
             : new BudgetBucketDto { Type = SerialiseType(model), Active = model.Active, Code = model.Code, Description = model.Description };
@@ -44,7 +44,7 @@ public class MapperBudgetBucketToDto2 : IDtoMapper<BudgetBucketDto, BudgetBucket
                 return new SpentPerPeriodExpenseBucket { Active = dto.Active, Code = dto.Code, Description = dto.Description };
             case BucketDtoType.FixedBudgetProject:
                 var f = (FixedBudgetBucketDto)dto;
-                return new FixedBudgetProjectBucket(f.Code, f.Description, f.FixedBudgetAmount, f.Created) { Active = dto.Active };
+                return new FixedBudgetProjectBucket(f.Code, f.Description, f.FixedBudgetAmount, f.Created.ToLocalTime()) { Active = dto.Active };
             default:
                 throw new DataFormatException("Unsupported Bucket type detected: " + dto);
         }
