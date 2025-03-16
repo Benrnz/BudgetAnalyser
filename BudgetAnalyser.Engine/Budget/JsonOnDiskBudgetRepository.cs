@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Engine.Budget;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class JsonOnDiskBudgetRepository : IBudgetRepository
 {
+    private static readonly JsonSerializerOptions Options = new() { Converters = { new DateOnlyJsonConverter() } };
     private readonly IBudgetBucketRepository budgetBucketRepository;
     private readonly IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper;
     private readonly IReaderWriterSelector readerWriterSelector;
@@ -133,7 +134,7 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
     {
         var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
         await using var stream = reader.CreateReadableStream(fileName);
-        var dto = await JsonSerializer.DeserializeAsync<BudgetCollectionDto>(stream);
+        var dto = await JsonSerializer.DeserializeAsync<BudgetCollectionDto>(stream, Options);
 
         return dto ?? throw new DataFormatException("Unable to deserialise Budget into correct type. File is corrupt.");
     }
