@@ -149,7 +149,10 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             return;
         }
 
-        Criteria = new GlobalFilterCriteria { BeginDate = filterState.BeginDate, EndDate = filterState.EndDate };
+        Criteria = new GlobalFilterCriteria {
+            BeginDate = filterState.BeginDate is null ? null : DateOnly.FromDateTime(filterState.BeginDate.Value),
+            EndDate = filterState.EndDate is null ? null : DateOnly.FromDateTime(filterState.EndDate.Value)
+        };
 
         SendFilterAppliedMessage();
     }
@@ -165,7 +168,11 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
     {
         var noCriteria = Criteria is null;
-        var filterState = new PersistentFiltersApplicationState { BeginDate = noCriteria ? null : Criteria.BeginDate, EndDate = noCriteria ? null : Criteria.EndDate };
+        var filterState = new PersistentFiltersApplicationState
+        {
+            BeginDate = noCriteria ? null : Criteria!.BeginDate?.ToDateTime(TimeOnly.MinValue),
+            EndDate = noCriteria ? null : Criteria!.EndDate?.ToDateTime(TimeOnly.MinValue)
+        };
 
         message.PersistThisModel(filterState);
     }

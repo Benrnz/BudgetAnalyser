@@ -11,12 +11,12 @@ public class PersistentFiltersApplicationState : IPersistentApplicationStateObje
     /// <summary>
     ///     Gets or sets the date to begin filtering from.
     /// </summary>
-    public DateOnly? BeginDate { get; init; }
+    public DateTime? BeginDate { get; init; }
 
     /// <summary>
     ///     Gets or sets the end date.
     /// </summary>
-    public DateOnly? EndDate { get; init; }
+    public DateTime? EndDate { get; init; }
 
     /// <summary>
     ///     Gets the order in which this object should be loaded.
