@@ -1,7 +1,9 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Filtering.GlobalDateFilterView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="{StaticResource Brush.DialogBackground}">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModel="clr-namespace:BudgetAnalyser.Filtering"
+             mc:Ignorable="d"
+             Background="{StaticResource Brush.DialogBackground}" d:DataContext="{d:DesignInstance viewModel:GlobalFilterController}">
 
     <Grid x:Name="MainContainer">
             <Grid.RowDefinitions>
@@ -22,7 +24,7 @@
                         Grid.Row="0"
                         Margin="3,3,0,3"
                         Orientation="Horizontal">
-                <DatePicker SelectedDate="{Binding Criteria.BeginDate, StringFormat=d}" />
+                <DatePicker SelectedDate="{Binding Criteria.BeginDate, StringFormat=d, Converter={StaticResource Converter.DateOnly}}" />
                 <Button Style="{StaticResource Button.Round.Minus}"
                         Command="{Binding BackPeriodCommand}"
                         CommandParameter="{Binding Criteria.BeginDate}"
@@ -40,7 +42,7 @@
                         Grid.Row="1"
                         Margin="3,3,0,3"
                         Orientation="Horizontal">
-                <DatePicker SelectedDate="{Binding Criteria.EndDate, StringFormat=d}" />
+                <DatePicker SelectedDate="{Binding Criteria.EndDate, StringFormat=d, Converter={StaticResource Converter.DateOnly}}" />
                 <Button Style="{StaticResource Button.Round.Minus}"
                         Command="{Binding BackPeriodCommand}"
                         CommandParameter="{Binding Criteria.EndDate}"
