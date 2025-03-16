@@ -10,13 +10,15 @@ internal class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
 {
     private readonly IDtoMapper<LedgerEntryLineDto, LedgerEntryLine> ledgerEntryLineMapper;
     private readonly IDtoMapper<LedgerBucketDto, LedgerBucket> ledgerMapper;
+    private readonly ILogger logger;
     private readonly IDtoMapper<MobileStorageSettingsDto, MobileStorageSettings> mobileSettingsMapper;
 
     public MapperLedgerBookToDto2(
         IBudgetBucketRepository bucketRepo,
         IAccountTypeRepository accountTypeRepo,
         ILedgerBucketFactory bucketFactory,
-        ILedgerTransactionFactory transactionFactory)
+        ILedgerTransactionFactory transactionFactory,
+        ILogger logger)
     {
         // Note AutoMapper requires a public constructor, although it's fine for the class to be internal.
         if (bucketRepo is null)
@@ -38,6 +40,8 @@ internal class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
         {
             throw new ArgumentNullException(nameof(accountTypeRepo));
         }
+
+        this.logger = logger;
 
         this.ledgerMapper = new MapperLedgerBucketToDto2(bucketRepo, accountTypeRepo, bucketFactory);
         this.mobileSettingsMapper = new MapperMobileSettingsToDto2();
@@ -62,9 +66,10 @@ internal class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
 
     public LedgerBook ToModel(LedgerBookDto dto)
     {
+        this.logger.LogInfo(_ => $"LedgerBookDto.Modified = {dto.Modified}");
         var ledgerBook = new LedgerBook(dto.Reconciliations.Select(this.ledgerEntryLineMapper.ToModel))
         {
-            Modified = dto.Modified.ToLocalTime(),
+            Modified = dto.Modified.ToUniversalTime(),
             Ledgers = dto.Ledgers.Select(this.ledgerMapper.ToModel).ToList(),
             Name = dto.Name,
             MobileSettings = dto.MobileSettings is null ? null : this.mobileSettingsMapper.ToModel(dto.MobileSettings),
@@ -73,6 +78,7 @@ internal class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
 
         InitialiseAndValidateLedgerBook(ledgerBook);
 
+        this.logger.LogInfo(_ => $"LedgerBook.Modified = {ledgerBook.Modified}");
         return ledgerBook;
     }
 

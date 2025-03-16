@@ -209,7 +209,7 @@ public class DtoToLedgerBookMapperTest
     public void ShouldMapModifiedDate()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Modified.ToLocalTime(), result.Modified);
+        Assert.AreEqual(TestData.Modified, result.Modified);
         Assert.AreNotEqual(DateTime.MinValue, result.Modified);
     }
 
@@ -242,7 +242,7 @@ public class DtoToLedgerBookMapperTest
     {
         var bucketRepo = new BucketBucketRepoAlwaysFind();
         var accountRepo = new InMemoryAccountTypeRepository();
-        var mapper = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
+        var mapper = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new DebugLogger());
         return mapper.ToModel(TestData);
     }
 }

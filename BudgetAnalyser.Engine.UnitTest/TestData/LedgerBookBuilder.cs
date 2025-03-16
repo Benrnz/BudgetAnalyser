@@ -17,7 +17,7 @@ public class LedgerBookBuilder
     private DateOnly tempReconDate;
 
     public IEnumerable<LedgerBucket> LedgerBuckets => this.ledgerBuckets;
-    public DateTime Modified { get; set; } = new(2013, 12, 16);
+    public DateTime Modified { get; set; } = new(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc);
 
     public string Name { get; set; } = "Test Data Book - built by LedgerBookBuilder";
 

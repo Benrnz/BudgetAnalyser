@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 
@@ -23,12 +20,7 @@ public class LedgerBook_GeneralTest
     [TestMethod]
     public void UnlockMostRecentLineShouldNotThrowIfBookIsEmpty()
     {
-        this.subject = new LedgerBook
-        {
-            Name = "Foo",
-            Modified = new DateTime(2011, 12, 4),
-            StorageKey = @"C:\TestLedgerBook.xml"
-        };
+        this.subject = new LedgerBook { Name = "Foo", Modified = new DateTime(2011, 12, 4, 0, 0, 0, DateTimeKind.Utc), StorageKey = @"C:\TestLedgerBook.xml" };
         var result = this.subject.UnlockMostRecentLine();
 
         Assert.IsNull(result);

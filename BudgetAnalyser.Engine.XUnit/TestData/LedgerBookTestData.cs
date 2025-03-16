@@ -127,7 +127,7 @@ public static class LedgerBookTestData
                         })
                 }));
 
-        var book = new LedgerBook(list) { Name = "Test Data 1 Book", Modified = new DateTime(2013, 12, 16), StorageKey = "C:\\Folder\\book1.xml" };
+        var book = new LedgerBook(list) { Name = "Test Data 1 Book", Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc), StorageKey = "C:\\Folder\\book1.xml" };
 
         Finalise(book);
         return book;
@@ -221,7 +221,7 @@ public static class LedgerBookTestData
         line.BalanceAdjustment(-550, "Credit card payment yet to go out.", StatementModelTestData.ChequeAccount, new Guid("63f3a7f8-48b4-4690-ab5c-e7ef66ed2b13"));
         list.Add(line);
 
-        var book = new LedgerBook(list) { Name = "Test Data 2 Book", Modified = new DateTime(2013, 12, 16), StorageKey = "C:\\Folder\\book1.xml" };
+        var book = new LedgerBook(list) { Name = "Test Data 2 Book", Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc), StorageKey = "C:\\Folder\\book1.xml" };
 
         Finalise(book);
         return book;
@@ -266,7 +266,7 @@ public static class LedgerBookTestData
                     })
         };
 
-        var book = new LedgerBook(list) { Name = "Smith Budget 2014", Modified = new DateTime(2013, 12, 22), StorageKey = @"C:\Foo\SmithLedger2014.xml" };
+        var book = new LedgerBook(list) { Name = "Smith Budget 2014", Modified = new DateTime(2013, 12, 22, 0, 0, 0, DateTimeKind.Utc), StorageKey = @"C:\Foo\SmithLedger2014.xml" };
 
         Finalise(book);
         return book;
@@ -352,7 +352,7 @@ public static class LedgerBookTestData
         line.BalanceAdjustment(-550, "Credit card payment yet to go out.", StatementModelTestData.ChequeAccount);
         list.Add(line);
 
-        var book = new LedgerBook(list) { Name = "Test Data 4 Book", Modified = new DateTime(2013, 12, 16), StorageKey = "C:\\Folder\\book1.xml" };
+        var book = new LedgerBook(list) { Name = "Test Data 4 Book", Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc), StorageKey = "C:\\Folder\\book1.xml" };
 
         Finalise(book);
         return book;
@@ -452,7 +452,7 @@ public static class LedgerBookTestData
 
         var book = ctor is not null ? ctor(list) : new LedgerBook(list) { StorageKey = "Test Ledger Book.xaml" };
         book.Name = "Test Data 5 Book";
-        book.Modified = new DateTime(2013, 12, 16);
+        book.Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc);
         book.StorageKey = "C:\\Folder\\book5.xml";
 
         Finalise(book);
@@ -525,7 +525,7 @@ public static class LedgerBookTestData
 
         var book = ctor is not null ? ctor(list) : new LedgerBook(list) { StorageKey = "Test Ledger Book.xaml" };
         book.Name = "Test Data 6 Book";
-        book.Modified = new DateTime(2013, 08, 15);
+        book.Modified = new DateTime(2013, 08, 15, 0, 0, 0, DateTimeKind.Utc);
         book.StorageKey = "C:\\FakeFolder\\book6.xml";
 
         Finalise(book);

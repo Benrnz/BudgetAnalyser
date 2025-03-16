@@ -30,15 +30,15 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     public JsonOnDiskLedgerBookRepositoryTest(ITestOutputHelper output)
     {
         this.outputter = new XUnitOutputWriter(output);
+        this.logger = new XUnitLogger(output);
         var bucketRepo = new BudgetBucketRepoAlwaysFind();
         var accountRepo = new InMemoryAccountTypeRepository();
         this.mapper = new MapperLedgerBookToDto2(
             bucketRepo,
             accountRepo,
             new LedgerBucketFactory(bucketRepo, accountRepo),
-            new LedgerTransactionFactory());
-
-        this.logger = new XUnitLogger(output);
+            new LedgerTransactionFactory(),
+            this.logger);
 
         this.stopwatch = Stopwatch.StartNew();
     }

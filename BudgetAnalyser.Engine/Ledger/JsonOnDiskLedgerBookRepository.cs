@@ -32,7 +32,7 @@ internal class JsonOnDiskLedgerBookRepository(
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        var book = new LedgerBook { Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' '), StorageKey = storageKey, Modified = DateTime.Now };
+        var book = new LedgerBook { Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' '), StorageKey = storageKey, Modified = DateTime.UtcNow };
 
         await SaveAsync(book, storageKey, false);
         return await LoadAsync(storageKey, false);
@@ -108,6 +108,7 @@ internal class JsonOnDiskLedgerBookRepository(
             throw new ArgumentNullException(nameof(storageKey));
         }
 
+        UpdateModifiedDate(book);
         var dataEntity = MapToDto(book);
         book.StorageKey = storageKey;
         dataEntity.StorageKey = storageKey;
@@ -135,6 +136,11 @@ internal class JsonOnDiskLedgerBookRepository(
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
         await JsonSerializer.SerializeAsync(stream, dataEntity, options);
+    }
+
+    protected virtual void UpdateModifiedDate(LedgerBook book)
+    {
+        book.Modified = DateTime.UtcNow;
     }
 
     private double CalculateChecksum(LedgerBook dataEntity)

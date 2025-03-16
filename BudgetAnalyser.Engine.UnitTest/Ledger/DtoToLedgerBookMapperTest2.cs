@@ -21,7 +21,7 @@ public class DtoToLedgerBookMapperTest2
     [TestMethod]
     public void ShouldMapModified()
     {
-        Assert.AreEqual(new DateTime(new DateOnly(2013, 12, 14), TimeOnly.MinValue, DateTimeKind.Utc).ToLocalTime(), Result.Modified);
+        Assert.AreEqual(new DateTime(new DateOnly(2013, 12, 14), TimeOnly.MinValue, DateTimeKind.Utc), Result.Modified);
     }
 
     [TestMethod]
@@ -41,7 +41,7 @@ public class DtoToLedgerBookMapperTest2
     {
         var accountRepo = new InMemoryAccountTypeRepository();
         var bucketRepo = new BucketBucketRepoAlwaysFind();
-        var subject = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
+        var subject = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new DebugLogger());
         Result = subject.ToModel(TestData);
     }
 }

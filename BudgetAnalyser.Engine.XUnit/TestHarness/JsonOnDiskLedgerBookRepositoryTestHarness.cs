@@ -40,4 +40,8 @@ internal class JsonOnDiskLedgerBookRepositoryTestHarness : JsonOnDiskLedgerBookR
         var result = await reader.ReadToEndAsync();
         SerialisedData = result;
     }
+
+    protected override void UpdateModifiedDate(LedgerBook book)
+    {
+    }
 }
