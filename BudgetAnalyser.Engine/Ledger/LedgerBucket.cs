@@ -47,7 +47,7 @@ public abstract class LedgerBucket
     ///     Allows ledger bucket specific behaviour during reconciliation.
     /// </summary>
     /// <returns>True if a transaction is created and added, otherwise false for nothing was added.</returns>
-    public abstract bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
+    public abstract bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateOnly reconciliationDate, decimal openingBalance);
 
     /// <summary>
     ///     Determines whether the specified <see cref="object" />, is equal to this instance.

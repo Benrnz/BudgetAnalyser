@@ -63,7 +63,7 @@ public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
     private void DateFilterApplied(GlobalFilterCriteria criteria)
     {
         ColourStyleName = this.standardStyleName;
-        DetailedText = $"Filtered from {criteria.BeginDate?.Date:d} to {criteria.EndDate?.Date:d}";
+        DetailedText = $"Filtered from {criteria.BeginDate:d} to {criteria.EndDate:d}";
     }
 
     private void NoDateFilterApplied()

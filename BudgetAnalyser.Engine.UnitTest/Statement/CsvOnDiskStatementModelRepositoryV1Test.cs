@@ -97,7 +97,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
         subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
         var model = await subject.LoadAsync("Foo.foo", false);
         Console.WriteLine(model.LastImport);
-        Assert.AreEqual(new DateTime(2012, 08, 20), model.LastImport);
+        Assert.AreEqual(new DateTime(new DateOnly(2012, 08, 20), TimeOnly.MinValue, DateTimeKind.Utc).ToLocalTime(), model.LastImport);
     }
 
     [TestMethod]
@@ -201,7 +201,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
         var mapper = new Mock<IDtoMapper<TransactionSetDto, StatementModel>>();
         var subject = ArrangeWithMockMappers(mapper.Object);
         var model = StatementModelTestData.TestData2();
-        model.Filter(new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 20), EndDate = new DateTime(2013, 08, 19) });
+        model.Filter(new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 07, 20), EndDate = new DateOnly(2013, 08, 19) });
 
         mapper.Setup(m => m.ToDto(model)).Returns(
             new TransactionSetDto { StorageKey = "Foo.bar", LastImport = new DateTime(2013, 07, 20), Transactions = TransactionSetDtoTestData.TestData2().Transactions.Take(2).ToList() });

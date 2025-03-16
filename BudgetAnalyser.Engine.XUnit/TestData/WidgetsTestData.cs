@@ -24,10 +24,7 @@ public static class WidgetsTestData
             new RemainingActualSurplusWidget { Visibility = true },
             new TimedUpdateCounterWidget { Visibility = false },
             new UpdateMobileDataWidget { Visibility = true },
-            new SurprisePaymentWidget
-            {
-                Visibility = true, Frequency = WeeklyOrFortnightly.Fortnightly, Id = TestDataConstants.RentBucketCode, StartPaymentDate = new DateOnly(2013, 7, 1).ToDateTime(TimeOnly.MinValue)
-            },
+            new SurprisePaymentWidget { Visibility = true, Frequency = WeeklyOrFortnightly.Fortnightly, Id = TestDataConstants.RentBucketCode, StartPaymentDate = new DateOnly(2013, 7, 1) },
             new BudgetBucketMonitorWidget { Visibility = true, BucketCode = TestDataConstants.FoodBucketCode },
             new BudgetBucketMonitorWidget { Visibility = true, BucketCode = TestDataConstants.HairBucketCode },
             new FixedBudgetMonitorWidget { Visibility = false, BucketCode = "SURPLUS.FENCE" },

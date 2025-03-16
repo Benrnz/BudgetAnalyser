@@ -20,7 +20,7 @@ internal interface IReconciliationBuilder
     /// </summary>
     /// <returns>A newly created and populated <see cref="LedgerEntryLine" />.</returns>
     ReconciliationResult CreateNewMonthlyReconciliation(
-        DateTime reconciliationClosingDateExclusive,
+        DateOnly reconciliationClosingDateExclusive,
         BudgetModel budget,
         StatementModel statement,
         params BankBalance[] bankBalances);

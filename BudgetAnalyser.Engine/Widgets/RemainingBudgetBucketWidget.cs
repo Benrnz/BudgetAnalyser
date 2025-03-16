@@ -191,7 +191,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
     }
 
-    internal static bool ValidatePeriod(BudgetCycle budgetCycle, DateTime inclBeginDate, DateTime inclEndDate, out string validationMessage)
+    internal static bool ValidatePeriod(BudgetCycle budgetCycle, DateOnly inclBeginDate, DateOnly inclEndDate, out string validationMessage)
     {
         if (budgetCycle == BudgetCycle.Monthly)
         {
@@ -204,7 +204,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 
         if (budgetCycle == BudgetCycle.Fortnightly)
         {
-            if (inclEndDate.Subtract(inclBeginDate).Days > 14)
+            if (inclEndDate.Subtract(inclBeginDate) >= 14)
             {
                 validationMessage = DesignedForOneFortnightOnly;
                 return false;

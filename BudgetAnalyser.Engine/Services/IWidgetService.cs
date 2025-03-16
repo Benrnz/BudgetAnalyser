@@ -27,7 +27,7 @@ public interface IWidgetService
     /// <summary>
     ///     Create a new Surprise Payment Widget with the provided parameters. Returns null if the specified bucket code already exists.
     /// </summary>
-    Widget? CreateNewSurprisePaymentWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
+    Widget? CreateNewSurprisePaymentWidget(string bucketCode, DateOnly paymentDate, WeeklyOrFortnightly frequency);
 
     /// <summary>
     ///     Create a new widget with the given parameters. This is used to instantiate the <see cref="IUserDefinedWidget" />s.

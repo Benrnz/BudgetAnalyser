@@ -59,7 +59,7 @@ public class WidgetServiceTest
     public void CreateNewSurprisePaymentWidget_ShouldReturnWidget()
     {
         this.mockBucketRepository.GetByCode(Arg.Any<string>()).Returns(StatementModelTestData.HairBucket);
-        var widget = this.service.CreateNewSurprisePaymentWidget("Bucket1", DateTime.Now, WeeklyOrFortnightly.Weekly);
+        var widget = this.service.CreateNewSurprisePaymentWidget("Bucket1", DateOnlyExt.Today(), WeeklyOrFortnightly.Weekly);
         widget.ShouldNotBeNull();
     }
 

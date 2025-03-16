@@ -20,7 +20,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     private BudgetBucket? budgetBucket;
     private Account doNotUseAccount = new ChequeAccount(string.Empty);
     private decimal doNotUseAmount;
-    private DateTime doNotUseDate;
+    private DateOnly doNotUseDate;
     private string? doNotUseDescription;
     private string? doNotUseReference1 = string.Empty;
     private string? doNotUseReference2 = string.Empty;
@@ -92,7 +92,7 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// <summary>
     ///     Gets or sets the transaction date.
     /// </summary>
-    public DateTime Date
+    public DateOnly Date
     {
         get => this.doNotUseDate;
         set

@@ -32,11 +32,11 @@ public static class StatementCalculations
         return tuple.Item1.DurationInMonths(tuple.Item2);
     }
 
-    private static (DateTime, DateTime) ValidateCriteria(GlobalFilterCriteria? criteria, IEnumerable<Transaction> transactions)
+    private static (DateOnly, DateOnly) ValidateCriteria(GlobalFilterCriteria? criteria, IEnumerable<Transaction> transactions)
     {
         var list = transactions.ToList();
-        var minDate = DateTime.MaxValue;
-        var maxDate = DateTime.MinValue;
+        var minDate = DateOnly.MaxValue;
+        var maxDate = DateOnly.MinValue;
 
         if (criteria is not null && !criteria.Cleared)
         {

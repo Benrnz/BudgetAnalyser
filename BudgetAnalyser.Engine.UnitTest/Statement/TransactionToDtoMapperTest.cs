@@ -18,7 +18,7 @@ public class TransactionToDtoMapperTest
         Account = StatementModelTestData.ChequeAccount,
         Amount = 123.99M,
         BudgetBucket = StatementModelTestData.PowerBucket,
-        Date = new DateTime(2014, 07, 31),
+        Date = new DateOnly(2014, 07, 31),
         Description = "The quick brown poo",
         Reference1 = "Reference 1",
         Reference2 = "REference 23",

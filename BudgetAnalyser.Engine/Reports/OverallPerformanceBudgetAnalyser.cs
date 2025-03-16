@@ -11,11 +11,11 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
 {
     private readonly IBudgetBucketRepository bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
 
-    private DateTime beginDate;
+    private DateOnly beginDate;
     private BudgetCollection? budgetCollection;
     private BudgetCycle budgetCycle = BudgetCycle.Monthly;
-    private Func<DateTime, int, DateTime> calculateNextPeriodDate = (_, _) => throw new NotSupportedException();
-    private DateTime endDate;
+    private Func<DateOnly, int, DateOnly> calculateNextPeriodDate = (_, _) => throw new NotSupportedException();
+    private DateOnly endDate;
     private BudgetModel? latestBudget;
     private GlobalFilterCriteria? rawCriteria;
     private StatementModel? statement;
@@ -130,8 +130,8 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         }
         else
         {
-            this.beginDate = this.rawCriteria.BeginDate ?? DateTime.MinValue;
-            this.endDate = this.rawCriteria.EndDate ?? DateTime.MinValue;
+            this.beginDate = this.rawCriteria.BeginDate ?? DateOnly.MinValue;
+            this.endDate = this.rawCriteria.EndDate ?? DateOnly.MinValue;
         }
     }
 

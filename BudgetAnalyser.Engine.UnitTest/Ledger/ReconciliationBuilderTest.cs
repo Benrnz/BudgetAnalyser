@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 public class ReconciliationBuilderTest
 {
     private static readonly IEnumerable<BankBalance> TestDataBankBalances = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
-    private static readonly DateTime TestDataReconcileDate = new(2013, 09, 15);
+    private static readonly DateOnly TestDataReconcileDate = new(2013, 09, 15);
 
     private IEnumerable<BankBalance> currentBankBalances;
     private ReconciliationBuilder subject;
@@ -56,7 +56,7 @@ public class ReconciliationBuilderTest
 
         ActPeriodEndReconciliationOnTestData5(this.testDataStatement);
         var previousMonthLine =
-            this.subject.LedgerBook.Reconciliations.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket);
+            this.subject.LedgerBook.Reconciliations.Single(line => line.Date == new DateOnly(2013, 08, 15)).Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket);
         var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
 
         // Assert last month's ledger transaction has been linked to the credit 16/8/13
@@ -167,7 +167,7 @@ public class ReconciliationBuilderTest
         testTransaction.BudgetBucket = LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket;
         testTransaction.Account = StatementModelTestData.ChequeAccount;
         testTransaction.Amount = -1250;
-        this.testDataStatement.Output(DateTime.MinValue);
+        this.testDataStatement.Output(DateOnly.MinValue);
 
         var reconResult = ActPeriodEndReconciliation(bankBalances: new[]
         {
@@ -189,7 +189,7 @@ public class ReconciliationBuilderTest
             Account = additionalTransactions.First().Account,
             Amount = -264M,
             BudgetBucket = additionalTransactions.First(t => t.BudgetBucket.Code == TestDataConstants.HairBucketCode).BudgetBucket,
-            Date = new DateTime(2013, 09, 13)
+            Date = new DateOnly(2013, 09, 13)
         });
         this.testDataStatement.LoadTransactions(additionalTransactions);
 
@@ -245,7 +245,7 @@ public class ReconciliationBuilderTest
         TestIntialise(5);
     }
 
-    private ReconciliationResult ActPeriodEndReconciliation(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null, bool ignoreWarnings = false)
+    private ReconciliationResult ActPeriodEndReconciliation(DateOnly? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null, bool ignoreWarnings = false)
     {
         this.currentBankBalances = bankBalances ?? TestDataBankBalances;
 
@@ -314,7 +314,7 @@ public class ReconciliationBuilderTest
                         Account = StatementModelTestData.ChequeAccount,
                         Amount = -23.56M,
                         BudgetBucket = StatementModelTestData.RegoBucket,
-                        Date = TestDataReconcileDate.Date.AddDays(-1),
+                        Date = TestDataReconcileDate.AddDays(-1),
                         TransactionType = new NamedTransaction("Foo"),
                         Description = "Last transaction"
                     })

@@ -94,10 +94,7 @@ public class MapperWidgetToDtoTest
         var surpriseDto = (MultiInstanceWidgetDto)dto;
         var expected = new MultiInstanceWidgetDto
         {
-            WidgetGroup = WidgetGroup.ProjectsSectionName,
-            Visible = true,
-            WidgetType = "BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget",
-            BucketCode = "SURPLUS.SPEC1"
+            WidgetGroup = WidgetGroup.ProjectsSectionName, Visible = true, WidgetType = "BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget", BucketCode = "SURPLUS.SPEC1"
         };
         surpriseDto.ShouldBeEquivalentTo(expected);
     }
@@ -105,7 +102,7 @@ public class MapperWidgetToDtoTest
     [Fact]
     public void MapToSurprisePaymentWidgetDto()
     {
-        var model = new SurprisePaymentWidget { Id = TestDataConstants.FoodBucketCode, StartPaymentDate = new DateTime(2013, 7, 1), Frequency = WeeklyOrFortnightly.Fortnightly, Visibility = false };
+        var model = new SurprisePaymentWidget { Id = TestDataConstants.FoodBucketCode, StartPaymentDate = new DateOnly(2013, 7, 1), Frequency = WeeklyOrFortnightly.Fortnightly, Visibility = false };
         var dto = this.subject.ToDto(model);
         dto.ShouldBeOfType<SurprisePaymentWidgetDto>();
         var surpriseDto = (SurprisePaymentWidgetDto)dto;

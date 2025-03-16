@@ -23,7 +23,7 @@ public class TransactionDto
     /// <summary>
     ///     Gets or sets the transaction date.
     /// </summary>
-    public DateTime Date { get; init; }
+    public DateOnly Date { get; init; }
 
     /// <summary>
     ///     Gets or sets the transaction description.

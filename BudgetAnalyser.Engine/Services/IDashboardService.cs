@@ -35,7 +35,7 @@ public interface IDashboardService : IServiceFoundation
     ///     Creates the new surprise payment monitor widget. This is a widget that shows which months require extra payments because four weeks do not perfectly divide into every month.
     ///     Returns null if the bucket code already has a Surprise Payment Monitor widget.
     /// </summary>
-    Widget? CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
+    Widget? CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateOnly paymentDate, WeeklyOrFortnightly frequency);
 
     /// <summary>
     ///     Removes a multi-instance widget from the widget groups.

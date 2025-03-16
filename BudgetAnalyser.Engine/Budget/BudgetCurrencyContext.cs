@@ -55,7 +55,7 @@ public class BudgetCurrencyContext : IBudgetCurrencyContext
     ///     Gets the effective until date. This is the last date the budget will applicable before another budget will come
     ///     into effect.
     /// </summary>
-    public DateTime? EffectiveUntil
+    public DateOnly? EffectiveUntil
     {
         get
         {

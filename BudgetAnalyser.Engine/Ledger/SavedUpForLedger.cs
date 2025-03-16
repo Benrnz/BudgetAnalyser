@@ -13,7 +13,7 @@ public class SavedUpForLedger : LedgerBucket
     /// </summary>
     /// <exception cref="System.ArgumentNullException"></exception>
     public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions,
-        DateTime reconciliationDate,
+        DateOnly reconciliationDate,
         decimal openingBalance)
     {
         if (transactions is null)

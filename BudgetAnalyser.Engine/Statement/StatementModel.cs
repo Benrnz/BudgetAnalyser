@@ -303,7 +303,7 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
         Filter(this.currentFilter);
     }
 
-    internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates(DateTime? minDate = null, DateTime? maxDate = null)
+    internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates(DateOnly? minDate = null, DateOnly? maxDate = null)
     {
         ThrowIfDisposed();
         if (this.duplicates is not null)
@@ -312,8 +312,8 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
             // Reset by Merging Transactions, Load Transactions, or by reloading the statement model.
         }
 
-        minDate ??= DateTime.MinValue;
-        maxDate ??= DateTime.MaxValue;
+        minDate ??= DateOnly.MinValue;
+        maxDate ??= DateOnly.MaxValue;
         var query =
             Transactions
                 .Where(t => t.Date >= minDate && t.Date <= maxDate)

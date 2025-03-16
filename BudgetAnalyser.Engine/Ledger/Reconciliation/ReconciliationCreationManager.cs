@@ -26,7 +26,7 @@ internal class ReconciliationCreationManager(
 
     /// <inheritdoc cref="IReconciliationCreationManager.PeriodEndReconciliation" />
     public ReconciliationResult PeriodEndReconciliation(LedgerBook ledgerBook,
-        DateTime closingDateExclusive,
+        DateOnly closingDateExclusive,
         BudgetCollection budgetCollection,
         StatementModel statement,
         bool ignoreWarnings,
@@ -264,7 +264,7 @@ internal class ReconciliationCreationManager(
         }
     }
 
-    private void PreReconciliationValidation(LedgerBook ledgerBook, DateTime reconciliationDate, StatementModel statement, BudgetModel budget)
+    private void PreReconciliationValidation(LedgerBook ledgerBook, DateOnly reconciliationDate, StatementModel statement, BudgetModel budget)
     {
         var messages = new StringBuilder();
         if (!ledgerBook.Validate(messages))
@@ -314,17 +314,17 @@ internal class ReconciliationCreationManager(
         return true;
     }
 
-    private static void ValidateAgainstMissingTransactions(DateTime reconciliationDate, StatementModel statement)
+    private static void ValidateAgainstMissingTransactions(DateOnly reconciliationDate, StatementModel statement)
     {
         var lastTransactionDate = statement.Transactions.Where(t => t.Date < reconciliationDate).Max(t => t.Date);
         var difference = reconciliationDate.Subtract(lastTransactionDate);
-        if (difference.TotalHours > 24)
+        if (difference >= 2)
         {
             throw new ValidationWarningException("There are no statement transactions in the last day or two, are you sure you have imported all this month's transactions?") { Source = "2" };
         }
     }
 
-    private void ValidateAgainstUncategorisedTransactions(DateTime startDate, DateTime reconciliationDate, StatementModel statement)
+    private void ValidateAgainstUncategorisedTransactions(DateOnly startDate, DateOnly reconciliationDate, StatementModel statement)
     {
         if (statement.AllTransactions
             .Where(t => t.Date >= startDate && t.Date < reconciliationDate)
@@ -362,7 +362,7 @@ internal class ReconciliationCreationManager(
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-    private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate, StatementModel statement, BudgetCycle periodType)
+    private static void ValidateDates(LedgerBook ledgerBook, DateOnly startDate, DateOnly reconciliationDate, StatementModel statement, BudgetCycle periodType)
     {
         var previousEntry = ledgerBook.Reconciliations.FirstOrDefault();
         if (previousEntry is not null)
@@ -392,7 +392,7 @@ internal class ReconciliationCreationManager(
                     break;
 
                 case BudgetCycle.Fortnightly:
-                    if (reconciliationDate.Subtract(previousEntry.Date).Days != 14)
+                    if (reconciliationDate.DayNumber - previousEntry.Date.DayNumber != 14)
                     {
                         throw new ValidationWarningException("The reconciliation date entered is not 2 weeks after the previous reconciliation. ") { Source = "6" };
                     }

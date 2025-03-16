@@ -9,9 +9,9 @@ namespace BudgetAnalyser.Engine;
 /// </summary>
 public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDataChangeDetection
 {
-    private DateTime? doNotUseBeginDate;
+    private DateOnly? doNotUseBeginDate;
     private bool doNotUseCleared;
-    private DateTime? doNotUseEndDate;
+    private DateOnly? doNotUseEndDate;
 
     /// <summary>
     ///     Constructs a new instance of <see cref="GlobalFilterCriteria" />
@@ -29,7 +29,7 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
     /// <summary>
     ///     The earliest date to include in filtered data when the criteria is applied. This is inclusive of the date.
     /// </summary>
-    public DateTime? BeginDate
+    public DateOnly? BeginDate
     {
         get => this.doNotUseBeginDate;
         set
@@ -56,7 +56,7 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
     /// <summary>
     ///     The latest date to include in filtered data when this criteria is applied. The date is exclusive.
     /// </summary>
-    public DateTime? EndDate
+    public DateOnly? EndDate
     {
         get => this.doNotUseEndDate;
         set
@@ -124,12 +124,12 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
 
     private void CheckConsistency()
     {
-        if (BeginDate is not null && BeginDate.Value == DateTime.MinValue)
+        if (BeginDate is not null && BeginDate.Value == DateOnly.MinValue)
         {
             BeginDate = null;
         }
 
-        if (EndDate is not null && EndDate.Value == DateTime.MinValue)
+        if (EndDate is not null && EndDate.Value == DateOnly.MinValue)
         {
             EndDate = null;
         }

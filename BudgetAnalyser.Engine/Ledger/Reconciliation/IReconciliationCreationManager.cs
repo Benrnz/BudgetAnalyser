@@ -25,7 +25,7 @@ internal interface IReconciliationCreationManager
     /// </exception>
     /// <exception cref="InvalidOperationException">Thrown when the supplied dates are invalid or not consistent with the<paramref name="ledgerBook" />.</exception>
     ReconciliationResult PeriodEndReconciliation(LedgerBook ledgerBook,
-        DateTime closingDateExclusive,
+        DateOnly closingDateExclusive,
         BudgetCollection budgetCollection,
         StatementModel statement,
         bool ignoreWarnings,

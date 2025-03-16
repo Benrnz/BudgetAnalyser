@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Budget;
 /// </summary>
 public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
 {
-    private readonly SortedList<DateTime, BudgetModel> budgetStorage;
+    private readonly SortedList<DateOnly, BudgetModel> budgetStorage;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetCollection" /> class.
@@ -27,9 +27,10 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     public BudgetCollection(IEnumerable<BudgetModel> initialBudgets)
     {
         this.budgetStorage =
-            new SortedList<DateTime, BudgetModel>(
-                initialBudgets.OrderByDescending(b => b.EffectiveFrom).ToDictionary(model => model.EffectiveFrom),
-                new DateTimeDescendingOrder());
+            new SortedList<DateOnly, BudgetModel>(
+                initialBudgets.OrderByDescending(b => b.EffectiveFrom)
+                    .ToDictionary(model => model.EffectiveFrom),
+                new DateOnlyDescendingOrder());
     }
 
     /// <summary>
@@ -49,7 +50,7 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     ///     Gets the current active budget.
     /// </summary>
     public BudgetModel? CurrentActiveBudget => this.OrderByDescending(b => b.EffectiveFrom)
-        .FirstOrDefault(b => b.EffectiveFrom <= DateTime.Now);
+        .FirstOrDefault(b => b.EffectiveFrom <= DateOnlyExt.Today());
 
     internal BudgetModel this[int index] => this.budgetStorage.ElementAt(index).Value;
 
@@ -112,7 +113,7 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     /// <summary>
     ///     Retrieves the applicable budget for the specified date.
     /// </summary>
-    public BudgetModel? ForDate(DateTime date)
+    public BudgetModel? ForDate(DateOnly date)
     {
         return this.OrderByDescending(b => b.EffectiveFrom).FirstOrDefault(b => b.EffectiveFrom <= date);
     }
@@ -124,7 +125,7 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     ///     The period covered by the dates given overlaps a period where no budgets are
     ///     available.
     /// </exception>
-    public IEnumerable<BudgetModel> ForDates(DateTime beginInclusive, DateTime endInclusive)
+    public IEnumerable<BudgetModel> ForDates(DateOnly beginInclusive, DateOnly endInclusive)
     {
         var budgets = new List<BudgetModel>();
         var firstEffectiveBudget = ForDate(beginInclusive) ?? throw new BudgetException(
@@ -168,7 +169,7 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Better for consistency with other methods here")]
     public bool IsFutureBudget(BudgetModel budget)
     {
-        return budget is null ? throw new ArgumentNullException(nameof(budget)) : budget.EffectiveFrom > DateTime.Now;
+        return budget is null ? throw new ArgumentNullException(nameof(budget)) : budget.EffectiveFrom > DateOnlyExt.Today();
     }
 
     internal virtual int IndexOf(BudgetModel budget)

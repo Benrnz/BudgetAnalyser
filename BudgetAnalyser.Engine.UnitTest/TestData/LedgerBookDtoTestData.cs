@@ -26,7 +26,7 @@ internal static class LedgerBookDtoTestData
     {
         var lines = new List<LedgerEntryLineDto>();
 
-        var line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
+        var line1 = AddEntryLineForTestData1(lines, new DateOnly(2013, 12, 20));
         line1.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -60,7 +60,7 @@ internal static class LedgerBookDtoTestData
             }
         ]);
 
-        var line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
+        var line2 = AddEntryLineForTestData1(lines, new DateOnly(2014, 1, 20));
         line2.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -85,7 +85,7 @@ internal static class LedgerBookDtoTestData
             }
         ]);
 
-        var line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
+        var line3 = AddEntryLineForTestData1(lines, new DateOnly(2014, 02, 20));
         line3.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -116,10 +116,7 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14),
-            Name = "Test Budget Ledger Book 1",
-            StorageKey = "C:\\Folder\\FooBook.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
+            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 1", StorageKey = "C:\\Folder\\FooBook.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -136,7 +133,7 @@ internal static class LedgerBookDtoTestData
     {
         var lines = new List<LedgerEntryLineDto>();
 
-        var line1 = AddEntryLineForTestData2(lines, new DateTime(2013, 12, 20));
+        var line1 = AddEntryLineForTestData2(lines, new DateOnly(2013, 12, 20));
         line1.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -162,7 +159,7 @@ internal static class LedgerBookDtoTestData
             }
         ]);
 
-        var line2 = AddEntryLineForTestData2(lines, new DateTime(2014, 1, 20));
+        var line2 = AddEntryLineForTestData2(lines, new DateOnly(2014, 1, 20));
         line2.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -187,7 +184,7 @@ internal static class LedgerBookDtoTestData
             }
         ]);
 
-        var line3 = AddEntryLineForTestData2(lines, new DateTime(2014, 02, 20));
+        var line3 = AddEntryLineForTestData2(lines, new DateOnly(2014, 02, 20));
         line3.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -225,10 +222,7 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14),
-            Name = "Test Budget Ledger Book 2",
-            StorageKey = "C:\\Folder\\FooBook2.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
+            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 2", StorageKey = "C:\\Folder\\FooBook2.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -245,7 +239,7 @@ internal static class LedgerBookDtoTestData
     {
         var lines = new List<LedgerEntryLineDto>();
 
-        var line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
+        var line1 = AddEntryLineForTestData1(lines, new DateOnly(2013, 12, 20));
         line1.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -279,7 +273,7 @@ internal static class LedgerBookDtoTestData
             }
         ]);
 
-        var line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
+        var line2 = AddEntryLineForTestData1(lines, new DateOnly(2014, 1, 20));
         line2.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -304,7 +298,7 @@ internal static class LedgerBookDtoTestData
             }
         ]);
 
-        var line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
+        var line3 = AddEntryLineForTestData1(lines, new DateOnly(2014, 02, 20));
         line3.Entries.AddRange(
         [
             new LedgerEntryDto
@@ -348,10 +342,7 @@ internal static class LedgerBookDtoTestData
 
         var book = new LedgerBookDto
         {
-            Modified = new DateTime(2013, 12, 14),
-            Name = "Test Budget Ledger Book 3",
-            StorageKey = "C:\\Folder\\FooBook3.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
+            Modified = new DateTime(2013, 12, 14), Name = "Test Budget Ledger Book 3", StorageKey = "C:\\Folder\\FooBook3.xml", Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
         };
 
         book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -360,7 +351,7 @@ internal static class LedgerBookDtoTestData
         return book;
     }
 
-    private static LedgerEntryLineDto AddEntryLineForTestData1(List<LedgerEntryLineDto> entries, DateTime lineDate)
+    private static LedgerEntryLineDto AddEntryLineForTestData1(List<LedgerEntryLineDto> entries, DateOnly lineDate)
     {
         var line = new LedgerEntryLineDto { Date = lineDate, Remarks = "Lorem ipsum dolor. Mit solo darte." };
 
@@ -368,7 +359,7 @@ internal static class LedgerBookDtoTestData
         return line;
     }
 
-    private static LedgerEntryLineDto AddEntryLineForTestData2(List<LedgerEntryLineDto> entries, DateTime lineDate)
+    private static LedgerEntryLineDto AddEntryLineForTestData2(List<LedgerEntryLineDto> entries, DateOnly lineDate)
     {
         var line = new LedgerEntryLineDto
         {

@@ -28,7 +28,7 @@ public interface IBudgetMaintenanceService : INotifyDatabaseChanges, IServiceFou
     /// <exception cref="ValidationWarningException">Will be thrown if the source budget is in an invalid state.</exception>
     /// <exception cref="ArgumentException">Will be thrown if the effective date of the new budget is not after the provided budget.</exception>
     /// <exception cref="ArgumentException">Will be thrown if the effective date is not a future date.</exception>
-    BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom, BudgetCycle budgetCycle);
+    BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateOnly newBudgetEffectiveFrom, BudgetCycle budgetCycle);
 
     /// <summary>
     ///     Updates the budget with the full collection of incomes and expenses. This method does not call validate on the model.

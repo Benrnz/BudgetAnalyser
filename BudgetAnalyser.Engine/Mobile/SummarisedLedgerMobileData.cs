@@ -34,7 +34,7 @@ public class SummarisedLedgerMobileData
     /// <summary>
     ///     The date this month started
     /// </summary>
-    public DateTime StartOfMonth { get; set; }
+    public DateOnly StartOfMonth { get; set; }
 
     /// <summary>
     ///     The title of the budget

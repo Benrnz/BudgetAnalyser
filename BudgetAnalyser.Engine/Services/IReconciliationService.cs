@@ -51,7 +51,7 @@ public interface IReconciliationService
     /// <param name="balances">The bank balances as at the <paramref name="reconciliationDate" /> to include in this new single line of the ledger book.</param>
     /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
     LedgerEntryLine PeriodEndReconciliation(LedgerBook ledgerBook,
-        DateTime reconciliationDate,
+        DateOnly reconciliationDate,
         BudgetCollection budgetCollection,
         StatementModel statement,
         bool ignoreWarnings,

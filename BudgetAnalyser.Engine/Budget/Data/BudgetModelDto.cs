@@ -15,7 +15,7 @@ public class BudgetModelDto
     /// <summary>
     ///     Gets or sets the effective from date as UTC
     /// </summary>
-    public DateTime EffectiveFrom { get; set; }
+    public DateOnly EffectiveFrom { get; set; }
 
     /// <summary>
     ///     No need for a data type for <see cref="Income" />, <see cref="Expenses" />, <see cref="BudgetItem" />,

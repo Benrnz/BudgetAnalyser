@@ -23,7 +23,7 @@ public class LedgerTransactionDto
     /// <summary>
     ///     Gets or sets the date.
     /// </summary>
-    public DateTime? Date { get; init; }
+    public DateOnly? Date { get; init; }
 
     /// <summary>
     ///     Gets or sets the transaction identifier.

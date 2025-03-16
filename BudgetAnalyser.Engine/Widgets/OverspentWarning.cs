@@ -130,8 +130,8 @@ public class OverspentWarning : Widget
 
     private int SearchForOtherNonLedgerBookOverspentBuckets(
         StatementModel statement,
-        DateTime inclBeginDate,
-        DateTime inclEndDate,
+        DateOnly inclBeginDate,
+        DateOnly inclEndDate,
         IBudgetCurrencyContext budget,
         IDictionary<BudgetBucket, decimal> currentLedgerBalances)
     {

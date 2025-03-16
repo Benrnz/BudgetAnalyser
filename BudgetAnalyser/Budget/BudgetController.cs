@@ -245,9 +245,9 @@ public class BudgetController : ControllerBase, IShowableController
     {
         var proposedDate = CurrentBudget.Model.EffectiveFrom.AddMonths(1);
 
-        if (proposedDate < DateTime.Today)
+        if (proposedDate < DateOnlyExt.Today())
         {
-            var differenceInMonths = proposedDate.DurationInMonths(DateTime.Today);
+            var differenceInMonths = proposedDate.DurationInMonths(DateOnlyExt.Today());
             proposedDate = proposedDate.AddMonths(differenceInMonths);
         }
 

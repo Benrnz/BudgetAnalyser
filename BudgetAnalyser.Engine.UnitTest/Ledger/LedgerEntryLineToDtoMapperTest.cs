@@ -41,7 +41,7 @@ public class LedgerEntryLineToDtoMapperTest
     [TestMethod]
     public void ShouldMapDate()
     {
-        Assert.AreEqual(new DateTime(2013, 8, 15), Result.Date.ToLocalTime());
+        Assert.AreEqual(new DateOnly(2013, 8, 15), Result.Date);
     }
 
     [TestMethod]

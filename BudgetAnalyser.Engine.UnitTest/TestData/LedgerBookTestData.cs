@@ -54,7 +54,7 @@ public static class LedgerBookTestData
     /// </summary>
     public static LedgerBook TestData1()
     {
-        var line = CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
+        var line = CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
         SetEntriesForTesting(
             line,
             new List<LedgerEntry>
@@ -84,7 +84,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List<LedgerEntry>
                 {
                     CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
@@ -107,7 +107,7 @@ public static class LedgerBookTestData
 
         list.Add(
             CreateLine(
-                new DateTime(2013, 08, 15),
+                new DateOnly(2013, 08, 15),
                 new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
                 new List<LedgerEntry>
@@ -142,7 +142,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -169,7 +169,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -192,7 +192,7 @@ public static class LedgerBookTestData
         previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         var line = CreateLine(
-            new DateTime(2013, 08, 15),
+            new DateOnly(2013, 08, 15),
             new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
             "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
             new List<LedgerEntry>
@@ -227,7 +227,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateTime(2013, 11, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 10738) }, "Opening entries").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 11, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 10738) }, "Opening entries").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -273,7 +273,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -300,7 +300,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -323,7 +323,7 @@ public static class LedgerBookTestData
         previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         var line = CreateLine(
-            new DateTime(2013, 08, 15),
+            new DateOnly(2013, 08, 15),
             new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2750), new BankBalance(StatementModelTestData.SavingsAccount, 200) },
             "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
             new List<LedgerEntry>
@@ -359,7 +359,7 @@ public static class LedgerBookTestData
         var list = new List<LedgerEntryLine>
         {
             CreateLine(
-                    new DateTime(2013, 06, 15),
+                    new DateOnly(2013, 06, 15),
                     new[] { new BankBalance(ChequeAccount, 2800), new BankBalance(SavingsAccount, 300) },
                     "Lorem ipsum")
                 .SetEntriesForTesting(
@@ -392,7 +392,7 @@ public static class LedgerBookTestData
 
         list.Add(
             CreateLine(
-                new DateTime(2013, 07, 15),
+                new DateOnly(2013, 07, 15),
                 new[] { new BankBalance(ChequeAccount, 4000), new BankBalance(SavingsAccount, 600) },
                 "dolor amet set").SetEntriesForTesting(
                 new List<LedgerEntry>
@@ -419,7 +419,7 @@ public static class LedgerBookTestData
         previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
 
         var line = CreateLine(
-            new DateTime(2013, 08, 15),
+            new DateOnly(2013, 08, 15),
             new[] { new BankBalance(ChequeAccount, 3050), new BankBalance(SavingsAccount, 1000) },
             "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
             new List<LedgerEntry>
@@ -461,7 +461,7 @@ public static class LedgerBookTestData
         var list = new List<LedgerEntryLine>
         {
             CreateLine(
-                    new DateTime(2013, 8, 1),
+                    new DateOnly(2013, 8, 1),
                     new[] { new BankBalance(ChequeAccount, 2800), new BankBalance(SavingsAccount, 300) },
                     "Lorem ipsum")
                 .SetEntriesForTesting(
@@ -494,7 +494,7 @@ public static class LedgerBookTestData
 
         list.Add(
             CreateLine(
-                new DateTime(2013, 8, 15),
+                new DateOnly(2013, 8, 15),
                 new[] { new BankBalance(ChequeAccount, 4000), new BankBalance(SavingsAccount, 600) },
                 "dolor amet set").SetEntriesForTesting(
                 new List<LedgerEntry>
@@ -585,7 +585,7 @@ public static class LedgerBookTestData
         return new LedgerEntry { LedgerBucket = ledger, Balance = balance };
     }
 
-    private static LedgerEntryLine CreateLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
+    private static LedgerEntryLine CreateLine(DateOnly date, IEnumerable<BankBalance> bankBalances, string remarks)
     {
         var line = new LedgerEntryLine(date, bankBalances) { Remarks = remarks };
         return line;

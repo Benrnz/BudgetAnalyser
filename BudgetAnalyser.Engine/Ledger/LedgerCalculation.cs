@@ -159,7 +159,7 @@ public class LedgerCalculation
     ///     Finds any overspent ledgers for the period and returns the date and value the of the total overspend.  This resulting collection can then be used to offset overdrawn balances from
     ///     Surplus. (Not done here). Negative values indicate overdrawn ledgers.  Only Ledgers tracked by the LedgerBook are examined for overdrawn balances.
     /// </summary>
-    public IEnumerable<ReportTransaction> CalculateOverSpentLedgers(StatementModel statement, LedgerEntryLine ledgerLine, DateTime inclBeginDate, DateTime inclEndDate)
+    public IEnumerable<ReportTransaction> CalculateOverSpentLedgers(StatementModel statement, LedgerEntryLine ledgerLine, DateOnly inclBeginDate, DateOnly inclEndDate)
     {
         CheckCacheForCleanUp();
 
@@ -257,7 +257,7 @@ public class LedgerCalculation
             : LocateApplicableLedgerLine(ledgerBook, filter.BeginDate, filter.EndDate);
     }
 
-    public virtual LedgerEntryLine? LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime? inclBeginDate, DateTime? inclEndDate)
+    public virtual LedgerEntryLine? LocateApplicableLedgerLine(LedgerBook ledgerBook, DateOnly? inclBeginDate, DateOnly? inclEndDate)
     {
         CheckCacheForCleanUp();
         if (ledgerBook is null)
@@ -265,17 +265,17 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(ledgerBook));
         }
 
-        if (inclBeginDate == null || inclBeginDate.Value == DateTime.MinValue)
+        if (inclBeginDate == null || inclBeginDate.Value == DateOnly.MinValue)
         {
             return null;
         }
 
-        return inclEndDate == null || inclEndDate.Value == DateTime.MinValue
+        return inclEndDate == null || inclEndDate.Value == DateOnly.MinValue
             ? null
             : LocateLedgerEntryLine(ledgerBook, inclBeginDate.Value, inclEndDate.Value);
     }
 
-    private static string BuildCacheKey(string name, object dependency1, object dependency2, DateTime dependentDate)
+    private static string BuildCacheKey(string name, object dependency1, object dependency2, DateOnly dependentDate)
     {
         long key;
         unchecked
@@ -287,7 +287,7 @@ public class LedgerCalculation
         return keyString;
     }
 
-    private Dictionary<BudgetBucket, decimal> CalculateLedgersCurrentBalances(LedgerEntryLine ledgerLine, DateTime inclBeginDate, DateTime inclEndDate, StatementModel statement)
+    private Dictionary<BudgetBucket, decimal> CalculateLedgersCurrentBalances(LedgerEntryLine ledgerLine, DateOnly inclBeginDate, DateOnly inclEndDate, StatementModel statement)
     {
         var ledgersSummary = new Dictionary<BudgetBucket, decimal>();
         foreach (var entry in ledgerLine.Entries)
@@ -300,7 +300,7 @@ public class LedgerCalculation
         return ledgersSummary;
     }
 
-    private decimal CalculateTransactionTotal(DateTime inclBeginDate, DateTime inclEndDate, StatementModel statement, LedgerEntryLine entryLine, string bucketCode)
+    private decimal CalculateTransactionTotal(DateOnly inclBeginDate, DateOnly inclEndDate, StatementModel statement, LedgerEntryLine entryLine, string bucketCode)
     {
         var autoMatchLedgerTransactions = GetAutoMatchingTransactions(statement, entryLine, inclBeginDate);
         // This needs to query .AllTransactions, not just .Transactions, when changing the date range the statement may not have had its internal filter changed when this runs.
@@ -347,7 +347,7 @@ public class LedgerCalculation
         }
     }
 
-    private IEnumerable<LedgerTransaction> GetAutoMatchingTransactions(StatementModel statement, LedgerEntryLine entryLine, DateTime inclBeginDate)
+    private IEnumerable<LedgerTransaction> GetAutoMatchingTransactions(StatementModel statement, LedgerEntryLine entryLine, DateOnly inclBeginDate)
     {
         var key = BuildCacheKey("GetAutoMatchingTransactions", statement, entryLine, inclBeginDate);
         var autoMatchLedgerTransactions = (List<LedgerTransaction>)GetOrAddFromCache(key, () => ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList());
@@ -379,7 +379,7 @@ public class LedgerCalculation
         return CalculationsCache.GetOrAdd(cacheKey, _ => wrappedFactory());
     }
 
-    private static LedgerEntryLine? LocateLedgerEntryLine(LedgerBook ledgerBook, DateTime inclBegin, DateTime inclEnd)
+    private static LedgerEntryLine? LocateLedgerEntryLine(LedgerBook ledgerBook, DateOnly inclBegin, DateOnly inclEnd)
     {
         return ledgerBook.Reconciliations.FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= inclBegin && ledgerEntryLine.Date <= inclEnd);
     }
@@ -388,7 +388,7 @@ public class LedgerCalculation
         Dictionary<BudgetBucket, decimal> runningBalances,
         Dictionary<BudgetBucket, decimal> previousBalances,
         List<ReportTransaction> overSpendTransactions,
-        DateTime currentDate)
+        DateOnly currentDate)
     {
         foreach (var runningBalance in runningBalances)
         {

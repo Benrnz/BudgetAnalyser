@@ -15,13 +15,13 @@ public class OverallPerformanceBudgetAnalyserTest
     private readonly StatementModel statementTestData = StatementModelTestData.TestData6();
     private OverallPerformanceBudgetAnalyser analyser;
     private BudgetCollection budgetsTestData = BudgetModelTestData.CreateCollectionWith2And5();
-    private GlobalFilterCriteria dateCriteria = new() { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 1, 1) };
+    private GlobalFilterCriteria dateCriteria = new() { BeginDate = new DateOnly(2013, 1, 1), EndDate = new DateOnly(2014, 1, 1) };
 
     [TestMethod]
     public void Analyse_ShouldErrorWhenMultipleBudgetsWithVariousPayCycles()
     {
         // Arrange
-        this.dateCriteria = new GlobalFilterCriteria { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 03, 1) };
+        this.dateCriteria = new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 1, 1), EndDate = new DateOnly(2014, 03, 1) };
         this.budgetsTestData[0].BudgetCycle = BudgetCycle.Monthly;
         this.budgetsTestData[1].BudgetCycle = BudgetCycle.Fortnightly;
 
@@ -37,7 +37,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [TestMethod]
     public void Analyse_ShouldFunctionWhenMultipleBudgetsWithSamePayCycles()
     {
-        this.dateCriteria = new GlobalFilterCriteria { BeginDate = new DateTime(2013, 1, 1), EndDate = new DateTime(2014, 03, 1) };
+        this.dateCriteria = new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 1, 1), EndDate = new DateOnly(2014, 03, 1) };
         var result = this.analyser!.Analyse(this.statementTestData, this.budgetsTestData, this.dateCriteria);
 
         Console.WriteLine(result.ValidationMessage);
@@ -273,7 +273,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [TestMethod]
     public void OutputTestData()
     {
-        this.statementTestData.Output(new DateTime(2013, 1, 1));
+        this.statementTestData.Output(new DateOnly(2013, 1, 1));
     }
 
     [TestInitialize]

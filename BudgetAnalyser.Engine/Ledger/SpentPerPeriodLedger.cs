@@ -24,7 +24,7 @@ public class SpentPerPeriodLedger : LedgerBucket
     /// <summary>
     ///     Allows ledger bucket specific behaviour during reconciliation.
     /// </summary>
-    public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+    public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateOnly reconciliationDate, decimal openingBalance)
     {
         var netAmount = transactions.Sum(t => t.Amount);
         var closingBalance = openingBalance + netAmount;
@@ -75,35 +75,35 @@ public class SpentPerPeriodLedger : LedgerBucket
         throw new NotSupportedException("Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
     }
 
-    private static LedgerTransaction? RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
+    private static LedgerTransaction? RemoveExcessToBudgetAmount(decimal closingBalance, DateOnly reconciliationDate, decimal budgetAmount)
     {
         return closingBalance - budgetAmount == 0
             ? null
             : (LedgerTransaction)new CreditLedgerTransaction { Amount = -(closingBalance - budgetAmount), Date = reconciliationDate, Narrative = RemoveExcessText };
     }
 
-    private static LedgerTransaction? RemoveExcessToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
+    private static LedgerTransaction? RemoveExcessToOpeningBalance(decimal closingBalance, DateOnly reconciliationDate, decimal openingBalance)
     {
         return closingBalance - openingBalance == 0
             ? null
             : (LedgerTransaction)new CreditLedgerTransaction { Amount = -(closingBalance - openingBalance), Date = reconciliationDate, Narrative = RemoveExcessText };
     }
 
-    private static LedgerTransaction? SupplementToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
+    private static LedgerTransaction? SupplementToBudgetAmount(decimal closingBalance, DateOnly reconciliationDate, decimal budgetAmount)
     {
         return budgetAmount - closingBalance == 0
             ? null
             : (LedgerTransaction)new CreditLedgerTransaction { Amount = budgetAmount - closingBalance, Date = reconciliationDate, Narrative = SupplementLessThanBudgetText };
     }
 
-    private static LedgerTransaction? SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
+    private static LedgerTransaction? SupplementToOpeningBalance(decimal closingBalance, DateOnly reconciliationDate, decimal openingBalance)
     {
         return openingBalance - closingBalance == 0
             ? null
             : (LedgerTransaction)new CreditLedgerTransaction { Amount = openingBalance - closingBalance, Date = reconciliationDate, Narrative = SupplementLessThanOpeningBalance };
     }
 
-    private static CreditLedgerTransaction? SupplementToZero(decimal closingBalance, DateTime reconciliationDate)
+    private static CreditLedgerTransaction? SupplementToZero(decimal closingBalance, DateOnly reconciliationDate)
     {
         return closingBalance == 0
             ? null

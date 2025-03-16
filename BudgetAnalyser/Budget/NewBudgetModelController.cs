@@ -14,7 +14,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
     private BudgetCycle doNotUseBudgetCycle;
-    private DateTime doNotUseEffectiveFrom;
+    private DateOnly doNotUseEffectiveFrom;
 
     public NewBudgetModelController([NotNull] IUiContext uiContext) : base(uiContext.Messenger)
     {
@@ -52,23 +52,8 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
         }
     }
 
-    /// <summary>
-    ///     Will be called to ascertain the availability of the button.
-    /// </summary>
-    public bool CanExecuteCancelButton => true;
-
-    /// <summary>
-    ///     Will be called to ascertain the availability of the button.
-    /// </summary>
-    public bool CanExecuteOkButton => false;
-
-    /// <summary>
-    ///     Will be called to ascertain the availability of the button.
-    /// </summary>
-    public bool CanExecuteSaveButton => EffectiveFrom > DateTime.Today;
-
     // ReSharper disable once MemberCanBePrivate.Global
-    public DateTime EffectiveFrom
+    public DateOnly EffectiveFrom
     {
         get => this.doNotUseEffectiveFrom;
         set
@@ -99,16 +84,29 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
         set => BudgetCycle = value ? BudgetCycle.Monthly : BudgetCycle.Fortnightly;
     }
 
-    public void ShowDialog(DateTime defaultEffectiveDate)
+    /// <summary>
+    ///     Will be called to ascertain the availability of the button.
+    /// </summary>
+    public bool CanExecuteCancelButton => true;
+
+    /// <summary>
+    ///     Will be called to ascertain the availability of the button.
+    /// </summary>
+    public bool CanExecuteOkButton => false;
+
+    /// <summary>
+    ///     Will be called to ascertain the availability of the button.
+    /// </summary>
+    public bool CanExecuteSaveButton => EffectiveFrom >= DateOnlyExt.Today();
+
+    public void ShowDialog(DateOnly defaultEffectiveDate)
     {
         this.dialogCorrelationId = Guid.NewGuid();
         EffectiveFrom = defaultEffectiveDate;
 
         var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, this, ShellDialogType.SaveCancel)
         {
-            CorrelationId = this.dialogCorrelationId,
-            Title = "Create new Budget based on current",
-            HelpAvailable = true
+            CorrelationId = this.dialogCorrelationId, Title = "Create new Budget based on current", HelpAvailable = true
         };
         Messenger.Send(dialogRequest);
     }

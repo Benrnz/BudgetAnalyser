@@ -49,7 +49,7 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        var newBudget = new BudgetModel { EffectiveFrom = DateTime.Today, Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ') };
+        var newBudget = new BudgetModel { EffectiveFrom = DateOnlyExt.Today(), Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ') };
 
         this.currentBudgetCollection = new BudgetCollection(newBudget) { StorageKey = storageKey };
 

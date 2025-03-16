@@ -34,7 +34,7 @@ public class LedgerEntryLineDto
     /// <summary>
     ///     Gets or sets the date of the reconciliation.
     /// </summary>
-    public DateTime Date { get; set; }
+    public DateOnly Date { get; set; }
 
     /// <summary>
     ///     Gets or sets the entries.

@@ -60,7 +60,29 @@ internal class BankImportUtilities
         return bucketRepository.GetByCode(stringType);
     }
 
-    internal DateTime FetchDate(string[] array, int index)
+    internal DateOnly FetchDate(string[] array, int index)
+    {
+        if (array is null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+
+        if (index > array.Length - 1 || index < 0)
+        {
+            ThrowIndexOutOfRangeException(array, index);
+        }
+
+        var stringToParse = array[index];
+        if (!DateOnly.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result))
+        {
+            this.logger.LogError(_ => "BankImportUtilities: Unable to parse date: " + stringToParse);
+            throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
+        }
+
+        return result;
+    }
+
+    internal DateTime FetchDateTime(string[] array, int index)
     {
         if (array is null)
         {

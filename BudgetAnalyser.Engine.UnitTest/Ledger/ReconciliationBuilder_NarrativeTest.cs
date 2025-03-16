@@ -147,7 +147,7 @@ public class ReconciliationBuilderNarrativeTest
             Account = LedgerBookTestData.ChequeAccount,
             Amount = 123.45M,
             BudgetBucket = BudgetBucketTestData.BudgetModelTestData1Buckets.First(),
-            Date = new DateTime(2024, 12, 9),
+            Date = new DateOnly(2024, 12, 9),
             Id = Guid.NewGuid(),
             TransactionType = StatementModelTestData.TransactionType /* Bill Payment */
         };

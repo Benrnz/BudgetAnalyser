@@ -35,7 +35,7 @@ public static class NewZealandPublicHolidays
     /// <summary>
     ///     Calculate and list New Zealand holidays between two dates.
     /// </summary>
-    public static IEnumerable<DateTime> CalculateHolidays(DateTime start, DateTime end)
+    public static IEnumerable<DateOnly> CalculateHolidays(DateOnly start, DateOnly end)
     {
         return CalculateHolidaysVerbose(start, end).Select(t => t.Item2);
     }
@@ -43,9 +43,9 @@ public static class NewZealandPublicHolidays
     /// <summary>
     ///     Calculate and list New Zealand holidays between two dates. The return collection contains labeled holidays and their dates.
     /// </summary>
-    public static IEnumerable<Tuple<string, DateTime>> CalculateHolidaysVerbose(DateTime start, DateTime end)
+    public static IEnumerable<Tuple<string, DateOnly>> CalculateHolidaysVerbose(DateOnly start, DateOnly end)
     {
-        var holidays = new Dictionary<DateTime, string>();
+        var holidays = new Dictionary<DateOnly, string>();
         foreach (var holidayTemplate in HolidayTemplates)
         {
             try
@@ -66,7 +66,7 @@ public static class NewZealandPublicHolidays
             }
         }
 
-        return holidays.Select(h => new Tuple<string, DateTime>(h.Value, h.Key)).OrderBy(d => d.Item2);
+        return holidays.Select(h => new Tuple<string, DateOnly>(h.Value, h.Key)).OrderBy(d => d.Item2);
     }
 
     /// <summary>
@@ -78,11 +78,11 @@ public static class NewZealandPublicHolidays
         public int CloseToDate { get; init; }
         public int Month { get; init; }
 
-        public override DateTime CalculateDate(DateTime start, DateTime end)
+        public override DateOnly CalculateDate(DateOnly start, DateOnly end)
         {
             for (var year = start.Year; year <= end.Year; year++)
             {
-                var proposed = new DateTime(year, Month, CloseToDate);
+                var proposed = new DateOnly(year, Month, CloseToDate);
                 switch (proposed.DayOfWeek)
                 {
                     case DayOfWeek.Sunday:
@@ -125,7 +125,7 @@ public static class NewZealandPublicHolidays
     {
         public DayOfWeek Day { get; init; }
 
-        public override DateTime CalculateDate(DateTime start, DateTime end)
+        public override DateOnly CalculateDate(DateOnly start, DateOnly end)
         {
             for (var year = start.Year; year <= end.Year; year++)
             {
@@ -145,7 +145,7 @@ public static class NewZealandPublicHolidays
                     day -= 31;
                 }
 
-                var proposed = new DateTime(year, month, day);
+                var proposed = new DateOnly(year, month, day);
 
                 switch (Day)
                 {
@@ -185,12 +185,12 @@ public static class NewZealandPublicHolidays
         public bool MondayiseIfOnWeekend { get; init; }
         public int Month { get; init; }
 
-        public override DateTime CalculateDate(DateTime start, DateTime end)
+        public override DateOnly CalculateDate(DateOnly start, DateOnly end)
         {
-            var proposed = DateTime.MinValue;
+            var proposed = DateOnly.MinValue;
             for (var year = start.Year; year <= end.Year; year++)
             {
-                proposed = new DateTime(year, Month, Day);
+                proposed = new DateOnly(year, Month, Day);
                 if (proposed >= start && proposed <= end)
                 {
                     break;
@@ -206,7 +206,7 @@ public static class NewZealandPublicHolidays
                 } while (proposed.DayOfWeek != DayOfWeek.Monday);
             }
 
-            return proposed < DateTime.MinValue.AddMonths(1)
+            return proposed < DateOnly.MinValue.AddMonths(1)
                 ? throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
                     "Cannot find a suitable date between {0} and {1}", start, end))
                 : proposed;
@@ -216,7 +216,7 @@ public static class NewZealandPublicHolidays
     private abstract class Holiday
     {
         public required string Name { get; init; }
-        public abstract DateTime CalculateDate(DateTime start, DateTime end);
+        public abstract DateOnly CalculateDate(DateOnly start, DateOnly end);
     }
 
     /// <summary>
@@ -228,7 +228,7 @@ public static class NewZealandPublicHolidays
         public int Index { get; init; }
         public int Month { get; init; }
 
-        public override DateTime CalculateDate(DateTime start, DateTime end)
+        public override DateOnly CalculateDate(DateOnly start, DateOnly end)
         {
             for (var year = start.Year; year <= end.Year; year++)
             {
@@ -243,9 +243,9 @@ public static class NewZealandPublicHolidays
                 "Cannot find a suitable date between {0} and {1}", start, end));
         }
 
-        private DateTime ProposeDate(int year)
+        private DateOnly ProposeDate(int year)
         {
-            var proposed = new DateTime(year, Month, 1);
+            var proposed = new DateOnly(year, Month, 1);
             while (proposed.DayOfWeek != Day)
             {
                 proposed = proposed.AddDays(1);
