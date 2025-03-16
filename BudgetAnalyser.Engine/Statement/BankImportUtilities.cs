@@ -73,13 +73,19 @@ internal class BankImportUtilities
         }
 
         var stringToParse = array[index];
-        if (!DateOnly.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result))
+        if (DateOnly.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result))
         {
-            this.logger.LogError(_ => "BankImportUtilities: Unable to parse date: " + stringToParse);
-            throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
+            return result;
         }
 
-        return result;
+        this.logger.LogWarning(_ => $"BankImportUtilities: Unable to parse date: {stringToParse}. Attempting to read as a DateTime instead. Will throw if invalid.");
+
+        if (DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.AssumeLocal, out var result1))
+        {
+            return DateOnly.FromDateTime(result1);
+        }
+
+        throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
     }
 
     internal DateTime FetchDateTime(string[] array, int index)

@@ -1,7 +1,9 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
+using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Moq;
@@ -180,8 +182,16 @@ public class CsvOnDiskStatementModelRepositoryV1Test
 
         var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
 
+        model.Output(DateOnly.MinValue);
         Assert.IsNotNull(model);
         Assert.AreEqual(33, model.AllTransactions.Count());
+        Assert.AreEqual(new DateOnly(2013, 10, 17), model.AllTransactions.First().Date);
+        Assert.AreEqual(
+            DateOnly.FromDateTime(DateTime.ParseExact("2013-10-18T09:15:20.0069564", "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture)),
+            model.AllTransactions.Skip(1).First().Date);
+        Assert.AreEqual(
+            DateOnly.FromDateTime(DateTime.ParseExact("2013-10-18T00:00:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)),
+            model.AllTransactions.Skip(2).First().Date);
     }
 
     [TestMethod]
