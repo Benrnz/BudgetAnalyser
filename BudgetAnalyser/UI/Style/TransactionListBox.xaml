@@ -215,7 +215,7 @@
                            Margin="5,2,5,2"
                            Text="Account" />
                 <DatePicker Grid.Row="1"
-                            SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource Converter.DateOnly}}"
                             TabIndex="2"
                             VerticalAlignment="Top"
                             Width="34" />
