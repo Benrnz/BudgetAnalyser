@@ -84,27 +84,13 @@ internal class BankImportUtilities
         if (DateTimeOffset.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result2))
         {
             var dateOnlyResult = DateOnly.FromDateTime(result2.DateTime);
-            this.logger.LogInfo(_ => $"BankImportUtilities: Successfully parsed string '{stringToParse}' as DateTimeOffset: {result2}. DateOnly = {dateOnlyResult}");;
+            this.logger.LogInfo(_ => $"BankImportUtilities: Successfully parsed string '{stringToParse}' as DateTimeOffset: {result2}. DateOnly = {dateOnlyResult}");
+            ;
             return dateOnlyResult;
         }
 
-        // 2013-10-17T09:15:20.0069564+12:00
-        var datePieces = stringToParse.Split('-');
-        if (datePieces.Length != 3)
-        {
-            this.logger.LogError(_ => $"BankImportUtilities: Unable to parse date: {stringToParse}");
-            throw new InvalidDataException($"Expected date, but provided data is invalid. {stringToParse}");
-        }
-
-        if (int.TryParse(datePieces[0], out var year)
-            && int.TryParse(datePieces[1], out var month)
-            && int.TryParse(datePieces[2].Substring(0, 2), out var day))
-        {
-            return new DateOnly(year, month, day);
-        }
-
         this.logger.LogError(_ => $"BankImportUtilities: Unable to parse date as pieces: {stringToParse}");
-        throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
+        throw new InvalidDataException($"Expected a date, but file data is invalid: {stringToParse}");
     }
 
     internal DateTime FetchDateTime(string[] array, int index)
