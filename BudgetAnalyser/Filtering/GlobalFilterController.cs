@@ -149,7 +149,8 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             return;
         }
 
-        Criteria = new GlobalFilterCriteria {
+        Criteria = new GlobalFilterCriteria
+        {
             BeginDate = filterState.BeginDate is null ? null : DateOnly.FromDateTime(filterState.BeginDate.Value),
             EndDate = filterState.EndDate is null ? null : DateOnly.FromDateTime(filterState.EndDate.Value)
         };
