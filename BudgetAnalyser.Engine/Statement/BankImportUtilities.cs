@@ -80,11 +80,18 @@ internal class BankImportUtilities
 
         this.logger.LogWarning(_ => $"BankImportUtilities: Unable to parse date: {stringToParse}. Attempting to read as a DateTime instead. Will throw if invalid.");
 
-        if (DateTime.TryParse(stringToParse, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result1))
+        if (DateTimeOffset.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result2))
         {
-            this.logger.LogInfo(_ => $"BankImportUtilities: Successfully parsed string '{stringToParse}' as DateTime: {result1}");;
-            return DateOnly.FromDateTime(result1);
+            var dateOnlyResult = DateOnly.FromDateTime(result2.DateTime);
+            this.logger.LogInfo(_ => $"BankImportUtilities: Successfully parsed string '{stringToParse}' as DateTimeOffset: {result2}. DateOnly = {dateOnlyResult}");;
+            return dateOnlyResult;
         }
+
+        // if (DateTime.TryParse(stringToParse, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result1))
+        // {
+        //     this.logger.LogInfo(_ => $"BankImportUtilities: Successfully parsed string '{stringToParse}' as DateTime: {result1}");;
+        //     return DateOnly.FromDateTime(result1);
+        // }
 
         throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
     }
