@@ -80,7 +80,7 @@ internal class BankImportUtilities
 
         this.logger.LogWarning(_ => $"BankImportUtilities: Unable to parse date: {stringToParse}. Attempting to read as a DateTime instead. Will throw if invalid.");
 
-        if (DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.AssumeLocal, out var result1))
+        if (DateTime.TryParse(stringToParse, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result1))
         {
             return DateOnly.FromDateTime(result1);
         }
