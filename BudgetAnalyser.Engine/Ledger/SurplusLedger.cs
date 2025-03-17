@@ -19,7 +19,7 @@ public class SurplusLedger : LedgerBucket
     /// <summary>
     ///     Allows ledger bucket specific behaviour during reconciliation.
     /// </summary>
-    public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+    public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateOnly reconciliationDate, decimal openingBalance)
     {
         return false;
     }

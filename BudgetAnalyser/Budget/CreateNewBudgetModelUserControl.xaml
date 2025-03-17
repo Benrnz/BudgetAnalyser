@@ -1,8 +1,9 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Budget.CreateNewBudgetModelUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="{StaticResource Brush.DialogBackground}">
-    <!-- DataContext: NewBudgetModelController -->
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModel="clr-namespace:BudgetAnalyser.Budget"
+             mc:Ignorable="d"
+             Background="{StaticResource Brush.DialogBackground}" d:DataContext="{d:DesignInstance viewModel:NewBudgetModelController}">
 
     <Grid FocusManager.FocusedElement="{Binding ElementName=CodeTextBox}">
         <Grid.ColumnDefinitions>
@@ -18,7 +19,7 @@
                     Margin="5">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Effective From Date (inclusive):" />
-            <DatePicker SelectedDate="{Binding EffectiveFrom}" />
+            <DatePicker SelectedDate="{Binding EffectiveFrom, Converter={StaticResource Converter.DateOnly}}" />
         </StackPanel>
         <StackPanel Grid.Column="0"
                     Grid.Row="1"

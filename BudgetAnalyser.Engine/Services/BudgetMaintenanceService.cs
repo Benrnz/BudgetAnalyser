@@ -54,7 +54,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
     public BudgetCollection? Budgets { get; private set; }
 
     /// <inheritdoc />
-    public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom, BudgetCycle budgetCycle)
+    public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateOnly newBudgetEffectiveFrom, BudgetCycle budgetCycle)
     {
         if (sourceBudget is null)
         {
@@ -66,7 +66,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
             throw new ArgumentException("The effective date of the new budget must be later than the other budget.", nameof(newBudgetEffectiveFrom));
         }
 
-        if (newBudgetEffectiveFrom <= DateTime.Today)
+        if (newBudgetEffectiveFrom <= DateOnlyExt.Today())
         {
             throw new ArgumentException("The effective date of the new budget must be a future date.", nameof(newBudgetEffectiveFrom));
         }

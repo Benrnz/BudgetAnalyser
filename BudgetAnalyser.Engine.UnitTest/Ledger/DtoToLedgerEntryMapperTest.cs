@@ -87,6 +87,6 @@ public class DtoToLedgerEntryMapperTest
         Result = subject.ToModel(TestData);
 
         var book = LedgerBookTestData.TestData2();
-        Control = book.Reconciliations.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+        Control = book.Reconciliations.First(l => l.Date == new DateOnly(2013, 08, 15)).Entries.First(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
     }
 }

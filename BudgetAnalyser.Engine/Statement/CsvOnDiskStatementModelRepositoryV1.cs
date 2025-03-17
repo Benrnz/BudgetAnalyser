@@ -209,7 +209,7 @@ internal class CsvOnDiskStatementModelRepositoryV1(
         {
             Checksum = this.importUtilities.FetchLong(headerSplit, 3),
             StorageKey = fileName,
-            LastImport = this.importUtilities.FetchDate(headerSplit, 4),
+            LastImport = this.importUtilities.FetchDateTime(headerSplit, 4),
             Transactions = transactions,
             VersionHash = this.importUtilities.FetchString(headerSplit, 1)
         };
@@ -254,7 +254,7 @@ internal class CsvOnDiskStatementModelRepositoryV1(
                 throw new DataFormatException("The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
             }
 
-            if (transaction.Date == DateTime.MinValue || transaction.Id == Guid.Empty)
+            if (transaction.Date == DateOnly.MinValue || transaction.Id == Guid.Empty)
             {
                 // Do not check for Amount == 0 here, sometimes memo transactions can appear with 0.00 or null amounts; which are valid.
                 throw new DataFormatException(

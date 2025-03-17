@@ -17,7 +17,7 @@ public class MapperBankBalanceAdjustmentToDto_ToDto_Test
     public MapperBankBalanceAdjustmentToDto_ToDto_Test()
     {
         var account = new ChequeAccount(AccountName);
-        this.testData = new BankBalanceAdjustmentTransaction(TransactionId) { Amount = 123.99M, Narrative = "Foo bar.", BankAccount = account, Date = new DateTime(2025, 1, 11) };
+        this.testData = new BankBalanceAdjustmentTransaction(TransactionId) { Amount = 123.99M, Narrative = "Foo bar.", BankAccount = account, Date = new DateOnly(2025, 1, 11) };
         var accountRepo = Substitute.For<IAccountTypeRepository>();
         accountRepo.GetByKey(AccountName).Returns(account);
         this.subject = new MapperBankBalanceAdjustmentToDto2(accountRepo);

@@ -89,7 +89,7 @@ internal class WidgetService : IWidgetService
     }
 
     /// <inheritdoc />
-    public Widget? CreateNewSurprisePaymentWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
+    public Widget? CreateNewSurprisePaymentWidget(string bucketCode, DateOnly paymentDate, WeeklyOrFortnightly frequency)
     {
         var widget = CreateUserDefinedWidget(typeof(SurprisePaymentWidget).FullName!, bucketCode);
         if (widget is null)

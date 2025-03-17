@@ -13,7 +13,7 @@ public class ReportTransaction
     /// <summary>
     ///     Gets or sets the transaction date.
     /// </summary>
-    public DateTime Date { get; set; }
+    public DateOnly Date { get; set; }
 
     /// <summary>
     ///     Gets or sets the ledger bucket code.

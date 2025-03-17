@@ -249,7 +249,7 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
     public async Task LoadAndSave_ShouldProduceSameJson()
     {
         var subject = CreateSubject(true);
-        var collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileName, false);
+        await subject.LoadAsync(TestDataConstants.DemoBudgetFileName, false);
 
         await subject.SaveAsync(TestDataConstants.DemoBudgetFileName, false);
         var serialisedData = JsonHelper.MinifyJson(subject.SerialisedData);

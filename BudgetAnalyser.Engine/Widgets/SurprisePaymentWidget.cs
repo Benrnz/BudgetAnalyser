@@ -60,7 +60,13 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     /// <summary>
     ///     Gets or sets the start payment date.
     /// </summary>
-    public DateTime StartPaymentDate { get; set; }
+    public DateOnly StartPaymentDate { get; set; }
+
+    /// <summary>
+    ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
+    ///     the user interface.
+    /// </summary>
+    public Type WidgetType => GetType();
 
     /// <summary>
     ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
@@ -74,12 +80,6 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
             OnPropertyChanged();
         }
     }
-
-    /// <summary>
-    ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
-    ///     the user interface.
-    /// </summary>
-    public Type WidgetType => GetType();
 
     /// <summary>
     ///     Updates the widget with new input.
@@ -104,9 +104,9 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         if (this.filter is null
             || this.filter.Cleared
             || this.filter.BeginDate is null
-            || this.filter.BeginDate == DateTime.MinValue
+            || this.filter.BeginDate == DateOnly.MinValue
             || this.filter.EndDate is null
-            || this.filter.EndDate.Value == DateTime.MinValue
+            || this.filter.EndDate.Value == DateOnly.MinValue
             || this.bucketRepository is null)
         {
             Enabled = false;
@@ -233,7 +233,7 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         return proposedDate;
     }
 
-    private PaymentDate CalculateStartDate(DateTime startPaymentDate, DateTime filterBeginDate)
+    private PaymentDate CalculateStartDate(DateOnly startPaymentDate, DateOnly filterBeginDate)
     {
         var proposed = new PaymentDate(startPaymentDate);
         while (proposed.Date < filterBeginDate)
@@ -248,8 +248,8 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     private class NextOccurance
     {
         public List<int> Dates { get; } = new();
-        public DateTime EndDate { get; init; }
-        public DateTime StartDate { get; init; }
+        public DateOnly EndDate { get; init; }
+        public DateOnly StartDate { get; init; }
 
         public string ConcatDates()
         {
@@ -281,9 +281,9 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
         }
     }
 
-    private record PaymentDate(DateTime Date)
+    private record PaymentDate(DateOnly Date)
     {
-        public DateTime Date { get; set; } = Date;
-        public DateTime ScheduledDate { get; } = Date;
+        public DateOnly Date { get; set; } = Date;
+        public DateOnly ScheduledDate { get; } = Date;
     }
 }

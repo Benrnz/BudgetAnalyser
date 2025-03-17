@@ -21,7 +21,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private bool doNotUseAddBalanceVisibility;
     private IEnumerable<Account> doNotUseBankAccounts;
     private decimal doNotUseBankBalance;
-    private DateTime doNotUseDate;
+    private DateOnly doNotUseDate;
     private bool doNotUseEditable;
     private Account doNotUseSelectedBankAccount;
     private Engine.Ledger.LedgerBook parentBook;
@@ -49,8 +49,6 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     // TODO Change this event to a message:
     public event EventHandler<EditBankBalancesEventArgs> Complete;
 
-    public string ActionButtonToolTip => "Add new ledger entry line.";
-
     public bool AddBalanceVisibility
     {
         get => this.doNotUseAddBalanceVisibility;
@@ -75,7 +73,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         get => this.doNotUseBankAccounts;
         private set
         {
-            if (object.ReferenceEquals(value, this.doNotUseBankAccounts))
+            if (ReferenceEquals(value, this.doNotUseBankAccounts))
             {
                 return;
             }
@@ -106,15 +104,9 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public decimal BankBalanceTotal => BankBalances.Sum(b => b.Balance);
     public bool Canceled { get; private set; }
-    public bool CanExecuteCancelButton => true;
-
-    public bool CanExecuteOkButton => CreateMode ? Date != DateTime.MinValue && HasRequiredBalances : Editable && Date != DateTime.MinValue && HasRequiredBalances;
-
-    public bool CanExecuteSaveButton => false;
-    public string CloseButtonToolTip => "Cancel";
     public bool CreateMode { get; private set; }
 
-    public DateTime Date
+    public DateOnly Date
     {
         get => this.doNotUseDate;
         set
@@ -165,6 +157,15 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         }
     }
 
+    public bool CanExecuteCancelButton => true;
+
+    public bool CanExecuteOkButton => CreateMode ? Date != DateOnly.MinValue && HasRequiredBalances : Editable && Date != DateOnly.MinValue && HasRequiredBalances;
+
+    public bool CanExecuteSaveButton => false;
+
+    public string ActionButtonToolTip => "Add new ledger entry line.";
+    public string CloseButtonToolTip => "Cancel";
+
     /// <summary>
     ///     Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine" /> to
     ///     the <see cref="LedgerBook" />.
@@ -179,7 +180,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
         var requestFilterMessage = new RequestFilterMessage(this);
         Messenger.Send(requestFilterMessage);
-        Date = requestFilterMessage.Criteria.EndDate?.AddDays(1) ?? DateTime.Today;
+        Date = requestFilterMessage.Criteria.EndDate?.AddDays(1) ?? DateOnlyExt.Today();
 
         ShowDialogCommon("Closing Period Reconciliation");
     }
@@ -269,7 +270,8 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
         if (message.Response == ShellDialogButton.Help)
         {
-            this.messageBox.Show("Use your actual pay day as the date, this signifies the closing of the previous period, and opening a new period on your pay day showing available funds in each ledger for the new month/fortnight. The date used will also select transactions from the statement to calculate the ledger balance. The date is set from the current date range filter (on the dashboard page), using the day after the end date. Statement Transactions will be selected by searching one month/fortnight prior to the given date, excluding this given date. The transactions are used to show how the current ledger balance is calculated. The bank balance is the balance as at the date given, after your pay has been credited.");
+            this.messageBox.Show(
+                "Use your actual pay day as the date, this signifies the closing of the previous period, and opening a new period on your pay day showing available funds in each ledger for the new month/fortnight. The date used will also select transactions from the statement to calculate the ledger balance. The date is set from the current date range filter (on the dashboard page), using the day after the end date. Statement Transactions will be selected by searching one month/fortnight prior to the given date, excluding this given date. The transactions are used to show how the current ledger balance is calculated. The bank balance is the balance as at the date given, after your pay has been credited.");
             return;
         }
 
@@ -307,7 +309,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private void Reset()
     {
         this.parentBook = null;
-        Date = DateTime.MinValue;
+        Date = DateOnly.MinValue;
         BankBalances = null;
         BankAccounts = null;
         SelectedBankAccount = null;
@@ -330,9 +332,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         this.dialogCorrelationId = Guid.NewGuid();
         var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
         {
-            CorrelationId = this.dialogCorrelationId,
-            Title = title,
-            HelpAvailable = CreateMode
+            CorrelationId = this.dialogCorrelationId, Title = title, HelpAvailable = CreateMode
         };
 
         Messenger.Send(dialogRequest);

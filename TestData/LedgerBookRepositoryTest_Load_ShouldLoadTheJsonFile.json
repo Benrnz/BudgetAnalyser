@@ -15,7 +15,7 @@
         }
     ],
     "MobileSettings": null,
-    "Modified": "2013-12-16T00:00:00",
+    "Modified": "2013-12-16T00:00:00Z",
     "Name": "Test Data 2 Book",
     "Reconciliations": [
         {
@@ -25,7 +25,7 @@
                     "Account": "CHEQUE",
                     "Amount": -550,
                     "AutoMatchingReference": null,
-                    "Date": "2013-08-15T00:00:00",
+                    "Date": "2013-08-15",
                     "Id": "63f3a7f8-48b4-4690-ab5c-e7ef66ed2b13",
                     "Narrative": "Credit card payment yet to go out.",
                     "TransactionType": "BudgetAnalyser.Engine.Ledger.BankBalanceAdjustmentTransaction"
@@ -37,7 +37,7 @@
                     "Balance": 2950
                 }
             ],
-            "Date": "2013-08-15T00:00:00",
+            "Date": "2013-08-15",
             "Entries": [
                 {
                     "Balance": 120,
@@ -117,7 +117,7 @@
                     "Balance": 3700
                 }
             ],
-            "Date": "2013-07-15T00:00:00",
+            "Date": "2013-07-15",
             "Entries": [
                 {
                     "Balance": 65,
@@ -197,7 +197,7 @@
                     "Balance": 2500
                 }
             ],
-            "Date": "2013-06-15T00:00:00",
+            "Date": "2013-06-15",
             "Entries": [
                 {
                     "Balance": 10,

@@ -24,4 +24,5 @@
     <converters:ImagePathConverter x:Key="Converter.ImagePath" />
     <converters:NumberSignToBrushConverter x:Key="Converter.NumberToBrush" />
     <converters:NumberToBoldConverter x:Key="Converter.NumberToBold" />
+    <converters:DateOnlyToDateTimeConverter x:Key="Converter.DateOnly" />
 </ResourceDictionary>

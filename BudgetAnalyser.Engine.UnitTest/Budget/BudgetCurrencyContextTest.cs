@@ -22,7 +22,7 @@ public class BudgetCurrencyContextTest
         var subject = CreateSubject1();
 
         Assert.IsTrue(subject.BudgetArchived);
-        Assert.AreEqual(new DateTime(2014, 01, 20), subject.EffectiveUntil);
+        Assert.AreEqual(new DateOnly(2014, 01, 20), subject.EffectiveUntil);
     }
 
     [TestMethod]
@@ -70,7 +70,7 @@ public class BudgetCurrencyContextTest
     [TestMethod]
     public void ShouldIndicateFutureBudgetWhenOneIsGiven()
     {
-        var budget3 = new BudgetModel { EffectiveFrom = new DateTime(DateTime.Today.AddMonths(1).Year, DateTime.Today.AddMonths(1).Month, 28) };
+        var budget3 = new BudgetModel { EffectiveFrom = new DateOnly(DateTime.Today.AddMonths(1).Year, DateTime.Today.AddMonths(1).Month, 28) };
         var subject = new BudgetCurrencyContext(
             new BudgetCollection(BudgetModelTestData.CreateTestData1(), BudgetModelTestData.CreateTestData2(), budget3),
             budget3

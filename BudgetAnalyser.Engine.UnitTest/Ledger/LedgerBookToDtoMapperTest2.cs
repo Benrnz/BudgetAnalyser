@@ -41,7 +41,7 @@ public class LedgerBookToDtoMapperTest2
     {
         var accountRepo = new InMemoryAccountTypeRepository();
         var bucketRepo = new BucketBucketRepoAlwaysFind();
-        var subject = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
+        var subject = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new DebugLogger());
         Result = subject.ToDto(TestData);
     }
 }

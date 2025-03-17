@@ -92,7 +92,7 @@ public class TransactionManagerServiceTest
     {
         var model2 = new StatementModelBuilder()
             .AppendTransaction(
-                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = null, Date = new DateTime(2013, 9, 10) })
+                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = null, Date = new DateOnly(2013, 9, 10) })
             .Merge(this.testData)
             .Build();
         this.testData = model2;
@@ -100,7 +100,7 @@ public class TransactionManagerServiceTest
 
         var result = this.subject.FilterByBucket(TransactionConstants.UncategorisedFilter);
 
-        this.testData.Output(DateTime.MinValue);
+        this.testData.Output(DateOnly.MinValue);
         Assert.AreEqual(1, result.Count());
     }
 
@@ -109,9 +109,9 @@ public class TransactionManagerServiceTest
     {
         var model2 = new StatementModelBuilder()
             .AppendTransaction(
-                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = StatementModelTestData.SurplusBucket, Date = new DateTime(2013, 9, 10) })
+                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = StatementModelTestData.SurplusBucket, Date = new DateOnly(2013, 9, 10) })
             .AppendTransaction(
-                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -1000M, BudgetBucket = new FixedBudgetProjectBucket("FOO", "Bar", 2000M), Date = new DateTime(2013, 9, 9) })
+                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -1000M, BudgetBucket = new FixedBudgetProjectBucket("FOO", "Bar", 2000M), Date = new DateOnly(2013, 9, 9) })
             .Merge(this.testData)
             .Build();
         this.testData = model2;
@@ -120,7 +120,7 @@ public class TransactionManagerServiceTest
 
         var result = this.subject.FilterByBucket(SurplusBucket.SurplusCode);
 
-        this.testData.Output(DateTime.MinValue);
+        this.testData.Output(DateOnly.MinValue);
         Assert.AreEqual(2, result.Count());
     }
 
@@ -162,7 +162,7 @@ public class TransactionManagerServiceTest
     {
         this.testData = new StatementModelTestHarness();
         this.testData.LoadTransactions(new List<Transaction>());
-        var criteria = new GlobalFilterCriteria { BeginDate = new DateTime(2014, 07, 01), EndDate = new DateTime(2014, 08, 01) };
+        var criteria = new GlobalFilterCriteria { BeginDate = new DateOnly(2014, 07, 01), EndDate = new DateOnly(2014, 08, 01) };
 
         Arrange();
 

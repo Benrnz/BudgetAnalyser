@@ -19,7 +19,7 @@
         }
     ],
     "MobileSettings": null,
-    "Modified": "2013-12-29T15:31:03.5480436+13:00",
+    "Modified": "2013-12-29T15:31:03.5480436Z",
     "Name": "Demo LedgerBook",
     "Reconciliations": [
         {
@@ -45,7 +45,7 @@
                 }
             ],
             "BankBalances": [],
-            "Date": "2013-10-20T00:00:00",
+            "Date": "2013-10-20",
             "Entries": [
                 {
                     "Balance": 37.00,
@@ -182,7 +182,7 @@
                 }
             ],
             "BankBalances": [],
-            "Date": "2013-09-20T00:00:00",
+            "Date": "2013-09-20",
             "Entries": [
                 {
                     "Balance": 37.00,

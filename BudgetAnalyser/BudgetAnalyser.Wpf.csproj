@@ -1,64 +1,64 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <RootNamespace>BudgetAnalyser</RootNamespace>
-    <AssemblyVersion>4.0.0</AssemblyVersion>
-    <FileVersion>4.0.0</FileVersion>
-    <StartupObject>BudgetAnalyser.App</StartupObject>
-    <AssemblyName>BudgetAnalyser</AssemblyName>
-    <ApplicationIcon>PieChart.ico</ApplicationIcon>
-    <LangVersion>default</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>BudgetAnalyser</RootNamespace>
+        <AssemblyVersion>4.0.0</AssemblyVersion>
+        <FileVersion>4.0.0</FileVersion>
+        <StartupObject>BudgetAnalyser.App</StartupObject>
+        <AssemblyName>BudgetAnalyser</AssemblyName>
+        <ApplicationIcon>PieChart.ico</ApplicationIcon>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="PieChart.ico" />
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="PieChart.ico"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Autofac" Version="8.2.0" />
-    <PackageReference Include="Autofac.Extras.AttributeMetadata" Version="6.0.0" />
-    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Metrics" Version="3.3.4" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="8.2.0"/>
+        <PackageReference Include="Autofac.Extras.AttributeMetadata" Version="6.0.0"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Metrics" Version="3.3.4"/>
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj" />
-    <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj" />
-    <ProjectReference Include="..\Rees.Wpf\Rees.Wpf.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj"/>
+        <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj"/>
+        <ProjectReference Include="..\Rees.Wpf\Rees.Wpf.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="UI\Assets\AmexLogo.png" />
-    <Resource Include="UI\Assets\ChequeLogo.png" />
-    <Resource Include="UI\Assets\ChequeLogo1.png" />
-    <Resource Include="UI\Assets\MastercardLogo.png" />
-    <Resource Include="UI\Assets\Misc1Logo.png" />
-    <Resource Include="UI\Assets\PieChart.ico" />
-    <Resource Include="UI\Assets\PieChart.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="UI\Assets\SavingsLogo.png" />
-    <Resource Include="UI\Assets\VisaLogo.png" />
-    <Resource Include="UI\Assets\warning.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="UI\Assets\AmexLogo.png"/>
+        <Resource Include="UI\Assets\ChequeLogo.png"/>
+        <Resource Include="UI\Assets\ChequeLogo1.png"/>
+        <Resource Include="UI\Assets\MastercardLogo.png"/>
+        <Resource Include="UI\Assets\Misc1Logo.png"/>
+        <Resource Include="UI\Assets\PieChart.ico"/>
+        <Resource Include="UI\Assets\PieChart.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="UI\Assets\SavingsLogo.png"/>
+        <Resource Include="UI\Assets\VisaLogo.png"/>
+        <Resource Include="UI\Assets\warning.png"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="JetBrains.Annotations" />
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="JetBrains.Annotations"/>
+    </ItemGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="BudgetAnalyser.Wpf.UnitTest"/> <!-- Same as [assembly: InternalsVisibleTo("CustomTest1")] -->

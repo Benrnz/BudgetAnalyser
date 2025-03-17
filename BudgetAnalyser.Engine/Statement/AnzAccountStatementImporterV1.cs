@@ -196,7 +196,7 @@ internal class AnzAccountStatementImporterV1 : IBankStatementImporter
         }
 
         var date = this.importUtilities.FetchDate(split, DateIndex);
-        if (date == DateTime.MinValue)
+        if (date == DateOnly.MinValue)
         {
             return false;
         }

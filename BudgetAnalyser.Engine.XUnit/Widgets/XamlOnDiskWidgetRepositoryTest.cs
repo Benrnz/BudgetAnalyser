@@ -65,6 +65,7 @@ public class XamlOnDiskWidgetRepositoryTest
         var results = await subject.LoadAsync(TestDataConstants.TestDataWidgetsFileName, false);
 
         results.Any().ShouldBeTrue();
+        results.OfType<SurprisePaymentWidget>().First().StartPaymentDate.ShouldBe(new DateOnly(2013, 7, 1));
     }
 
     [Fact]

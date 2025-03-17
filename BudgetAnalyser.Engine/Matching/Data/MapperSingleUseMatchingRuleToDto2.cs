@@ -14,7 +14,7 @@ public class MapperSingleUseMatchingRuleToDto2(IBudgetBucketRepository bucketRep
             BucketCode = model.BucketCode,
             RuleId = model.RuleId,
             Description = model.Description,
-            LastMatch = model.LastMatch,
+            LastMatch = model.LastMatch?.ToUniversalTime(),
             MatchCount = model.MatchCount,
             Reference1 = model.Reference1,
             Reference2 = model.Reference2,
@@ -22,7 +22,7 @@ public class MapperSingleUseMatchingRuleToDto2(IBudgetBucketRepository bucketRep
             TransactionType = model.TransactionType,
             Amount = model.Amount,
             And = model.And,
-            Created = model.Created
+            Created = model.Created.ToUniversalTime()
         };
 
         return dto;
@@ -35,9 +35,9 @@ public class MapperSingleUseMatchingRuleToDto2(IBudgetBucketRepository bucketRep
             Amount = dto.Amount,
             And = dto.And,
             BucketCode = dto.BucketCode,
-            Created = dto.Created ?? DateTime.Now,
+            Created = dto.Created?.ToLocalTime() ?? DateTime.Now,
             Description = dto.Description,
-            LastMatch = dto.LastMatch,
+            LastMatch = dto.LastMatch?.ToLocalTime(),
             MatchCount = dto.MatchCount,
             Reference1 = dto.Reference1,
             Reference2 = dto.Reference2,

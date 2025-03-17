@@ -17,7 +17,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     TransactionType = "Direct Credit,Yee,Har,Boi,Crazy-commas,",
                     Description = "Smith A B & J S",
                     Amount = 3474.02M,
-                    Date = new DateTime(2012, 08, 15),
+                    Date = new DateOnly(2012, 08, 15),
                     BudgetBucketCode = TestDataConstants.PayCreditCardBucketCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("7f78bd65-017e-4337-9459-7e5dfa447d66")
@@ -30,7 +30,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "",
                     Reference3 = "Ipayroll",
                     Amount = 3000M,
-                    Date = new DateTime(2012, 08, 15),
+                    Date = new DateOnly(2012, 08, 15),
                     BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("4e6bad3b-89c7-458c-a993-38859da68b54")
@@ -43,7 +43,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "Acme Inc",
                     Reference3 = "Acme Inc",
                     Amount = 144M,
-                    Date = new DateTime(2012, 08, 15),
+                    Date = new DateOnly(2012, 08, 15),
                     BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("55f94f77-601b-4808-ab38-b71cd5f4d6f7")
@@ -56,7 +56,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "Acme Inc",
                     Reference3 = "Acme Inc",
                     Amount = 3000,
-                    Date = new DateTime(2012, 08, 15),
+                    Date = new DateOnly(2012, 08, 15),
                     BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("1c4d9d4c-46de-4c39-a2f4-293beb646cc8")
@@ -69,7 +69,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "",
                     Reference3 = "",
                     Amount = -550M,
-                    Date = new DateTime(2012, 08, 16),
+                    Date = new DateOnly(2012, 08, 16),
                     BudgetBucketCode = SurplusBucket.SurplusCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("780f11dd-5ce4-4562-837c-f6043bdca27f")
@@ -82,7 +82,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "4367-****-****-3239",
                     Reference3 = "",
                     Amount = -27.50M,
-                    Date = new DateTime(2012, 08, 17),
+                    Date = new DateOnly(2012, 08, 17),
                     BudgetBucketCode = SurplusBucket.SurplusCode,
                     Account = TestDataConstants.VisaAccountName,
                     Id = new Guid("136e9010-9d07-4ddb-b7a3-abd209a23f44")
@@ -218,7 +218,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     TransactionType = "Direct Credit",
                     Description = "Smith A B & J S",
                     Amount = 3474.02M,
-                    Date = new DateTime(2012, 08, 15),
+                    Date = new DateOnly(2012, 08, 15),
                     BudgetBucketCode = TestDataConstants.PayCreditCardBucketCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("7f78bd65-017e-4337-9459-7e5dfa447d66")
@@ -231,7 +231,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "",
                     Reference3 = "Ipayroll",
                     Amount = 3000M,
-                    Date = new DateTime(2012, 08, 15),
+                    Date = new DateOnly(2012, 08, 15),
                     BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("4e6bad3b-89c7-458c-a993-38859da68b54")
@@ -244,7 +244,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "Acme Inc",
                     Reference3 = "Acme Inc",
                     Amount = 144M,
-                    Date = new DateTime(2012, 08, 15),
+                    Date = new DateOnly(2012, 08, 15),
                     BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("55f94f77-601b-4808-ab38-b71cd5f4d6f7")
@@ -257,7 +257,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "Acme Inc",
                     Reference3 = "Acme Inc",
                     Amount = 3000,
-                    Date = new DateTime(2012, 08, 15),
+                    Date = new DateOnly(2012, 08, 15),
                     BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("1c4d9d4c-46de-4c39-a2f4-293beb646cc8")
@@ -270,7 +270,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "",
                     Reference3 = "",
                     Amount = -550M,
-                    Date = new DateTime(2012, 08, 16),
+                    Date = new DateOnly(2012, 08, 16),
                     BudgetBucketCode = SurplusBucket.SurplusCode,
                     Account = TestDataConstants.ChequeAccountName,
                     Id = new Guid("780f11dd-5ce4-4562-837c-f6043bdca27f")
@@ -283,7 +283,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Reference2 = "4367-****-****-3239",
                     Reference3 = "",
                     Amount = -27.50M,
-                    Date = new DateTime(2012, 08, 17),
+                    Date = new DateOnly(2012, 08, 17),
                     BudgetBucketCode = SurplusBucket.SurplusCode,
                     Account = TestDataConstants.VisaAccountName,
                     Id = new Guid("136e9010-9d07-4ddb-b7a3-abd209a23f44")

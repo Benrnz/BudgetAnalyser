@@ -34,7 +34,7 @@ public class DtoToStatementModelMapperTest
     public void ShouldMapAllTransactionsAndHaveSameSum()
     {
         Assert.AreEqual(TestData.Transactions.Sum(t => t.Amount), Result.AllTransactions.Sum(t => t.Amount));
-        Assert.AreEqual(TestData.Transactions.Sum(t => t.Date.Ticks), Result.AllTransactions.Sum(t => t.Date.Ticks));
+        Assert.AreEqual(TestData.Transactions.Sum(t => t.Date.DayNumber), Result.AllTransactions.Sum(t => t.Date.DayNumber));
     }
 
     [TestMethod]
@@ -99,7 +99,7 @@ public class DtoToStatementModelMapperTest
     [TestMethod]
     public void ShouldMapLastImport()
     {
-        Assert.AreEqual(TestData.LastImport, Result.LastImport);
+        Assert.AreEqual(TestData.LastImport, Result.LastImport.ToUniversalTime());
     }
 
     [TestInitialize]
@@ -116,7 +116,7 @@ public class DtoToStatementModelMapperTest
     [TestMethod]
     public void TransactionsShouldBeInAscendingOrder()
     {
-        var previous = DateTime.MinValue;
+        var previous = DateOnly.MinValue;
         foreach (var txn in Result.AllTransactions)
         {
             if (txn.Date < previous)

@@ -20,7 +20,7 @@ public class MapperWidgetToDto(IStandardWidgetCatalog widgetCatalog) : IDtoMappe
                     WidgetType = s.GetType().FullName!,
                     Frequency = s.Frequency,
                     BucketCode = s.BucketCode,
-                    PaymentStartDate = DateOnly.FromDateTime(s.StartPaymentDate)
+                    PaymentStartDate = s.StartPaymentDate
                 };
 
             case BudgetBucketMonitorWidget b:
@@ -58,7 +58,7 @@ public class MapperWidgetToDto(IStandardWidgetCatalog widgetCatalog) : IDtoMappe
         }
         else if (dto is SurprisePaymentWidgetDto s)
         {
-            widget = new SurprisePaymentWidget { Frequency = s.Frequency, Id = s.BucketCode, StartPaymentDate = s.PaymentStartDate.ToDateTime(TimeOnly.MinValue) };
+            widget = new SurprisePaymentWidget { Frequency = s.Frequency, Id = s.BucketCode, StartPaymentDate = s.PaymentStartDate };
         }
         else
         {

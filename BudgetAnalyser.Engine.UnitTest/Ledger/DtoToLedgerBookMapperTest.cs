@@ -19,7 +19,7 @@ public class DtoToLedgerBookMapperTest
         {
             Account = TestDataConstants.ChequeAccountName,
             Amount = -12.45M,
-            Date = new DateTime(2013, 02, 02),
+            Date = new DateOnly(2013, 02, 02),
             Id = Guid.NewGuid(),
             Narrative = "Foo",
             TransactionType = "Foobar"
@@ -37,7 +37,7 @@ public class DtoToLedgerBookMapperTest
         {
             Account = TestDataConstants.ChequeAccountName,
             Amount = -12.45M,
-            Date = new DateTime(2013, 02, 02),
+            Date = new DateOnly(2013, 02, 02),
             Id = Guid.NewGuid(),
             Narrative = "Foo",
             TransactionType = null
@@ -148,7 +148,7 @@ public class DtoToLedgerBookMapperTest
         var result = ArrangeAndAct();
         var subject = result.Reconciliations.First().Date;
         Assert.AreEqual(TestData.Reconciliations.First().Date, subject);
-        Assert.AreNotEqual(DateTime.MinValue, subject);
+        Assert.AreNotEqual(DateOnly.MinValue, subject);
     }
 
     [TestMethod]
@@ -242,7 +242,7 @@ public class DtoToLedgerBookMapperTest
     {
         var bucketRepo = new BucketBucketRepoAlwaysFind();
         var accountRepo = new InMemoryAccountTypeRepository();
-        var mapper = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
+        var mapper = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new DebugLogger());
         return mapper.ToModel(TestData);
     }
 }

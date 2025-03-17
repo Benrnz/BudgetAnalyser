@@ -22,8 +22,8 @@ namespace BudgetAnalyser.Filtering;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 {
-    private BudgetModel currentBudget;
     private readonly IUserMessageBox userMessageBox;
+    private BudgetModel currentBudget;
     private Guid dialogCorrelationId;
     private string doNotUseAccountTypeSummary;
     private GlobalFilterCriteria doNotUseCriteria;
@@ -63,18 +63,14 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         }
     }
 
-    public string ActionButtonToolTip => "Apply filter and close.";
+    [UsedImplicitly]
+    public ICommand AddPeriodCommand => new RelayCommand<DateOnly>(OnAddPeriodCommandExecute, d => d != DateOnly.MinValue);
 
     [UsedImplicitly]
-    public ICommand AddPeriodCommand => new RelayCommand<DateTime>(OnAddPeriodCommandExecute, d => d != DateTime.MinValue);
-
-    [UsedImplicitly]
-    public ICommand BackPeriodCommand => new RelayCommand<DateTime>(OnBackPeriodCommandExecute, d => d != DateTime.MinValue);
+    public ICommand BackPeriodCommand => new RelayCommand<DateOnly>(OnBackPeriodCommandExecute, d => d != DateOnly.MinValue);
 
     [UsedImplicitly]
     public ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
-
-    public string CloseButtonToolTip => "Cancel and do not change the filter.";
 
     public GlobalFilterCriteria Criteria
     {
@@ -109,18 +105,18 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         }
     }
 
+    public string ActionButtonToolTip => "Apply filter and close.";
+
+    public string CloseButtonToolTip => "Cancel and do not change the filter.";
+
     public void PromptUserForDates()
     {
         this.dialogCorrelationId = Guid.NewGuid();
-        var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
-        {
-            CorrelationId = this.dialogCorrelationId,
-            Title = "Global Date Filter"
-        };
+        var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel) { CorrelationId = this.dialogCorrelationId, Title = "Global Date Filter" };
         Messenger.Send(dialogRequest);
     }
 
-    private void OnAddPeriodCommandExecute(DateTime date)
+    private void OnAddPeriodCommandExecute(DateOnly date)
     {
         if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
         {
@@ -155,8 +151,8 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
         Criteria = new GlobalFilterCriteria
         {
-            BeginDate = filterState.BeginDate,
-            EndDate = filterState.EndDate
+            BeginDate = filterState.BeginDate is null ? null : DateOnly.FromDateTime(filterState.BeginDate.Value),
+            EndDate = filterState.EndDate is null ? null : DateOnly.FromDateTime(filterState.EndDate.Value)
         };
 
         SendFilterAppliedMessage();
@@ -175,14 +171,14 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         var noCriteria = Criteria is null;
         var filterState = new PersistentFiltersApplicationState
         {
-            BeginDate = noCriteria ? null : Criteria.BeginDate,
-            EndDate = noCriteria ? null : Criteria.EndDate
+            BeginDate = noCriteria ? null : Criteria!.BeginDate?.ToDateTime(TimeOnly.MinValue),
+            EndDate = noCriteria ? null : Criteria!.EndDate?.ToDateTime(TimeOnly.MinValue)
         };
 
         message.PersistThisModel(filterState);
     }
 
-    private void OnBackPeriodCommandExecute(DateTime date)
+    private void OnBackPeriodCommandExecute(DateOnly date)
     {
         if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
         {

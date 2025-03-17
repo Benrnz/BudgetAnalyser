@@ -41,7 +41,7 @@ public static class BudgetModelTestData
     /// </summary>
     public static BudgetModel CreateTestData1()
     {
-        var budget = new BudgetModel { EffectiveFrom = new DateTime(2013, 01, 01), Name = TestDataConstants.Budget1Name };
+        var budget = new BudgetModel { EffectiveFrom = new DateOnly(2013, 01, 01), Name = TestDataConstants.Budget1Name };
 
         var expenses = new List<Expense>(
             new[]
@@ -63,7 +63,7 @@ public static class BudgetModelTestData
     /// </summary>
     public static BudgetModel CreateTestData2()
     {
-        var budget = new BudgetModel { EffectiveFrom = new DateTime(2014, 01, 20), Name = TestDataConstants.Budget2Name };
+        var budget = new BudgetModel { EffectiveFrom = new DateOnly(2014, 01, 20), Name = TestDataConstants.Budget2Name };
 
         var expenses = new List<Expense>(
             new[]
@@ -88,7 +88,7 @@ public static class BudgetModelTestData
     /// </summary>
     public static BudgetModel CreateTestData5()
     {
-        var budget = new BudgetModel { EffectiveFrom = new DateTime(2013, 01, 01), Name = TestDataConstants.Budget5Name };
+        var budget = new BudgetModel { EffectiveFrom = new DateOnly(2013, 01, 01), Name = TestDataConstants.Budget5Name };
 
         var expenses = new List<Expense>(
             new[]

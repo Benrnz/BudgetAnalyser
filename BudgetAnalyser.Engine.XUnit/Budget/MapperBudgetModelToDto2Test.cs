@@ -56,7 +56,7 @@ public class MapperBudgetModelToDto2Test
         dto.ShouldBeOfType<BudgetModelDto>();
         dto.Name.ShouldBe(budgetModel.Name);
         dto.BudgetCycle.ShouldBe(budgetModel.BudgetCycle);
-        dto.EffectiveFrom.ShouldBe(budgetModel.EffectiveFrom.ToUniversalTime());
+        dto.EffectiveFrom.ShouldBe(budgetModel.EffectiveFrom);
         dto.LastModified.ShouldBe(budgetModel.LastModified.ToUniversalTime());
         dto.LastModifiedComment.ShouldBe(budgetModel.LastModifiedComment);
         dto.Expenses.Count.ShouldBe(budgetModel.Expenses.Count());
@@ -71,7 +71,7 @@ public class MapperBudgetModelToDto2Test
         {
             Name = "Test Budget",
             BudgetCycle = BudgetCycle.Monthly,
-            EffectiveFrom = DateTime.Now,
+            EffectiveFrom = DateOnlyExt.Today(),
             LastModified = DateTime.Now,
             LastModifiedComment = "Test Comment",
             Expenses = [new ExpenseDto { Amount = 200M, BudgetBucketCode = TestDataConstants.PowerBucketCode }],

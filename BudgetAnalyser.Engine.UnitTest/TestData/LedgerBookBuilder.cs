@@ -14,17 +14,17 @@ public class LedgerBookBuilder
     private readonly List<LedgerEntryLine> reconciliations = new();
     private bool lockWhenFinished = true;
     private IEnumerable<BankBalance> tempBankBalances = Array.Empty<BankBalance>();
-    private DateTime tempReconDate;
+    private DateOnly tempReconDate;
 
     public IEnumerable<LedgerBucket> LedgerBuckets => this.ledgerBuckets;
-    public DateTime Modified { get; set; } = new(2013, 12, 16);
+    public DateTime Modified { get; set; } = new(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc);
 
     public string Name { get; set; } = "Test Data Book - built by LedgerBookBuilder";
 
     public IEnumerable<LedgerEntryLine> Reconciliations => this.reconciliations;
     public string StorageKey { get; set; } = "C:\\Folder\\book1.xml";
 
-    public ReconciliationTestDataBuilder AppendReconciliation(DateTime reconDate, params BankBalance[] bankBalances)
+    public ReconciliationTestDataBuilder AppendReconciliation(DateOnly reconDate, params BankBalance[] bankBalances)
     {
         this.tempBankBalances = bankBalances;
         this.tempReconDate = reconDate;
@@ -74,7 +74,7 @@ public class LedgerBookBuilder
             .IncludeLedger(LedgerBookTestData.PhoneLedger)
             .IncludeLedger(LedgerBookTestData.PowerLedger)
             .AppendReconciliation(
-                new DateTime(2013, 6, 15),
+                new DateOnly(2013, 6, 15),
                 new BankBalance(StatementModelTestData.ChequeAccount, 2500))
             .WithReconciliationEntries(
                 entryBuilder =>
@@ -99,7 +99,7 @@ public class LedgerBookBuilder
                                     .WithCredit(-123.56M, "Power bill"));
                 })
             .AppendReconciliation(
-                new DateTime(2013, 7, 15),
+                new DateOnly(2013, 7, 15),
                 new BankBalance(StatementModelTestData.ChequeAccount, 3700))
             .WithReconciliationEntries(
                 entryBuilder =>
@@ -123,7 +123,7 @@ public class LedgerBookBuilder
                                     .WithCredit(-145.56M, "Power bill"));
                 })
             .AppendReconciliation(
-                new DateTime(2013, 8, 15),
+                new DateOnly(2013, 8, 15),
                 new BankBalance(StatementModelTestData.ChequeAccount, 2950))
             .WithReconciliationEntries(
                 entryBuilder =>
@@ -276,7 +276,7 @@ public class LedgerBookBuilder
 
         public IEnumerable<LedgerTransaction> Transactions => this.transactions;
 
-        public TransactionTestDataBuilder WithBudgetCredit(decimal amount, DateTime? date = null, string automatchingRef = null)
+        public TransactionTestDataBuilder WithBudgetCredit(decimal amount, DateOnly? date = null, string automatchingRef = null)
         {
             var budgetTxn = this.transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
             if (budgetTxn is null)
@@ -289,7 +289,7 @@ public class LedgerBookBuilder
             return this;
         }
 
-        public TransactionTestDataBuilder WithCredit(decimal amount, string narrative, DateTime? date = null, string automatchingRef = null)
+        public TransactionTestDataBuilder WithCredit(decimal amount, string narrative, DateOnly? date = null, string automatchingRef = null)
         {
             this.transactions.Add(new CreditLedgerTransaction { Amount = amount, Narrative = narrative, AutoMatchingReference = automatchingRef ?? string.Empty, Date = date });
             return this;

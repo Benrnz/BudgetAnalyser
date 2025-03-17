@@ -44,7 +44,7 @@ public class LedgerEntryLine
     /// </summary>
     /// <param name="reconciliationDate">The date of the line</param>
     /// <param name="bankBalances">The bank balances for this date.</param>
-    internal LedgerEntryLine(DateTime reconciliationDate, IEnumerable<BankBalance> bankBalances)
+    internal LedgerEntryLine(DateOnly reconciliationDate, IEnumerable<BankBalance> bankBalances)
         : this()
     {
         if (bankBalances is null)
@@ -99,8 +99,7 @@ public class LedgerEntryLine
     ///     transactions
     ///     now falling outside the date range would need to be removed, thus affected balances.
     /// </summary>
-    [UsedImplicitly]
-    public DateTime Date { get; internal set; }
+    public DateOnly Date { get; internal set; }
 
     /// <summary>
     ///     Gets the entries for all the Ledger Buckets.

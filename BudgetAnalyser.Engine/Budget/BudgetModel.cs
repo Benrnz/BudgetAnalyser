@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Budget;
 public class BudgetModel : INotifyPropertyChanged
 {
     private BudgetCycle doNotUseBudgetCycle;
-    private DateTime doNotUseEffectiveFrom;
+    private DateOnly doNotUseEffectiveFrom;
     private DateTime doNotUseLastModified;
     private string doNotUseLastModifiedComment = string.Empty;
     private string doNotUseName = string.Empty;
@@ -27,7 +27,7 @@ public class BudgetModel : INotifyPropertyChanged
         Expenses = new List<Expense>();
         this.doNotUseLastModified = DateTime.Now;
         // Set this here because the deserialisation process will reset if a value exists in the XML file. If not its better to have a date than min value.
-        this.doNotUseEffectiveFrom = DateTime.Now;
+        this.doNotUseEffectiveFrom = DateOnlyExt.Today();
         this.doNotUseBudgetCycle = BudgetCycle.Monthly;
     }
 
@@ -57,7 +57,7 @@ public class BudgetModel : INotifyPropertyChanged
     /// <summary>
     ///     Gets or sets the effective from date.
     /// </summary>
-    public DateTime EffectiveFrom
+    public DateOnly EffectiveFrom
     {
         get => this.doNotUseEffectiveFrom;
         set

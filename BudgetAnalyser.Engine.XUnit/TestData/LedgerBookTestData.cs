@@ -55,7 +55,7 @@ public static class LedgerBookTestData
     /// </summary>
     public static LedgerBook TestData1()
     {
-        var line = CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
+        var line = CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
         SetEntriesForTesting(
             line,
             new List<LedgerEntry>
@@ -85,7 +85,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List<LedgerEntry>
                 {
                     CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
@@ -108,7 +108,7 @@ public static class LedgerBookTestData
 
         list.Add(
             CreateLine(
-                new DateTime(2013, 08, 15),
+                new DateOnly(2013, 08, 15),
                 new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
                 new List<LedgerEntry>
@@ -127,7 +127,7 @@ public static class LedgerBookTestData
                         })
                 }));
 
-        var book = new LedgerBook(list) { Name = "Test Data 1 Book", Modified = new DateTime(2013, 12, 16), StorageKey = "C:\\Folder\\book1.xml" };
+        var book = new LedgerBook(list) { Name = "Test Data 1 Book", Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc), StorageKey = "C:\\Folder\\book1.xml" };
 
         Finalise(book);
         return book;
@@ -143,7 +143,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -173,7 +173,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -198,7 +198,7 @@ public static class LedgerBookTestData
         previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         var line = CreateLine(
-            new DateTime(2013, 08, 15),
+            new DateOnly(2013, 08, 15),
             new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
             "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
             new List<LedgerEntry>
@@ -221,7 +221,7 @@ public static class LedgerBookTestData
         line.BalanceAdjustment(-550, "Credit card payment yet to go out.", StatementModelTestData.ChequeAccount, new Guid("63f3a7f8-48b4-4690-ab5c-e7ef66ed2b13"));
         list.Add(line);
 
-        var book = new LedgerBook(list) { Name = "Test Data 2 Book", Modified = new DateTime(2013, 12, 16), StorageKey = "C:\\Folder\\book1.xml" };
+        var book = new LedgerBook(list) { Name = "Test Data 2 Book", Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc), StorageKey = "C:\\Folder\\book1.xml" };
 
         Finalise(book);
         return book;
@@ -235,7 +235,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateTime(2013, 11, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 10738) }, "Opening entries").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 11, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 10738) }, "Opening entries").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -266,7 +266,7 @@ public static class LedgerBookTestData
                     })
         };
 
-        var book = new LedgerBook(list) { Name = "Smith Budget 2014", Modified = new DateTime(2013, 12, 22), StorageKey = @"C:\Foo\SmithLedger2014.xml" };
+        var book = new LedgerBook(list) { Name = "Smith Budget 2014", Modified = new DateTime(2013, 12, 22, 0, 0, 0, DateTimeKind.Utc), StorageKey = @"C:\Foo\SmithLedger2014.xml" };
 
         Finalise(book);
         return book;
@@ -281,7 +281,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -308,7 +308,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -331,7 +331,7 @@ public static class LedgerBookTestData
         previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         var line = CreateLine(
-            new DateTime(2013, 08, 15),
+            new DateOnly(2013, 08, 15),
             new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2750), new BankBalance(StatementModelTestData.SavingsAccount, 200) },
             "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
             new List<LedgerEntry>
@@ -352,7 +352,7 @@ public static class LedgerBookTestData
         line.BalanceAdjustment(-550, "Credit card payment yet to go out.", StatementModelTestData.ChequeAccount);
         list.Add(line);
 
-        var book = new LedgerBook(list) { Name = "Test Data 4 Book", Modified = new DateTime(2013, 12, 16), StorageKey = "C:\\Folder\\book1.xml" };
+        var book = new LedgerBook(list) { Name = "Test Data 4 Book", Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc), StorageKey = "C:\\Folder\\book1.xml" };
 
         Finalise(book);
         return book;
@@ -367,7 +367,7 @@ public static class LedgerBookTestData
         var list = new List<LedgerEntryLine>
         {
             CreateLine(
-                    new DateTime(2013, 06, 15),
+                    new DateOnly(2013, 06, 15),
                     new[] { new BankBalance(ChequeAccount, 2800), new BankBalance(SavingsAccount, 300) },
                     "Lorem ipsum")
                 .SetEntriesForTesting(
@@ -400,7 +400,7 @@ public static class LedgerBookTestData
 
         list.Add(
             CreateLine(
-                new DateTime(2013, 07, 15),
+                new DateOnly(2013, 07, 15),
                 new[] { new BankBalance(ChequeAccount, 4000), new BankBalance(SavingsAccount, 600) },
                 "dolor amet set").SetEntriesForTesting(
                 new List<LedgerEntry>
@@ -427,7 +427,7 @@ public static class LedgerBookTestData
         previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
 
         var line = CreateLine(
-            new DateTime(2013, 08, 15),
+            new DateOnly(2013, 08, 15),
             new[] { new BankBalance(ChequeAccount, 3050), new BankBalance(SavingsAccount, 1000) },
             "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
             new List<LedgerEntry>
@@ -452,7 +452,7 @@ public static class LedgerBookTestData
 
         var book = ctor is not null ? ctor(list) : new LedgerBook(list) { StorageKey = "Test Ledger Book.xaml" };
         book.Name = "Test Data 5 Book";
-        book.Modified = new DateTime(2013, 12, 16);
+        book.Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc);
         book.StorageKey = "C:\\Folder\\book5.xml";
 
         Finalise(book);
@@ -469,7 +469,7 @@ public static class LedgerBookTestData
         var list = new List<LedgerEntryLine>
         {
             CreateLine(
-                    new DateTime(2013, 8, 1),
+                    new DateOnly(2013, 8, 1),
                     new[] { new BankBalance(ChequeAccount, 2800), new BankBalance(SavingsAccount, 300) },
                     "Lorem ipsum")
                 .SetEntriesForTesting(
@@ -502,7 +502,7 @@ public static class LedgerBookTestData
 
         list.Add(
             CreateLine(
-                new DateTime(2013, 8, 15),
+                new DateOnly(2013, 8, 15),
                 new[] { new BankBalance(ChequeAccount, 4000), new BankBalance(SavingsAccount, 600) },
                 "dolor amet set").SetEntriesForTesting(
                 new List<LedgerEntry>
@@ -525,7 +525,7 @@ public static class LedgerBookTestData
 
         var book = ctor is not null ? ctor(list) : new LedgerBook(list) { StorageKey = "Test Ledger Book.xaml" };
         book.Name = "Test Data 6 Book";
-        book.Modified = new DateTime(2013, 08, 15);
+        book.Modified = new DateTime(2013, 08, 15, 0, 0, 0, DateTimeKind.Utc);
         book.StorageKey = "C:\\FakeFolder\\book6.xml";
 
         Finalise(book);
@@ -593,7 +593,7 @@ public static class LedgerBookTestData
         return new LedgerEntry { LedgerBucket = ledger, Balance = balance };
     }
 
-    private static LedgerEntryLine CreateLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
+    private static LedgerEntryLine CreateLine(DateOnly date, IEnumerable<BankBalance> bankBalances, string remarks)
     {
         var line = new LedgerEntryLine(date, bankBalances) { Remarks = remarks };
         return line;

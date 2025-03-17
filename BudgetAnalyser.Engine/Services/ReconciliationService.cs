@@ -90,7 +90,7 @@ internal class ReconciliationService(IReconciliationCreationManager reconciliati
 
     /// <inheritdoc />
     public LedgerEntryLine PeriodEndReconciliation(LedgerBook ledgerBook,
-        DateTime reconciliationDate,
+        DateOnly reconciliationDate,
         BudgetCollection budgetCollection,
         StatementModel statement,
         bool ignoreWarnings,

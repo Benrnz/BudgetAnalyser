@@ -8,11 +8,11 @@ namespace BudgetAnalyser.Engine.XUnit.Matching;
 
 public class MapperMatchingRuleToDto2Test
 {
-    private readonly MapperMatchingRuleToDto2 subject;
     private readonly IBudgetBucketRepository bucketRepo = new BucketBucketRepoAlwaysFind();
 
     private readonly MatchingRule matchingRuleTestData;
     private readonly SingleUseMatchingRule singleUseRuleTestData;
+    private readonly MapperMatchingRuleToDto2 subject;
 
     public MapperMatchingRuleToDto2Test()
     {
@@ -29,7 +29,7 @@ public class MapperMatchingRuleToDto2Test
             Reference1 = "Pakuranga",
             Reference2 = "Ref2",
             Reference3 = "Ref3",
-            TransactionType = "TranType",
+            TransactionType = "TranType"
         };
 
         this.singleUseRuleTestData = new SingleUseMatchingRule(this.bucketRepo)
@@ -44,9 +44,8 @@ public class MapperMatchingRuleToDto2Test
             Reference1 = "Pakuranga",
             Reference2 = "Ref2",
             Reference3 = "Ref3",
-            TransactionType = "TranType",
+            TransactionType = "TranType"
         };
-
     }
 
     [Fact]
@@ -59,26 +58,8 @@ public class MapperMatchingRuleToDto2Test
         dto.Amount.ShouldBe(12.34M);
         dto.BucketCode.ShouldBe(SurplusBucket.SurplusCode);
         dto.Description.ShouldBe("McDonalds");
-        dto.Created.ShouldBe(new DateTime(2025, 1, 18));
-        dto.LastMatch.ShouldBe(new DateTime(2025, 1, 1));
-        dto.MatchCount.ShouldBe(1);
-        dto.Reference1.ShouldBe("Pakuranga");
-        dto.Reference2.ShouldBe("Ref2");
-        dto.Reference3.ShouldBe("Ref3");
-        dto.TransactionType.ShouldBe("TranType");
-    }
-
-    [Fact]
-    public void ToDto_ShouldReturnSingleUseRuleDto_GivenValidData()
-    {
-        var dto = this.subject.ToDto(this.singleUseRuleTestData);
-
-        dto.And.ShouldBeTrue();
-        dto.Amount.ShouldBe(12.34M);
-        dto.BucketCode.ShouldBe(SurplusBucket.SurplusCode);
-        dto.Description.ShouldBe("McDonalds");
-        dto.Created.ShouldBe(new DateTime(2025, 1, 18));
-        dto.LastMatch.ShouldBe(new DateTime(2025, 1, 1));
+        dto.Created?.ToLocalTime().ShouldBe(new DateTime(2025, 1, 18));
+        dto.LastMatch?.ToLocalTime().ShouldBe(new DateTime(2025, 1, 1));
         dto.MatchCount.ShouldBe(1);
         dto.Reference1.ShouldBe("Pakuranga");
         dto.Reference2.ShouldBe("Ref2");
@@ -92,6 +73,24 @@ public class MapperMatchingRuleToDto2Test
         var dto = this.subject.ToDto(this.singleUseRuleTestData);
 
         dto.ShouldBeOfType<SingleUseMatchingRuleDto>();
+    }
+
+    [Fact]
+    public void ToDto_ShouldReturnSingleUseRuleDto_GivenValidData()
+    {
+        var dto = this.subject.ToDto(this.singleUseRuleTestData);
+
+        dto.And.ShouldBeTrue();
+        dto.Amount.ShouldBe(12.34M);
+        dto.BucketCode.ShouldBe(SurplusBucket.SurplusCode);
+        dto.Description.ShouldBe("McDonalds");
+        dto.Created?.ToLocalTime().ShouldBe(new DateTime(2025, 1, 18));
+        dto.LastMatch?.ToLocalTime().ShouldBe(new DateTime(2025, 1, 1));
+        dto.MatchCount.ShouldBe(1);
+        dto.Reference1.ShouldBe("Pakuranga");
+        dto.Reference2.ShouldBe("Ref2");
+        dto.Reference3.ShouldBe("Ref3");
+        dto.TransactionType.ShouldBe("TranType");
     }
 
     [Fact]

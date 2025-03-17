@@ -45,7 +45,7 @@ public abstract class LedgerTransaction
     /// <summary>
     ///     Gets or sets the transaction date.
     /// </summary>
-    public DateTime? Date { get; internal set; }
+    public DateOnly? Date { get; internal set; }
 
     /// <summary>
     ///     Gets or sets the Transaction ID. This is the same ID as the <see cref="StatementModel" />'s

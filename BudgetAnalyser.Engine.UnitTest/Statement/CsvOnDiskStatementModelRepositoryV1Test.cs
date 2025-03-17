@@ -1,7 +1,9 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
+using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Moq;
@@ -97,7 +99,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
         subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
         var model = await subject.LoadAsync("Foo.foo", false);
         Console.WriteLine(model.LastImport);
-        Assert.AreEqual(new DateTime(2012, 08, 20), model.LastImport);
+        Assert.AreEqual(new DateTime(new DateOnly(2012, 08, 20), TimeOnly.MinValue, DateTimeKind.Utc).ToLocalTime(), model.LastImport);
     }
 
     [TestMethod]
@@ -180,8 +182,21 @@ public class CsvOnDiskStatementModelRepositoryV1Test
 
         var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
 
+        model.Output(DateOnly.MinValue);
         Assert.IsNotNull(model);
         Assert.AreEqual(33, model.AllTransactions.Count());
+        var txn = model.AllTransactions.First();
+        // 2013-10-17T09:15:20.0069564+12:00
+        Console.WriteLine($"TransactionId: {txn.Id}");
+        Assert.AreEqual(new DateOnly(2013, 10, 17), txn.Date, message: $"TransactionId: {txn.Id}");
+        Assert.AreEqual(
+            DateOnly.FromDateTime(DateTime.ParseExact("2013-10-18T09:15:20.0069564", "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture)),
+            model.AllTransactions.Skip(1).First().Date,
+            message: "Second Transaction failing.");
+        Assert.AreEqual(
+            DateOnly.FromDateTime(DateTime.ParseExact("2013-10-18T00:00:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)),
+            model.AllTransactions.Skip(2).First().Date,
+            message: "Third Transaction failing.");
     }
 
     [TestMethod]
@@ -201,7 +216,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
         var mapper = new Mock<IDtoMapper<TransactionSetDto, StatementModel>>();
         var subject = ArrangeWithMockMappers(mapper.Object);
         var model = StatementModelTestData.TestData2();
-        model.Filter(new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 20), EndDate = new DateTime(2013, 08, 19) });
+        model.Filter(new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 07, 20), EndDate = new DateOnly(2013, 08, 19) });
 
         mapper.Setup(m => m.ToDto(model)).Returns(
             new TransactionSetDto { StorageKey = "Foo.bar", LastImport = new DateTime(2013, 07, 20), Transactions = TransactionSetDtoTestData.TestData2().Transactions.Take(2).ToList() });

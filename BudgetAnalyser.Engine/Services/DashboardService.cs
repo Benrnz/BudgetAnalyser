@@ -77,14 +77,14 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
     }
 
     /// <inheritdoc />
-    public Widget? CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
+    public Widget? CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateOnly paymentDate, WeeklyOrFortnightly frequency)
     {
         if (string.IsNullOrWhiteSpace(bucketCode))
         {
             throw new ArgumentNullException(nameof(bucketCode));
         }
 
-        if (paymentDate == DateTime.MinValue)
+        if (paymentDate == DateOnly.MinValue)
         {
             throw new ArgumentException("Payment date is not set.", nameof(paymentDate));
         }

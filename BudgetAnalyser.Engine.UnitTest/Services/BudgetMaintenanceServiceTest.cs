@@ -1,9 +1,7 @@
-﻿using System;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UnitTestUtilities;
 
@@ -26,7 +24,7 @@ public class BudgetMaintenanceServiceTest
         var source = this.budgetCollection.CurrentActiveBudget;
 
         Assert.IsTrue(this.budgetCollection.Count == 1);
-        var result = this.service.CloneBudgetModel(source, DateTime.Today.AddDays(1), BudgetCycle.Monthly);
+        var result = this.service.CloneBudgetModel(source, DateOnlyExt.Today().AddDays(1), BudgetCycle.Monthly);
         Assert.IsTrue(this.budgetCollection.Count == 2);
     }
 
@@ -36,7 +34,7 @@ public class BudgetMaintenanceServiceTest
     {
         var source = this.budgetCollection.CurrentActiveBudget;
 
-        this.service.CloneBudgetModel(source, DateTime.Today, BudgetCycle.Monthly);
+        this.service.CloneBudgetModel(source, DateOnlyExt.Today(), BudgetCycle.Monthly);
     }
 
     [TestMethod]
@@ -44,11 +42,8 @@ public class BudgetMaintenanceServiceTest
     public void CloneBudgetModel_WhenNewBudgetEffectiveFromIsBeforeOrEqualSourceBudgetEffectiveFrom_ThrowsArgumentException()
     {
         // Arrange
-        var sourceBudget = new BudgetModel
-        {
-            EffectiveFrom = DateTime.Today
-        };
-        var newBudgetEffectiveFrom = DateTime.Today;
+        var sourceBudget = new BudgetModel { EffectiveFrom = DateOnlyExt.Today() };
+        var newBudgetEffectiveFrom = DateOnlyExt.Today();
         var budgetCycle = BudgetCycle.Monthly;
 
         // Act + Assert
@@ -60,11 +55,8 @@ public class BudgetMaintenanceServiceTest
     public void CloneBudgetModel_WhenNewBudgetEffectiveFromIsLessThanOrEqualToToday_ThrowsArgumentException()
     {
         // Arrange
-        var sourceBudget = new BudgetModel
-        {
-            EffectiveFrom = DateTime.Today
-        };
-        var newBudgetEffectiveFrom = DateTime.Today.AddDays(-1);
+        var sourceBudget = new BudgetModel { EffectiveFrom = DateOnlyExt.Today() };
+        var newBudgetEffectiveFrom = DateOnlyExt.Today().AddDays(-1);
         var budgetCycle = BudgetCycle.Monthly;
 
         // Act + Assert
@@ -77,7 +69,7 @@ public class BudgetMaintenanceServiceTest
     {
         var source = new BudgetModel();
 
-        this.service.CloneBudgetModel(source, DateTime.Today, BudgetCycle.Monthly);
+        this.service.CloneBudgetModel(source, DateOnlyExt.Today(), BudgetCycle.Monthly);
     }
 
     [TestMethod]
@@ -86,7 +78,7 @@ public class BudgetMaintenanceServiceTest
     {
         // Arrange
         BudgetModel sourceBudget = null;
-        var newBudgetEffectiveFrom = DateTime.Today.AddDays(1);
+        var newBudgetEffectiveFrom = DateOnlyExt.Today().AddDays(1);
         var budgetCycle = BudgetCycle.Monthly;
 
         // Act + Assert
@@ -99,7 +91,7 @@ public class BudgetMaintenanceServiceTest
         var source = this.budgetCollection.CurrentActiveBudget;
 
         source.BudgetCycle = BudgetCycle.Monthly;
-        var result = this.service.CloneBudgetModel(source, DateTime.Today.AddDays(1), BudgetCycle.Fortnightly);
+        var result = this.service.CloneBudgetModel(source, DateOnlyExt.Today().AddDays(1), BudgetCycle.Fortnightly);
         Assert.AreEqual(BudgetCycle.Fortnightly, result.BudgetCycle);
     }
 
@@ -145,10 +137,10 @@ public class BudgetMaintenanceServiceTest
         this.budgetCollection = new BudgetCollection(BudgetModelTestData.CreateTestData1());
 
         this.service = new BudgetMaintenanceService(
-                                                    this.budgetRepo.Object,
-                                                    this.bucketRepo.Object,
-                                                    this.logger.Object,
-                                                    this.monitorableDependencies);
+            this.budgetRepo.Object,
+            this.bucketRepo.Object,
+            this.logger.Object,
+            this.monitorableDependencies);
 
         PrivateAccessor.SetProperty(this.service, "Budgets", this.budgetCollection);
     }

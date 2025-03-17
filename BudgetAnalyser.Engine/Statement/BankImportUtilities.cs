@@ -60,7 +60,40 @@ internal class BankImportUtilities
         return bucketRepository.GetByCode(stringType);
     }
 
-    internal DateTime FetchDate(string[] array, int index)
+    internal DateOnly FetchDate(string[] array, int index)
+    {
+        if (array is null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+
+        if (index > array.Length - 1 || index < 0)
+        {
+            ThrowIndexOutOfRangeException(array, index);
+        }
+
+        var stringToParse = array[index];
+        if (DateOnly.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result))
+        {
+            return result;
+        }
+
+        this.logger.LogWarning(_ => $"BankImportUtilities: Unable to parse date: {stringToParse}. Attempting to read as a DateTime instead. Will throw if invalid.");
+
+        // Parse as DateTimeOffset to ensure preservation of the original time and timezone.
+        if (DateTimeOffset.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result2))
+        {
+            var dateOnlyResult = DateOnly.FromDateTime(result2.DateTime);
+            this.logger.LogInfo(_ => $"BankImportUtilities: Successfully parsed string '{stringToParse}' as DateTimeOffset: {result2}. DateOnly = {dateOnlyResult}");
+            ;
+            return dateOnlyResult;
+        }
+
+        this.logger.LogError(_ => $"BankImportUtilities: Unable to parse date as pieces: {stringToParse}");
+        throw new InvalidDataException($"Expected a date, but file data is invalid: {stringToParse}");
+    }
+
+    internal DateTime FetchDateTime(string[] array, int index)
     {
         if (array is null)
         {

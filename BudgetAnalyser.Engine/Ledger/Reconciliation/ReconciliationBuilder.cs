@@ -27,7 +27,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
     /// <param name="statement">The current period statement.</param>
     /// <param name="bankBalances">A list of bank balances for the reconciliation, one for each account. (Excluding credit cards). </param>
     public ReconciliationResult CreateNewMonthlyReconciliation(
-        DateTime reconciliationClosingDateExclusive,
+        DateOnly reconciliationClosingDateExclusive,
         BudgetModel budget,
         StatementModel statement,
         params BankBalance[] bankBalances)
@@ -79,7 +79,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
     /// <param name="ledgerBook">The Ledger Book to find the date for</param>
     /// <param name="reconciliationDate">The chosen reconciliation date from the user</param>
     /// <param name="periodType">The budget period monthly/fortnightly</param>
-    internal static DateTime CalculateBeginDateForReconciliationPeriod(LedgerBook ledgerBook, DateTime reconciliationDate, BudgetCycle periodType)
+    internal static DateOnly CalculateBeginDateForReconciliationPeriod(LedgerBook ledgerBook, DateOnly reconciliationDate, BudgetCycle periodType)
     {
         if (ledgerBook.Reconciliations.Any())
         {
@@ -114,7 +114,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
         return sortedTransactions;
     }
 
-    private void AddNew(LedgerEntryLine line, BudgetModel budget, StatementModel statement, DateTime startDateIncl)
+    private void AddNew(LedgerEntryLine line, BudgetModel budget, StatementModel statement, DateOnly startDateIncl)
     {
         if (!line.IsNew)
         {
@@ -180,7 +180,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
     ///     Match statement transaction with special auto-matching references to Ledger transactions. Configures hyperlinking ids and marks then as matched. Also checks to ensure they are matched
     ///     for data integrity.
     /// </summary>
-    private void AutoMatchTransactionsAlreadyInPreviousPeriod(DateTime lineDate, List<Transaction> transactions, LedgerEntry? previousLedgerEntry, List<LedgerTransaction> newLedgerTransactions)
+    private void AutoMatchTransactionsAlreadyInPreviousPeriod(DateOnly lineDate, List<Transaction> transactions, LedgerEntry? previousLedgerEntry, List<LedgerTransaction> newLedgerTransactions)
     {
         var ledgerAutoMatchTransactions = FindAutoMatchingTransactions(previousLedgerEntry).ToList();
         var checkMatchedTxns = new List<LedgerTransaction>();
@@ -328,7 +328,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
                 && !t.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal));
     }
 
-    private List<LedgerTransaction> IncludeBudgetedAmount(Account salaryAccount, BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate)
+    private List<LedgerTransaction> IncludeBudgetedAmount(Account salaryAccount, BudgetModel currentBudget, LedgerBucket ledgerBucket, DateOnly reconciliationDate)
     {
         var budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
         var transactions = new List<LedgerTransaction>();

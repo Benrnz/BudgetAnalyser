@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 public class ReconciliationCreationManagerTest
 {
     private static readonly IEnumerable<BankBalance> TestDataBankBalances = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
-    private static readonly DateTime TestDataReconcileDate = new(2013, 09, 15);
+    private static readonly DateOnly TestDataReconcileDate = new(2013, 09, 15);
 
     private IBudgetBucketRepository bucketRepo;
     private IEnumerable<BankBalance> currentBankBalances;
@@ -111,7 +111,7 @@ public class ReconciliationCreationManagerTest
     [ExpectedException(typeof(InvalidOperationException))]
     public void Reconcile_ShouldThrow_GivenInvalidLedgerBook()
     {
-        var myTestDate = new DateTime(2012, 2, 20);
+        var myTestDate = new DateOnly(2012, 2, 20);
 
         // Make sure there is a valid budget to isolate the invalid ledger book test
         var budget = this.testDataBudgetCollection.OrderBy(b => b.EffectiveFrom).First();
@@ -124,7 +124,7 @@ public class ReconciliationCreationManagerTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void Reconcile_ShouldThrow_GivenNoEffectiveBudget()
     {
-        var myTestDate = new DateTime(2012, 2, 20);
+        var myTestDate = new DateOnly(2012, 2, 20);
         ActPeriodEndReconciliation(myTestDate);
     }
 
@@ -134,7 +134,7 @@ public class ReconciliationCreationManagerTest
         this.testDataStatement = new StatementModel(new FakeLogger()) { StorageKey = "C:\\Foo.xml" };
         try
         {
-            ActPeriodEndReconciliation(new DateTime(2013, 10, 15));
+            ActPeriodEndReconciliation(new DateOnly(2013, 10, 15));
         }
         catch (ValidationWarningException ex)
         {
@@ -173,14 +173,14 @@ public class ReconciliationCreationManagerTest
     [ExpectedException(typeof(InvalidOperationException))]
     public void Reconcile_ShouldThrow_GivenTestData1WithDateEqualToExistingLine()
     {
-        ActPeriodEndReconciliation(new DateTime(2013, 08, 15));
+        ActPeriodEndReconciliation(new DateOnly(2013, 08, 15));
     }
 
     [TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]
     public void Reconcile_ShouldThrow_GivenTestData1WithDateLessThanExistingLine()
     {
-        ActPeriodEndReconciliation(new DateTime(2013, 07, 15));
+        ActPeriodEndReconciliation(new DateOnly(2013, 07, 15));
     }
 
     [TestMethod]
@@ -272,7 +272,7 @@ public class ReconciliationCreationManagerTest
                 Account = StatementModelTestData.ChequeAccount,
                 Amount = -23.56M,
                 BudgetBucket = StatementModelTestData.RegoBucket,
-                Date = TestDataReconcileDate.Date.AddDays(-1),
+                Date = TestDataReconcileDate.AddDays(-1),
                 TransactionType = new NamedTransaction("Foo"),
                 Description = "Last transaction"
             })
@@ -288,7 +288,7 @@ public class ReconciliationCreationManagerTest
         this.testDataReconResult = new ReconciliationResult { Tasks = this.testDataToDoList, Reconciliation = new LedgerEntryLine(TestDataReconcileDate, TestDataBankBalances) };
     }
 
-    private ReconciliationResult ActPeriodEndReconciliation(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null, bool ignoreWarnings = false)
+    private ReconciliationResult ActPeriodEndReconciliation(DateOnly? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null, bool ignoreWarnings = false)
     {
         this.currentBankBalances = bankBalances ?? TestDataBankBalances;
 

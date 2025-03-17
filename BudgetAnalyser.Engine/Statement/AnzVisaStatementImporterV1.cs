@@ -214,6 +214,6 @@ internal class AnzVisaStatementImporterV1 : IBankStatementImporter
         }
 
         var date = this.importUtilities.FetchDate(split, DateIndex);
-        return date != DateTime.MinValue;
+        return date != DateOnly.MinValue;
     }
 }

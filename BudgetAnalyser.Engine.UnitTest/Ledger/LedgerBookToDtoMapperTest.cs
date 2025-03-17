@@ -199,7 +199,7 @@ public class LedgerBookToDtoMapperTest
     {
         var bucketRepo = new BucketBucketRepoAlwaysFind();
         var accountRepo = new InMemoryAccountTypeRepository();
-        var mapper = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory());
+        var mapper = new MapperLedgerBookToDto2(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new DebugLogger());
         return mapper.ToDto(TestData);
     }
 }
