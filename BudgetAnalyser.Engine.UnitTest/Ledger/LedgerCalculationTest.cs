@@ -61,7 +61,8 @@ public class LedgerCalculationTest
     public void CalculateCurrentPeriodSurplusBalance_ShouldNotCountPositivePayCCTransactions()
     {
         var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
-        var statement = CreateStatementBuilder().AppendTransaction(new Transaction
+        var statement = CreateStatementBuilder()
+            .AppendTransaction(new Transaction
             {
                 Account = StatementModelTestData.ChequeAccount,
                 Amount = -100M,
