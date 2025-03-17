@@ -80,6 +80,7 @@ internal class BankImportUtilities
 
         this.logger.LogWarning(_ => $"BankImportUtilities: Unable to parse date: {stringToParse}. Attempting to read as a DateTime instead. Will throw if invalid.");
 
+        // Parse as DateTimeOffset to ensure preservation of the original time and timezone.
         if (DateTimeOffset.TryParse(stringToParse, this.locale, DateTimeStyles.None, out var result2))
         {
             var dateOnlyResult = DateOnly.FromDateTime(result2.DateTime);
@@ -87,12 +88,22 @@ internal class BankImportUtilities
             return dateOnlyResult;
         }
 
-        // if (DateTime.TryParse(stringToParse, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result1))
-        // {
-        //     this.logger.LogInfo(_ => $"BankImportUtilities: Successfully parsed string '{stringToParse}' as DateTime: {result1}");;
-        //     return DateOnly.FromDateTime(result1);
-        // }
+        // 2013-10-17T09:15:20.0069564+12:00
+        var datePieces = stringToParse.Split('-');
+        if (datePieces.Length != 3)
+        {
+            this.logger.LogError(_ => $"BankImportUtilities: Unable to parse date: {stringToParse}");
+            throw new InvalidDataException($"Expected date, but provided data is invalid. {stringToParse}");
+        }
 
+        if (int.TryParse(datePieces[0], out var year)
+            && int.TryParse(datePieces[1], out var month)
+            && int.TryParse(datePieces[2].Substring(0, 2), out var day))
+        {
+            return new DateOnly(year, month, day);
+        }
+
+        this.logger.LogError(_ => $"BankImportUtilities: Unable to parse date as pieces: {stringToParse}");
         throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
     }
 
