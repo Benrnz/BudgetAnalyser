@@ -185,7 +185,13 @@ public class CsvOnDiskStatementModelRepositoryV1Test
         model.Output(DateOnly.MinValue);
         Assert.IsNotNull(model);
         Assert.AreEqual(33, model.AllTransactions.Count());
-        Assert.AreEqual(new DateOnly(2013, 10, 17), model.AllTransactions.First().Date);
+        var txn = model.AllTransactions.First();
+        // 2013-10-17T09:15:20.0069564+12:00
+        Assert.AreEqual(
+            DateOnly.FromDateTime(DateTime.ParseExact("2013-10-17T09:15:20.0069564+12:00", "yyyy-MM-ddTHH:mm:ss.fffffffzzz", CultureInfo.InvariantCulture)),
+            txn.Date);
+        Console.WriteLine($"TransactionId: {txn.Id}");
+        Assert.AreEqual(new DateOnly(2013, 10, 17), txn.Date, message: $"TransactionId: {txn.Id}");
         Assert.AreEqual(
             DateOnly.FromDateTime(DateTime.ParseExact("2013-10-18T09:15:20.0069564", "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture)),
             model.AllTransactions.Skip(1).First().Date);
