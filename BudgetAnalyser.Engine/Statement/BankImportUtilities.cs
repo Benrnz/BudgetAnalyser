@@ -82,6 +82,7 @@ internal class BankImportUtilities
 
         if (DateTime.TryParse(stringToParse, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result1))
         {
+            this.logger.LogInfo(_ => $"BankImportUtilities: Successfully parsed string '{stringToParse}' as DateTime: {result1}");;
             return DateOnly.FromDateTime(result1);
         }
 
