@@ -15,8 +15,6 @@ public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
     /// <summary>
     ///     Initializes a new instance of the <see cref="XamlOnDiskApplicationDatabaseRepository" /> class.
     /// </summary>
-    /// <exception cref="System.ArgumentNullException">
-    /// </exception>
     public XamlOnDiskApplicationDatabaseRepository(IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> mapper)
     {
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -25,7 +23,6 @@ public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
     /// <summary>
     ///     Creates a new budget analyser database graph.
     /// </summary>
-    /// <exception cref="System.ArgumentNullException"></exception>
     public async Task<ApplicationDatabase> CreateNewAsync(string storageKey)
     {
         if (storageKey.IsNothing())
