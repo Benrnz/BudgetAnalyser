@@ -93,7 +93,7 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
             throw new ArgumentException("Database filename is null and has not been set.");
         }
 
-        var dto = this.mapper.ToDto(budgetAnalyserDatabase);
+        var dto = MapToDto(budgetAnalyserDatabase);
         await SaveDtoToDisk(dto, budgetAnalyserDatabase.FileName);
     }
 
@@ -112,12 +112,7 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
         return File.Exists(budgetAnalyserDataStorage);
     }
 
-    protected virtual string LocateFilePath(string storageKey)
-    {
-        return Path.Combine(Path.GetDirectoryName(storageKey) ?? string.Empty, Path.GetFileNameWithoutExtension(storageKey));
-    }
-
-    protected virtual async Task SaveDtoToDisk(BudgetAnalyserStorageRoot dto, string storageKey)
+    private async Task SaveDtoToDisk(BudgetAnalyserStorageRoot dto, string storageKey)
     {
         if (dto is null)
         {
@@ -134,11 +129,21 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
         await JsonSerializer.SerializeAsync(stream, dto, options);
     }
 
-    private async Task<BudgetAnalyserStorageRoot> LoadJsonFromDiskAsync(string fileName)
+    protected virtual BudgetAnalyserStorageRoot MapToDto(ApplicationDatabase model)
+    {
+        return this.mapper.ToDto(model);
+    }
+
+    protected virtual async Task<BudgetAnalyserStorageRoot> LoadJsonFromDiskAsync(string fileName)
     {
         await using var stream = CreateReadableStream(fileName);
         var dto = await JsonSerializer.DeserializeAsync<BudgetAnalyserStorageRoot>(stream);
 
         return dto ?? throw new DataFormatException("Unable to deserialise Application Database file. File is corrupt.");
+    }
+
+    private string LocateFilePath(string storageKey)
+    {
+        return Path.Combine(Path.GetDirectoryName(storageKey) ?? string.Empty, Path.GetFileNameWithoutExtension(storageKey));
     }
 }
