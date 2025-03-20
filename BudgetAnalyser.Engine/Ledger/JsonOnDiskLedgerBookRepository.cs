@@ -19,7 +19,7 @@ internal class JsonOnDiskLedgerBookRepository(
     ILogger logger)
     : ILedgerBookRepository
 {
-    private static readonly JsonSerializerOptions Options = new() { Converters = { new DateOnlyJsonConverter() } };
+    private static readonly JsonSerializerOptions Options = new();
     private readonly BankImportUtilities importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
     private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

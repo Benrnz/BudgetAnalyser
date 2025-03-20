@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Budget;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class JsonOnDiskBudgetRepository : IBudgetRepository
 {
-    private static readonly JsonSerializerOptions Options = new() { Converters = { new DateOnlyJsonConverter() } };
+    private static readonly JsonSerializerOptions Options = new();
     private readonly IBudgetBucketRepository budgetBucketRepository;
     private readonly IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper;
     private readonly IReaderWriterSelector readerWriterSelector;
