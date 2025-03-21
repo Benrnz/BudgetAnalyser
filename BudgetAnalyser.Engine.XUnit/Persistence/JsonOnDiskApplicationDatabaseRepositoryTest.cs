@@ -1,4 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Persistence;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Shouldly;
@@ -9,7 +10,7 @@ namespace BudgetAnalyser.Engine.XUnit.Persistence;
 public class JsonOnDiskApplicationDatabaseRepositoryTest : IAsyncLifetime
 {
     private readonly JsonOnDiskApplicationDatabaseRepositoryTestHarness subject;
-    private ApplicationDatabase result;
+    private ApplicationDatabase resultingModel;
 
     public JsonOnDiskApplicationDatabaseRepositoryTest(ITestOutputHelper outputHelper)
     {
@@ -20,7 +21,7 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        this.result = await this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
+        this.resultingModel = await this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
     }
 
     public Task DisposeAsync()
@@ -32,36 +33,36 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IAsyncLifetime
     [Fact]
     public void LoadShouldSetBudgetCollectionStorageKeyGivenDemoFile()
     {
-        this.result.BudgetCollectionStorageKey.ShouldBe("DemoBudget.xml");
+        this.resultingModel.BudgetCollectionStorageKey.ShouldBe("DemoBudget.json");
     }
 
     [Fact]
     public void LoadShouldSetLedgerBookStorageKeyGivenDemoFile()
     {
-        this.result.LedgerBookStorageKey.ShouldBe("DemoLedgerBook.xml");
+        this.resultingModel.LedgerBookStorageKey.ShouldBe("DemoLedgerBook.json");
     }
 
     [Fact]
     public void LoadShouldSetMatchingRulesStorageKeyGivenDemoFile()
     {
-        this.result.MatchingRulesCollectionStorageKey.ShouldBe("DemoMatchingRules.xml");
+        this.resultingModel.MatchingRulesCollectionStorageKey.ShouldBe("DemoMatchingRules.json");
     }
 
     [Fact]
     public void LoadShouldSetReconciliationTasksGivenDemoFile()
     {
-        this.result.LedgerReconciliationToDoCollection.Count.ShouldBe(2);
+        this.resultingModel.LedgerReconciliationToDoCollection.Count.ShouldBe(2);
     }
 
     [Fact]
     public void LoadShouldSetStatementModelStorageKeyGivenDemoFile()
     {
-        this.result.StatementModelStorageKey.ShouldBe("DemoTransactions.csv");
+        this.resultingModel.StatementModelStorageKey.ShouldBe("DemoTransactions.csv");
     }
 
     [Fact]
     public void LoadShouldSetWidgetStorageKeyGivenDemoFile()
     {
-        this.result.WidgetsCollectionStorageKey.ShouldBe("Widgets.xml");
+        this.resultingModel.WidgetsCollectionStorageKey.ShouldBe("Widgets.json");
     }
 }

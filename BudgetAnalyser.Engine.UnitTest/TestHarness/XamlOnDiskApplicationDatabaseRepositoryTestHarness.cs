@@ -7,9 +7,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness;
 
 public class XamlOnDiskApplicationDatabaseRepositoryTestHarness : XamlOnDiskApplicationDatabaseRepository
 {
-    public XamlOnDiskApplicationDatabaseRepositoryTestHarness(
-        [NotNull]
-        IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> mapper) : base(mapper)
+    public XamlOnDiskApplicationDatabaseRepositoryTestHarness([NotNull] IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> mapper) : base(mapper)
     {
     }
 

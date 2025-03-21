@@ -56,7 +56,7 @@ public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
     ///     Deserialisation Application Database file failed, an exception was thrown by the
     ///     Xml deserialiser, the file format is invalid.
     /// </exception>
-    public async Task<ApplicationDatabase> LoadAsync(string storageKey)
+    public Task<ApplicationDatabase> LoadAsync(string storageKey)
     {
         if (storageKey.IsNothing())
         {
@@ -72,7 +72,7 @@ public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
         BudgetAnalyserStorageRoot storageRoot;
         try
         {
-            storageRoot = await LoadXmlFromDiskAsync(fileName);
+            storageRoot = LoadXmlFromDiskAsync(fileName);
         }
         catch (Exception ex)
         {
@@ -83,7 +83,7 @@ public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
 
         var db = this.mapper.ToModel(storageRoot);
         db.FileName = fileName;
-        return db;
+        return Task.FromResult(db);
     }
 
     /// <summary>
@@ -146,10 +146,10 @@ public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
         await file.FlushAsync();
     }
 
-    private async Task<BudgetAnalyserStorageRoot> LoadXmlFromDiskAsync(string fileName)
+    private BudgetAnalyserStorageRoot LoadXmlFromDiskAsync(string fileName)
     {
         object? result = null;
-        await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
+        result = XamlServices.Parse(LoadXamlAsString(fileName));
         return result as BudgetAnalyserStorageRoot ?? throw new BadApplicationStateFileFormatException("Unable to read the XAML and cast to BudgetAnalyserStorageRoot.");
     }
 }
