@@ -82,4 +82,10 @@
         </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax">
+        <Link>TestData\BudgetAnalyserDemo.bax</Link>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

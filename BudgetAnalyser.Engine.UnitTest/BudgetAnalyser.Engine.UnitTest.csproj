@@ -32,7 +32,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax" Link="TestData\BudgetAnalyserDemo.bax"/>
         <EmbeddedResource Include="..\TestData\DemoTransactions.csv" Link="TestData\DemoTransactions.csv"/>
         <EmbeddedResource Include="..\TestData\DuplicateTxnTest.csv" Link="TestData\DuplicateTxnTest.csv"/>
     </ItemGroup>

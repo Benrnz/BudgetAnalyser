@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine.XUnit;
 
 public class MetaTest(ITestOutputHelper testOutputHelper)
 {
-    private const int MinimumTestCount = 157;
+    private const int MinimumTestCount = 185;
 
     [Fact]
     public void ListAllTests()
@@ -18,7 +18,7 @@ public class MetaTest(ITestOutputHelper testOutputHelper)
     [Fact]
     public void NoDecreaseInTests()
     {
-        DiscoverTestCount().ShouldBeGreaterThan(MinimumTestCount);
+        DiscoverTestCount().ShouldBeGreaterThanOrEqualTo(MinimumTestCount);
     }
 
     private int DiscoverTestCount()
