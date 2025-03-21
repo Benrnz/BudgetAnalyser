@@ -11,12 +11,12 @@ namespace BudgetAnalyser.Engine.Persistence;
 public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepository
 {
     private readonly ILogger logger;
-    private readonly IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> mapper;
+    private readonly IDtoMapper<BudgetAnalyserStorageRoot2, ApplicationDatabase> mapper;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="JsonOnDiskApplicationDatabaseRepository" /> class.
     /// </summary>
-    public JsonOnDiskApplicationDatabaseRepository(IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> mapper, ILogger logger)
+    public JsonOnDiskApplicationDatabaseRepository(IDtoMapper<BudgetAnalyserStorageRoot2, ApplicationDatabase> mapper, ILogger logger)
     {
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -31,14 +31,14 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
         }
 
         var path = LocateFilePath(storageKey);
-        var storageRoot = new BudgetAnalyserStorageRoot
+        var storageRoot = new BudgetAnalyserStorageRoot2
         {
-            BudgetCollectionRootDto = new StorageBranch { Source = path + ".Budget.json" },
-            LedgerBookRootDto = new StorageBranch { Source = path + ".LedgerBook.json" },
+            BudgetCollectionRootDto = $"{path}.Budget.json",
+            LedgerBookRootDto = $"{path}.LedgerBook.json",
             LedgerReconciliationToDoCollection = new List<ToDoTaskDto>(),
-            MatchingRulesCollectionRootDto = new StorageBranch { Source = path + ".MatchingRules.json" },
-            StatementModelRootDto = new StorageBranch { Source = path + ".Transactions.csv" },
-            WidgetCollectionRootDto = new StorageBranch { Source = path + ".Widgets.json" },
+            MatchingRulesCollectionRootDto = $"{path}.MatchingRules.json",
+            StatementModelRootDto = $"{path}.Transactions.csv",
+            WidgetCollectionRootDto = $"{path}.Widgets.json",
             IsEncrypted = false
         };
 
@@ -64,7 +64,7 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
             throw new KeyNotFoundException("File does not exist.");
         }
 
-        BudgetAnalyserStorageRoot dto;
+        BudgetAnalyserStorageRoot2 dto;
         try
         {
             dto = await LoadJsonFromDiskAsync(storageKey);
@@ -112,7 +112,31 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
         return File.Exists(budgetAnalyserDataStorage);
     }
 
-    private async Task SaveDtoToDisk(BudgetAnalyserStorageRoot dto, string storageKey)
+    protected virtual async Task<BudgetAnalyserStorageRoot2> LoadJsonFromDiskAsync(string fileName)
+    {
+        await using var stream = CreateReadableStream(fileName);
+        var dto = await JsonSerializer.DeserializeAsync<BudgetAnalyserStorageRoot2>(stream);
+
+        return dto ?? throw new DataFormatException("Unable to deserialise Application Database file. File is corrupt.");
+    }
+
+    protected virtual BudgetAnalyserStorageRoot2 MapToDto(ApplicationDatabase model)
+    {
+        return this.mapper.ToDto(model);
+    }
+
+    protected virtual async Task SerialiseAndWriteToStream(Stream stream, BudgetAnalyserStorageRoot2 dto)
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        await JsonSerializer.SerializeAsync(stream, dto, options);
+    }
+
+    private string LocateFilePath(string storageKey)
+    {
+        return Path.Combine(Path.GetDirectoryName(storageKey) ?? string.Empty, Path.GetFileNameWithoutExtension(storageKey));
+    }
+
+    private async Task SaveDtoToDisk(BudgetAnalyserStorageRoot2 dto, string storageKey)
     {
         if (dto is null)
         {
@@ -121,29 +145,5 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
 
         await using var stream = CreateWritableStream(storageKey);
         await SerialiseAndWriteToStream(stream, dto);
-    }
-
-    protected virtual async Task SerialiseAndWriteToStream(Stream stream, BudgetAnalyserStorageRoot dto)
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        await JsonSerializer.SerializeAsync(stream, dto, options);
-    }
-
-    protected virtual BudgetAnalyserStorageRoot MapToDto(ApplicationDatabase model)
-    {
-        return this.mapper.ToDto(model);
-    }
-
-    protected virtual async Task<BudgetAnalyserStorageRoot> LoadJsonFromDiskAsync(string fileName)
-    {
-        await using var stream = CreateReadableStream(fileName);
-        var dto = await JsonSerializer.DeserializeAsync<BudgetAnalyserStorageRoot>(stream);
-
-        return dto ?? throw new DataFormatException("Unable to deserialise Application Database file. File is corrupt.");
-    }
-
-    private string LocateFilePath(string storageKey)
-    {
-        return Path.Combine(Path.GetDirectoryName(storageKey) ?? string.Empty, Path.GetFileNameWithoutExtension(storageKey));
     }
 }

@@ -4,17 +4,17 @@ using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
-public class JsonOnDiskApplicationDatabaseRepositoryTestHarness(IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> mapper, ILogger logger)
+public class JsonOnDiskApplicationDatabaseRepositoryTestHarness(IDtoMapper<BudgetAnalyserStorageRoot2, ApplicationDatabase> mapper, ILogger logger)
     : JsonOnDiskApplicationDatabaseRepository(mapper, logger)
 {
-    public BudgetAnalyserStorageRoot Dto { get; private set; }
+    public BudgetAnalyserStorageRoot2 Dto { get; private set; }
     public Func<string, bool> FileExistsOverride { get; set; }
 
     public Stream ReadableStream { get; private set; }
 
-    public Stream WritableStream { get; private set; } = new MemoryStream();
-
     public string SerialisedData { get; private set; }
+
+    public Stream WritableStream { get; } = new MemoryStream();
 
     protected override Stream CreateReadableStream(string fileName)
     {
@@ -38,24 +38,24 @@ public class JsonOnDiskApplicationDatabaseRepositoryTestHarness(IDtoMapper<Budge
         return FileExistsOverride?.Invoke(budgetAnalyserDataStorage) ?? true;
     }
 
-    protected override async Task SerialiseAndWriteToStream(Stream stream, BudgetAnalyserStorageRoot dto)
+    protected override async Task<BudgetAnalyserStorageRoot2> LoadJsonFromDiskAsync(string fileName)
+    {
+        Dto = await base.LoadJsonFromDiskAsync(fileName);
+        return Dto;
+    }
+
+    protected override BudgetAnalyserStorageRoot2 MapToDto(ApplicationDatabase model)
+    {
+        Dto = base.MapToDto(model);
+        return Dto;
+    }
+
+    protected override async Task SerialiseAndWriteToStream(Stream stream, BudgetAnalyserStorageRoot2 dto)
     {
         await base.SerialiseAndWriteToStream(stream, dto);
         stream.Position = 0;
         using var reader = new StreamReader(stream, Encoding.UTF8);
         var result = await reader.ReadToEndAsync();
         SerialisedData = result;
-    }
-
-    protected override BudgetAnalyserStorageRoot MapToDto(ApplicationDatabase model)
-    {
-        Dto = base.MapToDto(model);
-        return Dto;
-    }
-
-    protected override async Task<BudgetAnalyserStorageRoot> LoadJsonFromDiskAsync(string fileName)
-    {
-        Dto = await base.LoadJsonFromDiskAsync(fileName);
-        return Dto;
     }
 }

@@ -14,7 +14,7 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IAsyncLifetime
     public JsonOnDiskApplicationDatabaseRepositoryTest(ITestOutputHelper outputHelper)
     {
         var logger = new XUnitLogger(outputHelper);
-        this.subject = new JsonOnDiskApplicationDatabaseRepositoryTestHarness(new MapperApplicationDatabaseToStorageRoot2(), logger) { FileExistsOverride = fileName => true };
+        this.subject = new JsonOnDiskApplicationDatabaseRepositoryTestHarness(new MapperApplicationDatabaseToStorageRoot3(), logger) { FileExistsOverride = fileName => true };
         // Cannot call async methods in constructor.
     }
 
