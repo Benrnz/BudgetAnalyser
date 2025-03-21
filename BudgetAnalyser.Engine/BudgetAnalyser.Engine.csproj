@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AWSSDK.S3" Version="3.7.411.2"/>
+        <PackageReference Include="AWSSDK.S3" Version="3.7.415.23" />
         <PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
         <PackageReference Include="Microsoft.CodeAnalysis.Metrics" Version="3.3.4"/>
         <PackageReference Include="Portable.Xaml" Version="0.26.0"/>
