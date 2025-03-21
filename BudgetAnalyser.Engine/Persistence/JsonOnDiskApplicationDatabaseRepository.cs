@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Persistence;
 ///     A repository to store the top level Budget Analyser object graph in Xaml format on local disk.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Persistence.IApplicationDatabaseRepository" />
-// [AutoRegisterWithIoC]
+[AutoRegisterWithIoC]
 public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepository
 {
     private readonly ILogger logger;
