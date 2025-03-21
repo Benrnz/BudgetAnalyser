@@ -5,7 +5,7 @@ using Rees.UnitTestUtilities;
 namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
 public class JsonOnDiskApplicationDatabaseRepositoryTestHarness(IDtoMapper<BudgetAnalyserStorageRoot2, ApplicationDatabase> mapper, ILogger logger)
-    : JsonOnDiskApplicationDatabaseRepository(mapper, logger)
+    : JsonOnDiskApplicationDatabaseRepository(mapper, logger), IDisposable
 {
     public BudgetAnalyserStorageRoot2 Dto { get; private set; }
     public Func<string, bool> FileExistsOverride { get; set; }
@@ -16,6 +16,12 @@ public class JsonOnDiskApplicationDatabaseRepositoryTestHarness(IDtoMapper<Budge
 
     public Stream WritableStream { get; } = new MemoryStream();
 
+    public void Dispose()
+    {
+        ReadableStream?.Dispose();
+        WritableStream?.Dispose();
+    }
+
     protected override Stream CreateReadableStream(string fileName)
     {
         if (ReadableStream is not null)
@@ -23,8 +29,8 @@ public class JsonOnDiskApplicationDatabaseRepositoryTestHarness(IDtoMapper<Budge
             return ReadableStream;
         }
 
-        var data = GetType().Assembly.ExtractEmbeddedResourceAsText(fileName);
-        ReadableStream = new MemoryStream(Encoding.UTF8.GetBytes(data));
+        SerialisedData = GetType().Assembly.ExtractEmbeddedResourceAsText(fileName);
+        ReadableStream = new MemoryStream(Encoding.UTF8.GetBytes(SerialisedData));
         return ReadableStream;
     }
 
