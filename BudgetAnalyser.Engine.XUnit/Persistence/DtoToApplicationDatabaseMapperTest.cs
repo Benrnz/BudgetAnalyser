@@ -18,6 +18,7 @@ public class DtoToApplicationDatabaseMapperTest
             MatchingRulesCollectionRootDto = "Rules.xml",
             StatementModelRootDto = "Statement.xml",
             WidgetCollectionRootDto = "Widgets.xml",
+            Filter = new GlobalFilterDto(),
             LedgerReconciliationToDoCollection = new List<ToDoTaskDto>
             {
                 new() { CanDelete = true, Description = "Foo1", SystemGenerated = false }, new() { CanDelete = false, Description = "Foo2", SystemGenerated = true }

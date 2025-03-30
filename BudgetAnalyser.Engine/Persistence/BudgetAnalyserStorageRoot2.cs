@@ -13,6 +13,11 @@ public class BudgetAnalyserStorageRoot2
     public required string BudgetCollectionRootDto { get; init; }
 
     /// <summary>
+    ///     The filter that is applied to transactions, reports, and is used to determine period for month end reconciliation.
+    /// </summary>
+    public required GlobalFilterDto Filter { get; init; }
+
+    /// <summary>
     ///     Gets or sets a value indicating whether the data files are encrypted.
     /// </summary>
     /// <value>

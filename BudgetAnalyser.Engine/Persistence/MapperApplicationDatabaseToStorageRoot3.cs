@@ -6,6 +6,7 @@ namespace BudgetAnalyser.Engine.Persistence;
 [AutoRegisterWithIoC]
 public class MapperApplicationDatabaseToStorageRoot3 : IDtoMapper<BudgetAnalyserStorageRoot2, ApplicationDatabase>
 {
+    private readonly IDtoMapper<GlobalFilterDto, GlobalFilterCriteria> filterMapper = new MapperGlobalFilterCriteriaToDto2();
     private readonly IDtoMapper<List<ToDoTaskDto>, ToDoCollection> todoMapper = new MapperToDoCollectionToDto2();
 
     public BudgetAnalyserStorageRoot2 ToDto(ApplicationDatabase model)
@@ -18,7 +19,8 @@ public class MapperApplicationDatabaseToStorageRoot3 : IDtoMapper<BudgetAnalyser
             LedgerReconciliationToDoCollection = this.todoMapper.ToDto(model.LedgerReconciliationToDoCollection),
             MatchingRulesCollectionRootDto = model.MatchingRulesCollectionStorageKey,
             WidgetCollectionRootDto = model.WidgetsCollectionStorageKey,
-            IsEncrypted = model.IsEncrypted
+            IsEncrypted = model.IsEncrypted,
+            Filter = this.filterMapper.ToDto(model.GlobalFilter)
         };
         return dto;
     }
@@ -33,7 +35,8 @@ public class MapperApplicationDatabaseToStorageRoot3 : IDtoMapper<BudgetAnalyser
             MatchingRulesCollectionStorageKey = dto.MatchingRulesCollectionRootDto,
             IsEncrypted = dto.IsEncrypted,
             LedgerReconciliationToDoCollection = this.todoMapper.ToModel(dto.LedgerReconciliationToDoCollection),
-            WidgetsCollectionStorageKey = dto.WidgetCollectionRootDto
+            WidgetsCollectionStorageKey = dto.WidgetCollectionRootDto,
+            GlobalFilter = this.filterMapper.ToModel(dto.Filter)
         };
         return baxModel;
     }

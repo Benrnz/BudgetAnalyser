@@ -39,7 +39,8 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
             MatchingRulesCollectionRootDto = $"{path}.MatchingRules.json",
             StatementModelRootDto = $"{path}.Transactions.csv",
             WidgetCollectionRootDto = $"{path}.Widgets.json",
-            IsEncrypted = false
+            IsEncrypted = false,
+            Filter = new GlobalFilterDto()
         };
 
         var appDb = this.mapper.ToModel(storageRoot);
