@@ -33,5 +33,10 @@ public enum ApplicationDataType
     /// <summary>
     ///     Identifies a category of data within the application as "Widgets".
     /// </summary>
-    Widgets
+    Widgets,
+
+    /// <summary>
+    ///     Identifies a category of data within the application as the filter.
+    /// </summary>
+    Filter
 }

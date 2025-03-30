@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Services;
@@ -70,11 +71,13 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         this.dirtyDataService.ClearAllDirtyDataFlags();
+        GlobalFilter.PropertyChanged -= OnGlobalFilterOnPropertyChanged;
         this.budgetAnalyserDatabase.Close();
         this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
         this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
         this.monitorableDependencies.NotifyOfDependencyChange(GlobalFilter);
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
+        GlobalFilter.PropertyChanged += OnGlobalFilterOnPropertyChanged;
         return this.budgetAnalyserDatabase;
     }
 
@@ -87,7 +90,9 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         this.dirtyDataService.ClearAllDirtyDataFlags();
+        GlobalFilter.PropertyChanged -= OnGlobalFilterOnPropertyChanged;
         this.budgetAnalyserDatabase = await this.applicationRepository.CreateNewAsync(storageKey);
+        GlobalFilter.PropertyChanged += OnGlobalFilterOnPropertyChanged;
         foreach (var service in this.persistenceModelServices)
         {
             await service.CreateNewAsync(this.budgetAnalyserDatabase);
@@ -159,11 +164,14 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
 
         this.dirtyDataService.ClearAllDirtyDataFlags();
         var encryptionKey = this.credentialStore.RetrievePasskey();
+        GlobalFilter.PropertyChanged -= OnGlobalFilterOnPropertyChanged;
         this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
         if (this.budgetAnalyserDatabase.IsEncrypted && encryptionKey is null)
         {
             throw new EncryptionKeyNotProvidedException($"{this.budgetAnalyserDatabase.FileName} is encrypted and no password has been provided.");
         }
+
+        GlobalFilter.PropertyChanged += OnGlobalFilterOnPropertyChanged;
 
         // Notify interested subscribers that the main ApplicationDatabase model has been loaded. Intentionally raised before loading the other data models.
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
@@ -282,6 +290,11 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         return valid;
+    }
+
+    private void OnGlobalFilterOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Filter);
     }
 
     private async Task CreateBackup()
