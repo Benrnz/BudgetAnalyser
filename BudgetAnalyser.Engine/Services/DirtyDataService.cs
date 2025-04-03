@@ -5,10 +5,12 @@ internal class DirtyDataService : IDirtyDataService
 {
     private readonly Dictionary<ApplicationDataType, bool> dirtyData = new();
     private readonly ILogger logger;
+    private readonly IMonitorableDependencies monitorableDependencies;
 
-    public DirtyDataService(ILogger logger)
+    public DirtyDataService(ILogger logger, IMonitorableDependencies monitorableDependencies)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
         InitialiseDirtyDataTable();
     }
 
@@ -16,6 +18,7 @@ internal class DirtyDataService : IDirtyDataService
     {
         this.logger.LogInfo(_ => $"Data type {dataType} has been marked as DIRTY.");
         this.dirtyData[dataType] = true;
+        this.monitorableDependencies.NotifyOfDependencyChange<IDirtyDataService>(this);
     }
 
     public bool IsDirty(ApplicationDataType dataType)
@@ -33,6 +36,7 @@ internal class DirtyDataService : IDirtyDataService
             this.dirtyData[key] = false;
         }
 
+        this.monitorableDependencies.NotifyOfDependencyChange<IDirtyDataService>(this);
         this.logger.LogInfo(_ => "All dirty data flags have been cleared.");
     }
 

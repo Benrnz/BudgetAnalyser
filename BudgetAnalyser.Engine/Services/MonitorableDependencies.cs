@@ -32,17 +32,12 @@ internal class MonitorableDependencies : IMonitorableDependencies
             [typeof(LedgerCalculation)] = ledgerCalculator,
             [typeof(ApplicationDatabase)] = null,
             [typeof(ITransactionRuleService)] = null,
-            [typeof(IApplicationDatabaseService)] = null,
-            [typeof(ILogger)] = logger
+            [typeof(ILogger)] = logger,
+            [typeof(IDirtyDataService)] = null,
         };
     }
 
     public event EventHandler<DependencyChangedEventArgs>? DependencyChanged;
-
-    /// <summary>
-    ///     Gets a list of supported types
-    /// </summary>
-    public virtual IEnumerable<Type> SupportedWidgetDependencyTypes => this.availableDependencies.Keys;
 
     /// <summary>
     ///     Notifies this service of dependency that has changed.
@@ -77,6 +72,11 @@ internal class MonitorableDependencies : IMonitorableDependencies
         if (dependency is null)
         {
             return false;
+        }
+
+        if (!this.availableDependencies.ContainsKey(typeKey))
+        {
+            throw new KeyNotFoundException($"The requested dependency {typeKey.Name} is not supported.");
         }
 
         this.availableDependencies[typeKey] = dependency;

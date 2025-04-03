@@ -12,7 +12,7 @@ public class DirtyDataServiceTest
     public DirtyDataServiceTest(ITestOutputHelper outputWriter)
     {
         var logger = new XUnitLogger(outputWriter);
-        this.service = new DirtyDataService(logger);
+        this.service = new DirtyDataService(logger, new FakeMonitorableDependencies());
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class DirtyDataServiceTest
     [Fact]
     public void Constructor_ShouldThrow_GivenNullLogger()
     {
-        Should.Throw<ArgumentNullException>(() => new DirtyDataService(null));
+        Should.Throw<ArgumentNullException>(() => new DirtyDataService(null, new FakeMonitorableDependencies()));
     }
 
     [Fact]

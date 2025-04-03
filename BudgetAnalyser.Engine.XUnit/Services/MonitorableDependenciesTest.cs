@@ -24,17 +24,24 @@ public class MonitorableDependenciesTests
     [Fact]
     public void Constructor_ShouldInitializeDependencies()
     {
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(StatementModel));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(BudgetCollection));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(IBudgetCurrencyContext));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(LedgerBook));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(IBudgetBucketRepository));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(GlobalFilterCriteria));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(LedgerCalculation));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(ApplicationDatabase));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(ITransactionRuleService));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(IApplicationDatabaseService));
-        this.service.SupportedWidgetDependencyTypes.ShouldContain(typeof(ILogger));
+        var sut = new FakeMonitorableDependencies();
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(StatementModel));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(BudgetCollection));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(IBudgetCurrencyContext));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(LedgerBook));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(IBudgetBucketRepository));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(GlobalFilterCriteria));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(LedgerCalculation));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(ApplicationDatabase));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(ITransactionRuleService));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(ILogger));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(IDirtyDataService));
+    }
+
+    [Fact]
+    public void NotifyOfDependencyChange_ShouldThrow_WhenDependencyIsInvalid()
+    {
+        Should.Throw<KeyNotFoundException>(() => this.service.NotifyOfDependencyChange(this));
     }
 
     [Fact]

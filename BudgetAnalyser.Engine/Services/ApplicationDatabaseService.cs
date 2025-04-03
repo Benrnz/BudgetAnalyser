@@ -11,8 +11,8 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     private readonly ICredentialStore credentialStore;
     private readonly IDirtyDataService dirtyDataService;
     private readonly ILogger logger;
-    private readonly IMonitorableDependencies monitorableDependencies;
     private readonly IEnumerable<ISupportsModelPersistence> persistenceModelServices;
+    private readonly IMonitorableDependencies monitorableDependencies;
 
     private ApplicationDatabase? budgetAnalyserDatabase;
 
@@ -35,7 +35,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
         this.persistenceModelServices = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
     /// <inheritdoc />
@@ -44,6 +43,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     /// <inheritdoc />
     public GlobalFilterCriteria GlobalFilter => this.budgetAnalyserDatabase?.GlobalFilter ?? new GlobalFilterCriteria();
 
+    // TODO This should be deprecated and usage should shift to IDirtyDataService.
     public bool HasUnsavedChanges => this.dirtyDataService.HasUnsavedChanges;
 
     /// <inheritdoc />
@@ -73,7 +73,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.dirtyDataService.ClearAllDirtyDataFlags();
         GlobalFilter.PropertyChanged -= OnGlobalFilterOnPropertyChanged;
         this.budgetAnalyserDatabase.Close();
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
         this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
         this.monitorableDependencies.NotifyOfDependencyChange(GlobalFilter);
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
@@ -99,7 +98,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         this.monitorableDependencies.NotifyOfDependencyChange(GlobalFilter);
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
 
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         return this.budgetAnalyserDatabase;
@@ -200,7 +198,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             throw new DataFormatException("A subordinate data file contains unsupported data.", ex);
         }
 
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
         return this.budgetAnalyserDatabase;
     }
 
@@ -208,7 +205,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     public void NotifyOfChange(ApplicationDataType dataType)
     {
         this.dirtyDataService.NotifyOfChange(dataType);
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
     /// <inheritdoc />
@@ -264,7 +260,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         this.dirtyDataService.ClearAllDirtyDataFlags();
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
     /// <inheritdoc />
