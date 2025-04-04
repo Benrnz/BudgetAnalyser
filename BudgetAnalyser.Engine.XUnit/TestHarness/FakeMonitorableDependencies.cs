@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.Services;
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.Engine.UnitTest.TestHarness;
+namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
 internal class FakeMonitorableDependencies : MonitorableDependencies
 {

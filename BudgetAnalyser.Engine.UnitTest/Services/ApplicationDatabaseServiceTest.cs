@@ -91,7 +91,7 @@ public class ApplicationDatabaseServiceTest
     [TestMethod]
     public void Ctor_ShouldOrderServices()
     {
-        var services = (IEnumerable<ISupportsModelPersistence>)PrivateAccessor.GetField(this.subject, "databaseDependents");
+        var services = (IEnumerable<ISupportsModelPersistence>)PrivateAccessor.GetField(this.subject, "persistenceModelServices");
         var sequence = 0;
         foreach (var service in services)
         {

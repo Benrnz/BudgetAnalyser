@@ -1,5 +1,9 @@
 ﻿{
   "BudgetCollectionRootDto": "DemoBudget.json",
+  "Filter": {
+    "BeginDate": null,
+    "EndDate": null
+  },
   "IsEncrypted": false,
   "LedgerBookRootDto": "DemoLedgerBook.json",
   "LedgerReconciliationToDoCollection": [
@@ -10,7 +14,7 @@
     },
     {
       "CanDelete": false,
-      "Description": "Transfer any excess to On Call (~\u003E1000)",
+      "Description": "Transfer any excess to On Call (~>1000)",
       "SystemGenerated": false
     }
   ],

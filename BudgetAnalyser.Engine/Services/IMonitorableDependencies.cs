@@ -2,12 +2,10 @@
 
 public interface IMonitorableDependencies
 {
-    event EventHandler<DependencyChangedEventArgs>? DependencyChanged;
-
     /// <summary>
-    ///     Gets a list of supported types
+    /// An event that is raised when a dependency that is monitored by this class has been updated. Consumers can then call <see cref="RetrieveDependency"/> to fetch the updated dependency.
     /// </summary>
-    IEnumerable<Type> SupportedWidgetDependencyTypes { get; }
+    event EventHandler<DependencyChangedEventArgs>? DependencyChanged;
 
     /// <summary>
     ///     Notifies this service of dependency that has changed.

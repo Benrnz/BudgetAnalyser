@@ -1,12 +1,11 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Windows.Input;
-using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
@@ -22,6 +21,7 @@ namespace BudgetAnalyser.Filtering;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 {
+    private readonly IApplicationDatabaseService appDbService;
     private readonly IUserMessageBox userMessageBox;
     private BudgetModel currentBudget;
     private Guid dialogCorrelationId;
@@ -30,21 +30,19 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private string doNotUseDateSummaryLine1;
     private string doNotUseDateSummaryLine2;
 
-    public GlobalFilterController([NotNull] UiContext uiContext) : base(uiContext.Messenger)
+    public GlobalFilterController(UiContext uiContext, IApplicationDatabaseService appDbService) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
             throw new ArgumentNullException(nameof(uiContext));
         }
 
+        this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
+        this.appDbService.NewDataSourceAvailable += OnNewFilter;
         this.userMessageBox = uiContext.UserPrompts.MessageBox;
         this.doNotUseCriteria = new GlobalFilterCriteria();
         this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 
-        // Messenger.Register<BudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnPopUpResponseReceived(m));
-        Messenger.Register<GlobalFilterController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
-        Messenger.Register<GlobalFilterController, ApplicationStateLoadFinishedMessage>(this, static (r, m) => r.OnApplicationStateLoadFinished(m));
-        Messenger.Register<GlobalFilterController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
         Messenger.Register<GlobalFilterController, RequestFilterMessage>(this, static (r, m) => r.OnGlobalFilterRequested(m));
         Messenger.Register<GlobalFilterController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
         Messenger.Register<GlobalFilterController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
@@ -77,6 +75,11 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         get => this.doNotUseCriteria;
         set
         {
+            if (value == this.doNotUseCriteria)
+            {
+                return;
+            }
+
             this.doNotUseCriteria = value;
             OnPropertyChanged();
             UpdateSummaries();
@@ -141,43 +144,6 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         }
     }
 
-    private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
-    {
-        var filterState = message.ElementOfType<PersistentFiltersApplicationState>();
-        if (filterState is null)
-        {
-            return;
-        }
-
-        Criteria = new GlobalFilterCriteria
-        {
-            BeginDate = filterState.BeginDate is null ? null : DateOnly.FromDateTime(filterState.BeginDate.Value),
-            EndDate = filterState.EndDate is null ? null : DateOnly.FromDateTime(filterState.EndDate.Value)
-        };
-
-        SendFilterAppliedMessage();
-    }
-
-    private void OnApplicationStateLoadFinished(ApplicationStateLoadFinishedMessage message)
-    {
-        if (Criteria is null || Criteria.Cleared)
-        {
-            SendFilterAppliedMessage();
-        }
-    }
-
-    private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
-    {
-        var noCriteria = Criteria is null;
-        var filterState = new PersistentFiltersApplicationState
-        {
-            BeginDate = noCriteria ? null : Criteria!.BeginDate?.ToDateTime(TimeOnly.MinValue),
-            EndDate = noCriteria ? null : Criteria!.EndDate?.ToDateTime(TimeOnly.MinValue)
-        };
-
-        message.PersistThisModel(filterState);
-    }
-
     private void OnBackPeriodCommandExecute(DateOnly date)
     {
         if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
@@ -223,6 +189,12 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private void OnGlobalFilterRequested(RequestFilterMessage message)
     {
         message.Criteria = Criteria;
+    }
+
+    private void OnNewFilter(object? sender, EventArgs e)
+    {
+        Criteria = this.appDbService.GlobalFilter;
+        SendFilterAppliedMessage();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

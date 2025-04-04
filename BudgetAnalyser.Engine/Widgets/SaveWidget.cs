@@ -16,7 +16,7 @@ public class SaveWidget : Widget
     public SaveWidget()
     {
         Category = WidgetGroup.OverviewSectionName;
-        Dependencies = [typeof(IApplicationDatabaseService)];
+        Dependencies = [typeof(IDirtyDataService)];
         DetailedText = "Save";
         ImageResourceName = "SaveImage";
         RecommendedTimeIntervalUpdate = TimeSpan.FromSeconds(30);
@@ -41,9 +41,9 @@ public class SaveWidget : Widget
             return;
         }
 
-        var appDbService = (IApplicationDatabaseService)input[0];
+        var dirtyDataService = (IDirtyDataService)input[0];
 
-        Enabled = appDbService.HasUnsavedChanges;
+        Enabled = dirtyDataService.HasUnsavedChanges;
         Clickable = Enabled;
         DetailedText = Enabled ? "Save" : "No changes";
     }

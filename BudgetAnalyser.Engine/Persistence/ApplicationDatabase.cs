@@ -20,6 +20,7 @@ public class ApplicationDatabase
     public ApplicationDatabase()
     {
         LedgerReconciliationToDoCollection = new ToDoCollection();
+        GlobalFilter = new GlobalFilterCriteria();
     }
 
     /// <summary>
@@ -32,6 +33,11 @@ public class ApplicationDatabase
     ///     Gets the name of the main Budget Analyser Data file.
     /// </summary>
     public string? FileName { get; internal set; }
+
+    /// <summary>
+    ///     The filter that is applied to transactions, reports, and is used to determine period for month end reconciliation.
+    /// </summary>
+    public GlobalFilterCriteria GlobalFilter { get; internal set; }
 
     /// <summary>
     ///     Gets a value indicating whether the Application database is encrypted when stored on disk.
@@ -82,6 +88,7 @@ public class ApplicationDatabase
     public void Close()
     {
         BudgetCollectionStorageKey = string.Empty;
+        GlobalFilter = new GlobalFilterCriteria();
         FileName = null;
         LedgerBookStorageKey = string.Empty;
         MatchingRulesCollectionStorageKey = string.Empty;

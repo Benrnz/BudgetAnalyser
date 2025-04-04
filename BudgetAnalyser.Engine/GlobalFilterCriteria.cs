@@ -34,6 +34,11 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
         get => this.doNotUseBeginDate;
         set
         {
+            if (value == this.doNotUseBeginDate)
+            {
+                return;
+            }
+
             this.doNotUseBeginDate = value;
             OnPropertyChanged();
             CheckConsistency();
@@ -61,6 +66,11 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
         get => this.doNotUseEndDate;
         set
         {
+            if (value == this.doNotUseEndDate)
+            {
+                return;
+            }
+
             this.doNotUseEndDate = value;
             OnPropertyChanged();
             CheckConsistency();
@@ -134,8 +144,7 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
             EndDate = null;
         }
 
-        Cleared = BeginDate is null
-                  && EndDate is null;
+        Cleared = BeginDate is null && EndDate is null;
 
         if (BeginDate is not null && EndDate is not null && BeginDate > EndDate)
         {

@@ -105,6 +105,7 @@ namespace BudgetAnalyser
                 return;
             }
 
+            this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
             this.initialised = true;
             IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load()?.ToList();
 
@@ -116,6 +117,7 @@ namespace BudgetAnalyser
             // Create a distinct list of sequences.
             var sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
 
+            this.uiContext.Logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
 
             // Send state load messages in order.
@@ -123,9 +125,11 @@ namespace BudgetAnalyser
             {
                 var sequenceCopy = sequence;
                 var models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
+                this.uiContext.Logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
                 Messenger.Send(new ApplicationStateLoadedMessage(models));
             }
 
+            this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise completing. Sending ApplicationStateLoadFinishedMessage. {DateTime.Now}");
             Messenger.Send(new ApplicationStateLoadFinishedMessage());
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Services;
@@ -8,9 +9,9 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
 {
     private readonly IApplicationDatabaseRepository applicationRepository;
     private readonly ICredentialStore credentialStore;
-    private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
     private readonly IDirtyDataService dirtyDataService;
     private readonly ILogger logger;
+    private readonly IEnumerable<ISupportsModelPersistence> persistenceModelServices;
     private readonly IMonitorableDependencies monitorableDependencies;
 
     private ApplicationDatabase? budgetAnalyserDatabase;
@@ -33,10 +34,16 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.credentialStore = credentialStore ?? throw new ArgumentNullException(nameof(credentialStore));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
-        this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
+        this.persistenceModelServices = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
     }
 
+    /// <inheritdoc />
+    public event EventHandler? NewDataSourceAvailable;
+
+    /// <inheritdoc />
+    public GlobalFilterCriteria GlobalFilter => this.budgetAnalyserDatabase?.GlobalFilter ?? new GlobalFilterCriteria();
+
+    // TODO This should be deprecated and usage should shift to IDirtyDataService.
     public bool HasUnsavedChanges => this.dirtyDataService.HasUnsavedChanges;
 
     /// <inheritdoc />
@@ -58,16 +65,18 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
 
         this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear();
         // Only clears system generated tasks, not persistent user created tasks.
-        foreach (var service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
+        foreach (var service in this.persistenceModelServices.OrderByDescending(d => d.LoadSequence))
         {
             service.Close();
         }
 
         this.dirtyDataService.ClearAllDirtyDataFlags();
-
+        GlobalFilter.PropertyChanged -= OnGlobalFilterOnPropertyChanged;
         this.budgetAnalyserDatabase.Close();
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
         this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
+        this.monitorableDependencies.NotifyOfDependencyChange(GlobalFilter);
+        NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
+        GlobalFilter.PropertyChanged += OnGlobalFilterOnPropertyChanged;
         return this.budgetAnalyserDatabase;
     }
 
@@ -80,13 +89,17 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         this.dirtyDataService.ClearAllDirtyDataFlags();
+        GlobalFilter.PropertyChanged -= OnGlobalFilterOnPropertyChanged;
         this.budgetAnalyserDatabase = await this.applicationRepository.CreateNewAsync(storageKey);
-        foreach (var service in this.databaseDependents)
+        GlobalFilter.PropertyChanged += OnGlobalFilterOnPropertyChanged;
+        foreach (var service in this.persistenceModelServices)
         {
             await service.CreateNewAsync(this.budgetAnalyserDatabase);
         }
 
-        this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
+        this.monitorableDependencies.NotifyOfDependencyChange(GlobalFilter);
+
+        NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         return this.budgetAnalyserDatabase;
     }
 
@@ -149,15 +162,21 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
 
         this.dirtyDataService.ClearAllDirtyDataFlags();
         var encryptionKey = this.credentialStore.RetrievePasskey();
+        GlobalFilter.PropertyChanged -= OnGlobalFilterOnPropertyChanged;
         this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
         if (this.budgetAnalyserDatabase.IsEncrypted && encryptionKey is null)
         {
             throw new EncryptionKeyNotProvidedException($"{this.budgetAnalyserDatabase.FileName} is encrypted and no password has been provided.");
         }
 
+        GlobalFilter.PropertyChanged += OnGlobalFilterOnPropertyChanged;
+
+        // Notify interested subscribers that the main ApplicationDatabase model has been loaded. Intentionally raised before loading the other data models.
+        NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
+
         try
         {
-            foreach (var service in this.databaseDependents) // Already sorted ascending by sequence number.
+            foreach (var service in this.persistenceModelServices) // Already sorted ascending by sequence number.
             {
                 this.logger.LogInfo(_ => $"Loading service: {service}");
                 await service.LoadAsync(this.budgetAnalyserDatabase);
@@ -166,7 +185,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         catch (DataFormatException ex)
         {
             Close();
-            throw new DataFormatException("A subordindate data file is invalid or corrupt unable to load " + storageKey, ex);
+            throw new DataFormatException("A subordinate data file is invalid or corrupt unable to load " + storageKey, ex);
         }
         catch (KeyNotFoundException ex)
         {
@@ -179,8 +198,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             throw new DataFormatException("A subordinate data file contains unsupported data.", ex);
         }
 
-        this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
         return this.budgetAnalyserDatabase;
     }
 
@@ -188,7 +205,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     public void NotifyOfChange(ApplicationDataType dataType)
     {
         this.dirtyDataService.NotifyOfChange(dataType);
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
     /// <inheritdoc />
@@ -226,7 +242,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             throw new ValidationWarningException(messages.ToString());
         }
 
-        this.databaseDependents
+        this.persistenceModelServices
             .Where(service => this.dirtyDataService.IsDirty(service.DataType))
             .ToList()
             .ForEach(service => service.SavePreview());
@@ -238,13 +254,12 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
 
         // Save all remaining service's data.
-        foreach (var service in this.databaseDependents.Where(s => this.dirtyDataService.IsDirty(s.DataType)))
+        foreach (var service in this.persistenceModelServices.Where(s => this.dirtyDataService.IsDirty(s.DataType)))
         {
             await service.SaveAsync(this.budgetAnalyserDatabase);
         }
 
         this.dirtyDataService.ClearAllDirtyDataFlags();
-        this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
     }
 
     /// <inheritdoc />
@@ -256,7 +271,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         var valid = true;
-        foreach (var service in this.databaseDependents) // Already sorted ascending by sequence number.
+        foreach (var service in this.persistenceModelServices) // Already sorted ascending by sequence number.
         {
             try
             {
@@ -270,6 +285,11 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         }
 
         return valid;
+    }
+
+    private void OnGlobalFilterOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Filter);
     }
 
     private async Task CreateBackup()

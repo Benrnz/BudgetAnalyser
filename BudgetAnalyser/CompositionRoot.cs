@@ -133,7 +133,7 @@ public sealed class CompositionRoot : IDisposable
         var container = builder.Build();
 
         Logger = container.Resolve<ILogger>();
-        Logger.LogLevelFilter = LogLevel.Warn; // hardcoded default log level.
+        Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
 
         foreach (var assembly in assemblies)
         {
