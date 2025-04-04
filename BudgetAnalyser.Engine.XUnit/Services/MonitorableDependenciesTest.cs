@@ -62,8 +62,7 @@ public class MonitorableDependenciesTests
     [Fact]
     public void NotifyOfDependencyChange_ShouldTriggerEvent_WhenDependencyHasSignificantlyChanged()
     {
-        var statementModel = Substitute.For<IDataChangeDetection>();
-        statementModel.SignificantDataChangeHash().Returns(1L);
+        var statementModel = TestData.StatementModelTestData.TestData1();
         var eventTriggered = false;
         this.service.DependencyChanged += (sender, args) => eventTriggered = true;
 
