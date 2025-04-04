@@ -22,7 +22,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="BudgetAnalyser.Engine.UnitTest"/> <!-- Same as [assembly: InternalsVisibleTo("CustomTest1")] -->
-        <InternalsVisibleTo Include="BudgetAnalyser.Engine.XUnit"/>
+        <InternalsVisibleTo Include="BudgetAnalyser.Engine.XUnit3"/>
         <InternalsVisibleTo Include="BudgetAnalyser.Wpf.UnitTest"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>
