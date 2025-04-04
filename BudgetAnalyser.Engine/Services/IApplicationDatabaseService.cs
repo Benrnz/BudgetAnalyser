@@ -11,12 +11,12 @@ public interface IApplicationDatabaseService : IServiceFoundation
     /// <summary>
     ///     Occurs when a new data source has been loaded and is now available for use. This is raised before the contained data models are loaded.
     /// </summary>
-    public event EventHandler? NewDataSourceAvailable;
+    event EventHandler? NewDataSourceAvailable;
 
     /// <summary>
     ///     Gets the global filter that is being applied to transactions, reports, and for reconciliations.
     /// </summary>
-    public GlobalFilterCriteria GlobalFilter { get; }
+    GlobalFilterCriteria GlobalFilter { get; }
 
     /// <summary>
     ///     Gets or sets a value indicating whether there are unsaved changes across all application data.
