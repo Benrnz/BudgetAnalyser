@@ -20,7 +20,6 @@ public class JsonOnDiskWidgetRepositoryTest
     private readonly ITestOutputHelper output;
     private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter = new();
 
-
     public JsonOnDiskWidgetRepositoryTest(ITestOutputHelper output)
     {
         this.output = output;
@@ -29,39 +28,50 @@ public class JsonOnDiskWidgetRepositoryTest
     }
 
     [Fact]
-    public async Task CreateShouldSerialiseAndWriteGivenFilename()
+    public async Task Create_ShouldSerialiseAndWrite_GivenFilename()
     {
-        var subject = ArrangeUsingMocks();
-        var serialised = string.Empty;
-        this.mockReaderWriter.WriteToDiskAsync("foo.bar", Arg.Do<string>(s => serialised = s)).Returns(Task.CompletedTask);
+        var subject = ArrangeUsingEmbeddedResources();
         await subject.CreateNewAndSaveAsync("foo.bar");
-        await this.mockReaderWriter.Received(1).WriteToDiskAsync("foo.bar", Arg.Any<string>());
 
-        serialised.ShouldNotBeEmpty();
+        subject.SerialisedData.ShouldNotBeEmpty();
     }
 
     [Fact]
-    public async Task CreateShouldThrowGivenEmptyFileName()
+    public async Task Create_ShouldThrow_GivenEmptyFileName()
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.CreateNewAndSaveAsync(string.Empty));
     }
 
     [Fact]
-    public async Task CreateShouldThrowGivenNullFileName()
+    public async Task Create_ShouldThrow_GivenNullFileName()
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.CreateNewAndSaveAsync(null!));
     }
 
     [Fact]
-    public void CtorShouldThrowWhenGivenNullMapper()
+    public void Ctor_ShouldThrow_WhenGivenNullMapper()
     {
         Should.Throw<ArgumentNullException>(() => new XamlOnDiskWidgetRepository(null!, new XUnitLogger(this.output), this.mockSelector, new WidgetCatalog()));
     }
 
+    // [Fact]
+    // public async Task TempTest()
+    // {
+    //     var xamlRepo = new XamlOnDiskWidgetRepository(
+    //         new MapperWidgetToDto(new WidgetCatalog()),
+    //         new XUnitLogger(this.output),
+    //         new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), this.encryptedReaderWriter]),
+    //         new WidgetCatalog());
+    //     var widgets = await xamlRepo.LoadAsync(@"BudgetAnalyser.Engine.XUnit.TestData.WidgetsTestData.xml", false);
+    //     var jsonRepo = ArrangeUsingEmbeddedResources();
+    //     await jsonRepo.SaveAsync(widgets, "foo.bar", false);
+    //     this.output.WriteLine(jsonRepo.SerialisedData);
+    // }
+
     [Fact]
-    public async Task LoadFromDemoFileShouldReturnWidgets()
+    public async Task Load_ShouldReturnWidgets_GivenDemoFile()
     {
         var subject = ArrangeUsingEmbeddedResources();
         var results = await subject.LoadAsync(TestDataConstants.TestDataWidgetsFileName, false);
@@ -71,7 +81,7 @@ public class JsonOnDiskWidgetRepositoryTest
     }
 
     [Fact]
-    public async Task LoadShouldThrowGivenBadFileFormat()
+    public async Task Load_ShouldThrow_GivenBadFileFormat()
     {
         var subject = ArrangeUsingMocks();
         // If any exception is thrown during loading and parsing the file, it should be caught and rethrown as a DataFormatException.
@@ -81,7 +91,7 @@ public class JsonOnDiskWidgetRepositoryTest
     }
 
     [Fact]
-    public async Task LoadShouldThrowGivenEmptyFileName()
+    public async Task Load_ShouldThrow_GivenEmptyFileName()
     {
         var subject = ArrangeUsingMocks();
         this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(false);
@@ -89,21 +99,21 @@ public class JsonOnDiskWidgetRepositoryTest
     }
 
     [Fact]
-    public async Task LoadShouldThrowGivenNullFileName1()
+    public async Task Load_ShouldThrow_GivenNullFileName1()
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<KeyNotFoundException>(async () => await subject.LoadAsync(null!, false));
     }
 
     [Fact]
-    public async Task LoadShouldThrowGivenNullFileName2()
+    public async Task Load_ShouldThrow_GivenNullFileName2()
     {
         var subject = ArrangeUsingMocks();
         await Should.ThrowAsync<KeyNotFoundException>(async () => await subject.LoadAsync(null!, false));
     }
 
     [Fact]
-    public async Task LoadShouldThrowIfFileNotFound()
+    public async Task Load_ShouldThrow_IfFileNotFound()
     {
         var subject = ArrangeUsingMocks();
         this.mockReaderWriter.FileExists("Foo.bar").Returns(false);
@@ -111,7 +121,7 @@ public class JsonOnDiskWidgetRepositoryTest
     }
 
     [Fact]
-    public async Task LoadShouldThrowIfLoadedNullFile()
+    public async Task Load_ShouldThrow_IfLoadedNullFile()
     {
         var subject = ArrangeUsingMocks();
         this.mockReaderWriter.FileExists(Arg.Any<string>()).Returns(true);
@@ -120,27 +130,24 @@ public class JsonOnDiskWidgetRepositoryTest
     }
 
     [Fact]
-    public async Task SaveShouldSerialiseAndWriteGivenValidModel()
+    public async Task Save_ShouldSerialiseAndWrite_GivenValidModel()
     {
-        var subject = ArrangeUsingMocks();
-        var serialised = string.Empty;
-        this.mockReaderWriter.WriteToDiskAsync("foo.bar", Arg.Do<string>(s => serialised = s)).Returns(Task.CompletedTask);
+        var subject = ArrangeUsingEmbeddedResources();
         var models = WidgetsTestData.ModelTestData1();
         await subject.SaveAsync(models, "foo.bar", false);
-        await this.mockReaderWriter.Received(1).WriteToDiskAsync("foo.bar", Arg.Any<string>());
 
-        serialised.ShouldNotBeEmpty();
+        subject.SerialisedData.ShouldNotBeEmpty();
     }
 
     [Fact]
-    public async Task SaveShouldThrowGivenNullFileName()
+    public async Task Save_ShouldThrow_GivenNullFileName()
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(WidgetsTestData.ModelTestData1(), null!, false));
     }
 
     [Fact]
-    public async Task SaveShouldThrowGivenNullWidgetsList()
+    public async Task Save_ShouldThrow_GivenNullWidgetsList()
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(null!, "Foo.bar", false));
@@ -153,6 +160,6 @@ public class JsonOnDiskWidgetRepositoryTest
 
     private JsonOnDiskWidgetRepositoryTestHarness ArrangeUsingMocks()
     {
-        throw new NotImplementedException();
+        return new JsonOnDiskWidgetRepositoryTestHarness(new XUnitLogger(this.output), this.mockSelector);
     }
 }

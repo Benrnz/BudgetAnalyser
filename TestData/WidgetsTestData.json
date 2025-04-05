@@ -1,0 +1,111 @@
+[
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Overview",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.EncryptWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Tracking",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.OverspentWarning"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Overview",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.SaveWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Overview",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.CurrentFileWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Global Filter",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.DateFilterWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Overview",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.NewFileWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": false,
+      "WidgetGroup": "Tracking",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.RemainingSurplusWidget"
+    },
+    {
+      "$type": "surprisepmt",
+      "BucketCode": "RENT",
+      "Frequency": 1,
+      "PaymentStartDate": "2013-07-01",
+      "Visible": true,
+      "WidgetGroup": "Overview",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.SurprisePaymentWidget"
+    },
+    {
+      "$type": "multi",
+      "BucketCode": "FOOD",
+      "Visible": true,
+      "WidgetGroup": "Tracking",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.BudgetBucketMonitorWidget"
+    },
+    {
+      "$type": "multi",
+      "BucketCode": "HAIRCUT",
+      "Visible": true,
+      "WidgetGroup": "Tracking",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.BudgetBucketMonitorWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Overview",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.DaysSinceLastImport"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Overview",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.DisusedMatchingRuleWidget"
+    },
+    {
+      "$type": "multi",
+      "BucketCode": "SURPLUS.FENCE",
+      "Visible": false,
+      "WidgetGroup": "Projects",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget"
+    },
+    {
+      "$type": "multi",
+      "BucketCode": "SURPLUS.KITCHEN",
+      "Visible": true,
+      "WidgetGroup": "Projects",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.FixedBudgetMonitorWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Tracking",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.RemainingActualSurplusWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": false,
+      "WidgetGroup": "Overview",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.TimedUpdateCounterWidget"
+    },
+    {
+      "$type": "base",
+      "Visible": true,
+      "WidgetGroup": "Tracking",
+      "WidgetType": "BudgetAnalyser.Engine.Widgets.UpdateMobileDataWidget"
+    }
+  ]
