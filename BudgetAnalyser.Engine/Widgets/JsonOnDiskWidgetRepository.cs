@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Widgets;
 /// <summary>
 ///     A Repository to persistently store widgets in Json format on local disk.
 /// </summary>
-// [AutoRegisterWithIoC(SingleInstance = true)]
+[AutoRegisterWithIoC(SingleInstance = true)]
 internal class JsonOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, ILogger logger, IReaderWriterSelector readerWriterSelector, IStandardWidgetCatalog catalog) : IWidgetRepository
 {
     private readonly IStandardWidgetCatalog catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
@@ -29,17 +29,17 @@ internal class JsonOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
     /// <inheritdoc />
     public async Task<IEnumerable<Widget>> LoadAsync(string storageKey, bool isEncrypted)
     {
-        this.logger.LogInfo(_ => $"{nameof(XamlOnDiskWidgetRepository)} Loading Widgets from: {storageKey}");
+        this.logger.LogInfo(_ => $"{nameof(JsonOnDiskWidgetRepository)} Loading Widgets from: {storageKey}");
         if (storageKey.IsNothing())
         {
-            this.logger.LogWarning(_ => $"{nameof(XamlOnDiskWidgetRepository)} Storage key is empty: {storageKey}");
+            this.logger.LogWarning(_ => $"{nameof(JsonOnDiskWidgetRepository)} Storage key is empty: {storageKey}");
             throw new KeyNotFoundException("storageKey is blank");
         }
 
         var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
         if (!reader.FileExists(storageKey))
         {
-            this.logger.LogWarning(_ => $"{nameof(XamlOnDiskWidgetRepository)} Storage key cannot be found: {storageKey}");
+            this.logger.LogWarning(_ => $"{nameof(JsonOnDiskWidgetRepository)} Storage key cannot be found: {storageKey}");
             throw new KeyNotFoundException("Storage key can not be found: " + storageKey);
         }
 
@@ -50,18 +50,18 @@ internal class JsonOnDiskWidgetRepository(IDtoMapper<WidgetDto, Widget> mapper, 
         }
         catch (Exception ex)
         {
-            this.logger.LogWarning(_ => $"{nameof(XamlOnDiskWidgetRepository)} Deserialisation failed for: {storageKey}");
+            this.logger.LogWarning(_ => $"{nameof(JsonOnDiskWidgetRepository)} Deserialisation failed for: {storageKey}");
             throw new DataFormatException("Deserialisation Widgets failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
         }
 
         if (dataEntities is null)
         {
-            this.logger.LogWarning(_ => $"{nameof(XamlOnDiskWidgetRepository)} Deserialised widget file completed but isn't castable into List<WidgetDto>");
+            this.logger.LogWarning(_ => $"{nameof(JsonOnDiskWidgetRepository)} Deserialised widget file completed but isn't castable into List<WidgetDto>");
             throw new DataFormatException("Deserialised Widgets are not of type List<WidgetDto>");
         }
 
         var realModel = dataEntities.Select(d => this.mapper.ToModel(d));
-        this.logger.LogInfo(_ => $"{nameof(XamlOnDiskWidgetRepository)} Loaded {realModel.Count()} widgets from: {storageKey}");
+        this.logger.LogInfo(_ => $"{nameof(JsonOnDiskWidgetRepository)} Loaded {realModel.Count()} widgets from: {storageKey}");
         return realModel.ToList();
     }
 

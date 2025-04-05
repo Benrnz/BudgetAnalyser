@@ -1,7 +1,6 @@
 ﻿using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Widgets;
-using BudgetAnalyser.Engine.Widgets.Data;
 using BudgetAnalyser.Engine.XUnit.Helpers;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
@@ -55,22 +54,8 @@ public class JsonOnDiskWidgetRepositoryTest
     [Fact]
     public void Ctor_ShouldThrow_WhenGivenNullMapper()
     {
-        Should.Throw<ArgumentNullException>(() => new XamlOnDiskWidgetRepository(null!, new XUnitLogger(this.output), this.mockSelector, new WidgetCatalog()));
+        Should.Throw<ArgumentNullException>(() => new JsonOnDiskWidgetRepository(null!, new XUnitLogger(this.output), this.mockSelector, new WidgetCatalog()));
     }
-
-    // [Fact]
-    // public async Task TempTest()
-    // {
-    //     var xamlRepo = new XamlOnDiskWidgetRepository(
-    //         new MapperWidgetToDto(new WidgetCatalog()),
-    //         new XUnitLogger(this.output),
-    //         new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), this.encryptedReaderWriter]),
-    //         new WidgetCatalog());
-    //     var widgets = await xamlRepo.LoadAsync(@"BudgetAnalyser.Engine.XUnit.TestData.WidgetsTestData.xml", false);
-    //     var jsonRepo = ArrangeUsingEmbeddedResources();
-    //     await jsonRepo.SaveAsync(widgets, "foo.bar", false);
-    //     this.output.WriteLine(jsonRepo.SerialisedData);
-    // }
 
     [Fact]
     public async Task Load_ShouldReturnWidgets_GivenDemoFile()
