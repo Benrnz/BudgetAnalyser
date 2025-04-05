@@ -9,7 +9,6 @@ using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Widgets;
 
 public class XamlOnDiskWidgetRepositoryTest
