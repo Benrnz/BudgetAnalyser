@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.XUnit.Helpers;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Shouldly;
-using Xunit.Abstractions;
+
 
 #pragma warning disable CS8601 // Possible null reference assignment. // GENERATED CODE
 

@@ -38,7 +38,7 @@ public class MapperExpenseToDto2Test
     {
         // Arrange
         var dto = new ExpenseDto { Amount = 500, BudgetBucketCode = TestDataConstants.CarMtcBucketCode };
-        var carMtcBucket = BudgetBucketTestData.BudgetModelTestData1Buckets.Single(b => b.Code == UnitTest.TestData.TestDataConstants.CarMtcBucketCode);
+        var carMtcBucket = BudgetBucketTestData.BudgetModelTestData1Buckets.Single(b => b.Code == TestDataConstants.CarMtcBucketCode);
         this.bucketRepo.GetByCode(dto.BudgetBucketCode).Returns(carMtcBucket);
 
         // Act

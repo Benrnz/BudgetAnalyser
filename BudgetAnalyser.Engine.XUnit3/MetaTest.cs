@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Shouldly;
-using Xunit.Abstractions;
 
 namespace BudgetAnalyser.Engine.XUnit;
 

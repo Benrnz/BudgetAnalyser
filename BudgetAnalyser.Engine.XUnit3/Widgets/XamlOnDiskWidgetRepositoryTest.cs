@@ -8,7 +8,7 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 using Shouldly;
-using Xunit.Abstractions;
+
 
 namespace BudgetAnalyser.Engine.XUnit.Widgets;
 
