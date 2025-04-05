@@ -183,7 +183,7 @@ public class BudgetModel : INotifyPropertyChanged
         retval &= Incomes.OfType<IModelValidate>().ToList().All(i => i.Validate(validationMessages));
         retval &= Expenses.OfType<IModelValidate>().ToList().All(e => e.Validate(validationMessages));
 
-        if (Expenses.Any(e => e.Bucket.Code == SurplusBucket.SurplusCode))
+        if (Expenses.Any(e => e.BucketCode == SurplusBucket.SurplusCode))
         {
             validationMessages.AppendFormat(CultureInfo.CurrentCulture,
                 "You can not use SURPLUS as an expense code.");
@@ -191,7 +191,7 @@ public class BudgetModel : INotifyPropertyChanged
         }
 
         var duplicates = Expenses
-            .GroupBy(i => i.Bucket.Code)
+            .GroupBy(i => i.BucketCode)
             .Where(g => g.Count() > 1)
             .Select(g => g.Key);
 

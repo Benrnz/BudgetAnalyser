@@ -27,6 +27,12 @@ public class Expense : BudgetItem, IModelValidate
             throw new ArgumentNullException(nameof(validationMessages));
         }
 
+        if (Bucket is null)
+        {
+            validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Bucket has not been set on this Expense. {0:C}", Amount);
+            return false;
+        }
+
         var result = Bucket.Validate(validationMessages);
 
         if (result && Amount < 0)

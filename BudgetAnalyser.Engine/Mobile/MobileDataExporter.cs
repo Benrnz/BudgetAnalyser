@@ -81,7 +81,7 @@ internal class MobileDataExporter : IMobileDataExporter
                 BucketCode = entry.LedgerBucket.BudgetBucket.Code,
                 BucketType = entry.LedgerBucket.BudgetBucket.TypeDescription,
                 Description = entry.LedgerBucket.BudgetBucket.Description,
-                MonthlyBudgetAmount = currentBudget.Expenses.First(e => e.Bucket.Code == entry.LedgerBucket.BudgetBucket.Code).Amount
+                MonthlyBudgetAmount = currentBudget.Expenses.First(e => e.BucketCode == entry.LedgerBucket.BudgetBucket.Code).Amount
             });
         }
 

@@ -181,7 +181,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         try
         {
             return LedgerBook is null || ledgerLine is null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode)
-                ? Budget!.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount
+                ? Budget!.Model.Expenses.Single(b => b.BucketCode == BucketCode).Amount
                 : ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
         }
         catch (InvalidOperationException ex)

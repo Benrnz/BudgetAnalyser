@@ -330,7 +330,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
 
     private List<LedgerTransaction> IncludeBudgetedAmount(Account salaryAccount, BudgetModel currentBudget, LedgerBucket ledgerBucket, DateOnly reconciliationDate)
     {
-        var budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
+        var budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.BucketCode == ledgerBucket.BudgetBucket.Code);
         var transactions = new List<LedgerTransaction>();
         if (budgetedExpense is not null)
         {
@@ -339,7 +339,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
             {
                 budgetedAmount = new BudgetCreditLedgerTransaction
                 {
-                    Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
+                    Amount = budgetedExpense.Bucket!.Active ? budgetedExpense.Amount : 0,
                     Narrative = budgetedExpense.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
                 };
             }
@@ -347,7 +347,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
             {
                 budgetedAmount = new BudgetCreditLedgerTransaction
                 {
-                    Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
+                    Amount = budgetedExpense.Bucket!.Active ? budgetedExpense.Amount : 0,
                     Narrative = budgetedExpense.Bucket.Active
                         ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer."
                         : "Warning! Bucket has been disabled.",

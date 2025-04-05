@@ -9,7 +9,7 @@ public class MapperExpenseToDto2(IBudgetBucketRepository bucketRepo) : IDtoMappe
 
     public ExpenseDto ToDto(Expense model)
     {
-        return new ExpenseDto { Amount = model.Amount, BudgetBucketCode = model.Bucket.Code };
+        return new ExpenseDto { Amount = model.Amount, BudgetBucketCode = model.BucketCode };
     }
 
     public Expense ToModel(ExpenseDto dto)

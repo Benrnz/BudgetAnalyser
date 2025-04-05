@@ -68,8 +68,6 @@ public class BudgetController : ControllerBase, IShowableController
 
     public ICommand AddNewIncomeCommand => new RelayCommand(OnAddNewIncomeExecute);
 
-    [UsedImplicitly]
-    // ReSharper disable once MemberCanBePrivate.Global
     public string BudgetMenuItemName
     {
         [UsedImplicitly]
