@@ -55,9 +55,11 @@
         <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json">
           <Link>TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json</Link>
         </EmbeddedResource>
+        <EmbeddedResource Include="..\TestData\WidgetsTestData.json">
+          <Link>TestData\WidgetsTestData.json</Link>
+        </EmbeddedResource>
         <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
         <None Remove="TestData\WidgetsTestData.xml" />
-        <EmbeddedResource Include="TestData\WidgetsTestData.xml" />
     </ItemGroup>
 
     <ItemGroup>
