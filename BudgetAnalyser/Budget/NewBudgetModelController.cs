@@ -28,7 +28,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
         BudgetCycle = BudgetCycle.Monthly;
     }
 
-    public event EventHandler Ready;
+    public event EventHandler? Ready;
 
     /// <summary>
     ///     Gets the pay cycle for this budget. Can only be set during budget creation.
