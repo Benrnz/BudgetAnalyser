@@ -45,8 +45,19 @@ internal class MonitorableDependencies : IMonitorableDependencies
     /// <param name="dependency">The dependency.</param>
     /// <returns>A boolean value indicating if the dependency has significantly changed, true if so, otherwise false.</returns>
     [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Preferred method of passing type parameter")]
-    public virtual bool NotifyOfDependencyChange<T>(T? dependency)
+    public virtual bool NotifyOfDependencyChange<T>(T? dependency) where T : class
     {
+        if (dependency is null)
+        {
+            return false;
+        }
+
+        if (!this.availableDependencies.ContainsKey(typeof(T)))
+        {
+            throw new KeyNotFoundException($"The requested dependency {typeof(T).Name} is not supported.");
+        }
+
+        this.availableDependencies[typeof(T)] = dependency;
         return NotifyOfDependencyChange(dependency, typeof(T));
     }
 

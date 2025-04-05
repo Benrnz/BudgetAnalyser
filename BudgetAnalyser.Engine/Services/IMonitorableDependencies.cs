@@ -12,7 +12,7 @@ public interface IMonitorableDependencies
     /// </summary>
     /// <param name="dependency">The dependency.</param>
     /// <returns>A boolean value indicating if the dependency has significantly changed, true if so, otherwise false.</returns>
-    bool NotifyOfDependencyChange<T>(T? dependency);
+    bool NotifyOfDependencyChange<T>(T? dependency) where T : class;
 
     object RetrieveDependency(Type key);
 }
