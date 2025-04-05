@@ -14,13 +14,15 @@ internal class LedgerService(
     ILedgerBookRepository ledgerRepository,
     IAccountTypeRepository accountTypeRepository,
     ILedgerBucketFactory ledgerBucketFactory,
-    IMonitorableDependencies monitorableDependencies)
+    IMonitorableDependencies monitorableDependencies,
+    IDirtyDataService dirtyDataService)
     : ILedgerService, ISupportsModelPersistence
 {
     private readonly IAccountTypeRepository accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
     private readonly ILedgerBucketFactory ledgerBucketFactory = ledgerBucketFactory ?? throw new ArgumentNullException(nameof(ledgerBucketFactory));
     private readonly ILedgerBookRepository ledgerRepository = ledgerRepository ?? throw new ArgumentNullException(nameof(ledgerRepository));
     private readonly IMonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
+    private readonly IDirtyDataService dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
 
     /// <inheritdoc />
     public event EventHandler? Closed;
@@ -97,6 +99,8 @@ internal class LedgerService(
 
         var newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
         LedgerBook.AddLedger(newLedger);
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Ledger);
+        this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
     }
 
     /// <inheritdoc />

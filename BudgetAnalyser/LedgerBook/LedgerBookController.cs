@@ -254,6 +254,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         this.uiContext.UserPrompts.MessageBox.Show(
             "Ledger Bucket added successfully to the LedgerBook. It will be tracked and shown only when there are new transactions added for that Bucket.",
             "LedgerBook");
+        FileOperations.Dirty = true;
     }
 
     private void OnAddReconciliationDialogClose(object? sender, EditBankBalancesEventArgs? e)
