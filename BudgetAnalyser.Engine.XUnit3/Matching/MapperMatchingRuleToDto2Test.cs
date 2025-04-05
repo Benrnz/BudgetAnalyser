@@ -1,14 +1,14 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
-using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Shouldly;
 
 namespace BudgetAnalyser.Engine.XUnit.Matching;
 
 public class MapperMatchingRuleToDto2Test
 {
-    private readonly IBudgetBucketRepository bucketRepo = new BucketBucketRepoAlwaysFind();
+    private readonly IBudgetBucketRepository bucketRepo = new BudgetBucketRepoAlwaysFind();
 
     private readonly MatchingRule matchingRuleTestData;
     private readonly SingleUseMatchingRule singleUseRuleTestData;

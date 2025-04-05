@@ -75,7 +75,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj" />
-      <ProjectReference Include="..\BudgetAnalyser.Engine.UnitTest\BudgetAnalyser.Engine.UnitTest.csproj" />
       <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj" />
     </ItemGroup>
 
