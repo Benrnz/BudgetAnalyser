@@ -140,15 +140,15 @@ public class OverspentWarning : Widget
         this.logger.LogInfo(l => l.Format("SearchForOtherNonLedgerBookOverSpentBuckets: {0} statement transactions found.", transactions.Count()));
         foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is ExpenseBucket))
         {
-            if (currentLedgerBalances.ContainsKey(expense.Bucket))
+            if (currentLedgerBalances.ContainsKey(expense.Bucket!))
             {
-                this.logger.LogInfo(l => l.Format("Ignoring {0}, exists within LedgerBook", expense.Bucket.Code));
+                this.logger.LogInfo(l => l.Format("Ignoring {0}, exists within LedgerBook", expense.BucketCode));
                 continue;
             }
 
             var bucketBalance = expense.Amount + transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
-            currentLedgerBalances.Add(expense.Bucket, bucketBalance);
-            this.logger.LogInfo(l => l.Format("Found non-LedgerBook Bucket: {0} Bucket calc'd balance {1}", expense.Bucket.Code, bucketBalance));
+            currentLedgerBalances.Add(expense.Bucket!, bucketBalance);
+            this.logger.LogInfo(l => l.Format("Found non-LedgerBook Bucket: {0} Bucket calc'd balance {1}", expense.BucketCode, bucketBalance));
             if (bucketBalance < -this.tolerance)
             {
                 this.logger.LogInfo(_ => "Bucket balance less than tolerance... Adding warning.");

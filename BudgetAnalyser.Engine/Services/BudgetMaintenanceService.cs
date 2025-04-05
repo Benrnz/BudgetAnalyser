@@ -215,7 +215,7 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
         foreach (var budgetBucket in buckets)
         {
             var copyOfBucket = budgetBucket;
-            BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
+            BudgetBucketRepository.GetOrCreateNew(copyOfBucket!.Code, () => copyOfBucket);
         }
     }
 

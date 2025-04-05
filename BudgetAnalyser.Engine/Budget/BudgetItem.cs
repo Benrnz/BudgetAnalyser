@@ -40,13 +40,12 @@ public abstract class BudgetItem : INotifyPropertyChanged
         }
     }
 
-
     /// <summary>
     ///     Gets or sets the bucket classification for this.
     /// </summary>
-    public required BudgetBucket Bucket
+    public BudgetBucket? Bucket
     {
-        get => this.doNotUseBucket ?? throw new InvalidOperationException("Bucket is required.");
+        get => this.doNotUseBucket;
         set
         {
             if (value == this.doNotUseBucket)
@@ -60,20 +59,24 @@ public abstract class BudgetItem : INotifyPropertyChanged
             }
 
             this.doNotUseBucket = value;
-            this.doNotUseBucket.PropertyChanged += OnBucketPropertyChanged;
+            if (this.doNotUseBucket is not null)
+            {
+                this.doNotUseBucket.PropertyChanged += OnBucketPropertyChanged;
+            }
+
             OnPropertyChanged();
         }
     }
 
     /// <summary>
+    ///     A safe way to query Bucket Code without having to do a null check. Bucket can be null when creating a new budget item.
+    /// </summary>
+    public string BucketCode => Bucket?.Code ?? "[Blank / Invalid]";
+
+    /// <summary>
     ///     Gets the summary.
     /// </summary>
-    public string Summary => string.Format(
-        CultureInfo.CurrentCulture,
-        "{0} {1}: {2}",
-        Bucket.TypeDescription.AnOrA(true),
-        EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
-        Bucket.Description);
+    public string Summary => $"{Bucket?.TypeDescription.AnOrA(true)} {EnsureNoRepeatedLastWord(Bucket?.TypeDescription, GetType().Name)}: {Bucket?.Description}";
 
     /// <summary>
     ///     Determines whether the specified <see cref="object" />, is equal to this instance.
@@ -107,6 +110,11 @@ public abstract class BudgetItem : INotifyPropertyChanged
     /// </returns>
     public override int GetHashCode()
     {
+        if (Bucket is null)
+        {
+            return 0;
+        }
+
         unchecked
         {
             return Bucket.GetHashCode() * GetType().GetHashCode();

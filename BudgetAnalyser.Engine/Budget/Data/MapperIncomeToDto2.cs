@@ -9,7 +9,7 @@ public class MapperIncomeToDto2(IBudgetBucketRepository bucketRepo) : IDtoMapper
 
     public IncomeDto ToDto(Income model)
     {
-        return new IncomeDto { Amount = model.Amount, BudgetBucketCode = model.Bucket.Code };
+        return new IncomeDto { Amount = model.Amount, BudgetBucketCode = model.BucketCode };
     }
 
     public Income ToModel(IncomeDto dto)
