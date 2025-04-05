@@ -60,7 +60,6 @@
         </EmbeddedResource>
         <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
         <None Remove="TestData\WidgetsTestData.xml" />
-        <EmbeddedResource Include="TestData\WidgetsTestData.xml" />
     </ItemGroup>
 
     <ItemGroup>

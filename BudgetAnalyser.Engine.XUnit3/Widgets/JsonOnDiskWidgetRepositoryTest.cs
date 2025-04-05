@@ -2,11 +2,13 @@
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.Widgets.Data;
+using BudgetAnalyser.Engine.XUnit.Helpers;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
+using Rees.UnitTestUtilities;
 using Shouldly;
 
 namespace BudgetAnalyser.Engine.XUnit.Widgets;
@@ -151,6 +153,20 @@ public class JsonOnDiskWidgetRepositoryTest
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(null!, "Foo.bar", false));
+    }
+
+    [Fact]
+    public async Task LoadAndSave_ShouldProduceSameJson()
+    {
+        var subject = ArrangeUsingEmbeddedResources();
+        var widgets = await subject.LoadAsync(TestDataConstants.TestDataWidgetsFileName, false);
+
+        await subject.SaveAsync(widgets, "foo.bar", false);
+        var serialisedData = JsonHelper.MinifyJson(subject.SerialisedData);
+        var expectedData = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.TestDataWidgetsFileName);
+        expectedData = JsonHelper.MinifyJson(expectedData);
+
+        serialisedData.ShouldBe(expectedData);
     }
 
     private JsonOnDiskWidgetRepositoryTestHarness ArrangeUsingEmbeddedResources()
