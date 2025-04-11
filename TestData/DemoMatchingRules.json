@@ -1,0 +1,16 @@
+[
+  {
+    "Amount": null,
+    "And": true,
+    "BucketCode": "SALARY",
+    "Created": "2014-04-12T04:02:19.7922645Z",
+    "Description": "Acme Inc",
+    "LastMatch": "2014-08-29T22:21:24.6301711Z",
+    "MatchCount": 1,
+    "Reference1": "Acme W E Coyote",
+    "Reference2": null,
+    "Reference3": null,
+    "RuleId": "f21881f2-4ca7-4d90-b2f5-4d08a56b38cc",
+    "TransactionType": null
+  }
+]
