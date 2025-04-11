@@ -1,5 +1,6 @@
 [
   {
+    "$type":"base",
     "Amount": null,
     "And": true,
     "BucketCode": "SALARY",
