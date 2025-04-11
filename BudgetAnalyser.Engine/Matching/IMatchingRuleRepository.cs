@@ -11,9 +11,8 @@ public interface IMatchingRuleRepository
     IEnumerable<MatchingRule> CreateNew();
 
     /// <summary>
-    ///     Creates a new empty collection of <see cref="MatchingRule" />s at the location indicated by the
-    ///     <paramref name="storageKey" />. Any existing data at this location will be overwritten. After this is complete, use
-    ///     the <see cref="LoadAsync" /> method to load the new collection.
+    ///     Creates a new empty collection of <see cref="MatchingRule" />s at the location indicated by the <paramref name="storageKey" />. Any existing data at this location will be overwritten.
+    ///     After this is complete, use the <see cref="LoadAsync" /> method to load the new collection.
     /// </summary>
     /// <exception cref="System.ArgumentNullException">Will be thrown if the storage key is null.</exception>
     Task CreateNewAndSaveAsync(string storageKey);
@@ -24,13 +23,10 @@ public interface IMatchingRuleRepository
     /// <param name="storageKey">The unique storage identifier.</param>
     /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
     /// <exception cref="System.Collections.Generic.KeyNotFoundException">
-    ///     Will be thrown when the storageKey is blank
-    ///     or
-    ///     Storage key can not be found.
+    ///     Will be thrown when the storageKey is blank or Storage key can not be found.
     /// </exception>
     /// <exception cref="DataFormatException">
-    ///     Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is
-    ///     invalid or Deserialised Matching-Rules are not of type List{MatchingRuleDto}
+    ///     Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid or Deserialised Matching-Rules are not of type List{MatchingRuleDto}
     /// </exception>
     /// <exception cref="System.ArgumentNullException">Will be thrown if the storage key is null.</exception>
     Task<IEnumerable<MatchingRule>> LoadAsync(string storageKey, bool isEncrypted);

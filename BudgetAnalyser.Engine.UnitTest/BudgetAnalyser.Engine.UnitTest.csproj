@@ -20,14 +20,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml" Link="TestData\DemoMatchingRules.xml"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv"/>
         <EmbeddedResource Include="TestData\AnzVisaCsvFileExportFormat.csv"/>
         <EmbeddedResource Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv"/>
-        <EmbeddedResource Include="TestData\MatchingRulesTestData.xml"/>
         <EmbeddedResource Include="TestData\WestpacChequeCsvFileExportFormat.csv"/>
     </ItemGroup>
 
