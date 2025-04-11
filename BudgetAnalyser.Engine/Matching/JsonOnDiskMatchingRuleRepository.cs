@@ -2,13 +2,11 @@
 using System.Text.Json;
 using BudgetAnalyser.Engine.Matching.Data;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Widgets.Data;
-using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.Matching;
 
 /// <summary>
-///     A Repository to persistently store matching rules in Xaml format on local disk.
+///     A Repository to persistently store matching rules in Json format on local disk.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Matching.IMatchingRuleRepository" />
 // [AutoRegisterWithIoC(SingleInstance = true)]
@@ -59,7 +57,7 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         catch (Exception ex)
         {
             this.logger.LogWarning(_ => $"{nameof(JsonOnDiskMatchingRuleRepository)} Deserialisation failed for: {storageKey}");
-            throw new DataFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
+            throw new DataFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Json deserialiser, the file format is invalid.", ex);
         }
 
         if (dataEntities is null)
@@ -97,18 +95,14 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         return model.Select(r => this.mapper.ToDto(r));
     }
 
-    // ReSharper disable once VirtualMemberNeverOverridden.Global // Used in unit testing
-    protected virtual object Deserialise(string xaml)
-    {
-        return XamlServices.Parse(xaml);
-    }
-
     [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
     protected virtual async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName, bool isEncrypted)
     {
         var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        var result = await reader.LoadFromDiskAsync(fileName);
-        return (List<MatchingRuleDto>)Deserialise(result);
+        await using var stream = reader.CreateReadableStream(fileName);
+        var dto = await JsonSerializer.DeserializeAsync<List<MatchingRuleDto>>(stream, new JsonSerializerOptions());
+
+        return dto ?? throw new DataFormatException("Unable to deserialise Matching Rules into the correct type. File is corrupt.");
     }
 
     protected virtual async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities, bool isEncrypted)

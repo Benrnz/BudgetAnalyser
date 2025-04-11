@@ -40,9 +40,6 @@
         <EmbeddedResource Include="..\TestData\DemoLedgerBook.json.secure">
           <Link>TestData\DemoLedgerBook.json.secure</Link>
         </EmbeddedResource>
-        <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml">
-          <Link>TestData\DemoMatchingRules.xml</Link>
-        </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\DemoTransactions.csv">
           <Link>TestData\DemoTransactions.csv</Link>
         </EmbeddedResource>
@@ -57,6 +54,9 @@
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\WidgetsTestData.json">
           <Link>TestData\WidgetsTestData.json</Link>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\TestData\DemoMatchingRules.json">
+          <Link>TestData\DemoMatchingRules.json</Link>
         </EmbeddedResource>
         <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
         <None Remove="TestData\WidgetsTestData.xml" />

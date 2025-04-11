@@ -12,7 +12,7 @@ public static class TestDataConstants
     public const string TestDataWidgetsFileName = @"BudgetAnalyser.Engine.XUnit.TestData.WidgetsTestData.json";
     public const string DemoLedgerBookFileName = @"BudgetAnalyser.Engine.XUnit.TestData.DemoLedgerBook.json";
     public const string DemoEncryptedFilePassword = "Password99";
-    public const string DemoRulesFileName = @"BudgetAnalyser.Engine.XUnit.TestData.DemoMatchingRules.xml";
+    public const string DemoRulesFileName = @"BudgetAnalyser.Engine.XUnit.TestData.DemoMatchingRules.json";
     public const string DemoTransactionsFileName = @"BudgetAnalyser.Engine.XUnit.TestData.DemoTransactions.csv";
     public const string EmptyBudgetFileName = @"BudgetAnalyser.Engine.XUnit.TestData.EmptyBudget.json";
     public const string CarMtcBucketCode = "CAR MTC";
