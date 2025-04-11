@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Matching;
 ///     A Repository to persistently store matching rules in Xaml format on local disk.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Matching.IMatchingRuleRepository" />
-[AutoRegisterWithIoC(SingleInstance = true)]
+//[AutoRegisterWithIoC(SingleInstance = true)]
 internal class XamlOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, MatchingRule> mapper, ILogger logger, IReaderWriterSelector readerWriterSelector)
     : IMatchingRuleRepository
 {

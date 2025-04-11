@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Matching;
 ///     A Repository to persistently store matching rules in Json format on local disk.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Matching.IMatchingRuleRepository" />
-// [AutoRegisterWithIoC(SingleInstance = true)]
+[AutoRegisterWithIoC(SingleInstance = true)]
 internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, MatchingRule> mapper, ILogger logger, IReaderWriterSelector readerWriterSelector)
     : IMatchingRuleRepository
 {
@@ -67,7 +67,7 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         }
 
         var realModel = dataEntities.Select(d => this.mapper.ToModel(d));
-        return Validate(realModel.ToList());
+        return PreventDuplicates(realModel.ToList());
     }
 
     /// <inheritdoc />
@@ -83,7 +83,7 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        IEnumerable<MatchingRule> model = Validate(rules.ToList());
+        IEnumerable<MatchingRule> model = PreventDuplicates(rules.ToList());
         var dataEntities = MapToDto(model);
         this.logger.LogInfo(_ => $"{nameof(JsonOnDiskMatchingRuleRepository)} Saving Matching Rules to: {storageKey}");
         await SaveToDiskAsync(storageKey, dataEntities, isEncrypted);
@@ -118,7 +118,7 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         await JsonSerializer.SerializeAsync(stream, dataEntities, options);
     }
 
-    private IList<MatchingRule> Validate(IList<MatchingRule> model)
+    private IList<MatchingRule> PreventDuplicates(IList<MatchingRule> model)
     {
         // Remove duplicates.
         var duplicatesExist = model.GroupBy(r => r.RuleId).Any(g => g.Count() > 1);

@@ -1,8 +1,12 @@
-﻿namespace BudgetAnalyser.Engine.Matching.Data;
+﻿using System.Text.Json.Serialization;
+
+namespace BudgetAnalyser.Engine.Matching.Data;
 
 /// <summary>
 ///     A Dto object to persist a matching rule.
 /// </summary>
+[JsonDerivedType(typeof(MatchingRuleDto), typeDiscriminator: "base")]
+[JsonDerivedType(typeof(SingleUseMatchingRuleDto), typeDiscriminator: "singleuse")]
 public class MatchingRuleDto
 {
     /// <summary>

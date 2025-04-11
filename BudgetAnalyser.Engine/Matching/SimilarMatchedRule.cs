@@ -3,7 +3,7 @@
 namespace BudgetAnalyser.Engine.Matching;
 
 /// <summary>
-///     Used for the purpose of showing similar rules as a check when creating a new rule.
+///     Used for the purpose of showing similar rules as a check when creating a new rule. This is a utility for UI purposes not a persisted rule.
 /// </summary>
 public class SimilarMatchedRule : MatchingRule
 {
