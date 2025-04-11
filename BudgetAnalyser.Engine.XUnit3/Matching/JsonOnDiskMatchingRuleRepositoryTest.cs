@@ -2,10 +2,12 @@
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Persistence;
+using BudgetAnalyser.Engine.XUnit.Helpers;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Rees.UnitTestUtilities;
 using Shouldly;
 
 namespace BudgetAnalyser.Engine.XUnit.Matching;
@@ -93,6 +95,20 @@ public class JsonOnDiskMatchingRuleRepositoryTest
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(null!, "rules.json", false));
+    }
+
+    [Fact]
+    public async Task LoadAndSave_ShouldProduceSameJson()
+    {
+        var subject = ArrangeUsingEmbeddedResources();
+        var rules = await subject.LoadAsync(TestDataConstants.DemoRulesFileName, false);
+
+        await subject.SaveAsync(rules, "foo.bar", false);
+        var serialisedData = JsonHelper.MinifyJson(subject.SerialisedData);
+        var expectedData = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoRulesFileName);
+        expectedData = JsonHelper.MinifyJson(expectedData);
+
+        serialisedData.ShouldBe(expectedData);
     }
 
     private JsonOnDiskMatchingRuleRepositoryTestHarness ArrangeUsingEmbeddedResources()
