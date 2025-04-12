@@ -239,7 +239,7 @@ public sealed class CompositionRoot : IDisposable
         // Wait Cursor Builder
         builder.RegisterInstance<Func<IWaitCursor>>(() => new WpfWaitCursor());
 
-        builder.RegisterType<PersistBaxAppStateAggregate>().As<IPersistApplicationState>().SingleInstance();
+        builder.RegisterType<PersistBaxAppStateAsJson>().As<IPersistApplicationState>().SingleInstance();
         // Input Box / Message Box / Question Box / User Prompts etc
         builder.RegisterType<WpfViewLoader<InputBox>>().Named<IViewLoader>(InputBoxView);
         builder.Register(c => new WindowsInputBox(c.ResolveNamed<IViewLoader>(InputBoxView))).As<IUserInputBox>();
