@@ -84,17 +84,6 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     Task ImportAndMergeBankStatementAsync(string storageKey, Account account);
 
     /// <summary>
-    ///     Parses and loads the persisted state data from the provided object.
-    /// </summary>
-    /// <param name="stateData">The state data loaded from persistent storage.</param>
-    void Initialise(StatementApplicationState stateData);
-
-    /// <summary>
-    ///     Prepares the persistent state data to save to storage.
-    /// </summary>
-    StatementApplicationState PreparePersistentStateData();
-
-    /// <summary>
     ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.
     /// </summary>
     /// <param name="transactionToRemove">The transaction to remove.</param>
