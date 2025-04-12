@@ -21,7 +21,6 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     private readonly IStatementRepository statementRepository;
     private BudgetCollection? budgetCollection;
     private int budgetHash;
-    private bool sortedByBucket;
     private ObservableCollection<Transaction> transactions = new();
 
     /// <summary>
@@ -284,24 +283,6 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         StatementModel.Dispose();
         StatementModel = combinedModel;
         NewDataAvailable();
-    }
-
-    /// <inheritdoc />
-    public void Initialise(StatementApplicationState stateData)
-    {
-        if (stateData is null)
-        {
-            throw new ArgumentNullException(nameof(stateData));
-        }
-
-        this.budgetHash = 0;
-        this.sortedByBucket = stateData.SortByBucket ?? false;
-    }
-
-    /// <inheritdoc />
-    public StatementApplicationState PreparePersistentStateData()
-    {
-        return new StatementApplicationState { SortByBucket = this.sortedByBucket };
     }
 
     /// <inheritdoc />
