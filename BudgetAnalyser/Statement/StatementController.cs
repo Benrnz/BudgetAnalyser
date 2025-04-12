@@ -38,8 +38,6 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
 
         Messenger.Register<StatementController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
-        Messenger.Register<StatementController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
-        Messenger.Register<StatementController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
         Messenger.Register<StatementController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<StatementController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
 
@@ -177,23 +175,6 @@ public class StatementController : ControllerBase, IShowableController, IInitial
             FileOperations.NotifyOfEdit();
             await FileOperations.SyncWithServiceAsync();
         }
-    }
-
-    private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
-    {
-        var statementMetadata = message.ElementOfType<StatementApplicationState>();
-        if (statementMetadata is null)
-        {
-            return;
-        }
-
-        this.transactionService.Initialise(statementMetadata);
-    }
-
-    private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
-    {
-        var statementMetadata = this.transactionService.PreparePersistentStateData();
-        message.PersistThisModel(statementMetadata);
     }
 
     private async void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
