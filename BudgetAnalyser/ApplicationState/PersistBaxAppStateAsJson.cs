@@ -30,7 +30,7 @@ public class PersistBaxAppStateAsJson : IPersistApplicationState
     /// <summary>
     ///     Gets the full name of the file to save the data into. The file will be overwritten. By default, this will save to the application folder with the name BudgetAnalyserAppState.xml.
     /// </summary>
-    protected virtual string FullFileName
+    private string FullFileName
     {
         get
         {
@@ -54,7 +54,7 @@ public class PersistBaxAppStateAsJson : IPersistApplicationState
     /// </exception>
     public IEnumerable<IPersistentApplicationStateObject> Load()
     {
-        if (!File.Exists(FullFileName))
+        if (!CheckFileNameExists())
         {
             return new List<IPersistentApplicationStateObject>();
         }
@@ -62,8 +62,10 @@ public class PersistBaxAppStateAsJson : IPersistApplicationState
         try
         {
             var serialised = JsonSerializer.Deserialize<BaxApplicationStateDto>(ReadAppStateFileAsText()) ??
-                   throw new BadApplicationStateFileFormatException($"The file used to store application state ({FullFileName}) is not in the correct format. It may have been tampered with.");
-            var models = new List<IPersistentApplicationStateObject> {
+                             throw new BadApplicationStateFileFormatException(
+                                 $"The file used to store application state ({FullFileName}) is not in the correct format. It may have been tampered with.");
+            var models = new List<IPersistentApplicationStateObject>
+            {
                 new MainApplicationState { BudgetAnalyserDataStorageKey = serialised.LastBaxFile },
                 new ShellPersistentState { Size = serialised.ShellWindowState.Size, TopLeft = serialised.ShellWindowState.TopLeft }
             };
@@ -93,12 +95,17 @@ public class PersistBaxAppStateAsJson : IPersistApplicationState
 
         try
         {
-            JsonSerializer.Serialize(stream, data, new JsonSerializerOptions { WriteIndented = true });
+            WriteToStream(stream, data);
         }
         catch (IOException ex)
         {
             this.userMessageBox.Show(ex, "Unable to save application preferences. Please check the file is not read-only or in use by another process.");
         }
+    }
+
+    protected virtual bool CheckFileNameExists()
+    {
+        return File.Exists(FullFileName);
     }
 
     protected virtual Stream CreateWritableStream()
@@ -116,6 +123,11 @@ public class PersistBaxAppStateAsJson : IPersistApplicationState
     protected virtual string ReadAppStateFileAsText()
     {
         return File.ReadAllText(FullFileName);
+    }
+
+    protected virtual void WriteToStream(Stream stream, BaxApplicationStateDto data)
+    {
+        JsonSerializer.Serialize(stream, data, new JsonSerializerOptions { WriteIndented = true });
     }
 
     private IEnumerable<IPersistentApplicationStateObject> HandleCorruptFileGracefully(Exception ex)
