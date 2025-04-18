@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
@@ -7,19 +8,17 @@ using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest.Statement;
+namespace BudgetAnalyser.Engine.XUnit.Statement;
 
-public class CsvOnDiskStatementModelRepositoryV1Test
+public class CsvOnDiskStatementModelRepositoryV2Test
 {
-    private readonly IDtoMapper<TransactionSetDto, StatementModel> mapper;
     private readonly IFileReaderWriter mockFileReaderWriter;
     private readonly IReaderWriterSelector mockReaderWriterSelector;
     private readonly ITestOutputHelper writer;
 
-    public CsvOnDiskStatementModelRepositoryV1Test(ITestOutputHelper writer)
+    public CsvOnDiskStatementModelRepositoryV2Test(ITestOutputHelper writer)
     {
         this.writer = writer;
-        this.mapper = Substitute.For<IDtoMapper<TransactionSetDto, StatementModel>>();
         this.mockFileReaderWriter = Substitute.For<IFileReaderWriter>();
         this.mockReaderWriterSelector = Substitute.For<IReaderWriterSelector>();
         this.mockReaderWriterSelector.SelectReaderWriter(Arg.Any<bool>()).Returns(this.mockFileReaderWriter);
@@ -107,7 +106,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     public async Task Load_ShouldReturnStatementModelWithOneDuration_GivenTestData1()
     {
         var subject = ArrangeWithMocks();
-        var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
+        var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.TestData1()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
         var model = await subject.LoadAsync("Foo.foo", false);
 
@@ -118,7 +117,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     public async Task Load_ShouldReturnStatementModelWithTransactions_GivenTestData1()
     {
         var subject = ArrangeWithMocks();
-        var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
+        var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.TestData1()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
         var model = await subject.LoadAsync("Foo.foo", false);
 
@@ -171,6 +170,8 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     {
         var subject = ArrangeWithMocks();
         subject.Dto = BudgetAnalyserRawCsvTestDataV1.BadTestData_CorruptedCommaFormat();
+        var writerStream = new MemoryStream();
+        this.mockFileReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(writerStream);
         await subject.SaveAsync(StatementModelTestData.TestData1(), "Foo.bar", false);
 
         var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(subject.SerialisedData));
@@ -183,6 +184,8 @@ public class CsvOnDiskStatementModelRepositoryV1Test
 
     private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithMocks()
     {
-        return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), this.mapper, this.mockReaderWriterSelector);
+        var logger = new XUnitLogger(this.writer);
+        var realMapper = new MapperStatementModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
+        return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, this.mockReaderWriterSelector);
     }
 }

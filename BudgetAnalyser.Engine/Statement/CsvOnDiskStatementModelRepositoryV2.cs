@@ -53,10 +53,6 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         }
 
         var transactions = await LoadTransactions(storageKey, isEncrypted);
-        if (transactions.Count == 0)
-        {
-            return new StatementModel(this.logger) { StorageKey = storageKey }.LoadTransactions(new List<Transaction>());
-        }
 
         var transactionSet = CreateTransactionSetDto(transactions);
 
@@ -93,7 +89,8 @@ internal class CsvOnDiskStatementModelRepositoryV2(
 
         var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
         await using var stream = writer.CreateWritableStream(storageKey);
-        await WriteToStream(transactionSet, stream);
+        await using var streamWriter = new StreamWriter(stream);
+        await WriteToStream(transactionSet, streamWriter);
     }
 
     protected virtual TransactionSetDto MapToDto(StatementModel model)
@@ -101,9 +98,8 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         return this.mapper.ToDto(model);
     }
 
-    protected virtual async Task WriteToStream(TransactionSetDto transactionSet, Stream stream)
+    protected virtual async Task WriteToStream(TransactionSetDto transactionSet, StreamWriter streamWriter)
     {
-        await using var streamWriter = new StreamWriter(stream);
         WriteHeader(streamWriter, transactionSet);
 
         foreach (var transaction in transactionSet.Transactions)

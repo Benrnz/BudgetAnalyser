@@ -14,7 +14,7 @@ internal class CsvOnDiskStatementModelRepositoryV2TestHarness : CsvOnDiskStateme
     {
     }
 
-    public TransactionSetDto? Dto { get; set; } = null;
+    public TransactionSetDto? Dto { get; set; }
     public string SerialisedData { get; set; }
 
     protected override TransactionSetDto MapToDto(StatementModel model)
@@ -28,11 +28,11 @@ internal class CsvOnDiskStatementModelRepositoryV2TestHarness : CsvOnDiskStateme
         return Dto;
     }
 
-    protected override async Task WriteToStream(TransactionSetDto transactionSet, Stream stream)
+    protected override async Task WriteToStream(TransactionSetDto transactionSet, StreamWriter streamWriter)
     {
-        await base.WriteToStream(transactionSet, stream);
-        stream.Position = 0;
-        using var reader = new StreamReader(stream);
+        await base.WriteToStream(transactionSet, streamWriter);
+        streamWriter.BaseStream.Position = 0;
+        using var reader = new StreamReader(streamWriter.BaseStream);
         SerialisedData = await reader.ReadToEndAsync();
     }
 }

@@ -562,6 +562,7 @@ public class BankImportUtilitiesTest
     [InlineData(1, "2014-04-15,123e4567-e89b-12d3-a456-426614174000,SomeData")]
     [InlineData(2, "2014-04-15,SomeData,123e4567-e89b-12d3-a456-426614174000")]
     [InlineData(2, "2014-04-15,SomeData,123e4567-e89b-12d3-a456-426614174000,")]
+    [InlineData(9, "Salary,Ipayroll Limite,Acme Inc,,Ipayroll,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,123e4567-e89b-12d3-a456-426614174000,")]
     public void FetchGuid_WithValidGuid_ShouldReturnGuid(int index, string data)
     {
         // Arrange

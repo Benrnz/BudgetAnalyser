@@ -349,7 +349,7 @@ internal class BankImportUtilities
         var charIndex = 0;
         // Get an array with the indexes of all the ',' characters
         List<int> commaIndexes = [0];
-        for (var i = index; i < array.Length; i++)
+        for (var i = 0; i < array.Length; i++)
         {
             if (array[i] == ',')
             {
