@@ -77,7 +77,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        var transactionSet = this.mapper.ToDto(model);
+        var transactionSet = MapToDto(model);
         transactionSet.VersionHash = VersionHash;
         transactionSet.StorageKey = storageKey;
         transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
@@ -91,50 +91,20 @@ internal class CsvOnDiskStatementModelRepositoryV2(
                     model.AllTransactions.Count()));
         }
 
-        var selector = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = selector.CreateWritableStream(storageKey);
+        var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+        await using var stream = writer.CreateWritableStream(storageKey);
+        await WriteToStream(transactionSet, stream);
+    }
+
+    protected virtual TransactionSetDto MapToDto(StatementModel model)
+    {
+        return this.mapper.ToDto(model);
+    }
+
+    protected virtual async Task WriteToStream(TransactionSetDto transactionSet, Stream stream)
+    {
         await using var streamWriter = new StreamWriter(stream);
-        await WriteToStream(transactionSet, streamWriter);
-    }
-
-    /// <summary>
-    ///     Reads the lines from the file asynchronously.
-    /// </summary>
-    protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines, bool isEncrypted)
-    {
-        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        var textData = await reader.LoadFirstLinesFromDiskAsync(fileName, lines);
-        var firstLines = textData.SplitLines(lines);
-        return firstLines;
-    }
-
-    protected virtual async IAsyncEnumerable<ReadOnlyMemory<char>> ReadLinesAsync(string fileName, bool isEncrypted, bool firstLineOnly = false)
-    {
-        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = reader.CreateReadableStream(fileName);
-        using var streamReader = new StreamReader(stream);
-
-        var lineCount = 0;
-        while (!streamReader.EndOfStream)
-        {
-            var line = await streamReader.ReadLineAsync();
-            lineCount++;
-            if (line != null && firstLineOnly && lineCount == 1)
-            {
-                yield return line.AsMemory();
-                break;
-            }
-
-            if (line != null)
-            {
-                yield return line.AsMemory();
-            }
-        }
-    }
-
-    protected async Task WriteToStream(TransactionSetDto transactionSet, StreamWriter writer)
-    {
-        WriteHeader(writer, transactionSet);
+        WriteHeader(streamWriter, transactionSet);
 
         foreach (var transaction in transactionSet.Transactions)
         {
@@ -169,10 +139,10 @@ internal class CsvOnDiskStatementModelRepositoryV2(
             line.Append(transaction.Id);
             line.Append(",");
 
-            await writer.WriteLineAsync(line.ToString());
+            await streamWriter.WriteLineAsync(line.ToString());
         }
 
-        await writer.FlushAsync();
+        await streamWriter.FlushAsync();
     }
 
     private static long CalculateTransactionCheckSum(TransactionSetDto setDto)
@@ -213,7 +183,10 @@ internal class CsvOnDiskStatementModelRepositoryV2(
     {
         var lineCount = 0;
         var transactions = new List<TransactionDto>();
-        await foreach (var lineChars in ReadLinesAsync(storageKey, isEncrypted))
+        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+        await using var stream = reader.CreateReadableStream(storageKey);
+
+        await foreach (var lineChars in ReadLinesAsync(stream))
         {
             if (lineCount == 0)
             {
@@ -313,6 +286,21 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         catch (IndexOutOfRangeException ex)
         {
             throw new DataFormatException("The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
+        }
+    }
+
+    private async IAsyncEnumerable<ReadOnlyMemory<char>> ReadLinesAsync(Stream stream)
+    {
+        using var streamReader = new StreamReader(stream);
+
+        while (!streamReader.EndOfStream)
+        {
+            // TODO This needs more work.  Each line is creating a string unnecessarily. Should read in as a Span<char> and return that.
+            var line = await streamReader.ReadLineAsync();
+            if (line is not null)
+            {
+                yield return line.AsMemory();
+            }
         }
     }
 
