@@ -148,16 +148,19 @@ public class BankImportUtilitiesTest
         }
     }
 
-    [Fact]
-    public void FetchDate_WithValidDate_ShouldReturnDateOnly()
+    [Theory]
+    [InlineData(0, "14/04/2014,123.45,FUEL")]
+    [InlineData(1, "Test Data,14/04/2014,123.45,FUEL")]
+    [InlineData(2, "TestData,FUEL,14/04/2014")]
+    [InlineData(2, "TestData,FUEL,14/04/2014,")]
+    public void FetchDate_WithValidDate_ShouldReturnDateOnly(int index, string data)
     {
         // Arrange
         var subject = CreateSubject();
-        var data = "14/04/2014,123.45,FUEL";
         var span = data.AsSpan();
 
         // Act
-        var result = subject.FetchDate(span, 0);
+        var result = subject.FetchDate(span, index);
 
         // Assert
         result.ShouldBe(new DateOnly(2014, 4, 14));
@@ -247,19 +250,22 @@ public class BankImportUtilitiesTest
         }
     }
 
-    [Fact]
-    public void FetchDateTime_WithValidDate_ShouldReturnDateTime()
+    [Theory]
+    [InlineData(0, "2014-04-14T04:50:06Z,123.45,FUEL")]
+    [InlineData(1, "123.45,2014-04-14T04:50:06Z,123.45,FUEL")]
+    [InlineData(2, "123.45,FUEL,2014-04-14T04:50:06Z,123.45")]
+    [InlineData(2, "123.45,FUEL,2014-04-14T04:50:06Z,123.45,")]
+    public void FetchDateTime_WithValidDate_ShouldReturnDateTime(int index, string data)
     {
         // Arrange
         var subject = CreateSubject();
-        var data = "14/04/2014,123.45,FUEL";
         var span = data.AsSpan();
 
         // Act
-        var result = subject.FetchDateTime(span, 0);
+        var result = subject.FetchDateTime(span, index);
 
         // Assert
-        result.ShouldBe(new DateTime(2014, 4, 14));
+        result.ShouldBe(new DateTime(new DateOnly(2014, 4, 14), new TimeOnly(4, 50, 6), DateTimeKind.Utc));
     }
 
     [Fact]
@@ -397,16 +403,20 @@ public class BankImportUtilitiesTest
         }
     }
 
-    [Fact]
-    public void FetchDecimal_WithValidDecimal_ShouldReturnDecimal()
+    [Theory]
+    [InlineData(0, "123.45,FUEL")]
+    [InlineData(1, "2014-04-15,123.45,FUEL")]
+    [InlineData(2, "2014-04-15,\"Foo Bar\",123.45")]
+    [InlineData(2, "2014-04-15,\"Foo Bar\",123.45,")]
+    [InlineData(2, "2014-04-15,\"Foo Bar\", 123.45,")]
+    public void FetchDecimal_WithValidDecimal_ShouldReturnDecimal(int index, string data)
     {
         // Arrange
         var subject = CreateSubject();
-        var data = "123.45,FUEL";
         var span = data.AsSpan();
 
         // Act
-        var result = subject.FetchDecimal(span, 0);
+        var result = subject.FetchDecimal(span, index);
 
         // Assert
         result.ShouldBe(123.45m);
@@ -547,16 +557,19 @@ public class BankImportUtilitiesTest
         }
     }
 
-    [Fact]
-    public void FetchGuid_WithValidGuid_ShouldReturnGuid()
+    [Theory]
+    [InlineData(0, "123e4567-e89b-12d3-a456-426614174000,SomeData")]
+    [InlineData(1, "2014-04-15,123e4567-e89b-12d3-a456-426614174000,SomeData")]
+    [InlineData(2, "2014-04-15,SomeData,123e4567-e89b-12d3-a456-426614174000")]
+    [InlineData(2, "2014-04-15,SomeData,123e4567-e89b-12d3-a456-426614174000,")]
+    public void FetchGuid_WithValidGuid_ShouldReturnGuid(int index, string data)
     {
         // Arrange
         var subject = CreateSubject();
-        var data = "123e4567-e89b-12d3-a456-426614174000,SomeData";
         var span = data.AsSpan();
 
         // Act
-        var result = subject.FetchGuid(span, 0);
+        var result = subject.FetchGuid(span, index);
 
         // Assert
         result.ShouldBe(Guid.Parse("123e4567-e89b-12d3-a456-426614174000"));
@@ -697,16 +710,19 @@ public class BankImportUtilitiesTest
         }
     }
 
-    [Fact]
-    public void FetchLong_WithValidLong_ShouldReturnLong()
+    [Theory]
+    [InlineData(0, "1234567890,SomeData")]
+    [InlineData(2, "ABCV,SomeData,1234567890,ee")]
+    [InlineData(2, "ABCV,SomeData,1234567890")]
+    [InlineData(2, "ABCV,SomeData,1234567890,")]
+    public void FetchLong_WithValidLongAtIndex_ShouldReturnLong(int index, string data)
     {
         // Arrange
         var subject = CreateSubject();
-        var data = "1234567890,SomeData";
         var span = data.AsSpan();
 
         // Act
-        var result = subject.FetchLong(span, 0);
+        var result = subject.FetchLong(span, index);
 
         // Assert
         result.ShouldBe(1234567890L);
@@ -801,16 +817,19 @@ public class BankImportUtilitiesTest
         result.ShouldBe("Quoted String");
     }
 
-    [Fact]
-    public void FetchString_WithValidString_ShouldReturnString()
+    [Theory]
+    [InlineData(0, "\"Test String\",Another Value")]
+    [InlineData(1, "Nonsense,Test String,0333.11")]
+    [InlineData(2, "3.14,Another Value,Test String")]
+    [InlineData(2, "3.14,Another Value,Test String,")]
+    public void FetchString_WithValidStringAtIndex_ShouldReturnString(int index, string data)
     {
         // Arrange
         var subject = CreateSubject();
-        var data = "\"Test String\",Another Value";
         var span = data.AsSpan();
 
         // Act
-        var result = subject.FetchString(span, 0);
+        var result = subject.FetchString(span, index);
 
         // Assert
         result.ShouldBe("Test String");

@@ -61,7 +61,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldReturnAStatementModel_GivenFileWithNoTransactions()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
 
@@ -73,7 +73,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldReturnStatementModelWithFilename_GivenTestData1()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
         var model = await subject.LoadAsync("Foo.foo", false);
@@ -84,7 +84,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldReturnStatementModelWithImportedDate_GivenTestData1()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
         var model = await subject.LoadAsync("Foo.foo", false);
@@ -95,7 +95,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldReturnStatementModelWithNoTransactions_GivenFileWithNoTransactions()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
         var model = await subject.LoadAsync("Foo.foo", false);
@@ -106,7 +106,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldReturnStatementModelWithOneDuration_GivenTestData1()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
         var model = await subject.LoadAsync("Foo.foo", false);
@@ -117,7 +117,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldReturnStatementModelWithTransactions_GivenTestData1()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
         var model = await subject.LoadAsync("Foo.foo", false);
@@ -128,7 +128,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldReturnStatementModelWithZeroDuration_GivenFileWithNoTransactions()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
         var model = await subject.LoadAsync("Foo.foo", false);
@@ -139,7 +139,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldThrow_GivenFileWithIncorrectChecksum()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectChecksum()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
 
@@ -149,7 +149,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldThrow_GivenFileWithIncorrectDataTypes()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectDataTypeInRow1()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
 
@@ -159,7 +159,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task Load_ShouldThrow_GivenIncorrectVersionHashFile()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectVersionHash()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
 
@@ -169,7 +169,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
     [Fact]
     public async Task WrittenDataShouldAutomaticallyStripCommas()
     {
-        var subject = Arrange();
+        var subject = ArrangeWithMocks();
         subject.Dto = BudgetAnalyserRawCsvTestDataV1.BadTestData_CorruptedCommaFormat();
         await subject.SaveAsync(StatementModelTestData.TestData1(), "Foo.bar", false);
 
@@ -181,7 +181,7 @@ public class CsvOnDiskStatementModelRepositoryV1Test
         secondLine!.Count(c => c == ',').ShouldBe(10);
     }
 
-    private CsvOnDiskStatementModelRepositoryV2TestHarness Arrange()
+    private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithMocks()
     {
         return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), this.mapper, this.mockReaderWriterSelector);
     }

@@ -100,20 +100,10 @@ internal class BankImportUtilities
             ThrowIndexOutOfRangeException(array.Length, index);
         }
 
+        var charIndex = FindAllCommas(array, index, out var length);
+
         // Slice the span starting from the given index
-        var span = array.Slice(index);
-        var length = 0;
-
-        // Find the next ',' or the end of the span
-        foreach (var t in span)
-        {
-            if (t == ',')
-            {
-                break;
-            }
-
-            length++;
-        }
+        var span = array.Slice(charIndex);
 
         // Extract the segment up to the next ','
         var segment = span.Slice(0, length);
@@ -156,24 +146,15 @@ internal class BankImportUtilities
             ThrowIndexOutOfRangeException(array.Length, index);
         }
 
+        var charIndex = FindAllCommas(array, index, out var length);
+
         // Slice the span starting from the given index
-        var span = array.Slice(index);
-        var length = 0;
-
-        // Find the next ',' or the end of the span
-        foreach (var t in span)
-        {
-            if (t == ',')
-            {
-                break;
-            }
-
-            length++;
-        }
+        var span = array.Slice(charIndex);
 
         // Extract the segment up to the next ','
         var segment = span.Slice(0, length);
-        if (!DateTime.TryParse(segment, this.locale, DateTimeStyles.None, out var result))
+        var styles = segment.EndsWith('Z') ? DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal : DateTimeStyles.AssumeLocal;
+        if (!DateTime.TryParse(segment, CultureInfo.InvariantCulture, styles, out var result))
         {
             var errorMessage = $"BankImportUtilities: Unable to parse DateTime: {segment.ToString()}";
             this.logger.LogError(_ => errorMessage);
@@ -212,20 +193,10 @@ internal class BankImportUtilities
             ThrowIndexOutOfRangeException(array.Length, index);
         }
 
+        var charIndex = FindAllCommas(array, index, out var length);
+
         // Slice the span starting from the given index
-        var span = array.Slice(index);
-        var length = 0;
-
-        // Find the next ',' or the end of the span
-        foreach (var t in span)
-        {
-            if (t == ',')
-            {
-                break;
-            }
-
-            length++;
-        }
+        var span = array.Slice(charIndex);
 
         // Extract the segment up to the next ','
         var segment = span.Slice(0, length);
@@ -269,20 +240,10 @@ internal class BankImportUtilities
             ThrowIndexOutOfRangeException(array.Length, index);
         }
 
+        var charIndex = FindAllCommas(array, index, out var length);
+
         // Slice the span starting from the given index
-        var span = array.Slice(index);
-        var length = 0;
-
-        // Find the next ',' or the end of the span
-        foreach (var t in span)
-        {
-            if (t == ',')
-            {
-                break;
-            }
-
-            length++;
-        }
+        var span = array.Slice(charIndex);
 
         // Extract the segment up to the next ','
         var segment = span.Slice(0, length);
@@ -325,20 +286,10 @@ internal class BankImportUtilities
             ThrowIndexOutOfRangeException(array.Length, index);
         }
 
+        var charIndex = FindAllCommas(array, index, out var length);
+
         // Slice the span starting from the given index
-        var span = array.Slice(index);
-        var length = 0;
-
-        // Find the next ',' or the end of the span
-        foreach (var t in span)
-        {
-            if (t == ',')
-            {
-                break;
-            }
-
-            length++;
-        }
+        var span = array.Slice(charIndex);
 
         // Extract the segment up to the next ','
         var segment = span.Slice(0, length);
@@ -376,20 +327,10 @@ internal class BankImportUtilities
             ThrowIndexOutOfRangeException(array.Length, index);
         }
 
+        var charIndex = FindAllCommas(array, index, out var length);
+
         // Slice the span starting from the given index
-        var span = array.Slice(index);
-        var length = 0;
-
-        // Find the next ',' or the end of the span
-        foreach (var t in span)
-        {
-            if (t == ',')
-            {
-                break;
-            }
-
-            length++;
-        }
+        var span = array.Slice(charIndex);
 
         // Extract the segment up to the next ','
         var segment = span.Slice(0, length).ToString().Trim();
@@ -401,6 +342,36 @@ internal class BankImportUtilities
         }
 
         return segment;
+    }
+
+    private static int FindAllCommas(ReadOnlySpan<char> array, int index, out int length)
+    {
+        var charIndex = 0;
+        // Get an array with the indexes of all the ',' characters
+        List<int> commaIndexes = [0];
+        for (var i = index; i < array.Length; i++)
+        {
+            if (array[i] == ',')
+            {
+                commaIndexes.Add(i);
+            }
+        }
+
+        if (index > 0)
+        {
+            charIndex = commaIndexes[index] + 1; // Don't include the comma itself
+        }
+
+        if (index == commaIndexes.Count - 1)
+        {
+            length = array.Length - charIndex;
+        }
+        else
+        {
+            length = commaIndexes[index + 1] - charIndex;
+        }
+
+        return charIndex;
     }
 
     private static void ThrowIndexOutOfRangeException(int arrayLength, int index)
