@@ -558,19 +558,19 @@ public class BankImportUtilitiesTest
     }
 
     [Theory]
-    [InlineData(0, "123e4567-e89b-12d3-a456-426614174000,SomeData")]
-    [InlineData(1, "2014-04-15,123e4567-e89b-12d3-a456-426614174000,SomeData")]
-    [InlineData(2, "2014-04-15,SomeData,123e4567-e89b-12d3-a456-426614174000")]
-    [InlineData(2, "2014-04-15,SomeData,123e4567-e89b-12d3-a456-426614174000,")]
-    [InlineData(9, "Salary,Ipayroll Limite,Acme Inc,,Ipayroll,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,123e4567-e89b-12d3-a456-426614174000,")]
-    public void FetchGuid_WithValidGuid_ShouldReturnGuid(int index, string data)
+    [InlineData("123e4567-e89b-12d3-a456-426614174000,SomeData",0)]
+    [InlineData("2014-04-15,123e4567-e89b-12d3-a456-426614174000,SomeData",1)]
+    [InlineData("2014-04-15,SomeData,123e4567-e89b-12d3-a456-426614174000",2)]
+    [InlineData("2015-04-15,SomeData,123e4567-e89b-12d3-a456-426614174000,",2)]
+    [InlineData("Salary,Ipayroll Limite,Acme Inc,,Ipayroll,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,123e4567-e89b-12d3-a456-426614174000,",9)]
+    public void FetchGuid_WithValidGuid_ShouldReturnGuid(string data, int commaIndex)
     {
         // Arrange
         var subject = CreateSubject();
         var span = data.AsSpan();
 
         // Act
-        var result = subject.FetchGuid(span, index);
+        var result = subject.FetchGuid(span, commaIndex);
 
         // Assert
         result.ShouldBe(Guid.Parse("123e4567-e89b-12d3-a456-426614174000"));
