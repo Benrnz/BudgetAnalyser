@@ -182,6 +182,22 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         secondLine!.Count(c => c == ',').ShouldBe(10);
     }
 
+    [Fact]
+    public async Task SaveAsync_ShouldWriteSerializedDataToFile_GivenTestData2()
+    {
+        // Arrange
+        var subject = ArrangeWithMocks();
+        var testData = StatementModelTestData.TestData2();
+        subject.WriteStream = new MemoryStream();
+
+        // Act
+        await subject.SaveAsync(testData, "TestFile.csv", false);
+
+        // Assert
+        subject.SerialisedData.ShouldNotBeNullOrEmpty();
+        subject.SerialisedData.ShouldContain("VersionHash,15955E20-A2CC-4C69-AD42-94D84377FC0C,TransactionCheckSum,-8509267440001667191,2013-08-14T12:00:00.0000000Z");
+    }
+
     private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithMocks()
     {
         var logger = new XUnitLogger(this.writer);

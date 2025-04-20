@@ -88,9 +88,14 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         }
 
         var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = writer.CreateWritableStream(storageKey);
+        await using var stream = CreateWritableStream(storageKey, writer);
         await using var streamWriter = new StreamWriter(stream);
         await WriteToStream(transactionSet, streamWriter);
+    }
+
+    protected virtual Stream CreateWritableStream(string storageKey, IFileReaderWriter writer)
+    {
+        return writer.CreateWritableStream(storageKey);
     }
 
     protected virtual TransactionSetDto MapToDto(StatementModel model)
