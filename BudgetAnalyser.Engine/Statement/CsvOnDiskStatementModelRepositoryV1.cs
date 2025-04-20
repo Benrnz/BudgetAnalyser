@@ -35,7 +35,7 @@ internal class CsvOnDiskStatementModelRepositoryV1(
         await SaveAsync(newStatement, storageKey, false);
     }
 
-    public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
+    public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted, bool tempSwitch = false)
     {
         if (storageKey.IsNothing())
         {

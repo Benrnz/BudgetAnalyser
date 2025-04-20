@@ -26,7 +26,7 @@ public interface IVersionedStatementModelRepository
     /// <exception cref="System.NotSupportedException">The CSV file is not supported by this version of the Budget Analyser.</exception>
     /// <exception cref="StatementModelChecksumException">Will be thrown if the checksum doesn't match the data within the file.</exception>
     /// <exception cref="DataFormatException">Will be thrown if the file format is invalid.</exception>
-    Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted);
+    Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted, bool tempSwitch = false);
 
     /// <summary>
     ///     Saves the <see cref="StatementModel" />.

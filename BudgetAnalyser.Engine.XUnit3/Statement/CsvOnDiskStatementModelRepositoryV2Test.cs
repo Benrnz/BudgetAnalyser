@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Persistence;
@@ -222,6 +223,28 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         var expected = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoTransactionsFileName).Trim();
 
         result.ShouldBe(expected);
+    }
+
+    [Fact]
+    [Trait("Category", "LocalOnly")]
+    public async Task PerformanceTest1() {
+        var subject = ArrangeWithEmbeddedResources();
+        var sw = Stopwatch.StartNew();
+        var model = await subject.LoadAsync("""BudgetAnalyser.Engine.XUnit.TestData.ReesAccounts2020.Transactions_20250416.backup.csv""", false);
+        sw.Stop();
+
+        this.writer.WriteLine($"Elapsed: {sw.ElapsedMilliseconds:N}ms");
+    }
+
+    [Fact]
+    [Trait("Category", "LocalOnly")]
+    public async Task PerformanceTest2() {
+        var subject = ArrangeWithEmbeddedResources();
+        var sw = Stopwatch.StartNew();
+        var model = await subject.LoadAsync("""BudgetAnalyser.Engine.XUnit.TestData.ReesAccounts2020.Transactions_20250416.backup.csv""", false, true);
+        sw.Stop();
+
+        this.writer.WriteLine($"Elapsed: {sw.ElapsedMilliseconds:N}ms");
     }
 
     private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithMocks()

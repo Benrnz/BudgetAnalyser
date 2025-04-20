@@ -36,7 +36,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         await SaveAsync(newStatement, storageKey, false);
     }
 
-    public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
+    public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted, bool tempSwitch = false)
     {
         if (storageKey.IsNothing())
         {
@@ -52,7 +52,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
             throw new KeyNotFoundException(ex.Message, ex);
         }
 
-        var transactions = await LoadTransactions(storageKey, isEncrypted);
+        var transactions = await LoadTransactions(storageKey, isEncrypted, tempSwitch);
 
         var transactionSet = CreateTransactionSetDto(transactions);
 
@@ -180,15 +180,16 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         return transactionSet;
     }
 
-    private async Task<List<TransactionDto>> LoadTransactions(string storageKey, bool isEncrypted)
+    private async Task<List<TransactionDto>> LoadTransactions(string storageKey, bool isEncrypted, bool tempSwitch = false)
     {
         var lineCount = 0;
         var transactions = new List<TransactionDto>();
         var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
         await using var stream = reader.CreateReadableStream(storageKey);
 
-        await foreach (var lineChars in ReadLinesAsync(stream))
+        await foreach (var lineChars in tempSwitch ? ReadLinesAsync2(stream) : ReadLinesAsync(stream))
         {
+            //this.logger.LogInfo(_ => $"{lineCount} {lineChars.ToString()}");
             if (lineCount == 0)
             {
                 ReadHeaderLine(lineChars, storageKey);
@@ -303,6 +304,140 @@ internal class CsvOnDiskStatementModelRepositoryV2(
                 yield return line.AsMemory();
             }
         }
+    }
+
+    private async IAsyncEnumerable<ReadOnlyMemory<char>> ReadLinesAsync2(Stream stream)
+    {
+        // Limitation a line cannot be more than 2048 chars.
+        using var streamReader = new StreamReader(stream);
+        var startOfLine = true;
+        var previousBuffer = new char[1024];
+        var leftoverChars = 0;
+        var linesReturnedCount = 0;
+        var blockBuffer = new char[1024];
+        var charsRead = await streamReader.ReadBlockAsync(blockBuffer);
+        while (charsRead > 0)
+        {
+            //this.logger.LogInfo(_ => $"Reading line index {linesReturnedCount}");
+            var finishedReading = charsRead < 1024 || streamReader.EndOfStream;
+            var lineBeginIndex = 0;
+            // Does the buffer start with a return character?
+            if (blockBuffer[0] == '\n' || blockBuffer[0] == '\r')
+            {
+                startOfLine = true;
+                // Strip out the return chars
+                lineBeginIndex = blockBuffer[1] == '\r' ? 2 : 1;
+                // If there was left over chars from the previous chunk read, this means that was a complete line, it was just missing the return char end of line delimiter.
+                if (leftoverChars > 0)
+                {
+                    linesReturnedCount++;
+                    yield return TrimEndOfLine(previousBuffer.AsMemory(0, leftoverChars));
+                    leftoverChars = 0;
+                }
+            }
+
+            // Buffer starts with a fresh new line of data.
+            if (startOfLine)
+            {
+                if (finishedReading)
+                {
+                    // File is so small that it fits in the buffer (1024 chars).
+                    linesReturnedCount++;
+                    yield return TrimEndOfLine(blockBuffer.AsMemory());
+                    break;
+                }
+
+                var span = blockBuffer.AsSpan().Slice(lineBeginIndex);
+                var endOfLinePosition = span.IndexOf('\n') + lineBeginIndex;
+                var length = endOfLinePosition - lineBeginIndex + 1;
+                if (leftoverChars <= 0)
+                {
+                    linesReturnedCount++;
+                    yield return TrimEndOfLine(blockBuffer.AsMemory().Slice(lineBeginIndex, length));
+                }
+                else
+                {
+                    var lineChars = new char[length + leftoverChars];
+                    Array.Copy(previousBuffer, 0, lineChars, 0, leftoverChars);
+                    Array.Copy(blockBuffer, lineBeginIndex, lineChars, leftoverChars, length);
+                    leftoverChars = 0;
+                    linesReturnedCount++;
+                    yield return TrimEndOfLine(lineChars.AsMemory());
+                }
+
+                startOfLine = false;
+                lineBeginIndex = endOfLinePosition + 1;
+            }
+
+            // Part way through a read chunk. Find next end of line char.
+            while (lineBeginIndex < charsRead)
+            {
+                // This is suss. Could use .IndexOf('\n') instead within a While loop?
+                var span = blockBuffer.AsSpan().Slice(lineBeginIndex);
+                var endOfLine = span.IndexOf('\n');
+                if (endOfLine < 0)
+                {
+                    if (finishedReading)
+                    {
+                        // No EOL found, but we've read all data from the stream, so we assume the remaining chars are a line.
+                        endOfLine = span.Length - 1;
+                    }
+                    else
+                    {
+                        // No end of line char found, we've run out of characters in the buffer, go read next chunk.
+                        break;
+                    }
+                }
+
+                // The actual index of the end of line char is foundIndex + lineBeginIndex because we sliced the span part way through.
+                endOfLine += lineBeginIndex;
+
+                var length = endOfLine - lineBeginIndex + 1;
+                if (leftoverChars <= 0)
+                {
+                    linesReturnedCount++;
+                    yield return TrimEndOfLine(blockBuffer.AsMemory().Slice(lineBeginIndex, length));
+                }
+                else
+                {
+                    var lineChars = new char[length + leftoverChars];
+                    Array.Copy(previousBuffer, 0, lineChars, 0, leftoverChars);
+                    Array.Copy(blockBuffer, lineBeginIndex, lineChars, leftoverChars, length);
+                    leftoverChars = 0;
+                    linesReturnedCount++;
+                    yield return TrimEndOfLine(lineChars.AsMemory());
+                }
+
+                lineBeginIndex = endOfLine + 1;
+                startOfLine = true;
+            }
+
+            leftoverChars = charsRead - lineBeginIndex;
+            Array.Copy(blockBuffer, lineBeginIndex, previousBuffer, 0, leftoverChars);
+            charsRead = await streamReader.ReadBlockAsync(blockBuffer);
+        }
+    }
+
+    private ReadOnlyMemory<char> TrimEndOfLine(ReadOnlyMemory<char> lineChars)
+    {
+        var lastIndex = lineChars.Length - 1;
+        var span = lineChars.Span;
+        if (span[lastIndex] == '\r')
+        {
+            return lineChars.Slice(0, lastIndex);
+        }
+
+        if (span[lastIndex] == '\n')
+        {
+            if (span[lastIndex - 1] == '\r')
+            {
+                return lineChars.Slice(0, lastIndex - 1);
+            }
+
+            return lineChars.Slice(0, lastIndex);
+        }
+
+        return lineChars;
     }
 
     private string? SanitiseString(string? data, string property)
