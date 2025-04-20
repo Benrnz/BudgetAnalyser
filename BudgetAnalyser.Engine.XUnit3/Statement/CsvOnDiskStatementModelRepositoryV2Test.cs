@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
@@ -6,6 +7,7 @@ using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
+using Rees.UnitTestUtilities;
 using Shouldly;
 
 namespace BudgetAnalyser.Engine.XUnit.Statement;
@@ -198,10 +200,42 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         subject.SerialisedData.ShouldContain("VersionHash,15955E20-A2CC-4C69-AD42-94D84377FC0C,TransactionCheckSum,-8509267440001667191,2013-08-14T12:00:00.0000000Z");
     }
 
+    [Fact]
+    public async Task Load_ShouldReturnStatementModelWithTransactions_GivenDemoFile()
+    {
+        var subject = ArrangeWithEmbeddedResources();
+        var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
+
+        model.AllTransactions.Count().ShouldBe(33);
+        model.DurationInMonths.ShouldBe(1);
+        model.LastImport.ShouldBe(DateTime.Parse("2014-07-19T21:15:20.0069564+12:00"));
+    }
+
+    [Fact]
+    public async Task LoadAndSave_ShouldProduceTheSameCsv_GivenDemoFile()
+    {
+        var subject = ArrangeWithEmbeddedResources();
+        var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
+
+        await subject.SaveAsync(model, "Foo.bar", false);
+        var result = subject.SerialisedData.Trim();
+        var expected = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoTransactionsFileName).Trim();
+
+        result.ShouldBe(expected);
+    }
+
     private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithMocks()
     {
         var logger = new XUnitLogger(this.writer);
         var realMapper = new MapperStatementModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
         return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, this.mockReaderWriterSelector);
+    }
+
+    private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithEmbeddedResources()
+    {
+        var logger = new XUnitLogger(this.writer);
+        var realMapper = new MapperStatementModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
+        var selector = new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]);
+        return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, selector);
     }
 }
