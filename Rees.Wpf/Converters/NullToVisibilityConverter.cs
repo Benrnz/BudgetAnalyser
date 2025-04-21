@@ -7,7 +7,7 @@ namespace Rees.Wpf.Converters;
 /// <summary>
 ///     Returns <see cref="Visibility.Hidden" /> when the value is null or an empty string. Otherwise,
 ///     <see cref="Visibility.Collapsed" />.
-///     This is the opporsite of <see cref="NotNullToVisibilityConverter" />.
+///     This is the opposite of <see cref="NotNullToVisibilityConverter" />.
 /// </summary>
 public class NullToVisibilityConverter : IValueConverter
 {
@@ -24,19 +24,23 @@ public class NullToVisibilityConverter : IValueConverter
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var stringParameter = parameter as string;
+        var valueAsString = value as string;
         var hiddenValue = Visibility.Hidden;
         var test = () => value is null;
 
         if (stringParameter is not null)
         {
-            if (value is string && (stringParameter == string.Empty || stringParameter == "Empty"))
-            {
-                test = () => string.IsNullOrWhiteSpace(value.ToString());
-            }
-
             if (stringParameter == "Collapsed")
             {
                 hiddenValue = Visibility.Collapsed;
+            }
+        }
+
+        if (valueAsString is not null)
+        {
+            if (valueAsString == string.Empty)
+            {
+                test = () => string.IsNullOrWhiteSpace(value!.ToString());
             }
         }
 

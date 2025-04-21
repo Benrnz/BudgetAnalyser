@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Statement;
 ///     A repository for the <see cref="StatementModel" /> backed by Csv on local disk storage.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Statement.IVersionedStatementModelRepository" />
-// [AutoRegisterWithIoC(SingleInstance = true)]
+[AutoRegisterWithIoC(SingleInstance = true)]
 internal class CsvOnDiskStatementModelRepositoryV2(
     BankImportUtilities importUtilities,
     ILogger logger,
@@ -350,10 +350,27 @@ internal class CsvOnDiskStatementModelRepositoryV2(
             }
 
             if (finishedReading) { break; }
+
             charsRead = await streamReader.ReadBlockAsync(blockBuffer);
         }
 
         this.logger.LogInfo(_ => $"Finished reading the CSV Stream. Chunks Read: {chunksRead}, Lines Returned: {linesReturnedCount}");
+    }
+
+    private string? SanitiseString(string? data, string property)
+    {
+        if (string.IsNullOrWhiteSpace(data))
+        {
+            return data;
+        }
+
+        var result = data.Replace(",", string.Empty);
+        if (result.Length != data.Length)
+        {
+            this.logger.LogWarning(l => l.Format("'{0}' contains commas, and they have been stripped out. [{1}] -> [{2}]", property, data, result));
+        }
+
+        return result;
     }
 
     private ReadOnlyMemory<char> TrimEndOfLine(ReadOnlyMemory<char> lineChars)
@@ -376,22 +393,6 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         }
 
         return lineChars;
-    }
-
-    private string? SanitiseString(string? data, string property)
-    {
-        if (string.IsNullOrWhiteSpace(data))
-        {
-            return data;
-        }
-
-        var result = data.Replace(",", string.Empty);
-        if (result.Length != data.Length)
-        {
-            this.logger.LogWarning(l => l.Format("'{0}' contains commas, and they have been stripped out. [{1}] -> [{2}]", property, data, result));
-        }
-
-        return result;
     }
 
     private void ValidateChecksumIntegrity(TransactionSetDto transactionSet)

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Persistence;
@@ -31,7 +30,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     public void Ctor_ShouldThrow_GivenNullBankImportUtils()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new CsvOnDiskStatementModelRepositoryV1(
+            new CsvOnDiskStatementModelRepositoryV2(
                 null,
                 new FakeLogger(),
                 new DtoMapperStub<TransactionSetDto, StatementModel>(),
@@ -42,7 +41,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     public void Ctor_ShouldThrow_GivenNullLogger()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new CsvOnDiskStatementModelRepositoryV1(
+            new CsvOnDiskStatementModelRepositoryV2(
                 new BankImportUtilities(new FakeLogger()),
                 null,
                 new DtoMapperStub<TransactionSetDto, StatementModel>(),
@@ -53,7 +52,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     public void Ctor_ShouldThrow_GivenNullMapper()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new CsvOnDiskStatementModelRepositoryV1(
+            new CsvOnDiskStatementModelRepositoryV2(
                 new BankImportUtilities(new FakeLogger()),
                 new FakeLogger(),
                 null,
@@ -117,6 +116,17 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
+    public async Task Load_ShouldReturnStatementModelWithTransactions_GivenDemoFile()
+    {
+        var subject = ArrangeWithEmbeddedResources();
+        var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
+
+        model.AllTransactions.Count().ShouldBe(33);
+        model.DurationInMonths.ShouldBe(1);
+        model.LastImport.ShouldBe(DateTime.Parse("2014-07-19T21:15:20.0069564+12:00"));
+    }
+
+    [Fact]
     public async Task Load_ShouldReturnStatementModelWithTransactions_GivenTestData1()
     {
         var subject = ArrangeWithMocks();
@@ -169,20 +179,16 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task WrittenDataShouldAutomaticallyStripCommas()
+    public async Task LoadAndSave_ShouldProduceTheSameCsv_GivenDemoFile()
     {
-        var subject = ArrangeWithMocks();
-        subject.Dto = BudgetAnalyserRawCsvTestDataV1.BadTestData_CorruptedCommaFormat();
-        var writerStream = new MemoryStream();
-        this.mockFileReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(writerStream);
-        await subject.SaveAsync(StatementModelTestData.TestData1(), "Foo.bar", false);
+        var subject = ArrangeWithEmbeddedResources();
+        var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
 
-        var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(subject.SerialisedData));
-        var reader = new StreamReader(memoryStream);
-        var firstLine = await reader.ReadLineAsync(TestContext.Current.CancellationToken);
-        var secondLine = await reader.ReadLineAsync(TestContext.Current.CancellationToken);
-        firstLine!.Count(c => c == ',').ShouldBe(4);
-        secondLine!.Count(c => c == ',').ShouldBe(10);
+        await subject.SaveAsync(model, "Foo.bar", false);
+        var result = subject.SerialisedData.Trim();
+        var expected = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoTransactionsFileName).Trim();
+
+        result.ShouldBe(expected);
     }
 
     [Fact]
@@ -202,34 +208,20 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnStatementModelWithTransactions_GivenDemoFile()
+    public async Task WrittenDataShouldAutomaticallyStripCommas()
     {
-        var subject = ArrangeWithEmbeddedResources();
-        var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
+        var subject = ArrangeWithMocks();
+        subject.Dto = BudgetAnalyserRawCsvTestDataV1.BadTestData_CorruptedCommaFormat();
+        var writerStream = new MemoryStream();
+        this.mockFileReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(writerStream);
+        await subject.SaveAsync(StatementModelTestData.TestData1(), "Foo.bar", false);
 
-        model.AllTransactions.Count().ShouldBe(33);
-        model.DurationInMonths.ShouldBe(1);
-        model.LastImport.ShouldBe(DateTime.Parse("2014-07-19T21:15:20.0069564+12:00"));
-    }
-
-    [Fact]
-    public async Task LoadAndSave_ShouldProduceTheSameCsv_GivenDemoFile()
-    {
-        var subject = ArrangeWithEmbeddedResources();
-        var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
-
-        await subject.SaveAsync(model, "Foo.bar", false);
-        var result = subject.SerialisedData.Trim();
-        var expected = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoTransactionsFileName).Trim();
-
-        result.ShouldBe(expected);
-    }
-
-    private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithMocks()
-    {
-        var logger = new XUnitLogger(this.writer);
-        var realMapper = new MapperStatementModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
-        return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, this.mockReaderWriterSelector);
+        var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(subject.SerialisedData));
+        var reader = new StreamReader(memoryStream);
+        var firstLine = await reader.ReadLineAsync(TestContext.Current.CancellationToken);
+        var secondLine = await reader.ReadLineAsync(TestContext.Current.CancellationToken);
+        firstLine!.Count(c => c == ',').ShouldBe(4);
+        secondLine!.Count(c => c == ',').ShouldBe(10);
     }
 
     private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithEmbeddedResources()
@@ -238,5 +230,12 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         var realMapper = new MapperStatementModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
         var selector = new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]);
         return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, selector);
+    }
+
+    private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithMocks()
+    {
+        var logger = new XUnitLogger(this.writer);
+        var realMapper = new MapperStatementModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
+        return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, this.mockReaderWriterSelector);
     }
 }

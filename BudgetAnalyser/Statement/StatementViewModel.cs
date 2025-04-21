@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
@@ -11,11 +10,11 @@ namespace BudgetAnalyser.Statement;
 public class StatementViewModel : ObservableRecipient
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
+    private readonly bool doNotUseSortByDate;
     private readonly IUiContext uiContext;
     private bool doNotUseDirty;
     private string doNotUseDuplicateSummary;
     private Transaction doNotUseSelectedRow;
-    private readonly bool doNotUseSortByDate;
     private StatementModel doNotUseStatement;
     private ObservableCollection<Transaction> doNotUseTransactions;
     private ITransactionManagerService transactionService;
@@ -46,7 +45,6 @@ public class StatementViewModel : ObservableRecipient
 
     public string DuplicateSummary
     {
-        [UsedImplicitly]
         get => this.doNotUseDuplicateSummary;
 
         private set
