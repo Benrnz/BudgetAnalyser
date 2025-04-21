@@ -36,7 +36,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         await SaveAsync(newStatement, storageKey, false);
     }
 
-    public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted, bool tempSwitch = false)
+    public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
     {
         if (storageKey.IsNothing())
         {
@@ -52,7 +52,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
             throw new KeyNotFoundException(ex.Message, ex);
         }
 
-        var transactions = await LoadTransactions(storageKey, isEncrypted, tempSwitch);
+        var transactions = await LoadTransactions(storageKey, isEncrypted);
 
         var transactionSet = CreateTransactionSetDto(transactions);
 
@@ -80,11 +80,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         if (model.AllTransactions.Count() != transactionSet.Transactions.Count())
         {
             throw new StatementModelChecksumException(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Only {0} out of {1} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.",
-                    transactionSet.Transactions.Count,
-                    model.AllTransactions.Count()));
+                $"Only {transactionSet.Transactions.Count} out of {model.AllTransactions.Count()} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.");
         }
 
         var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
@@ -180,16 +176,15 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         return transactionSet;
     }
 
-    private async Task<List<TransactionDto>> LoadTransactions(string storageKey, bool isEncrypted, bool tempSwitch = false)
+    private async Task<List<TransactionDto>> LoadTransactions(string storageKey, bool isEncrypted)
     {
         var lineCount = 0;
         var transactions = new List<TransactionDto>();
         var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
         await using var stream = reader.CreateReadableStream(storageKey);
 
-        await foreach (var lineChars in tempSwitch ? ReadLinesAsync2(stream) : ReadLinesAsync(stream))
+        await foreach (var lineChars in ReadLinesAsync(stream))
         {
-            //this.logger.LogInfo(_ => $"{lineCount} {lineChars.ToString()}");
             if (lineCount == 0)
             {
                 ReadHeaderLine(lineChars, storageKey);
@@ -293,87 +288,24 @@ internal class CsvOnDiskStatementModelRepositoryV2(
 
     private async IAsyncEnumerable<ReadOnlyMemory<char>> ReadLinesAsync(Stream stream)
     {
-        using var streamReader = new StreamReader(stream);
-
-        while (!streamReader.EndOfStream)
-        {
-            // TODO This needs more work.  Each line is creating a string unnecessarily. Should read in as a Span<char> and return that.
-            var line = await streamReader.ReadLineAsync();
-            if (line is not null)
-            {
-                yield return line.AsMemory();
-            }
-        }
-    }
-
-    private async IAsyncEnumerable<ReadOnlyMemory<char>> ReadLinesAsync2(Stream stream)
-    {
         // Limitation a line cannot be more than 2048 chars.
         using var streamReader = new StreamReader(stream);
-        var startOfLine = true;
-        var previousBuffer = new char[1024];
-        var leftoverChars = 0;
+        var chunksRead = 0;
         var linesReturnedCount = 0;
+        var leftoverChars = 0;
+        var previousBuffer = new char[1024];
         var blockBuffer = new char[1024];
         var charsRead = await streamReader.ReadBlockAsync(blockBuffer);
         while (charsRead > 0)
         {
-            //this.logger.LogInfo(_ => $"Reading line index {linesReturnedCount}");
-            var finishedReading = charsRead < 1024 || streamReader.EndOfStream;
+            chunksRead++;
+            var finishedReading = streamReader.EndOfStream;
             var lineBeginIndex = 0;
-            // Does the buffer start with a return character?
-            if (blockBuffer[0] == '\n' || blockBuffer[0] == '\r')
-            {
-                startOfLine = true;
-                // Strip out the return chars
-                lineBeginIndex = blockBuffer[1] == '\r' ? 2 : 1;
-                // If there was left over chars from the previous chunk read, this means that was a complete line, it was just missing the return char end of line delimiter.
-                if (leftoverChars > 0)
-                {
-                    linesReturnedCount++;
-                    yield return TrimEndOfLine(previousBuffer.AsMemory(0, leftoverChars));
-                    leftoverChars = 0;
-                }
-            }
 
-            // Buffer starts with a fresh new line of data.
-            if (startOfLine)
-            {
-                if (finishedReading)
-                {
-                    // File is so small that it fits in the buffer (1024 chars).
-                    linesReturnedCount++;
-                    yield return TrimEndOfLine(blockBuffer.AsMemory());
-                    break;
-                }
-
-                var span = blockBuffer.AsSpan().Slice(lineBeginIndex);
-                var endOfLinePosition = span.IndexOf('\n') + lineBeginIndex;
-                var length = endOfLinePosition - lineBeginIndex + 1;
-                if (leftoverChars <= 0)
-                {
-                    linesReturnedCount++;
-                    yield return TrimEndOfLine(blockBuffer.AsMemory().Slice(lineBeginIndex, length));
-                }
-                else
-                {
-                    var lineChars = new char[length + leftoverChars];
-                    Array.Copy(previousBuffer, 0, lineChars, 0, leftoverChars);
-                    Array.Copy(blockBuffer, lineBeginIndex, lineChars, leftoverChars, length);
-                    leftoverChars = 0;
-                    linesReturnedCount++;
-                    yield return TrimEndOfLine(lineChars.AsMemory());
-                }
-
-                startOfLine = false;
-                lineBeginIndex = endOfLinePosition + 1;
-            }
-
-            // Part way through a read chunk. Find next end of line char.
+            // Find next end of line char.
             while (lineBeginIndex < charsRead)
             {
-                // This is suss. Could use .IndexOf('\n') instead within a While loop?
-                var span = blockBuffer.AsSpan().Slice(lineBeginIndex);
+                var span = blockBuffer.AsSpan().Slice(lineBeginIndex, charsRead - lineBeginIndex);
                 var endOfLine = span.IndexOf('\n');
                 if (endOfLine < 0)
                 {
@@ -395,11 +327,13 @@ internal class CsvOnDiskStatementModelRepositoryV2(
                 var length = endOfLine - lineBeginIndex + 1;
                 if (leftoverChars <= 0)
                 {
+                    // Full line found within the buffer.
                     linesReturnedCount++;
                     yield return TrimEndOfLine(blockBuffer.AsMemory().Slice(lineBeginIndex, length));
                 }
                 else
                 {
+                    // This happens at the beginning of each new buffer from the second chunk onwards and there were left over characters from the previous buffer.
                     var lineChars = new char[length + leftoverChars];
                     Array.Copy(previousBuffer, 0, lineChars, 0, leftoverChars);
                     Array.Copy(blockBuffer, lineBeginIndex, lineChars, leftoverChars, length);
@@ -409,13 +343,19 @@ internal class CsvOnDiskStatementModelRepositoryV2(
                 }
 
                 lineBeginIndex = endOfLine + 1;
-                startOfLine = true;
             }
 
             leftoverChars = charsRead - lineBeginIndex;
-            Array.Copy(blockBuffer, lineBeginIndex, previousBuffer, 0, leftoverChars);
+            if (leftoverChars > 0)
+            {
+                Array.Copy(blockBuffer, lineBeginIndex, previousBuffer, 0, leftoverChars);
+            }
+
+            if (finishedReading) { break; }
             charsRead = await streamReader.ReadBlockAsync(blockBuffer);
         }
+
+        this.logger.LogInfo(_ => $"Finished reading the CSV Stream. Chunks Read: {chunksRead}, Lines Returned: {linesReturnedCount}");
     }
 
     private ReadOnlyMemory<char> TrimEndOfLine(ReadOnlyMemory<char> lineChars)
@@ -463,15 +403,8 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         if (transactionSet.Checksum > 1 && transactionSet.Checksum != calcTxnCheckSum)
         {
             this.logger.LogError(l =>
-                l.Format(
-                    "BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}",
-                    transactionSet.Checksum, calcTxnCheckSum));
-            throw new StatementModelChecksumException(
-                string.Format(
-                    CultureInfo.CurrentCulture,
-                    "The statement being loaded, does not match the internal checksum. {0} {1}",
-                    calcTxnCheckSum,
-                    transactionSet.Checksum));
+                l.Format("BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", transactionSet.Checksum, calcTxnCheckSum));
+            throw new StatementModelChecksumException($"The statement being loaded, does not match the internal checksum. {calcTxnCheckSum} {transactionSet.Checksum}");
         }
     }
 

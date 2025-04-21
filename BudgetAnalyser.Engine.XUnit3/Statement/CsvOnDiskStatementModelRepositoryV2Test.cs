@@ -227,21 +227,10 @@ public class CsvOnDiskStatementModelRepositoryV2Test
 
     [Fact]
     [Trait("Category", "LocalOnly")]
-    public async Task PerformanceTest1() {
-        var subject = ArrangeWithEmbeddedResources();
-        var sw = Stopwatch.StartNew();
-        var model = await subject.LoadAsync("""BudgetAnalyser.Engine.XUnit.TestData.ReesAccounts2020.Transactions_20250416.backup.csv""", false);
-        sw.Stop();
-
-        this.writer.WriteLine($"Elapsed: {sw.ElapsedMilliseconds:N}ms");
-    }
-
-    [Fact]
-    [Trait("Category", "LocalOnly")]
     public async Task PerformanceTest2() {
         var subject = ArrangeWithEmbeddedResources();
         var sw = Stopwatch.StartNew();
-        var model = await subject.LoadAsync("""BudgetAnalyser.Engine.XUnit.TestData.ReesAccounts2020.Transactions_20250416.backup.csv""", false, true);
+        var model = await subject.LoadAsync("""BudgetAnalyser.Engine.XUnit.TestData.ReesAccounts2020.Transactions_20250416.backup.csv""", false);
         sw.Stop();
 
         this.writer.WriteLine($"Elapsed: {sw.ElapsedMilliseconds:N}ms");
