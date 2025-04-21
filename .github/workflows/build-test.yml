@@ -47,7 +47,7 @@ jobs:
 
     # Execute all unit tests in the solution
     - name: Run unit tests
-      run: dotnet test --no-build --verbosity minimal --configuration Debug --filter "Category!=LocalOnly"
+      run: dotnet test --no-build --verbosity minimal --configuration Debug
 
     - name: Validate code style
       run: dotnet format --no-restore --verify-no-changes --verbosity minimal
