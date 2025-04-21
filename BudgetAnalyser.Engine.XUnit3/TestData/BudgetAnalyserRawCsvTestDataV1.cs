@@ -169,6 +169,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                Payment,The Very Big Telco,202610963,095501328,B Smith,-91.98,2012-08-20T00:00:00.0000000,PHNET,CHEQUE,56b22788-d1e6-4a5d-a715-08b563dae678,
                Payment,The very cool Power Co,A B Smith,659792,Energyonline,-212.07,2012-08-20T00:00:00.0000000,POWER,CHEQUE,17b8c91c-5174-41a7-b382-b6a9ff52a11a,
                Credit Card Debit,Z Queen Street            Auckland     Nz,4367-****-****-3239,,,-28.49,2012-08-20T00:00:00.0000000,FUEL,VISA,bd12376a-6aac-4171-a23c-f85af168582f,
+
                """";
     }
 
@@ -176,6 +177,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
     {
         return """"
                VersionHash,15955E20-A2CC-4C69-AD42-94D84377FC0C,TransactionCheckSum,0,2012-08-20T00:00:00.0000000Z
+
                """";
     }
 

@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement.Data;
 
@@ -99,44 +99,42 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         return this.mapper.ToDto(model);
     }
 
+    [SuppressMessage("ReSharper", "MethodHasAsyncOverload")]
     protected virtual async Task WriteToStream(TransactionSetDto transactionSet, StreamWriter streamWriter)
     {
         WriteHeader(streamWriter, transactionSet);
 
         foreach (var transaction in transactionSet.Transactions)
         {
-            var line = new StringBuilder();
-            line.Append(SanitiseString(transaction.TransactionType, nameof(transaction.TransactionType)));
-            line.Append(",");
+            streamWriter.Write(SanitiseString(transaction.TransactionType, nameof(transaction.TransactionType)));
+            streamWriter.Write(',');
 
-            line.Append(SanitiseString(transaction.Description, nameof(transaction.Description)));
-            line.Append(",");
+            streamWriter.Write(SanitiseString(transaction.Description, nameof(transaction.Description)));
+            streamWriter.Write(',');
 
-            line.Append(SanitiseString(transaction.Reference1, nameof(transaction.Reference1)));
-            line.Append(",");
+            streamWriter.Write(SanitiseString(transaction.Reference1, nameof(transaction.Reference1)));
+            streamWriter.Write(',');
 
-            line.Append(SanitiseString(transaction.Reference2, nameof(transaction.Reference2)));
-            line.Append(",");
+            streamWriter.Write(SanitiseString(transaction.Reference2, nameof(transaction.Reference2)));
+            streamWriter.Write(',');
 
-            line.Append(SanitiseString(transaction.Reference3, nameof(transaction.Reference3)));
-            line.Append(",");
+            streamWriter.Write(SanitiseString(transaction.Reference3, nameof(transaction.Reference3)));
+            streamWriter.Write(',');
 
-            line.Append(transaction.Amount);
-            line.Append(",");
+            streamWriter.Write(transaction.Amount.ToString("G"));
+            streamWriter.Write(',');
 
-            line.Append(transaction.Date.ToString("O", CultureInfo.InvariantCulture));
-            line.Append(",");
+            streamWriter.Write(transaction.Date.ToString("O", CultureInfo.InvariantCulture));
+            streamWriter.Write(',');
 
-            line.Append(SanitiseString(transaction.BudgetBucketCode, nameof(transaction.BudgetBucketCode)));
-            line.Append(",");
+            streamWriter.Write(SanitiseString(transaction.BudgetBucketCode, nameof(transaction.BudgetBucketCode)));
+            streamWriter.Write(',');
 
-            line.Append(SanitiseString(transaction.Account, nameof(transaction.Account)));
-            line.Append(",");
+            streamWriter.Write(SanitiseString(transaction.Account, nameof(transaction.Account)));
+            streamWriter.Write(',');
 
-            line.Append(transaction.Id);
-            line.Append(",");
-
-            await streamWriter.WriteLineAsync(line.ToString());
+            streamWriter.Write(transaction.Id.ToString());
+            streamWriter.WriteLine(',');
         }
 
         await streamWriter.FlushAsync();
@@ -288,13 +286,13 @@ internal class CsvOnDiskStatementModelRepositoryV2(
 
     private async IAsyncEnumerable<ReadOnlyMemory<char>> ReadLinesAsync(Stream stream)
     {
-        // Limitation a line cannot be more than 2048 chars.
+        // Limitation a line cannot be more than 20,000 chars.
         using var streamReader = new StreamReader(stream);
         var chunksRead = 0;
         var linesReturnedCount = 0;
         var leftoverChars = 0;
-        var previousBuffer = new char[1024];
-        var blockBuffer = new char[1024];
+        var previousBuffer = new char[10000];
+        var blockBuffer = new char[10000];
         var charsRead = await streamReader.ReadBlockAsync(blockBuffer);
         while (charsRead > 0)
         {
