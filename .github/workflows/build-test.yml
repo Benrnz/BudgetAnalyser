@@ -43,7 +43,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore --verbosity quiet --configuration Debug
+      run: dotnet build --no-restore --verbosity quiet --configuration Debug --verbosity verbose
 
     # Execute all unit tests in the solution
     - name: Run unit tests
