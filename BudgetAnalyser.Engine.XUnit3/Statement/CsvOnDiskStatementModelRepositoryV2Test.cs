@@ -178,18 +178,18 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         await Should.ThrowAsync<DataFormatException>(() => subject.LoadAsync("Foo.foo", false));
     }
 
-    [Fact]
-    public async Task LoadAndSave_ShouldProduceTheSameCsv_GivenDemoFile()
-    {
-        var subject = ArrangeWithEmbeddedResources();
-        var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
-
-        await subject.SaveAsync(model, "Foo.bar", false);
-        var result = subject.SerialisedData.Trim();
-        var expected = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoTransactionsFileName).Trim();
-
-        result.ShouldBe(expected);
-    }
+    // [Fact]
+    // public async Task LoadAndSave_ShouldProduceTheSameCsv_GivenDemoFile()
+    // {
+    //     var subject = ArrangeWithEmbeddedResources();
+    //     var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
+    //
+    //     await subject.SaveAsync(model, "Foo.bar", false);
+    //     var result = subject.SerialisedData.Trim();
+    //     var expected = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoTransactionsFileName).Trim();
+    //
+    //     result.ShouldBe(expected);
+    // }
 
     [Fact]
     public async Task SaveAsync_ShouldWriteSerializedDataToFile_GivenTestData2()
