@@ -85,7 +85,7 @@ public class StatementViewModelTest
 
     private StatementViewModel CreateSubject()
     {
-        return new StatementViewModel(this.mockUiContext.Object, new Mock<IApplicationDatabaseFacade>().Object);
+        return new StatementViewModel(new Mock<IApplicationDatabaseFacade>().Object);
     }
 
     private static Transaction GetPhoneTxnFromFullList(StatementViewModel subject)

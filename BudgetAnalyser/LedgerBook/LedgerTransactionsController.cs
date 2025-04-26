@@ -20,6 +20,7 @@ namespace BudgetAnalyser.LedgerBook;
 public class LedgerTransactionsController : ControllerBase
 {
     private readonly ILedgerService ledgerService;
+    private readonly ILogger logger;
     private readonly IReconciliationService reconService;
     private Guid dialogCorrelationId = Guid.NewGuid();
     private bool doNotUseIsReadOnly;
@@ -32,7 +33,6 @@ public class LedgerTransactionsController : ControllerBase
     private LedgerEntryLine? entryLine;
     private bool isAddDirty;
     private bool wasChanged;
-    private readonly ILogger logger;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public LedgerTransactionsController(UiContext uiContext, ILedgerService ledgerService, IReconciliationService reconService) : base(uiContext.Messenger)
@@ -209,7 +209,7 @@ public class LedgerTransactionsController : ControllerBase
             return;
         }
 
-        if (transaction is null)
+        if (transaction is null || this.ledgerService.LedgerBook is null)
         {
             return;
         }
@@ -301,7 +301,7 @@ public class LedgerTransactionsController : ControllerBase
 
     private decimal RetrieveOpeningBalance()
     {
-        var book = this.ledgerService.LedgerBook;
+        var book = this.ledgerService.LedgerBook ?? throw new InvalidOperationException("LedgerBook is null and not initialised.");
         var found = false;
         var remainingRecons = book.Reconciliations.SkipWhile(r =>
         {
@@ -355,19 +355,20 @@ public class LedgerTransactionsController : ControllerBase
 
     private void SaveNewEntryTransaction()
     {
+        var book = this.ledgerService.LedgerBook ?? throw new InvalidOperationException("LedgerBook is null and not initialised.");
         try
         {
             if (this.entryLine is null || LedgerEntry is null)
             {
                 this.logger.LogError(
                     l => l.Format(
-                                    "Silent error: Attempt to create a new ledger transaction, but LedgerLine or LedgerEntry is null. LedgerLine: {0}, LedgerEntry: {1}",
-                                    this.entryLine,
-                                    LedgerEntry));
+                        "Silent error: Attempt to create a new ledger transaction, but LedgerLine or LedgerEntry is null. LedgerLine: {0}, LedgerEntry: {1}",
+                        this.entryLine,
+                        LedgerEntry));
                 return;
             }
 
-            var newTransaction = this.reconService.CreateLedgerTransaction(this.ledgerService.LedgerBook, this.entryLine, LedgerEntry, NewTransactionAmount, NewTransactionNarrative ?? string.Empty);
+            var newTransaction = this.reconService.CreateLedgerTransaction(book, this.entryLine, LedgerEntry, NewTransactionAmount, NewTransactionNarrative ?? string.Empty);
             ShownTransactions.Add(newTransaction);
         }
         catch (ArgumentException)

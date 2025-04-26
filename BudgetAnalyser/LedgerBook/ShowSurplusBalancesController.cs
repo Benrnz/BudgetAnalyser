@@ -13,7 +13,7 @@ namespace BudgetAnalyser.LedgerBook;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class ShowSurplusBalancesController : ControllerBase
 {
-    private LedgerEntryLine ledgerEntryLine;
+    private LedgerEntryLine? ledgerEntryLine;
 
     public ShowSurplusBalancesController(IMessenger messenger) : base(messenger)
     {
@@ -26,12 +26,12 @@ public class ShowSurplusBalancesController : ControllerBase
     [UsedImplicitly]
     public ICommand RemoveBankBalanceCommand =>
         // This is here solely to disable the Remove Bank Balance button on the default DataTemplate that displays the BankBalance type.
-        new RelayCommand<BankBalance>(b => { }, b => false);
+        new RelayCommand<BankBalance>(_ => { }, _ => false);
 
-    public ObservableCollection<BankBalance> SurplusBalances { get; private set; }
+    public ObservableCollection<BankBalance> SurplusBalances { get; private set; } = new();
 
     [UsedImplicitly]
-    public decimal SurplusTotal => this.ledgerEntryLine.CalculatedSurplus;
+    public decimal SurplusTotal => this.ledgerEntryLine?.CalculatedSurplus ?? 0;
 
     public void ShowDialog(LedgerEntryLine ledgerLine)
     {

@@ -21,13 +21,13 @@ public class TransferFundsController : ControllerBase, IShellDialogToolTips, ISh
         Messenger.Register<TransferFundsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public event EventHandler TransferFundsRequested;
+    public event EventHandler? TransferFundsRequested;
 
     public bool BankTransferConfirmed { get; set; }
 
-    public IEnumerable<LedgerBucket> LedgerBuckets { get; private set; }
+    public IEnumerable<LedgerBucket> LedgerBuckets { get; private set; } = Array.Empty<LedgerBucket>();
 
-    public TransferFundsCommand TransferFundsDto { get; set; }
+    public TransferFundsCommand TransferFundsDto { get; private set; } = new();
 
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
@@ -56,7 +56,6 @@ public class TransferFundsController : ControllerBase, IShellDialogToolTips, ISh
     public void ShowDialog(IEnumerable<LedgerBucket> ledgerBuckets)
     {
         Reset();
-        TransferFundsDto = new TransferFundsCommand();
         LedgerBuckets = ledgerBuckets.ToList();
         this.dialogCorrelationId = Guid.NewGuid();
         var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.SaveCancel)
@@ -74,7 +73,7 @@ public class TransferFundsController : ControllerBase, IShellDialogToolTips, ISh
             return false;
         }
 
-        return TransferFundsDto.BankTransferRequired ? BankTransferConfirmed : true;
+        return !TransferFundsDto.BankTransferRequired || BankTransferConfirmed;
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -96,8 +95,8 @@ public class TransferFundsController : ControllerBase, IShellDialogToolTips, ISh
 
     private void Reset()
     {
-        TransferFundsDto = null;
+        TransferFundsDto = new TransferFundsCommand();
         BankTransferConfirmed = false;
-        LedgerBuckets = null;
+        LedgerBuckets = Array.Empty<LedgerBucket>();
     }
 }

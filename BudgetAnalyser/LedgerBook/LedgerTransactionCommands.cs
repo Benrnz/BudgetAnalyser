@@ -10,7 +10,7 @@ namespace BudgetAnalyser.LedgerBook;
 public static class LedgerTransactionCommands
 {
     [PropertyInjection]
-    public static IMessenger MessengerInstance
+    public static IMessenger? MessengerInstance
     {
         get;
         [UsedImplicitly]
@@ -31,9 +31,7 @@ public static class LedgerTransactionCommands
             throw new ArgumentNullException(nameof(transactionId));
         }
 
-        using (var message = new NavigateToTransactionMessage(transactionId.Value))
-        {
-            MessengerInstance.Send(message);
-        }
+        using var message = new NavigateToTransactionMessage(transactionId.Value);
+        MessengerInstance!.Send(message);
     }
 }

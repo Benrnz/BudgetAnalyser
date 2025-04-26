@@ -234,7 +234,7 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
         return SelectedRule is not null;
     }
 
-    private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
+    private void OnClosedNotificationReceived(object? sender, EventArgs eventArgs)
     {
         Rules.Clear();
         RulesGroupedByBucket.Clear();
@@ -279,7 +279,7 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
         OnPropertyChanged(nameof(RulesGroupedByBucket));
     }
 
-    private void OnNewRuleCreated(object sender, EventArgs eventArgs)
+    private void OnNewRuleCreated(object? sender, EventArgs eventArgs)
     {
         NewRuleController.RuleCreated -= OnNewRuleCreated;
         if (NewRuleController.NewRule is not null)
@@ -288,7 +288,7 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
         }
     }
 
-    private void OnSavedNotificationReceived(object sender, EventArgs eventArgs)
+    private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
     {
         EditingRule = false;
         OnPropertyChanged(nameof(AndOrText));

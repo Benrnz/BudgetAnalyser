@@ -10,19 +10,15 @@ namespace BudgetAnalyser.Statement;
 public class StatementViewModel : ObservableRecipient
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
-    private readonly bool doNotUseSortByDate;
-    private readonly IUiContext uiContext;
     private bool doNotUseDirty;
-    private string doNotUseDuplicateSummary;
-    private Transaction doNotUseSelectedRow;
-    private StatementModel doNotUseStatement;
-    private ObservableCollection<Transaction> doNotUseTransactions;
+    private string? doNotUseDuplicateSummary;
+    private Transaction? doNotUseSelectedRow;
+    private StatementModel? doNotUseStatement;
+    private ObservableCollection<Transaction> doNotUseTransactions = new();
     private ITransactionManagerService transactionService;
 
-    public StatementViewModel(IUiContext uiContext, IApplicationDatabaseFacade applicationDatabaseService)
+    public StatementViewModel(IApplicationDatabaseFacade applicationDatabaseService)
     {
-        this.doNotUseSortByDate = true;
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
     }
 
@@ -58,7 +54,7 @@ public class StatementViewModel : ObservableRecipient
 
     public bool HasTransactions => Statement is not null && Statement.Transactions.Any();
 
-    public Transaction SelectedRow
+    public Transaction? SelectedRow
     {
         get => this.doNotUseSelectedRow;
         set

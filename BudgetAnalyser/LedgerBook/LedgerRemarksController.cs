@@ -13,8 +13,8 @@ public class LedgerRemarksController : ControllerBase
     private readonly IReconciliationService reconciliationService;
     private Guid dialogCorrelationId;
     private bool doNotUseIsReadOnly;
-    private LedgerEntryLine doNotUseLedgerEntryLine;
-    private string doNotUseRemarks;
+    private LedgerEntryLine? doNotUseLedgerEntryLine;
+    private string doNotUseRemarks = string.Empty;
 
     public LedgerRemarksController(UiContext uiContext, IReconciliationService reconciliationService) : base(uiContext.Messenger)
     {
@@ -23,16 +23,11 @@ public class LedgerRemarksController : ControllerBase
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        if (reconciliationService is null)
-        {
-            throw new ArgumentNullException(nameof(reconciliationService));
-        }
-
-        this.reconciliationService = reconciliationService;
+        this.reconciliationService = reconciliationService ?? throw new ArgumentNullException(nameof(reconciliationService));
         Messenger.Register<LedgerRemarksController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public event EventHandler Completed;
+    public event EventHandler? Completed;
 
     public bool IsReadOnly
     {
@@ -44,7 +39,7 @@ public class LedgerRemarksController : ControllerBase
         }
     }
 
-    public LedgerEntryLine LedgerEntryLine
+    public LedgerEntryLine? LedgerEntryLine
     {
         get => this.doNotUseLedgerEntryLine;
         private set
@@ -85,13 +80,13 @@ public class LedgerRemarksController : ControllerBase
             return;
         }
 
-        if (!IsReadOnly)
+        if (!IsReadOnly && LedgerEntryLine is not null)
         {
             this.reconciliationService.UpdateRemarks(LedgerEntryLine, Remarks);
         }
 
         LedgerEntryLine = null;
-        Remarks = null;
+        Remarks = string.Empty;
 
         var handler = Completed;
         handler?.Invoke(this, EventArgs.Empty);

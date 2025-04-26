@@ -4,7 +4,7 @@ using System.Windows.Input;
 namespace BudgetAnalyser.LedgerBook;
 
 /// <summary>
-///     Interaction logic for LegderBookView.xaml
+///     Interaction logic for LedgerBookView.xaml
 /// </summary>
 public partial class LedgerBookUserControl
 {
@@ -75,18 +75,18 @@ public partial class LedgerBookUserControl
         }
     }
 
-    private void OnLedgerBookUpdated(object sender, EventArgs e)
+    private void OnLedgerBookUpdated(object? sender, EventArgs e)
     {
         ResetLedgerBookContent();
         DynamicallyCreateLedgerBookGrid();
     }
 
-    private void OnTransferFundsClicked(object sender, RoutedEventArgs e)
+    private void OnTransferFundsClicked(object? sender, RoutedEventArgs e)
     {
         Controller.OnTransferFundsCommandExecuted();
     }
 
-    private void OnUnlockCurrentLedgerLineClicked(object sender, RoutedEventArgs e)
+    private void OnUnlockCurrentLedgerLineClicked(object? sender, RoutedEventArgs e)
     {
         Controller.OnUnlockLedgerLineCommandExecuted();
     }

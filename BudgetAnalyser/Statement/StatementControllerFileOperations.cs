@@ -15,11 +15,7 @@ public class StatementControllerFileOperations : ControllerBase
     private bool doNotUseLoadingData;
     private ITransactionManagerService transactionService;
 
-    public StatementControllerFileOperations(
-        IUiContext uiContext,
-        LoadFileController loadFileController,
-        IApplicationDatabaseFacade applicationDatabaseService)
-        : base(uiContext.Messenger)
+    public StatementControllerFileOperations(IUiContext uiContext, LoadFileController loadFileController, IApplicationDatabaseFacade applicationDatabaseService) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
@@ -33,7 +29,7 @@ public class StatementControllerFileOperations : ControllerBase
 
         this.messageBox = uiContext.UserPrompts.MessageBox;
         this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
-        ViewModel = new StatementViewModel(uiContext, applicationDatabaseService);
+        ViewModel = new StatementViewModel(applicationDatabaseService);
     }
 
     public bool LoadingData

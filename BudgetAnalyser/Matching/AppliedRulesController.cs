@@ -90,7 +90,7 @@ public class AppliedRulesController : ControllerBase
         RulesController.CreateNewRuleFromTransaction(this.statementController.ViewModel.SelectedRow);
     }
 
-    private void OnSavedNotificationReceived(object sender, EventArgs eventArgs)
+    private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
     {
         Dirty = false;
     }
