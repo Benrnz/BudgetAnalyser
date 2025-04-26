@@ -34,7 +34,10 @@ public class OverspentWarningTest
         LedgerBook = new LedgerBookTestHarness { StorageKey = "Test Ledger Book.xaml" };
         SetLedgerBalancesFakeDataSomeOverspentBuckets();
 
-        Subject = new OverspentWarning(new FakeLogger());
+        Subject = new OverspentWarning(new FakeLogger())
+        {
+            Tolerance = 10,
+        };
         Act();
     }
 

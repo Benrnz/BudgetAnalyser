@@ -14,7 +14,7 @@ public class OverspentWarning : Widget
 {
     private readonly ILogger logger;
 
-    private readonly decimal tolerance;
+    private decimal tolerance;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="OverspentWarning" /> class.
@@ -38,6 +38,20 @@ public class OverspentWarning : Widget
     }
 
     internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; } = Array.Empty<KeyValuePair<BudgetBucket, decimal>>();
+
+    public decimal Tolerance
+    {
+        get => this.tolerance;
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "Tolerance must be greater than or equal to 0.");
+            }
+
+            this.tolerance = value;
+        }
+    }
 
     /// <summary>
     ///     Updates the widget with new input.
