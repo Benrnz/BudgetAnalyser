@@ -1,4 +1,4 @@
-name: .NET Core Desktop Build and Test
+ name: .NET Core Desktop Build and Test
 
 on:
   push:
@@ -43,11 +43,24 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore --verbosity quiet --configuration Debug 
+      run: dotnet build --no-restore --verbosity quiet --configuration Debug
 
     # Execute all unit tests in the solution
     - name: Run unit tests
-      run: dotnet test --no-build --configuration Debug --verbosity diag
+      run: dotnet test --no-build --configuration Debug
+
+    - name: Upload test log file
+      if: always() # Ensures the step runs even if previous steps fail
+      uses: actions/upload-artifact@v3
+      with:
+        name: TestResultsLog
+        path: D:\a\BudgetAnalyser\BudgetAnalyser\BudgetAnalyser.Engine.XUnit3\bin\Debug\net9.0\TestResults\BudgetAnalyser.Engine.XUnit3_net9.0_x64.log
+      continue-on-error: true
+
+    - name: Output test log file
+      if: always() # Ensures the step runs even if previous steps fail
+      run: type "D:\a\BudgetAnalyser\BudgetAnalyser\BudgetAnalyser.Engine.XUnit3\bin\Debug\net9.0\TestResults\BudgetAnalyser.Engine.XUnit3_net9.0_x64.log"
+      continue-on-error: true
 
     - name: Validate code style
       run: dotnet format --no-restore --verify-no-changes --verbosity minimal
