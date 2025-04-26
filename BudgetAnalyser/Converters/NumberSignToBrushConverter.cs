@@ -11,7 +11,7 @@ public class NumberSignToBrushConverter : IValueConverter
         var stringParameter = parameter as string;
         var light = stringParameter is not null && stringParameter == "Light";
         var number = ConverterHelper.ParseNumber(value);
-        return number is null ? ConverterHelper.TransparentBrush : (object)ConvertToBrush(number.Value, light);
+        return number is null ? ConverterHelper.TransparentBrush : (object?)ConvertToBrush(number.Value, light);
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -19,7 +19,7 @@ public class NumberSignToBrushConverter : IValueConverter
         throw new NotSupportedException();
     }
 
-    private static Brush ConvertToBrush(decimal number, bool light)
+    private static Brush? ConvertToBrush(decimal number, bool light)
     {
         if (light)
         {

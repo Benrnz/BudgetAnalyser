@@ -19,17 +19,14 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
     private bool doNotUseAddBalanceVisibility;
-    private IEnumerable<Account> doNotUseBankAccounts;
+    private IEnumerable<Account> doNotUseBankAccounts = Array.Empty<Account>();
     private decimal doNotUseBankBalance;
     private DateOnly doNotUseDate;
     private bool doNotUseEditable;
-    private Account doNotUseSelectedBankAccount;
-    private Engine.Ledger.LedgerBook parentBook;
+    private Account? doNotUseSelectedBankAccount;
+    private Engine.Ledger.LedgerBook? parentBook;
 
-    public AddLedgerReconciliationController(
-        UiContext uiContext,
-        IAccountTypeRepository accountTypeRepository)
-        : base(uiContext.Messenger)
+    public AddLedgerReconciliationController(UiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(uiContext.Messenger)
     {
         this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
         if (uiContext is null)
@@ -47,7 +44,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     }
 
     // TODO Change this event to a message:
-    public event EventHandler<EditBankBalancesEventArgs> Complete;
+    public event EventHandler<EditBankBalancesEventArgs>? Complete;
 
     public bool AddBalanceVisibility
     {
@@ -100,7 +97,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         }
     }
 
-    public ObservableCollection<BankBalanceViewModel> BankBalances { get; private set; }
+    public ObservableCollection<BankBalanceViewModel> BankBalances { get; private set; } = new();
 
     public decimal BankBalanceTotal => BankBalances.Sum(b => b.Balance);
     public bool Canceled { get; private set; }
@@ -142,12 +139,12 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     ///     Checks to make sure the <see cref="BankBalances" /> collection contains a balance for every ledger that will be
     ///     included in the reconciliation.
     /// </summary>
-    public bool HasRequiredBalances => this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount));
+    public bool HasRequiredBalances => this.parentBook is not null && this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount));
 
     [UsedImplicitly]
     public ICommand RemoveBankBalanceCommand => new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, _ => Editable);
 
-    public Account SelectedBankAccount
+    public Account? SelectedBankAccount
     {
         get => this.doNotUseSelectedBankAccount;
         set
@@ -167,8 +164,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     public string CloseButtonToolTip => "Cancel";
 
     /// <summary>
-    ///     Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine" /> to
-    ///     the <see cref="LedgerBook" />.
+    ///     Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine" /> to the <see cref="LedgerBook" />.
     /// </summary>
     public void ShowCreateDialog(Engine.Ledger.LedgerBook ledgerBook)
     {
@@ -180,6 +176,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
         var requestFilterMessage = new RequestFilterMessage(this);
         Messenger.Send(requestFilterMessage);
+        if (requestFilterMessage.Criteria is null)
+        {
+            return;
+        }
+
         Date = requestFilterMessage.Criteria.EndDate?.AddDays(1) ?? DateOnlyExt.Today();
 
         ShowDialogCommon("Closing Period Reconciliation");
@@ -208,6 +209,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     private void AddNewBankBalance()
     {
+        if (SelectedBankAccount is null)
+        {
+            return;
+        }
+
         BankBalances.Add(new BankBalanceViewModel(null, SelectedBankAccount, BankBalance));
         SelectedBankAccount = null;
         BankBalance = 0;
@@ -227,7 +233,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             return false;
         }
 
-        return !AddBalanceVisibility ? true : SelectedBankAccount is not null;
+        return !AddBalanceVisibility || SelectedBankAccount is not null;
     }
 
     private void OnAddBankBalanceCommandExecuted()
@@ -310,8 +316,8 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     {
         this.parentBook = null;
         Date = DateOnly.MinValue;
-        BankBalances = null;
-        BankAccounts = null;
+        BankBalances = new ObservableCollection<BankBalanceViewModel>();
+        BankAccounts = Array.Empty<Account>();
         SelectedBankAccount = null;
     }
 
@@ -323,10 +329,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         SelectedBankAccount = null;
         if (CreateMode)
         {
-            if (BankAccounts.Any())
-            {
-                SelectedBankAccount = BankAccounts.First(account => account.IsSalaryAccount);
-            }
+            SelectedBankAccount = BankAccounts.FirstOrDefault(account => account.IsSalaryAccount);
         }
 
         this.dialogCorrelationId = Guid.NewGuid();

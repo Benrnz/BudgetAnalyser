@@ -102,7 +102,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 
     public string EnterPasswordText { get; private set; } = string.Empty;
 
-    public string FileName { get; private set; }
+    public string FileName { get; private set; } = string.Empty;
 
     public bool IsEncrypted
     {

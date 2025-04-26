@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,10 +36,10 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private readonly ICommand showRemarksCommand;
     private readonly ICommand showSurplusBalancesCommand;
     private readonly ICommand showTransactionsCommand;
-    private ContentPresenter contentPresenter;
-    private Engine.Ledger.LedgerBook ledgerBook;
-    private ResourceDictionary localResources;
-    private List<LedgerBucket> sortedLedgers;
+    private ContentPresenter? contentPresenter;
+    private Engine.Ledger.LedgerBook? ledgerBook;
+    private ResourceDictionary localResources = new();
+    private List<LedgerBucket> sortedLedgers = new();
 
     public LedgerBookGridBuilderV2(
         ICommand showTransactionsCommand,
@@ -83,7 +80,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private Border AddBorderToGridCell(Panel parent, string background, bool hasBorder, int gridRow, int gridColumn)
     {
         var border = new Border();
-        if (background is not null)
+        if (!string.IsNullOrWhiteSpace(background))
         {
             border.Background = (Brush)FindResource(background);
         }
@@ -100,7 +97,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         return border;
     }
 
-    private TextBlock AddContentToGrid(FrameworkElement parent, string content, ref int gridRow, int gridColumn, string style, string tooltip = null)
+    private TextBlock AddContentToGrid(FrameworkElement parent, string content, ref int gridRow, int gridColumn, string style, string? tooltip = null)
     {
         var panel = parent as Panel;
         var decorator = parent as Decorator;
@@ -117,11 +114,9 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         {
             panel.Children.Add(textBlock);
         }
-        else
+        else if (decorator is not null)
         {
-            decorator.Child = decorator is not null
-                ? (UIElement)textBlock
-                : throw new ArgumentException($"{nameof(parent)} is not a Panel nor a Decorator", nameof(parent));
+            decorator.Child = textBlock;
         }
 
         return textBlock;
@@ -141,7 +136,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
             numberOfPeriodsToShow = 1;
         }
 
-        if (numberOfPeriodsToShow > this.ledgerBook.Reconciliations.Count())
+        if (numberOfPeriodsToShow > this.ledgerBook!.Reconciliations.Count())
         {
             numberOfPeriodsToShow = this.ledgerBook.Reconciliations.Count();
         }
@@ -189,13 +184,13 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
 
         // Ledgers
         gridRow = 5;
-        Account currentBankAccount = null;
+        Account? currentBankAccount = null;
 
         foreach (var ledger in this.sortedLedgers)
         {
-            if (currentBankAccount != ledger.StoredInAccount)
+            if (currentBankAccount is not null && currentBankAccount != ledger.StoredInAccount)
             {
-                // Bank account group separater
+                // Bank account group separator
                 currentBankAccount = ledger.StoredInAccount;
                 var bankAccountBorder = AddBorderToGridCell(grid, false, false, gridRow, 0);
                 Grid.SetColumnSpan(bankAccountBorder, 2);
@@ -222,7 +217,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
             var hyperlink = new Hyperlink(new Run(ledger.BudgetBucket.Code))
             {
                 Command = this.showLedgerBucketDetailsCommand,
-                CommandParameter = this.ledgerBook.Ledgers.Single(l => l.BudgetBucket == ledger.BudgetBucket) // Must be Main Ledger Map from book
+                CommandParameter = this.ledgerBook!.Ledgers.Single(l => l.BudgetBucket == ledger.BudgetBucket) // Must be Main Ledger Map from book
             };
             var textBlock = new TextBlock(hyperlink)
             {
@@ -247,7 +242,13 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         }
     }
 
-    private TextBlock AddHyperlinkToGrid(Panel parent, string hyperlinkText, ref int gridRow, int gridColumn, string style, string tooltip = null, object parameter = null)
+    private TextBlock AddHyperlinkToGrid(Panel parent,
+        string hyperlinkText,
+        ref int gridRow,
+        int gridColumn,
+        string style,
+        string? tooltip = null,
+        object? parameter = null)
     {
         var hyperlink = new Hyperlink(new Run(hyperlinkText))
         {
@@ -270,8 +271,8 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         var gridColumn = 2; //because the first two columns are headings
         var periodNumber = 0;
 
-        // Loop thru all Reconciliations from most recent to oldest adding cells to the grid vertically. 
-        foreach (var line in this.ledgerBook.Reconciliations)
+        // Loop thru all Reconciliations from most recent to oldest adding cells to the grid vertically.
+        foreach (var line in this.ledgerBook!.Reconciliations)
         {
             var gridRow = 0;
             if (++periodNumber > numberOfPeriodsToShow)
@@ -290,34 +291,34 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
             // Bank Balance
             AddBorderToGridCell(grid, BankBalanceBackground, false, gridRow, gridColumn);
             var bankBalanceText = AddHyperlinkToGrid(
-                                                     grid,
-                                                     line.LedgerBalance.ToString("N", CultureInfo.CurrentCulture),
-                                                     ref gridRow,
-                                                     gridColumn,
-                                                     ImportantNumberStyle,
-                                                     BuildToolTipForBankBalance(line),
-                                                     line);
+                grid,
+                line.LedgerBalance.ToString("N", CultureInfo.CurrentCulture),
+                ref gridRow,
+                gridColumn,
+                ImportantNumberStyle,
+                BuildToolTipForBankBalance(line),
+                line);
             hyperlink = (Hyperlink)bankBalanceText.Inlines.FirstInline;
             hyperlink.Command = this.showBankBalancesCommand;
             bankBalanceText.Foreground = (Brush)FindResource(BankBalanceTextBrush);
 
             // Balance Adjustments
             AddHyperlinkToGrid(
-                               grid,
-                               line.TotalBalanceAdjustments.ToString("N", CultureInfo.CurrentCulture),
-                               ref gridRow,
-                               gridColumn,
-                               ImportantNumberStyle,
-                               parameter: line);
+                grid,
+                line.TotalBalanceAdjustments.ToString("N", CultureInfo.CurrentCulture),
+                ref gridRow,
+                gridColumn,
+                ImportantNumberStyle,
+                parameter: line);
 
             // Surplus
             gridRow = AddSurplusCell(grid, gridRow, gridColumn, line);
 
             // Ledgers
-            Account currentBankAccount = null;
+            Account? currentBankAccount = null;
             foreach (var ledger in this.sortedLedgers)
             {
-                if (currentBankAccount != ledger.StoredInAccount)
+                if (currentBankAccount is not null && currentBankAccount != ledger.StoredInAccount)
                 {
                     gridRow++;
                     currentBankAccount = ledger.StoredInAccount;
@@ -474,18 +475,18 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         foreach (var bankBalance in line.BankBalances)
         {
             individualLedgerBalances.AppendFormat(
-                                                  CultureInfo.CurrentCulture,
-                                                  "{0}: {1:N}; ",
-                                                  bankBalance.Account,
-                                                  bankBalance.Balance + line.BankBalanceAdjustments.Where(a => a.BankAccount == bankBalance.Account).Sum(a => a.Amount));
+                CultureInfo.CurrentCulture,
+                "{0}: {1:N}; ",
+                bankBalance.Account,
+                bankBalance.Balance + line.BankBalanceAdjustments.Where(a => a.BankAccount == bankBalance.Account).Sum(a => a.Amount));
         }
 
         return string.Format(
-                             CultureInfo.CurrentCulture,
-                             "Total Ledger Balance: {0:N}; Adjusted Bank Balance {1:N}; {2}",
-                             line.LedgerBalance,
-                             line.TotalBankBalance + line.TotalBalanceAdjustments,
-                             individualLedgerBalances);
+            CultureInfo.CurrentCulture,
+            "Total Ledger Balance: {0:N}; Adjusted Bank Balance {1:N}; {2}",
+            line.LedgerBalance,
+            line.TotalBankBalance + line.TotalBalanceAdjustments,
+            individualLedgerBalances);
     }
 
     private void DynamicallyCreateLedgerBookGrid(int numberOfPeriodsToShow)
@@ -507,7 +508,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         var grid = new Grid();
         // Date
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-        // Ledgers 
+        // Ledgers
         AddLedgerRows(grid);
         // Surplus
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -520,7 +521,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         // Bank account heading lines
         this.sortedLedgers.Select(l => l.StoredInAccount).Distinct().ToList().ForEach(_ => grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }));
 
-        this.contentPresenter.Content = grid;
+        this.contentPresenter!.Content = grid;
         AddGridColumns(grid, numberOfPeriodsToShow);
 
         AddHeadingColumnContent(grid);
@@ -532,10 +533,10 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private object FindResource(string resourceName)
     {
         var localResource = this.localResources[resourceName];
-        return localResource is not null ? localResource : Application.Current.FindResource(resourceName);
+        return localResource ?? Application.Current.FindResource(resourceName)!;
     }
 
-    private static Brush StripColour(LedgerBucket ledger)
+    private static Brush? StripColour(LedgerBucket ledger)
     {
         if (ledger.BudgetBucket is SpentPerPeriodExpenseBucket)
         {

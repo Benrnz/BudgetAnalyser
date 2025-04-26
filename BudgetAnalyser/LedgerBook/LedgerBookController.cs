@@ -202,7 +202,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         try
         {
             var reconciliationDate = this.uiContext.AddLedgerReconciliationController.Date;
-            var budgetCollection = this.uiContext.BudgetController.Budgets;
+            var budgetCollection = this.uiContext.BudgetController.Budgets ?? throw new InvalidOperationException("Budget collection is null.");
             ViewModel.NewLedgerLine = this.reconService.PeriodEndReconciliation(ViewModel.LedgerBook!,
                 reconciliationDate,
                 budgetCollection,
@@ -247,6 +247,12 @@ public class LedgerBookController : ControllerBase, IShowableController
         if (e.SelectedBucket is not ExpenseBucket expenseBucket)
         {
             this.messageBox.Show("You must select an expense budget bucket to track when adding a new Ledger Column.");
+            return;
+        }
+
+        if (e.StoreInThisAccount is null)
+        {
+            this.messageBox.Show("You must select an account to track the new Ledger Column.");
             return;
         }
 

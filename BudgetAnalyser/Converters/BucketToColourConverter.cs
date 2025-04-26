@@ -28,7 +28,7 @@ public class BucketToColourConverter : IValueConverter
             return ConverterHelper.AccumulatedBucketBrush;
         }
 
-        return value is IncomeBudgetBucket ? ConverterHelper.IncomeBucketBrush : (object)ConverterHelper.NeutralNumberBackgroundBrush;
+        return value is IncomeBudgetBucket ? ConverterHelper.IncomeBucketBrush : (object?)ConverterHelper.NeutralNumberBackgroundBrush;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

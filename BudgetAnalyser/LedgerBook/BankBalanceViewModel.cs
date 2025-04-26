@@ -9,10 +9,10 @@ namespace BudgetAnalyser.LedgerBook;
 /// </summary>
 public class BankBalanceViewModel : BankBalance
 {
-    private readonly LedgerEntryLine line;
+    private readonly LedgerEntryLine? line;
 
     [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "It is validated.")]
-    public BankBalanceViewModel([CanBeNull] LedgerEntryLine line, BankBalance balance) : base(balance.Account, balance.Balance)
+    public BankBalanceViewModel(LedgerEntryLine? line, BankBalance balance) : base(balance.Account, balance.Balance)
     {
         if (balance is null)
         {
@@ -22,7 +22,7 @@ public class BankBalanceViewModel : BankBalance
         this.line = line;
     }
 
-    public BankBalanceViewModel([CanBeNull] LedgerEntryLine line, Account account, decimal balance) : base(account, balance)
+    public BankBalanceViewModel(LedgerEntryLine? line, Account account, decimal balance) : base(account, balance)
     {
         this.line = line;
     }

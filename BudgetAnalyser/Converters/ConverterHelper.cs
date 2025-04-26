@@ -62,7 +62,7 @@ public static class ConverterHelper
     [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
     public static readonly Brush? TransparentBrush = new SolidColorBrush(Colors.Transparent);
 
-    public static decimal? ParseNumber(object value)
+    public static decimal? ParseNumber(object? value)
     {
         if (value is decimal decimalValue)
         {

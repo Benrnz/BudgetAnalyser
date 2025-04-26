@@ -19,6 +19,11 @@ public partial class LedgerBookUserControl
 
     private void DynamicallyCreateLedgerBookGrid()
     {
+        if (Controller.ViewModel.LedgerBook is null)
+        {
+            return;
+        }
+
         var builder = Controller.GridBuilder();
         builder.BuildGrid(Controller.ViewModel.LedgerBook, Resources, this.LedgerBookPanel, Controller.NumberOfPeriodsToShow);
     }
@@ -62,7 +67,7 @@ public partial class LedgerBookUserControl
 
     private void OnLedgerBookReadyMessageReceived(LedgerBookReadyMessage message)
     {
-        // this is only used when no Ledgerbook has been previously loaded. Data binding hasnt been set up to respond to the ViewModel.LedgerBook property changing until the UI is actually drawn 
+        // this is only used when no Ledgerbook has been previously loaded. Data binding hasnt been set up to respond to the ViewModel.LedgerBook property changing until the UI is actually drawn
         // for the first time.
         if (message.LedgerBook is not null && message.ForceUiRefresh)
         {

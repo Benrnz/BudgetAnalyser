@@ -14,9 +14,9 @@ public class BudgetBucketToStringConverter : IValueConverter
         return bucket?.Code;
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var stringValue = value as string;
-        return string.IsNullOrWhiteSpace(stringValue) ? null : (object)BudgetBucketBindingSource.BucketRepository.GetByCode(stringValue);
+        return string.IsNullOrWhiteSpace(stringValue) ? null : (object?)BudgetBucketBindingSource.BucketRepository?.GetByCode(stringValue);
     }
 }
