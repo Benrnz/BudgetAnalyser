@@ -170,7 +170,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     ///     Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine" /> to
     ///     the <see cref="LedgerBook" />.
     /// </summary>
-    public void ShowCreateDialog([NotNull] Engine.Ledger.LedgerBook ledgerBook)
+    public void ShowCreateDialog(Engine.Ledger.LedgerBook ledgerBook)
     {
         this.parentBook = ledgerBook ?? throw new ArgumentNullException(nameof(ledgerBook));
         BankBalances = new ObservableCollection<BankBalanceViewModel>();
@@ -189,7 +189,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     ///     Used to show the bank balances involved in this <see cref="LedgerEntryLine" />.
     ///     Only shows balances at this stage, no editing allowed.
     /// </summary>
-    public void ShowViewDialog([NotNull] Engine.Ledger.LedgerBook ledgerBook, [NotNull] LedgerEntryLine line)
+    public void ShowViewDialog(Engine.Ledger.LedgerBook ledgerBook, LedgerEntryLine line)
     {
         if (line is null)
         {

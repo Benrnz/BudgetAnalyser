@@ -13,8 +13,8 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     private bool doNotUseDirty;
 
     public LedgerBookControllerFileOperations(
-        [NotNull] IMessenger messenger,
-        [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
+        IMessenger messenger,
+        IApplicationDatabaseFacade applicationDatabaseService)
     {
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         MessengerInstance = messenger ?? throw new ArgumentNullException(nameof(messenger));
@@ -23,8 +23,6 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
-
-    public IMessenger MessengerInstance { get; }
 
     internal bool Dirty
     {
@@ -44,6 +42,8 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     ///     Gets or sets the ledger service. Will be set by the <see cref="LedgerBookController" /> during its initialisation.
     /// </summary>
     internal ILedgerService LedgerService { get; set; }
+
+    public IMessenger MessengerInstance { get; }
 
     public LedgerBookViewModel ViewModel { get; }
 

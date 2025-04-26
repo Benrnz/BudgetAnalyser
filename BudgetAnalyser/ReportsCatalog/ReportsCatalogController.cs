@@ -18,7 +18,7 @@ public class ReportsCatalogController : ControllerBase, IShowableController
     private StatementModel? currentStatementModel;
     private bool doNotUseShown;
 
-    public ReportsCatalogController([NotNull] UiContext uiContext, [NotNull] NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
+    public ReportsCatalogController(UiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {

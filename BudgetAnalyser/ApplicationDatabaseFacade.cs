@@ -6,12 +6,12 @@ using BudgetAnalyser.Engine.Services;
 namespace BudgetAnalyser;
 
 /// <summary>
-/// An interface to represent a clientside facade to marshall all access to the <see cref="IApplicationDatabaseService"/>.  This is to allow clientside code to be notified of changing data and send
-/// messages between controllers.
+///     An interface to represent a clientside facade to marshall all access to the <see cref="IApplicationDatabaseService" />.  This is to allow clientside code to be notified of changing data and send
+///     messages between controllers.
 /// </summary>
 public interface IApplicationDatabaseFacade
 {
-    // NOTE This interface could inherit from IApplicationDatabaseService, but for simplicity of IOC registration, it does not. Also, not necessarily a bad thing because it forces local code to use 
+    // NOTE This interface could inherit from IApplicationDatabaseService, but for simplicity of IOC registration, it does not. Also, not necessarily a bad thing because it forces local code to use
     // this facade and not accidentally use the service directly.
 
     /// <summary>
@@ -29,19 +29,19 @@ public interface IApplicationDatabaseFacade
     ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
     ///     calling this method.
     /// </summary>
-    ApplicationDatabase Close();
+    ApplicationDatabase? Close();
 
     /// <summary>
     ///     Creates a new application database storage.
     /// </summary>
     /// <param name="storageKey">The storage key.</param>
-    Task<ApplicationDatabase> CreateNewDatabaseAsync([NotNull] string storageKey);
+    Task<ApplicationDatabase> CreateNewDatabaseAsync(string storageKey);
 
     /// <summary>
     ///     Decrypt the underlying data files.
     /// </summary>
     /// <param name="confirmCredentialsClaim">A duplicate credential must be provided to ensure the user can decrypt their files.</param>
-    /// <exception cref="EncryptionKeyNotProvidedException">Will be thrown if the data files are encrypted and no credentials are provided. See <see cref="ICredentialStore"/> to provide credentials.</exception>
+    /// <exception cref="EncryptionKeyNotProvidedException">Will be thrown if the data files are encrypted and no credentials are provided. See <see cref="ICredentialStore" /> to provide credentials.</exception>
     Task DecryptFilesAsync(object confirmCredentialsClaim);
 
     /// <summary>
@@ -80,7 +80,7 @@ public interface IApplicationDatabaseFacade
     ///     Will be thrown if an underlying data file is completely the wrong format. Most
     ///     likely not a Budget Analyser file.
     /// </exception>
-    Task<ApplicationDatabase> LoadAsync([NotNull] string storageKey);
+    Task<ApplicationDatabase> LoadAsync(string storageKey);
 
     /// <summary>
     ///     Notifies the service that data has changed and will need to be saved.
@@ -121,7 +121,7 @@ internal class WpfApplicationDatabaseFacade(IApplicationDatabaseService engineSe
     public bool HasUnsavedChanges => engineService.HasUnsavedChanges;
     public bool IsEncrypted => engineService.IsEncrypted;
 
-    public ApplicationDatabase Close()
+    public ApplicationDatabase? Close()
     {
         var result = engineService.Close();
         PersistenceOperationCommands.SaveDatabaseCommand.NotifyCanExecuteChanged();

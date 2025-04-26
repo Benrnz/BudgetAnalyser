@@ -345,7 +345,11 @@ public class BudgetController : ControllerBase, IShowableController
         if (budgetItem is Expense expenseItem)
         {
             expenseItem.PropertyChanged -= OnExpenseAmountPropertyChanged;
-            expenseItem.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
+            if (expenseItem.Bucket is not null)
+            {
+                expenseItem.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
+            }
+
             Expenses.Remove(expenseItem);
             return;
         }
@@ -353,7 +357,11 @@ public class BudgetController : ControllerBase, IShowableController
         if (budgetItem is Income incomeItem)
         {
             incomeItem.PropertyChanged -= OnIncomeAmountPropertyChanged;
-            incomeItem.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
+            if (incomeItem.Bucket is not null)
+            {
+                incomeItem.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
+            }
+
             Incomes.Remove(incomeItem);
         }
     }
@@ -404,7 +412,7 @@ public class BudgetController : ControllerBase, IShowableController
         }
 
         var viewModel = (BudgetSelectionViewModel)message.Content;
-        if (CurrentBudget is null || viewModel.Selected == CurrentBudget.Model)
+        if (CurrentBudget is null || viewModel.Selected == CurrentBudget.Model || viewModel.Selected is null)
         {
             return;
         }
@@ -447,13 +455,19 @@ public class BudgetController : ControllerBase, IShowableController
         foreach (var item in Incomes)
         {
             item.PropertyChanged -= OnIncomeAmountPropertyChanged;
-            item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
+            if (item.Bucket is not null)
+            {
+                item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
+            }
         }
 
         foreach (var item in Expenses)
         {
             item.PropertyChanged -= OnExpenseAmountPropertyChanged;
-            item.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
+            if (item.Bucket is not null)
+            {
+                item.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
+            }
         }
     }
 
@@ -494,14 +508,20 @@ public class BudgetController : ControllerBase, IShowableController
             i =>
             {
                 i.PropertyChanged += OnIncomeAmountPropertyChanged;
-                i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
+                if (i.Bucket is not null)
+                {
+                    i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
+                }
             });
         Expenses = new BindingList<Expense>(CurrentBudget.Model.Expenses.ToList());
         Expenses.ToList().ForEach(
             e =>
             {
                 e.PropertyChanged += OnExpenseAmountPropertyChanged;
-                e.Bucket.PropertyChanged += OnExpenseAmountPropertyChanged;
+                if (e.Bucket is not null)
+                {
+                    e.Bucket.PropertyChanged += OnExpenseAmountPropertyChanged;
+                }
             });
     }
 

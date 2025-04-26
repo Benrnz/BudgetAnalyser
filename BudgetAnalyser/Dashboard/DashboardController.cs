@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Threading;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
@@ -21,12 +20,7 @@ public sealed class DashboardController : ControllerBase, IShowableController
     private Guid doNotUseCorrelationId;
     private bool doNotUseShown;
 
-    public DashboardController(
-        [NotNull]
-        IUiContext uiContext,
-        [NotNull]
-        IDashboardService dashboardService)
-        : base(uiContext.Messenger)
+    public DashboardController(IUiContext uiContext, IDashboardService dashboardService) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
@@ -47,6 +41,7 @@ public sealed class DashboardController : ControllerBase, IShowableController
         this.createNewSurprisePaymentMonitorController.Complete += OnCreateNewSurprisePaymentMonitorComplete;
 
         CorrelationId = Guid.NewGuid();
+        WidgetGroups = new ObservableCollection<WidgetGroup>();
     }
 
     public Guid CorrelationId
@@ -92,7 +87,7 @@ public sealed class DashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void OnBudgetBucketChosenForNewBucketMonitor(object sender, BudgetBucketChosenEventArgs args)
+    private void OnBudgetBucketChosenForNewBucketMonitor(object? sender, BudgetBucketChosenEventArgs args)
     {
         if (args.CorrelationId != CorrelationId)
         {
@@ -114,7 +109,7 @@ public sealed class DashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void OnCreateNewFixedProjectComplete(object sender, DialogResponseEventArgs dialogResponseEventArgs)
+    private void OnCreateNewFixedProjectComplete(object? sender, DialogResponseEventArgs dialogResponseEventArgs)
     {
         if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != CorrelationId)
         {
@@ -132,7 +127,7 @@ public sealed class DashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void OnCreateNewSurprisePaymentMonitorComplete(object sender, DialogResponseEventArgs dialogResponseEventArgs)
+    private void OnCreateNewSurprisePaymentMonitorComplete(object? sender, DialogResponseEventArgs dialogResponseEventArgs)
     {
         if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != CorrelationId)
         {
@@ -142,6 +137,11 @@ public sealed class DashboardController : ControllerBase, IShowableController
         CorrelationId = Guid.NewGuid();
         try
         {
+            if (this.createNewSurprisePaymentMonitorController.Selected is null)
+            {
+                return;
+            }
+
             this.dashboardService.CreateNewSurprisePaymentMonitorWidget(
                 this.createNewSurprisePaymentMonitorController.Selected.Code,
                 this.createNewSurprisePaymentMonitorController.PaymentStartDate,

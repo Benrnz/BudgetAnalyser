@@ -11,6 +11,6 @@ public class WindowsWpfEnvironmentFolders : IEnvironmentFolders
     /// </summary>
     public Task<string> ApplicationDataFolder()
     {
-        return Task.FromResult(Path.GetDirectoryName(GetType().Assembly.Location));
+        return Task.FromResult(Path.GetDirectoryName(GetType().Assembly.Location) ?? string.Empty);
     }
 }

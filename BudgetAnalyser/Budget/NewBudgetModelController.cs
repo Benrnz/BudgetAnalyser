@@ -16,7 +16,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     private BudgetCycle doNotUseBudgetCycle;
     private DateOnly doNotUseEffectiveFrom;
 
-    public NewBudgetModelController([NotNull] IUiContext uiContext) : base(uiContext.Messenger)
+    public NewBudgetModelController(IUiContext uiContext) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {

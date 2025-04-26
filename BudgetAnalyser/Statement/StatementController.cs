@@ -11,8 +11,6 @@ using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
-using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
-using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser.Statement;
 
@@ -28,9 +26,9 @@ public class StatementController : ControllerBase, IShowableController, IInitial
     private Guid shellDialogCorrelationId;
 
     public StatementController(
-        [NotNull] IUiContext uiContext,
-        [NotNull] StatementControllerFileOperations fileOperations,
-        [NotNull] ITransactionManagerService transactionService)
+        IUiContext uiContext,
+        StatementControllerFileOperations fileOperations,
+        ITransactionManagerService transactionService)
         : base(uiContext.Messenger)
     {
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
@@ -74,12 +72,17 @@ public class StatementController : ControllerBase, IShowableController, IInitial
     }
 
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
+    internal EditingTransactionController EditingTransactionController => this.uiContext.EditingTransactionController;
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
     public StatementControllerFileOperations FileOperations { get; }
 
-    [UsedImplicitly] public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
+    [UsedImplicitly]
+    public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
 
-    [UsedImplicitly] public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
+    [UsedImplicitly]
+    public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
+
+    internal SplitTransactionController SplitTransactionController => this.uiContext.SplitTransactionController;
 
     public string? TextFilter
     {
@@ -99,8 +102,6 @@ public class StatementController : ControllerBase, IShowableController, IInitial
     }
 
     public StatementViewModel ViewModel => FileOperations.ViewModel;
-    internal EditingTransactionController EditingTransactionController => this.uiContext.EditingTransactionController;
-    internal SplitTransactionController SplitTransactionController => this.uiContext.SplitTransactionController;
 
     public void Initialize()
     {

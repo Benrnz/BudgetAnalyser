@@ -5,96 +5,95 @@ using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
-namespace BudgetAnalyser.LedgerBook
+namespace BudgetAnalyser.LedgerBook;
+
+[AutoRegisterWithIoC(SingleInstance = true)]
+public class LedgerRemarksController : ControllerBase
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
-    public class LedgerRemarksController : ControllerBase
+    private readonly IReconciliationService reconciliationService;
+    private Guid dialogCorrelationId;
+    private bool doNotUseIsReadOnly;
+    private LedgerEntryLine doNotUseLedgerEntryLine;
+    private string doNotUseRemarks;
+
+    public LedgerRemarksController(UiContext uiContext, IReconciliationService reconciliationService) : base(uiContext.Messenger)
     {
-        private readonly IReconciliationService reconciliationService;
-        private Guid dialogCorrelationId;
-        private bool doNotUseIsReadOnly;
-        private LedgerEntryLine doNotUseLedgerEntryLine;
-        private string doNotUseRemarks;
-
-        public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] IReconciliationService reconciliationService) : base(uiContext.Messenger)
+        if (uiContext is null)
         {
-            if (uiContext is null)
-            {
-                throw new ArgumentNullException(nameof(uiContext));
-            }
-
-            if (reconciliationService is null)
-            {
-                throw new ArgumentNullException(nameof(reconciliationService));
-            }
-
-            this.reconciliationService = reconciliationService;
-            Messenger.Register<LedgerRemarksController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+            throw new ArgumentNullException(nameof(uiContext));
         }
 
-        public event EventHandler Completed;
-
-        public bool IsReadOnly
+        if (reconciliationService is null)
         {
-            get => this.doNotUseIsReadOnly;
-            private set
-            {
-                this.doNotUseIsReadOnly = value;
-                OnPropertyChanged();
-            }
+            throw new ArgumentNullException(nameof(reconciliationService));
         }
 
-        public LedgerEntryLine LedgerEntryLine
+        this.reconciliationService = reconciliationService;
+        Messenger.Register<LedgerRemarksController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+    }
+
+    public event EventHandler Completed;
+
+    public bool IsReadOnly
+    {
+        get => this.doNotUseIsReadOnly;
+        private set
         {
-            get => this.doNotUseLedgerEntryLine;
-            private set
-            {
-                this.doNotUseLedgerEntryLine = value;
-                OnPropertyChanged();
-            }
+            this.doNotUseIsReadOnly = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public LedgerEntryLine LedgerEntryLine
+    {
+        get => this.doNotUseLedgerEntryLine;
+        private set
+        {
+            this.doNotUseLedgerEntryLine = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string Remarks
+    {
+        get => this.doNotUseRemarks;
+        set
+        {
+            this.doNotUseRemarks = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public void Show(LedgerEntryLine line, bool isNew)
+    {
+        LedgerEntryLine = line;
+        Remarks = LedgerEntryLine.Remarks;
+        IsReadOnly = !isNew;
+        this.dialogCorrelationId = Guid.NewGuid();
+        var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
+        {
+            Title = "Ledger Entry Remarks",
+            CorrelationId = this.dialogCorrelationId
+        };
+        Messenger.Send(dialogRequest);
+    }
+
+    private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+    {
+        if (!message.IsItForMe(this.dialogCorrelationId))
+        {
+            return;
         }
 
-        public string Remarks
+        if (!IsReadOnly)
         {
-            get => this.doNotUseRemarks;
-            set
-            {
-                this.doNotUseRemarks = value;
-                OnPropertyChanged();
-            }
+            this.reconciliationService.UpdateRemarks(LedgerEntryLine, Remarks);
         }
 
-        public void Show(LedgerEntryLine line, bool isNew)
-        {
-            LedgerEntryLine = line;
-            Remarks = LedgerEntryLine.Remarks;
-            IsReadOnly = !isNew;
-            this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
-            {
-                Title = "Ledger Entry Remarks",
-                CorrelationId = this.dialogCorrelationId
-            };
-            Messenger.Send(dialogRequest);
-        }
+        LedgerEntryLine = null;
+        Remarks = null;
 
-        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
-        {
-            if (!message.IsItForMe(this.dialogCorrelationId))
-            {
-                return;
-            }
-
-            if (!IsReadOnly)
-            {
-                this.reconciliationService.UpdateRemarks(LedgerEntryLine, Remarks);
-            }
-
-            LedgerEntryLine = null;
-            Remarks = null;
-
-            var handler = Completed;
-            handler?.Invoke(this, EventArgs.Empty);
-        }
+        var handler = Completed;
+        handler?.Invoke(this, EventArgs.Empty);
     }
 }

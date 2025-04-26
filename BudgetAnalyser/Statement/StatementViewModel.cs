@@ -19,7 +19,7 @@ public class StatementViewModel : ObservableRecipient
     private ObservableCollection<Transaction> doNotUseTransactions;
     private ITransactionManagerService transactionService;
 
-    public StatementViewModel([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
+    public StatementViewModel(IUiContext uiContext, IApplicationDatabaseFacade applicationDatabaseService)
     {
         this.doNotUseSortByDate = true;
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));

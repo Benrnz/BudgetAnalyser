@@ -21,7 +21,7 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
     private BudgetBucket? doNotUseSelected;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
+    public CreateNewSurprisePaymentMonitorController(IUiContext uiContext, IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
@@ -36,7 +36,7 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
     }
 
     // TODO Replace this event with a message.
-    public event EventHandler<DialogResponseEventArgs> Complete;
+    public event EventHandler<DialogResponseEventArgs>? Complete;
 
     [UsedImplicitly]
     public IEnumerable<BudgetBucket> BudgetBuckets => this.bucketRepository.Buckets.ToList();
@@ -92,7 +92,7 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
     /// </summary>
-    public bool CanExecuteOkButton => Selected! is not null && PaymentStartDate != DateOnly.MinValue;
+    public bool CanExecuteOkButton => Selected is not null && PaymentStartDate != DateOnly.MinValue;
 
     /// <summary>
     ///     Will be called ascertain the availability of the button.

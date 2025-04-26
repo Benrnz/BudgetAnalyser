@@ -23,12 +23,12 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 {
     private readonly IApplicationDatabaseService appDbService;
     private readonly IUserMessageBox userMessageBox;
-    private BudgetModel currentBudget;
+    private BudgetModel? currentBudget;
     private Guid dialogCorrelationId;
-    private string doNotUseAccountTypeSummary;
+    private string doNotUseAccountTypeSummary = string.Empty;
     private GlobalFilterCriteria doNotUseCriteria;
-    private string doNotUseDateSummaryLine1;
-    private string doNotUseDateSummaryLine2;
+    private string doNotUseDateSummaryLine1 = string.Empty;
+    private string doNotUseDateSummaryLine2 = string.Empty;
 
     public GlobalFilterController(UiContext uiContext, IApplicationDatabaseService appDbService) : base(uiContext.Messenger)
     {
@@ -41,7 +41,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         this.appDbService.NewDataSourceAvailable += OnNewFilter;
         this.userMessageBox = uiContext.UserPrompts.MessageBox;
         this.doNotUseCriteria = new GlobalFilterCriteria();
-        this.currentBudget = uiContext.BudgetController?.CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
+        this.currentBudget = uiContext.BudgetController.CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 
         Messenger.Register<GlobalFilterController, RequestFilterMessage>(this, static (r, m) => r.OnGlobalFilterRequested(m));
         Messenger.Register<GlobalFilterController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
@@ -123,7 +123,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     {
         if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
         {
-            if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
+            if (this.currentBudget!.BudgetCycle == BudgetCycle.Monthly)
             {
                 Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(1);
                 return;
@@ -134,7 +134,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
         if (Criteria.EndDate is not null && date == Criteria.EndDate)
         {
-            if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
+            if (this.currentBudget!.BudgetCycle == BudgetCycle.Monthly)
             {
                 Criteria.EndDate = Criteria.EndDate.Value.AddMonths(1);
                 return;
@@ -148,7 +148,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     {
         if (Criteria.BeginDate is not null && date == Criteria.BeginDate)
         {
-            if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
+            if (this.currentBudget!.BudgetCycle == BudgetCycle.Monthly)
             {
                 Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(-1);
                 return;
@@ -159,7 +159,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
         if (Criteria.EndDate is not null && date == Criteria.EndDate)
         {
-            if (this.currentBudget.BudgetCycle == BudgetCycle.Monthly)
+            if (this.currentBudget!.BudgetCycle == BudgetCycle.Monthly)
             {
                 Criteria.EndDate = Criteria.EndDate.Value.AddMonths(-1);
                 return;
@@ -171,7 +171,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
     private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
     {
-        this.currentBudget = message.Budgets.CurrentActiveBudget;
+        this.currentBudget = message.Budgets?.CurrentActiveBudget;
     }
 
     private void OnClearCommandExecute()
@@ -214,7 +214,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         SendFilterAppliedMessage();
     }
 
-    private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
+    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
     {
         if (message is null)
         {
