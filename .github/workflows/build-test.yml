@@ -51,7 +51,7 @@ jobs:
 
     - name: Upload test log file
       if: always() # Ensures the step runs even if previous steps fail
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: TestResultsLog
         path: D:\a\BudgetAnalyser\BudgetAnalyser\BudgetAnalyser.Engine.XUnit3\bin\Debug\net9.0\TestResults\BudgetAnalyser.Engine.XUnit3_net9.0_x64.log
