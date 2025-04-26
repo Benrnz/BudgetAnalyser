@@ -28,7 +28,7 @@ public class OverspentWarning : Widget
         DetailedText = "Overspent";
         ImageResourceName = null;
         RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(15);
-        this.tolerance = 10; // By default, must be overspent by 10 dollars to be considered overspent.
+        this.tolerance = 25; // By default, must be overspent by 10 dollars to be considered overspent.
     }
 
     public OverspentWarning(ILogger logger) : this()
