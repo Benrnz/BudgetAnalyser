@@ -23,43 +23,42 @@
 
     <ItemGroup>
         <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax">
-          <Link>TestData\BudgetAnalyserDemo.bax</Link>
+            <Link>TestData\BudgetAnalyserDemo.bax</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\BudgetCollectionTestData.json">
-          <Link>TestData\BudgetCollectionTestData.json</Link>
+            <Link>TestData\BudgetCollectionTestData.json</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\DemoBudget.json">
-          <Link>TestData\DemoBudget.json</Link>
+            <Link>TestData\DemoBudget.json</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\DemoBudget.json.secure">
-          <Link>TestData\DemoBudget.json.secure</Link>
+            <Link>TestData\DemoBudget.json.secure</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\DemoLedgerBook.json">
-          <Link>TestData\DemoLedgerBook.json</Link>
+            <Link>TestData\DemoLedgerBook.json</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\DemoLedgerBook.json.secure">
-          <Link>TestData\DemoLedgerBook.json.secure</Link>
+            <Link>TestData\DemoLedgerBook.json.secure</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\DemoTransactions.csv">
-          <Link>TestData\DemoTransactions.csv</Link>
+            <Link>TestData\DemoTransactions.csv</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\DuplicateTxnTest.csv">
-          <Link>TestData\DuplicateTxnTest.csv</Link>
+            <Link>TestData\DuplicateTxnTest.csv</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\EmptyBudget.json">
-          <Link>TestData\EmptyBudget.json</Link>
+            <Link>TestData\EmptyBudget.json</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json">
-          <Link>TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json</Link>
+            <Link>TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheJsonFile.json</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\WidgetsTestData.json">
-          <Link>TestData\WidgetsTestData.json</Link>
+            <Link>TestData\WidgetsTestData.json</Link>
         </EmbeddedResource>
         <EmbeddedResource Include="..\TestData\DemoMatchingRules.json">
-          <Link>TestData\DemoMatchingRules.json</Link>
+            <Link>TestData\DemoMatchingRules.json</Link>
         </EmbeddedResource>
         <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
-        <None Remove="TestData\WidgetsTestData.xml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -68,16 +67,16 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
-        <PackageReference Include="NSubstitute" Version="5.3.0" />
-        <PackageReference Include="Rees.UnitTestUtilities" Version="2.0.4" />
-        <PackageReference Include="Shouldly" Version="4.3.0" />
-        <PackageReference Include="xunit.v3" Version="2.0.0" />
+        <PackageReference Include="NSubstitute" Version="5.3.0"/>
+        <PackageReference Include="Rees.UnitTestUtilities" Version="2.0.4"/>
+        <PackageReference Include="Shouldly" Version="4.3.0"/>
+        <PackageReference Include="xunit.v3" Version="2.0.0"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj" />
-      <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj" />
+        <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj"/>
+        <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj"/>
     </ItemGroup>
 
 </Project>

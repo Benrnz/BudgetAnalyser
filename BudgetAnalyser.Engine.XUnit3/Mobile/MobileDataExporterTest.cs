@@ -7,7 +7,6 @@ using BudgetAnalyser.Engine.XUnit.TestData;
 using NSubstitute;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Mobile;
 
 public class MobileDataExporterTest
@@ -37,7 +36,7 @@ public class MobileDataExporterTest
         {
             Exported = new DateTime(2025, 1, 1),
             Title = "Test Data 3 Budget",
-            LastTransactionImport = new DateTime(new DateOnly(2013, 08, 14), new TimeOnly(12,0,0), DateTimeKind.Utc),
+            LastTransactionImport = new DateTime(new DateOnly(2013, 08, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc),
             StartOfMonth = new DateOnly(2013, 7, 15)
         };
         expected.LedgerBuckets.AddRange([
