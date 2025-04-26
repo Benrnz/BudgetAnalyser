@@ -28,7 +28,11 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData1()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData1\FooStatement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new StatementModel(new FakeLogger())
+        {
+            StorageKey = @"C:\TestData1\FooStatement.csv",
+            LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
+        };
 
         var transactions = CreateTransactions1();
         statement.LoadTransactions(transactions);
@@ -41,7 +45,11 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData2()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new StatementModel(new FakeLogger())
+        {
+            StorageKey = @"C:\TestData2\Foo2Statement.csv",
+            LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
+        };
 
         var transactions = CreateTransactions2();
         statement.LoadTransactions(transactions);
@@ -55,7 +63,11 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData2A()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new StatementModel(new FakeLogger())
+        {
+            StorageKey = @"C:\TestData2\Foo2Statement.csv",
+            LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
+        };
 
         IList<Transaction> transactions = CreateTransactions2().ToList();
         var modTransaction = transactions.Single(t => t.Date == new DateOnly(2013, 07, 16) && t.BudgetBucket == PhoneBucket);
@@ -71,7 +83,11 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData3()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData3\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new StatementModel(new FakeLogger())
+        {
+            StorageKey = @"C:\TestData3\Foo2Statement.csv",
+            LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
+        };
 
         var transactions = CreateTransactions3();
         statement.LoadTransactions(transactions);
@@ -86,7 +102,11 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData4()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData4\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new StatementModel(new FakeLogger())
+        {
+            StorageKey = @"C:\TestData4\Foo2Statement.csv",
+            LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
+        };
 
         var transactions = CreateTransactions3().ToList();
         transactions.AddRange(CreateTransactions1());
@@ -103,7 +123,11 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData5()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData5\Foo5Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new StatementModel(new FakeLogger())
+        {
+            StorageKey = @"C:\TestData5\Foo5Statement.csv",
+            LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
+        };
 
         var transactions = CreateTransactions5();
         statement.LoadTransactions(transactions);
@@ -117,7 +141,11 @@ public static class StatementModelTestData
     /// </summary>
     public static StatementModel TestData6()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData6\Foo6Statement.csv", LastImport = new DateTime(2013, 12, 31) };
+        var statement = new StatementModel(new FakeLogger())
+        {
+            StorageKey = @"C:\TestData6\Foo6Statement.csv",
+            LastImport = new DateTime(new DateOnly(2013, 12, 30), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
+        };
 
         var transactions = CreateTransactions12Months();
         statement.LoadTransactions(transactions);

@@ -69,7 +69,7 @@ internal class BankImportUtilities
 
         if (index > array.Length - 1 || index < 0)
         {
-            ThrowIndexOutOfRangeException(array, index);
+            ThrowIndexOutOfRangeException(array.Length, index);
         }
 
         var stringToParse = array[index];
@@ -93,6 +93,30 @@ internal class BankImportUtilities
         throw new InvalidDataException($"Expected a date, but file data is invalid: {stringToParse}");
     }
 
+    internal DateOnly FetchDate(ReadOnlySpan<char> array, int index)
+    {
+        if (index < 0 || index >= array.Length)
+        {
+            ThrowIndexOutOfRangeException(array.Length, index);
+        }
+
+        var charIndex = FindAllCommas(array, index, out var length);
+
+        // Slice the span starting from the given index
+        var span = array.Slice(charIndex);
+
+        // Extract the segment up to the next ','
+        var segment = span.Slice(0, length);
+        if (!DateOnly.TryParse(segment, this.locale, DateTimeStyles.None, out var result))
+        {
+            var errorMessage = $"BankImportUtilities: Unable to parse DateOnly: {segment.ToString()}";
+            this.logger.LogError(_ => errorMessage);
+            throw new InvalidDataException(errorMessage);
+        }
+
+        return result;
+    }
+
     internal DateTime FetchDateTime(string[] array, int index)
     {
         if (array is null)
@@ -102,7 +126,7 @@ internal class BankImportUtilities
 
         if (index > array.Length - 1 || index < 0)
         {
-            ThrowIndexOutOfRangeException(array, index);
+            ThrowIndexOutOfRangeException(array.Length, index);
         }
 
         var stringToParse = array[index];
@@ -110,6 +134,31 @@ internal class BankImportUtilities
         {
             this.logger.LogError(_ => "BankImportUtilities: Unable to parse date: " + stringToParse);
             throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
+        }
+
+        return result;
+    }
+
+    internal DateTime FetchDateTime(ReadOnlySpan<char> array, int index)
+    {
+        if (index < 0 || index >= array.Length)
+        {
+            ThrowIndexOutOfRangeException(array.Length, index);
+        }
+
+        var charIndex = FindAllCommas(array, index, out var length);
+
+        // Slice the span starting from the given index
+        var span = array.Slice(charIndex);
+
+        // Extract the segment up to the next ','
+        var segment = span.Slice(0, length);
+        var styles = segment.EndsWith('Z') ? DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal : DateTimeStyles.AssumeLocal;
+        if (!DateTime.TryParse(segment, CultureInfo.InvariantCulture, styles, out var result))
+        {
+            var errorMessage = $"BankImportUtilities: Unable to parse DateTime: {segment.ToString()}";
+            this.logger.LogError(_ => errorMessage);
+            throw new InvalidDataException(errorMessage);
         }
 
         return result;
@@ -124,7 +173,7 @@ internal class BankImportUtilities
 
         if (index > array.Length - 1 || index < 0)
         {
-            ThrowIndexOutOfRangeException(array, index);
+            ThrowIndexOutOfRangeException(array.Length, index);
         }
 
         var stringToParse = array[index];
@@ -132,6 +181,30 @@ internal class BankImportUtilities
         {
             this.logger.LogError(_ => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
             throw new InvalidDataException("Expected decimal, but provided data is invalid. " + stringToParse);
+        }
+
+        return result;
+    }
+
+    internal decimal FetchDecimal(ReadOnlySpan<char> array, int index)
+    {
+        if (index < 0 || index >= array.Length)
+        {
+            ThrowIndexOutOfRangeException(array.Length, index);
+        }
+
+        var charIndex = FindAllCommas(array, index, out var length);
+
+        // Slice the span starting from the given index
+        var span = array.Slice(charIndex);
+
+        // Extract the segment up to the next ','
+        var segment = span.Slice(0, length);
+        if (!decimal.TryParse(segment, NumberStyles.Number, this.locale, out var result))
+        {
+            var errorMessage = $"BankImportUtilities: Unable to parse decimal: {segment.ToString()}";
+            this.logger.LogError(_ => errorMessage);
+            throw new InvalidDataException(errorMessage);
         }
 
         return result;
@@ -147,7 +220,7 @@ internal class BankImportUtilities
 
         if (index > array.Length - 1 || index < 0)
         {
-            ThrowIndexOutOfRangeException(array, index);
+            ThrowIndexOutOfRangeException(array.Length, index);
         }
 
         var stringToParse = array[index];
@@ -155,6 +228,30 @@ internal class BankImportUtilities
         {
             this.logger.LogError(_ => "BankImportUtilities: Unable to parse Guid: " + stringToParse);
             throw new InvalidDataException("Expected Guid, but provided data is invalid. " + stringToParse);
+        }
+
+        return result;
+    }
+
+    internal Guid FetchGuid(ReadOnlySpan<char> array, int index)
+    {
+        if (index < 0 || index >= array.Length)
+        {
+            ThrowIndexOutOfRangeException(array.Length, index);
+        }
+
+        var charIndex = FindAllCommas(array, index, out var length);
+
+        // Slice the span starting from the given index
+        var span = array.Slice(charIndex);
+
+        // Extract the segment up to the next ','
+        var segment = span.Slice(0, length);
+        if (!Guid.TryParse(segment, out var result))
+        {
+            var errorMessage = $"BankImportUtilities: Unable to parse Guid: {segment.ToString()}";
+            this.logger.LogError(_ => errorMessage);
+            throw new InvalidDataException(errorMessage);
         }
 
         return result;
@@ -169,7 +266,7 @@ internal class BankImportUtilities
 
         if (index > array.Length - 1 || index < 0)
         {
-            ThrowIndexOutOfRangeException(array, index);
+            ThrowIndexOutOfRangeException(array.Length, index);
         }
 
         var stringToParse = array[index];
@@ -182,7 +279,30 @@ internal class BankImportUtilities
         return result;
     }
 
-    [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
+    internal long FetchLong(ReadOnlySpan<char> array, int index)
+    {
+        if (index < 0 || index >= array.Length)
+        {
+            ThrowIndexOutOfRangeException(array.Length, index);
+        }
+
+        var charIndex = FindAllCommas(array, index, out var length);
+
+        // Slice the span starting from the given index
+        var span = array.Slice(charIndex);
+
+        // Extract the segment up to the next ','
+        var segment = span.Slice(0, length);
+        if (!long.TryParse(segment, out var result))
+        {
+            var errorMessage = $"BankImportUtilities: Unable to parse long: {segment.ToString()}";
+            this.logger.LogError(_ => errorMessage);
+            throw new InvalidDataException(errorMessage);
+        }
+
+        return result;
+    }
+
     internal string FetchString(string[] array, int index)
     {
         if (array is null)
@@ -192,7 +312,7 @@ internal class BankImportUtilities
 
         if (index > array.Length - 1 || index < 0)
         {
-            ThrowIndexOutOfRangeException(array, index);
+            ThrowIndexOutOfRangeException(array.Length, index);
         }
 
         var result = array[index].Trim();
@@ -200,8 +320,62 @@ internal class BankImportUtilities
         return chars.Length > 0 && chars[0] == '"' ? result.Replace("\"", string.Empty) : result;
     }
 
-    private static void ThrowIndexOutOfRangeException(string[] array, int index)
+    internal string FetchString(ReadOnlySpan<char> array, int index)
     {
-        throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));
+        if (index < 0 || index >= array.Length)
+        {
+            ThrowIndexOutOfRangeException(array.Length, index);
+        }
+
+        var charIndex = FindAllCommas(array, index, out var length);
+
+        // Slice the span starting from the given index
+        var span = array.Slice(charIndex);
+
+        // Extract the segment up to the next ','
+        var segment = span.Slice(0, length).ToString().Trim();
+
+        // Remove surrounding quotes if present
+        if (segment.Length > 0 && segment[0] == '"')
+        {
+            segment = segment.Replace("\"", string.Empty);
+        }
+
+        return segment;
+    }
+
+    private static int FindAllCommas(ReadOnlySpan<char> array, int index, out int length)
+    {
+        var charIndex = 0;
+        // Get an array with the indexes of all the ',' characters
+        List<int> commaIndexes = [0];
+        for (var i = 0; i < array.Length; i++)
+        {
+            if (array[i] == ',')
+            {
+                commaIndexes.Add(i);
+            }
+        }
+
+        if (index > 0)
+        {
+            charIndex = commaIndexes[index] + 1; // Don't include the comma itself
+        }
+
+        if (index == commaIndexes.Count - 1)
+        {
+            length = array.Length - charIndex;
+        }
+        else
+        {
+            length = commaIndexes[index + 1] - charIndex;
+        }
+
+        return charIndex;
+    }
+
+    private static void ThrowIndexOutOfRangeException(int arrayLength, int index)
+    {
+        throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, arrayLength));
     }
 }
