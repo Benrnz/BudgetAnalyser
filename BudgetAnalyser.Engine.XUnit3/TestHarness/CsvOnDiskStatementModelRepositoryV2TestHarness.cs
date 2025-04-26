@@ -17,7 +17,7 @@ internal class CsvOnDiskStatementModelRepositoryV2TestHarness : CsvOnDiskStateme
     public MemoryStream? WriteStream { get; set; } = new();
 
     public TransactionSetDto? Dto { get; set; }
-    public string SerialisedData { get; set; }
+    public string SerialisedData { get; set; } = string.Empty;
 
     protected override Stream CreateWritableStream(string storageKey, IFileReaderWriter writer)
     {

@@ -12,7 +12,7 @@ internal class BankImportUtilitiesTestHarness : BankImportUtilities
     {
     }
 
-    public Action<string> AbortIfFileDoesntExistOverride { get; set; }
+    public Action<string>? AbortIfFileDoesntExistOverride { get; set; }
 
     internal override void AbortIfFileDoesntExist(string fileName)
     {

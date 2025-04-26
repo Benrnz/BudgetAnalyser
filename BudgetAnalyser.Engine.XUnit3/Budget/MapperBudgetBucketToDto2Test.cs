@@ -36,7 +36,7 @@ public class MapperBudgetBucketToDto2Test
     public void ToDto_ShouldThrowArgumentNullException_WhenBucketIsNull()
     {
         // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToDto(null));
+        Should.Throw<ArgumentNullException>(() => this.mapper.ToDto(null!));
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class MapperBudgetBucketToDto2Test
     public void ToModel_ShouldThrowArgumentNullException_WhenDtoIsNull()
     {
         // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToModel(null));
+        Should.Throw<ArgumentNullException>(() => this.mapper.ToModel(null!));
     }
 
     [Fact]

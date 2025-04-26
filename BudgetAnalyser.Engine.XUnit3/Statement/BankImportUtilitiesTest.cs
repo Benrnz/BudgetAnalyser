@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.XUnit.Statement;
 
 public class BankImportUtilitiesTest
 {
-    private IBudgetBucketRepository bucketRepository;
+    private readonly IBudgetBucketRepository bucketRepository = Substitute.For<IBudgetBucketRepository>();
     private string[] StringArrayTestData => ["123.34", "14/04/2014", "FUEL", "42/12/2088", "A94B4FE5-4F43-43A6-8CD2-8430F45FB58D"];
 
     [Fact]
@@ -28,7 +28,7 @@ public class BankImportUtilitiesTest
         var subject = CreateSubject();
 
         Assert.Throws<ArgumentNullException>(() =>
-            subject.FetchBudgetBucket(null, 2, this.bucketRepository));
+            subject.FetchBudgetBucket(null!, 2, this.bucketRepository));
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class BankImportUtilitiesTest
         var testArray = StringArrayTestData;
 
         Assert.Throws<ArgumentNullException>(() =>
-            subject.FetchBudgetBucket(testArray, 2, null));
+            subject.FetchBudgetBucket(testArray, 2, null!));
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class BankImportUtilitiesTest
             subject.FetchDateTime(span, 0);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Expected exception was thrown
@@ -294,7 +294,7 @@ public class BankImportUtilitiesTest
         var subject = CreateSubject();
 
         Assert.Throws<ArgumentNullException>(() =>
-            subject.FetchDate((string[])null, 2));
+            subject.FetchDate((string[])null!, 2));
     }
 
     [Fact]
@@ -333,7 +333,7 @@ public class BankImportUtilitiesTest
             subject.FetchDecimal(span, 0);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Expected exception was thrown
@@ -448,7 +448,7 @@ public class BankImportUtilitiesTest
         var subject = CreateSubject();
 
         Assert.Throws<ArgumentNullException>(() =>
-            subject.FetchDecimal((string[])null, 2));
+            subject.FetchDecimal((string[])null!, 2));
     }
 
     [Fact]
@@ -487,7 +487,7 @@ public class BankImportUtilitiesTest
             subject.FetchGuid(span, 0);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Expected exception was thrown
@@ -550,7 +550,7 @@ public class BankImportUtilitiesTest
             subject.FetchGuid(span, -1);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Exception was thrown as expected
@@ -602,7 +602,7 @@ public class BankImportUtilitiesTest
         var subject = CreateSubject();
 
         Assert.Throws<ArgumentNullException>(() =>
-            subject.FetchGuid((string[])null, 2));
+            subject.FetchGuid((string[])null!, 2));
     }
 
     [Fact]
@@ -641,7 +641,7 @@ public class BankImportUtilitiesTest
             subject.FetchLong(span, 0);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Expected exception was thrown
@@ -704,7 +704,7 @@ public class BankImportUtilitiesTest
             subject.FetchLong(span, -1);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Exception was thrown as expected
@@ -754,7 +754,7 @@ public class BankImportUtilitiesTest
             subject.FetchString(span, 0);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Expected exception was thrown
@@ -775,7 +775,7 @@ public class BankImportUtilitiesTest
             subject.FetchString(span, 50);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Exception was thrown as expected
@@ -796,7 +796,7 @@ public class BankImportUtilitiesTest
             subject.FetchString(span, -1);
             Assert.Fail("Expected UnexpectedIndexException was not thrown.");
         }
-        catch (UnexpectedIndexException ex)
+        catch (UnexpectedIndexException)
         {
             // Assert
             // Exception was thrown as expected
@@ -863,7 +863,7 @@ public class BankImportUtilitiesTest
         var subject = CreateSubject();
 
         Assert.Throws<ArgumentNullException>(() =>
-            subject.FetchString((string[])null, 2));
+            subject.FetchString((string[])null!, 2));
     }
 
     [Fact]
@@ -891,8 +891,6 @@ public class BankImportUtilitiesTest
 
     private BankImportUtilities CreateSubject()
     {
-        this.bucketRepository = Substitute.For<IBudgetBucketRepository>();
-
         var subject = new BankImportUtilities(new FakeLogger());
         subject.ConfigureLocale(CultureInfo.CreateSpecificCulture("en-NZ"));
         return subject;

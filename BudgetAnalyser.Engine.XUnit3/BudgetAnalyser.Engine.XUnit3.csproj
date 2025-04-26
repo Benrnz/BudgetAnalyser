@@ -19,6 +19,7 @@
         For more information on Microsoft Testing Platform support in xUnit.net, please visit:
           https://xunit.net/docs/getting-started/v3/microsoft-testing-platform
         -->
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

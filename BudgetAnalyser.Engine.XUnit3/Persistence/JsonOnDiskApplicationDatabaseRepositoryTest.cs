@@ -12,7 +12,7 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable
 {
     private readonly XUnitLogger logger;
     private readonly JsonOnDiskApplicationDatabaseRepositoryTestHarness subject;
-    private ApplicationDatabase resultingModel;
+    private ApplicationDatabase? resultingModel;
 
     public JsonOnDiskApplicationDatabaseRepositoryTest(ITestOutputHelper outputHelper)
     {
@@ -50,19 +50,19 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable
     [Fact]
     public async Task CreateNew_ShouldThrow_GivenNullStorageKey()
     {
-        await Should.ThrowAsync<ArgumentNullException>(async () => await this.subject.CreateNewAsync(null));
+        await Should.ThrowAsync<ArgumentNullException>(async () => await this.subject.CreateNewAsync(null!));
     }
 
     [Fact]
     public void Ctor_ShouldThrow_GivenNullLogger()
     {
-        Should.Throw<ArgumentNullException>(() => new JsonOnDiskApplicationDatabaseRepository(new MapperApplicationDatabaseToStorageRoot3(), null));
+        Should.Throw<ArgumentNullException>(() => new JsonOnDiskApplicationDatabaseRepository(new MapperApplicationDatabaseToStorageRoot3(), null!));
     }
 
     [Fact]
     public void Ctor_ShouldThrow_GivenNullMapper()
     {
-        Should.Throw<ArgumentNullException>(() => new JsonOnDiskApplicationDatabaseRepository(null, this.logger));
+        Should.Throw<ArgumentNullException>(() => new JsonOnDiskApplicationDatabaseRepository(null!, this.logger));
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable
     [Fact]
     public async Task Load_ShouldThrow_GivenNullStorageKey()
     {
-        await Should.ThrowAsync<ArgumentException>(() => this.subject.LoadAsync(null));
+        await Should.ThrowAsync<ArgumentException>(() => this.subject.LoadAsync(null!));
     }
 
     [Fact]
@@ -153,7 +153,7 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable
     [Fact]
     public async Task Save_ShouldThrow_GivenNullModel()
     {
-        await Should.ThrowAsync<ArgumentNullException>(() => this.subject.SaveAsync(null));
+        await Should.ThrowAsync<ArgumentNullException>(() => this.subject.SaveAsync(null!));
     }
 
     [Fact]

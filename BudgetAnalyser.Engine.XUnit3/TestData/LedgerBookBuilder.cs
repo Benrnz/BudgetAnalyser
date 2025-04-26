@@ -276,7 +276,7 @@ public class LedgerBookBuilder
 
         public IEnumerable<LedgerTransaction> Transactions => this.transactions;
 
-        public TransactionTestDataBuilder WithBudgetCredit(decimal amount, DateOnly? date = null, string automatchingRef = null)
+        public TransactionTestDataBuilder WithBudgetCredit(decimal amount, DateOnly? date = null, string? automatchingRef = null)
         {
             var budgetTxn = this.transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
             if (budgetTxn is null)
@@ -289,7 +289,7 @@ public class LedgerBookBuilder
             return this;
         }
 
-        public TransactionTestDataBuilder WithCredit(decimal amount, string narrative, DateOnly? date = null, string automatchingRef = null)
+        public TransactionTestDataBuilder WithCredit(decimal amount, string narrative, DateOnly? date = null, string? automatchingRef = null)
         {
             this.transactions.Add(new CreditLedgerTransaction { Amount = amount, Narrative = narrative, AutoMatchingReference = automatchingRef ?? string.Empty, Date = date });
             return this;

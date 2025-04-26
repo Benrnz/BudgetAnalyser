@@ -13,7 +13,7 @@ public class MapperBankBalanceAdjustmentToDto_ToModel_Test
     private readonly Account account;
     private readonly MapperBankBalanceAdjustmentToDto2 subject;
     private readonly LedgerTransactionDto testData;
-    private BankBalanceAdjustmentTransaction result;
+    private BankBalanceAdjustmentTransaction? result;
 
     public MapperBankBalanceAdjustmentToDto_ToModel_Test()
     {
@@ -35,28 +35,28 @@ public class MapperBankBalanceAdjustmentToDto_ToModel_Test
     public void ShouldMapAccount()
     {
         Act();
-        this.result.BankAccount.ShouldBeEquivalentTo(this.account);
+        this.result!.BankAccount.ShouldBeEquivalentTo(this.account);
     }
 
     [Fact]
     public void ShouldMapAmount()
     {
         Act();
-        this.result.Amount.ShouldBe(-123.99M);
+        this.result!.Amount.ShouldBe(-123.99M);
     }
 
     [Fact]
     public void ShouldMapId()
     {
         Act();
-        this.result.Id.ShouldBe(TransactionId);
+        this.result!.Id.ShouldBe(TransactionId);
     }
 
     [Fact]
     public void ShouldMapNarrative()
     {
         Act();
-        this.result.Narrative.ShouldBe("Foo bar.");
+        this.result!.Narrative.ShouldBe("Foo bar.");
     }
 
     [Fact]

@@ -31,7 +31,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     {
         Should.Throw<ArgumentNullException>(() =>
             new CsvOnDiskStatementModelRepositoryV2(
-                null,
+                null!,
                 new FakeLogger(),
                 new DtoMapperStub<TransactionSetDto, StatementModel>(),
                 this.mockReaderWriterSelector));
@@ -43,7 +43,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         Should.Throw<ArgumentNullException>(() =>
             new CsvOnDiskStatementModelRepositoryV2(
                 new BankImportUtilities(new FakeLogger()),
-                null,
+                null!,
                 new DtoMapperStub<TransactionSetDto, StatementModel>(),
                 this.mockReaderWriterSelector));
     }
@@ -55,7 +55,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
             new CsvOnDiskStatementModelRepositoryV2(
                 new BankImportUtilities(new FakeLogger()),
                 new FakeLogger(),
-                null,
+                null!,
                 this.mockReaderWriterSelector));
     }
 

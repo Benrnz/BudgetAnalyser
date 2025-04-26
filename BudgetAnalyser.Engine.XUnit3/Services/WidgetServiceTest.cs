@@ -29,19 +29,19 @@ public class WidgetServiceTest
     [Fact]
     public void Constructor_ShouldThrow_GivenNullBucketRepository()
     {
-        Should.Throw<ArgumentNullException>(() => new WidgetService(null, this.mockMonitoringServices, this.logger));
+        Should.Throw<ArgumentNullException>(() => new WidgetService(null!, this.mockMonitoringServices, this.logger));
     }
 
     [Fact]
     public void Constructor_ShouldThrow_GivenNullLogger()
     {
-        Should.Throw<ArgumentNullException>(() => new WidgetService(this.mockBucketRepository, this.mockMonitoringServices, null));
+        Should.Throw<ArgumentNullException>(() => new WidgetService(this.mockBucketRepository, this.mockMonitoringServices, null!));
     }
 
     [Fact]
     public void Constructor_ShouldThrow_GivenNullMonitoringServices()
     {
-        Should.Throw<ArgumentNullException>(() => new WidgetService(this.mockBucketRepository, null, this.logger));
+        Should.Throw<ArgumentNullException>(() => new WidgetService(this.mockBucketRepository, null!, this.logger));
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public class WidgetServiceTest
     [Fact]
     public void Initialise_ShouldThrow_GivenNullWidgetsFromPersistence()
     {
-        Should.Throw<ArgumentNullException>(() => this.service.Initialise(null));
+        Should.Throw<ArgumentNullException>(() => this.service.Initialise(null!));
     }
 
     [Fact]

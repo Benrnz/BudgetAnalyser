@@ -16,9 +16,9 @@ internal class JsonOnDiskLedgerBookRepositoryTestHarness : JsonOnDiskLedgerBookR
     {
     }
 
-    public LedgerBookDto Dto { get; set; }
+    public LedgerBookDto? Dto { get; set; }
 
-    public string SerialisedData { get; private set; }
+    public string SerialisedData { get; private set; } = string.Empty;
 
     protected override async Task<LedgerBookDto> LoadJsonFromDiskAsync(string fileName, bool isEncrypted)
     {

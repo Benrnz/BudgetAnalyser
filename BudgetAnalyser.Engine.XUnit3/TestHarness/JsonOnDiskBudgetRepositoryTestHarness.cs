@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
 public class JsonOnDiskBudgetRepositoryTestHarness : JsonOnDiskBudgetRepository
 {
-    private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter;
+    private readonly EmbeddedResourceFileReaderWriterEncrypted? encryptedReaderWriter;
 
     public JsonOnDiskBudgetRepositoryTestHarness(IBudgetBucketRepository bucketRepository,
         IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper,
@@ -19,13 +19,13 @@ public class JsonOnDiskBudgetRepositoryTestHarness : JsonOnDiskBudgetRepository
         }
     }
 
-    public BudgetCollectionDto Dto { get; set; }
+    public BudgetCollectionDto? Dto { get; set; }
 
     public bool IsEncryptedAtLastAccess { get; private set; }
 
-    public byte[] SerialisedBytes { get; private set; }
+    public byte[] SerialisedBytes { get; private set; } = [];
 
-    public string SerialisedData { get; private set; }
+    public string SerialisedData { get; private set; } = string.Empty;
 
     protected override async Task<BudgetCollectionDto> LoadJsonFromDiskAsync(string fileName, bool isEncrypted)
     {
@@ -51,7 +51,7 @@ public class JsonOnDiskBudgetRepositoryTestHarness : JsonOnDiskBudgetRepository
         stream.Position = 0;
         if (IsEncryptedAtLastAccess)
         {
-            var encryptedDestinationStream = this.encryptedReaderWriter.OutputStream;
+            var encryptedDestinationStream = this.encryptedReaderWriter!.OutputStream;
             encryptedDestinationStream.Position = 0;
             using var byteReader = new BinaryReader(encryptedDestinationStream);
             SerialisedBytes = byteReader.ReadBytes((int)encryptedDestinationStream.Length);
