@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.XUnit.Helpers;
 
 public static class StatementModelHelper
 {
-    public static void Output(this StatementModel instance, DateOnly startDate, IReesTestOutput outputWriter = null)
+    public static void Output(this StatementModel instance, DateOnly startDate, IReesTestOutput? outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         writer.WriteLine(string.Empty);
@@ -30,7 +30,7 @@ public static class StatementModelHelper
         writer.WriteLine(string.Empty);
     }
 
-    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput outputWriter)
+    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput? outputWriter)
     {
         return outputWriter ?? new DebugTestOutput();
     }

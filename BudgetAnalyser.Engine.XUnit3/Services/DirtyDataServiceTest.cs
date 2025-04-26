@@ -26,7 +26,7 @@ public class DirtyDataServiceTest
     [Fact]
     public void Constructor_ShouldThrow_GivenNullLogger()
     {
-        Should.Throw<ArgumentNullException>(() => new DirtyDataService(null, new FakeMonitorableDependencies()));
+        Should.Throw<ArgumentNullException>(() => new DirtyDataService(null!, new FakeMonitorableDependencies()));
     }
 
     [Fact]

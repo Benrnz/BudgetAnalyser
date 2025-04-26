@@ -30,15 +30,15 @@ internal class FakeMonitorableDependencies : MonitorableDependencies
     ///     Notifies this service of dependency that has changed.
     /// </summary>
     /// <param name="dependency">The dependency.</param>
-    /// <returns>A boolean value indicating if the dependency has significantly change, true if so, otherwise false.</returns>
-    public override bool NotifyOfDependencyChange<T>(T dependency)
+    /// <returns>A boolean value indicating if the dependency has significantly changed, true if so, otherwise false.</returns>
+    public override bool NotifyOfDependencyChange<T>(T? dependency) where T : class
     {
         return true;
     }
 
     public override object RetrieveDependency(Type key)
     {
-        return null;
+        return null!;
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ internal class FakeMonitorableDependencies : MonitorableDependencies
     /// <param name="dependency">The dependency.</param>
     /// <param name="typeKey">The type key.</param>
     /// <returns>A boolean value indicating if the dependency has significantly change, true if so, otherwise false.</returns>
-    protected override bool NotifyOfDependencyChange(object dependency, Type typeKey)
+    protected override bool NotifyOfDependencyChange(object? dependency, Type typeKey)
     {
         return true;
     }

@@ -7,12 +7,12 @@ namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 public class JsonOnDiskApplicationDatabaseRepositoryTestHarness(IDtoMapper<BudgetAnalyserStorageRoot2, ApplicationDatabase> mapper, ILogger logger)
     : JsonOnDiskApplicationDatabaseRepository(mapper, logger), IDisposable
 {
-    public BudgetAnalyserStorageRoot2 Dto { get; private set; }
-    public Func<string, bool> FileExistsOverride { get; set; }
+    public BudgetAnalyserStorageRoot2? Dto { get; private set; }
+    public Func<string, bool>? FileExistsOverride { get; set; }
 
-    public Stream ReadableStream { get; private set; }
+    public Stream? ReadableStream { get; private set; }
 
-    public string SerialisedData { get; private set; }
+    public string SerialisedData { get; private set; } = string.Empty;
 
     public Stream WritableStream { get; } = new MemoryStream();
 

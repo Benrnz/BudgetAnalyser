@@ -13,7 +13,7 @@ public class ExpenseTest
     public void BucketMustHaveADescription()
     {
         var subject = CreateSubject();
-        subject.Bucket.Description = null;
+        subject.Bucket!.Description = null!;
 
         var result = subject.Validate(Logs);
 
@@ -95,7 +95,7 @@ public class ExpenseTest
     {
         var subject = CreateSubject();
         subject.Amount = 0;
-        subject.Bucket.Active = true;
+        subject.Bucket!.Active = true;
 
         var result = subject.Validate(Logs);
 
@@ -108,7 +108,7 @@ public class ExpenseTest
     {
         var subject = CreateSubject();
         subject.Amount = 0;
-        subject.Bucket.Active = false;
+        subject.Bucket!.Active = false;
 
         var result = subject.Validate(Logs);
 

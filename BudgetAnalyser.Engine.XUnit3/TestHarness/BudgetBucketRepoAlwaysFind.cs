@@ -18,7 +18,7 @@ public class BudgetBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
         this.isInitialising = false;
     }
 
-    public override BudgetBucket GetByCode(string code)
+    public override BudgetBucket? GetByCode(string code)
     {
         if (code is null)
         {

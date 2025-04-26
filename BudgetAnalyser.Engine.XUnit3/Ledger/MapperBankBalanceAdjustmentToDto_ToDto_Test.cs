@@ -12,7 +12,7 @@ public class MapperBankBalanceAdjustmentToDto_ToDto_Test
     private static readonly Guid TransactionId = new("7F921750-4467-4EA4-81E6-3EFD466341A6");
     private readonly MapperBankBalanceAdjustmentToDto2 subject;
     private readonly BankBalanceAdjustmentTransaction testData;
-    private LedgerTransactionDto result;
+    private LedgerTransactionDto? result;
 
     public MapperBankBalanceAdjustmentToDto_ToDto_Test()
     {
@@ -27,35 +27,35 @@ public class MapperBankBalanceAdjustmentToDto_ToDto_Test
     public void ShouldMapAmount()
     {
         Act();
-        this.result.Amount.ShouldBe(123.99M);
+        this.result!.Amount.ShouldBe(123.99M);
     }
 
     [Fact]
     public void ShouldMapBankAccount()
     {
         Act();
-        this.result.Account.ShouldBe(AccountName);
+        this.result!.Account.ShouldBe(AccountName);
     }
 
     [Fact]
     public void ShouldMapId()
     {
         Act();
-        this.result.Id.ShouldBe(TransactionId);
+        this.result!.Id.ShouldBe(TransactionId);
     }
 
     [Fact]
     public void ShouldMapNarrative()
     {
         Act();
-        this.result.Narrative.ShouldBe("Foo bar.");
+        this.result!.Narrative.ShouldBe("Foo bar.");
     }
 
     [Fact]
     public void ShouldMapTransactionType()
     {
         Act();
-        this.result.TransactionType.ShouldBe(typeof(BankBalanceAdjustmentTransaction).FullName);
+        this.result!.TransactionType.ShouldBe(typeof(BankBalanceAdjustmentTransaction).FullName);
     }
 
     private void Act()

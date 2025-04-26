@@ -8,8 +8,8 @@ namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 [AutoRegisterWithIoC(Named = StorageConstants.EncryptedInstanceName)]
 public class EmbeddedResourceFileReaderWriterEncrypted : IFileReaderWriter
 {
-    public Func<string, bool> FileExistsOverride { get; set; }
-    public Stream InputStream { get; set; }
+    public Func<string, bool>? FileExistsOverride { get; set; }
+    public Stream? InputStream { get; set; }
     public Stream OutputStream { get; set; } = new MemoryStream();
 
     public string Password { get; set; } = TestDataConstants.DemoEncryptedFilePassword;

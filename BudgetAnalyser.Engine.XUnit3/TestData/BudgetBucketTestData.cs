@@ -9,8 +9,8 @@ public static class BudgetBucketTestData
         get
         {
             var budgetModel = BudgetModelTestData.CreateTestData1();
-            return budgetModel.Expenses.Select(e => e.Bucket)
-                .Union(budgetModel.Incomes.Select(i => i.Bucket));
+            return budgetModel.Expenses.Select(e => e.Bucket ?? throw new ArgumentNullException())
+                .Union(budgetModel.Incomes.Select(i => i.Bucket ?? throw new ArgumentNullException()));
         }
     }
 }

@@ -362,7 +362,7 @@ public static class LedgerBookTestData
     ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
     ///     There are multiple Bank Balances for the latest entry, and the Home Insurance bucket in a different account.
     /// </summary>
-    public static LedgerBook TestData5(Func<IEnumerable<LedgerEntryLine>, LedgerBook> ctor = null)
+    public static LedgerBook TestData5(Func<IEnumerable<LedgerEntryLine>, LedgerBook>? ctor = null)
     {
         var list = new List<LedgerEntryLine>
         {
@@ -464,7 +464,7 @@ public static class LedgerBookTestData
     ///     Also includes some debit transactions. There are multiple Bank Balances for the latest entry, and the Home
     ///     Insurance bucket in a different account.
     /// </summary>
-    public static LedgerBook TestData6(Func<IEnumerable<LedgerEntryLine>, LedgerBook> ctor = null)
+    public static LedgerBook TestData6(Func<IEnumerable<LedgerEntryLine>, LedgerBook>? ctor = null)
     {
         var list = new List<LedgerEntryLine>
         {

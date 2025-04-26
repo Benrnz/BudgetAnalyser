@@ -54,7 +54,7 @@ public class MapperIncomeToDto2Test
     {
         // Arrange
         var dto = new IncomeDto { Amount = 1000, BudgetBucketCode = "INVALID" };
-        this.bucketRepo.GetByCode(dto.BudgetBucketCode).Returns((BudgetBucket)null);
+        this.bucketRepo.GetByCode(dto.BudgetBucketCode).Returns((BudgetBucket)null!);
 
         // Act & Assert
         Should.Throw<DataFormatException>(() => this.mapper.ToModel(dto));

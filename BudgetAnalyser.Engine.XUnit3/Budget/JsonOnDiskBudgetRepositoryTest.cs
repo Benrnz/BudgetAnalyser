@@ -86,7 +86,7 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
     public async Task CreateNew_ShouldThrow_GivenNullFileName()
     {
         var subject = CreateSubject();
-        await Should.ThrowAsync<ArgumentNullException>(async () => await subject.CreateNewAndSaveAsync(null));
+        await Should.ThrowAsync<ArgumentNullException>(async () => await subject.CreateNewAndSaveAsync(null!));
     }
 
     [Fact]
@@ -104,21 +104,21 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
     }
 
     [Fact]
-    public async Task Ctor_ShouldThrow_GivenNullMapper()
+    public void Ctor_ShouldThrow_GivenNullMapper()
     {
-        await Should.ThrowAsync<ArgumentNullException>(async () =>
+        Should.Throw<ArgumentNullException>(() =>
             new JsonOnDiskBudgetRepository(
                 new BudgetBucketRepoAlwaysFind(),
-                null,
+                null!,
                 this.mockFileSelector));
     }
 
     [Fact]
-    public async Task Ctor_ShouldThrow_WhenBucketRepositoryIsNull()
+    public void Ctor_ShouldThrow_WhenBucketRepositoryIsNull()
     {
-        await Should.ThrowAsync<ArgumentNullException>(async () =>
+        Should.Throw<ArgumentNullException>(() =>
             new JsonOnDiskBudgetRepository(
-                null,
+                null!,
                 this.mapper,
                 this.mockFileSelector));
     }
@@ -297,7 +297,7 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
                 var sourceExpense = source.Expenses.ElementAt(expenseIndex);
                 var rereadExpense = reread.Expenses.ElementAt(expenseIndex);
                 rereadExpense.Amount.ShouldBe(sourceExpense.Amount);
-                rereadExpense.Bucket.Code.ShouldBe(sourceExpense.Bucket.Code);
+                rereadExpense.Bucket!.Code.ShouldBe(sourceExpense.Bucket!.Code);
                 rereadExpense.Bucket.GetType().ShouldBe(sourceExpense.Bucket.GetType());
             }
 
@@ -306,7 +306,7 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
                 var sourceExpense = source.Incomes.ElementAt(incomeIndex);
                 var rereadExpense = reread.Incomes.ElementAt(incomeIndex);
                 rereadExpense.Amount.ShouldBe(sourceExpense.Amount);
-                rereadExpense.Bucket.Code.ShouldBe(sourceExpense.Bucket.Code);
+                rereadExpense.Bucket!.Code.ShouldBe(sourceExpense.Bucket!.Code);
                 rereadExpense.Bucket.GetType().ShouldBe(sourceExpense.Bucket.GetType());
             }
         }
@@ -335,7 +335,7 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
         subject.SerialisedData.ShouldNotBeNullOrEmpty();
     }
 
-    private JsonOnDiskBudgetRepositoryTestHarness CreateSubject(bool real = false, IBudgetBucketRepository bucketRepo = null)
+    private JsonOnDiskBudgetRepositoryTestHarness CreateSubject(bool real = false, IBudgetBucketRepository? bucketRepo = null)
     {
         bucketRepo ??= this.bucketRepo;
         if (real)

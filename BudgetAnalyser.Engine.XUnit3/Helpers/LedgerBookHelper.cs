@@ -20,7 +20,7 @@ public static class LedgerBookHelper
         return ledgerOrder;
     }
 
-    public static void Output(this LedgerBook book, bool outputTransactions = false, IReesTestOutput outputWriter = null)
+    public static void Output(this LedgerBook book, bool outputTransactions = false, IReesTestOutput? outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         writer.WriteLine(string.Empty);
@@ -39,7 +39,7 @@ public static class LedgerBookHelper
         }
     }
 
-    public static void Output(this LedgerEntryLine line, IDictionary<BudgetBucket, int> ledgerOrder, bool outputTransactions = false, bool outputHeader = false, IReesTestOutput outputWriter = null)
+    public static void Output(this LedgerEntryLine line, IDictionary<BudgetBucket, int> ledgerOrder, bool outputTransactions = false, bool outputHeader = false, IReesTestOutput? outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         if (outputHeader)
@@ -85,7 +85,7 @@ public static class LedgerBookHelper
                         transaction.Date ?? line.Date,
                         transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
                         transaction.Id,
-                        transaction.AutoMatchingReference,
+                        transaction.AutoMatchingReference ?? string.Empty,
                         transaction.Narrative.Truncate(30));
                 }
             }
@@ -94,7 +94,7 @@ public static class LedgerBookHelper
         writer.WriteLine("=================================================================================================================================");
     }
 
-    public static void Output(this LedgerBookDto book, bool outputTransactions = false, IReesTestOutput outputWriter = null)
+    public static void Output(this LedgerBookDto book, bool outputTransactions = false, IReesTestOutput? outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         writer.WriteLine("Name: {0}", book.Name);
@@ -142,7 +142,7 @@ public static class LedgerBookHelper
         }
     }
 
-    public static void Output(this LedgerEntry instance, IReesTestOutput outputWriter = null)
+    public static void Output(this LedgerEntry instance, IReesTestOutput? outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         writer.WriteLine("Ledger Entry Transactions. ============================================");
@@ -155,7 +155,7 @@ public static class LedgerBookHelper
         writer.WriteLine($"{instance.Transactions.Count()} transactions. NetAmount: {instance.NetAmount:F2} ClosingBalance: {instance.Balance:F2}");
     }
 
-    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput outputWriter)
+    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput? outputWriter)
     {
         return outputWriter ?? new DebugTestOutput();
     }
