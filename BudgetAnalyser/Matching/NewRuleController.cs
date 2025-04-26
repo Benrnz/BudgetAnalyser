@@ -264,7 +264,7 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         Messenger.Send(dialogRequest);
     }
 
-    private void OnCriteriaValuePropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void OnCriteriaValuePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         RefreshSimilarRules();
     }

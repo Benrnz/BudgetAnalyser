@@ -15,7 +15,7 @@ public partial class BudgetMaintenance
 
     private BudgetController Controller => (BudgetController)DataContext;
 
-    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
         if (e.OldValue is BudgetController controller)
         {

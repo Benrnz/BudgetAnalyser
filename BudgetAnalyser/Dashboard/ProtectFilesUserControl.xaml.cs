@@ -15,22 +15,22 @@ public partial class ProtectFilesUserControl
         InitializeComponent();
     }
 
-    private void OnConfirmBoxKeyUp(object sender, KeyEventArgs e)
+    private void OnConfirmBoxKeyUp(object? sender, KeyEventArgs e)
     {
         this.controller!.SetConfirmedPassword(this.passwordBox.Password == this.confirmBox.Password);
     }
 
-    private void OnPasswordKeyUp(object sender, KeyEventArgs e)
+    private void OnPasswordKeyUp(object? sender, KeyEventArgs e)
     {
         SendPasswordToController();
     }
 
-    private void OnPasswordLostFocus(object sender, RoutedEventArgs e)
+    private void OnPasswordLostFocus(object? sender, RoutedEventArgs e)
     {
         SendPasswordToController();
     }
 
-    private void OnWindowIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnWindowIsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
         if (DataContext is not null)
         {

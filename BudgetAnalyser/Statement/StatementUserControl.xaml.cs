@@ -60,12 +60,18 @@ public partial class StatementUserControl
                     var txn = (Transaction)t;
                     return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
                 }
-            : t =>
-            {
-                var txn = (Transaction)t;
-                return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
-            };
+                : t =>
+                {
+                    var txn = (Transaction)t;
+                    return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
+                };
         }
+    }
+
+    private void ClearSearchButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Controller.ClearSearch();
+        this.ClearSearchButton.IsEnabled = false;
     }
 
     private ListBoxItem GetSelectedListBoxItem()
@@ -74,7 +80,7 @@ public partial class StatementUserControl
         return (ListBoxItem)this.TransactionListBox.ItemContainerGenerator.ContainerFromItem(transaction);
     }
 
-    private void OnBucketFilterComboBoxDropDownClosed(object sender, EventArgs e)
+    private void OnBucketFilterComboBoxDropDownClosed(object? sender, EventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(Controller.BucketFilter))
         {
@@ -84,7 +90,7 @@ public partial class StatementUserControl
         AnimateWidth(this.BucketFilterComboBox, BucketComboMaxWidth, BucketComboMinWidth);
     }
 
-    private void OnBucketFilterComboBoxDropDownOpened(object sender, EventArgs e)
+    private void OnBucketFilterComboBoxDropDownOpened(object? sender, EventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(Controller.BucketFilter))
         {
@@ -94,7 +100,7 @@ public partial class StatementUserControl
         AnimateWidth(this.BucketFilterComboBox, BucketComboMinWidth, BucketComboMaxWidth);
     }
 
-    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
         if (!this.subscribedToMainWindowClose)
         {
@@ -136,13 +142,13 @@ public partial class StatementUserControl
             });
     }
 
-    private void OnSearchTextBoxGotFocus(object sender, RoutedEventArgs e)
+    private void OnSearchTextBoxGotFocus(object? sender, RoutedEventArgs e)
     {
         AnimateWidth(this.SearchTextBox, SearchBoxMinWidth, SearchBoxMaxWidth);
         AnimateWidth(this.ClearSearchButton, 0, ClearSearchButtonMaxWidth);
     }
 
-    private void OnSearchTextBoxLostFocus(object sender, RoutedEventArgs e)
+    private void OnSearchTextBoxLostFocus(object? sender, RoutedEventArgs e)
     {
         AnimateWidth(this.SearchTextBox, SearchBoxMaxWidth, SearchBoxMinWidth);
         AnimateWidth(this.ClearSearchButton, ClearSearchButtonMaxWidth, 0);
@@ -157,7 +163,7 @@ public partial class StatementUserControl
         }
     }
 
-    private void OnTransactionListBoxDoubleClick(object sender, MouseButtonEventArgs e)
+    private void OnTransactionListBoxDoubleClick(object? sender, MouseButtonEventArgs e)
     {
         if (Controller.EditTransactionCommand.CanExecute(null))
         {
@@ -165,7 +171,7 @@ public partial class StatementUserControl
         }
     }
 
-    private void OnTransactionListBoxKeyUp(object sender, KeyEventArgs e)
+    private void OnTransactionListBoxKeyUp(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
@@ -181,7 +187,7 @@ public partial class StatementUserControl
         ApplyBucketFilter();
     }
 
-    private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == "BucketFilter")
         {
@@ -194,7 +200,7 @@ public partial class StatementUserControl
         }
     }
 
-    private void OnVisibleChangedShowTransaction(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnVisibleChangedShowTransaction(object? sender, DependencyPropertyChangedEventArgs e)
     {
         IsVisibleChanged -= OnVisibleChangedShowTransaction;
 
@@ -202,13 +208,7 @@ public partial class StatementUserControl
         this.TransactionListBox.ScrollIntoView(Controller.ViewModel.SelectedRow);
     }
 
-    private void ClearSearchButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        Controller.ClearSearch();
-        this.ClearSearchButton.IsEnabled = false;
-    }
-
-    private void SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)
+    private void SearchTextBox_OnKeyUp(object? sender, KeyEventArgs e)
     {
         this.ClearSearchButton.IsEnabled = this.SearchTextBox.Text.Length > 0;
     }

@@ -12,10 +12,15 @@ public class StatementControllerFileOperations : ControllerBase
 {
     private readonly LoadFileController loadFileController;
     private readonly IUserMessageBox messageBox;
+    private readonly ITransactionManagerService transactionService;
     private bool doNotUseLoadingData;
-    private ITransactionManagerService transactionService;
 
-    public StatementControllerFileOperations(IUiContext uiContext, LoadFileController loadFileController, IApplicationDatabaseFacade applicationDatabaseService) : base(uiContext.Messenger)
+    public StatementControllerFileOperations(
+        IUiContext uiContext,
+        LoadFileController loadFileController,
+        IApplicationDatabaseFacade applicationDatabaseService,
+        ITransactionManagerService transactionManagerService)
+        : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
@@ -29,7 +34,8 @@ public class StatementControllerFileOperations : ControllerBase
 
         this.messageBox = uiContext.UserPrompts.MessageBox;
         this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
-        ViewModel = new StatementViewModel(applicationDatabaseService);
+        this.transactionService = transactionManagerService ?? throw new ArgumentNullException(nameof(transactionManagerService));
+        ViewModel = new StatementViewModel(applicationDatabaseService, this.transactionService);
     }
 
     public bool LoadingData
@@ -51,12 +57,6 @@ public class StatementControllerFileOperations : ControllerBase
         NotifyOfReset();
         ViewModel.TriggerRefreshTotalsRow();
         Messenger.Send(new StatementReadyMessage(null));
-    }
-
-    internal void Initialise(ITransactionManagerService transactionManagerService)
-    {
-        this.transactionService = transactionManagerService;
-        ViewModel.Initialise(this.transactionService);
     }
 
     internal async Task MergeInNewTransactions()
@@ -103,7 +103,8 @@ public class StatementControllerFileOperations : ControllerBase
     internal void NotifyOfEdit()
     {
         ViewModel.Dirty = true;
-        Messenger.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
+        var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
+        Messenger.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, statement));
     }
 
     internal async Task<bool> SyncWithServiceAsync()
@@ -147,7 +148,8 @@ public class StatementControllerFileOperations : ControllerBase
     /// </returns>
     private async Task<string> GetFileNameFromUser()
     {
-        await this.loadFileController.RequestUserInputForMerging(ViewModel.Statement);
+        var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
+        await this.loadFileController.RequestUserInputForMerging(statement);
 
         return this.loadFileController.FileName;
     }
@@ -155,6 +157,7 @@ public class StatementControllerFileOperations : ControllerBase
     private void NotifyOfReset()
     {
         ViewModel.Dirty = false;
-        Messenger.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
+        var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
+        Messenger.Send(new StatementHasBeenModifiedMessage(false, statement));
     }
 }

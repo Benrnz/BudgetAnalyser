@@ -16,7 +16,7 @@ public partial class ReconciliationToDoListUserControl
 
     private ReconciliationToDoListController Controller => (ReconciliationToDoListController)DataContext;
 
-    private void OnListDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnListDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
         if (Controller.Tasks is null)
         {
@@ -27,7 +27,7 @@ public partial class ReconciliationToDoListUserControl
         view.SortDescriptions.Add(new SortDescription("SystemGenerated", ListSortDirection.Descending));
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
+    private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not ReconciliationToDoListController controller)
         {

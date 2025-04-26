@@ -10,16 +10,17 @@ namespace BudgetAnalyser.Statement;
 public class StatementViewModel : ObservableRecipient
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
+    private readonly ITransactionManagerService transactionService;
     private bool doNotUseDirty;
     private string? doNotUseDuplicateSummary;
     private Transaction? doNotUseSelectedRow;
     private StatementModel? doNotUseStatement;
     private ObservableCollection<Transaction> doNotUseTransactions = new();
-    private ITransactionManagerService transactionService;
 
-    public StatementViewModel(IApplicationDatabaseFacade applicationDatabaseService)
+    public StatementViewModel(IApplicationDatabaseFacade applicationDatabaseService, ITransactionManagerService transactionService)
     {
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
+        this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
     }
 
     public decimal AverageDebit => this.transactionService.AverageDebit;
@@ -39,7 +40,7 @@ public class StatementViewModel : ObservableRecipient
         }
     }
 
-    public string DuplicateSummary
+    public string? DuplicateSummary
     {
         get => this.doNotUseDuplicateSummary;
 
@@ -64,17 +65,12 @@ public class StatementViewModel : ObservableRecipient
         }
     }
 
-    public StatementModel Statement
+    public StatementModel? Statement
     {
         get => this.doNotUseStatement;
 
         set
         {
-            if (this.transactionService is null)
-            {
-                throw new InvalidOperationException("Initialise has not been called.");
-            }
-
             this.doNotUseStatement = value;
 
             OnPropertyChanged();
@@ -102,12 +98,6 @@ public class StatementViewModel : ObservableRecipient
     public bool HasSelectedRow()
     {
         return SelectedRow is not null;
-    }
-
-    public StatementViewModel Initialise(ITransactionManagerService transactionManagerService)
-    {
-        this.transactionService = transactionManagerService;
-        return this;
     }
 
     public void TriggerRefreshBucketFilterList()

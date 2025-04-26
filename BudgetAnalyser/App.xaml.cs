@@ -70,19 +70,19 @@ public partial class App
         }
     }
 
-    private void OnApplicationExit(object sender, ExitEventArgs e)
+    private void OnApplicationExit(object? sender, ExitEventArgs e)
     {
         Current.Exit -= OnApplicationExit;
         this.compositionRoot?.Dispose();
         this.logger?.LogAlways(_ => "=========== Application Exiting ===========");
     }
 
-    private void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    private void OnCurrentDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         LogUnhandledException("App.OnCurrentDomainUnhandledException", e.ExceptionObject);
     }
 
-    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    private void OnDispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
     {
         LogUnhandledException("App.OnDispatcherUnhandledException", e.Exception);
     }

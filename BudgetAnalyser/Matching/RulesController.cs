@@ -269,7 +269,7 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
         }
     }
 
-    private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)
+    private void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)
     {
         SortBy = BucketSortKey; // Defaults to Bucket sort order.
         Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);

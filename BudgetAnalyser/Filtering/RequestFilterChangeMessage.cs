@@ -5,7 +5,7 @@ namespace BudgetAnalyser.Filtering;
 
 public class RequestFilterChangeMessage : MessageBase
 {
-    public RequestFilterChangeMessage(object sender)
+    public RequestFilterChangeMessage(object? sender)
     {
         Sender = sender;
     }

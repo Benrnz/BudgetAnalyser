@@ -1,39 +1,36 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 
-namespace BudgetAnalyser.LedgerBook
+namespace BudgetAnalyser.LedgerBook;
+
+/// <summary>
+///     Interaction logic for TransferFundsView.xaml
+/// </summary>
+public partial class TransferFundsView
 {
-    /// <summary>
-    ///     Interaction logic for TransferFundsView.xaml
-    /// </summary>
-    public partial class TransferFundsView
+    public TransferFundsView()
     {
-        public TransferFundsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private TransferFundsController? Controller => (TransferFundsController)DataContext;
+    private TransferFundsController? Controller => (TransferFundsController)DataContext;
 
-        private void ToLedger_OnSelected(object sender, RoutedEventArgs e)
-        {
-            Controller?.RequerySuggested();
-        }
+    private void Amount_OnSourceUpdated(object? sender, RoutedEventArgs e)
+    {
+        Controller?.RequerySuggested();
+    }
 
-        private void FromLedger_OnSelected(object sender, RoutedEventArgs e)
-        {
-            Controller?.RequerySuggested();
-        }
+    private void FromLedger_OnSelected(object? sender, RoutedEventArgs e)
+    {
+        Controller?.RequerySuggested();
+    }
 
-        private void Amount_OnSourceUpdated(object? sender, RoutedEventArgs e)
-        {
-            Controller?.RequerySuggested();
-        }
+    private void Narrative_OnSourceUpdated(object? sender, RoutedEventArgs e)
+    {
+        Controller?.RequerySuggested();
+    }
 
-        private void Narrative_OnSourceUpdated(object? sender, RoutedEventArgs e)
-        {
-            Controller?.RequerySuggested();
-        }
+    private void ToLedger_OnSelected(object? sender, RoutedEventArgs e)
+    {
+        Controller?.RequerySuggested();
     }
 }

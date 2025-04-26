@@ -28,17 +28,17 @@ public partial class LedgerBookUserControl
         builder.BuildGrid(Controller.ViewModel.LedgerBook, Resources, this.LedgerBookPanel, Controller.NumberOfPeriodsToShow);
     }
 
-    private void OnAddLedgerClicked(object sender, RoutedEventArgs e)
+    private void OnAddLedgerClicked(object? sender, RoutedEventArgs e)
     {
         Controller.OnAddNewLedgerCommandExecuted();
     }
 
-    private void OnAddNewReconciliationClicked(object sender, RoutedEventArgs e)
+    private void OnAddNewReconciliationClicked(object? sender, RoutedEventArgs e)
     {
         Controller.OnAddNewReconciliationCommandExecuted();
     }
 
-    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
         if (!this.subscribedToMainWindowClose)
         {
@@ -60,7 +60,7 @@ public partial class LedgerBookUserControl
         DynamicallyCreateLedgerBookGrid();
     }
 
-    private void OnLedgerBookNameClick(object sender, MouseButtonEventArgs e)
+    private void OnLedgerBookNameClick(object? sender, MouseButtonEventArgs e)
     {
         Controller.EditLedgerBookName();
     }

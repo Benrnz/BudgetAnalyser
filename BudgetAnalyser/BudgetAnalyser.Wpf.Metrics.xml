@@ -78,7 +78,7 @@
                                             <Metric Name="ExecutableLines" Value="13"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void App.OnApplicationExit(object sender, ExitEventArgs e)"
+                                    <Method Name="void App.OnApplicationExit(object? sender, ExitEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\App.xaml.cs" Line="74">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="75"/>
@@ -88,7 +88,7 @@
                                             <Metric Name="ExecutableLines" Value="4"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void App.OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)"
+                                    <Method Name="void App.OnCurrentDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\App.xaml.cs" Line="81">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="98"/>
@@ -98,7 +98,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void App.OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)"
+                                    <Method Name="void App.OnDispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\App.xaml.cs" Line="86">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="94"/>
@@ -765,7 +765,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void InputBox.OnCancelButtonClick(object sender, RoutedEventArgs e)"
+                                    <Method Name="void InputBox.OnCancelButtonClick(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\InputBox.xaml.cs" Line="15">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="88"/>
@@ -775,7 +775,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void InputBox.OnLoaded(object sender, RoutedEventArgs e)"
+                                    <Method Name="void InputBox.OnLoaded(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\InputBox.xaml.cs" Line="21">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="96"/>
@@ -785,7 +785,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void InputBox.OnOkButtonClick(object sender, RoutedEventArgs e)"
+                                    <Method Name="void InputBox.OnOkButtonClick(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\InputBox.xaml.cs" Line="26">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="88"/>
@@ -1934,7 +1934,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void NewWindowContainer.OnClosed(object sender, EventArgs e)"
+                                    <Method Name="void NewWindowContainer.OnClosed(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\NewWindowContainer.xaml.cs" Line="19">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="80"/>
@@ -1944,7 +1944,7 @@
                                             <Metric Name="ExecutableLines" Value="3"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void NewWindowContainer.OnControllerPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)"
+                                    <Method Name="void NewWindowContainer.OnControllerPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\NewWindowContainer.xaml.cs" Line="27">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="71"/>
@@ -1954,7 +1954,7 @@
                                             <Metric Name="ExecutableLines" Value="5"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void NewWindowContainer.OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void NewWindowContainer.OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\NewWindowContainer.xaml.cs" Line="39">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="64"/>
@@ -3182,7 +3182,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void ShellWindow.OnLoaded(object sender, RoutedEventArgs e)"
+                                    <Method Name="void ShellWindow.OnLoaded(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Shell.xaml.cs" Line="21">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="68"/>
@@ -3192,7 +3192,7 @@
                                             <Metric Name="ExecutableLines" Value="6"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ShellWindow.OnLocationChanged(object sender, EventArgs e)"
+                                    <Method Name="void ShellWindow.OnLocationChanged(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Shell.xaml.cs" Line="35">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="83"/>
@@ -3202,7 +3202,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ShellWindow.OnSizeChanged(object sender, SizeChangedEventArgs e)"
+                                    <Method Name="void ShellWindow.OnSizeChanged(object? sender, SizeChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Shell.xaml.cs" Line="43">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="83"/>
@@ -3212,7 +3212,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ShellWindow.ShellWindow_OnClosing(object sender, CancelEventArgs e)"
+                                    <Method Name="void ShellWindow.ShellWindow_OnClosing(object? sender, CancelEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Shell.xaml.cs" Line="51">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="69"/>
@@ -5722,7 +5722,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void BudgetController.BudgetModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)"
+                                    <Method Name="void BudgetController.BudgetModelOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetController.cs" Line="234">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="86"/>
@@ -5742,7 +5742,7 @@
                                             <Metric Name="ExecutableLines" Value="5"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetController.OnAddNewBudgetReady(object sender, EventArgs e)"
+                                    <Method Name="void BudgetController.OnAddNewBudgetReady(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetController.cs" Line="257">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="71"/>
@@ -5802,7 +5802,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetController.OnExpenseAmountPropertyChanged(object sender, EventArgs propertyChangedEventArgs)"
+                                    <Method Name="void BudgetController.OnExpenseAmountPropertyChanged(object? sender, EventArgs propertyChangedEventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetController.cs" Line="359">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="70"/>
@@ -5812,7 +5812,7 @@
                                             <Metric Name="ExecutableLines" Value="5"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetController.OnIncomeAmountPropertyChanged(object sender, EventArgs propertyChangedEventArgs)"
+                                    <Method Name="void BudgetController.OnIncomeAmountPropertyChanged(object? sender, EventArgs propertyChangedEventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetController.cs" Line="370">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="70"/>
@@ -5852,7 +5852,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetController.OnSavingNotificationReceived(object sender, ValidatingEventArgs args)"
+                                    <Method Name="void BudgetController.OnSavingNotificationReceived(object? sender, ValidatingEventArgs args)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetController.cs" Line="408">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -5872,7 +5872,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetController.OnValidatingNotificationReceived(object sender, ValidatingEventArgs eventArgs)"
+                                    <Method Name="void BudgetController.OnValidatingNotificationReceived(object? sender, ValidatingEventArgs eventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetController.cs" Line="418">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="93"/>
@@ -6048,7 +6048,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void BudgetMaintenance.OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void BudgetMaintenance.OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetMaintenance.xaml.cs" Line="18">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="59"/>
@@ -6058,7 +6058,7 @@
                                             <Metric Name="ExecutableLines" Value="13"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetMaintenance.OnExpensesListChanged(object sender, ListChangedEventArgs listChangedEventArgs)"
+                                    <Method Name="void BudgetMaintenance.OnExpensesListChanged(object? sender, ListChangedEventArgs listChangedEventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetMaintenance.xaml.cs" Line="44">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="72"/>
@@ -6068,7 +6068,7 @@
                                             <Metric Name="ExecutableLines" Value="4"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetMaintenance.OnIncomesListChanged(object sender, ListChangedEventArgs listChangedEventArgs)"
+                                    <Method Name="void BudgetMaintenance.OnIncomesListChanged(object? sender, ListChangedEventArgs listChangedEventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetMaintenance.xaml.cs" Line="54">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="72"/>
@@ -6180,7 +6180,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetModelNameUserControl.OnKeyUp(object sender, KeyEventArgs e)"
+                                    <Method Name="void BudgetModelNameUserControl.OnKeyUp(object? sender, KeyEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetModelNameUserControl.xaml.cs" Line="21">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="74"/>
@@ -6190,7 +6190,7 @@
                                             <Metric Name="ExecutableLines" Value="4"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetModelNameUserControl.OnMouseDoubleClick(object sender, MouseButtonEventArgs e)"
+                                    <Method Name="void BudgetModelNameUserControl.OnMouseDoubleClick(object? sender, MouseButtonEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetModelNameUserControl.xaml.cs" Line="36">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="71"/>
@@ -6284,7 +6284,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void BudgetSelectionView.OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void BudgetSelectionView.OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Budget\BudgetSelectionView.xaml.cs" Line="18">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="77"/>
@@ -8914,7 +8914,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void DashboardController.OnBudgetBucketChosenForNewBucketMonitor(object sender, BudgetBucketChosenEventArgs args)"
+                                    <Method Name="void DashboardController.OnBudgetBucketChosenForNewBucketMonitor(object? sender, BudgetBucketChosenEventArgs args)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Dashboard\DashboardController.cs" Line="95">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="65"/>
@@ -8924,7 +8924,7 @@
                                             <Metric Name="ExecutableLines" Value="7"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void DashboardController.OnCreateNewFixedProjectComplete(object sender, DialogResponseEventArgs dialogResponseEventArgs)"
+                                    <Method Name="void DashboardController.OnCreateNewFixedProjectComplete(object? sender, DialogResponseEventArgs dialogResponseEventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Dashboard\DashboardController.cs" Line="117">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="68"/>
@@ -8934,7 +8934,7 @@
                                             <Metric Name="ExecutableLines" Value="5"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void DashboardController.OnCreateNewSurprisePaymentMonitorComplete(object sender, DialogResponseEventArgs dialogResponseEventArgs)"
+                                    <Method Name="void DashboardController.OnCreateNewSurprisePaymentMonitorComplete(object? sender, DialogResponseEventArgs dialogResponseEventArgs)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Dashboard\DashboardController.cs" Line="135">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="69"/>
@@ -9646,7 +9646,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ProtectFilesUserControl.OnConfirmBoxKeyUp(object sender, KeyEventArgs e)"
+                                    <Method Name="void ProtectFilesUserControl.OnConfirmBoxKeyUp(object? sender, KeyEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Dashboard\ProtectFilesUserControl.xaml.cs" Line="20">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="90"/>
@@ -9656,7 +9656,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ProtectFilesUserControl.OnPasswordKeyUp(object sender, KeyEventArgs e)"
+                                    <Method Name="void ProtectFilesUserControl.OnPasswordKeyUp(object? sender, KeyEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Dashboard\ProtectFilesUserControl.xaml.cs" Line="25">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -9666,7 +9666,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ProtectFilesUserControl.OnPasswordLostFocus(object sender, RoutedEventArgs e)"
+                                    <Method Name="void ProtectFilesUserControl.OnPasswordLostFocus(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Dashboard\ProtectFilesUserControl.xaml.cs" Line="30">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -9676,7 +9676,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ProtectFilesUserControl.OnWindowIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void ProtectFilesUserControl.OnWindowIsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Dashboard\ProtectFilesUserControl.xaml.cs" Line="35">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="68"/>
@@ -10378,7 +10378,7 @@
                                     <Metric Name="ExecutableLines" Value="2"/>
                                 </Metrics>
                                 <Members>
-                                    <Method Name="FilterAppliedMessage.FilterAppliedMessage(object sender, GlobalFilterCriteria criteria)"
+                                    <Method Name="FilterAppliedMessage.FilterAppliedMessage(object? sender, GlobalFilterCriteria criteria)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Filtering\FilterAppliedMessage.cs" Line="8">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="85"/>
@@ -10964,7 +10964,7 @@
                                     <Metric Name="ExecutableLines" Value="1"/>
                                 </Metrics>
                                 <Members>
-                                    <Method Name="RequestFilterChangeMessage.RequestFilterChangeMessage(object sender)"
+                                    <Method Name="RequestFilterChangeMessage.RequestFilterChangeMessage(object? sender)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Filtering\RequestFilterChangeMessage.cs" Line="8">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="96"/>
@@ -11018,7 +11018,7 @@
                                     <Metric Name="ExecutableLines" Value="1"/>
                                 </Metrics>
                                 <Members>
-                                    <Method Name="RequestFilterMessage.RequestFilterMessage(object sender)"
+                                    <Method Name="RequestFilterMessage.RequestFilterMessage(object? sender)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Filtering\RequestFilterMessage.cs" Line="8">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="96"/>
@@ -11824,7 +11824,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void AddLedgerReconciliationUserControl.OnAddBankBalanceClick(object sender, RoutedEventArgs e)"
+                                    <Method Name="void AddLedgerReconciliationUserControl.OnAddBankBalanceClick(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\AddLedgerReconciliationUserControl.xaml.cs" Line="18">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="87"/>
@@ -11834,7 +11834,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void AddLedgerReconciliationUserControl.OnBankBalanceGotFocus(object sender, RoutedEventArgs e)"
+                                    <Method Name="void AddLedgerReconciliationUserControl.OnBankBalanceGotFocus(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\AddLedgerReconciliationUserControl.xaml.cs" Line="24">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="86"/>
@@ -11844,7 +11844,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void AddLedgerReconciliationUserControl.OnBankBalanceMouseUp(object sender, MouseButtonEventArgs e)"
+                                    <Method Name="void AddLedgerReconciliationUserControl.OnBankBalanceMouseUp(object? sender, MouseButtonEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\AddLedgerReconciliationUserControl.xaml.cs" Line="32">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -11854,7 +11854,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void AddLedgerReconciliationUserControl.OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void AddLedgerReconciliationUserControl.OnIsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\AddLedgerReconciliationUserControl.xaml.cs" Line="37">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="77"/>
@@ -11864,7 +11864,7 @@
                                             <Metric Name="ExecutableLines" Value="4"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void AddLedgerReconciliationUserControl.OnBankBalanceKeyDown(object sender, KeyEventArgs e)"
+                                    <Method Name="void AddLedgerReconciliationUserControl.OnBankBalanceKeyDown(object? sender, KeyEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\AddLedgerReconciliationUserControl.xaml.cs" Line="48">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="72"/>
@@ -11874,7 +11874,7 @@
                                             <Metric Name="ExecutableLines" Value="4"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void AddLedgerReconciliationUserControl.OnBankBalanceKeyUp(object sender, KeyEventArgs e)"
+                                    <Method Name="void AddLedgerReconciliationUserControl.OnBankBalanceKeyUp(object? sender, KeyEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\AddLedgerReconciliationUserControl.xaml.cs" Line="71">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="73"/>
@@ -13632,7 +13632,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerBookUserControl.OnAddLedgerClicked(object sender, RoutedEventArgs e)"
+                                    <Method Name="void LedgerBookUserControl.OnAddLedgerClicked(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerBookUserControl.xaml.cs" Line="26">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -13642,7 +13642,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerBookUserControl.OnAddNewReconciliationClicked(object sender, RoutedEventArgs e)"
+                                    <Method Name="void LedgerBookUserControl.OnAddNewReconciliationClicked(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerBookUserControl.xaml.cs" Line="31">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -13652,7 +13652,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerBookUserControl.OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void LedgerBookUserControl.OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerBookUserControl.xaml.cs" Line="36">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="61"/>
@@ -13662,7 +13662,7 @@
                                             <Metric Name="ExecutableLines" Value="12"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerBookUserControl.OnLedgerBookNameClick(object sender, MouseButtonEventArgs e)"
+                                    <Method Name="void LedgerBookUserControl.OnLedgerBookNameClick(object? sender, MouseButtonEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerBookUserControl.xaml.cs" Line="58">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -13682,7 +13682,7 @@
                                             <Metric Name="ExecutableLines" Value="3"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerBookUserControl.OnLedgerBookUpdated(object sender, EventArgs e)"
+                                    <Method Name="void LedgerBookUserControl.OnLedgerBookUpdated(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerBookUserControl.xaml.cs" Line="73">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="93"/>
@@ -13692,7 +13692,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerBookUserControl.OnTransferFundsClicked(object sender, RoutedEventArgs e)"
+                                    <Method Name="void LedgerBookUserControl.OnTransferFundsClicked(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerBookUserControl.xaml.cs" Line="79">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -13702,7 +13702,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerBookUserControl.OnUnlockCurrentLedgerLineClicked(object sender, RoutedEventArgs e)"
+                                    <Method Name="void LedgerBookUserControl.OnUnlockCurrentLedgerLineClicked(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerBookUserControl.xaml.cs" Line="84">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -14629,7 +14629,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerRemarksUserControl.OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void LedgerRemarksUserControl.OnIsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerRemarksUserControl.xaml.cs" Line="18">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="80"/>
@@ -15641,7 +15641,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void LedgerTransactionsUserControl.OnNewTransactionVisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void LedgerTransactionsUserControl.OnNewTransactionVisibilityChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerTransactionsUserControl.xaml.cs" Line="18">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="80"/>
@@ -15794,7 +15794,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void LedgerTransactionUserControl.OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void LedgerTransactionUserControl.OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\LedgerTransactionUserControl.xaml.cs" Line="25">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="56"/>
@@ -15957,7 +15957,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void ReconciliationToDoListUserControl.OnListDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void ReconciliationToDoListUserControl.OnListDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\ReconciliationToDoListUserControl.xaml.cs" Line="20">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="83"/>
@@ -15967,7 +15967,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ReconciliationToDoListUserControl.OnUnloaded(object sender, RoutedEventArgs e)"
+                                    <Method Name="void ReconciliationToDoListUserControl.OnUnloaded(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\ReconciliationToDoListUserControl.xaml.cs" Line="26">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="93"/>
@@ -16547,7 +16547,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void TransferFundsView.ToLedger_OnSelected(object sender, RoutedEventArgs e)"
+                                    <Method Name="void TransferFundsView.ToLedger_OnSelected(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\TransferFundsView.xaml.cs" Line="19">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -16557,7 +16557,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void TransferFundsView.FromLedger_OnSelected(object sender, RoutedEventArgs e)"
+                                    <Method Name="void TransferFundsView.FromLedger_OnSelected(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\LedgerBook\TransferFundsView.xaml.cs" Line="24">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -17177,7 +17177,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void EditRulesUserControl.OnCheckedAndSelectedRule(object sender, RoutedEventArgs e)"
+                                    <Method Name="void EditRulesUserControl.OnCheckedAndSelectedRule(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\EditRulesUserControl.xaml.cs" Line="28">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="79"/>
@@ -17187,7 +17187,7 @@
                                             <Metric Name="ExecutableLines" Value="3"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void EditRulesUserControl.OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void EditRulesUserControl.OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\EditRulesUserControl.xaml.cs" Line="43">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="60"/>
@@ -17197,7 +17197,7 @@
                                             <Metric Name="ExecutableLines" Value="12"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void EditRulesUserControl.OnGroupListBoxLoaded(object sender, RoutedEventArgs e)"
+                                    <Method Name="void EditRulesUserControl.OnGroupListBoxLoaded(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\EditRulesUserControl.xaml.cs" Line="62">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="63"/>
@@ -17207,7 +17207,7 @@
                                             <Metric Name="ExecutableLines" Value="9"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void EditRulesUserControl.OnGroupListBoxRuleSelectionChanged(object sender, SelectionChangedEventArgs e)"
+                                    <Method Name="void EditRulesUserControl.OnGroupListBoxRuleSelectionChanged(object? sender, SelectionChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\EditRulesUserControl.xaml.cs" Line="92">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="73"/>
@@ -17217,7 +17217,7 @@
                                             <Metric Name="ExecutableLines" Value="4"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void EditRulesUserControl.OnRuleAdded(object sender, MatchingRuleEventArgs e)"
+                                    <Method Name="void EditRulesUserControl.OnRuleAdded(object? sender, MatchingRuleEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\EditRulesUserControl.xaml.cs" Line="113">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="57"/>
@@ -17227,7 +17227,7 @@
                                             <Metric Name="ExecutableLines" Value="14"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void EditRulesUserControl.OnRuleRemoved(object sender, EventArgs e)"
+                                    <Method Name="void EditRulesUserControl.OnRuleRemoved(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\EditRulesUserControl.xaml.cs" Line="136">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="66"/>
@@ -17237,7 +17237,7 @@
                                             <Metric Name="ExecutableLines" Value="7"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void EditRulesUserControl.OnSortChanged(object sender, EventArgs e)"
+                                    <Method Name="void EditRulesUserControl.OnSortChanged(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\EditRulesUserControl.xaml.cs" Line="147">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="62"/>
@@ -17247,7 +17247,7 @@
                                             <Metric Name="ExecutableLines" Value="7"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void EditRulesUserControl.OnVisibilityChangedAndButton(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void EditRulesUserControl.OnVisibilityChangedAndButton(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\EditRulesUserControl.xaml.cs" Line="183">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="96"/>
@@ -18121,7 +18121,7 @@
                                             <Metric Name="ExecutableLines" Value="6"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void NewRuleController.OnCriteriaValuePropertyChanged(object sender, PropertyChangedEventArgs e)"
+                                    <Method Name="void NewRuleController.OnCriteriaValuePropertyChanged(object? sender, PropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\NewRuleController.cs" Line="261">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -18874,7 +18874,7 @@
                                             <Metric Name="ExecutableLines" Value="4"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void RulesController.OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)"
+                                    <Method Name="void RulesController.OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Matching\RulesController.cs" Line="270">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="69"/>
@@ -19571,7 +19571,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void ReportsCatalogUserControl.OverallPerformanceClicked(object sender, RoutedEventArgs e)"
+                                    <Method Name="void ReportsCatalogUserControl.OverallPerformanceClicked(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\ReportsCatalog\ReportsCatalogUserControl.xaml.cs" Line="16">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -20595,7 +20595,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void ShellDialogView.OnShellDialogKeyUp(object sender, KeyEventArgs e)"
+                                    <Method Name="void ShellDialogView.OnShellDialogKeyUp(object? sender, KeyEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\ShellDialog\ShellDialogView.xaml.cs" Line="18">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="67"/>
@@ -21637,7 +21637,7 @@
                                             </Method>
                                         </Accessors>
                                     </Property>
-                                    <Method Name="void LoadFileView.OnFileNameMouseUp(object sender, MouseEventArgs e)"
+                                    <Method Name="void LoadFileView.OnFileNameMouseUp(object? sender, MouseEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\LoadFileView.xaml.cs" Line="18">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="93"/>
@@ -22873,7 +22873,7 @@
                                             <Metric Name="ExecutableLines" Value="3"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementController.OnClosedNotificationReceived(object sender, EventArgs e)"
+                                    <Method Name="void StatementController.OnClosedNotificationReceived(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementController.cs" Line="212">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="100"/>
@@ -22923,7 +22923,7 @@
                                             <Metric Name="ExecutableLines" Value="3"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementController.OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)"
+                                    <Method Name="void StatementController.OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementController.cs" Line="272">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="95"/>
@@ -22933,7 +22933,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementController.OnSavedNotificationReceived(object sender, EventArgs e)"
+                                    <Method Name="void StatementController.OnSavedNotificationReceived(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementController.cs" Line="277">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="91"/>
@@ -23529,7 +23529,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnBucketFilterComboBoxDropDownClosed(object sender, EventArgs e)"
+                                    <Method Name="void StatementUserControl.OnBucketFilterComboBoxDropDownClosed(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="77">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="83"/>
@@ -23539,7 +23539,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnBucketFilterComboBoxDropDownOpened(object sender, EventArgs e)"
+                                    <Method Name="void StatementUserControl.OnBucketFilterComboBoxDropDownOpened(object? sender, EventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="87">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="83"/>
@@ -23549,7 +23549,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void StatementUserControl.OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="97">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="58"/>
@@ -23569,7 +23569,7 @@
                                             <Metric Name="ExecutableLines" Value="3"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnSearchTextBoxGotFocus(object sender, RoutedEventArgs e)"
+                                    <Method Name="void StatementUserControl.OnSearchTextBoxGotFocus(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="139">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="83"/>
@@ -23579,7 +23579,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnSearchTextBoxLostFocus(object sender, RoutedEventArgs e)"
+                                    <Method Name="void StatementUserControl.OnSearchTextBoxLostFocus(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="145">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="83"/>
@@ -23599,7 +23599,7 @@
                                             <Metric Name="ExecutableLines" Value="3"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnTransactionListBoxDoubleClick(object sender, MouseButtonEventArgs e)"
+                                    <Method Name="void StatementUserControl.OnTransactionListBoxDoubleClick(object? sender, MouseButtonEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="160">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="83"/>
@@ -23609,7 +23609,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnTransactionListBoxKeyUp(object sender, KeyEventArgs e)"
+                                    <Method Name="void StatementUserControl.OnTransactionListBoxKeyUp(object? sender, KeyEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="168">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="76"/>
@@ -23629,7 +23629,7 @@
                                             <Metric Name="ExecutableLines" Value="1"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)"
+                                    <Method Name="void StatementUserControl.OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="184">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="74"/>
@@ -23639,7 +23639,7 @@
                                             <Metric Name="ExecutableLines" Value="4"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.OnVisibleChangedShowTransaction(object sender, DependencyPropertyChangedEventArgs e)"
+                                    <Method Name="void StatementUserControl.OnVisibleChangedShowTransaction(object? sender, DependencyPropertyChangedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="197">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="78"/>
@@ -23649,7 +23649,7 @@
                                             <Metric Name="ExecutableLines" Value="3"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.ClearSearchButton_OnClick(object sender, RoutedEventArgs e)"
+                                    <Method Name="void StatementUserControl.ClearSearchButton_OnClick(object? sender, RoutedEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="205">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="85"/>
@@ -23659,7 +23659,7 @@
                                             <Metric Name="ExecutableLines" Value="2"/>
                                         </Metrics>
                                     </Method>
-                                    <Method Name="void StatementUserControl.SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)"
+                                    <Method Name="void StatementUserControl.SearchTextBox_OnKeyUp(object? sender, KeyEventArgs e)"
                                             File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser\Statement\StatementUserControl.xaml.cs" Line="211">
                                         <Metrics>
                                             <Metric Name="MaintainabilityIndex" Value="89"/>

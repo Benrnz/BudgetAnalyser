@@ -15,14 +15,13 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Statement;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class StatementController : ControllerBase, IShowableController, IInitializableController
+public class StatementController : ControllerBase, IShowableController
 {
     private readonly ITransactionManagerService transactionService;
     private readonly IUiContext uiContext;
-    private string doNotUseBucketFilter;
+    private string? doNotUseBucketFilter;
     private bool doNotUseShown;
     private string? doNotUseTextFilter;
-    private bool initialised;
     private Guid shellDialogCorrelationId;
 
     public StatementController(
@@ -53,7 +52,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
     ///     Only relevant when the view is displaying transactions by date.  The filter is hidden when shown in GroupByBucket
     ///     mode.
     /// </summary>
-    public string BucketFilter
+    public string? BucketFilter
     {
         get => this.doNotUseBucketFilter;
 
@@ -103,17 +102,6 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
     public StatementViewModel ViewModel => FileOperations.ViewModel;
 
-    public void Initialize()
-    {
-        if (this.initialised)
-        {
-            return;
-        }
-
-        this.initialised = true;
-        FileOperations.Initialise(this.transactionService);
-    }
-
     public bool Shown
     {
         get => this.doNotUseShown;
@@ -140,7 +128,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         Messenger.Register(recipient, handler);
     }
 
-    private async Task CheckBudgetContainsAllUsedBucketsFromStatement(BudgetCollection budgets = null)
+    private async Task CheckBudgetContainsAllUsedBucketsFromStatement(BudgetCollection? budgets = null)
     {
         if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
         {
@@ -164,7 +152,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
     private async Task FinaliseSplitTransaction(ShellDialogResponseMessage message)
     {
-        if (message.Response == ShellDialogButton.Save)
+        if (message.Response == ShellDialogButton.Save && SplitTransactionController.OriginalTransaction is not null)
         {
             this.transactionService.SplitTransaction(
                 SplitTransactionController.OriginalTransaction,
@@ -191,7 +179,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         ViewModel.TriggerRefreshBucketFilterList();
     }
 
-    private void OnClosedNotificationReceived(object sender, EventArgs e)
+    private void OnClosedNotificationReceived(object? sender, EventArgs e)
     {
         FileOperations.Close();
     }
@@ -227,7 +215,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
     private void OnGlobalDateFilterApplied(FilterAppliedMessage message)
     {
-        if (message.Sender == this || message.Criteria is null)
+        if (message.Sender == this)
         {
             return;
         }
@@ -239,7 +227,7 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
         this.transactionService.FilterTransactions(message.Criteria);
         ViewModel.Statement = this.transactionService.StatementModel;
-        ViewModel.Transactions = new ObservableCollection<Transaction>(ViewModel.Statement.Transactions);
+        ViewModel.Transactions = new ObservableCollection<Transaction>(ViewModel.Statement!.Transactions);
         ViewModel.TriggerRefreshTotalsRow();
         OnPropertyChanged(nameof(BucketFilter));
     }
@@ -251,12 +239,12 @@ public class StatementController : ControllerBase, IShowableController, IInitial
         await FileOperations.MergeInNewTransactions();
     }
 
-    private async void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)
+    private async void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)
     {
         await FileOperations.SyncWithServiceAsync();
     }
 
-    private void OnSavedNotificationReceived(object sender, EventArgs e)
+    private void OnSavedNotificationReceived(object? sender, EventArgs e)
     {
         FileOperations.ViewModel.Dirty = false;
     }
@@ -282,6 +270,11 @@ public class StatementController : ControllerBase, IShowableController, IInitial
 
     private void OnSplitTransactionCommandExecute()
     {
+        if (ViewModel.SelectedRow is null)
+        {
+            return;
+        }
+
         this.shellDialogCorrelationId = Guid.NewGuid();
         SplitTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
     }
