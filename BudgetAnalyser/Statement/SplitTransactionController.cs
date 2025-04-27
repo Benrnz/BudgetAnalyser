@@ -13,8 +13,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private Guid dialogCorrelationId;
-    private string doNotUseInvalidMessage;
-    private Transaction doNotUseOriginalTransaction;
+    private string? doNotUseInvalidMessage;
+    private Transaction? doNotUseOriginalTransaction;
     private decimal doNotUseSplinterAmount1;
     private decimal doNotUseSplinterAmount2;
 
@@ -29,16 +29,10 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
         Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public IEnumerable<BudgetBucket> BudgetBuckets
-    {
-        [UsedImplicitly]
-        get;
-        private set;
-    }
+    public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; } = Array.Empty<BudgetBucket>();
 
-    public string InvalidMessage
+    public string? InvalidMessage
     {
-        [UsedImplicitly]
         get => this.doNotUseInvalidMessage;
         private set
         {
@@ -80,7 +74,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             }
 
             this.doNotUseSplinterAmount1 = value;
-            this.doNotUseSplinterAmount2 = OriginalTransaction.Amount - value;
+            this.doNotUseSplinterAmount2 = OriginalTransaction?.Amount ?? 0 - value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(SplinterAmount2));
             OnPropertyChanged(nameof(TotalAmount));
@@ -100,7 +94,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             }
 
             this.doNotUseSplinterAmount2 = value;
-            this.doNotUseSplinterAmount1 = OriginalTransaction.Amount - value;
+            this.doNotUseSplinterAmount1 = OriginalTransaction?.Amount ?? 0 - value;
             OnPropertyChanged(nameof(SplinterAmount1));
             OnPropertyChanged();
             OnPropertyChanged(nameof(TotalAmount));
@@ -109,8 +103,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
         }
     }
 
-    public BudgetBucket SplinterBucket1 { get; set; }
-    public BudgetBucket SplinterBucket2 { get; set; }
+    public BudgetBucket? SplinterBucket1 { get; set; }
+    public BudgetBucket? SplinterBucket2 { get; set; }
     public decimal TotalAmount => SplinterAmount1 + SplinterAmount2;
 
     public bool Valid
@@ -158,7 +152,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
         OriginalTransaction = originalTransaction;
         SplinterAmount1 = OriginalTransaction.Amount;
         SplinterAmount2 = 0M;
-        SplinterBucket2 = SplinterBucket1 = OriginalTransaction.BudgetBucket;
+        SplinterBucket2 = SplinterBucket1 = originalTransaction.BudgetBucket;
 
         var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.SaveCancel)
         {

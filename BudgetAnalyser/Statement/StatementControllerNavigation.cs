@@ -11,31 +11,11 @@ public class StatementControllerNavigation
     private readonly StatementController controller;
     private readonly IUserQuestionBoxYesNo questionBox;
 
-    public StatementControllerNavigation(
-        IMessenger messenger,
-        StatementController controller,
-        IUserQuestionBoxYesNo questionBox)
+    public StatementControllerNavigation(IMessenger messenger, StatementController controller, IUserQuestionBoxYesNo questionBox)
     {
-        if (messenger is null)
-        {
-            throw new ArgumentNullException(nameof(messenger));
-        }
-
-        if (controller is null)
-        {
-            throw new ArgumentNullException(nameof(controller));
-        }
-
-        if (questionBox is null)
-        {
-            throw new ArgumentNullException(nameof(questionBox));
-        }
-
-        MessengerInstance = messenger;
-        this.controller = controller;
-        this.questionBox = questionBox;
-
-        MessengerInstance.Register<StatementControllerNavigation, NavigateToTransactionMessage>(this, static (r, m) => r.OnNavigateToTransactionRequestReceived(m));
+        MessengerInstance = messenger ?? throw new ArgumentNullException(nameof(messenger));
+        this.controller = controller ?? throw new ArgumentNullException(nameof(controller));
+        this.questionBox = questionBox ?? throw new ArgumentNullException(nameof(questionBox));
     }
 
     private IMessenger MessengerInstance { get; }
@@ -78,23 +58,5 @@ public class StatementControllerNavigation
         }
 
         return false;
-    }
-
-    private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
-    {
-        if (NavigateToVisibleTransaction(message.TransactionId))
-        {
-            message.SetSearchAsSuccessful();
-            return;
-        }
-
-        if (NavigateToTransactionOutsideOfFilter(message.TransactionId))
-        {
-            message.SetSearchAsSuccessful();
-            return;
-        }
-
-        message.SetSearchAsFailed();
-        // No such transaction id found.
     }
 }

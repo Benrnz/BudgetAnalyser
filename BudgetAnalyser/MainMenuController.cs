@@ -1,10 +1,8 @@
 ﻿using System.Windows.Input;
-using System.Windows.Threading;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
-using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
@@ -44,7 +42,6 @@ public class MainMenuController : ControllerBase, IInitializableController
 
         this.uiContext = uiContext;
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
-        Messenger.Register<MainMenuController, NavigateToTransactionMessage>(this, static (r, m) => r.OnNavigateToTransactionRequestReceived(m));
     }
 
     [UsedImplicitly]
@@ -163,18 +160,6 @@ public class MainMenuController : ControllerBase, IInitializableController
         BeforeTabExecutedCommon();
         LedgerBookToggle = true;
         AfterTabExecutedCommon();
-    }
-
-    private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
-    {
-        message.WhenReadyToNavigate.ContinueWith(
-            t =>
-            {
-                if (t.IsCompleted && !t.IsCanceled && !t.IsFaulted && message.Success)
-                {
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, OnTransactionExecuted);
-                }
-            });
     }
 
     private void OnReportsExecuted()

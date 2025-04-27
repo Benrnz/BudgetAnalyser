@@ -108,7 +108,6 @@ public partial class StatementUserControl
             this.subscribedToMainWindowClose = true;
             Controller.RegisterListener<TransactionsChangedMessage>(this, static (r, m) => r.OnTransactionsChanged(m));
             Controller.RegisterListener<ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
-            Controller.RegisterListener<NavigateToTransactionMessage>(this, static (r, m) => r.OnNavigateToTransactionRequestReceived(m));
         }
 
         if (Controller is not null)
@@ -128,18 +127,6 @@ public partial class StatementUserControl
         }
 
         ApplyBucketFilter();
-    }
-
-    private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
-    {
-        message.WhenReadyToNavigate.ContinueWith(
-            t =>
-            {
-                if (t.IsCompleted && !t.IsCanceled && !t.IsFaulted && message.Success)
-                {
-                    IsVisibleChanged += OnVisibleChangedShowTransaction;
-                }
-            });
     }
 
     private void OnSearchTextBoxGotFocus(object? sender, RoutedEventArgs e)

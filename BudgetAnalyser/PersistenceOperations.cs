@@ -59,12 +59,18 @@ public class PersistenceOperations
         var fileName = fileDialog.FileName;
 
         this.applicationDatabaseService.Close();
-        var appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
+        await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
     }
 
     public async void OnLoadDatabaseCommandExecute()
     {
-        await LoadDatabase(PromptUserForFileName);
+        var fileName = PromptUserForFileName();
+        if (fileName is null)
+        {
+            return;
+        }
+
+        await LoadDatabase(fileName);
     }
 
     public async void OnLoadDemoDatabaseCommandExecute()
@@ -138,18 +144,18 @@ public class PersistenceOperations
         catch (EncryptionKeyIncorrectException)
         {
             // Recover by prompting user for the password.
-            this.uiContext.Logger.LogWarning(l => $"Attempt to open an encrypted file {fileName} with an incorrect password.");
+            this.uiContext.Logger.LogWarning(_ => $"Attempt to open an encrypted file {fileName} with an incorrect password.");
             this.uiContext.EncryptFileController.ShowEnterPasswordDialog(fileName, "Incorrect password");
         }
         catch (KeyNotFoundException)
         {
             this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", fileName);
-            this.uiContext.Logger.LogWarning(l => $"The previously loaded Budget Analyser file ({fileName}) no longer exists.");
+            this.uiContext.Logger.LogWarning(_ => $"The previously loaded Budget Analyser file ({fileName}) no longer exists.");
         }
         catch (EncryptionKeyNotProvidedException)
         {
             // Recover by prompting user for the password.
-            this.uiContext.Logger.LogWarning(l => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
+            this.uiContext.Logger.LogWarning(_ => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
             this.uiContext.EncryptFileController.ShowEnterPasswordDialog(fileName);
         }
     }
@@ -178,7 +184,7 @@ public class PersistenceOperations
         return true;
     }
 
-    private string PromptUserForFileName()
+    private string? PromptUserForFileName()
     {
         var openDialog = this.uiContext.UserPrompts.OpenFileFactory();
         openDialog.CheckFileExists = true;

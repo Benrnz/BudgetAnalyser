@@ -1,29 +1,16 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerTransactionUserControl"
              x:Name="ControlRoot"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:statement="clr-namespace:BudgetAnalyser.Statement">
+             xmlns:statement="clr-namespace:BudgetAnalyser.Statement" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ledger="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance ledger:LedgerTransaction}">
 
     <!-- Used to show (readonly) a transaction in an items control -->
 
     <Grid Background="{StaticResource Brush.TileBackground}"
           Margin="1">
-        <Grid.ContextMenu>
-            <ContextMenu>
-                <ContextMenu.Resources>
-
-                    <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
-                           TargetType="{x:Type TextBlock}" />
-                </ContextMenu.Resources>
-                <MenuItem Command="{x:Static ledgerBook:LedgerTransactionCommands.NavigateToTransactionCommand}"
-                          CommandParameter="{Binding Id}">
-                    <MenuItem.Header>
-                        <TextBlock Text="Navigate to this transaction" />
-                    </MenuItem.Header>
-                </MenuItem>
-            </ContextMenu>
-        </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="35" />
@@ -44,7 +31,7 @@
             <TextBlock Text="{Binding Date, StringFormat='{}{0:d/MMM}'}"
                        ToolTip="{Binding Date, Converter={StaticResource Converter.ToString}, ConverterParameter='d/MMM/yy'}"
                        Width="60" />
-            <TextBlock Text="{Binding Narrative}" ToolTip="{Binding Narrative}"/>
+            <TextBlock Text="{Binding Narrative}" ToolTip="{Binding Narrative}" />
         </StackPanel>
 
         <statement:AccountUserControl Grid.Column="1"

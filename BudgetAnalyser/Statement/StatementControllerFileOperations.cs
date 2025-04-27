@@ -64,7 +64,7 @@ public class StatementControllerFileOperations : ControllerBase
         PersistenceOperationCommands.SaveDatabaseCommand.Execute(this);
 
         var fileName = await GetFileNameFromUser();
-        if (string.IsNullOrWhiteSpace(fileName))
+        if (string.IsNullOrWhiteSpace(fileName) || this.loadFileController.SelectedExistingAccountName is null)
         {
             // User cancelled
             return;
@@ -151,7 +151,7 @@ public class StatementControllerFileOperations : ControllerBase
         var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
         await this.loadFileController.RequestUserInputForMerging(statement);
 
-        return this.loadFileController.FileName;
+        return this.loadFileController.FileName ?? string.Empty;
     }
 
     private void NotifyOfReset()

@@ -13,5 +13,5 @@ public partial class AccountUserControl
     }
 
     public Account Account => (Account)DataContext;
-    public string FriendlyAccountName => Account.ToString();
+    public string FriendlyAccountName => Account?.ToString() ?? string.Empty;
 }
