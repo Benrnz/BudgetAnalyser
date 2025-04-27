@@ -5,7 +5,7 @@ internal interface IMatchingRuleFactory
     MatchingRule CreateNewRule(
         string bucketCode,
         string? description,
-        string[]? references,
+        string?[] references,
         string? transactionTypeName,
         decimal? amount,
         bool andMatching);
@@ -13,7 +13,7 @@ internal interface IMatchingRuleFactory
     SingleUseMatchingRule CreateNewSingleUseRule(
         string bucketCode,
         string? description,
-        string[]? references,
+        string?[] references,
         string? transactionTypeName,
         decimal? amount,
         bool andMatching);

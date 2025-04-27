@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Matching;
 ///     The Controller for <see cref="EditRulesUserControl" /> .
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class RulesController : ControllerBase, IInitializableController, IShowableController
+public class RulesController : ControllerBase, IShowableController
 {
     public const string BucketSortKey = "Bucket";
     public const string DescriptionSortKey = "Description";
@@ -26,10 +26,9 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
     private bool doNotUseEditingRule;
     private bool doNotUseFlatListBoxVisibility;
     private bool doNotUseGroupByListBoxVisibility;
-    private MatchingRule doNotUseSelectedRule;
+    private MatchingRule? doNotUseSelectedRule;
     private bool doNotUseShown;
-    private string doNotUseSortBy;
-    private bool initialised;
+    private string? doNotUseSortBy;
 
     public RulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
         : base(uiContext.Messenger)
@@ -48,20 +47,24 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
         this.ruleService.Closed += OnClosedNotificationReceived;
         this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
         this.ruleService.Saved += OnSavedNotificationReceived;
+
+        Rules = new ObservableCollection<MatchingRule>();
+        RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
     }
 
     /// <summary>
     ///     These events are required because the ListBoxes do not update when items are added. God only knows why.
     /// </summary>
-    public event EventHandler<MatchingRuleEventArgs> RuleAdded;
+    public event EventHandler<MatchingRuleEventArgs>? RuleAdded;
 
     /// <summary>
     ///     These events are required because the ListBoxes do not update when items are removed. God only knows why.
     /// </summary>
-    public event EventHandler<MatchingRuleEventArgs> RuleRemoved;
+    public event EventHandler<MatchingRuleEventArgs>? RuleRemoved;
 
-    public event EventHandler SortChanged;
-    public string AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
+    public event EventHandler? SortChanged;
+
+    public string? AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
 
     [UsedImplicitly]
     public ICommand CloseCommand => new RelayCommand(() => Shown = false);
@@ -107,7 +110,7 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
     public ObservableCollection<MatchingRule> Rules { get; private set; }
     public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
 
-    public MatchingRule SelectedRule
+    public MatchingRule? SelectedRule
     {
         get => this.doNotUseSelectedRule;
         set
@@ -128,7 +131,7 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
         }
     }
 
-    public string SortBy
+    public string? SortBy
     {
         get => this.doNotUseSortBy;
         set
@@ -161,18 +164,6 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
 
     [UsedImplicitly]
     public ICommand SortCommand => new RelayCommand<string>(OnSortCommandExecute);
-
-    public void Initialize()
-    {
-        if (this.initialised)
-        {
-            return;
-        }
-
-        this.initialised = true;
-        Rules = new ObservableCollection<MatchingRule>();
-        RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
-    }
 
     public bool Shown
     {
@@ -294,7 +285,7 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
         OnPropertyChanged(nameof(AndOrText));
     }
 
-    private void OnSortCommandExecute(string sortBy)
+    private void OnSortCommandExecute(string? sortBy)
     {
         SortBy = sortBy;
     }
@@ -306,7 +297,7 @@ public class RulesController : ControllerBase, IInitializableController, IShowab
             EditingRule = false;
         }
 
-        var selectedRule = SelectedRule;
+        var selectedRule = SelectedRule ?? throw new InvalidOperationException("Selected Rule is null, and not selected.");
         if (!this.ruleService.RemoveRule(SelectedRule))
         {
             return;

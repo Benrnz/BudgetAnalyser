@@ -35,7 +35,7 @@ public interface ITransactionRuleService : INotifyDatabaseChanges, IServiceFound
     MatchingRule CreateNewRule(
         string bucketCode,
         string? description,
-        string[] references,
+        string?[] references,
         string? transactionTypeName,
         decimal? amount,
         bool andMatching);

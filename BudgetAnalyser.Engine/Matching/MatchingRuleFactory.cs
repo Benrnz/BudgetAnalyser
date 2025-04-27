@@ -7,12 +7,12 @@ internal class MatchingRuleFactory(IBudgetBucketRepository bucketRepo) : IMatchi
 {
     private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
 
-    public MatchingRule CreateNewRule(string bucketCode, string? description, string[]? references, string? transactionTypeName, decimal? amount, bool andMatching)
+    public MatchingRule CreateNewRule(string bucketCode, string? description, string?[] references, string? transactionTypeName, decimal? amount, bool andMatching)
     {
         return CreateAnyNewRule(CreateRuleForPersistence, bucketCode, description, references, transactionTypeName, amount, andMatching);
     }
 
-    public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string? description, string[]? references, string? transactionTypeName, decimal? amount, bool andMatching)
+    public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string? description, string?[] references, string? transactionTypeName, decimal? amount, bool andMatching)
     {
         var rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references, transactionTypeName, amount, andMatching);
         return rule;
@@ -21,7 +21,7 @@ internal class MatchingRuleFactory(IBudgetBucketRepository bucketRepo) : IMatchi
     private static T CreateAnyNewRule<T>(Func<string, T> ruleCtor,
         string bucketCode,
         string? description,
-        string[]? references,
+        string?[] references,
         string? transactionTypeName,
         decimal? amount,
         bool andMatching)
@@ -31,8 +31,6 @@ internal class MatchingRuleFactory(IBudgetBucketRepository bucketRepo) : IMatchi
         {
             throw new ArgumentNullException(nameof(bucketCode));
         }
-
-        references ??= [string.Empty, string.Empty, string.Empty];
 
         if (references.Length > 3)
         {

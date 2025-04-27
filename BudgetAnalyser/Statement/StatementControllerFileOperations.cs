@@ -156,6 +156,12 @@ public class StatementControllerFileOperations : ControllerBase
 
     private void NotifyOfReset()
     {
+        if (ViewModel is { Dirty: false, Statement: null })
+        {
+            // No need to notify of reset if the statement is already null. This happens during first load before the statement is loaded
+            return;
+        }
+
         ViewModel.Dirty = false;
         var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
         Messenger.Send(new StatementHasBeenModifiedMessage(false, statement));

@@ -127,11 +127,11 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type matching:DisusedRulesController}">
-        <filtering:DisusedRulesUserControl />
+        <matching:DisusedRulesUserControl />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type dashboard:EncryptFileController}">
-        <dashboard:ProtectFilesUserControl/>
+        <dashboard:ProtectFilesUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type mobile:UploadMobileDataController}">

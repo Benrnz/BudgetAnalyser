@@ -1,12 +1,11 @@
 ﻿using System.Windows.Input;
 using BudgetAnalyser.Engine.Matching;
 
-namespace BudgetAnalyser.Matching
-{
-    public class DisusedRuleViewModel
-    {
-        public MatchingRule MatchingRule { get; set; }
+namespace BudgetAnalyser.Matching;
 
-        public ICommand RemoveCommand { get; set; }
-    }
+public class DisusedRuleViewModel
+{
+    public required MatchingRule MatchingRule { get; init; }
+
+    public required ICommand RemoveCommand { get; init; }
 }

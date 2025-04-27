@@ -142,7 +142,7 @@ internal class TransactionRuleService(
     public IEnumerable<RulesGroupedByBucket> MatchingRulesGroupedByBucket => this.matchingRulesGroupedByBucket;
 
     /// <inheritdoc />
-    public MatchingRule CreateNewRule(string bucketCode, string? description, string[] references, string? transactionTypeName, decimal? amount, bool andMatching)
+    public MatchingRule CreateNewRule(string bucketCode, string? description, string?[] references, string? transactionTypeName, decimal? amount, bool andMatching)
     {
         var rule = this.ruleFactory.CreateNewRule(bucketCode, description, references, transactionTypeName, amount, andMatching);
         AddRule(rule);

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -19,21 +18,17 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
     private readonly ILogger logger;
     private readonly IUserMessageBox messageBoxService;
     private readonly ITransactionRuleService rulesService;
-    private DecimalCriteria doNotUseAmount;
+    private DecimalCriteria doNotUseAmount = new();
     private bool doNotUseAndChecked;
-    private StringCriteria doNotUseDescription;
+    private StringCriteria doNotUseDescription = new();
     private bool doNotUseOrChecked;
-    private StringCriteria doNotUseReference1;
-    private StringCriteria doNotUseReference2;
-    private StringCriteria doNotUseReference3;
-    private StringCriteria doNotUseTransactionType;
+    private StringCriteria doNotUseReference1 = new();
+    private StringCriteria doNotUseReference2 = new();
+    private StringCriteria doNotUseReference3 = new();
+    private StringCriteria doNotUseTransactionType = new();
     private Guid shellDialogCorrelationId;
 
-    public NewRuleController(
-        UiContext uiContext,
-        ITransactionRuleService rulesService,
-        IBudgetBucketRepository bucketRepo)
-        : base(uiContext.Messenger)
+    public NewRuleController(UiContext uiContext, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
@@ -48,7 +43,7 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         Messenger.Register<NewRuleController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public event EventHandler RuleCreated;
+    public event EventHandler? RuleCreated;
 
     public DecimalCriteria Amount
     {
@@ -84,7 +79,7 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         }
     }
 
-    public BudgetBucket Bucket { get; set; }
+    public BudgetBucket? Bucket { get; set; }
 
     public StringCriteria Description
     {
@@ -175,7 +170,9 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
     }
 
     public IEnumerable<SimilarMatchedRule>? SimilarRules { get; private set; }
+
     public bool SimilarRulesExist { get; private set; }
+
     public string Title => "New Matching Rule for: " + Bucket;
 
     public StringCriteria TransactionType
@@ -200,35 +197,12 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         SimilarRules = null;
         AndChecked = true;
         NewRule = null;
-        if (Description is not null)
-        {
-            Description.PropertyChanged -= OnCriteriaValuePropertyChanged;
-        }
-
-        if (Reference1 is not null)
-        {
-            Reference1.PropertyChanged -= OnCriteriaValuePropertyChanged;
-        }
-
-        if (Reference2 is not null)
-        {
-            Reference2.PropertyChanged -= OnCriteriaValuePropertyChanged;
-        }
-
-        if (Reference3 is not null)
-        {
-            Reference3.PropertyChanged -= OnCriteriaValuePropertyChanged;
-        }
-
-        if (Amount is not null)
-        {
-            Amount.PropertyChanged -= OnCriteriaValuePropertyChanged;
-        }
-
-        if (TransactionType is not null)
-        {
-            TransactionType.PropertyChanged -= OnCriteriaValuePropertyChanged;
-        }
+        Description.PropertyChanged -= OnCriteriaValuePropertyChanged;
+        Reference1.PropertyChanged -= OnCriteriaValuePropertyChanged;
+        Reference2.PropertyChanged -= OnCriteriaValuePropertyChanged;
+        Reference3.PropertyChanged -= OnCriteriaValuePropertyChanged;
+        Amount.PropertyChanged -= OnCriteriaValuePropertyChanged;
+        TransactionType.PropertyChanged -= OnCriteriaValuePropertyChanged;
 
         Description = new StringCriteria { Applicable = true };
         Description.PropertyChanged += OnCriteriaValuePropertyChanged;
@@ -290,12 +264,11 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         NewRule = this.rulesService.CreateNewRule(
             Bucket.Code,
             Description.Applicable ? Description.Value : null,
-            new[]
-            {
+            [
                 Reference1.Applicable ? Reference1.Value : null,
                 Reference2.Applicable ? Reference2.Value : null,
                 Reference3.Applicable ? Reference3.Value : null
-            },
+            ],
             TransactionType.Applicable ? TransactionType.Value : null,
             Amount.Applicable ? Amount.Value : null,
             AndChecked);
@@ -305,11 +278,15 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
 
     private void RefreshSimilarRules()
     {
+        if (SimilarRules is null)
+        {
+            return;
+        }
+
         var view = CollectionViewSource.GetDefaultView(SimilarRules);
         view?.Refresh();
     }
 
-    [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Reviewed, acceptable here.")]
     private void UpdateSimilarRules()
     {
         if (SimilarRules is null)
@@ -319,7 +296,7 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
 
         this.logger.LogInfo(l => l.Format("UpdateSimilarRules1: Rules.Count() = {0}", SimilarRules.Count()));
         var view = CollectionViewSource.GetDefaultView(SimilarRules);
-        view.Filter = item => this.rulesService.IsRuleSimilar((SimilarMatchedRule)item, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType);
+        view.Filter = item => this.rulesService.IsRuleSimilar((SimilarMatchedRule)item, Amount, Description, [Reference1, Reference2, Reference3], TransactionType);
         view.SortDescriptions.Add(new SortDescription(nameof(SimilarMatchedRule.SortOrder), ListSortDirection.Descending));
 
         SimilarRulesExist = !view.IsEmpty;

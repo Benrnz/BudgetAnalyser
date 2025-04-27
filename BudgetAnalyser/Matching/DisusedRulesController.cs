@@ -17,7 +17,7 @@ public class DisusedRulesController : ControllerBase
     private readonly IApplicationDatabaseFacade dbService;
     private readonly ITransactionRuleService ruleService;
     private Guid dialogCorrelationId = Guid.NewGuid();
-    private List<MatchingRule> removedRules;
+    private List<MatchingRule> removedRules = new();
 
     public DisusedRulesController(IMessenger messenger, ITransactionRuleService ruleService, IApplicationDatabaseFacade dbService) : base(messenger)
     {
@@ -42,12 +42,17 @@ public class DisusedRulesController : ControllerBase
         Messenger.Register<DisusedRulesController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
 
-    public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; }
+    public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; } = new();
 
     public ICommand RemoveRuleCommand => new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r is not null);
 
-    private void OnRemoveRuleExecuted(DisusedRuleViewModel rule)
+    private void OnRemoveRuleExecuted(DisusedRuleViewModel? rule)
     {
+        if (rule is null)
+        {
+            return;
+        }
+
         DisusedRules.Remove(rule);
         this.removedRules.Add(rule.MatchingRule);
     }
@@ -91,8 +96,8 @@ public class DisusedRulesController : ControllerBase
 
     private void Reset()
     {
-        this.removedRules = null;
-        DisusedRules = null;
+        this.removedRules = new List<MatchingRule>();
+        DisusedRules = new ObservableCollection<DisusedRuleViewModel>();
         this.dialogCorrelationId = Guid.NewGuid();
     }
 }

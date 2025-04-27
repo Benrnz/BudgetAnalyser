@@ -72,7 +72,8 @@ public class AppliedRulesController : ControllerBase
 
     private void OnApplyRulesCommandExecute()
     {
-        if (this.ruleService.Match(this.statementController.ViewModel.Statement.Transactions))
+        var statement = this.statementController.ViewModel.Statement ?? throw new InvalidOperationException("The statement model is null, not initialised or not loaded.");
+        if (this.ruleService.Match(statement.Transactions))
         {
             Dirty = true;
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Transactions);

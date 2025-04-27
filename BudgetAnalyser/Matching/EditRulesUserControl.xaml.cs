@@ -11,10 +11,10 @@ namespace BudgetAnalyser.Matching;
 /// <summary>
 ///     Interaction logic for EditRulesUserControl.xaml
 /// </summary>
-public partial class EditRulesUserControl : UserControl
+public partial class EditRulesUserControl
 {
     private bool backgroundUpdate;
-    private string currentSort;
+    private string? currentSort;
 
     public EditRulesUserControl()
     {
@@ -64,9 +64,9 @@ public partial class EditRulesUserControl : UserControl
             return;
         }
 
-        Controller.PropertyChanged += (s, eventArgs) =>
+        Controller.PropertyChanged += (_, eventArgs) =>
         {
-            // Ensure all other listboxes deselect their currently selected item when another is chosen in different listbox.
+            // Ensure all other list boxes deselect their currently selected item when another is chosen in different listbox.
             if (eventArgs.PropertyName == "SelectedRule")
             {
                 Debug.WriteLine("EditRulesUserControl: SelectedRule Changed handled by a listbox");
@@ -100,7 +100,7 @@ public partial class EditRulesUserControl : UserControl
             return;
         }
 
-        var selectedRule = (MatchingRule)e.AddedItems[0];
+        var selectedRule = (MatchingRule)e.AddedItems[0]!;
 
         // Chosen not to use Data Binding here.  The rule list box inside the group data template does not deselect the selected item when a different
         // rule is chosen in a different group.  This is a big problem, because if code is written to deselect it manually (set it to null), this triggers data binding
@@ -133,6 +133,11 @@ public partial class EditRulesUserControl : UserControl
 
     private void OnRuleRemoved(object? sender, EventArgs e)
     {
+        if (sender is null)
+        {
+            return;
+        }
+
         var rule = (MatchingRule)sender;
         var flatList = (ObservableCollection<MatchingRule>)this.FlatListBox.ItemsSource;
         flatList.Remove(rule);
