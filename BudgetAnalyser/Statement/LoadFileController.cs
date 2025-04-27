@@ -20,20 +20,15 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
     private Guid dialogCorrelationId;
     private bool disposed;
     private bool doNotUseCanExecuteOkButton;
-    private string doNotUseFileName;
+    private string? doNotUseFileName;
     private bool doNotUseFileTypeSelectionReady;
-    private Account doNotUseSelectedExistingAccountName;
-    private string doNotUseTitle;
-    private Task fileSelectionTask;
+    private Account? doNotUseSelectedExistingAccountName;
+    private string doNotUseTitle = string.Empty;
+    private Task fileSelectionTask = Task.CompletedTask;
     private bool showingDialog;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public LoadFileController(
-        [NotNull]
-        IUiContext uiContext,
-        [NotNull]
-        IAccountTypeRepository accountTypeRepository)
-        : base(uiContext.Messenger)
+    public LoadFileController(IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
@@ -48,13 +43,12 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
     }
 
     [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
-    [UsedImplicitly]
     public string AccountNameHelp => "When importing a new bank statement file, you must select the account the statement comes from.\nThis allows merging of multiple accounts into one file.";
 
     public ICommand BrowseForFileCommand => new RelayCommand(OnBrowseForFileCommandExecute);
-    public IEnumerable<Account> ExistingAccountNames { get; private set; }
+    public IEnumerable<Account> ExistingAccountNames { get; private set; } = Array.Empty<Account>();
 
-    public string FileName
+    public string? FileName
     {
         get => this.doNotUseFileName;
 
@@ -96,12 +90,11 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public bool MergeMode
     {
-        [UsedImplicitly]
         get;
         private set;
     }
 
-    public Account SelectedExistingAccountName
+    public Account? SelectedExistingAccountName
     {
         get => this.doNotUseSelectedExistingAccountName;
 
@@ -119,12 +112,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
         }
     }
 
-    public string SuggestedDateRange
-    {
-        [UsedImplicitly]
-        get;
-        private set;
-    }
+    public string SuggestedDateRange { get; private set; } = string.Empty;
 
     public string Title
     {
@@ -176,7 +164,8 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public bool CanExecuteSaveButton => false;
 
-    public string ActionButtonToolTip { get; private set; }
+    public string ActionButtonToolTip { get; private set; } = string.Empty;
+
     public string CloseButtonToolTip => "Cancel";
 
     public Task RequestUserInputForMerging(StatementModel currentStatement)
@@ -187,28 +176,11 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
         }
 
         MergeMode = true;
-        SuggestedDateRange = null;
+        SuggestedDateRange = string.Empty;
         Title = "Merge Statement";
         ActionButtonToolTip = "Merge transactions from the selected file into the current statement file.";
-        if (currentStatement is not null)
-        {
-            CalculateSuggestedDateRange(currentStatement);
-        }
+        CalculateSuggestedDateRange(currentStatement);
 
-        return RequestUserInputCommomPreparation();
-    }
-
-    public Task RequestUserInputForOpenFile()
-    {
-        if (this.disposed)
-        {
-            throw new ObjectDisposedException("LoadFileController.RequestUserInputForOpenFile");
-        }
-
-        MergeMode = false;
-        ActionButtonToolTip = "Open the selected file. Any statement file already open will be closed first.";
-        SuggestedDateRange = null;
-        Title = "Open Statement";
         return RequestUserInputCommomPreparation();
     }
 
@@ -304,7 +276,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
             if (disposing)
             {
                 // Dispose managed resources.
-                this.fileSelectionTask?.Dispose();
+                this.fileSelectionTask.Dispose();
             }
         }
 
@@ -376,7 +348,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
         this.dialogCorrelationId = Guid.NewGuid();
         var popRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.OkCancel) { CorrelationId = this.dialogCorrelationId, Title = Title };
 
-        this.fileSelectionTask?.Dispose();
+        this.fileSelectionTask.Dispose();
 
         this.fileSelectionTask = new Task(() => { });
         Messenger.Send(popRequest);

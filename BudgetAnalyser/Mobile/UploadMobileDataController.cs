@@ -1,7 +1,9 @@
 ﻿using System.Security;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Mobile;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
@@ -34,9 +36,9 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
     private readonly ILogger logger;
     private readonly IUserMessageBox messageBoxService;
     private readonly IMobileDataUploader uploader;
-    private string doNotUseAccessKeyId;
-    private string doNotUseAccessKeySecret;
-    private string doNotUseAmazonRegion;
+    private string doNotUseAccessKeyId = string.Empty;
+    private string doNotUseAccessKeySecret = string.Empty;
+    private string doNotUseAmazonRegion = string.Empty;
     private UpdateMobileDataWidget? widget;
 
     public UploadMobileDataController(
@@ -125,19 +127,19 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
     /// </summary>
     public bool CanExecuteSaveButton => false;
 
-    private async Task AttemptUploadAsync()
+    private async Task AttemptUploadAsync(BudgetModel budget, StatementModel statement, Engine.Ledger.LedgerBook ledgerBook, GlobalFilterCriteria filter)
     {
         if (this.widget is null)
         {
-            this.logger.LogError(l => "Widget cannot be null when attempting to Upload mobile data.");
+            this.logger.LogError(_ => "Widget cannot be null when attempting to Upload mobile data.");
             return;
         }
 
         try
         {
             this.widget.LockWhileUploading(true);
-            var budget = this.widget.BudgetCollection.CurrentActiveBudget;
-            var export = this.dataExporter.CreateExportObject(this.widget.StatementModel, budget, this.widget.LedgerBook, this.widget.Filter);
+            // This validation should already be done by the Widget itself, but double check here.
+            var export = this.dataExporter.CreateExportObject(statement, budget, ledgerBook, filter);
 
             await Task.Run(() => this.dataExporter.SaveCopyAsync(export));
 
@@ -145,12 +147,12 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         }
         catch (SecurityException ex)
         {
-            this.logger.LogError(ex, l => "A Security Exception occured attempting to upload Mobile Summary Data.");
+            this.logger.LogError(ex, _ => "A Security Exception occured attempting to upload Mobile Summary Data.");
             this.messageBoxService.Show(ex.Message, "Invalid Credentials");
         }
         catch (Exception ex)
         {
-            this.logger.LogError(ex, l => "An unexpected Exception occured attempting to upload Mobile Summary Data.");
+            this.logger.LogError(ex, _ => "An unexpected Exception occured attempting to upload Mobile Summary Data.");
             this.messageBoxService.Show(ex.Message, "Upload Failed");
         }
         finally
@@ -168,23 +170,29 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
 
         try
         {
-            if (message.Response == ShellDialogButton.Cancel)
+            if (message.Response == ShellDialogButton.Cancel || this.widget is null)
             {
                 return;
             }
 
-            var changed = AccessKeyId != this.widget.LedgerBook.MobileSettings.AccessKeyId;
-            changed |= AccessKeySecret != this.widget.LedgerBook.MobileSettings.AccessKeySecret;
-            changed |= AmazonRegion != this.widget.LedgerBook.MobileSettings.AmazonS3Region;
+            var budget = this.widget.BudgetCollection?.CurrentActiveBudget ?? throw new InvalidOperationException("Budget cannot be null when attempting to Upload mobile data.");
+            var statement = this.widget.StatementModel ?? throw new InvalidOperationException("StatementModel cannot be null when attempting to Upload mobile data.");
+            var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
+            var filter = this.widget.Filter ?? throw new InvalidOperationException("Filter cannot be null when attempting to Upload mobile data.");
+            var mobileSettings = this.widget.LedgerBook.MobileSettings ??
+                                 throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
+            var changed = AccessKeyId != mobileSettings.AccessKeyId;
+            changed |= AccessKeySecret != mobileSettings.AccessKeySecret;
+            changed |= AmazonRegion != mobileSettings.AmazonS3Region;
             if (changed)
             {
-                this.widget.LedgerBook.MobileSettings.AccessKeyId = AccessKeyId;
-                this.widget.LedgerBook.MobileSettings.AccessKeySecret = AccessKeySecret;
-                this.widget.LedgerBook.MobileSettings.AmazonS3Region = AmazonRegion;
+                mobileSettings.AccessKeyId = AccessKeyId;
+                mobileSettings.AccessKeySecret = AccessKeySecret;
+                mobileSettings.AmazonS3Region = AmazonRegion;
                 this.appDbService.NotifyOfChange(ApplicationDataType.Ledger);
             }
 
-            await AttemptUploadAsync();
+            await AttemptUploadAsync(budget, statement, ledgerBook, filter);
         }
         finally
         {
@@ -197,9 +205,12 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         this.widget = message.Widget as UpdateMobileDataWidget;
         if (this.widget is not null && this.widget.Enabled)
         {
-            AccessKeyId = this.widget.LedgerBook.MobileSettings.AccessKeyId;
-            AccessKeySecret = this.widget.LedgerBook.MobileSettings.AccessKeySecret;
-            AmazonRegion = this.widget.LedgerBook.MobileSettings.AmazonS3Region;
+            var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
+            var mobileSettings = ledgerBook.MobileSettings ??
+                                 throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
+            AccessKeyId = mobileSettings.AccessKeyId;
+            AccessKeySecret = mobileSettings.AccessKeySecret;
+            AmazonRegion = mobileSettings.AmazonS3Region;
             Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.correlationId,

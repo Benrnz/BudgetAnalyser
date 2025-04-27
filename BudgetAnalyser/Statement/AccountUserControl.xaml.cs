@@ -1,19 +1,17 @@
-﻿using System.Windows.Controls;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 
-namespace BudgetAnalyser.Statement
+namespace BudgetAnalyser.Statement;
+
+/// <summary>
+///     Interaction logic for AccountUserControl.xaml
+/// </summary>
+public partial class AccountUserControl
 {
-    /// <summary>
-    ///     Interaction logic for AccountUserControl.xaml
-    /// </summary>
-    public partial class AccountUserControl : UserControl
+    public AccountUserControl()
     {
-        public AccountUserControl()
-        {
-            InitializeComponent();
-        }
-
-        public Account Account => (Account)DataContext;
-        public string FriendlyAccountName => Account?.ToString();
+        InitializeComponent();
     }
+
+    public Account Account => (Account)DataContext;
+    public string FriendlyAccountName => Account.ToString();
 }

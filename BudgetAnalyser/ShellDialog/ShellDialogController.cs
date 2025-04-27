@@ -15,14 +15,14 @@ public class ShellDialogController : ControllerBase
     private bool doNotUseHelpButtonVisible;
     private bool doNotUseOkButtonVisible;
     private bool doNotUseSaveButtonVisible;
-    private string doNotUseTitle;
+    private string doNotUseTitle = string.Empty;
 
     public ShellDialogController(IMessenger messenger) : base(messenger)
     {
         DialogType = ShellDialogType.OkCancel;
         this.dialogRelayCommand = new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand);
         DialogCommand = this.dialogRelayCommand;
-        messenger.Register<ShellDialogCommandRequerySuggestedMessage>(this, (l, m) => this.dialogRelayCommand.NotifyCanExecuteChanged());
+        messenger.Register<ShellDialogCommandRequerySuggestedMessage>(this, (_, _) => this.dialogRelayCommand.NotifyCanExecuteChanged());
     }
 
     public string ActionToolTip => Content is not IShellDialogToolTips customTooltips ? DialogType == ShellDialogType.SaveCancel ? "Save" : "Ok" : customTooltips.ActionButtonToolTip;

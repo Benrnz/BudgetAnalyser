@@ -58,8 +58,8 @@ public class PersistenceOperations
 
         var fileName = fileDialog.FileName;
 
-        var appDb = this.applicationDatabaseService.Close();
-        appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
+        this.applicationDatabaseService.Close();
+        var appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
     }
 
     public async void OnLoadDatabaseCommandExecute()

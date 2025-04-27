@@ -6,7 +6,7 @@ namespace BudgetAnalyser;
 /// <summary>
 ///     Interaction logic for NewWindowContainer.xaml
 /// </summary>
-public partial class NewWindowContainer : Window
+public partial class NewWindowContainer
 {
     private INotifyPropertyChanged? notifyController;
     private IShowableController? showableController;
@@ -30,7 +30,11 @@ public partial class NewWindowContainer : Window
         {
             if (propertyChangedEventArgs.PropertyName == "Shown" && this.showableController.Shown == false)
             {
-                this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
+                if (this.notifyController is not null)
+                {
+                    this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
+                }
+
                 Close();
             }
         }

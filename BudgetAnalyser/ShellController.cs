@@ -106,9 +106,9 @@ public class ShellController : ControllerBase, IInitializableController
 
         this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
         this.initialised = true;
-        IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load()?.ToList();
+        IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load().ToList();
 
-        if (rehydratedModels is null || rehydratedModels.None())
+        if (rehydratedModels.None())
         {
             rehydratedModels = CreateNewDefaultApplicationState();
         }

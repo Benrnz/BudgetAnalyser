@@ -29,7 +29,7 @@ public interface IApplicationDatabaseFacade
     ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
     ///     calling this method.
     /// </summary>
-    ApplicationDatabase? Close();
+    void Close();
 
     /// <summary>
     ///     Creates a new application database storage.
@@ -121,12 +121,10 @@ internal class WpfApplicationDatabaseFacade(IApplicationDatabaseService engineSe
     public bool HasUnsavedChanges => engineService.HasUnsavedChanges;
     public bool IsEncrypted => engineService.IsEncrypted;
 
-    public ApplicationDatabase? Close()
+    public void Close()
     {
-        var result = engineService.Close();
+        engineService.Close();
         PersistenceOperationCommands.SaveDatabaseCommand.NotifyCanExecuteChanged();
-        // Send message here?
-        return result;
     }
 
     public async Task<ApplicationDatabase> CreateNewDatabaseAsync(string storageKey)

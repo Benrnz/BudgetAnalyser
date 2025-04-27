@@ -11,8 +11,8 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     private readonly ICredentialStore credentialStore;
     private readonly IDirtyDataService dirtyDataService;
     private readonly ILogger logger;
-    private readonly IEnumerable<ISupportsModelPersistence> persistenceModelServices;
     private readonly IMonitorableDependencies monitorableDependencies;
+    private readonly IEnumerable<ISupportsModelPersistence> persistenceModelServices;
 
     private ApplicationDatabase? budgetAnalyserDatabase;
 
@@ -56,11 +56,11 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     }
 
     /// <inheritdoc />
-    public ApplicationDatabase? Close()
+    public void Close()
     {
         if (this.budgetAnalyserDatabase is null)
         {
-            return null;
+            return;
         }
 
         this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear();
@@ -77,7 +77,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.monitorableDependencies.NotifyOfDependencyChange(GlobalFilter);
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         GlobalFilter.PropertyChanged += OnGlobalFilterOnPropertyChanged;
-        return this.budgetAnalyserDatabase;
     }
 
     /// <inheritdoc />
@@ -287,11 +286,6 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         return valid;
     }
 
-    private void OnGlobalFilterOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Filter);
-    }
-
     private async Task CreateBackup()
     {
         if (this.budgetAnalyserDatabase is null)
@@ -320,5 +314,10 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         this.budgetAnalyserDatabase.LedgerBookStorageKey = ledgerStorageKey;
         this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey = matchingRuleStorageKey;
         this.budgetAnalyserDatabase.StatementModelStorageKey = statementStorageKey;
+    }
+
+    private void OnGlobalFilterOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        this.dirtyDataService.NotifyOfChange(ApplicationDataType.Filter);
     }
 }
