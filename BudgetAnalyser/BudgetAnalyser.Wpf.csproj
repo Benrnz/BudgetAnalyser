@@ -13,6 +13,7 @@
         <AssemblyName>BudgetAnalyser</AssemblyName>
         <ApplicationIcon>PieChart.ico</ApplicationIcon>
         <LangVersion>default</LangVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
