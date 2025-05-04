@@ -103,11 +103,10 @@ public class StatementControllerFileOperations : ControllerBase
     internal void NotifyOfEdit()
     {
         ViewModel.Dirty = true;
-        var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
-        Messenger.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, statement));
+        Messenger.Send(new StatementHasBeenModifiedMessage());
     }
 
-    internal async Task<bool> SyncWithServiceAsync()
+    internal async Task SyncWithServiceAsync()
     {
         var statementModel = this.transactionService.StatementModel;
         LoadingData = true;
@@ -130,8 +129,6 @@ public class StatementControllerFileOperations : ControllerBase
 
                 LoadingData = false;
             });
-
-        return true;
     }
 
     private void FileCannotBeLoaded(Exception ex)
@@ -163,7 +160,6 @@ public class StatementControllerFileOperations : ControllerBase
         }
 
         ViewModel.Dirty = false;
-        var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
-        Messenger.Send(new StatementHasBeenModifiedMessage(false, statement));
+        Messenger.Send(new StatementHasBeenModifiedMessage());
     }
 }
