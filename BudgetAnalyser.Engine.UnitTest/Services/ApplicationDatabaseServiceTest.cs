@@ -48,12 +48,6 @@ public class ApplicationDatabaseServiceTest
     }
 
     [TestMethod]
-    public void Close_ShouldReturnNull_GivenNoApplicationDatabaseIsLoaded()
-    {
-        Assert.IsNull(this.subject.Close());
-    }
-
-    [TestMethod]
     public async Task CreateNewDatabaseAsync_ShouldCallCreateOnEachService()
     {
         CreateNewDatabaseSetup();

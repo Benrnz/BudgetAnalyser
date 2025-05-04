@@ -1,9 +1,8 @@
 ﻿using Rees.Wpf;
 
-namespace BudgetAnalyser.Dashboard
+namespace BudgetAnalyser.Dashboard;
+
+public class PasswordSetMessage : MessageBase
 {
-    public class PasswordSetMessage : MessageBase
-    {
-        public string DatabaseStorageKey { get; set; }
-    }
+    public required string DatabaseStorageKey { get; init; }
 }

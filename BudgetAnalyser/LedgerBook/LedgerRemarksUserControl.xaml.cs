@@ -1,26 +1,24 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Rees.Wpf;
 
-namespace BudgetAnalyser.LedgerBook
+namespace BudgetAnalyser.LedgerBook;
+
+/// <summary>
+///     Interaction logic for LedgerRemarksUserControl.xaml
+/// </summary>
+public partial class LedgerRemarksUserControl : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for LedgerRemarksUserControl.xaml
-    /// </summary>
-    public partial class LedgerRemarksUserControl : UserControl
+    public LedgerRemarksUserControl()
     {
-        public LedgerRemarksUserControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnIsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
+    {
+        if ((bool)e.NewValue)
         {
-            if ((bool)e.NewValue)
-            {
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => this.RemarksTextBox.Focus());
-            }
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => this.RemarksTextBox.Focus());
         }
     }
 }

@@ -3,6 +3,8 @@
         xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shellDialog="clr-namespace:BudgetAnalyser.ShellDialog"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         Background="{StaticResource Brush.MainBackground}"
         SizeChanged="OnSizeChanged"
         LocationChanged="OnLocationChanged"
@@ -13,7 +15,7 @@
         SizeToContent="Manual"
         SnapsToDevicePixels="True"
         Title="{Binding WindowTitle}"
-        Closing="ShellWindow_OnClosing">
+        Closing="ShellWindow_OnClosing" d:DataContext="{d:DesignInstance budgetAnalyser:ShellController}">
 
     <Window.InputBindings>
         <KeyBinding Key="S"
@@ -28,8 +30,7 @@
         <Grid>
 
             <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding StatementController}"
-                                  DataContext="{Binding StatementController}" />
+                <ContentPresenter Content="{Binding StatementController}" />
                 <shellDialog:ShellDialogView DataContext="{Binding TransactionsDialog}" />
             </Grid>
 

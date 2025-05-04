@@ -12,9 +12,7 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private bool doNotUseDirty;
 
-    public LedgerBookControllerFileOperations(
-        [NotNull] IMessenger messenger,
-        [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
+    public LedgerBookControllerFileOperations(IMessenger messenger, IApplicationDatabaseFacade applicationDatabaseService)
     {
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         MessengerInstance = messenger ?? throw new ArgumentNullException(nameof(messenger));
@@ -22,9 +20,7 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
         ViewModel = new LedgerBookViewModel();
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    public IMessenger MessengerInstance { get; }
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     internal bool Dirty
     {
@@ -43,7 +39,9 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     /// <summary>
     ///     Gets or sets the ledger service. Will be set by the <see cref="LedgerBookController" /> during its initialisation.
     /// </summary>
-    internal ILedgerService LedgerService { get; set; }
+    internal ILedgerService? LedgerService { get; set; }
+
+    public IMessenger MessengerInstance { get; }
 
     public LedgerBookViewModel ViewModel { get; }
 
@@ -54,7 +52,7 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     }
 
     [NotifyPropertyChangedInvocator]
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         var handler = PropertyChanged;
         handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -69,6 +67,11 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
 
     internal void SyncDataFromLedgerService()
     {
+        if (LedgerService is null)
+        {
+            return;
+        }
+
         ViewModel.LedgerBook = LedgerService.LedgerBook;
         MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
     }

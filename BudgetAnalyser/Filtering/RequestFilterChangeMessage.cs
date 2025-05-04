@@ -1,15 +1,14 @@
 ﻿using BudgetAnalyser.Engine;
 using Rees.Wpf;
 
-namespace BudgetAnalyser.Filtering
-{
-    public class RequestFilterChangeMessage : MessageBase
-    {
-        public RequestFilterChangeMessage(object sender)
-        {
-            Sender = sender;
-        }
+namespace BudgetAnalyser.Filtering;
 
-        public GlobalFilterCriteria Criteria { get; set; }
+public class RequestFilterChangeMessage : MessageBase
+{
+    public RequestFilterChangeMessage(object? sender)
+    {
+        Sender = sender;
     }
+
+    public required GlobalFilterCriteria Criteria { get; init; }
 }

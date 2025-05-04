@@ -32,7 +32,7 @@ public interface IApplicationDatabaseService : IServiceFoundation
     ///     Closes the currently loaded Budget Analyser file, and therefore any other application data is also closed.
     ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before calling this method.
     /// </summary>
-    ApplicationDatabase? Close();
+    void Close();
 
     /// <summary>
     ///     Creates a new application database storage.

@@ -48,15 +48,6 @@ public class StatementViewModelTest
         Assert.AreEqual(0, subject.TotalCredits);
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
-    public void SetStatement_ShouldThrow_GivenInitialiseHasNotBeenCalled()
-    {
-        var subject = CreateSubject();
-        subject.Statement = StatementModelTestData.TestData1();
-        Assert.Fail();
-    }
-
     [TestInitialize]
     public void TestInitialise()
     {
@@ -78,14 +69,14 @@ public class StatementViewModelTest
 
     private StatementViewModel Arrange()
     {
-        var subject = CreateSubject().Initialise(this.mockTransactionService.Object);
+        var subject = CreateSubject();
         subject.Statement = StatementModelTestData.TestData1();
         return subject;
     }
 
     private StatementViewModel CreateSubject()
     {
-        return new StatementViewModel(this.mockUiContext.Object, new Mock<IApplicationDatabaseFacade>().Object);
+        return new StatementViewModel(new Mock<IApplicationDatabaseFacade>().Object, this.mockTransactionService.Object);
     }
 
     private static Transaction GetPhoneTxnFromFullList(StatementViewModel subject)

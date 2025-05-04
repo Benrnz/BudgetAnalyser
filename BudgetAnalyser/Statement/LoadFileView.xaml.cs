@@ -1,23 +1,22 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace BudgetAnalyser.Statement
+namespace BudgetAnalyser.Statement;
+
+/// <summary>
+///     Interaction logic for LoadFileView.xaml
+/// </summary>
+public partial class LoadFileView : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for LoadFileView.xaml
-    /// </summary>
-    public partial class LoadFileView : UserControl
+    public LoadFileView()
     {
-        public LoadFileView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private LoadFileController Controller => (LoadFileController)DataContext;
+    private LoadFileController Controller => (LoadFileController)DataContext;
 
-        private void OnFileNameMouseUp(object sender, MouseEventArgs e)
-        {
-            Controller.BrowseForFileCommand.Execute(null);
-        }
+    private void OnFileNameMouseUp(object? sender, MouseEventArgs e)
+    {
+        Controller.BrowseForFileCommand.Execute(null);
     }
 }

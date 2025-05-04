@@ -1,55 +1,58 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-namespace BudgetAnalyser
+namespace BudgetAnalyser;
+
+/// <summary>
+///     Interaction logic for NewWindowContainer.xaml
+/// </summary>
+public partial class NewWindowContainer
 {
-    /// <summary>
-    ///     Interaction logic for NewWindowContainer.xaml
-    /// </summary>
-    public partial class NewWindowContainer : Window
+    private INotifyPropertyChanged? notifyController;
+    private IShowableController? showableController;
+
+    public NewWindowContainer()
     {
-        private INotifyPropertyChanged? notifyController;
-        private IShowableController? showableController;
+        InitializeComponent();
+    }
 
-        public NewWindowContainer()
+    private void OnClosed(object? sender, EventArgs e)
+    {
+        if (this.notifyController is not null)
         {
-            InitializeComponent();
+            this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
         }
+    }
 
-        private void OnClosed(object sender, EventArgs e)
+    private void OnControllerPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    {
+        if (this.showableController is not null)
         {
-            if (this.notifyController is not null)
+            if (propertyChangedEventArgs.PropertyName == "Shown" && this.showableController.Shown == false)
             {
-                this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
-            }
-        }
-
-        private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            if (this.showableController is not null)
-            {
-                if (propertyChangedEventArgs.PropertyName == "Shown" && this.showableController.Shown == false)
+                if (this.notifyController is not null)
                 {
                     this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
-                    Close();
                 }
+
+                Close();
             }
         }
+    }
 
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.OldValue is not null && this.notifyController is not null)
         {
-            if (e.OldValue is not null && this.notifyController is not null)
-            {
-                this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
-            }
-
-            this.notifyController = e.NewValue as INotifyPropertyChanged;
-            if (this.notifyController is not null)
-            {
-                this.notifyController.PropertyChanged += OnControllerPropertyChanged;
-            }
-
-            this.showableController = e.NewValue as IShowableController;
+            this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
         }
+
+        this.notifyController = e.NewValue as INotifyPropertyChanged;
+        if (this.notifyController is not null)
+        {
+            this.notifyController.PropertyChanged += OnControllerPropertyChanged;
+        }
+
+        this.showableController = e.NewValue as IShowableController;
     }
 }

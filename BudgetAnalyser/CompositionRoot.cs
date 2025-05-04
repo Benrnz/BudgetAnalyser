@@ -28,10 +28,9 @@ using IPersistApplicationState = BudgetAnalyser.ApplicationState.IPersistApplica
 namespace BudgetAnalyser;
 
 /// <summary>
-///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/
-///     It constructs any and all required objects, the whole graph for use for the process lifetime of the application.
-///     This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used any where
-///     else in the application to prevent the Service Locator anti-pattern from appearing.
+///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all required objects, the whole graph for use for
+///     the process lifetime of the application. This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used anywhere else in the application to prevent
+///     the Service Locator anti pattern from appearing.
 /// </summary>
 [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
 public sealed class CompositionRoot : IDisposable
@@ -40,23 +39,57 @@ public sealed class CompositionRoot : IDisposable
     private readonly List<IDisposable> disposables = new();
     private bool disposed;
 
+    public CompositionRoot()
+    {
+        Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
+        var builder = new ContainerBuilder();
+        var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
+        var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
+        var thisAssembly = GetType().GetTypeInfo().Assembly;
+
+        builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
+
+        ComposeTypesWithDefaultImplementations(storageAssembly, builder);
+        ComposeTypesWithDefaultImplementations(engineAssembly, builder);
+        ComposeTypesWithDefaultImplementations(thisAssembly, builder);
+
+        // Register Messenger Singleton from MVVM CommunityToolkit
+        // NOTE This should be the only place we refer to WeakReferenceMessenger.Default
+        // Choosing to customise this could result in two messengers being used in the application. Controllers currently rely on the default messenger set in the base class, not this one.
+        builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", WeakReferenceMessenger.Default);
+
+        // Registrations from Rees.Wpf - There are no automatic registrations in this assembly.
+        RegistrationsForReesWpf(builder);
+
+        AllLocalNonAutomaticRegistrations(builder);
+
+        var container = builder.Build();
+
+        Logger = container.Resolve<ILogger>();
+        Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
+
+        BuildApplicationObjectGraph(container, engineAssembly, thisAssembly, storageAssembly);
+        ShellController = container.Resolve<ShellController>();
+        ShellWindow = new ShellWindow { DataContext = ShellController };
+    }
+
     /// <summary>
     ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger has not
     ///     been available.
     ///     (An alternative would be to pass the logger into the Composition Root).
     /// </summary>
-    public ILogger Logger { get; private set; }
+    public ILogger Logger { get; }
 
     /// <summary>
     ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first
     ///     object to be called following execution of this Composition Root.
     /// </summary>
-    public ShellController ShellController { get; private set; }
+    public ShellController ShellController { get; }
 
     /// <summary>
     ///     The top level Window that binds to the <see cref="ShellController" />.
     /// </summary>
-    public Window ShellWindow { get; private set; }
+    public Window ShellWindow { get; }
 
     /// <summary>
     ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -85,55 +118,19 @@ public sealed class CompositionRoot : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    ///     Register all IoC mappings and instantiate the object graph required to run the application.
-    ///     IMPORTANT:  The main UI thread needs to call this method. This will ensure Controllers & ViewModels have default UI dependencies set correctly. Ex: the
-    ///     <see cref="System.Windows.Threading.Dispatcher" />
-    /// </summary>
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "IoC Config")]
-    public void Compose()
-    {
-        Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
-        var builder = new ContainerBuilder();
-        var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
-        var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
-        var thisAssembly = GetType().GetTypeInfo().Assembly;
-
-        builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
-
-        ComposeTypesWithDefaultImplementations(storageAssembly, builder);
-        ComposeTypesWithDefaultImplementations(engineAssembly, builder);
-        ComposeTypesWithDefaultImplementations(thisAssembly, builder);
-
-        // Register Messenger Singleton from MVVM CommunityToolkit
-        // NOTE This should be the only place we refer to WeakReferenceMessenger.Default
-        // Choosing to customise this could result in two messengers being used in the application. Controllers currently rely on the default messenger set in the base class, not this one.
-        builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", WeakReferenceMessenger.Default);
-
-        // Registrations from Rees.Wpf - There are no automatic registrations in this assembly.
-        RegistrationsForReesWpf(builder);
-
-        AllLocalNonAutomaticRegistrations(builder);
-
-        BuildApplicationObjectGraph(builder, engineAssembly, thisAssembly, storageAssembly);
-    }
-
     [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "builder", Justification = "Good template code and likely use in the future")]
     private static void AllLocalNonAutomaticRegistrations(ContainerBuilder builder)
     {
         // Register any special mappings that have not been registered with automatic mappings.
         // Explicit object creation below is necessary to correctly register with IoC container.
-        builder.RegisterType<DebugLogger>().As<ILogger>().SingleInstance();
+        builder.RegisterType<DebugLogger>().As<ILogger>();
+        builder.RegisterType<UiContext>().As<IUiContext>().SingleInstance();
     }
 
-    private void BuildApplicationObjectGraph(ContainerBuilder builder, params Assembly[] assemblies)
+    private void BuildApplicationObjectGraph(IContainer container, params Assembly[] assemblies)
     {
         // Instantiate and store all controllers...
         // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
-        var container = builder.Build();
-
-        Logger = container.Resolve<ILogger>();
-        Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
 
         foreach (var assembly in assemblies)
         {
@@ -145,7 +142,7 @@ public sealed class CompositionRoot : IDisposable
                 var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out var registration);
                 if (success)
                 {
-                    var requestToResolve = new ResolveRequest(typedService, registration, Enumerable.Empty<Parameter>());
+                    var requestToResolve = new ResolveRequest(typedService, registration, []);
                     //object dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
                     var dependency = container.ResolveComponent(requestToResolve);
                     requirement.PropertyInjectionAssignment(dependency);
@@ -156,8 +153,6 @@ public sealed class CompositionRoot : IDisposable
         // Kick it off
         ConstructUiContext(container);
         this.disposables.AddIfSomething(container.Resolve<ICredentialStore>() as IDisposable);
-        ShellController = container.Resolve<ShellController>();
-        ShellWindow = new ShellWindow { DataContext = ShellController };
     }
 
     private static void ComposeTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)
@@ -177,7 +172,7 @@ public sealed class CompositionRoot : IDisposable
                 registration = builder.RegisterType(dependency.DependencyRequired).InstancePerDependency();
             }
 
-            if (dependency.NamedInstanceName.IsSomething())
+            if (dependency.NamedInstanceName is not null)
             {
                 // Named Dependency
                 registration = registration.Named(dependency.NamedInstanceName, dependency.DependencyRequired);
@@ -189,43 +184,53 @@ public sealed class CompositionRoot : IDisposable
 
     /// <summary>
     ///     Build the <see cref="IUiContext" /> instance that is used by all <see cref="ControllerBase" /> controllers.
-    ///     It contains refereces to commonly used UI components that most controllers require as well as references to all
+    ///     It contains references to commonly used UI components that most controllers require as well as references to all
     ///     other controllers.  All controllers are single instances.
     /// </summary>
     /// <param name="container">The newly created (and short lived) IoC container used to instantiate objects.</param>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Composition Root Pattern - pull all abstract wiring into one place")]
     private void ConstructUiContext(IContainer container)
     {
-        var uiContext = container.Resolve<UiContext>();
-        uiContext.Logger = Logger;
-        uiContext.ReconciliationToDoListController = container.Resolve<ReconciliationToDoListController>();
-        uiContext.CreateNewFixedBudgetController = container.Resolve<CreateNewFixedBudgetController>();
-        uiContext.CreateNewSurprisePaymentMonitorController = container.Resolve<CreateNewSurprisePaymentMonitorController>();
-        uiContext.LedgerBucketViewController = container.Resolve<LedgerBucketViewController>();
-        uiContext.ShowSurplusBalancesController = container.Resolve<ShowSurplusBalancesController>();
-        uiContext.AddLedgerReconciliationController = container.Resolve<AddLedgerReconciliationController>();
-        uiContext.NewBudgetModelController = container.Resolve<NewBudgetModelController>();
-        uiContext.BudgetController = container.Resolve<BudgetController>();
-        uiContext.ChooseBudgetBucketController = container.Resolve<ChooseBudgetBucketController>();
-        uiContext.LedgerRemarksController = container.Resolve<LedgerRemarksController>();
-        uiContext.GlobalFilterController = container.Resolve<GlobalFilterController>();
-        uiContext.LedgerTransactionsController = container.Resolve<LedgerTransactionsController>();
-        uiContext.LedgerBookController = container.Resolve<LedgerBookController>();
-        uiContext.StatementController = container.Resolve<StatementController>();
-        uiContext.NewRuleController = container.Resolve<NewRuleController>();
-        uiContext.RulesController = container.Resolve<RulesController>();
-        uiContext.MainMenuController = container.Resolve<MainMenuController>();
-        uiContext.DashboardController = container.Resolve<DashboardController>();
-        uiContext.OverallPerformanceController = container.Resolve<OverallPerformanceController>();
-        uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
-        uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
-        uiContext.SplitTransactionController = container.Resolve<SplitTransactionController>();
-        uiContext.EditingTransactionController = container.Resolve<EditingTransactionController>();
-        uiContext.StatementControllerNavigation = container.Resolve<StatementControllerNavigation>();
-        uiContext.TransferFundsController = container.Resolve<TransferFundsController>();
-        uiContext.DisusedRulesController = container.Resolve<DisusedRulesController>();
-        uiContext.EncryptFileController = container.Resolve<EncryptFileController>();
-        uiContext.UploadMobileDataController = container.Resolve<UploadMobileDataController>();
+        var uiContext = container.Resolve<IUiContext>();
+        Type[] controllerTypes =
+        [
+            typeof(AddLedgerReconciliationController),
+            typeof(AppliedRulesController),
+            typeof(BudgetController),
+            typeof(ChooseBudgetBucketController),
+            typeof(CreateNewFixedBudgetController),
+            typeof(CreateNewSurprisePaymentMonitorController),
+            typeof(DashboardController),
+            typeof(DisusedRulesController),
+            typeof(EditingTransactionController),
+            typeof(EncryptFileController),
+            typeof(GlobalFilterController),
+            typeof(LedgerBookController),
+            typeof(LedgerBucketViewController),
+            typeof(LedgerRemarksController),
+            typeof(LedgerTransactionsController),
+            typeof(MainMenuController),
+            typeof(NewBudgetModelController),
+            typeof(NewRuleController),
+            typeof(OverallPerformanceController),
+            typeof(ReconciliationToDoListController),
+            typeof(ReportsCatalogController),
+            typeof(RulesController),
+            typeof(ShowSurplusBalancesController),
+            typeof(SplitTransactionController),
+            typeof(StatementController),
+            typeof(TransferFundsController),
+            typeof(UploadMobileDataController)
+        ];
+
+        var controllers = new Dictionary<Type, Lazy<ControllerBase>>();
+        foreach (var controllerType in controllerTypes)
+        {
+            var lazy = new Lazy<ControllerBase>(() => (ControllerBase)container.Resolve(controllerType));
+            controllers.Add(controllerType, lazy);
+        }
+
+        uiContext.Initialise(controllers);
     }
 
     private bool IsMainThread()
@@ -245,9 +250,9 @@ public sealed class CompositionRoot : IDisposable
         builder.Register(c => new WindowsInputBox(c.ResolveNamed<IViewLoader>(InputBoxView))).As<IUserInputBox>();
         builder.RegisterType<WindowsMessageBox>().As<IUserMessageBox>().SingleInstance();
         builder.RegisterType<WindowsQuestionBoxYesNo>().As<IUserQuestionBoxYesNo>().SingleInstance();
-        builder.Register(c => new Func<IUserPromptOpenFile>(() => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true }))
+        builder.Register(_ => new Func<IUserPromptOpenFile>(() => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true }))
             .SingleInstance();
-        builder.Register(c => new Func<IUserPromptSaveFile>(() => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true }))
+        builder.Register(_ => new Func<IUserPromptSaveFile>(() => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true }))
             .SingleInstance();
     }
 

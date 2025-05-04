@@ -1,35 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0-windows</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <PropertyGroup>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <RootNamespace>BudgetAnalyser.Wpf.UnitTest</RootNamespace>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
 
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-    <RootNamespace>BudgetAnalyser.Wpf.UnitTest</RootNamespace>
-    <LangVersion>default</LangVersion>
-  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
+        <PackageReference Include="Moq" Version="4.20.72"/>
+        <PackageReference Include="MSTest.TestAdapter" Version="3.8.3"/>
+        <PackageReference Include="MSTest.TestFramework" Version="3.8.3"/>
+        <PackageReference Include="Rees.UnitTestUtilities" Version="2.0.4"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.8.3" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.8.3" />
-    <PackageReference Include="Rees.UnitTestUtilities" Version="2.0.4" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\BudgetAnalyser\BudgetAnalyser.Wpf.csproj"/>
+        <ProjectReference Include="..\Rees.Wpf\Rees.Wpf.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BudgetAnalyser\BudgetAnalyser.Wpf.csproj" />
-    <ProjectReference Include="..\Rees.Wpf\Rees.Wpf.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
+    </ItemGroup>
 
 </Project>

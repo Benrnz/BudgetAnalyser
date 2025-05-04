@@ -13,7 +13,7 @@ public class ConcurrentMessenger : IMessenger
     private readonly IMessenger defaultMessenger;
     private readonly ILogger logger;
 
-    public ConcurrentMessenger([NotNull] IMessenger defaultMessenger, [NotNull] ILogger logger)
+    public ConcurrentMessenger(IMessenger defaultMessenger, ILogger logger)
     {
         if (defaultMessenger is null)
         {
@@ -37,7 +37,8 @@ public class ConcurrentMessenger : IMessenger
         }
     }
 
-    public void Register<TRecipient, TMessage, TToken>(TRecipient recipient, TToken token, MessageHandler<TRecipient, TMessage> handler) where TRecipient : class where TMessage : class where TToken : IEquatable<TToken>
+    public void Register<TRecipient, TMessage, TToken>(TRecipient recipient, TToken token, MessageHandler<TRecipient, TMessage> handler)
+        where TRecipient : class where TMessage : class where TToken : IEquatable<TToken>
     {
         lock (SyncRoot)
         {

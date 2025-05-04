@@ -10,20 +10,17 @@ namespace BudgetAnalyser.Statement;
 public class StatementViewModel : ObservableRecipient
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
-    private readonly bool doNotUseSortByDate;
-    private readonly IUiContext uiContext;
+    private readonly ITransactionManagerService transactionService;
     private bool doNotUseDirty;
-    private string doNotUseDuplicateSummary;
-    private Transaction doNotUseSelectedRow;
-    private StatementModel doNotUseStatement;
-    private ObservableCollection<Transaction> doNotUseTransactions;
-    private ITransactionManagerService transactionService;
+    private string? doNotUseDuplicateSummary;
+    private Transaction? doNotUseSelectedRow;
+    private StatementModel? doNotUseStatement;
+    private ObservableCollection<Transaction> doNotUseTransactions = new();
 
-    public StatementViewModel([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseFacade applicationDatabaseService)
+    public StatementViewModel(IApplicationDatabaseFacade applicationDatabaseService, ITransactionManagerService transactionService)
     {
-        this.doNotUseSortByDate = true;
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
+        this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
     }
 
     public decimal AverageDebit => this.transactionService.AverageDebit;
@@ -43,7 +40,7 @@ public class StatementViewModel : ObservableRecipient
         }
     }
 
-    public string DuplicateSummary
+    public string? DuplicateSummary
     {
         get => this.doNotUseDuplicateSummary;
 
@@ -58,7 +55,7 @@ public class StatementViewModel : ObservableRecipient
 
     public bool HasTransactions => Statement is not null && Statement.Transactions.Any();
 
-    public Transaction SelectedRow
+    public Transaction? SelectedRow
     {
         get => this.doNotUseSelectedRow;
         set
@@ -68,17 +65,12 @@ public class StatementViewModel : ObservableRecipient
         }
     }
 
-    public StatementModel Statement
+    public StatementModel? Statement
     {
         get => this.doNotUseStatement;
 
         set
         {
-            if (this.transactionService is null)
-            {
-                throw new InvalidOperationException("Initialise has not been called.");
-            }
-
             this.doNotUseStatement = value;
 
             OnPropertyChanged();
@@ -106,12 +98,6 @@ public class StatementViewModel : ObservableRecipient
     public bool HasSelectedRow()
     {
         return SelectedRow is not null;
-    }
-
-    public StatementViewModel Initialise(ITransactionManagerService transactionManagerService)
-    {
-        this.transactionService = transactionManagerService;
-        return this;
     }
 
     public void TriggerRefreshBucketFilterList()

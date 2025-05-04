@@ -82,7 +82,7 @@ public sealed class UpdateMobileDataWidget : Widget
         BudgetCollection = (BudgetCollection)input[2];
         Filter = (GlobalFilterCriteria)input[3];
 
-        if (LedgerBook is null || StatementModel is null || BudgetCollection is null || Filter is null)
+        if (LedgerBook is null || StatementModel is null || BudgetCollection is null || BudgetCollection.CurrentActiveBudget is null || Filter is null)
         {
             return;
         }
