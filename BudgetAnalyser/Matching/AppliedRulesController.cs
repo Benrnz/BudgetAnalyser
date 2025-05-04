@@ -25,10 +25,10 @@ public class AppliedRulesController : ControllerBase
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        RulesController = uiContext.RulesController;
+        RulesController = uiContext.Controller<RulesController>();
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
-        this.statementController = uiContext.StatementController;
+        this.statementController = uiContext.Controller<StatementController>();
         this.messageBox = uiContext.UserPrompts.MessageBox;
         this.ruleService.Saved += OnSavedNotificationReceived;
     }

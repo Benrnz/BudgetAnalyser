@@ -26,7 +26,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private Account? doNotUseSelectedBankAccount;
     private Engine.Ledger.LedgerBook? parentBook;
 
-    public AddLedgerReconciliationController(UiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(uiContext.Messenger)
+    public AddLedgerReconciliationController(IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(uiContext.Messenger)
     {
         this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
         if (uiContext is null)

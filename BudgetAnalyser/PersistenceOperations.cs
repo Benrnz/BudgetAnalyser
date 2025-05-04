@@ -145,7 +145,7 @@ public class PersistenceOperations
         {
             // Recover by prompting user for the password.
             this.uiContext.Logger.LogWarning(_ => $"Attempt to open an encrypted file {fileName} with an incorrect password.");
-            this.uiContext.EncryptFileController.ShowEnterPasswordDialog(fileName, "Incorrect password");
+            this.uiContext.Controller<EncryptFileController>().ShowEnterPasswordDialog(fileName, "Incorrect password");
         }
         catch (KeyNotFoundException)
         {
@@ -156,7 +156,7 @@ public class PersistenceOperations
         {
             // Recover by prompting user for the password.
             this.uiContext.Logger.LogWarning(_ => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
-            this.uiContext.EncryptFileController.ShowEnterPasswordDialog(fileName);
+            this.uiContext.Controller<EncryptFileController>().ShowEnterPasswordDialog(fileName);
         }
     }
 

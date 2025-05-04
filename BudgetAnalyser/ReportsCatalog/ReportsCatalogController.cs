@@ -18,7 +18,7 @@ public class ReportsCatalogController : ControllerBase, IShowableController
     private StatementModel? currentStatementModel;
     private bool doNotUseShown;
 
-    public ReportsCatalogController(UiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
+    public ReportsCatalogController(IUiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
@@ -26,7 +26,7 @@ public class ReportsCatalogController : ControllerBase, IShowableController
         }
 
         this.newWindowViewLoader = newWindowViewLoader ?? throw new ArgumentNullException(nameof(newWindowViewLoader));
-        OverallPerformanceController = uiContext.OverallPerformanceController;
+        OverallPerformanceController = uiContext.Controller<OverallPerformanceController>();
 
         Messenger.Register<ReportsCatalogController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
         Messenger.Register<ReportsCatalogController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));

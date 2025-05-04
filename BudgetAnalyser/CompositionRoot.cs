@@ -28,10 +28,9 @@ using IPersistApplicationState = BudgetAnalyser.ApplicationState.IPersistApplica
 namespace BudgetAnalyser;
 
 /// <summary>
-///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/
-///     It constructs any and all required objects, the whole graph for use for the process lifetime of the application.
-///     This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used any where
-///     else in the application to prevent the Service Locator anti-pattern from appearing.
+///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all required objects, the whole graph for use for
+///     the process lifetime of the application. This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used anywhere else in the application to prevent
+///     the Service Locator anti pattern from appearing.
 /// </summary>
 [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
 public sealed class CompositionRoot : IDisposable
@@ -124,7 +123,8 @@ public sealed class CompositionRoot : IDisposable
     {
         // Register any special mappings that have not been registered with automatic mappings.
         // Explicit object creation below is necessary to correctly register with IoC container.
-        builder.RegisterType<DebugLogger>().As<ILogger>().SingleInstance();
+        builder.RegisterType<DebugLogger>().As<ILogger>();
+        builder.RegisterType<UiContext>().As<IUiContext>().SingleInstance();
     }
 
     private void BuildApplicationObjectGraph(IContainer container, params Assembly[] assemblies)
@@ -142,7 +142,7 @@ public sealed class CompositionRoot : IDisposable
                 var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out var registration);
                 if (success)
                 {
-                    var requestToResolve = new ResolveRequest(typedService, registration, Enumerable.Empty<Parameter>());
+                    var requestToResolve = new ResolveRequest(typedService, registration, []);
                     //object dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
                     var dependency = container.ResolveComponent(requestToResolve);
                     requirement.PropertyInjectionAssignment(dependency);
@@ -184,43 +184,53 @@ public sealed class CompositionRoot : IDisposable
 
     /// <summary>
     ///     Build the <see cref="IUiContext" /> instance that is used by all <see cref="ControllerBase" /> controllers.
-    ///     It contains refereces to commonly used UI components that most controllers require as well as references to all
+    ///     It contains references to commonly used UI components that most controllers require as well as references to all
     ///     other controllers.  All controllers are single instances.
     /// </summary>
     /// <param name="container">The newly created (and short lived) IoC container used to instantiate objects.</param>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Composition Root Pattern - pull all abstract wiring into one place")]
     private void ConstructUiContext(IContainer container)
     {
-        var uiContext = container.Resolve<UiContext>();
-        uiContext.Logger = Logger;
-        uiContext.ReconciliationToDoListController = container.Resolve<ReconciliationToDoListController>();
-        uiContext.CreateNewFixedBudgetController = container.Resolve<CreateNewFixedBudgetController>();
-        uiContext.CreateNewSurprisePaymentMonitorController = container.Resolve<CreateNewSurprisePaymentMonitorController>();
-        uiContext.LedgerBucketViewController = container.Resolve<LedgerBucketViewController>();
-        uiContext.ShowSurplusBalancesController = container.Resolve<ShowSurplusBalancesController>();
-        uiContext.AddLedgerReconciliationController = container.Resolve<AddLedgerReconciliationController>();
-        uiContext.NewBudgetModelController = container.Resolve<NewBudgetModelController>();
-        uiContext.BudgetController = container.Resolve<BudgetController>();
-        uiContext.ChooseBudgetBucketController = container.Resolve<ChooseBudgetBucketController>();
-        uiContext.LedgerRemarksController = container.Resolve<LedgerRemarksController>();
-        uiContext.GlobalFilterController = container.Resolve<GlobalFilterController>();
-        uiContext.LedgerTransactionsController = container.Resolve<LedgerTransactionsController>();
-        uiContext.LedgerBookController = container.Resolve<LedgerBookController>();
-        uiContext.StatementController = container.Resolve<StatementController>();
-        uiContext.NewRuleController = container.Resolve<NewRuleController>();
-        uiContext.RulesController = container.Resolve<RulesController>();
-        uiContext.MainMenuController = container.Resolve<MainMenuController>();
-        uiContext.DashboardController = container.Resolve<DashboardController>();
-        uiContext.OverallPerformanceController = container.Resolve<OverallPerformanceController>();
-        uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
-        uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
-        uiContext.SplitTransactionController = container.Resolve<SplitTransactionController>();
-        uiContext.EditingTransactionController = container.Resolve<EditingTransactionController>();
-        uiContext.StatementControllerNavigation = container.Resolve<StatementControllerNavigation>();
-        uiContext.TransferFundsController = container.Resolve<TransferFundsController>();
-        uiContext.DisusedRulesController = container.Resolve<DisusedRulesController>();
-        uiContext.EncryptFileController = container.Resolve<EncryptFileController>();
-        uiContext.UploadMobileDataController = container.Resolve<UploadMobileDataController>();
+        var uiContext = container.Resolve<IUiContext>();
+        Type[] controllerTypes =
+        [
+            typeof(AddLedgerReconciliationController),
+            typeof(AppliedRulesController),
+            typeof(BudgetController),
+            typeof(ChooseBudgetBucketController),
+            typeof(CreateNewFixedBudgetController),
+            typeof(CreateNewSurprisePaymentMonitorController),
+            typeof(DashboardController),
+            typeof(DisusedRulesController),
+            typeof(EditingTransactionController),
+            typeof(EncryptFileController),
+            typeof(GlobalFilterController),
+            typeof(LedgerBookController),
+            typeof(LedgerBucketViewController),
+            typeof(LedgerRemarksController),
+            typeof(LedgerTransactionsController),
+            typeof(MainMenuController),
+            typeof(NewBudgetModelController),
+            typeof(NewRuleController),
+            typeof(OverallPerformanceController),
+            typeof(ReconciliationToDoListController),
+            typeof(ReportsCatalogController),
+            typeof(RulesController),
+            typeof(ShowSurplusBalancesController),
+            typeof(SplitTransactionController),
+            typeof(StatementController),
+            typeof(TransferFundsController),
+            typeof(UploadMobileDataController)
+        ];
+
+        var controllers = new Dictionary<Type, Lazy<ControllerBase>>();
+        foreach (var controllerType in controllerTypes)
+        {
+            var lazy = new Lazy<ControllerBase>(() => (ControllerBase)container.Resolve(controllerType));
+            controllers.Add(controllerType, lazy);
+        }
+
+        uiContext.Initialise(controllers);
     }
 
     private bool IsMainThread()

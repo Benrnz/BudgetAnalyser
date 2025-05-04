@@ -43,7 +43,7 @@ public class StatementController : ControllerBase, IShowableController
         this.transactionService.Saved += OnSavedNotificationReceived;
     }
 
-    public AppliedRulesController AppliedRulesController => this.uiContext.AppliedRulesController;
+    public AppliedRulesController AppliedRulesController => this.uiContext.Controller<AppliedRulesController>();
 
     /// <summary>
     ///     Gets or sets the bucket filter.
@@ -71,7 +71,7 @@ public class StatementController : ControllerBase, IShowableController
     }
 
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
-    internal EditingTransactionController EditingTransactionController => this.uiContext.EditingTransactionController;
+    internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
     public StatementControllerFileOperations FileOperations { get; }
 
@@ -81,7 +81,7 @@ public class StatementController : ControllerBase, IShowableController
     [UsedImplicitly]
     public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
-    internal SplitTransactionController SplitTransactionController => this.uiContext.SplitTransactionController;
+    internal SplitTransactionController SplitTransactionController => this.uiContext.Controller<SplitTransactionController>();
 
     public string? TextFilter
     {
@@ -154,6 +154,12 @@ public class StatementController : ControllerBase, IShowableController
     {
         if (message.Response == ShellDialogButton.Save && SplitTransactionController.OriginalTransaction is not null)
         {
+            if (SplitTransactionController.SplinterBucket1 is null || SplitTransactionController.SplinterBucket2 is null)
+            {
+                this.uiContext.UserPrompts.MessageBox.Show("Splinter buckets cannot be empty.", "Split Transaction Validation Error");
+                return;
+            }
+
             this.transactionService.SplitTransaction(
                 SplitTransactionController.OriginalTransaction,
                 SplitTransactionController.SplinterAmount1,

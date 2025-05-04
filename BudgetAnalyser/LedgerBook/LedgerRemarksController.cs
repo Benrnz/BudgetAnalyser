@@ -16,7 +16,7 @@ public class LedgerRemarksController : ControllerBase
     private LedgerEntryLine? doNotUseLedgerEntryLine;
     private string doNotUseRemarks = string.Empty;
 
-    public LedgerRemarksController(UiContext uiContext, IReconciliationService reconciliationService) : base(uiContext.Messenger)
+    public LedgerRemarksController(IUiContext uiContext, IReconciliationService reconciliationService) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {

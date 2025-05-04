@@ -27,10 +27,10 @@ public sealed class DashboardController : ControllerBase, IShowableController
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        this.chooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
-        this.createNewFixedBudgetController = uiContext.CreateNewFixedBudgetController;
-        this.createNewSurprisePaymentMonitorController = uiContext.CreateNewSurprisePaymentMonitorController;
-        GlobalFilterController = uiContext.GlobalFilterController;
+        this.chooseBudgetBucketController = uiContext.Controller<ChooseBudgetBucketController>();
+        this.createNewFixedBudgetController = uiContext.Controller<CreateNewFixedBudgetController>();
+        this.createNewSurprisePaymentMonitorController = uiContext.Controller<CreateNewSurprisePaymentMonitorController>();
+        GlobalFilterController = uiContext.Controller<GlobalFilterController>();
 
         this.uiContext = uiContext;
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));

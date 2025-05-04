@@ -28,7 +28,7 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
     private StringCriteria doNotUseTransactionType = new();
     private Guid shellDialogCorrelationId;
 
-    public NewRuleController(UiContext uiContext, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
+    public NewRuleController(IUiContext uiContext, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {

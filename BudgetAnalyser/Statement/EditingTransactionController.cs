@@ -15,7 +15,7 @@ public class EditingTransactionController : ControllerBase
     private Transaction? doNotUseTransaction;
     private BudgetBucket? originalBucket;
 
-    public EditingTransactionController(UiContext uiContext, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
+    public EditingTransactionController(IUiContext uiContext, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {

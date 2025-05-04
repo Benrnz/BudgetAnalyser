@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows;
+﻿using System.Windows;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -60,41 +59,21 @@ public class ShellController : ControllerBase, IInitializableController
         ReportsDialog = new ShellDialogController(Messenger);
     }
 
-    [UsedImplicitly]
-    public BudgetController BudgetController => this.uiContext.BudgetController;
-
+    public BudgetController BudgetController => this.uiContext.Controller<BudgetController>();
     public ShellDialogController BudgetDialog { get; }
-    public DashboardController DashboardController => this.uiContext.DashboardController;
+    public DashboardController DashboardController => this.uiContext.Controller<DashboardController>();
     public ShellDialogController DashboardDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
-
-    [UsedImplicitly]
-    public LedgerBookController LedgerBookController => this.uiContext.LedgerBookController;
-
+    public LedgerBookController LedgerBookController => this.uiContext.Controller<LedgerBookController>();
     public ShellDialogController LedgerBookDialog { get; }
-
-    [UsedImplicitly]
-    public MainMenuController MainMenuController => this.uiContext.MainMenuController;
-
-    [UsedImplicitly]
-    public ReportsCatalogController ReportsCatalogController => this.uiContext.ReportsCatalogController;
-
+    public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
+    public ReportsCatalogController ReportsCatalogController => this.uiContext.Controller<ReportsCatalogController>();
     public ShellDialogController ReportsDialog { get; }
-
-    [UsedImplicitly]
-    public RulesController RulesController => this.uiContext.RulesController;
-
-    [UsedImplicitly]
-    public StatementController StatementController => this.uiContext.StatementController;
-
+    public RulesController RulesController => this.uiContext.Controller<RulesController>();
+    public StatementController StatementController => this.uiContext.Controller<StatementController>();
     public ShellDialogController TransactionsDialog { get; }
-
     internal Point WindowSize { get; private set; }
-
-    [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
-    [UsedImplicitly]
     public string WindowTitle => "Budget Analyser";
-
     internal Point WindowTopLeft { get; private set; }
 
     public void Initialize()

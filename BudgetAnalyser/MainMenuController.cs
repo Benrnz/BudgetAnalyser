@@ -1,8 +1,12 @@
 ﻿using System.Windows.Input;
+using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
+using BudgetAnalyser.LedgerBook;
+using BudgetAnalyser.ReportsCatalog;
+using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
@@ -120,11 +124,11 @@ public class MainMenuController : ControllerBase, IInitializableController
             controller.Shown = false;
         }
 
-        this.uiContext.DashboardController.Shown = DashboardToggle;
-        this.uiContext.StatementController.Shown = TransactionsToggle;
-        this.uiContext.LedgerBookController.Shown = LedgerBookToggle;
-        this.uiContext.BudgetController.Shown = BudgetToggle;
-        this.uiContext.ReportsCatalogController.Shown = ReportsToggle;
+        this.uiContext.Controller<DashboardController>().Shown = DashboardToggle;
+        this.uiContext.Controller<StatementController>().Shown = TransactionsToggle;
+        this.uiContext.Controller<LedgerBookController>().Shown = LedgerBookToggle;
+        this.uiContext.Controller<BudgetController>().Shown = BudgetToggle;
+        this.uiContext.Controller<ReportsCatalogController>().Shown = ReportsToggle;
     }
 
     private void BeforeTabExecutedCommon()
@@ -224,7 +228,7 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     private void ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
     {
-        if (message.Widget is not NewFileWidget widget)
+        if (message.Widget is not NewFileWidget)
         {
             return;
         }
@@ -236,7 +240,7 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
     {
-        if (message.Widget is not CurrentFileWidget widget)
+        if (message.Widget is not CurrentFileWidget)
         {
             return;
         }
@@ -248,7 +252,7 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     private void ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
     {
-        if (message.Widget is not LoadDemoWidget widget)
+        if (message.Widget is not LoadDemoWidget)
         {
             return;
         }

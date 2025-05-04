@@ -36,7 +36,7 @@ public class BudgetController : ControllerBase, IShowableController
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public BudgetController(
-        UiContext uiContext,
+        IUiContext uiContext,
         IBudgetMaintenanceService maintenanceService,
         IApplicationDatabaseFacade applicationDatabaseService)
         : base(uiContext.Messenger)
@@ -50,7 +50,7 @@ public class BudgetController : ControllerBase, IShowableController
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.questionBox = uiContext.UserPrompts.YesNoBox;
         this.messageBox = uiContext.UserPrompts.MessageBox;
-        NewBudgetController = uiContext.NewBudgetModelController;
+        NewBudgetController = uiContext.Controller<NewBudgetModelController>();
         NewBudgetController.Ready += OnAddNewBudgetReady;
         Shown = false;
 

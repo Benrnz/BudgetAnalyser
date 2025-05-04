@@ -1,89 +1,53 @@
-﻿using System.Reflection;
-using BudgetAnalyser.Budget;
-using BudgetAnalyser.Dashboard;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Filtering;
-using BudgetAnalyser.LedgerBook;
-using BudgetAnalyser.Matching;
-using BudgetAnalyser.Mobile;
-using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.ReportsCatalog.OverallPerformance;
-using BudgetAnalyser.Statement;
+﻿using BudgetAnalyser.Engine;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser;
 
 /// <summary>
-///     Controllers required by the <see cref="ShellController" /> and most other <see cref="ControllerBase" /> controllers
-///     grouped together for convenience.
+///     Controllers required by the <see cref="ShellController" /> and most other <see cref="ControllerBase" /> controllers grouped together for convenience.
 ///     This follows an Ambient Context pattern. Not using Thread Local Storage for ease of testing.
 /// </summary>
-[AutoRegisterWithIoC(SingleInstance = true)]
-public class UiContext : IUiContext
+//[AutoRegisterWithIoC(SingleInstance = true)]
+public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger logger) : IUiContext
 {
-    private List<ControllerBase> controllers;
+    private readonly Dictionary<Type, Lazy<ControllerBase>> controllerDic = new();
+    private IReadOnlySet<ControllerBase> doNotUseControllers = new HashSet<ControllerBase>();
 
-    public UiContext(
-        UserPrompts userPrompts,
-        IMessenger messenger)
-    {
-        if (userPrompts is null)
-        {
-            throw new ArgumentNullException(nameof(userPrompts));
-        }
-
-        if (messenger is null)
-        {
-            throw new ArgumentNullException(nameof(messenger));
-        }
-
-        UserPrompts = userPrompts;
-        Messenger = messenger;
-    }
-
-    public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
-    public DisusedRulesController DisusedRulesController { get; set; }
-    public LedgerBucketViewController LedgerBucketViewController { get; set; }
-    public LedgerRemarksController LedgerRemarksController { get; set; }
-    public LedgerTransactionsController LedgerTransactionsController { get; set; }
-    public NewBudgetModelController NewBudgetModelController { get; set; }
-    public OverallPerformanceController OverallPerformanceController { get; set; }
-    public ReconciliationToDoListController ReconciliationToDoListController { get; set; }
-    public ShowSurplusBalancesController ShowSurplusBalancesController { get; set; }
-    public StatementControllerNavigation StatementControllerNavigation { get; set; }
-    public TransferFundsController TransferFundsController { get; set; }
-
-    public UploadMobileDataController UploadMobileDataController { get; set; }
-    public AppliedRulesController AppliedRulesController { get; set; }
-    public BudgetController BudgetController { get; set; }
-    public ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
-    public IEnumerable<ControllerBase> Controllers => this.controllers ?? (this.controllers = DiscoverAllControllers());
-    public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
-    public CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
-    public DashboardController DashboardController { get; set; }
-    public EditingTransactionController EditingTransactionController { get; set; }
-
-    public EncryptFileController EncryptFileController { get; set; }
-    public GlobalFilterController GlobalFilterController { get; set; }
-    public LedgerBookController LedgerBookController { get; set; }
-    public ILogger Logger { get; set; }
-    public MainMenuController MainMenuController { get; set; }
-    public IMessenger Messenger { get; }
-    public NewRuleController NewRuleController { get; set; }
-    public ReportsCatalogController ReportsCatalogController { get; set; }
-    public RulesController RulesController { get; set; }
     public IEnumerable<IShowableController> ShowableControllers => Controllers.OfType<IShowableController>();
-    public SplitTransactionController SplitTransactionController { get; set; }
-    public StatementController StatementController { get; set; }
-    public UserPrompts UserPrompts { get; }
 
-    private List<ControllerBase> DiscoverAllControllers()
+    public IReadOnlySet<ControllerBase> Controllers
     {
-        return GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(p => typeof(ControllerBase).IsAssignableFrom(p.PropertyType))
-            .Select(p => p.GetValue(this))
-            .Cast<ControllerBase>()
-            .ToList();
+        get
+        {
+            if (this.doNotUseControllers.Any())
+            {
+                return this.doNotUseControllers;
+            }
+
+            return this.doNotUseControllers = this.controllerDic.Values.Select(c => c.Value).ToHashSet();
+        }
     }
+
+    public T Controller<T>() where T : ControllerBase
+    {
+        if (this.controllerDic.TryGetValue(typeof(T), out var lazy))
+        {
+            return (T)lazy.Value;
+        }
+
+        throw new ArgumentException($"Controller of type {typeof(T).Name} not found.");
+    }
+
+    public void Initialise(IDictionary<Type, Lazy<ControllerBase>> controllers)
+    {
+        foreach (var kvp in controllers)
+        {
+            this.controllerDic.Add(kvp.Key, kvp.Value);
+        }
+    }
+
+    public ILogger Logger { get; } = logger ?? throw new ArgumentNullException(nameof(logger));
+    public IMessenger Messenger { get; } = messenger ?? throw new ArgumentNullException(nameof(messenger));
+    public UserPrompts UserPrompts { get; } = userPrompts ?? throw new ArgumentNullException(nameof(userPrompts));
 }

@@ -18,7 +18,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
     private decimal doNotUseSplinterAmount1;
     private decimal doNotUseSplinterAmount2;
 
-    public SplitTransactionController(UiContext uiContext, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
+    public SplitTransactionController(IUiContext uiContext, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
     {
         if (uiContext is null)
         {
