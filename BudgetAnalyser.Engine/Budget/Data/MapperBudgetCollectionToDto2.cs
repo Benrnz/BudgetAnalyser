@@ -12,11 +12,11 @@ public class MapperBudgetCollectionToDto2(IBudgetBucketRepository bucketRepo, ID
     public BudgetCollectionDto ToDto(BudgetCollection model)
     {
         return new BudgetCollectionDto
-        {
-            Buckets = this.bucketRepo.Buckets.Select(this.bucketMapper.ToDto).ToList(),
-            StorageKey = model.StorageKey,
-            Budgets = model.Select(this.budgetModelMapper.ToDto).ToList()
-        };
+        (
+            this.bucketRepo.Buckets.Select(this.bucketMapper.ToDto).ToArray(),
+            StorageKey: model.StorageKey,
+            Budgets: model.Select(this.budgetModelMapper.ToDto).ToArray()
+        );
     }
 
     public BudgetCollection ToModel(BudgetCollectionDto dto)
@@ -24,7 +24,11 @@ public class MapperBudgetCollectionToDto2(IBudgetBucketRepository bucketRepo, ID
         // Note budget buckets from the top of the DTO are not mapped here, as this mapper is only concerned with the BudgetCollection type.
         // Budget Buckets are created and mapped from the XamlOnDiskBudgetRepository directly into the InMemoryBudgetBucketRepository.
         var model = new BudgetCollection { StorageKey = dto.StorageKey };
-        dto.Budgets.ForEach(x => model.Add(this.budgetModelMapper.ToModel(x)));
+        foreach (var budgetDto in dto.Budgets)
+        {
+            model.Add(this.budgetModelMapper.ToModel(budgetDto));
+        }
+
         return model;
     }
 }
