@@ -12,7 +12,6 @@ using NSubstitute;
 using Rees.UnitTestUtilities;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Ledger;
 
 public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
@@ -236,7 +235,9 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     {
         // Save TestData2 to produce the serialised data.
         var subject = CreateSubject(true);
-        await subject.SaveAsync(LedgerBookTestData.TestData2(), LoadFileName, false);
+        var testData = LedgerBookTestData.TestData2();
+        testData.StorageKey = LoadFileName;
+        await subject.SaveAsync(testData, LoadFileName, false);
         var serialisedData = subject.SerialisedData;
         this.outputter.WriteLine(serialisedData);
         serialisedData.Length.ShouldBeGreaterThan(100);

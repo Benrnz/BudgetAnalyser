@@ -115,16 +115,20 @@ internal static class LedgerBookDtoTestData
         UpdateLineBalances(line3, line2, 1801.45M);
 
         var book = new LedgerBookDto
-        {
-            Modified = new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
-            Name = "Test Budget Ledger Book 1",
-            StorageKey = "C:\\Folder\\FooBook.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
-        };
+        (
+            0,
+            [
+                new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
+                new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
+                new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName }
+            ],
+            null,
+            new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
+            "Test Budget Ledger Book 1",
+            StorageKey: "C:\\Folder\\FooBook.xml",
+            Reconciliations: lines.OrderByDescending(e => e.Date).ToArray()
+        );
 
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
         return book;
     }
 
@@ -224,16 +228,21 @@ internal static class LedgerBookDtoTestData
         UpdateLineBalances(line3, line2, 1801.45M);
 
         var book = new LedgerBookDto
-        {
-            Modified = new DateTime(2013, 12, 14),
-            Name = "Test Budget Ledger Book 2",
-            StorageKey = "C:\\Folder\\FooBook2.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
-        };
+        (
+            0,
+            MobileSettings: null,
+            Ledgers:
+            [
+                new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
+                new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
+                new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName }
+            ],
+            Modified: new DateTime(2013, 12, 14),
+            Name: "Test Budget Ledger Book 2",
+            StorageKey: "C:\\Folder\\FooBook2.xml",
+            Reconciliations: lines.OrderByDescending(e => e.Date).ToArray()
+        );
 
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
         return book;
     }
 
@@ -342,21 +351,25 @@ internal static class LedgerBookDtoTestData
         UpdateLineBalances(line1, null, 1999.25M);
         UpdateLineBalances(line2, line1, 2001.15M);
         UpdateLineBalances(line3, line2, 1801.45M);
-        line3.BankBalances.Add(
-            new BankBalanceDto { Account = StatementModelTestData.SavingsAccount.Name, Balance = 201M });
+        line3.BankBalances.Add(new BankBalanceDto(StatementModelTestData.SavingsAccount.Name, 201M));
         line3.BankBalance += 201M;
 
         var book = new LedgerBookDto
-        {
-            Modified = new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
-            Name = "Test Budget Ledger Book 3",
-            StorageKey = "C:\\Folder\\FooBook3.xml",
-            Reconciliations = lines.OrderByDescending(e => e.Date).ToList()
-        };
+        (
+            0,
+            MobileSettings: null,
+            Ledgers:
+            [
+                new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
+                new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
+                new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName }
+            ],
+            Modified: new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
+            Name: "Test Budget Ledger Book 3",
+            StorageKey: "C:\\Folder\\FooBook3.xml",
+            Reconciliations: lines.OrderByDescending(e => e.Date).ToArray()
+        );
 
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-        book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
         return book;
     }
 
@@ -390,7 +403,7 @@ internal static class LedgerBookDtoTestData
     private static void UpdateLineBalances(LedgerEntryLineDto currentLine, LedgerEntryLineDto previousLine, decimal bankBalance)
     {
         currentLine.BankBalance = bankBalance;
-        currentLine.BankBalances.Add(new BankBalanceDto { Account = StatementModelTestData.ChequeAccount.Name, Balance = bankBalance });
+        currentLine.BankBalances.Add(new BankBalanceDto(StatementModelTestData.ChequeAccount.Name, bankBalance));
 
         if (previousLine is null)
         {

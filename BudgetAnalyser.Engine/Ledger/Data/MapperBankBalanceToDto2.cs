@@ -9,7 +9,7 @@ internal class MapperBankBalanceToDto2(IAccountTypeRepository accountTypeReposit
 
     public BankBalanceDto ToDto(BankBalance model)
     {
-        var dto = new BankBalanceDto { Account = model.Account.Name, Balance = model.Balance };
+        var dto = new BankBalanceDto(model.Account.Name, model.Balance);
         return dto;
     }
 

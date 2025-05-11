@@ -57,7 +57,9 @@ public class DtoToLedgerBookMapperTest
     [TestMethod]
     public void ShouldIgnoreAndContinueIfLedgerIsNotDeclared_GivenOneLedgerBucketIsMissing()
     {
-        TestData.Ledgers.RemoveAt(0);
+        var ledgers = TestData.Ledgers.Skip(1).ToArray();
+        var myTestData = TestData with { Ledgers = ledgers };
+        TestData = myTestData;
         var model = ArrangeAndAct();
 
         // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the
@@ -91,7 +93,7 @@ public class DtoToLedgerBookMapperTest
     public void ShouldMapCorrectNumberOfLines()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Reconciliations.Count, result.Reconciliations.Count());
+        Assert.AreEqual(TestData.Reconciliations.Count(), result.Reconciliations.Count());
     }
 
     [TestMethod]
@@ -224,7 +226,8 @@ public class DtoToLedgerBookMapperTest
     [TestMethod]
     public void ShouldRepopulateLedgerCollectionFromReconciliations_GivenDtoContainsNoLedgers()
     {
-        TestData.Ledgers.Clear();
+        var myTestData = TestData with { Ledgers = [] };
+        TestData = myTestData;
         var model = ArrangeAndAct();
 
         // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the

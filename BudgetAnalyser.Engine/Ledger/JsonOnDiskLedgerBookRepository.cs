@@ -68,8 +68,8 @@ internal class JsonOnDiskLedgerBookRepository(
             throw new DataFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", storageKey));
         }
 
-        dataEntity.StorageKey = storageKey;
         var book = this.mapper.ToModel(dataEntity);
+        book.StorageKey = storageKey;
 
         var messages = new StringBuilder();
         if (!book.Validate(messages))
@@ -108,11 +108,14 @@ internal class JsonOnDiskLedgerBookRepository(
             throw new ArgumentNullException(nameof(storageKey));
         }
 
+        if (storageKey != book.StorageKey)
+        {
+            // TODO unnecessary to pass in the storage key here, we should be able to get it from the book.
+            //throw new ArgumentException("Storage key does not match the book's storage key.", nameof(storageKey));
+        }
+
         UpdateModifiedDate(book);
-        var dataEntity = MapToDto(book);
-        book.StorageKey = storageKey;
-        dataEntity.StorageKey = storageKey;
-        dataEntity.Checksum = CalculateChecksum(book);
+        var dataEntity = MapToDto(book, CalculateChecksum(book));
         this.logger.LogInfo(_ => $"Saving Ledger Book to disk: {storageKey}. Checksum is: {dataEntity.Checksum}");
 
         await SaveDtoToDiskAsync(dataEntity, isEncrypted);
@@ -127,9 +130,10 @@ internal class JsonOnDiskLedgerBookRepository(
         return ledgerBookDto ?? throw new CorruptedLedgerBookException("Unable to deserialise ledger book data into correct type.");
     }
 
-    protected virtual LedgerBookDto MapToDto(LedgerBook book)
+    protected virtual LedgerBookDto MapToDto(LedgerBook book, double checksum)
     {
-        return this.mapper.ToDto(book);
+        var dto = this.mapper.ToDto(book);
+        return dto with { Checksum = checksum };
     }
 
     protected virtual async Task SerialiseAndWriteToStream(Stream stream, LedgerBookDto dataEntity)
