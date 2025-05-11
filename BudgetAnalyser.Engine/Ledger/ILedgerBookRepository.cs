@@ -34,8 +34,7 @@ public interface ILedgerBookRepository
     ///     be overwritten.
     /// </summary>
     /// <param name="book">The Ledger Book object to save.</param>
-    /// <param name="storageKey">The unique storage identifier</param>
     /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
     /// <exception cref="System.ArgumentNullException">Will be thrown if arguments are null.</exception>
-    Task SaveAsync(LedgerBook book, string storageKey, bool isEncrypted);
+    Task SaveAsync(LedgerBook book, bool isEncrypted);
 }

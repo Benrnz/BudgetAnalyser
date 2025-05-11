@@ -19,10 +19,10 @@ internal class LedgerService(
     : ILedgerService, ISupportsModelPersistence
 {
     private readonly IAccountTypeRepository accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
+    private readonly IDirtyDataService dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
     private readonly ILedgerBucketFactory ledgerBucketFactory = ledgerBucketFactory ?? throw new ArgumentNullException(nameof(ledgerBucketFactory));
     private readonly ILedgerBookRepository ledgerRepository = ledgerRepository ?? throw new ArgumentNullException(nameof(ledgerRepository));
     private readonly IMonitorableDependencies monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
-    private readonly IDirtyDataService dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
 
     /// <inheritdoc />
     public event EventHandler? Closed;
@@ -164,7 +164,7 @@ internal class LedgerService(
             throw new ValidationWarningException("Ledger Book is invalid, cannot save at this time:\n" + messages);
         }
 
-        await this.ledgerRepository.SaveAsync(LedgerBook, applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey), applicationDatabase.IsEncrypted);
+        await this.ledgerRepository.SaveAsync(LedgerBook, applicationDatabase.IsEncrypted);
         this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
         Saved?.Invoke(this, EventArgs.Empty);
     }

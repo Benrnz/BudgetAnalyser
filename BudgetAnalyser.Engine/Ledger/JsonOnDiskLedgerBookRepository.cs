@@ -34,7 +34,7 @@ internal class JsonOnDiskLedgerBookRepository(
 
         var book = new LedgerBook { Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' '), StorageKey = storageKey, Modified = DateTime.UtcNow };
 
-        await SaveAsync(book, storageKey, false);
+        await SaveAsync(book, false);
         return await LoadAsync(storageKey, false);
     }
 
@@ -96,27 +96,21 @@ internal class JsonOnDiskLedgerBookRepository(
         return book;
     }
 
-    public async Task SaveAsync(LedgerBook book, string storageKey, bool isEncrypted)
+    public async Task SaveAsync(LedgerBook book, bool isEncrypted)
     {
         if (book is null)
         {
             throw new ArgumentNullException(nameof(book));
         }
 
-        if (storageKey.IsNothing())
+        if (book.StorageKey.IsNothing())
         {
-            throw new ArgumentNullException(nameof(storageKey));
-        }
-
-        if (storageKey != book.StorageKey)
-        {
-            // TODO unnecessary to pass in the storage key here, we should be able to get it from the book.
-            //throw new ArgumentException("Storage key does not match the book's storage key.", nameof(storageKey));
+            throw new ArgumentException("LedgerBook storage key cannot be blank.");
         }
 
         UpdateModifiedDate(book);
         var dataEntity = MapToDto(book, CalculateChecksum(book));
-        this.logger.LogInfo(_ => $"Saving Ledger Book to disk: {storageKey}. Checksum is: {dataEntity.Checksum}");
+        this.logger.LogInfo(_ => $"Saving Ledger Book to disk: {book.StorageKey}. Checksum is: {dataEntity.Checksum}");
 
         await SaveDtoToDiskAsync(dataEntity, isEncrypted);
     }
