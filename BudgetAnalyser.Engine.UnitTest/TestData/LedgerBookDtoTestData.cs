@@ -24,112 +24,158 @@ internal static class LedgerBookDtoTestData
     /// </summary>
     public static LedgerBookDto TestData1()
     {
-        var lines = new List<LedgerEntryLineDto>();
-
-        var line1 = AddEntryLineForTestData1(lines, new DateOnly(2013, 12, 20));
-        line1.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                Balance = 0, // because would go into negative
-                BucketCode = TestDataConstants.RatesBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                [
-                    new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                    new LedgerTransactionDto { Id = Id2, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
-                ]
-            },
-            new LedgerEntryDto
-            {
-                Balance = 21.15M,
-                BucketCode = TestDataConstants.RegoBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions = [new LedgerTransactionDto { Id = Id3, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                Balance = 0, // because would go into negative
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                [
-                    new LedgerTransactionDto { Id = Id4, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                    new LedgerTransactionDto { Id = Id5, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
-                ]
-            }
-        ]);
-
-        var line2 = AddEntryLineForTestData1(lines, new DateOnly(2014, 1, 20));
-        line2.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RatesBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id6, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RegoBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id7, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions = [new LedgerTransactionDto { Id = Id8, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            }
-        ]);
-
-        var line3 = AddEntryLineForTestData1(lines, new DateOnly(2014, 02, 20));
-        line3.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RatesBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id9, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RegoBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id10, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions = [new LedgerTransactionDto { Id = Id11, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            }
-        ]);
-
-        UpdateLineBalances(line1, null, 1999.25M);
-        UpdateLineBalances(line2, line1, 2001.15M);
-        UpdateLineBalances(line3, line2, 1801.45M);
-
-        var book = new LedgerBookDto
+        var ledgerBookDto = new LedgerBookDto
         (
-            0,
+            Modified: new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
+            Name: "Test Budget Ledger Book 1",
+            StorageKey: "C:\\Folder\\FooBook.xml",
+            Reconciliations:
+            [
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2014, 02, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            150M,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto
+                                {
+                                    Id = Id9, Amount = 75, Narrative = "Budgeted Amount",
+                                    TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
+                                }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            63.45M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto
+                                {
+                                    Id = Id10, Amount = 21.15M, Narrative = "Budgeted Amount",
+                                    TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
+                                }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            190M,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto
+                                {
+                                    Id = Id11, Amount = 95, Narrative = "Budgeted Amount",
+                                    TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
+                                }
+                            ]
+                        )
+                    ],
+                    BankBalance: 1801.45M,
+                    BankBalances: [new BankBalanceDto(TestDataConstants.ChequeAccountName, 1801.45M)],
+                    BankBalanceAdjustments: []
+                ),
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2014, 01, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            75M,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id6, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            42.30M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id7, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            95M,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id8, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        )
+                    ],
+                    BankBalance: 2001.15M,
+                    BankBalances: [new BankBalanceDto(TestDataConstants.ChequeAccountName, 2001.15M)],
+                    BankBalanceAdjustments: []
+                ),
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2013, 12, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            0,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
+                                new LedgerTransactionDto { Id = Id2, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            21.15M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id3, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            0,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id4, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
+                                new LedgerTransactionDto { Id = Id5, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                            ]
+                        )
+                    ],
+                    BankBalance: 1999.25M,
+                    BankBalances: [new BankBalanceDto(TestDataConstants.ChequeAccountName, 1999.25M)],
+                    BankBalanceAdjustments: []
+                )
+            ],
+            Ledgers:
             [
                 new LedgerBucketDto(TestDataConstants.RegoBucketCode, TestDataConstants.ChequeAccountName),
                 new LedgerBucketDto(TestDataConstants.CarMtcBucketCode, TestDataConstants.ChequeAccountName),
                 new LedgerBucketDto(TestDataConstants.RatesBucketCode, TestDataConstants.ChequeAccountName)
             ],
-            null,
-            new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
-            "Test Budget Ledger Book 1",
-            StorageKey: "C:\\Folder\\FooBook.xml",
-            Reconciliations: lines.OrderByDescending(e => e.Date).ToArray()
+            Checksum: 0,
+            MobileSettings: null
         );
-
-        return book;
+        return ledgerBookDto;
     }
 
     /// <summary>
@@ -138,113 +184,179 @@ internal static class LedgerBookDtoTestData
     /// </summary>
     public static LedgerBookDto TestData2()
     {
-        var lines = new List<LedgerEntryLineDto>();
-
-        var line1 = AddEntryLineForTestData2(lines, new DateOnly(2013, 12, 20));
-        line1.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                Balance = 0, // because would go into negative
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                BucketCode = TestDataConstants.RatesBucketCode,
-                Transactions = [new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                Balance = 21.15M,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                BucketCode = TestDataConstants.RegoBucketCode,
-                Transactions = [new LedgerTransactionDto { Id = Id2, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                Balance = 0, // because would go into negative
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                Transactions = [new LedgerTransactionDto { Id = Id3, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            }
-        ]);
-
-        var line2 = AddEntryLineForTestData2(lines, new DateOnly(2014, 1, 20));
-        line2.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RatesBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id4, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RegoBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id5, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions = [new LedgerTransactionDto { Id = Id6, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            }
-        ]);
-
-        var line3 = AddEntryLineForTestData2(lines, new DateOnly(2014, 02, 20));
-        line3.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RatesBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                [
-                    new LedgerTransactionDto { Id = Id7, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                    new LedgerTransactionDto { Id = Id8, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
-                ]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RegoBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id9, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                [
-                    new LedgerTransactionDto { Id = Id10, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                    new LedgerTransactionDto { Id = Id11, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
-                ]
-            }
-        ]);
-
-        UpdateLineBalances(line1, null, 1999.25M);
-        UpdateLineBalances(line2, line1, 2001.15M);
-        UpdateLineBalances(line3, line2, 1801.45M);
-
-        var book = new LedgerBookDto
+        var ledgerBookDto = new LedgerBookDto
         (
-            0,
-            MobileSettings: null,
+            Modified: new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
+            Name: "Test Budget Ledger Book 2",
+            StorageKey: "C:\\Folder\\FooBook2.xml",
+            Reconciliations:
+            [
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2014, 02, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            0M,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id7, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
+                                new LedgerTransactionDto { Id = Id8, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            63.45M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto
+                                {
+                                    Id = Id9, Amount = 21.15M, Narrative = "Budgeted Amount",
+                                    TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
+                                }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            0M,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id10, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
+                                new LedgerTransactionDto { Id = Id11, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                            ]
+                        )
+                    ],
+                    BankBalance: 1801.45M,
+                    BankBalances: [new BankBalanceDto(TestDataConstants.ChequeAccountName, 1801.45M)],
+                    BankBalanceAdjustments:
+                    [
+                        new LedgerTransactionDto
+                        {
+                            Amount = -99,
+                            Narrative = "The quick brown fox",
+                            TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
+                            Account = TestDataConstants.ChequeAccountName
+                        }
+                    ]
+                ),
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2014, 01, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            75M,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id4, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            42.30M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id5, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            95M,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id6, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        )
+                    ],
+                    BankBalance: 2001.15M,
+                    BankBalances: [new BankBalanceDto(TestDataConstants.ChequeAccountName, 2001.15M)],
+                    BankBalanceAdjustments:
+                    [
+                        new LedgerTransactionDto
+                        {
+                            Amount = -99,
+                            Narrative = "The quick brown fox",
+                            TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
+                            Account = TestDataConstants.ChequeAccountName
+                        }
+                    ]
+                ),
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2013, 12, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            0,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            21.15M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id2, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            0,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id3, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        )
+                    ],
+                    BankBalance: 1999.25M,
+                    BankBalances: [new BankBalanceDto(TestDataConstants.ChequeAccountName, 1999.25M)],
+                    BankBalanceAdjustments:
+                    [
+                        new LedgerTransactionDto
+                        {
+                            Amount = -99,
+                            Narrative = "The quick brown fox",
+                            TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
+                            Account = TestDataConstants.ChequeAccountName
+                        }
+                    ]
+                )
+            ],
             Ledgers:
             [
                 new LedgerBucketDto(TestDataConstants.RegoBucketCode, TestDataConstants.ChequeAccountName),
                 new LedgerBucketDto(TestDataConstants.CarMtcBucketCode, TestDataConstants.ChequeAccountName),
                 new LedgerBucketDto(TestDataConstants.RatesBucketCode, TestDataConstants.ChequeAccountName)
             ],
-            Modified: new DateTime(2013, 12, 14),
-            Name: "Test Budget Ledger Book 2",
-            StorageKey: "C:\\Folder\\FooBook2.xml",
-            Reconciliations: lines.OrderByDescending(e => e.Date).ToArray()
+            Checksum: 0,
+            MobileSettings: null
         );
-
-        return book;
+        return ledgerBookDto;
     }
+
 
     /// <summary>
     ///     Same as TestData1 but with some Balance Adjustments on the most recent line.
@@ -252,172 +364,160 @@ internal static class LedgerBookDtoTestData
     /// </summary>
     public static LedgerBookDto TestData3()
     {
-        var lines = new List<LedgerEntryLineDto>();
-
-        var line1 = AddEntryLineForTestData1(lines, new DateOnly(2013, 12, 20));
-        line1.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                Balance = 0, // because would go into negative
-                BucketCode = TestDataConstants.RatesBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                [
-                    new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                    new LedgerTransactionDto { Id = Id2, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
-                ]
-            },
-            new LedgerEntryDto
-            {
-                Balance = 21.15M,
-                BucketCode = TestDataConstants.RegoBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions = [new LedgerTransactionDto { Id = Id3, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                Balance = 0, // because would go into negative
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                [
-                    new LedgerTransactionDto { Id = Id4, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                    new LedgerTransactionDto { Id = Id5, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
-                ]
-            }
-        ]);
-
-        var line2 = AddEntryLineForTestData1(lines, new DateOnly(2014, 1, 20));
-        line2.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RatesBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id6, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RegoBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id7, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions = [new LedgerTransactionDto { Id = Id8, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            }
-        ]);
-
-        var line3 = AddEntryLineForTestData1(lines, new DateOnly(2014, 02, 20));
-        line3.Entries.AddRange(
-        [
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RatesBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id9, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.RegoBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions =
-                    [new LedgerTransactionDto { Id = Id10, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            },
-            new LedgerEntryDto
-            {
-                BucketCode = TestDataConstants.CarMtcBucketCode,
-                StoredInAccount = TestDataConstants.ChequeAccountName,
-                Transactions = [new LedgerTransactionDto { Id = Id11, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }]
-            }
-        ]);
-
-        line3.BankBalanceAdjustments.Add(
-            new LedgerTransactionDto
-            {
-                Account = StatementModelTestData.ChequeAccount.Name,
-                Amount = -100.01M,
-                Narrative = "Visa payment yet to go out",
-                Id = new Guid("22927CF0-BAA2-4828-A669-C77396888BD6"),
-                TransactionType = typeof(CreditLedgerTransaction).FullName
-            });
-
-        UpdateLineBalances(line1, null, 1999.25M);
-        UpdateLineBalances(line2, line1, 2001.15M);
-        UpdateLineBalances(line3, line2, 1801.45M);
-        line3.BankBalances.Add(new BankBalanceDto(StatementModelTestData.SavingsAccount.Name, 201M));
-        line3.BankBalance += 201M;
-
-        var book = new LedgerBookDto
+        var ledgerBookDto = new LedgerBookDto
         (
-            0,
-            MobileSettings: null,
+            Modified: new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
+            Name: "Test Budget Ledger Book 3",
+            StorageKey: "C:\\Folder\\FooBook3.xml",
+            Reconciliations:
+            [
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2014, 02, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            150M,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id9, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            63.45M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto
+                                    { Id = Id10, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            190M,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id11, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        )
+                    ],
+                    BankBalance: 2002.45M,
+                    BankBalances:
+                    [
+                        new BankBalanceDto(TestDataConstants.ChequeAccountName, 1801.45M),
+                        new BankBalanceDto(TestDataConstants.SavingsAccountName, 201M)
+                    ],
+                    BankBalanceAdjustments:
+                    [
+                        new LedgerTransactionDto
+                        {
+                            Account = StatementModelTestData.ChequeAccount.Name,
+                            Amount = -100.01M,
+                            Narrative = "Visa payment yet to go out",
+                            Id = new Guid("22927CF0-BAA2-4828-A669-C77396888BD6"),
+                            TransactionType = typeof(CreditLedgerTransaction).FullName
+                        }
+                    ]
+                ),
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2014, 01, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            75M,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id6, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            42.30M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id7, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            95M,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id8, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        )
+                    ],
+                    BankBalance: 2001.15M,
+                    BankBalances: [new BankBalanceDto(TestDataConstants.ChequeAccountName, 2001.15M)],
+                    BankBalanceAdjustments: []
+                ),
+                new LedgerEntryLineDto
+                (
+                    Date: new DateOnly(2013, 12, 20),
+                    Remarks: "Lorem ipsum dolor. Mit solo darte.",
+                    Entries:
+                    [
+                        new LedgerEntryDto
+                        (
+                            0,
+                            TestDataConstants.RatesBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
+                                new LedgerTransactionDto { Id = Id2, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            21.15M,
+                            TestDataConstants.RegoBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id3, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                            ]
+                        ),
+
+                        new LedgerEntryDto
+                        (
+                            0,
+                            TestDataConstants.CarMtcBucketCode,
+                            TestDataConstants.ChequeAccountName,
+                            [
+                                new LedgerTransactionDto { Id = Id4, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
+                                new LedgerTransactionDto { Id = Id5, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                            ]
+                        )
+                    ],
+                    BankBalance: 1999.25M,
+                    BankBalances: [new BankBalanceDto(TestDataConstants.ChequeAccountName, 1999.25M)],
+                    BankBalanceAdjustments: []
+                )
+            ],
             Ledgers:
             [
                 new LedgerBucketDto(TestDataConstants.RegoBucketCode, TestDataConstants.ChequeAccountName),
                 new LedgerBucketDto(TestDataConstants.CarMtcBucketCode, TestDataConstants.ChequeAccountName),
                 new LedgerBucketDto(TestDataConstants.RatesBucketCode, TestDataConstants.ChequeAccountName)
             ],
-            Modified: new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
-            Name: "Test Budget Ledger Book 3",
-            StorageKey: "C:\\Folder\\FooBook3.xml",
-            Reconciliations: lines.OrderByDescending(e => e.Date).ToArray()
+            Checksum: 0,
+            MobileSettings: null
         );
-
-        return book;
-    }
-
-    private static LedgerEntryLineDto AddEntryLineForTestData1(List<LedgerEntryLineDto> entries, DateOnly lineDate)
-    {
-        var line = new LedgerEntryLineDto { Date = lineDate, Remarks = "Lorem ipsum dolor. Mit solo darte." };
-
-        entries.Add(line);
-        return line;
-    }
-
-    private static LedgerEntryLineDto AddEntryLineForTestData2(List<LedgerEntryLineDto> entries, DateOnly lineDate)
-    {
-        var line = new LedgerEntryLineDto
-        {
-            Date = lineDate,
-            Remarks = "Lorem ipsum dolor. Mit solo darte.",
-            BankBalanceAdjustments =
-            [
-                new LedgerTransactionDto
-                {
-                    Amount = -99M, Narrative = "The quick brown fox", TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName, Account = TestDataConstants.ChequeAccountName
-                }
-            ]
-        };
-
-        entries.Add(line);
-        return line;
-    }
-
-    private static void UpdateLineBalances(LedgerEntryLineDto currentLine, LedgerEntryLineDto previousLine, decimal bankBalance)
-    {
-        currentLine.BankBalance = bankBalance;
-        currentLine.BankBalances.Add(new BankBalanceDto(StatementModelTestData.ChequeAccount.Name, bankBalance));
-
-        if (previousLine is null)
-        {
-            return;
-        }
-
-        foreach (var entry in currentLine.Entries)
-        {
-            var previousEntry = previousLine.Entries.Single(e => e.BucketCode == entry.BucketCode);
-            entry.Balance = previousEntry.Balance + entry.Transactions.Sum(t => t.Amount);
-            if (entry.Balance < 0)
-            {
-                entry.Balance = 0;
-            }
-        }
+        return ledgerBookDto;
     }
 }

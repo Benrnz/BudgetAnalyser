@@ -24,7 +24,23 @@ public class DtoToLedgerBookMapperTest
             Narrative = "Foo",
             TransactionType = "Foobar"
         };
-        TestData.Reconciliations.First().Entries.Last().Transactions.Add(invalidTxn);
+        var firstReconciliation = TestData.Reconciliations.First();
+        var firstEntry = firstReconciliation.Entries.First();
+
+        // Update the entry with the modified transaction
+        var updatedTransactions = firstEntry.Transactions.ToList();
+        updatedTransactions[0] = invalidTxn;
+        var updatedEntry = firstEntry with { Transactions = updatedTransactions.ToArray() };
+
+        // Update the reconciliation with the modified entry
+        var updatedEntries = firstReconciliation.Entries.ToList();
+        updatedEntries[0] = updatedEntry;
+        var updatedReconciliation = firstReconciliation with { Entries = updatedEntries.ToArray() };
+
+        // Update the TestData with the modified reconciliation
+        var updatedReconciliations = TestData.Reconciliations.ToList();
+        updatedReconciliations[0] = updatedReconciliation;
+        TestData = TestData with { Reconciliations = updatedReconciliations.ToArray() };
 
         ArrangeAndAct();
     }
@@ -42,7 +58,25 @@ public class DtoToLedgerBookMapperTest
             Narrative = "Foo",
             TransactionType = null
         };
-        TestData.Reconciliations.First().Entries.Last().Transactions.Add(invalidTxn);
+        var firstReconciliation = TestData.Reconciliations.First();
+        var firstEntry = firstReconciliation.Entries.First();
+        var firstTransaction = firstEntry.Transactions.First();
+
+        // Update the entry with the modified transaction
+        var updatedTransactions = firstEntry.Transactions.ToList();
+        updatedTransactions[0] = invalidTxn;
+        var updatedEntry = firstEntry with { Transactions = updatedTransactions.ToArray() };
+
+        // Update the reconciliation with the modified entry
+        var updatedEntries = firstReconciliation.Entries.ToList();
+        updatedEntries[0] = updatedEntry;
+        var updatedReconciliation = firstReconciliation with { Entries = updatedEntries.ToArray() };
+
+        // Update the TestData with the modified reconciliation
+        var updatedReconciliations = TestData.Reconciliations.ToList();
+        updatedReconciliations[0] = updatedReconciliation;
+        TestData = TestData with { Reconciliations = updatedReconciliations.ToArray() };
+
         ArrangeAndAct();
     }
 
@@ -79,14 +113,14 @@ public class DtoToLedgerBookMapperTest
     public void ShouldMapCorrectNumberOfLineEntries()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Reconciliations.First().Entries.Count, result.Reconciliations.First().Entries.Count());
+        Assert.AreEqual(TestData.Reconciliations.First().Entries.Count(), result.Reconciliations.First().Entries.Count());
     }
 
     [TestMethod]
     public void ShouldMapCorrectNumberOfLineEntryTransactions()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.Count, result.Reconciliations.First().Entries.First().Transactions.Count());
+        Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.Count(), result.Reconciliations.First().Entries.First().Transactions.Count());
     }
 
     [TestMethod]

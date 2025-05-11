@@ -12,12 +12,12 @@ internal class MapperLedgerEntryToDto2(ILedgerBucketFactory bucketFactory, ILedg
     public LedgerEntryDto ToDto(LedgerEntry model)
     {
         var dto = new LedgerEntryDto
-        {
-            StoredInAccount = model.LedgerBucket.StoredInAccount.Name,
-            BucketCode = model.LedgerBucket.BudgetBucket.Code,
-            Balance = model.Balance,
-            Transactions = model.Transactions.Select(this.transactionMapper.ToDto).ToList()
-        };
+        (
+            StoredInAccount: model.LedgerBucket.StoredInAccount.Name,
+            BucketCode: model.LedgerBucket.BudgetBucket.Code,
+            Balance: model.Balance,
+            Transactions: model.Transactions.Select(this.transactionMapper.ToDto).ToArray()
+        );
         return dto;
     }
 
@@ -26,7 +26,7 @@ internal class MapperLedgerEntryToDto2(ILedgerBucketFactory bucketFactory, ILedg
         var entry = new LedgerEntry(dto.Transactions.Select(t => this.transactionMapper.ToModel(t)))
         {
             Balance = dto.Balance,
-            LedgerBucket = this.bucketFactory.Build(dto.BucketCode, dto.StoredInAccount ?? AccountTypeRepositoryConstants.Cheque)
+            LedgerBucket = this.bucketFactory.Build(dto.BucketCode, string.IsNullOrWhiteSpace(dto.StoredInAccount) ? AccountTypeRepositoryConstants.Cheque : dto.StoredInAccount)
         };
 
         return entry;

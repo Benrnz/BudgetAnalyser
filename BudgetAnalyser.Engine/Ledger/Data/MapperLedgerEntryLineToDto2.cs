@@ -15,14 +15,14 @@ internal class MapperLedgerEntryLineToDto2(
     public LedgerEntryLineDto ToDto(LedgerEntryLine model)
     {
         var dto = new LedgerEntryLineDto
-        {
-            BankBalance = model.TotalBankBalance,
-            BankBalanceAdjustments = model.BankBalanceAdjustments.Select(this.bankAdjustmentMapper.ToDto).ToList(),
-            BankBalances = model.BankBalances.Select(this.bankBalanceMapper.ToDto).ToList(),
-            Date = model.Date,
-            Remarks = model.Remarks,
-            Entries = model.Entries.Select(this.ledgerEntriesMapper.ToDto).ToList()
-        };
+        (
+            model.TotalBankBalance,
+            model.BankBalanceAdjustments.Select(this.bankAdjustmentMapper.ToDto).ToArray(),
+            model.BankBalances.Select(this.bankBalanceMapper.ToDto).ToArray(),
+            model.Date,
+            Remarks: model.Remarks,
+            Entries: model.Entries.Select(this.ledgerEntriesMapper.ToDto).ToArray()
+        );
 
         return dto;
     }

@@ -27,7 +27,7 @@ public class LedgerEntryToDtoMapperTest
     [TestMethod]
     public void ShouldMapCorrectNumberOfTransactions()
     {
-        Assert.AreEqual(1, Result.Transactions.Count);
+        Assert.AreEqual(1, Result.Transactions.Count());
     }
 
     [TestInitialize]

@@ -23,14 +23,13 @@ public class DtoToLedgerEntryMapperTest
 </scg:List>
 </LedgerEntryDto.Transactions>
 </LedgerEntryDto>                 */
-        new()
-        {
-            Balance = 52.32M,
-            BucketCode = TestDataConstants.PowerBucketCode,
-            StoredInAccount = TestDataConstants.ChequeAccountName,
-            Transactions = new List<LedgerTransactionDto>
-            {
-                new()
+        new
+        (
+            52.32M,
+            TestDataConstants.PowerBucketCode,
+            TestDataConstants.ChequeAccountName,
+            [
+                new LedgerTransactionDto
                 {
                     Account = StatementModelTestData.ChequeAccount.Name,
                     Amount = 140M,
@@ -38,7 +37,7 @@ public class DtoToLedgerEntryMapperTest
                     Narrative = "Foo...",
                     TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
                 },
-                new()
+                new LedgerTransactionDto
                 {
                     Account = StatementModelTestData.ChequeAccount.Name,
                     Amount = -98.56M,
@@ -46,8 +45,8 @@ public class DtoToLedgerEntryMapperTest
                     Narrative = "Bar...",
                     TransactionType = typeof(CreditLedgerTransaction).FullName
                 }
-            }
-        };
+            ]
+        );
 
     [TestMethod]
     public void ShouldMapBalance()
