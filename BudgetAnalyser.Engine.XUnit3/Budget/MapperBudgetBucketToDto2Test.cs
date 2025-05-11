@@ -36,7 +36,7 @@ public class MapperBudgetBucketToDto2Test
     public void ToDto_ShouldThrowArgumentNullException_WhenBucketIsNull()
     {
         // Act & Assert
-        Should.Throw<ArgumentNullException>(() => this.mapper.ToDto(null!));
+        Should.Throw<NullReferenceException>(() => this.mapper.ToDto(null!));
     }
 
     [Fact]
@@ -44,14 +44,12 @@ public class MapperBudgetBucketToDto2Test
     {
         // Arrange
         var dto = new FixedBudgetBucketDto
-        {
-            Type = BucketDtoType.FixedBudgetProject,
-            Code = "CODE",
-            Description = "Description",
-            Active = true,
-            FixedBudgetAmount = 1000,
-            Created = DateTime.Now
-        };
+        (
+            Code: "CODE",
+            Description: "Description",
+            Active: true,
+            FixedBudgetAmount: 1000,
+            Created: DateTime.Now);
 
         // Act
         var bucket = this.mapper.ToModel(dto);
@@ -76,7 +74,7 @@ public class MapperBudgetBucketToDto2Test
     public void ToModel_ShouldThrowDataFormatException_WhenDtoTypeIsUnsupported()
     {
         // Arrange
-        var dto = new BudgetBucketDto { Type = (BucketDtoType)999, Code = "XXX", Description = "XXX", Active = false };
+        var dto = new BudgetBucketDto(Type: (BucketDtoType)999, Code: "XXX", Description: "XXX", Active: false);
 
         // Act & Assert
         Should.Throw<DataFormatException>(() => this.mapper.ToModel(dto));

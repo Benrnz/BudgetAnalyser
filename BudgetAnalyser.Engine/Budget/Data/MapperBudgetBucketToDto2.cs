@@ -8,16 +8,14 @@ public class MapperBudgetBucketToDto2 : IDtoMapper<BudgetBucketDto, BudgetBucket
     public BudgetBucketDto ToDto(BudgetBucket model)
     {
         var dto = model is FixedBudgetProjectBucket fixedProjectBucket
-            ? new FixedBudgetBucketDto
-            {
-                Type = SerialiseType(model),
-                Active = model.Active,
-                Code = model.Code,
-                Description = model.Description,
-                Created = fixedProjectBucket.Created.ToUniversalTime(),
-                FixedBudgetAmount = fixedProjectBucket.FixedBudgetAmount
-            }
-            : new BudgetBucketDto { Type = SerialiseType(model), Active = model.Active, Code = model.Code, Description = model.Description };
+            ? new FixedBudgetBucketDto(
+                model.Active,
+                model.Code,
+                model.Description,
+                fixedProjectBucket.Created.ToUniversalTime(),
+                fixedProjectBucket.FixedBudgetAmount
+            )
+            : new BudgetBucketDto(model.Active, model.Code, model.Description, SerialiseType(model));
 
         return dto;
     }
