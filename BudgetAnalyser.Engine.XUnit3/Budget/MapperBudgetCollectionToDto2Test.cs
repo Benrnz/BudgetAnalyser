@@ -42,7 +42,14 @@ public class MapperBudgetCollectionToDto2Test
     {
         // Arrange
         var budgetCollection = BudgetModelTestData.CreateCollectionWith1And2();
-        this.mapperBudgetModel.ToDto(Arg.Any<BudgetModel>()).Returns(new BudgetModelDto());
+        this.mapperBudgetModel.ToDto(Arg.Any<BudgetModel>()).Returns(
+            new BudgetModelDto(
+                BudgetCycle.Fortnightly,
+                new DateOnly(2018, 01, 01),
+                [],
+                [],
+                DateTime.Now,
+                DateTime.Now.ToString()));
 
         // Act
         var dto = this.mapper.ToDto(budgetCollection);
@@ -57,7 +64,11 @@ public class MapperBudgetCollectionToDto2Test
     public void ToModel_ShouldMapBudgetCollectionDtoToBudgetCollection()
     {
         // Arrange
-        var budgetCollectionDto = new BudgetCollectionDto(StorageKey: "TestKey", Budgets: [new BudgetModelDto()], Buckets: []);
+        var budgetCollectionDto = new BudgetCollectionDto(StorageKey: "TestKey", Budgets:
+            [
+                new BudgetModelDto(BudgetCycle.Monthly, new DateOnly(2018, 01, 01), [], [], DateTime.Now, DateTime.Now.ToString())
+            ],
+            Buckets: []);
         this.mapperBudgetModel.ToModel(Arg.Any<BudgetModelDto>()).Returns(new BudgetModel());
 
         // Act

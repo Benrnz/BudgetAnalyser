@@ -59,8 +59,8 @@ public class MapperBudgetModelToDto2Test
         dto.EffectiveFrom.ShouldBe(budgetModel.EffectiveFrom);
         dto.LastModified.ShouldBe(budgetModel.LastModified.ToUniversalTime());
         dto.LastModifiedComment.ShouldBe(budgetModel.LastModifiedComment);
-        dto.Expenses.Count.ShouldBe(budgetModel.Expenses.Count());
-        dto.Incomes.Count.ShouldBe(budgetModel.Incomes.Count());
+        dto.Expenses.Count().ShouldBe(budgetModel.Expenses.Count());
+        dto.Incomes.Count().ShouldBe(budgetModel.Incomes.Count());
     }
 
     [Fact]
@@ -68,15 +68,14 @@ public class MapperBudgetModelToDto2Test
     {
         // Arrange
         var budgetModelDto = new BudgetModelDto
-        {
-            Name = "Test Budget",
-            BudgetCycle = BudgetCycle.Monthly,
-            EffectiveFrom = DateOnlyExt.Today(),
-            LastModified = DateTime.Now,
-            LastModifiedComment = "Test Comment",
-            Expenses = [new ExpenseDto { Amount = 200M, BudgetBucketCode = TestDataConstants.PowerBucketCode }],
-            Incomes = [new IncomeDto { Amount = 2000M, BudgetBucketCode = TestDataConstants.IncomeBucketCode }]
-        };
+        (
+            Name: "Test Budget",
+            BudgetCycle: BudgetCycle.Monthly,
+            EffectiveFrom: DateOnlyExt.Today(),
+            LastModified: DateTime.Now,
+            Expenses: [new ExpenseDto { Amount = 200M, BudgetBucketCode = TestDataConstants.PowerBucketCode }],
+            Incomes: [new IncomeDto { Amount = 2000M, BudgetBucketCode = TestDataConstants.IncomeBucketCode }]
+        ) { LastModifiedComment = "Test Comment" };
 
         // Act
         var model = this.mapper.ToModel(budgetModelDto);
@@ -86,9 +85,9 @@ public class MapperBudgetModelToDto2Test
         model.Name.ShouldBe(budgetModelDto.Name);
         model.BudgetCycle.ShouldBe(budgetModelDto.BudgetCycle);
         model.EffectiveFrom.ShouldBe(budgetModelDto.EffectiveFrom);
-        model.LastModified.ShouldBe(budgetModelDto.LastModified.Value);
+        model.LastModified.ShouldBe(budgetModelDto.LastModified!.Value);
         model.LastModifiedComment.ShouldBe(budgetModelDto.LastModifiedComment);
-        model.Expenses.Count().ShouldBe(budgetModelDto.Expenses.Count);
-        model.Incomes.Count().ShouldBe(budgetModelDto.Incomes.Count);
+        model.Expenses.Count().ShouldBe(budgetModelDto.Expenses.Count());
+        model.Incomes.Count().ShouldBe(budgetModelDto.Incomes.Count());
     }
 }
