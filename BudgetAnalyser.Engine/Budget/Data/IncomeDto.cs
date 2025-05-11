@@ -3,15 +3,4 @@
 /// <summary>
 ///     A Dto persistence class to store an Income object.
 /// </summary>
-public class IncomeDto
-{
-    /// <summary>
-    ///     Gets or sets the income amount.
-    /// </summary>
-    public decimal Amount { get; set; }
-
-    /// <summary>
-    ///     Gets or sets the budget bucket textual code.
-    /// </summary>
-    public string BudgetBucketCode { get; set; } = string.Empty;
-}
+public record IncomeDto(decimal Amount, string BudgetBucketCode);
