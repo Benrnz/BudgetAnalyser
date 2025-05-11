@@ -118,9 +118,9 @@ internal static class LedgerBookDtoTestData
         (
             0,
             [
-                new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
-                new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
-                new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName }
+                new LedgerBucketDto(TestDataConstants.RegoBucketCode, TestDataConstants.ChequeAccountName),
+                new LedgerBucketDto(TestDataConstants.CarMtcBucketCode, TestDataConstants.ChequeAccountName),
+                new LedgerBucketDto(TestDataConstants.RatesBucketCode, TestDataConstants.ChequeAccountName)
             ],
             null,
             new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
@@ -233,9 +233,9 @@ internal static class LedgerBookDtoTestData
             MobileSettings: null,
             Ledgers:
             [
-                new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
-                new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
-                new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName }
+                new LedgerBucketDto(TestDataConstants.RegoBucketCode, TestDataConstants.ChequeAccountName),
+                new LedgerBucketDto(TestDataConstants.CarMtcBucketCode, TestDataConstants.ChequeAccountName),
+                new LedgerBucketDto(TestDataConstants.RatesBucketCode, TestDataConstants.ChequeAccountName)
             ],
             Modified: new DateTime(2013, 12, 14),
             Name: "Test Budget Ledger Book 2",
@@ -360,9 +360,9 @@ internal static class LedgerBookDtoTestData
             MobileSettings: null,
             Ledgers:
             [
-                new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
-                new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName },
-                new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName }
+                new LedgerBucketDto(TestDataConstants.RegoBucketCode, TestDataConstants.ChequeAccountName),
+                new LedgerBucketDto(TestDataConstants.CarMtcBucketCode, TestDataConstants.ChequeAccountName),
+                new LedgerBucketDto(TestDataConstants.RatesBucketCode, TestDataConstants.ChequeAccountName)
             ],
             Modified: new DateTime(2013, 12, 14, 0, 0, 0, DateTimeKind.Utc),
             Name: "Test Budget Ledger Book 3",
