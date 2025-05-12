@@ -25,7 +25,7 @@ internal class MapperToDoTaskToDto2 : IDtoMapper<ToDoTaskDto, ToDoTask>
 {
     public ToDoTaskDto ToDto(ToDoTask model)
     {
-        var dto = new ToDoTaskDto { Description = model.Description, CanDelete = model.CanDelete, SystemGenerated = model.SystemGenerated };
+        var dto = new ToDoTaskDto(Description: model.Description, CanDelete: model.CanDelete, SystemGenerated: model.SystemGenerated);
         return dto;
     }
 
