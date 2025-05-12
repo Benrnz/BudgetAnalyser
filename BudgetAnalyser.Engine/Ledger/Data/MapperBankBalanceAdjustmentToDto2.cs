@@ -10,15 +10,15 @@ internal class MapperBankBalanceAdjustmentToDto2(IAccountTypeRepository accountT
     public LedgerTransactionDto ToDto(BankBalanceAdjustmentTransaction model)
     {
         var dto = new LedgerTransactionDto
-        {
-            Account = model.BankAccount.Name,
-            TransactionType = model.GetType().FullName,
-            Amount = model.Amount,
-            AutoMatchingReference = model.AutoMatchingReference,
-            Date = model.Date,
-            Id = model.Id,
-            Narrative = model.Narrative
-        };
+        (
+            model.BankAccount.Name,
+            TransactionType: model.GetType().FullName,
+            Amount: model.Amount,
+            AutoMatchingReference: model.AutoMatchingReference,
+            Date: model.Date,
+            Id: model.Id,
+            Narrative: model.Narrative
+        );
 
         return dto;
     }

@@ -44,10 +44,11 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.ChequeAccountName,
                             [
                                 new LedgerTransactionDto
-                                {
-                                    Id = Id9, Amount = 75, Narrative = "Budgeted Amount",
-                                    TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
-                                }
+                                (
+                                    Id: Id9, Amount: 75, Narrative: "Budgeted Amount",
+                                    TransactionType: "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction", AutoMatchingReference: null, Account: TestDataConstants.ChequeAccountName, Date:
+                                    new DateOnly(2014, 2, 20)
+                                )
                             ]
                         ),
 
@@ -58,10 +59,11 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.ChequeAccountName,
                             [
                                 new LedgerTransactionDto
-                                {
-                                    Id = Id10, Amount = 21.15M, Narrative = "Budgeted Amount",
-                                    TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
-                                }
+                                (
+                                    Id: Id10, Amount: 21.15M, Narrative: "Budgeted Amount",
+                                    TransactionType: "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction", AutoMatchingReference: null, Account: TestDataConstants.ChequeAccountName, Date:
+                                    new DateOnly(2014, 2, 20)
+                                )
                             ]
                         ),
 
@@ -72,10 +74,11 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.ChequeAccountName,
                             [
                                 new LedgerTransactionDto
-                                {
-                                    Id = Id11, Amount = 95, Narrative = "Budgeted Amount",
-                                    TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
-                                }
+                                (
+                                    Id: Id11, Amount: 95, Narrative: "Budgeted Amount",
+                                    TransactionType: "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction", AutoMatchingReference: null, Account: TestDataConstants.ChequeAccountName, Date:
+                                    new DateOnly(2014, 2, 20)
+                                )
                             ]
                         )
                     ],
@@ -95,7 +98,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RatesBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id6, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id6, Amount: 75, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName, Account:
+                                    TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -105,7 +109,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RegoBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id7, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id7, Amount: 21.15M, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName, Account:
+                                    TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -115,7 +120,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.CarMtcBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id8, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id8, Amount: 95, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName, AutoMatchingReference:
+                                    null, Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20))
                             ]
                         )
                     ],
@@ -135,8 +141,10 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RatesBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                                new LedgerTransactionDto { Id = Id2, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id1, Amount: 75, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName, Account:
+                                    TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null),
+                                new LedgerTransactionDto(Id: Id2, Amount: -195, Narrative: "Rates payment", TransactionType: typeof(CreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -146,7 +154,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RegoBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id3, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id3, Amount: 21.15M, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -156,8 +165,10 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.CarMtcBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id4, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                                new LedgerTransactionDto { Id = Id5, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id4, Amount: 95, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName, Account:
+                                    TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null),
+                                new LedgerTransactionDto(Id: Id5, Amount: -295.45M, Narrative: "Fix car", TransactionType: typeof(CreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, AutoMatchingReference: null, Date: new DateOnly(2013, 12, 20))
                             ]
                         )
                     ],
@@ -203,8 +214,10 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RatesBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id7, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                                new LedgerTransactionDto { Id = Id8, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id7, Amount: 75, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 2, 20), AutoMatchingReference: null),
+                                new LedgerTransactionDto(Id: Id8, Amount: -195, Narrative: "Rates payment", TransactionType: typeof(CreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, AutoMatchingReference: null, Date: new DateOnly(2014, 2, 20))
                             ]
                         ),
 
@@ -215,10 +228,11 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.ChequeAccountName,
                             [
                                 new LedgerTransactionDto
-                                {
-                                    Id = Id9, Amount = 21.15M, Narrative = "Budgeted Amount",
-                                    TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction"
-                                }
+                                (
+                                    Id: Id9, Amount: 21.15M, Narrative: "Budgeted Amount",
+                                    TransactionType: "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction", AutoMatchingReference: null, Account: TestDataConstants.ChequeAccountName,
+                                    Date: new DateOnly(2014, 2, 20)
+                                )
                             ]
                         ),
 
@@ -228,8 +242,10 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.CarMtcBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id10, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                                new LedgerTransactionDto { Id = Id11, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id10, Amount: 95, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, AutoMatchingReference: null, Date: new DateOnly(2014, 2, 20)),
+                                new LedgerTransactionDto(Id: Id11, Amount: -295.45M, Narrative: "Fix car", TransactionType: typeof(CreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, AutoMatchingReference: null, Date: new DateOnly(2014, 2, 20))
                             ]
                         )
                     ],
@@ -238,12 +254,15 @@ internal static class LedgerBookDtoTestData
                     BankBalanceAdjustments:
                     [
                         new LedgerTransactionDto
-                        {
-                            Amount = -99,
-                            Narrative = "The quick brown fox",
-                            TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
-                            Account = TestDataConstants.ChequeAccountName
-                        }
+                        (
+                            Amount: -99,
+                            Narrative: "The quick brown fox",
+                            TransactionType: typeof(BankBalanceAdjustmentTransaction).FullName,
+                            Account: TestDataConstants.ChequeAccountName,
+                            AutoMatchingReference: null,
+                            Date: new DateOnly(2014, 2, 20),
+                            Id: new Guid("22927CF0-BAA2-4828-A669-C77396888BD6")
+                        )
                     ]
                 ),
                 new LedgerEntryLineDto
@@ -258,7 +277,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RatesBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id4, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id4, Amount: 75, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -268,7 +288,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RegoBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id5, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id5, Amount: 21.15M, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -278,7 +299,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.CarMtcBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id6, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id6, Amount: 95, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20), AutoMatchingReference: null)
                             ]
                         )
                     ],
@@ -287,12 +309,15 @@ internal static class LedgerBookDtoTestData
                     BankBalanceAdjustments:
                     [
                         new LedgerTransactionDto
-                        {
-                            Amount = -99,
-                            Narrative = "The quick brown fox",
-                            TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
-                            Account = TestDataConstants.ChequeAccountName
-                        }
+                        (
+                            Amount: -99,
+                            Narrative: "The quick brown fox",
+                            TransactionType: typeof(BankBalanceAdjustmentTransaction).FullName,
+                            Account: TestDataConstants.ChequeAccountName,
+                            AutoMatchingReference: null,
+                            Date: new DateOnly(2014, 1, 20),
+                            Id: new Guid("22927CF0-BAA2-4828-A669-C77396888BD6")
+                        )
                     ]
                 ),
                 new LedgerEntryLineDto
@@ -307,7 +332,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RatesBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id1, Amount: 75, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -317,7 +343,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RegoBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id2, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id2, Amount: 21.15M, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -327,7 +354,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.CarMtcBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id3, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id3, Amount: 95, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null)
                             ]
                         )
                     ],
@@ -336,12 +364,15 @@ internal static class LedgerBookDtoTestData
                     BankBalanceAdjustments:
                     [
                         new LedgerTransactionDto
-                        {
-                            Amount = -99,
-                            Narrative = "The quick brown fox",
-                            TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
-                            Account = TestDataConstants.ChequeAccountName
-                        }
+                        (
+                            Amount: -99,
+                            Narrative: "The quick brown fox",
+                            TransactionType: typeof(BankBalanceAdjustmentTransaction).FullName,
+                            Account: TestDataConstants.ChequeAccountName,
+                            Date: new DateOnly(2013, 12, 20),
+                            AutoMatchingReference: null,
+                            Id: new Guid("22927CF0-BAA2-4828-A669-C77396888B99")
+                        )
                     ]
                 )
             ],
@@ -383,7 +414,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RatesBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id9, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id9, Amount: 75, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 2, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -394,7 +426,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.ChequeAccountName,
                             [
                                 new LedgerTransactionDto
-                                    { Id = Id10, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" }
+                                (Id: Id10, Amount: 21.15M, Narrative: "Budgeted Amount", TransactionType: "BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction", AutoMatchingReference: null,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 2, 20))
                             ]
                         ),
 
@@ -404,7 +437,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.CarMtcBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id11, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id11, Amount: 95, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 2, 20), AutoMatchingReference: null)
                             ]
                         )
                     ],
@@ -417,13 +451,15 @@ internal static class LedgerBookDtoTestData
                     BankBalanceAdjustments:
                     [
                         new LedgerTransactionDto
-                        {
-                            Account = StatementModelTestData.ChequeAccount.Name,
-                            Amount = -100.01M,
-                            Narrative = "Visa payment yet to go out",
-                            Id = new Guid("22927CF0-BAA2-4828-A669-C77396888BD6"),
-                            TransactionType = typeof(CreditLedgerTransaction).FullName
-                        }
+                        (
+                            StatementModelTestData.ChequeAccount.Name,
+                            -100.01M,
+                            Narrative: "Visa payment yet to go out",
+                            Id: new Guid("22927CF0-BAA2-4828-A669-C77396888BD6"),
+                            TransactionType: typeof(CreditLedgerTransaction).FullName,
+                            AutoMatchingReference: null,
+                            Date: new DateOnly(2014, 2, 20)
+                        )
                     ]
                 ),
                 new LedgerEntryLineDto
@@ -438,7 +474,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RatesBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id6, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id6, Amount: 75, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -448,7 +485,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RegoBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id7, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id7, Amount: 21.15M, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -458,7 +496,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.CarMtcBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id8, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id8, Amount: 95, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2014, 1, 20), AutoMatchingReference: null)
                             ]
                         )
                     ],
@@ -478,8 +517,10 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RatesBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id1, Amount = 75, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                                new LedgerTransactionDto { Id = Id2, Amount = -195, Narrative = "Rates payment", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id1, Amount: 75, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null),
+                                new LedgerTransactionDto(Id: Id2, Amount: -195, Narrative: "Rates payment", TransactionType: typeof(CreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -489,7 +530,8 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.RegoBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id3, Amount = 21.15M, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id3, Amount: 21.15M, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null)
                             ]
                         ),
 
@@ -499,8 +541,10 @@ internal static class LedgerBookDtoTestData
                             TestDataConstants.CarMtcBucketCode,
                             TestDataConstants.ChequeAccountName,
                             [
-                                new LedgerTransactionDto { Id = Id4, Amount = 95, Narrative = "Budgeted Amount", TransactionType = typeof(BudgetCreditLedgerTransaction).FullName },
-                                new LedgerTransactionDto { Id = Id5, Amount = -295.45M, Narrative = "Fix car", TransactionType = typeof(CreditLedgerTransaction).FullName }
+                                new LedgerTransactionDto(Id: Id4, Amount: 95, Narrative: "Budgeted Amount", TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                                    Account: TestDataConstants.ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null),
+                                new LedgerTransactionDto(Id: Id5, Amount: -295.45M, Narrative: "Fix car", TransactionType: typeof(CreditLedgerTransaction).FullName, Account: TestDataConstants
+                                    .ChequeAccountName, Date: new DateOnly(2013, 12, 20), AutoMatchingReference: null)
                             ]
                         )
                     ],

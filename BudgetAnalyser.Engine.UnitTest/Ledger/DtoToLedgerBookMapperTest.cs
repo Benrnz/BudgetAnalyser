@@ -16,14 +16,15 @@ public class DtoToLedgerBookMapperTest
     public void InvalidTransactionTypeShouldThrow()
     {
         var invalidTxn = new LedgerTransactionDto
-        {
-            Account = TestDataConstants.ChequeAccountName,
-            Amount = -12.45M,
-            Date = new DateOnly(2013, 02, 02),
-            Id = Guid.NewGuid(),
-            Narrative = "Foo",
-            TransactionType = "Foobar"
-        };
+        (
+            TestDataConstants.ChequeAccountName,
+            -12.45M,
+            Date: new DateOnly(2013, 02, 02),
+            Id: Guid.NewGuid(),
+            Narrative: "Foo",
+            TransactionType: "Foobar",
+            AutoMatchingReference: null
+        );
         var firstReconciliation = TestData.Reconciliations.First();
         var firstEntry = firstReconciliation.Entries.First();
 
@@ -50,14 +51,15 @@ public class DtoToLedgerBookMapperTest
     public void NullTransactionTypeShouldThrow()
     {
         var invalidTxn = new LedgerTransactionDto
-        {
-            Account = TestDataConstants.ChequeAccountName,
-            Amount = -12.45M,
-            Date = new DateOnly(2013, 02, 02),
-            Id = Guid.NewGuid(),
-            Narrative = "Foo",
-            TransactionType = null
-        };
+        (
+            TestDataConstants.ChequeAccountName,
+            -12.45M,
+            Date: new DateOnly(2013, 02, 02),
+            Id: Guid.NewGuid(),
+            Narrative: "Foo",
+            TransactionType: null,
+            AutoMatchingReference: null
+        );
         var firstReconciliation = TestData.Reconciliations.First();
         var firstEntry = firstReconciliation.Entries.First();
         var firstTransaction = firstEntry.Transactions.First();

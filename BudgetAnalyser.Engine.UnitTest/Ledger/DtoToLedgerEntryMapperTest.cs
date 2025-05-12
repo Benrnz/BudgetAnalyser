@@ -30,21 +30,25 @@ public class DtoToLedgerEntryMapperTest
             TestDataConstants.ChequeAccountName,
             [
                 new LedgerTransactionDto
-                {
-                    Account = StatementModelTestData.ChequeAccount.Name,
-                    Amount = 140M,
-                    Id = Guid.NewGuid(),
-                    Narrative = "Foo...",
-                    TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
-                },
+                (
+                    StatementModelTestData.ChequeAccount.Name,
+                    140M,
+                    Id: Guid.NewGuid(),
+                    Narrative: "Foo...",
+                    TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                    AutoMatchingReference: null,
+                    Date: null
+                ),
                 new LedgerTransactionDto
-                {
-                    Account = StatementModelTestData.ChequeAccount.Name,
-                    Amount = -98.56M,
-                    Id = Guid.NewGuid(),
-                    Narrative = "Bar...",
-                    TransactionType = typeof(CreditLedgerTransaction).FullName
-                }
+                (
+                    StatementModelTestData.ChequeAccount.Name,
+                    -98.56M,
+                    Id: Guid.NewGuid(),
+                    Narrative: "Bar...",
+                    TransactionType: typeof(CreditLedgerTransaction).FullName,
+                    AutoMatchingReference: null,
+                    Date: null
+                )
             ]
         );
 

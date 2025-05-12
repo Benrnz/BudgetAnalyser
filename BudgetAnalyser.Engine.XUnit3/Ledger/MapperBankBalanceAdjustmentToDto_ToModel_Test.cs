@@ -18,13 +18,14 @@ public class MapperBankBalanceAdjustmentToDto_ToModel_Test
     public MapperBankBalanceAdjustmentToDto_ToModel_Test()
     {
         this.testData = new LedgerTransactionDto
-        {
-            Id = TransactionId,
-            Amount = -123.99M,
-            Narrative = "Foo bar.",
-            TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
-            Account = AccountName
-        };
+        (
+            Id: TransactionId,
+            Amount: -123.99M,
+            Narrative: "Foo bar.",
+            TransactionType: typeof(BankBalanceAdjustmentTransaction).FullName,
+            Account: AccountName,
+            AutoMatchingReference: null,
+            Date: new DateOnly(2023, 10, 1));
         this.account = new ChequeAccount(AccountName);
         var accountRepo = Substitute.For<IAccountTypeRepository>();
         accountRepo.GetByKey(AccountName).Returns(this.account);

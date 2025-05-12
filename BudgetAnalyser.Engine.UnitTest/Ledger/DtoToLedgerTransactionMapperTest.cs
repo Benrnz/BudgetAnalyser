@@ -8,13 +8,16 @@ public class DtoToLedgerTransactionMapperTest
 {
     private static readonly Guid TransactionId = new("7F921750-4467-4EA4-81E6-3EFD466341C6");
 
-    public DtoToLedgerTransactionMapperTest()
-    {
-        TestData = new LedgerTransactionDto { Id = TransactionId, Amount = -123.99M, Narrative = "Foo bar.", TransactionType = typeof(CreditLedgerTransaction).FullName };
-    }
-
     private LedgerTransaction Result { get; set; }
-    private LedgerTransactionDto TestData { get; }
+
+    private LedgerTransactionDto TestData { get; } = new(
+        Id: TransactionId,
+        Amount: -123.99M,
+        Narrative: "Foo bar.",
+        TransactionType: typeof(CreditLedgerTransaction).FullName,
+        AutoMatchingReference: null,
+        Date: null,
+        Account: null);
 
     [TestMethod]
     public void ShouldMapAmount()
