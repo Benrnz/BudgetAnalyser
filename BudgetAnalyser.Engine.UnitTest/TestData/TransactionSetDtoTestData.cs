@@ -7,14 +7,14 @@ public static class TransactionSetDtoTestData
     public static TransactionSetDto TestData2()
     {
         return new TransactionSetDto
-        {
-            Checksum = 252523523525,
-            StorageKey = @"C:\Foo\Bar.csv",
-            LastImport = new DateTime(2013, 8, 15),
-            VersionHash = "uiwhgr8972y59872gh5972798gh",
-            Transactions = new List<TransactionDto>
-            {
-                new(
+        (
+            Checksum: 252523523525,
+            StorageKey: @"C:\Foo\Bar.csv",
+            LastImport: new DateTime(2013, 8, 15),
+            VersionHash: "uiwhgr8972y59872gh5972798gh",
+            Transactions:
+            [
+                new TransactionDto(
                     TestDataConstants.ChequeAccountName,
                     -95.15M,
                     BudgetBucketCode: TestDataConstants.PowerBucketCode,
@@ -26,8 +26,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new
-                (
+                new TransactionDto(
                     TestDataConstants.ChequeAccountName,
                     -58.19M,
                     BudgetBucketCode: TestDataConstants.PhoneBucketCode,
@@ -39,8 +38,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new
-                (
+                new TransactionDto(
                     TestDataConstants.ChequeAccountName,
                     850.99M,
                     BudgetBucketCode: TestDataConstants.IncomeBucketCode,
@@ -52,7 +50,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new(
+                new TransactionDto(
                     TestDataConstants.ChequeAccountName,
                     -89.15M,
                     BudgetBucketCode: TestDataConstants.PowerBucketCode,
@@ -64,7 +62,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new(
+                new TransactionDto(
                     TestDataConstants.VisaAccountName,
                     -91.00M,
                     BudgetBucketCode: TestDataConstants.CarMtcBucketCode,
@@ -76,7 +74,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new(
+                new TransactionDto(
                     TestDataConstants.ChequeAccountName,
                     -68.29M,
                     BudgetBucketCode: TestDataConstants.PhoneBucketCode,
@@ -88,7 +86,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new(
+                new TransactionDto(
                     TestDataConstants.ChequeAccountName,
                     850.99M,
                     BudgetBucketCode: TestDataConstants.IncomeBucketCode,
@@ -100,7 +98,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new(
+                new TransactionDto(
                     TestDataConstants.VisaAccountName,
                     -55.00M,
                     BudgetBucketCode: TestDataConstants.HairBucketCode,
@@ -112,7 +110,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new(
+                new TransactionDto(
                     TestDataConstants.VisaAccountName,
                     -350.00M,
                     BudgetBucketCode: TestDataConstants.RegoBucketCode,
@@ -124,7 +122,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 ),
-                new(
+                new TransactionDto(
                     TestDataConstants.ChequeAccountName,
                     850.99M,
                     BudgetBucketCode: TestDataConstants.IncomeBucketCode,
@@ -136,7 +134,7 @@ public static class TransactionSetDtoTestData
                     Reference3: "",
                     TransactionType: "Bill Payment"
                 )
-            }
-        };
+            ]
+        );
     }
 }

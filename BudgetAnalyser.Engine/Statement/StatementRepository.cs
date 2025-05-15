@@ -54,6 +54,6 @@ internal class StatementRepository(IVersionedStatementModelRepository statementM
             throw new ArgumentNullException(nameof(statementModel));
         }
 
-        await this.statementModelRepository.SaveAsync(statementModel, statementModel.StorageKey, isEncrypted);
+        await this.statementModelRepository.SaveAsync(statementModel, isEncrypted);
     }
 }

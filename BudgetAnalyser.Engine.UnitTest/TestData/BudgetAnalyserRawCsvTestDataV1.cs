@@ -8,11 +8,12 @@ public static class BudgetAnalyserRawCsvTestDataV1
     public static TransactionSetDto BadTestData_CorruptedCommaFormat()
     {
         var set = new TransactionSetDto
-        {
-            StorageKey = "abcdef",
-            Transactions = new List<TransactionDto>
-            {
-                new(
+        (
+            StorageKey: "abcdef",
+            LastImport: new DateTime(2013, 8, 15),
+            Transactions:
+            [
+                new TransactionDto(
                     TransactionType: "Direct Credit,Yee,Har,Boi,Crazy-commas,",
                     Description: "Smith A B & J S",
                     Amount: 3474.02M,
@@ -21,7 +22,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("7f78bd65-017e-4337-9459-7e5dfa447d66")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Salary",
                     Description: "Ipayroll Limite",
                     Reference1: "Acme Inc",
@@ -33,7 +34,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("4e6bad3b-89c7-458c-a993-38859da68b54")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Direct Credit",
                     Description: "Acme Inc Ltd      Dl",
                     Reference1: "Salary",
@@ -45,7 +46,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("55f94f77-601b-4808-ab38-b71cd5f4d6f7")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Direct Credit",
                     Description: "Acme Inc Ltd      Dl",
                     Reference1: "Salary",
@@ -57,7 +58,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("1c4d9d4c-46de-4c39-a2f4-293beb646cc8")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Chq/Withdrawal",
                     Description: "",
                     Reference1: "0894T0129180",
@@ -69,7 +70,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("780f11dd-5ce4-4562-837c-f6043bdca27f")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Credit Card Debit",
                     Description: "Charcoal Burger          Thames   Nz",
                     Reference1: "0894T0129180",
@@ -81,8 +82,8 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.VisaAccountName,
                     Id: new Guid("136e9010-9d07-4ddb-b7a3-abd209a23f44")
                 )
-            }
-        };
+            ]
+        );
 
         return set;
     }
@@ -203,11 +204,12 @@ public static class BudgetAnalyserRawCsvTestDataV1
         //    "Payment,The very cool Power Co,A B Smith,659792,Energyonline,-212.07,2012-08-20T00:00:00.0000000,POWER,CHEQUE,17b8c91c-5174-41a7-b382-b6a9ff52a11a,                     ",
         //    "Credit Card Debit,Z Queen Street            Auckland     Nz,4367-****-****-3239,,,-28.49,2012-08-20T00:00:00.0000000,FUEL,VISA,bd12376a-6aac-4171-a23c-f85af168582f,    "
         var set = new TransactionSetDto
-        {
-            StorageKey = "Gooo",
-            Transactions = new List<TransactionDto>
-            {
-                new(
+        (
+            StorageKey: "Gooo",
+            LastImport: new DateTime(2013, 8, 15),
+            Transactions:
+            [
+                new TransactionDto(
                     TransactionType: "Direct Credit",
                     Description: "Smith A B & J S",
                     Amount: 3474.02M,
@@ -216,7 +218,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("7f78bd65-017e-4337-9459-7e5dfa447d66")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Salary",
                     Description: "Ipayroll Limite",
                     Reference1: "Acme Inc",
@@ -228,7 +230,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("4e6bad3b-89c7-458c-a993-38859da68b54")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Direct Credit",
                     Description: "Acme Inc Ltd      Dl",
                     Reference1: "Salary",
@@ -240,7 +242,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("55f94f77-601b-4808-ab38-b71cd5f4d6f7")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Direct Credit",
                     Description: "Acme Inc Ltd      Dl",
                     Reference1: "Salary",
@@ -252,7 +254,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("1c4d9d4c-46de-4c39-a2f4-293beb646cc8")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Chq/Withdrawal",
                     Description: "",
                     Reference1: "0894T0129180",
@@ -264,7 +266,7 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.ChequeAccountName,
                     Id: new Guid("780f11dd-5ce4-4562-837c-f6043bdca27f")
                 ),
-                new(
+                new TransactionDto(
                     TransactionType: "Credit Card Debit",
                     Description: "Charcoal Burger          Thames   Nz",
                     Reference1: "0894T0129180",
@@ -276,8 +278,8 @@ public static class BudgetAnalyserRawCsvTestDataV1
                     Account: TestDataConstants.VisaAccountName,
                     Id: new Guid("136e9010-9d07-4ddb-b7a3-abd209a23f44")
                 )
-            }
-        };
+            ]
+        );
 
         return set;
     }

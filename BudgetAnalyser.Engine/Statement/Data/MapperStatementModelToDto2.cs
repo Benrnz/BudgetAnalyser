@@ -18,11 +18,12 @@ public class MapperStatementModelToDto2(
     {
         this.logger.LogInfo(_ => $"Mapping StatementModel '{model.StorageKey}' into a DTO.");
         var dto = new TransactionSetDto
-        {
-            LastImport = model.LastImport.ToUniversalTime(),
-            StorageKey = model.StorageKey,
-            Transactions = model.AllTransactions.Select(this.transactionMapper.ToDto).ToList()
-        };
+        (
+            model.LastImport.ToUniversalTime(),
+            model.StorageKey,
+            model.AllTransactions.Select(this.transactionMapper.ToDto).ToArray(),
+            0
+        );
         // Checksum and VersionHash are set during persistence
         this.logger.LogInfo(_ => $"Mapping of StatementModel '{model.StorageKey}' finished. {dto.Transactions.Count()} of {model.AllTransactions.Count()} exported.");
         return dto;

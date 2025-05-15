@@ -33,8 +33,7 @@ public interface IVersionedStatementModelRepository
     /// </summary>
     /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
     /// <param name="model">The statement model to save.</param>
-    /// <param name="storageKey">The unique storage identifier</param>
     /// <exception cref="System.ArgumentNullException">Will be thrown if any arguments are null.</exception>
     /// <exception cref="BudgetAnalyser.Engine.Statement.StatementModelChecksumException">Will be thrown if serialisation resulted in data that doesn't match the checksum.</exception>
-    Task SaveAsync(StatementModel model, string storageKey, bool isEncrypted);
+    Task SaveAsync(StatementModel model, bool isEncrypted);
 }

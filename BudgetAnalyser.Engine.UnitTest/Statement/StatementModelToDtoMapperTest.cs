@@ -32,7 +32,7 @@ public class StatementModelToDtoMapperTest
         testData.Filter(new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 07, 20), EndDate = new DateOnly(2013, 08, 19) });
         Act(testData);
 
-        Assert.AreEqual(TestData.AllTransactions.Count(), Result.Transactions.Count);
+        Assert.AreEqual(TestData.AllTransactions.Count(), Result.Transactions.Count());
     }
 
     [TestMethod]
