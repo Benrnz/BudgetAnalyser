@@ -261,18 +261,18 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         try
         {
             return new TransactionDto
-            {
-                TransactionType = this.importUtilities.FetchString(span, 0),
-                Description = this.importUtilities.FetchString(span, 1),
-                Reference1 = this.importUtilities.FetchString(span, 2),
-                Reference2 = this.importUtilities.FetchString(span, 3),
-                Reference3 = this.importUtilities.FetchString(span, 4),
-                Amount = this.importUtilities.FetchDecimal(span, 5),
-                Date = this.importUtilities.FetchDate(span, 6),
-                BudgetBucketCode = this.importUtilities.FetchString(span, 7),
-                Account = this.importUtilities.FetchString(span, 8),
-                Id = this.importUtilities.FetchGuid(span, 9)
-            };
+            (
+                TransactionType: this.importUtilities.FetchString(span, 0),
+                Description: this.importUtilities.FetchString(span, 1),
+                Reference1: this.importUtilities.FetchString(span, 2),
+                Reference2: this.importUtilities.FetchString(span, 3),
+                Reference3: this.importUtilities.FetchString(span, 4),
+                Amount: this.importUtilities.FetchDecimal(span, 5),
+                Date: this.importUtilities.FetchDate(span, 6),
+                BudgetBucketCode: this.importUtilities.FetchString(span, 7),
+                Account: this.importUtilities.FetchString(span, 8),
+                Id: this.importUtilities.FetchGuid(span, 9)
+            );
         }
         catch (InvalidDataException ex)
         {
