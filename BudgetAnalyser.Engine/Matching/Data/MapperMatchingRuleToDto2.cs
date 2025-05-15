@@ -17,19 +17,21 @@ public class MapperMatchingRuleToDto2(IBudgetBucketRepository bucketRepo) : IDto
         }
 
         var dto = new MatchingRuleDto
+        (
+            BucketCode: model.BucketCode,
+            Description: model.Description,
+            LastMatch: model.LastMatch?.ToUniversalTime(),
+            MatchCount: model.MatchCount,
+            Reference1: model.Reference1,
+            Reference2: model.Reference2,
+            Reference3: model.Reference3,
+            TransactionType: model.TransactionType,
+            Amount: model.Amount,
+            And: model.And,
+            Created: model.Created.ToUniversalTime()
+        )
         {
-            BucketCode = model.BucketCode,
-            RuleId = model.RuleId,
-            Description = model.Description,
-            LastMatch = model.LastMatch?.ToUniversalTime(),
-            MatchCount = model.MatchCount,
-            Reference1 = model.Reference1,
-            Reference2 = model.Reference2,
-            Reference3 = model.Reference3,
-            TransactionType = model.TransactionType,
-            Amount = model.Amount,
-            And = model.And,
-            Created = model.Created.ToUniversalTime()
+            RuleId = model.RuleId
         };
 
         return dto;

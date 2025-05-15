@@ -91,18 +91,19 @@ public class DataMatchingRuleToMatchingRuleMapperTest
     public void TestInitialise()
     {
         TestData = new MatchingRuleDto
-        {
-            Created = new DateTime(2014, 1, 2),
-            Amount = 123.45M,
-            BucketCode = "CARMTC",
-            Description = "Testing Description",
-            LastMatch = new DateTime(2014, 06, 22),
-            MatchCount = 2,
-            Reference1 = "Testing Reference1",
-            Reference2 = "Testing Reference2",
-            Reference3 = "Testing Reference3",
-            TransactionType = "Testing TransactionType"
-        };
+        (
+            Created: new DateTime(2014, 1, 2),
+            Amount: 123.45M,
+            BucketCode: "CARMTC",
+            Description: "Testing Description",
+            LastMatch: new DateTime(2014, 06, 22),
+            MatchCount: 2,
+            Reference1: "Testing Reference1",
+            Reference2: "Testing Reference2",
+            Reference3: "Testing Reference3",
+            TransactionType: "Testing TransactionType",
+            And: true
+        );
     }
 
     [TestMethod]
