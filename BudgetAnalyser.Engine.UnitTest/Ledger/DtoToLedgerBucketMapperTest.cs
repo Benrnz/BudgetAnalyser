@@ -11,7 +11,7 @@ public class DtoToLedgerBucketMapperTest
 {
     private LedgerBucket Result { get; set; }
 
-    private LedgerBucketDto TestData => new() { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName };
+    private LedgerBucketDto TestData => new(TestDataConstants.RegoBucketCode, TestDataConstants.ChequeAccountName);
 
     [TestMethod]
     public void ShouldMapBankAccount()

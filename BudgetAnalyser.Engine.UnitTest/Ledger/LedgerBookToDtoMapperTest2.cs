@@ -33,7 +33,7 @@ public class LedgerBookToDtoMapperTest2
     [TestMethod]
     public void ShouldMapReconciliations()
     {
-        Assert.AreEqual(3, Result.Reconciliations.Count);
+        Assert.AreEqual(3, Result.Reconciliations.Count());
     }
 
     [TestInitialize]

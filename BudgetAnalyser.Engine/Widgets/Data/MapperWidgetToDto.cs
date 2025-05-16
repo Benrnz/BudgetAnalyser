@@ -14,25 +14,25 @@ public class MapperWidgetToDto(IStandardWidgetCatalog widgetCatalog) : IDtoMappe
         {
             case SurprisePaymentWidget s:
                 return new SurprisePaymentWidgetDto
-                {
-                    WidgetGroup = s.Category,
-                    Visible = s.Visibility,
-                    WidgetType = s.GetType().FullName!,
-                    Frequency = s.Frequency,
-                    BucketCode = s.BucketCode,
-                    PaymentStartDate = s.StartPaymentDate
-                };
+                (
+                    WidgetGroup: s.Category,
+                    Visible: s.Visibility,
+                    WidgetType: s.GetType().FullName!,
+                    Frequency: s.Frequency,
+                    BucketCode: s.BucketCode,
+                    PaymentStartDate: s.StartPaymentDate
+                );
 
             case BudgetBucketMonitorWidget b:
-                return new MultiInstanceWidgetDto { WidgetGroup = b.Category, Visible = b.Visibility, WidgetType = b.GetType().FullName!, BucketCode = b.BucketCode };
+                return new MultiInstanceWidgetDto(WidgetGroup: b.Category, Visible: b.Visibility, WidgetType: b.GetType().FullName!, BucketCode: b.BucketCode);
 
             case FixedBudgetMonitorWidget f:
-                return new MultiInstanceWidgetDto { WidgetGroup = f.Category, Visible = f.Visibility, WidgetType = f.GetType().FullName!, BucketCode = f.BucketCode };
+                return new MultiInstanceWidgetDto(WidgetGroup: f.Category, Visible: f.Visibility, WidgetType: f.GetType().FullName!, BucketCode: f.BucketCode);
 
             default:
                 // CurrentFileWidget, DateFilterWidget, DaysSinceLastImport, DisusedMatchingRuleWidget, EncryptWidget, NewFileWidget, OverspentWarning, RemainingActualSurplusWidget,
                 // RemainingSurplusWidget, SaveWidget, TimedUpdateCounterWidget, UpdateMobileDataWidget
-                return new WidgetDto { Visible = model.Visibility, WidgetGroup = model.Category, WidgetType = model.GetType().FullName! };
+                return new WidgetDto(model.Visibility, model.Category, model.GetType().FullName!);
         }
     }
 

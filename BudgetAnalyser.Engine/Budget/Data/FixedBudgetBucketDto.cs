@@ -1,27 +1,12 @@
 ﻿namespace BudgetAnalyser.Engine.Budget.Data;
 
 /// <summary>
-///     A Dto object for persisting a Fixed Budget Bucket.
+///     A Dto object for persisting a Fixed Project Budget Bucket.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Budget.Data.BudgetBucketDto" />
-public class FixedBudgetBucketDto : BudgetBucketDto
-{
-    /// <summary>
-    ///     Gets or sets the created date.
-    /// </summary>
-    public DateTime Created { get; init; }
-
-    /// <summary>
-    ///     Gets or sets the fixed budget amount.
-    /// </summary>
-    public decimal FixedBudgetAmount { get; init; }
-
-    /// <summary>
-    ///     Gets or sets the simple persistence bucket type.
-    /// </summary>
-    public override BucketDtoType Type
-    {
-        get => BucketDtoType.FixedBudgetProject;
-        init { }
-    }
-}
+public record FixedBudgetBucketDto(
+    bool Active,
+    string Code,
+    string Description,
+    DateTime Created,
+    decimal FixedBudgetAmount) : BudgetBucketDto(Active, Code, Description, BucketDtoType.FixedBudgetProject);

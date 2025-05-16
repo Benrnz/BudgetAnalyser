@@ -19,10 +19,7 @@ public class DtoToApplicationDatabaseMapperTest
             StatementModelRootDto = "Statement.xml",
             WidgetCollectionRootDto = "Widgets.xml",
             Filter = new GlobalFilterDto(),
-            LedgerReconciliationToDoCollection = new List<ToDoTaskDto>
-            {
-                new() { CanDelete = true, Description = "Foo1", SystemGenerated = false }, new() { CanDelete = false, Description = "Foo2", SystemGenerated = true }
-            }
+            LedgerReconciliationToDoCollection = [new ToDoTaskDto(true, "Foo1", false), new ToDoTaskDto(false, "Foo2", true)]
         };
 
         var subject = new MapperApplicationDatabaseToStorageRoot3();

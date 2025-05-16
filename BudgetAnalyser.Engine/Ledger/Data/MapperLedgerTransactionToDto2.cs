@@ -14,15 +14,15 @@ internal class MapperLedgerTransactionToDto2(ILedgerTransactionFactory ledgerTra
         }
 
         var dto = new LedgerTransactionDto
-        {
-            Account = null, // Only used for type BalanceAdjustmentTransaction
-            Amount = model.Amount,
-            AutoMatchingReference = model.AutoMatchingReference,
-            Date = model.Date,
-            Id = model.Id,
-            Narrative = model.Narrative,
-            TransactionType = model.GetType().FullName
-        };
+        (
+            null, // Only used for type BalanceAdjustmentTransaction
+            model.Amount,
+            model.AutoMatchingReference,
+            model.Date,
+            model.Id,
+            model.Narrative,
+            model.GetType().FullName
+        );
         return dto;
     }
 

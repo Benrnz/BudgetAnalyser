@@ -36,37 +36,37 @@ public static class WidgetsTestData
     {
         return new List<WidgetDto>
         {
-            new() { WidgetType = typeof(EncryptWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.OverviewSectionName },
-            new() { WidgetType = typeof(OverspentWarning).FullName!, Visible = true, WidgetGroup = WidgetGroup.OverviewSectionName },
-            new() { WidgetType = typeof(SaveWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.OverviewSectionName },
-            new() { WidgetType = typeof(CurrentFileWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.OverviewSectionName },
-            new() { WidgetType = typeof(DateFilterWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.GlobalFilterSectionName },
-            new() { WidgetType = typeof(NewFileWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.OverviewSectionName },
-            new() { WidgetType = typeof(RemainingSurplusWidget).FullName!, Visible = false, WidgetGroup = WidgetGroup.PeriodicTrackingSectionName },
+            new(WidgetType: typeof(EncryptWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.OverviewSectionName),
+            new(WidgetType: typeof(OverspentWarning).FullName!, Visible: true, WidgetGroup: WidgetGroup.OverviewSectionName),
+            new(WidgetType: typeof(SaveWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.OverviewSectionName),
+            new(WidgetType: typeof(CurrentFileWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.OverviewSectionName),
+            new(WidgetType: typeof(DateFilterWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.GlobalFilterSectionName),
+            new(WidgetType: typeof(NewFileWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.OverviewSectionName),
+            new(WidgetType: typeof(RemainingSurplusWidget).FullName!, Visible: false, WidgetGroup: WidgetGroup.PeriodicTrackingSectionName),
             new SurprisePaymentWidgetDto
-            {
-                WidgetType = typeof(SurprisePaymentWidget).FullName!,
-                Visible = true,
-                WidgetGroup = WidgetGroup.OverviewSectionName,
-                Frequency = WeeklyOrFortnightly.Fortnightly,
-                BucketCode = TestDataConstants.RentBucketCode,
-                PaymentStartDate = new DateOnly(2013, 7, 1)
-            },
+            (
+                WidgetType: typeof(SurprisePaymentWidget).FullName!,
+                Visible: true,
+                WidgetGroup: WidgetGroup.OverviewSectionName,
+                Frequency: WeeklyOrFortnightly.Fortnightly,
+                BucketCode: TestDataConstants.RentBucketCode,
+                PaymentStartDate: new DateOnly(2013, 7, 1)
+            ),
             new MultiInstanceWidgetDto
-            {
-                WidgetType = typeof(BudgetBucketMonitorWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.PeriodicTrackingSectionName, BucketCode = TestDataConstants.FoodBucketCode
-            },
+            (
+                WidgetType: typeof(BudgetBucketMonitorWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.PeriodicTrackingSectionName, BucketCode: TestDataConstants.FoodBucketCode
+            ),
             new MultiInstanceWidgetDto
-            {
-                WidgetType = typeof(BudgetBucketMonitorWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.PeriodicTrackingSectionName, BucketCode = TestDataConstants.HairBucketCode
-            },
-            new() { WidgetType = typeof(DaysSinceLastImport).FullName!, Visible = true, WidgetGroup = WidgetGroup.OverviewSectionName },
-            new() { WidgetType = typeof(DisusedMatchingRuleWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.OverviewSectionName },
-            new MultiInstanceWidgetDto { WidgetType = typeof(FixedBudgetMonitorWidget).FullName!, Visible = false, WidgetGroup = WidgetGroup.ProjectsSectionName, BucketCode = "SURPLUS.FENCE" },
-            new MultiInstanceWidgetDto { WidgetType = typeof(FixedBudgetMonitorWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.ProjectsSectionName, BucketCode = "SURPLUS.KITCHEN" },
-            new() { WidgetType = typeof(RemainingActualSurplusWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.PeriodicTrackingSectionName },
-            new() { WidgetType = typeof(TimedUpdateCounterWidget).FullName!, Visible = false, WidgetGroup = WidgetGroup.OverviewSectionName },
-            new() { WidgetType = typeof(UpdateMobileDataWidget).FullName!, Visible = true, WidgetGroup = WidgetGroup.OverviewSectionName }
+            (
+                WidgetType: typeof(BudgetBucketMonitorWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.PeriodicTrackingSectionName, BucketCode: TestDataConstants.HairBucketCode
+            ),
+            new(WidgetType: typeof(DaysSinceLastImport).FullName!, Visible: true, WidgetGroup: WidgetGroup.OverviewSectionName),
+            new(WidgetType: typeof(DisusedMatchingRuleWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.OverviewSectionName),
+            new MultiInstanceWidgetDto(WidgetType: typeof(FixedBudgetMonitorWidget).FullName!, Visible: false, WidgetGroup: WidgetGroup.ProjectsSectionName, BucketCode: "SURPLUS.FENCE"),
+            new MultiInstanceWidgetDto(WidgetType: typeof(FixedBudgetMonitorWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.ProjectsSectionName, BucketCode: "SURPLUS.KITCHEN"),
+            new(WidgetType: typeof(RemainingActualSurplusWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.PeriodicTrackingSectionName),
+            new(WidgetType: typeof(TimedUpdateCounterWidget).FullName!, Visible: false, WidgetGroup: WidgetGroup.OverviewSectionName),
+            new(WidgetType: typeof(UpdateMobileDataWidget).FullName!, Visible: true, WidgetGroup: WidgetGroup.OverviewSectionName)
         };
     }
 }

@@ -184,7 +184,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         var subject = ArrangeWithEmbeddedResources();
         var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
 
-        await subject.SaveAsync(model, "Foo.bar", false);
+        await subject.SaveAsync(model, false);
         var result = subject.SerialisedData.Trim();
         var expected = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoTransactionsFileName).Trim();
 
@@ -200,7 +200,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         subject.WriteStream = new MemoryStream();
 
         // Act
-        await subject.SaveAsync(testData, "TestFile.csv", false);
+        await subject.SaveAsync(testData, false);
 
         // Assert
         subject.SerialisedData.ShouldNotBeNullOrEmpty();
@@ -214,7 +214,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         subject.Dto = BudgetAnalyserRawCsvTestDataV1.BadTestData_CorruptedCommaFormat();
         var writerStream = new MemoryStream();
         this.mockFileReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(writerStream);
-        await subject.SaveAsync(StatementModelTestData.TestData1(), "Foo.bar", false);
+        await subject.SaveAsync(StatementModelTestData.TestData1(), false);
 
         var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(subject.SerialisedData));
         var reader = new StreamReader(memoryStream);

@@ -36,7 +36,7 @@ public class MapperIncomeToDto2Test
     public void ToModel_ShouldMapIncomeDtoToIncome()
     {
         // Arrange
-        var dto = new IncomeDto { Amount = 1000, BudgetBucketCode = "INCOME" };
+        var dto = new IncomeDto(1000, "INCOME");
         var bucket = new IncomeBudgetBucket { Code = "INCOME" };
         this.bucketRepo.GetByCode(dto.BudgetBucketCode).Returns(bucket);
 
@@ -53,7 +53,7 @@ public class MapperIncomeToDto2Test
     public void ToModel_ShouldThrowDataFormatException_WhenBucketCodeIsInvalid()
     {
         // Arrange
-        var dto = new IncomeDto { Amount = 1000, BudgetBucketCode = "INVALID" };
+        var dto = new IncomeDto(1000, "INVALID");
         this.bucketRepo.GetByCode(dto.BudgetBucketCode).Returns((BudgetBucket)null!);
 
         // Act & Assert

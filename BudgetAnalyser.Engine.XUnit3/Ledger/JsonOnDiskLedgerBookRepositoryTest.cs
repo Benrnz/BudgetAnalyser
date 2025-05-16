@@ -12,7 +12,6 @@ using NSubstitute;
 using Rees.UnitTestUtilities;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Ledger;
 
 public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
@@ -178,7 +177,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         loadedDto = subject.Dto;
         loadedDto!.Output(true, this.outputter);
 
-        await subject.SaveAsync(book, book.StorageKey, false);
+        await subject.SaveAsync(book, false);
         savedDto = subject.Dto;
         subject.Dto = null;
         savedDto!.Output(true, this.outputter);
@@ -223,7 +222,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
         loadedDto = subject.Dto;
         subject.Dto = null;
 
-        await subject.SaveAsync(book, book.StorageKey, true);
+        await subject.SaveAsync(book, true);
         savedDto = subject.Dto;
 
         savedDto!.Checksum.ShouldBe(loadedDto!.Checksum);
@@ -236,7 +235,9 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     {
         // Save TestData2 to produce the serialised data.
         var subject = CreateSubject(true);
-        await subject.SaveAsync(LedgerBookTestData.TestData2(), LoadFileName, false);
+        var testData = LedgerBookTestData.TestData2();
+        testData.StorageKey = LoadFileName;
+        await subject.SaveAsync(testData, false);
         var serialisedData = subject.SerialisedData;
         this.outputter.WriteLine(serialisedData);
         serialisedData.Length.ShouldBeGreaterThan(100);
@@ -256,12 +257,10 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     [Fact]
     public async Task Save_ShouldSaveTheJsonFile_GivenTestData2()
     {
-        var fileName = @"CompleteSmellyFoo.json";
-
         var subject = CreateSubject(true);
 
         var testData = LedgerBookTestData.TestData2();
-        await subject.SaveAsync(testData, fileName, false);
+        await subject.SaveAsync(testData, false);
 
         subject.SerialisedData.ShouldNotBeNullOrWhiteSpace();
         this.stopwatch.Stop();
@@ -272,7 +271,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     {
         var subject = CreateSubject(true);
 
-        await subject.SaveAsync(LedgerBookTestData.TestData2(), "Foo.json", false);
+        await subject.SaveAsync(LedgerBookTestData.TestData2(), false);
 
         ExtractCheckSum(subject.SerialisedData).ShouldBe(8435.06);
         this.stopwatch.Stop();
@@ -281,12 +280,10 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     [Fact]
     public async Task SaveEncrypted_ShouldSaveTheJsonFile_GivenTestData2()
     {
-        var fileName = @"CompleteSmellyFoo.json";
-
         var subject = CreateSubject(true);
 
         var testData = LedgerBookTestData.TestData2();
-        await subject.SaveAsync(testData, fileName, true);
+        await subject.SaveAsync(testData, true);
 
         subject.SerialisedData.ShouldNotBeNullOrWhiteSpace();
         this.stopwatch.Stop();
@@ -296,7 +293,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
     public async Task SavingAndLoading_ShouldProduceTheSameCheckSum_GivenTestData2()
     {
         var subject1 = CreateSubject(true);
-        await subject1.SaveAsync(LedgerBookTestData.TestData2(), "Foo2.json", false);
+        await subject1.SaveAsync(LedgerBookTestData.TestData2(), false);
         var serialisedData = subject1.SerialisedData;
 
         // this.outputter.WriteLine("Saved / Serialised Json:");

@@ -1,8 +1,4 @@
 ﻿namespace BudgetAnalyser.Engine.Widgets.Data;
 
-public class SurprisePaymentWidgetDto : WidgetDto
-{
-    public required string BucketCode { get; init; }
-    public required WeeklyOrFortnightly Frequency { get; init; }
-    public required DateOnly PaymentStartDate { get; init; }
-}
+public record SurprisePaymentWidgetDto(bool Visible, string WidgetGroup, string WidgetType, string BucketCode, WeeklyOrFortnightly Frequency, DateOnly PaymentStartDate)
+    : WidgetDto(Visible, WidgetGroup, WidgetType);

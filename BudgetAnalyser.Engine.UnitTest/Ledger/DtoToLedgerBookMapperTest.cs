@@ -16,15 +16,32 @@ public class DtoToLedgerBookMapperTest
     public void InvalidTransactionTypeShouldThrow()
     {
         var invalidTxn = new LedgerTransactionDto
-        {
-            Account = TestDataConstants.ChequeAccountName,
-            Amount = -12.45M,
-            Date = new DateOnly(2013, 02, 02),
-            Id = Guid.NewGuid(),
-            Narrative = "Foo",
-            TransactionType = "Foobar"
-        };
-        TestData.Reconciliations.First().Entries.Last().Transactions.Add(invalidTxn);
+        (
+            TestDataConstants.ChequeAccountName,
+            -12.45M,
+            Date: new DateOnly(2013, 02, 02),
+            Id: Guid.NewGuid(),
+            Narrative: "Foo",
+            TransactionType: "Foobar",
+            AutoMatchingReference: null
+        );
+        var firstReconciliation = TestData.Reconciliations.First();
+        var firstEntry = firstReconciliation.Entries.First();
+
+        // Update the entry with the modified transaction
+        var updatedTransactions = firstEntry.Transactions.ToList();
+        updatedTransactions[0] = invalidTxn;
+        var updatedEntry = firstEntry with { Transactions = updatedTransactions.ToArray() };
+
+        // Update the reconciliation with the modified entry
+        var updatedEntries = firstReconciliation.Entries.ToList();
+        updatedEntries[0] = updatedEntry;
+        var updatedReconciliation = firstReconciliation with { Entries = updatedEntries.ToArray() };
+
+        // Update the TestData with the modified reconciliation
+        var updatedReconciliations = TestData.Reconciliations.ToList();
+        updatedReconciliations[0] = updatedReconciliation;
+        TestData = TestData with { Reconciliations = updatedReconciliations.ToArray() };
 
         ArrangeAndAct();
     }
@@ -34,15 +51,34 @@ public class DtoToLedgerBookMapperTest
     public void NullTransactionTypeShouldThrow()
     {
         var invalidTxn = new LedgerTransactionDto
-        {
-            Account = TestDataConstants.ChequeAccountName,
-            Amount = -12.45M,
-            Date = new DateOnly(2013, 02, 02),
-            Id = Guid.NewGuid(),
-            Narrative = "Foo",
-            TransactionType = null
-        };
-        TestData.Reconciliations.First().Entries.Last().Transactions.Add(invalidTxn);
+        (
+            TestDataConstants.ChequeAccountName,
+            -12.45M,
+            Date: new DateOnly(2013, 02, 02),
+            Id: Guid.NewGuid(),
+            Narrative: "Foo",
+            TransactionType: null,
+            AutoMatchingReference: null
+        );
+        var firstReconciliation = TestData.Reconciliations.First();
+        var firstEntry = firstReconciliation.Entries.First();
+        var firstTransaction = firstEntry.Transactions.First();
+
+        // Update the entry with the modified transaction
+        var updatedTransactions = firstEntry.Transactions.ToList();
+        updatedTransactions[0] = invalidTxn;
+        var updatedEntry = firstEntry with { Transactions = updatedTransactions.ToArray() };
+
+        // Update the reconciliation with the modified entry
+        var updatedEntries = firstReconciliation.Entries.ToList();
+        updatedEntries[0] = updatedEntry;
+        var updatedReconciliation = firstReconciliation with { Entries = updatedEntries.ToArray() };
+
+        // Update the TestData with the modified reconciliation
+        var updatedReconciliations = TestData.Reconciliations.ToList();
+        updatedReconciliations[0] = updatedReconciliation;
+        TestData = TestData with { Reconciliations = updatedReconciliations.ToArray() };
+
         ArrangeAndAct();
     }
 
@@ -57,7 +93,9 @@ public class DtoToLedgerBookMapperTest
     [TestMethod]
     public void ShouldIgnoreAndContinueIfLedgerIsNotDeclared_GivenOneLedgerBucketIsMissing()
     {
-        TestData.Ledgers.RemoveAt(0);
+        var ledgers = TestData.Ledgers.Skip(1).ToArray();
+        var myTestData = TestData with { Ledgers = ledgers };
+        TestData = myTestData;
         var model = ArrangeAndAct();
 
         // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the
@@ -77,21 +115,21 @@ public class DtoToLedgerBookMapperTest
     public void ShouldMapCorrectNumberOfLineEntries()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Reconciliations.First().Entries.Count, result.Reconciliations.First().Entries.Count());
+        Assert.AreEqual(TestData.Reconciliations.First().Entries.Count(), result.Reconciliations.First().Entries.Count());
     }
 
     [TestMethod]
     public void ShouldMapCorrectNumberOfLineEntryTransactions()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.Count, result.Reconciliations.First().Entries.First().Transactions.Count());
+        Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.Count(), result.Reconciliations.First().Entries.First().Transactions.Count());
     }
 
     [TestMethod]
     public void ShouldMapCorrectNumberOfLines()
     {
         var result = ArrangeAndAct();
-        Assert.AreEqual(TestData.Reconciliations.Count, result.Reconciliations.Count());
+        Assert.AreEqual(TestData.Reconciliations.Count(), result.Reconciliations.Count());
     }
 
     [TestMethod]
@@ -224,7 +262,8 @@ public class DtoToLedgerBookMapperTest
     [TestMethod]
     public void ShouldRepopulateLedgerCollectionFromReconciliations_GivenDtoContainsNoLedgers()
     {
-        TestData.Ledgers.Clear();
+        var myTestData = TestData with { Ledgers = [] };
+        TestData = myTestData;
         var model = ArrangeAndAct();
 
         // There should be three ledgers in the book because it is deemed invalid for there to be NO ledgers at all from the persistence file. If this occurs it is repopulated based on the

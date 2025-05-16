@@ -23,31 +23,34 @@ public class DtoToLedgerEntryMapperTest
 </scg:List>
 </LedgerEntryDto.Transactions>
 </LedgerEntryDto>                 */
-        new()
-        {
-            Balance = 52.32M,
-            BucketCode = TestDataConstants.PowerBucketCode,
-            StoredInAccount = TestDataConstants.ChequeAccountName,
-            Transactions = new List<LedgerTransactionDto>
-            {
-                new()
-                {
-                    Account = StatementModelTestData.ChequeAccount.Name,
-                    Amount = 140M,
-                    Id = Guid.NewGuid(),
-                    Narrative = "Foo...",
-                    TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
-                },
-                new()
-                {
-                    Account = StatementModelTestData.ChequeAccount.Name,
-                    Amount = -98.56M,
-                    Id = Guid.NewGuid(),
-                    Narrative = "Bar...",
-                    TransactionType = typeof(CreditLedgerTransaction).FullName
-                }
-            }
-        };
+        new
+        (
+            52.32M,
+            TestDataConstants.PowerBucketCode,
+            TestDataConstants.ChequeAccountName,
+            [
+                new LedgerTransactionDto
+                (
+                    StatementModelTestData.ChequeAccount.Name,
+                    140M,
+                    Id: Guid.NewGuid(),
+                    Narrative: "Foo...",
+                    TransactionType: typeof(BudgetCreditLedgerTransaction).FullName,
+                    AutoMatchingReference: null,
+                    Date: null
+                ),
+                new LedgerTransactionDto
+                (
+                    StatementModelTestData.ChequeAccount.Name,
+                    -98.56M,
+                    Id: Guid.NewGuid(),
+                    Narrative: "Bar...",
+                    TransactionType: typeof(CreditLedgerTransaction).FullName,
+                    AutoMatchingReference: null,
+                    Date: null
+                )
+            ]
+        );
 
     [TestMethod]
     public void ShouldMapBalance()

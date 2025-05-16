@@ -7,7 +7,7 @@ internal class MapperMobileSettingsToDto2 : IDtoMapper<MobileStorageSettingsDto,
 {
     public MobileStorageSettingsDto ToDto(MobileStorageSettings model)
     {
-        var dto = new MobileStorageSettingsDto { AccessKeyId = model.AccessKeyId, AccessKeySecret = model.AccessKeySecret, AmazonS3Region = model.AmazonS3Region };
+        var dto = new MobileStorageSettingsDto(model.AccessKeyId, model.AccessKeySecret, model.AmazonS3Region);
         return dto;
     }
 

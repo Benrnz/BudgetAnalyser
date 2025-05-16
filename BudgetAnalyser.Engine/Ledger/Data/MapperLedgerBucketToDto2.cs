@@ -13,7 +13,7 @@ internal class MapperLedgerBucketToDto2(IBudgetBucketRepository bucketRepo, IAcc
 
     public LedgerBucketDto ToDto(LedgerBucket model)
     {
-        var dto = new LedgerBucketDto { BucketCode = model.BudgetBucket.Code, StoredInAccount = model.StoredInAccount.Name };
+        var dto = new LedgerBucketDto(model.BudgetBucket.Code, model.StoredInAccount.Name);
         return dto;
     }
 

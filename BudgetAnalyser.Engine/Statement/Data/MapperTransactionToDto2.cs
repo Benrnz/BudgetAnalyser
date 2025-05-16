@@ -13,18 +13,18 @@ public class MapperTransactionToDto2(IAccountTypeRepository accountRepo, IBudget
     public TransactionDto ToDto(Transaction model)
     {
         var dto = new TransactionDto
-        {
-            Account = model.Account.Name,
-            Amount = model.Amount,
-            BudgetBucketCode = model.BudgetBucket?.Code,
-            Date = model.Date,
-            Description = model.Description,
-            Id = model.Id,
-            Reference1 = model.Reference1,
-            Reference2 = model.Reference2,
-            Reference3 = model.Reference3,
-            TransactionType = model.TransactionType.Name
-        };
+        (
+            model.Account.Name,
+            model.Amount,
+            BudgetBucketCode: model.BudgetBucket?.Code,
+            Date: model.Date,
+            Description: model.Description,
+            Id: model.Id,
+            Reference1: model.Reference1,
+            Reference2: model.Reference2,
+            Reference3: model.Reference3,
+            TransactionType: model.TransactionType.Name
+        );
         return dto;
     }
 

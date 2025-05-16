@@ -34,7 +34,7 @@ internal class JsonOnDiskLedgerBookRepository(
 
         var book = new LedgerBook { Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' '), StorageKey = storageKey, Modified = DateTime.UtcNow };
 
-        await SaveAsync(book, storageKey, false);
+        await SaveAsync(book, false);
         return await LoadAsync(storageKey, false);
     }
 
@@ -68,8 +68,8 @@ internal class JsonOnDiskLedgerBookRepository(
             throw new DataFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", storageKey));
         }
 
-        dataEntity.StorageKey = storageKey;
         var book = this.mapper.ToModel(dataEntity);
+        book.StorageKey = storageKey;
 
         var messages = new StringBuilder();
         if (!book.Validate(messages))
@@ -96,24 +96,21 @@ internal class JsonOnDiskLedgerBookRepository(
         return book;
     }
 
-    public async Task SaveAsync(LedgerBook book, string storageKey, bool isEncrypted)
+    public async Task SaveAsync(LedgerBook book, bool isEncrypted)
     {
         if (book is null)
         {
             throw new ArgumentNullException(nameof(book));
         }
 
-        if (storageKey.IsNothing())
+        if (book.StorageKey.IsNothing())
         {
-            throw new ArgumentNullException(nameof(storageKey));
+            throw new ArgumentException("LedgerBook storage key cannot be blank.");
         }
 
         UpdateModifiedDate(book);
-        var dataEntity = MapToDto(book);
-        book.StorageKey = storageKey;
-        dataEntity.StorageKey = storageKey;
-        dataEntity.Checksum = CalculateChecksum(book);
-        this.logger.LogInfo(_ => $"Saving Ledger Book to disk: {storageKey}. Checksum is: {dataEntity.Checksum}");
+        var dataEntity = MapToDto(book, CalculateChecksum(book));
+        this.logger.LogInfo(_ => $"Saving Ledger Book to disk: {book.StorageKey}. Checksum is: {dataEntity.Checksum}");
 
         await SaveDtoToDiskAsync(dataEntity, isEncrypted);
     }
@@ -127,9 +124,10 @@ internal class JsonOnDiskLedgerBookRepository(
         return ledgerBookDto ?? throw new CorruptedLedgerBookException("Unable to deserialise ledger book data into correct type.");
     }
 
-    protected virtual LedgerBookDto MapToDto(LedgerBook book)
+    protected virtual LedgerBookDto MapToDto(LedgerBook book, double checksum)
     {
-        return this.mapper.ToDto(book);
+        var dto = this.mapper.ToDto(book);
+        return dto with { Checksum = checksum };
     }
 
     protected virtual async Task SerialiseAndWriteToStream(Stream stream, LedgerBookDto dataEntity)

@@ -11,20 +11,20 @@ public class DtoToMatchingRuleMapperTest
     private static readonly Guid Id = new("901EC4BB-B8B5-43CD-A8C9-15121048CBA4");
     private MatchingRule Result { get; set; }
 
-    private MatchingRuleDto TestData => new()
-    {
-        Amount = 123.45M,
-        BucketCode = TestDataConstants.PhoneBucketCode,
-        Created = new DateTime(2014, 07, 04),
-        Description = "The quick brown fox",
-        LastMatch = new DateTime(2014, 07, 29),
-        MatchCount = 2,
-        Reference1 = "jumped",
-        Reference2 = "over",
-        Reference3 = "the lazy",
-        RuleId = Id,
-        TransactionType = "dog."
-    };
+    private MatchingRuleDto TestData => new(
+        123.45M,
+        BucketCode: TestDataConstants.PhoneBucketCode,
+        Created: new DateTime(2014, 07, 04),
+        Description: "The quick brown fox",
+        LastMatch: new DateTime(2014, 07, 29),
+        MatchCount: 2,
+        Reference1: "jumped",
+        Reference2: "over",
+        Reference3: "the lazy",
+        TransactionType: "dog.",
+        And: true
+    )
+    { RuleId = Id };
 
     [TestMethod]
     public void ShouldMapAmount()

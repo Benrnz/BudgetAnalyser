@@ -33,7 +33,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         }
 
         var newStatement = new StatementModel(this.logger) { StorageKey = storageKey };
-        await SaveAsync(newStatement, storageKey, false);
+        await SaveAsync(newStatement, false);
     }
 
     public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
@@ -61,30 +61,27 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         return this.mapper.ToModel(transactionSet);
     }
 
-    public async Task SaveAsync(StatementModel model, string storageKey, bool isEncrypted)
+    public async Task SaveAsync(StatementModel model, bool isEncrypted)
     {
         if (model is null)
         {
             throw new ArgumentNullException(nameof(model));
         }
 
-        if (storageKey.IsNothing())
+        if (model.StorageKey.IsNothing())
         {
-            throw new ArgumentNullException(nameof(storageKey));
+            throw new ArgumentNullException(nameof(StatementModel.StorageKey));
         }
 
         var transactionSet = MapToDto(model);
-        transactionSet.VersionHash = VersionHash;
-        transactionSet.StorageKey = storageKey;
-        transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
         if (model.AllTransactions.Count() != transactionSet.Transactions.Count())
         {
             throw new StatementModelChecksumException(
-                $"Only {transactionSet.Transactions.Count} out of {model.AllTransactions.Count()} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.");
+                $"Only {transactionSet.Transactions.Count()} out of {model.AllTransactions.Count()} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.");
         }
 
         var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = CreateWritableStream(storageKey, writer);
+        await using var stream = CreateWritableStream(model.StorageKey, writer);
         await using var streamWriter = new StreamWriter(stream);
         await WriteToStream(transactionSet, streamWriter);
     }
@@ -96,7 +93,12 @@ internal class CsvOnDiskStatementModelRepositoryV2(
 
     protected virtual TransactionSetDto MapToDto(StatementModel model)
     {
-        return this.mapper.ToDto(model);
+        var dto = this.mapper.ToDto(model);
+        return dto with
+        {
+            VersionHash = VersionHash,
+            Checksum = CalculateTransactionCheckSum(dto)
+        };
     }
 
     [SuppressMessage("ReSharper", "MethodHasAsyncOverload")]
@@ -164,13 +166,13 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         }
 
         var transactionSet = new TransactionSetDto
-        {
-            Checksum = this.transactionHeaderDto.Checksum,
-            StorageKey = this.transactionHeaderDto.StorageKey,
-            LastImport = this.transactionHeaderDto.LastImport,
-            Transactions = transactions,
-            VersionHash = this.transactionHeaderDto.VersionHash
-        };
+        (
+            Checksum: this.transactionHeaderDto.Checksum,
+            StorageKey: this.transactionHeaderDto.StorageKey,
+            LastImport: this.transactionHeaderDto.LastImport,
+            Transactions: transactions.ToArray(),
+            VersionHash: this.transactionHeaderDto.VersionHash
+        );
         return transactionSet;
     }
 
@@ -261,18 +263,18 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         try
         {
             return new TransactionDto
-            {
-                TransactionType = this.importUtilities.FetchString(span, 0),
-                Description = this.importUtilities.FetchString(span, 1),
-                Reference1 = this.importUtilities.FetchString(span, 2),
-                Reference2 = this.importUtilities.FetchString(span, 3),
-                Reference3 = this.importUtilities.FetchString(span, 4),
-                Amount = this.importUtilities.FetchDecimal(span, 5),
-                Date = this.importUtilities.FetchDate(span, 6),
-                BudgetBucketCode = this.importUtilities.FetchString(span, 7),
-                Account = this.importUtilities.FetchString(span, 8),
-                Id = this.importUtilities.FetchGuid(span, 9)
-            };
+            (
+                TransactionType: this.importUtilities.FetchString(span, 0),
+                Description: this.importUtilities.FetchString(span, 1),
+                Reference1: this.importUtilities.FetchString(span, 2),
+                Reference2: this.importUtilities.FetchString(span, 3),
+                Reference3: this.importUtilities.FetchString(span, 4),
+                Amount: this.importUtilities.FetchDecimal(span, 5),
+                Date: this.importUtilities.FetchDate(span, 6),
+                BudgetBucketCode: this.importUtilities.FetchString(span, 7),
+                Account: this.importUtilities.FetchString(span, 8),
+                Id: this.importUtilities.FetchGuid(span, 9)
+            );
         }
         catch (InvalidDataException ex)
         {

@@ -1,6 +1,3 @@
 ﻿namespace BudgetAnalyser.Engine.Widgets.Data;
 
-public class MultiInstanceWidgetDto : WidgetDto
-{
-    public required string BucketCode { get; init; }
-}
+public record MultiInstanceWidgetDto(bool Visible, string WidgetGroup, string WidgetType, string BucketCode) : WidgetDto(Visible, WidgetGroup, WidgetType);

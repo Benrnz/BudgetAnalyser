@@ -51,15 +51,15 @@ internal class MapperLedgerBookToDto2 : IDtoMapper<LedgerBookDto, LedgerBook>
     public LedgerBookDto ToDto(LedgerBook model)
     {
         var ledgerBook = new LedgerBookDto
-        {
-            Ledgers = model.Ledgers.Select(this.ledgerMapper.ToDto).ToList(),
-            MobileSettings = model.MobileSettings is null ? null : this.mobileSettingsMapper.ToDto(model.MobileSettings),
-            Modified = model.Modified.ToUniversalTime(),
-            Name = model.Name,
-            Reconciliations = model.Reconciliations.Select(this.ledgerEntryLineMapper.ToDto).ToList(),
-            StorageKey = model.StorageKey
-            // Checksum is set by the repository class when saving.
-        };
+        (
+            Ledgers: model.Ledgers.Select(this.ledgerMapper.ToDto).ToArray(),
+            MobileSettings: model.MobileSettings is null ? null : this.mobileSettingsMapper.ToDto(model.MobileSettings),
+            Modified: model.Modified.ToUniversalTime(),
+            Name: model.Name,
+            Reconciliations: model.Reconciliations.Select(this.ledgerEntryLineMapper.ToDto).ToArray(),
+            StorageKey: model.StorageKey,
+            Checksum: 0
+        );
 
         return ledgerBook;
     }

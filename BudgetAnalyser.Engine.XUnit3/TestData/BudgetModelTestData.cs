@@ -9,13 +9,13 @@ public static class BudgetModelTestData
     {
         return new[]
         {
-            new BudgetBucketDto { Code = TestDataConstants.RentBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Rent for my bachelor pad" },
-            new BudgetBucketDto { Code = TestDataConstants.FoodBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Groceries, staples, and necessities" },
-            new BudgetBucketDto { Code = TestDataConstants.WaterBucketCode, Type = BucketDtoType.SpentPeriodicallyExpense, Description = "Water Rates" },
-            new BudgetBucketDto { Code = TestDataConstants.HairBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Haircuts" },
-            new BudgetBucketDto { Code = TestDataConstants.CarMtcBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Car Maintenance" },
-            new BudgetBucketDto { Code = TestDataConstants.PhoneBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Phone and Internet" },
-            new BudgetBucketDto { Code = TestDataConstants.IncomeBucketCode, Type = BucketDtoType.Income, Description = "Salary from Lawn Mowing business" }
+            new BudgetBucketDto(true, TestDataConstants.RentBucketCode, Type: BucketDtoType.SpentPeriodicallyExpense, Description: "Rent for my bachelor pad"),
+            new BudgetBucketDto(true, TestDataConstants.FoodBucketCode, Type: BucketDtoType.SpentPeriodicallyExpense, Description: "Groceries, staples, and necessities"),
+            new BudgetBucketDto(true, TestDataConstants.WaterBucketCode, Type: BucketDtoType.SpentPeriodicallyExpense, Description: "Water Rates"),
+            new BudgetBucketDto(true, TestDataConstants.HairBucketCode, Type: BucketDtoType.SavedUpForExpense, Description: "Haircuts"),
+            new BudgetBucketDto(true, TestDataConstants.CarMtcBucketCode, Type: BucketDtoType.SavedUpForExpense, Description: "Car Maintenance"),
+            new BudgetBucketDto(true, TestDataConstants.PhoneBucketCode, Type: BucketDtoType.SavedUpForExpense, Description: "Phone and Internet"),
+            new BudgetBucketDto(true, TestDataConstants.IncomeBucketCode, Type: BucketDtoType.Income, Description: "Salary from Lawn Mowing business")
         };
     }
 

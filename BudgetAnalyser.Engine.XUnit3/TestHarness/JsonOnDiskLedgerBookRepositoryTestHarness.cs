@@ -26,9 +26,9 @@ internal class JsonOnDiskLedgerBookRepositoryTestHarness : JsonOnDiskLedgerBookR
         return Dto;
     }
 
-    protected override LedgerBookDto MapToDto(LedgerBook book)
+    protected override LedgerBookDto MapToDto(LedgerBook book, double checksum)
     {
-        Dto = base.MapToDto(book);
+        Dto = base.MapToDto(book, checksum);
         return Dto;
     }
 

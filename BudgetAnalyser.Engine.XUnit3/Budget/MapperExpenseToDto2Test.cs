@@ -37,7 +37,7 @@ public class MapperExpenseToDto2Test
     public void ToModel_ShouldMapExpenseDtoToExpense()
     {
         // Arrange
-        var dto = new ExpenseDto { Amount = 500, BudgetBucketCode = TestDataConstants.CarMtcBucketCode };
+        var dto = new ExpenseDto(500, TestDataConstants.CarMtcBucketCode);
         var carMtcBucket = BudgetBucketTestData.BudgetModelTestData1Buckets.Single(b => b.Code == TestDataConstants.CarMtcBucketCode);
         this.bucketRepo.GetByCode(dto.BudgetBucketCode).Returns(carMtcBucket);
 
@@ -54,7 +54,7 @@ public class MapperExpenseToDto2Test
     public void ToModel_ShouldThrowDataFormatException_WhenBucketCodeIsInvalid()
     {
         // Arrange
-        var dto = new ExpenseDto { Amount = 500, BudgetBucketCode = "INVALID" };
+        var dto = new ExpenseDto(500, "INVALID");
         this.bucketRepo.GetByCode(dto.BudgetBucketCode).Returns((BudgetBucket)null!);
 
         // Act & Assert
