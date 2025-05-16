@@ -23,8 +23,6 @@ public class StatementViewModel : ObservableRecipient
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
     }
 
-    public decimal AverageDebit => this.transactionService.AverageDebit;
-
     public bool Dirty
     {
         get => this.doNotUseDirty;
@@ -110,7 +108,6 @@ public class StatementViewModel : ObservableRecipient
         OnPropertyChanged(nameof(TotalCredits));
         OnPropertyChanged(nameof(TotalDebits));
         OnPropertyChanged(nameof(TotalDifference));
-        OnPropertyChanged(nameof(AverageDebit));
         OnPropertyChanged(nameof(TotalCount));
         OnPropertyChanged(nameof(HasTransactions));
         OnPropertyChanged(nameof(StatementName));

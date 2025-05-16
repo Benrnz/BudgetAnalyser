@@ -11,11 +11,6 @@ namespace BudgetAnalyser.Engine.Services;
 public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFoundation
 {
     /// <summary>
-    ///     Gets the calculated average debit.
-    /// </summary>
-    decimal AverageDebit { get; }
-
-    /// <summary>
     ///     Gets the statement model.
     /// </summary>
     StatementModel? StatementModel { get; }

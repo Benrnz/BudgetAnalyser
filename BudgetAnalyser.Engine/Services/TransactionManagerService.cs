@@ -143,9 +143,6 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     }
 
     /// <inheritdoc />
-    public decimal AverageDebit => this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount < 0).SafeAverage(t => t.Amount);
-
-    /// <inheritdoc />
     public StatementModel? StatementModel { get; private set; }
 
     /// <inheritdoc />

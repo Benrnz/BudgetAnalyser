@@ -4,9 +4,9 @@
              xmlns:root="clr-namespace:BudgetAnalyser"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             DataContextChanged="OnDataContextChanged" 
+             DataContextChanged="OnDataContextChanged"
              d:DataContext="{d:DesignInstance statement:StatementController}">
 
     <Grid Background="{StaticResource Brush.MainBackground}">
@@ -139,17 +139,6 @@
                                Text="{Binding ViewModel.TotalDifference, StringFormat=C}" />
                 </StackPanel>
             </Border>
-            <Border Background="{StaticResource Brush.DebitBackground1}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The average debit transaction from the currently displayed list.">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="Avg DR: " />
-                    <TextBlock FontSize="16"
-                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="{Binding ViewModel.AverageDebit, StringFormat=C}" />
-                </StackPanel>
-            </Border>
             <Border Background="{StaticResource Brush.NeutralNumberBackground}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                     ToolTip="The number of transactions currently displayed.">
@@ -224,7 +213,7 @@
                      SelectedItem="{Binding ViewModel.SelectedRow}"
                      SelectionMode="Single"
                      VirtualizingPanel.IsVirtualizing="False"
-                     Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource Converter.BoolToVis}}"/>
+                     Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource Converter.BoolToVis}}" />
         </Grid>
     </Grid>
 
