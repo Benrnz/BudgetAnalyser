@@ -32,7 +32,7 @@
                            Text="*"
                            Visibility="{Binding ViewModel.Dirty, Converter={StaticResource Converter.BoolToVis}}" />
             </StackPanel>
-            <!-- Tool bar -->
+            <!-- Toolbar -->
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
@@ -150,17 +150,7 @@
                                Text="Transactions" />
                 </StackPanel>
             </Border>
-            <Border Background="{StaticResource Brush.NeutralNumberBackground}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The total number of months the currently displayed transaction span.">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="Months: " />
-                    <TextBlock FontSize="16"
-                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="{Binding ViewModel.Statement.DurationInMonths}" />
-                </StackPanel>
-            </Border>
+
             <Border Background="{StaticResource Brush.ImportantHighlightLight}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                     ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows."
@@ -168,6 +158,16 @@
                 <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                            Text="{Binding ViewModel.DuplicateSummary}" />
             </Border>
+
+            <Button Style="{StaticResource Button.Round.Left}"
+                    IsEnabled="{Binding CanNavigatePrevious}"
+                    Click="OnNavigatePreviousClick"
+                    ToolTip="Previous Page" />
+            <Button Style="{StaticResource Button.Round.Right}"
+                    Click="OnNavigateNextClick"
+                    IsEnabled="{Binding CanNavigateNext}"
+                    ToolTip="Next Page" />
+
         </StackPanel>
 
         <Grid Grid.Row="2"
@@ -204,7 +204,7 @@
                      Grid.Row="1"
                      IsTextSearchEnabled="False"
                      ItemContainerStyle="{StaticResource ListBox.TransactionContainer}"
-                     ItemsSource="{Binding ViewModel.Transactions}"
+                     ItemsSource="{Binding ViewModel.PagedTransactions}"
                      ItemTemplate="{StaticResource TransactionTemplate1}"
                      KeyUp="OnTransactionListBoxKeyUp"
                      MinHeight="95"

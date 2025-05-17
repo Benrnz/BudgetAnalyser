@@ -60,11 +60,11 @@ public partial class StatementUserControl
                     var txn = (Transaction)t;
                     return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
                 }
-            : t =>
-            {
-                var txn = (Transaction)t;
-                return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
-            };
+                : t =>
+                {
+                    var txn = (Transaction)t;
+                    return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
+                };
         }
     }
 
@@ -127,6 +127,16 @@ public partial class StatementUserControl
         }
 
         ApplyBucketFilter();
+    }
+
+    private void OnNavigateNextClick(object sender, RoutedEventArgs e)
+    {
+        Controller.NavigateNextPage();
+    }
+
+    private void OnNavigatePreviousClick(object sender, RoutedEventArgs e)
+    {
+        Controller.NavigatePreviousPage();
     }
 
     private void OnSearchTextBoxGotFocus(object? sender, RoutedEventArgs e)

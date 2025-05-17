@@ -17,9 +17,13 @@ namespace BudgetAnalyser.Statement;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class StatementController : ControllerBase, IShowableController
 {
+    private const int ItemsPerPage = 20;
     private readonly ITransactionManagerService transactionService;
     private readonly IUiContext uiContext;
     private string? doNotUseBucketFilter;
+    private bool doNotUseCanNavigateNext;
+    private bool doNotUseCanNavigatePrevious;
+    private int doNotUseCurrentPage = 1;
     private bool doNotUseShown;
     private string? doNotUseTextFilter;
     private Guid shellDialogCorrelationId;
@@ -70,15 +74,54 @@ public class StatementController : ControllerBase, IShowableController
         }
     }
 
+    public bool CanNavigateNext
+    {
+        get => this.doNotUseCanNavigateNext;
+        private set
+        {
+            if (value == this.doNotUseCanNavigateNext)
+            {
+                return;
+            }
+
+            this.doNotUseCanNavigateNext = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool CanNavigatePrevious
+    {
+        get => this.doNotUseCanNavigatePrevious;
+        private set
+        {
+            if (value == this.doNotUseCanNavigatePrevious)
+            {
+                return;
+            }
+
+            this.doNotUseCanNavigatePrevious = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int CurrentPage
+    {
+        get => this.doNotUseCurrentPage;
+        set
+        {
+            this.doNotUseCurrentPage = value;
+            UpdatePagedTransactions();
+            OnPropertyChanged();
+        }
+    }
+
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
     internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
     public StatementControllerFileOperations FileOperations { get; }
 
-    [UsedImplicitly]
     public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
 
-    [UsedImplicitly]
     public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
     internal SplitTransactionController SplitTransactionController => this.uiContext.Controller<SplitTransactionController>();
@@ -97,8 +140,11 @@ public class StatementController : ControllerBase, IShowableController
             OnPropertyChanged();
             ViewModel.Transactions = this.transactionService.FilterBySearchText(TextFilter);
             ViewModel.TriggerRefreshTotalsRow();
+            CurrentPage = 1;
         }
     }
+
+    public int TotalPages => (ViewModel.Transactions.Count + ItemsPerPage - 1) / ItemsPerPage;
 
     public StatementViewModel ViewModel => FileOperations.ViewModel;
 
@@ -121,6 +167,22 @@ public class StatementController : ControllerBase, IShowableController
     {
         TextFilter = null;
         ViewModel.Transactions = this.transactionService.ClearBucketAndTextFilters();
+    }
+
+    public void NavigateNextPage()
+    {
+        if (CurrentPage < TotalPages)
+        {
+            CurrentPage++;
+        }
+    }
+
+    public void NavigatePreviousPage()
+    {
+        if (CurrentPage > 1)
+        {
+            CurrentPage--;
+        }
     }
 
     public void RegisterListener<TMessage>(StatementUserControl recipient, MessageHandler<StatementUserControl, TMessage> handler) where TMessage : MessageBase
@@ -234,6 +296,7 @@ public class StatementController : ControllerBase, IShowableController
         this.transactionService.FilterTransactions(message.Criteria);
         ViewModel.Statement = this.transactionService.StatementModel;
         ViewModel.Transactions = new ObservableCollection<Transaction>(ViewModel.Statement!.Transactions);
+        CurrentPage = 1;
         ViewModel.TriggerRefreshTotalsRow();
         OnPropertyChanged(nameof(BucketFilter));
     }
@@ -242,12 +305,16 @@ public class StatementController : ControllerBase, IShowableController
     {
         TextFilter = null;
         BucketFilter = null;
+        CurrentPage = 1;
         await FileOperations.MergeInNewTransactions();
+        UpdatePagedTransactions();
     }
 
     private async void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)
     {
+        CurrentPage = 1;
         await FileOperations.SyncWithServiceAsync();
+        UpdatePagedTransactions();
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs e)
@@ -283,5 +350,13 @@ public class StatementController : ControllerBase, IShowableController
 
         this.shellDialogCorrelationId = Guid.NewGuid();
         SplitTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
+    }
+
+    private void UpdatePagedTransactions()
+    {
+        CanNavigateNext = CanNavigatePrevious = false;
+        ViewModel.PagedTransactions = new ObservableCollection<Transaction>(ViewModel.Transactions.Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage));
+        CanNavigateNext = CurrentPage < TotalPages;
+        CanNavigatePrevious = CurrentPage > 1;
     }
 }

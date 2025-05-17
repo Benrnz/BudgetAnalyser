@@ -13,6 +13,7 @@ public class StatementViewModel : ObservableRecipient
     private readonly ITransactionManagerService transactionService;
     private bool doNotUseDirty;
     private string? doNotUseDuplicateSummary;
+    private ObservableCollection<Transaction> doNotUsePagedTransactions = new();
     private Transaction? doNotUseSelectedRow;
     private StatementModel? doNotUseStatement;
     private ObservableCollection<Transaction> doNotUseTransactions = new();
@@ -53,6 +54,21 @@ public class StatementViewModel : ObservableRecipient
 
     public bool HasTransactions => Statement is not null && Statement.Transactions.Any();
 
+    public ObservableCollection<Transaction> PagedTransactions
+    {
+        get => this.doNotUsePagedTransactions;
+        internal set
+        {
+            if (Equals(value, this.doNotUsePagedTransactions))
+            {
+                return;
+            }
+
+            this.doNotUsePagedTransactions = value;
+            OnPropertyChanged();
+        }
+    }
+
     public Transaction? SelectedRow
     {
         get => this.doNotUseSelectedRow;
@@ -83,6 +99,7 @@ public class StatementViewModel : ObservableRecipient
     public decimal TotalDebits => this.transactionService.TotalDebits;
     public decimal TotalDifference => TotalCredits + TotalDebits;
 
+    // TODO Does this need to be an ObservableCollection?
     public ObservableCollection<Transaction> Transactions
     {
         get => this.doNotUseTransactions;
