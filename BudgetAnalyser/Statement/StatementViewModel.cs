@@ -13,17 +13,16 @@ public class StatementViewModel : ObservableRecipient
     private readonly ITransactionManagerService transactionService;
     private bool doNotUseDirty;
     private string? doNotUseDuplicateSummary;
+    private ObservableCollection<Transaction> doNotUsePagedTransactions = new();
     private Transaction? doNotUseSelectedRow;
     private StatementModel? doNotUseStatement;
-    private ObservableCollection<Transaction> doNotUseTransactions = new();
+    private List<Transaction> doNotUseTransactions = new();
 
     public StatementViewModel(IApplicationDatabaseFacade applicationDatabaseService, ITransactionManagerService transactionService)
     {
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
     }
-
-    public decimal AverageDebit => this.transactionService.AverageDebit;
 
     public bool Dirty
     {
@@ -55,6 +54,21 @@ public class StatementViewModel : ObservableRecipient
 
     public bool HasTransactions => Statement is not null && Statement.Transactions.Any();
 
+    public ObservableCollection<Transaction> PagedTransactions
+    {
+        get => this.doNotUsePagedTransactions;
+        internal set
+        {
+            if (Equals(value, this.doNotUsePagedTransactions))
+            {
+                return;
+            }
+
+            this.doNotUsePagedTransactions = value;
+            OnPropertyChanged();
+        }
+    }
+
     public Transaction? SelectedRow
     {
         get => this.doNotUseSelectedRow;
@@ -85,7 +99,8 @@ public class StatementViewModel : ObservableRecipient
     public decimal TotalDebits => this.transactionService.TotalDebits;
     public decimal TotalDifference => TotalCredits + TotalDebits;
 
-    public ObservableCollection<Transaction> Transactions
+    // TODO Does this need to be an ObservableCollection?
+    public List<Transaction> Transactions
     {
         get => this.doNotUseTransactions;
         internal set
@@ -110,7 +125,6 @@ public class StatementViewModel : ObservableRecipient
         OnPropertyChanged(nameof(TotalCredits));
         OnPropertyChanged(nameof(TotalDebits));
         OnPropertyChanged(nameof(TotalDifference));
-        OnPropertyChanged(nameof(AverageDebit));
         OnPropertyChanged(nameof(TotalCount));
         OnPropertyChanged(nameof(HasTransactions));
         OnPropertyChanged(nameof(StatementName));

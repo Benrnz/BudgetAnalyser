@@ -40,10 +40,14 @@ public class StatementControllerFileOperations : ControllerBase
 
     public bool LoadingData
     {
-        [UsedImplicitly]
         get => this.doNotUseLoadingData;
         private set
         {
+            if (this.doNotUseLoadingData == value)
+            {
+                return;
+            }
+
             this.doNotUseLoadingData = value;
             OnPropertyChanged();
         }
@@ -109,6 +113,7 @@ public class StatementControllerFileOperations : ControllerBase
     internal async Task SyncWithServiceAsync()
     {
         var statementModel = this.transactionService.StatementModel;
+        ViewModel.Statement = null; // Prevent events from firing while updating the model.
         LoadingData = true;
         await Dispatcher.CurrentDispatcher.BeginInvoke(
             DispatcherPriority.Normal,

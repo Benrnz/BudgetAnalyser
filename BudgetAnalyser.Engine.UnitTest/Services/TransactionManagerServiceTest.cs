@@ -22,12 +22,6 @@ public class TransactionManagerServiceTest
     private StatementModel testData;
 
     [TestMethod]
-    public void AverageDebit_ShouldBe115_GivenTestData2()
-    {
-        Assert.AreEqual(-115.25M, decimal.Round(this.subject.AverageDebit, 2));
-    }
-
-    [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void Ctor_ShouldThrow_GivenNullBucketRepo()
     {

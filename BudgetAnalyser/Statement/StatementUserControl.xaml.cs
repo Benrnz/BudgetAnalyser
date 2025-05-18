@@ -129,6 +129,16 @@ public partial class StatementUserControl
         ApplyBucketFilter();
     }
 
+    private void OnNavigateNextClick(object sender, RoutedEventArgs e)
+    {
+        Controller.NavigateNextPage();
+    }
+
+    private void OnNavigatePreviousClick(object sender, RoutedEventArgs e)
+    {
+        Controller.NavigatePreviousPage();
+    }
+
     private void OnSearchTextBoxGotFocus(object? sender, RoutedEventArgs e)
     {
         AnimateWidth(this.SearchTextBox, SearchBoxMinWidth, SearchBoxMaxWidth);

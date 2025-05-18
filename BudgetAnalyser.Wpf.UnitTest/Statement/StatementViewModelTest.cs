@@ -1,5 +1,4 @@
 ﻿using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Statement;
 using BudgetAnalyser.Wpf.UnitTest.TestData;
 using Moq;
@@ -57,14 +56,14 @@ public class StatementViewModelTest
     }
 
     [TestMethod]
-    public void TriggerRefreshTotalsRowShouldRaise10Events()
+    public void TriggerRefreshTotalsRowShouldRaise7Events()
     {
         var subject = Arrange();
         var eventCount = 0;
         subject.PropertyChanged += (s, e) => eventCount++;
         subject.TriggerRefreshTotalsRow();
 
-        Assert.AreEqual(8, eventCount);
+        Assert.AreEqual(7, eventCount);
     }
 
     private StatementViewModel Arrange()
@@ -77,13 +76,6 @@ public class StatementViewModelTest
     private StatementViewModel CreateSubject()
     {
         return new StatementViewModel(new Mock<IApplicationDatabaseFacade>().Object, this.mockTransactionService.Object);
-    }
-
-    private static Transaction GetPhoneTxnFromFullList(StatementViewModel subject)
-    {
-        var transactionFromFullList = subject.Statement.Transactions
-            .Single(t => t.BudgetBucket == StatementModelTestData.PhoneBucket && t.Date == new DateOnly(2013, 07, 16));
-        return transactionFromFullList;
     }
 
     private static IWaitCursor WaitCursorFactory()

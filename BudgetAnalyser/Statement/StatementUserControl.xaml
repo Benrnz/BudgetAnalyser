@@ -4,26 +4,27 @@
              xmlns:root="clr-namespace:BudgetAnalyser"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             DataContextChanged="OnDataContextChanged" 
+             DataContextChanged="OnDataContextChanged"
              d:DataContext="{d:DesignInstance statement:StatementController}">
 
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
-            <!-- Menu bar -->
+            <!-- Header bar & Tool bar -->
             <RowDefinition Height="Auto" />
-            <!-- Tool bar -->
+            <!-- Oil light & Navigation bar -->
             <RowDefinition Height="Auto" />
-            <!-- Transaction Headers -->
-            <RowDefinition Height="*" />
             <!-- Transaction List -->
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <!-- Header bar & Tool bar -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <!-- Header bar -->
             <StackPanel Margin="8,2,2,2"
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource TextBlock.Heading1}"
@@ -32,8 +33,9 @@
                            Text="*"
                            Visibility="{Binding ViewModel.Dirty, Converter={StaticResource Converter.BoolToVis}}" />
             </StackPanel>
-            <!-- Tool bar -->
-            <StackPanel Grid.Column="1"
+            <!-- Toolbar -->
+            <StackPanel Grid.Row="0"
+                        Grid.Column="1"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
                 <Grid>
@@ -92,96 +94,95 @@
                         ToolTip="Merge in new Transactions. This will also save any unsaved changes before merging new transactions." />
             </StackPanel>
         </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <!-- Oil light -->
+            <StackPanel Grid.Column="0"
+                        Orientation="Horizontal"
+                        SnapsToDevicePixels="True"
+                        TextBlock.Foreground="{StaticResource Brush.MainBackground}">
+                <TextBlock Background="{StaticResource Brush.NeutralNumberBackground}"
+                           Margin="4"
+                           Padding="4"
+                           Text="Loading Data..."
+                           Visibility="{Binding FileOperations.LoadingData, Converter={StaticResource Converter.BoolToVis}}" />
+                <Border Background="{StaticResource Brush.CreditBackground1}"
+                        Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                        ToolTip="Total Credits currently displayed.">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                                   Text="CR: " />
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                                   Text="{Binding ViewModel.TotalCredits, StringFormat=C}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource Brush.DebitBackground1}"
+                        Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                        ToolTip="Total debits currently displayed.">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                                   Text="DR: " />
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                                   Text="{Binding ViewModel.TotalDebits, StringFormat=C}" />
+                    </StackPanel>
+                </Border>
+                <Border
+                    Background="{Binding ViewModel.TotalDifference, Converter={StaticResource Converter.NumberToBrush}}"
+                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                    ToolTip="Difference between total displayed credits and total displayed debits.">
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl Height="15"
+                                        Margin="5,0,0,0"
+                                        Template="{StaticResource DeltaImage}"
+                                        Width="15" />
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                                   Text="{Binding ViewModel.TotalDifference, StringFormat=C}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource Brush.NeutralNumberBackground}"
+                        Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                        ToolTip="The number of transactions currently displayed.">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                                   Text="{Binding ViewModel.TotalCount}" />
+                        <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                                   Text="Transactions" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource Brush.ImportantHighlightLight}"
+                        Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                        ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows."
+                        Visibility="{Binding ViewModel.DuplicateSummary, Converter={StaticResource Converter.NullToVis}}">
+                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                               Text="{Binding ViewModel.DuplicateSummary}" />
+                </Border>
+            </StackPanel>
+            <!-- Navigation bar -->
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        SnapsToDevicePixels="True"
+                        HorizontalAlignment="Right">
+                <Button Style="{StaticResource Button.Round.Left}"
+                        IsEnabled="{Binding CanNavigatePrevious}"
+                        Click="OnNavigatePreviousClick"
+                        ToolTip="Previous Page" />
+                <Button Style="{StaticResource Button.Round.Right}"
+                        Click="OnNavigateNextClick"
+                        IsEnabled="{Binding CanNavigateNext}"
+                        ToolTip="Next Page" />
+            </StackPanel>
+        </Grid>
 
-        <!-- Oil light bar -->
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    SnapsToDevicePixels="True"
-                    TextBlock.Foreground="{StaticResource Brush.MainBackground}">
-            <TextBlock Background="{StaticResource Brush.NeutralNumberBackground}"
-                       Margin="4"
-                       Padding="4"
-                       Text="Loading Data..."
-                       Visibility="{Binding FileOperations.LoadingData, Converter={StaticResource Converter.BoolToVis}}" />
-            <Border Background="{StaticResource Brush.CreditBackground1}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="Total Credits currently displayed.">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="CR: " />
-                    <TextBlock FontSize="16"
-                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="{Binding ViewModel.TotalCredits, StringFormat=C}" />
-                </StackPanel>
-            </Border>
-            <Border Background="{StaticResource Brush.DebitBackground1}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="Total debits currently displayed.">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="DR: " />
-                    <TextBlock FontSize="16"
-                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="{Binding ViewModel.TotalDebits, StringFormat=C}" />
-                </StackPanel>
-            </Border>
-            <Border
-                Background="{Binding ViewModel.TotalDifference, Converter={StaticResource Converter.NumberToBrush}}"
-                Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                ToolTip="Difference between total displayed credits and total displayed debits.">
-                <StackPanel Orientation="Horizontal">
-                    <ContentControl Height="15"
-                                    Margin="5,0,0,0"
-                                    Template="{StaticResource DeltaImage}"
-                                    Width="15" />
-                    <TextBlock FontSize="16"
-                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="{Binding ViewModel.TotalDifference, StringFormat=C}" />
-                </StackPanel>
-            </Border>
-            <Border Background="{StaticResource Brush.DebitBackground1}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The average debit transaction from the currently displayed list.">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="Avg DR: " />
-                    <TextBlock FontSize="16"
-                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="{Binding ViewModel.AverageDebit, StringFormat=C}" />
-                </StackPanel>
-            </Border>
-            <Border Background="{StaticResource Brush.NeutralNumberBackground}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The number of transactions currently displayed.">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="16"
-                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="{Binding ViewModel.TotalCount}" />
-                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="Transactions" />
-                </StackPanel>
-            </Border>
-            <Border Background="{StaticResource Brush.NeutralNumberBackground}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The total number of months the currently displayed transaction span.">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="Months: " />
-                    <TextBlock FontSize="16"
-                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="{Binding ViewModel.Statement.DurationInMonths}" />
-                </StackPanel>
-            </Border>
-            <Border Background="{StaticResource Brush.ImportantHighlightLight}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows."
-                    Visibility="{Binding ViewModel.DuplicateSummary, Converter={StaticResource Converter.NullToVis}}">
-                <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                           Text="{Binding ViewModel.DuplicateSummary}" />
-            </Border>
-        </StackPanel>
-
-        <Grid Grid.Row="2"
+        <!-- Transaction List -->
+        <Grid Grid.Column="0"
+              Grid.Row="2"
               IsSharedSizeScope="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -215,7 +216,7 @@
                      Grid.Row="1"
                      IsTextSearchEnabled="False"
                      ItemContainerStyle="{StaticResource ListBox.TransactionContainer}"
-                     ItemsSource="{Binding ViewModel.Transactions}"
+                     ItemsSource="{Binding ViewModel.PagedTransactions}"
                      ItemTemplate="{StaticResource TransactionTemplate1}"
                      KeyUp="OnTransactionListBoxKeyUp"
                      MinHeight="95"
@@ -224,7 +225,7 @@
                      SelectedItem="{Binding ViewModel.SelectedRow}"
                      SelectionMode="Single"
                      VirtualizingPanel.IsVirtualizing="False"
-                     Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource Converter.BoolToVis}}"/>
+                     Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource Converter.BoolToVis}}" />
         </Grid>
     </Grid>
 
