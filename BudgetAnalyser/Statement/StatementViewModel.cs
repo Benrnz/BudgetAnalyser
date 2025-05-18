@@ -16,7 +16,7 @@ public class StatementViewModel : ObservableRecipient
     private ObservableCollection<Transaction> doNotUsePagedTransactions = new();
     private Transaction? doNotUseSelectedRow;
     private StatementModel? doNotUseStatement;
-    private ObservableCollection<Transaction> doNotUseTransactions = new();
+    private List<Transaction> doNotUseTransactions = new();
 
     public StatementViewModel(IApplicationDatabaseFacade applicationDatabaseService, ITransactionManagerService transactionService)
     {
@@ -100,7 +100,7 @@ public class StatementViewModel : ObservableRecipient
     public decimal TotalDifference => TotalCredits + TotalDebits;
 
     // TODO Does this need to be an ObservableCollection?
-    public ObservableCollection<Transaction> Transactions
+    public List<Transaction> Transactions
     {
         get => this.doNotUseTransactions;
         internal set

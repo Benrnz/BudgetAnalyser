@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 
@@ -33,7 +32,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     /// <summary>
     ///     Clears the bucket and text filters.
     /// </summary>
-    ObservableCollection<Transaction> ClearBucketAndTextFilters();
+    List<Transaction> ClearBucketAndTextFilters();
 
     /// <summary>
     ///     Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for displaying in the UI.
@@ -56,13 +55,13 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     ///     The bucket code as text. This can be null or return all, and <see cref="TransactionConstants.UncategorisedFilter" /> to only return transactions without a bucket
     ///     classification.
     /// </param>
-    ObservableCollection<Transaction> FilterByBucket(string? bucketCode);
+    List<Transaction> FilterByBucket(string? bucketCode);
 
     /// <summary>
     ///     Returns a filtered list of <see cref="Transaction" />s using the provided search text.  All following transaction fields are searched: Description, Reference1, Reference2, Reference3.
     /// </summary>
     /// <param name="searchText">The search text. Minimum 3 characters.</param>
-    ObservableCollection<Transaction> FilterBySearchText(string? searchText);
+    List<Transaction> FilterBySearchText(string? searchText);
 
     /// <summary>
     ///     Filters the transactions using the filter object provided.

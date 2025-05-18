@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
@@ -21,7 +20,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     private readonly IStatementRepository statementRepository;
     private BudgetCollection? budgetCollection;
     private int budgetHash;
-    private ObservableCollection<Transaction> transactions = new();
+    private List<Transaction> transactions = new();
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="TransactionManagerService" /> class.
@@ -63,7 +62,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <inheritdoc />
     public void Close()
     {
-        this.transactions = new ObservableCollection<Transaction>();
+        this.transactions = new List<Transaction>();
         StatementModel?.Dispose();
         StatementModel = null;
         this.budgetCollection = null;
@@ -155,7 +154,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     public decimal TotalDebits => this.transactions.None() ? 0 : this.transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
 
     /// <inheritdoc />
-    public ObservableCollection<Transaction> ClearBucketAndTextFilters()
+    public List<Transaction> ClearBucketAndTextFilters()
     {
         ResetTransactionsCollection();
         return this.transactions;
@@ -184,7 +183,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     }
 
     /// <inheritdoc />
-    public ObservableCollection<Transaction> FilterByBucket(string? bucketCode)
+    public List<Transaction> FilterByBucket(string? bucketCode)
     {
         if (StatementModel is null)
         {
@@ -193,22 +192,22 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         if (bucketCode == TransactionConstants.UncategorisedFilter)
         {
-            return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket is null));
+            return this.transactions = new List<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket is null));
         }
 
         var bucket = bucketCode is null ? null : this.bucketRepository.GetByCode(bucketCode);
 
         if (bucket is null)
         {
-            return new ObservableCollection<Transaction>(StatementModel.Transactions);
+            return new List<Transaction>(StatementModel.Transactions);
         }
 
         var paternityTest = new BudgetBucketPaternity();
-        return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => paternityTest.OfSameBucketFamily(t.BudgetBucket, bucket)));
+        return this.transactions = new List<Transaction>(StatementModel.Transactions.Where(t => paternityTest.OfSameBucketFamily(t.BudgetBucket, bucket)));
     }
 
     /// <inheritdoc />
-    public ObservableCollection<Transaction> FilterBySearchText(string? searchText)
+    public List<Transaction> FilterBySearchText(string? searchText)
     {
         if (StatementModel is null)
         {
@@ -225,7 +224,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             return ClearBucketAndTextFilters();
         }
 
-        this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions
+        this.transactions = new List<Transaction>(StatementModel.Transactions
             .Where(t => MatchTransactionText(t, searchText))
             .AsParallel()
             .ToList());
@@ -424,6 +423,6 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
     private void ResetTransactionsCollection()
     {
-        this.transactions = StatementModel is null ? new ObservableCollection<Transaction>() : new ObservableCollection<Transaction>(StatementModel.Transactions);
+        this.transactions = StatementModel is null ? new List<Transaction>() : new List<Transaction>(StatementModel.Transactions);
     }
 }

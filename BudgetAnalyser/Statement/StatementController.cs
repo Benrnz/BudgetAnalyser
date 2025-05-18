@@ -295,7 +295,7 @@ public class StatementController : ControllerBase, IShowableController
 
         this.transactionService.FilterTransactions(message.Criteria);
         ViewModel.Statement = this.transactionService.StatementModel;
-        ViewModel.Transactions = new ObservableCollection<Transaction>(ViewModel.Statement!.Transactions);
+        ViewModel.Transactions = ViewModel.Statement!.Transactions.ToList();
         CurrentPage = 1;
         ViewModel.TriggerRefreshTotalsRow();
         OnPropertyChanged(nameof(BucketFilter));
