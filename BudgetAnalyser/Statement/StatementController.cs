@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Statement;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class StatementController : ControllerBase, IShowableController
 {
-    private const int ItemsPerPage = 20;
+    private const int ItemsPerPage = 32;
     private readonly ITransactionManagerService transactionService;
     private readonly IUiContext uiContext;
     private string? doNotUseBucketFilter;
@@ -71,6 +71,7 @@ public class StatementController : ControllerBase, IShowableController
             OnPropertyChanged();
             ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
             ViewModel.TriggerRefreshTotalsRow();
+            CurrentPage = 1;
         }
     }
 
@@ -293,12 +294,15 @@ public class StatementController : ControllerBase, IShowableController
             return;
         }
 
+        var bucketFilter = BucketFilter;
+        BucketFilter = null;
         this.transactionService.FilterTransactions(message.Criteria);
         ViewModel.Statement = this.transactionService.StatementModel;
         ViewModel.Transactions = ViewModel.Statement!.Transactions.ToList();
         CurrentPage = 1;
         ViewModel.TriggerRefreshTotalsRow();
-        OnPropertyChanged(nameof(BucketFilter));
+        BucketFilter = bucketFilter;
+        TextFilter = null;
     }
 
     private async void OnMergeStatementCommandExecute()
