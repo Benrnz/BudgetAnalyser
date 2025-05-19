@@ -80,13 +80,13 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
         {
             dto = await LoadJsonFromDiskAsync(storageKey, isEncrypted);
         }
-        catch (JsonException ex)
-        {
-            throw new DataFormatException($"The budget file '{storageKey}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", ex);
-        }
         catch (EncryptionKeyIncorrectException)
         {
             throw;
+        }
+        catch (JsonException ex)
+        {
+            throw new DataFormatException($"The budget file '{storageKey}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", ex);
         }
         catch (Exception ex)
         {
