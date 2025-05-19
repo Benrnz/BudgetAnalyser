@@ -78,7 +78,7 @@ public interface IApplicationDatabaseService : IServiceFoundation
     /// <summary>
     ///     Prepares the persistent data for saving into permanent storage.
     /// </summary>
-    MainApplicationState PreparePersistentStateData();
+    ApplicationEngineState PreparePersistentStateData();
 
     /// <summary>
     ///     Saves all Budget Analyser application data.

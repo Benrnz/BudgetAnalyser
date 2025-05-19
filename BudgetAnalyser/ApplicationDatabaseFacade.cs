@@ -90,7 +90,7 @@ public interface IApplicationDatabaseFacade
     /// <summary>
     ///     Prepares the persistent data for saving into permenant storage.
     /// </summary>
-    MainApplicationState PreparePersistentStateData();
+    ApplicationEngineState PreparePersistentStateData();
 
     /// <summary>
     ///     Saves all Budget Analyser application data.
@@ -157,7 +157,7 @@ internal class WpfApplicationDatabaseFacade(IApplicationDatabaseService engineSe
         PersistenceOperationCommands.SaveDatabaseCommand.NotifyCanExecuteChanged();
     }
 
-    public MainApplicationState PreparePersistentStateData()
+    public ApplicationEngineState PreparePersistentStateData()
     {
         return engineService.PreparePersistentStateData();
     }
