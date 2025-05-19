@@ -1,4 +1,5 @@
 ﻿using System.Security;
+using System.Text;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
@@ -18,11 +19,26 @@ internal class EncryptedLocalDiskReaderWriter(IFileEncryptor fileEncryptor, ICre
 
     public Stream CreateReadableStream(string fileName)
     {
-        return this.fileEncryptor.CreateReadableEncryptedStream(fileName, RetrievePassword());
+        var stream = this.fileEncryptor.CreateReadableEncryptedStream(fileName, RetrievePassword());
+        if (!stream.CanRead)
+        {
+            throw new DataFormatException($"Unable to stream data from the file {fileName}.");
+        }
+
+        // Check the first 16 bytes of the stream to see if it is a valid encrypted file.
+        var checkChunk = new byte[16];
+        stream.ReadExactly(checkChunk, 0, 16);
+        stream.Position = 0;
+        if (!IsValidAlphaNumericWithPunctuation(Encoding.Default.GetString(checkChunk)))
+        {
+            throw new EncryptionKeyIncorrectException($"Unable to stream any valid data from the file {fileName}. The encryption key is incorrect.");
+        }
+
+        return stream;
     }
 
     /// <summary>
-    ///     Files the exists.
+    ///     Checks to see if the File exists.
     /// </summary>
     /// <param name="fileName">Full path and filename of the file.</param>
     public bool FileExists(string fileName)
