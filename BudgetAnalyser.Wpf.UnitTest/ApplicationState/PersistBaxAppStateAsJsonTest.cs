@@ -31,7 +31,7 @@ public class PersistBaxAppStateAsJsonTest
 
         // Assert
         Assert.AreEqual(2, result.Count, "There should be two deserialized objects.");
-        var mainState = result.OfType<MainApplicationState>().Single();
+        var mainState = result.OfType<ApplicationEngineState>().Single();
         var shellState = result.OfType<ShellPersistentState>().Single();
 
         Assert.AreEqual("TestFile.bax", mainState.BudgetAnalyserDataStorageKey, "The LastBaxFile value should match.");
@@ -61,7 +61,7 @@ public class PersistBaxAppStateAsJsonTest
         // Arrange
         var modelsToPersist = new List<IPersistentApplicationStateObject>
         {
-            new MainApplicationState { BudgetAnalyserDataStorageKey = "TestFile.bax" },
+            new ApplicationEngineState { BudgetAnalyserDataStorageKey = "TestFile.bax" },
             new ShellPersistentState { Size = new Point(800, 600), TopLeft = new Point(100, 100) }
         };
 

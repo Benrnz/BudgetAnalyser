@@ -17,13 +17,13 @@ namespace BudgetAnalyser.Statement;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class StatementController : ControllerBase, IShowableController
 {
-    private const int ItemsPerPage = 32;
     private readonly ITransactionManagerService transactionService;
     private readonly IUiContext uiContext;
     private string? doNotUseBucketFilter;
     private bool doNotUseCanNavigateNext;
     private bool doNotUseCanNavigatePrevious;
     private int doNotUseCurrentPage = 1;
+    private int doNotUsePageSize = 10;
     private bool doNotUseShown;
     private string? doNotUseTextFilter;
     private Guid shellDialogCorrelationId;
@@ -123,6 +123,27 @@ public class StatementController : ControllerBase, IShowableController
 
     public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
 
+    public int PageSize
+    {
+        get => this.doNotUsePageSize;
+        set
+        {
+            if (value == this.doNotUsePageSize)
+            {
+                return;
+            }
+
+            if (value < 1)
+            {
+                value = 10;
+            }
+
+            this.doNotUsePageSize = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(TotalPages));
+        }
+    }
+
     public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
     internal SplitTransactionController SplitTransactionController => this.uiContext.Controller<SplitTransactionController>();
@@ -145,7 +166,7 @@ public class StatementController : ControllerBase, IShowableController
         }
     }
 
-    public int TotalPages => (ViewModel.Transactions.Count + ItemsPerPage - 1) / ItemsPerPage;
+    public int TotalPages => (ViewModel.Transactions.Count + PageSize - 1) / PageSize;
 
     public StatementViewModel ViewModel => FileOperations.ViewModel;
 
@@ -359,7 +380,7 @@ public class StatementController : ControllerBase, IShowableController
     private void UpdatePagedTransactions()
     {
         CanNavigateNext = CanNavigatePrevious = false;
-        ViewModel.PagedTransactions = new ObservableCollection<Transaction>(ViewModel.Transactions.Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage));
+        ViewModel.PagedTransactions = new ObservableCollection<Transaction>(ViewModel.Transactions.Skip((CurrentPage - 1) * PageSize).Take(PageSize));
         CanNavigateNext = CurrentPage < TotalPages;
         CanNavigatePrevious = CurrentPage > 1;
     }

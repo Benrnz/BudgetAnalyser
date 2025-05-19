@@ -109,7 +109,7 @@ public class PersistenceOperations
         ValidateModel("Validate Budget Analyser Data");
     }
 
-    public MainApplicationState PreparePersistentStateData()
+    public ApplicationEngineState PreparePersistentStateData()
     {
         return this.applicationDatabaseService.PreparePersistentStateData();
     }

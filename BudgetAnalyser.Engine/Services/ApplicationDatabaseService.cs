@@ -207,7 +207,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     }
 
     /// <inheritdoc />
-    public MainApplicationState PreparePersistentStateData()
+    public ApplicationEngineState PreparePersistentStateData()
     {
         if (this.budgetAnalyserDatabase is null)
         {
@@ -219,7 +219,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             throw new ArgumentException("The loaded budget analyser files have not been given a file name. Code error");
         }
 
-        return new MainApplicationState { BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName };
+        return new ApplicationEngineState { BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName };
     }
 
     /// <inheritdoc />

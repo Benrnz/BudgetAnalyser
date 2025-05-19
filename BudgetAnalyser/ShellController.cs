@@ -123,7 +123,7 @@ public class ShellController : ControllerBase, IInitializableController
 
     public void OnViewReady()
     {
-        // Re-run the initialisers. This allows any controller who couldn't initialise until the views are loaded to now reattempt to initialise.
+        // Re-run the initializers. This allows any controller who couldn't initialise until the views are loaded to now reattempt to initialise.
         this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         if (this.originalWindowTopLeft != new Point())
         {
@@ -137,8 +137,7 @@ public class ShellController : ControllerBase, IInitializableController
     }
 
     /// <summary>
-    ///     This method will persist the application state. Application State is user preference settings for the application,
-    ///     window, and last loaded file.
+    ///     This method will persist the application state. Application State is user preference settings for the application, window, and last loaded file.
     ///     Any data that is used for Budgets, reconciliation, reporting belongs in the Application Database.
     /// </summary>
     public void SaveApplicationState()
@@ -193,9 +192,11 @@ public class ShellController : ControllerBase, IInitializableController
                 // Setting Window Top & Left at this point has no effect, must happen after window is loaded. See OnViewReady()
                 this.originalWindowTopLeft = shellState.TopLeft;
             }
+
+            StatementController.PageSize = shellState.ListPageSize;
         }
 
-        var storedMainAppState = message.ElementOfType<MainApplicationState>();
+        var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
         if (storedMainAppState is not null)
         {
             await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
@@ -207,7 +208,8 @@ public class ShellController : ControllerBase, IInitializableController
         var shellPersistentStateV1 = new ShellPersistentState
         {
             Size = WindowSize,
-            TopLeft = WindowTopLeft
+            TopLeft = WindowTopLeft,
+            ListPageSize = StatementController.PageSize
         };
         message.PersistThisModel(shellPersistentStateV1);
 

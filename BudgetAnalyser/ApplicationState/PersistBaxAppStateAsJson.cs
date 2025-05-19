@@ -66,8 +66,8 @@ public class PersistBaxAppStateAsJson : IPersistApplicationState
                                  $"The file used to store application state ({FullFileName}) is not in the correct format. It may have been tampered with.");
             var models = new List<IPersistentApplicationStateObject>
             {
-                new MainApplicationState { BudgetAnalyserDataStorageKey = serialised.LastBaxFile },
-                new ShellPersistentState { Size = serialised.ShellWindowState.Size, TopLeft = serialised.ShellWindowState.TopLeft }
+                new ApplicationEngineState { BudgetAnalyserDataStorageKey = serialised.LastBaxFile },
+                new ShellPersistentState { Size = serialised.ShellWindowState.Size, TopLeft = serialised.ShellWindowState.TopLeft, ListPageSize = serialised.ShellWindowState.ListPageSize }
             };
             return models;
         }

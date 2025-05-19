@@ -8,15 +8,15 @@ public record BaxApplicationStateDto
 {
     public BaxApplicationStateDto()
     {
-        ShellWindowState = new ShellWindowStateDto { Size = new Point(1100, 1200), TopLeft = new Point(0, 0) };
+        ShellWindowState = new ShellWindowStateDto(new Point(1100, 1200), new Point(0, 0), 30);
         LastBaxFile = string.Empty;
     }
 
     public BaxApplicationStateDto(IPersistentApplicationStateObject[] states)
     {
         var shell = states.OfType<ShellPersistentState>().Single();
-        ShellWindowState = new ShellWindowStateDto { Size = shell.Size, TopLeft = shell.TopLeft };
-        var main = states.OfType<MainApplicationState>().Single();
+        ShellWindowState = new ShellWindowStateDto(shell.Size, shell.TopLeft, shell.ListPageSize);
+        var main = states.OfType<ApplicationEngineState>().Single();
         LastBaxFile = main.BudgetAnalyserDataStorageKey;
     }
 
@@ -24,8 +24,4 @@ public record BaxApplicationStateDto
     public ShellWindowStateDto ShellWindowState { get; init; }
 }
 
-public record ShellWindowStateDto
-{
-    public required Point Size { get; init; }
-    public required Point TopLeft { get; init; }
-}
+public record ShellWindowStateDto(Point Size, Point TopLeft, int ListPageSize);
