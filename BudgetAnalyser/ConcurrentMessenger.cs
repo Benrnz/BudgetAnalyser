@@ -7,27 +7,11 @@ namespace BudgetAnalyser;
 ///     A <see cref="IMessenger" /> that is thread safe when registering listeners, sending and unregistering.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class ConcurrentMessenger : IMessenger
+public class ConcurrentMessenger(IMessenger defaultMessenger, ILogger logger) : IMessenger
 {
-    private static readonly object SyncRoot = new();
-    private readonly IMessenger defaultMessenger;
-    private readonly ILogger logger;
-
-    public ConcurrentMessenger(IMessenger defaultMessenger, ILogger logger)
-    {
-        if (defaultMessenger is null)
-        {
-            throw new ArgumentNullException(nameof(defaultMessenger));
-        }
-
-        if (logger is null)
-        {
-            throw new ArgumentNullException(nameof(logger));
-        }
-
-        this.defaultMessenger = defaultMessenger;
-        this.logger = logger;
-    }
+    private static readonly Lock SyncRoot = new();
+    private readonly IMessenger defaultMessenger = defaultMessenger ?? throw new ArgumentNullException(nameof(defaultMessenger));
+    private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public bool IsRegistered<TMessage, TToken>(object recipient, TToken token) where TMessage : class where TToken : IEquatable<TToken>
     {
@@ -105,7 +89,7 @@ public class ConcurrentMessenger : IMessenger
             this.defaultMessenger.Cleanup();
         }
 
-        this.logger.LogInfo(l => "IMessenger.Cleanup");
+        this.logger.LogInfo(_ => "IMessenger.Cleanup");
     }
 
     public void Reset()
@@ -115,6 +99,6 @@ public class ConcurrentMessenger : IMessenger
             this.defaultMessenger.Reset();
         }
 
-        this.logger.LogInfo(l => "IMessenger.Reset");
+        this.logger.LogInfo(_ => "IMessenger.Reset");
     }
 }

@@ -133,7 +133,7 @@ internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBeha
         var wrongAccountPayments = new List<Transaction>();
 
         // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be transferred from the stored-in account.
-        var syncRoot = new object();
+        var syncRoot = new Lock();
         Parallel.ForEach(
             debitAccountTransactionsOnly.Where(t => t.Amount < 0).ToList(),
             t =>

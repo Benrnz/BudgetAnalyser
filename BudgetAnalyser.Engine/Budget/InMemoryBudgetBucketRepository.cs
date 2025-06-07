@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Budget;
 public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
 {
     private readonly IDtoMapper<BudgetBucketDto, BudgetBucket> mapper;
-    private readonly object syncRoot = new();
+    private readonly Lock syncRoot = new();
     private Dictionary<string, BudgetBucket> lookupTable = new();
 
     public InMemoryBudgetBucketRepository(IDtoMapper<BudgetBucketDto, BudgetBucket> mapper)
