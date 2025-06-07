@@ -24,12 +24,12 @@ Features
  
 Overview
 --------
-It's a simple 2 tier application at the moment with all business logic residing in the engine assembly. The UI is currently WPF, but the intention is to create others as well. All data is saved only locally, no data is uploaded anywhere. This project has a fundamental goal not to upload any user's personal budgeting or bank statement data online.
-No databases are currently used, data is saved in XML format.  It is the user's responsibility to save their data in a secure location (ie: NTFS permissions or a PGP/TrueCrypt file or drive).
+It's a simple 2 tier application at the moment with all business logic residing in the engine assembly. The UI is currently WPF, but the intention is to create others as well. All data is saved only locally, no data is uploaded anywhere. This project has a fundamental goal not to upload any user's personal budgeting or bank statement data online to protect privacy by removing the risk.
+No databases are currently used, data is saved in JSON format.  It is the user's responsibility to save their data in a secure location (ie: NTFS permissions or a PGP/TrueCrypt file or drive).
 
 Security
 --------
-This application does not upload any information provided to it to the Internet.  All provided data is saved locally to disk.  The user is responsible for securing the saved file data, if necessary.  This application is intentionally written as a client-side only Windows application for maximum security. Because no information is shared, no information can be leaked.
+This application does not upload any information provided to the Internet.  All provided data is saved locally to disk.  The user is responsible for securing the saved file data, if necessary.  This application is intentionally written as a client-side only Windows application for maximum security. Because no information is shared, no information can be leaked. Optionally the user can use a companion mobile app and to support this summarised data must be uploaded to an S3 bucket. 
 
 Getting Started
 ---------------
