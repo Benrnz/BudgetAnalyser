@@ -191,13 +191,13 @@ internal class ReconciliationCreationManager(
                             "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found. {0}",
                             ledgerTransaction));
                 throw new ValidationWarningException(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
-                        "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
-                        ledgerTransaction.Id,
-                        ledgerTransaction.AutoMatchingReference,
-                        ledgerTransaction.Amount))
-                { Source = "1" };
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
+                            ledgerTransaction.Id,
+                            ledgerTransaction.AutoMatchingReference,
+                            ledgerTransaction.Amount))
+                    { Source = "1" };
             }
         }
     }
@@ -219,6 +219,10 @@ internal class ReconciliationCreationManager(
             Date = ledgerEntryLine.Date,
             Narrative = transferDetails.Narrative
         };
+
+        // Adding logging here to help diag possible duplicates being created.
+        this.logger.LogInfo(_ => $"TransferFunds Initiated. SourceTxn: {sourceTransaction.Id} {sourceTransaction.Amount:C} ToTxn: {destinationTransaction.Id} {destinationTransaction
+            .Amount:C}");
 
         if (transferDetails.BankTransferRequired)
         {

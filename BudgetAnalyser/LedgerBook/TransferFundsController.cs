@@ -117,8 +117,15 @@ public class TransferFundsController : ControllerBase, IShellDialogToolTips, ISh
             return;
         }
 
-        Messenger.Send(new LedgerBucketTransferCommandMessage(TransferFundsDto));
+        var transferFundsDto = TransferFundsDto;
         Reset();
+        if (transferFundsDto.FromLedger is null)
+        {
+            // Double click prevention
+            return;
+        }
+
+        Messenger.Send(new LedgerBucketTransferCommandMessage(transferFundsDto));
     }
 
     private void OnTransferFundsDtoPropertyChanged(object? sender, PropertyChangedEventArgs e)

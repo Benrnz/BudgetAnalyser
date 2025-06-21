@@ -107,7 +107,7 @@ public class DebugLogger : ILogger
             throw new ArgumentNullException(nameof(logEntryBuilder));
         }
 
-        Debug.WriteLine("INFO   " + logEntryBuilder(this));
+        Debug.WriteLine(ConstructLogEntry(LogLevel.Info, logEntryBuilder));
     }
 
     /// <summary>
