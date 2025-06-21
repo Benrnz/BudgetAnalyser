@@ -83,7 +83,7 @@ public partial class LedgerBookUserControl
 
     private void OnTransferFundsClicked(object? sender, RoutedEventArgs e)
     {
-        Controller.OnTransferFundsCommandExecuted();
+        Controller.OnTransferFundsInitiated();
     }
 
     private void OnUnlockCurrentLedgerLineClicked(object? sender, RoutedEventArgs e)

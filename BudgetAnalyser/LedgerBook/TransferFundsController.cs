@@ -23,8 +23,6 @@ public class TransferFundsController : ControllerBase, IShellDialogToolTips, ISh
         Messenger.Register<TransferFundsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public event EventHandler? TransferFundsRequested;
-
     public bool BankTransferConfirmed { get; set; }
 
     public decimal? FromBalance
@@ -119,7 +117,7 @@ public class TransferFundsController : ControllerBase, IShellDialogToolTips, ISh
             return;
         }
 
-        TransferFundsRequested?.Invoke(this, EventArgs.Empty);
+        Messenger.Send(new LedgerBucketTransferCommandMessage(TransferFundsDto));
         Reset();
     }
 

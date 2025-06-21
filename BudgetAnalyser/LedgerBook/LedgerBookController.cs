@@ -66,6 +66,7 @@ public class LedgerBookController : ControllerBase, IShowableController
         Messenger.Register<LedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<LedgerBookController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
         Messenger.Register<LedgerBookController, LedgerBookReadyMessage>(this, (_, _) => ShowRemarksCommand.NotifyCanExecuteChanged());
+        Messenger.Register<LedgerBookController, LedgerBucketTransferCommandMessage>(this, static (r, m) => r.OnTransferFundsCommandReceived(m));
 
         this.ledgerService.Saved += OnSaveNotificationReceived;
         this.ledgerService.Closed += OnClosedNotificationReceived;
@@ -142,7 +143,6 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     public void OnAddNewLedgerCommandExecuted()
     {
-        // TODO Change this to an event.
         this.chooseBudgetBucketController.Chosen += OnAddNewLedgerComplete;
         this.chooseBudgetBucketController.Filter(bucket => bucket is ExpenseBucket, "Choose an Expense Budget Bucket");
         this.chooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book", Guid.NewGuid(), true);
@@ -162,20 +162,17 @@ public class LedgerBookController : ControllerBase, IShowableController
             }
         }
 
-        // TODO Change this to an event.
         this.addLedgerReconciliationController.Complete += OnAddReconciliationDialogClose;
         this.addLedgerReconciliationController.ShowCreateDialog(ViewModel.LedgerBook!);
     }
 
-    public void OnTransferFundsCommandExecuted()
+    public void OnTransferFundsInitiated()
     {
-        // TODO Change this to a message
         if (ViewModel.NewLedgerLine is null)
         {
             return;
         }
 
-        this.transferFundsController.TransferFundsRequested += OnTransferFundsRequested;
         this.transferFundsController.ShowDialog(ViewModel.LedgerBook!.LedgersAvailableForTransfer(), ViewModel.NewLedgerLine);
     }
 
@@ -421,10 +418,9 @@ public class LedgerBookController : ControllerBase, IShowableController
         ViewModel.CurrentStatement = message.StatementModel;
     }
 
-    private void OnTransferFundsRequested(object? sender, EventArgs? eventArgs)
+    private void OnTransferFundsCommandReceived(LedgerBucketTransferCommandMessage message)
     {
-        this.transferFundsController.TransferFundsRequested -= OnTransferFundsRequested;
-        this.reconService.TransferFunds(ViewModel.LedgerBook!, ViewModel.NewLedgerLine!, this.transferFundsController.TransferFundsDto);
+        this.reconService.TransferFunds(ViewModel.LedgerBook!, ViewModel.NewLedgerLine!, message.TransferFundsCommand);
         RaiseLedgerBookUpdated();
         FileOperations.ReconciliationChangesWillNeedToBeSaved();
     }
