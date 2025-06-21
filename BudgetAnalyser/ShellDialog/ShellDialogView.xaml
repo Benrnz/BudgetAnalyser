@@ -6,8 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=shellDialog:ShellDialogController}">
 
-    <Grid Background="#cc000000"
-          KeyUp="OnShellDialogKeyUp"
+    <Grid KeyUp="OnShellDialogKeyUp"
           Visibility="{Binding Content, Converter={StaticResource Converter.NullToVis}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />

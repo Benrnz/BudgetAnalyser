@@ -170,8 +170,13 @@ public class LedgerBookController : ControllerBase, IShowableController
     public void OnTransferFundsCommandExecuted()
     {
         // TODO Change this to a message
+        if (ViewModel.NewLedgerLine is null)
+        {
+            return;
+        }
+
         this.transferFundsController.TransferFundsRequested += OnTransferFundsRequested;
-        this.transferFundsController.ShowDialog(ViewModel.LedgerBook!.LedgersAvailableForTransfer());
+        this.transferFundsController.ShowDialog(ViewModel.LedgerBook!.LedgersAvailableForTransfer(), ViewModel.NewLedgerLine);
     }
 
     public void OnUnlockLedgerLineCommandExecuted()

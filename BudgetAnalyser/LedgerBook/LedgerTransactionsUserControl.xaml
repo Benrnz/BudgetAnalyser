@@ -28,7 +28,7 @@
                 Margin="-6,0,12,0"
                 ToolTip="{Binding LedgerEntry.LedgerBucket.BudgetBucket.TypeDescription}"
                 VerticalAlignment="Stretch" />
-        <!-- Tool bar -->
+        <!-- Toolbar -->
         <Grid Grid.Column="1"
               Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -73,7 +73,7 @@
                 <TextBlock Grid.Column="2"
                            Grid.Row="0"
                            Style="{StaticResource TextBlock.Number}"
-                           Text="{Binding OpeningBalance, StringFormat=N2}"/>
+                           Text="{Binding OpeningBalance, StringFormat=N2}" />
                 <TextBlock Grid.Column="1"
                            Grid.Row="1"
                            HorizontalAlignment="Right"
