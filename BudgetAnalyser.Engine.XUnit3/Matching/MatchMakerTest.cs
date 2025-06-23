@@ -78,10 +78,12 @@ public class MatchMakerTest
     [Fact]
     public void MatchShouldMatchIfReferenceIsPartialBucketCode()
     {
+        var bucket = new SpentPerPeriodExpenseBucket("FOOBAR", "Foo");
         this.mockBudgetBucketRepo.IsValidCode("FOOBAR").Returns(true);
         this.mockBudgetBucketRepo.GetByCode("FOOBAR").Returns(new SpentPerPeriodExpenseBucket("FOOBAR", "Foo"));
+        this.mockBudgetBucketRepo.Buckets.Returns([bucket]);
         var transactions = this.testDataTransactions;
-        transactions.First().Reference1 = "Foob"; // At least 4 characters of the bucket code.
+        transactions.First().Reference1 = "Fooba"; // At least 4 characters of the bucket code.
         var subject = Arrange();
 
         var result = subject.Match(transactions, new List<MatchingRule>());
@@ -93,8 +95,10 @@ public class MatchMakerTest
     [InlineData("FOOBAR", false)]
     public void MatchShouldMatchIfReferenceIsSupersetBucketCode(string reference, bool expectedResult)
     {
+        var bucket = new SpentPerPeriodExpenseBucket(reference, "Foo");
         this.mockBudgetBucketRepo.IsValidCode(reference).Returns(true);
-        this.mockBudgetBucketRepo.GetByCode(reference).Returns(new SpentPerPeriodExpenseBucket(reference, "Foo"));
+        this.mockBudgetBucketRepo.GetByCode(reference).Returns(bucket);
+        this.mockBudgetBucketRepo.Buckets.Returns([bucket]);
         var transactions = this.testDataTransactions;
         transactions.First().Reference1 = "Foobarft"; // At least 7 characters of the bucket code.
         var subject = Arrange();
