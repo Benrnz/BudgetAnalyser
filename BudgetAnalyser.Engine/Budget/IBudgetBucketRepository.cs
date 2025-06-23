@@ -45,7 +45,7 @@ public interface IBudgetBucketRepository
     /// <summary>
     ///     Initialises the buckets from the provided data.  Used by persistence.
     /// </summary>
-    void Initialise(IEnumerable<BudgetBucketDto> buckets);
+    IBudgetBucketRepository Initialise(IEnumerable<BudgetBucketDto> buckets);
 
     /// <summary>
     ///     Determines whether the bucket code is registered in this repository.
