@@ -24,41 +24,33 @@ internal class Matchmaker(ILogger logger, IBudgetBucketRepository bucketRepo) : 
         }
 
         SetBucketCodesQuickLookup();
+        var localRules = rules.ToArray();
 
-        var matchesOccured = false;
-        this.logger.LogInfo(l => l.Format("{0} Matching operation started.", LogPrefix));
-        foreach (var transaction in transactions)
-        {
-            var thisMatch = AutoMatchBasedOnReference(transaction);
-
-            // If auto-matched based on user provided reference number.
-            if (!thisMatch)
+        var matchesOccured = 0;
+        this.logger.LogInfo(_ => $"{LogPrefix} Matching operation started.");
+        Parallel.ForEach(
+            transactions,
+            transaction =>
             {
-                thisMatch = MatchToRules(rules, transaction);
-            }
+                var thisMatch = IsReferenceBucketCode(transaction);
 
-            matchesOccured |= thisMatch;
-        }
-        // Parallel.ForEach(
-        //     transactions,
-        //     transaction =>
-        //     {
-        //         var thisMatch = AutoMatchBasedOnReference(transaction);
-        //
-        //         // If auto-matched based on user provided reference number.
-        //         if (!thisMatch)
-        //         {
-        //             thisMatch = MatchToRules(rules, transaction);
-        //         }
-        //
-        //         matchesOccured |= thisMatch;
-        //     });
+                // If auto-matched based on user provided reference number.
+                if (!thisMatch)
+                {
+                    thisMatch = MatchToRules(localRules, transaction);
+                }
 
-        this.logger.LogInfo(l => l.Format("{0} Matching operation finished.", LogPrefix));
-        return matchesOccured;
+                if (thisMatch)
+                {
+                    Interlocked.Exchange(ref matchesOccured, 1);
+                }
+            });
+
+        this.logger.LogInfo(_ => $"{LogPrefix} Matching operation finished.");
+        return matchesOccured == 1;
     }
 
-    private bool AutoMatchBasedOnReference(Transaction transaction)
+    private bool IsReferenceBucketCode(Transaction transaction)
     {
         if (MatchReferenceToBucketCode(transaction.Reference1?.Trim(), transaction))
         {
@@ -80,10 +72,12 @@ internal class Matchmaker(ILogger logger, IBudgetBucketRepository bucketRepo) : 
 
     private bool MatchReferenceToBucketCode(string? reference, Transaction transaction)
     {
-        if (reference is null)
+        if (string.IsNullOrWhiteSpace(reference))
         {
             return false;
         }
+
+        reference = reference.ToUpperInvariant();
 
         if (this.bucketRepo.IsValidCode(reference))
         {
@@ -94,7 +88,6 @@ internal class Matchmaker(ILogger logger, IBudgetBucketRepository bucketRepo) : 
 
         // Partial matches
         // Max Bucket code length is 7 characters. Partial matches should be at least 5 characters.
-        reference = reference.ToUpperInvariant();
         if (reference.Length is >= 5 and < 7)
         {
             var code = this.bucketCodesQuickLookup.FirstOrDefault(code => code.StartsWith(reference));
@@ -102,6 +95,18 @@ internal class Matchmaker(ILogger logger, IBudgetBucketRepository bucketRepo) : 
             {
                 this.logger.LogInfo(_ => $"{LogPrefix} Transaction '{transaction.Id}' auto-matched by reference '{reference}' with partial match to {code}");
                 transaction.BudgetBucket = this.bucketRepo.GetByCode(code);
+                return true;
+            }
+        }
+
+        // Reference is longer than 7, check the first 7 chars to see if it matches a bucket code.
+        if (reference.Length > 7)
+        {
+            var possibleCode = reference.Substring(0, 7);
+            if (this.bucketRepo.IsValidCode(possibleCode))
+            {
+                this.logger.LogInfo(_ => $"{LogPrefix} Transaction '{transaction.Id}' auto-matched by reference '{reference}' with exact match.");
+                transaction.BudgetBucket = this.bucketRepo.GetByCode(possibleCode);
                 return true;
             }
         }
@@ -121,16 +126,9 @@ internal class Matchmaker(ILogger logger, IBudgetBucketRepository bucketRepo) : 
                     transaction.BudgetBucket = rule.Bucket;
                     matchesOccured = true;
                     var loggedTransaction = transaction;
-                    this.logger.LogInfo(
-                        l =>
-                            l.Format(
-                                "{0} Transaction Matched: {1} {2:C} {3} {4} RuleId:{5}",
-                                LogPrefix,
-                                loggedTransaction.Date,
-                                loggedTransaction.Amount,
-                                loggedTransaction.Description.Truncate(15, true),
-                                loggedTransaction.BudgetBucket.Code,
-                                rule.RuleId));
+                    this.logger.LogInfo(_ =>
+                        $"{LogPrefix} Transaction Matched To RULE: {loggedTransaction.Date} {loggedTransaction.Amount:C} {loggedTransaction.Description.Truncate(15, true)} {loggedTransaction
+                            .BudgetBucket.Code} RuleId:{rule.RuleId}");
                 }
             }
         }

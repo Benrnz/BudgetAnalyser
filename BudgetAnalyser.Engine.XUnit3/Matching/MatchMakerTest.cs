@@ -12,16 +12,18 @@ namespace BudgetAnalyser.Engine.XUnit.Matching;
 public class MatchMakerTest
 {
     private readonly IEnumerable<MatchingRule> allRules;
+    private readonly ILogger logger;
     private readonly IBudgetBucketRepository mockBudgetBucketRepo;
     private readonly MatchingRulesTestDataGenerated testData = new();
     private readonly IList<Transaction> testDataTransactions;
 
-    public MatchMakerTest()
+    public MatchMakerTest(ITestOutputHelper testOutputHelper)
     {
         this.testData.BucketRepo = new BudgetBucketRepoAlwaysFind().Initialise(Array.Empty<BudgetBucketDto>());
         this.allRules = this.testData.TestData1();
         this.testDataTransactions = StatementModelTestData.TestData2().WithNullBudgetBuckets().AllTransactions.ToList();
         this.mockBudgetBucketRepo = Substitute.For<IBudgetBucketRepository>();
+        this.logger = new XUnitLogger(testOutputHelper);
     }
 
     [Fact]
@@ -39,8 +41,8 @@ public class MatchMakerTest
     [Fact]
     public void MatchShouldMatchIfReference1IsBucketCode()
     {
-        this.mockBudgetBucketRepo.IsValidCode("Foo").Returns(true);
-        this.mockBudgetBucketRepo.GetByCode("Foo").Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
+        this.mockBudgetBucketRepo.IsValidCode("FOO").Returns(true);
+        this.mockBudgetBucketRepo.GetByCode("FOO").Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
         var transactions = this.testDataTransactions;
         transactions.First().Reference1 = "Foo";
         var subject = Arrange();
@@ -52,8 +54,8 @@ public class MatchMakerTest
     [Fact]
     public void MatchShouldMatchIfReference2IsBucketCode()
     {
-        this.mockBudgetBucketRepo.IsValidCode("Foo").Returns(true);
-        this.mockBudgetBucketRepo.GetByCode("Foo").Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
+        this.mockBudgetBucketRepo.IsValidCode("FOO").Returns(true);
+        this.mockBudgetBucketRepo.GetByCode("FOO").Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
         var transactions = this.testDataTransactions;
         transactions.First().Reference2 = "Foo";
         var subject = Arrange();
@@ -65,8 +67,8 @@ public class MatchMakerTest
     [Fact]
     public void MatchShouldMatchIfReference3IsBucketCode()
     {
-        this.mockBudgetBucketRepo.IsValidCode("Foo").Returns(true);
-        this.mockBudgetBucketRepo.GetByCode("Foo").Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
+        this.mockBudgetBucketRepo.IsValidCode("FOO").Returns(true);
+        this.mockBudgetBucketRepo.GetByCode("FOO").Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
         var transactions = this.testDataTransactions;
         transactions.First().Reference3 = "Foo";
         var subject = Arrange();
@@ -75,32 +77,38 @@ public class MatchMakerTest
         result.ShouldBeTrue();
     }
 
-    [Fact]
-    public void MatchShouldMatchIfReferenceIsPartialBucketCode()
+    [Theory]
+    [InlineData("FOOBAR", "FOOBAR", true)]
+    [InlineData("FOOBAR", "FOOBA", true)]
+    [InlineData("FOOBAR", "", false)]
+    [InlineData("FOOBAR", null, false)]
+    [InlineData("FOOBAR", "   ", false)]
+    public void MatchShouldMatchIfReferenceIsPartialBucketCode(string bucketeCode, string? reference, bool expectedResult)
     {
-        var bucket = new SpentPerPeriodExpenseBucket("FOOBAR", "Foo");
-        this.mockBudgetBucketRepo.IsValidCode("FOOBAR").Returns(true);
-        this.mockBudgetBucketRepo.GetByCode("FOOBAR").Returns(new SpentPerPeriodExpenseBucket("FOOBAR", "Foo"));
+        var bucket = new SpentPerPeriodExpenseBucket(bucketeCode, "Foo");
+        this.mockBudgetBucketRepo.IsValidCode(bucketeCode).Returns(true);
+        this.mockBudgetBucketRepo.GetByCode(bucketeCode).Returns(bucket);
         this.mockBudgetBucketRepo.Buckets.Returns([bucket]);
         var transactions = this.testDataTransactions;
-        transactions.First().Reference1 = "Fooba"; // At least 4 characters of the bucket code.
+        transactions.First().Reference1 = reference; // At least 4 characters of the bucket code.
         var subject = Arrange();
 
         var result = subject.Match(transactions, new List<MatchingRule>());
-        result.ShouldBeTrue();
+        result.ShouldBe(expectedResult);
     }
 
     [Theory]
-    [InlineData("FOOBARF", true)]
-    [InlineData("FOOBAR", false)]
-    public void MatchShouldMatchIfReferenceIsSupersetBucketCode(string reference, bool expectedResult)
+    [InlineData("FOOBARF", "Foobarft", true)]
+    [InlineData("FOOBARF", "FoObArft", true)]
+    [InlineData("FOOBAR", "FOOBARf123456789", false)]
+    public void MatchShouldMatchIfReferenceIsSupersetBucketCode(string bucketCode, string reference, bool expectedResult)
     {
-        var bucket = new SpentPerPeriodExpenseBucket(reference, "Foo");
-        this.mockBudgetBucketRepo.IsValidCode(reference).Returns(true);
-        this.mockBudgetBucketRepo.GetByCode(reference).Returns(bucket);
+        var bucket = new SpentPerPeriodExpenseBucket(bucketCode, "Foo");
+        this.mockBudgetBucketRepo.IsValidCode(bucketCode).Returns(true);
+        this.mockBudgetBucketRepo.GetByCode(bucketCode).Returns(bucket);
         this.mockBudgetBucketRepo.Buckets.Returns([bucket]);
         var transactions = this.testDataTransactions;
-        transactions.First().Reference1 = "Foobarft"; // At least 7 characters of the bucket code.
+        transactions.First().Reference1 = reference; // At least 7 characters of the bucket code.
         var subject = Arrange();
 
         var result = subject.Match(transactions, new List<MatchingRule>());
@@ -110,8 +118,10 @@ public class MatchMakerTest
     [Fact]
     public void MatchShouldPreferMatchFromReferenceOverRules()
     {
-        this.mockBudgetBucketRepo.IsValidCode("Foo").Returns(true);
-        this.mockBudgetBucketRepo.GetByCode("Foo").Returns(new SpentPerPeriodExpenseBucket("FOO", "Foo"));
+        this.mockBudgetBucketRepo.IsValidCode("FOO").Returns(true);
+        var bucket = new SpentPerPeriodExpenseBucket("FOO", "Foo");
+        this.mockBudgetBucketRepo.GetByCode("FOO").Returns(bucket);
+        this.mockBudgetBucketRepo.Buckets.Returns([bucket]);
         var transactions = this.testDataTransactions;
         var firstTxn = transactions.First();
         firstTxn.Reference1 = "Foo";
@@ -217,6 +227,6 @@ public class MatchMakerTest
 
     private Matchmaker Arrange()
     {
-        return new Matchmaker(new FakeLogger(), this.mockBudgetBucketRepo);
+        return new Matchmaker(this.logger, this.mockBudgetBucketRepo);
     }
 }
