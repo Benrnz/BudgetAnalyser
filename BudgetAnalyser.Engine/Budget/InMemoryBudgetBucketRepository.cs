@@ -105,7 +105,7 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
     }
 
     /// <inheritdoc />
-    public virtual void Initialise(IEnumerable<BudgetBucketDto> buckets)
+    public virtual IBudgetBucketRepository Initialise(IEnumerable<BudgetBucketDto> buckets)
     {
         if (buckets is null)
         {
@@ -122,6 +122,8 @@ public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
 
             InitialiseMandatorySpecialBuckets();
         }
+
+        return this;
     }
 
     /// <inheritdoc />

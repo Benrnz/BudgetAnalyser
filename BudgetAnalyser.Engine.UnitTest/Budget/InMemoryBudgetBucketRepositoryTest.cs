@@ -12,8 +12,7 @@ public class InMemoryBudgetBucketRepositoryTest
     [TestMethod]
     public void AfterInitialisePayCreditCardBucketShouldExist()
     {
-        var subject = CreateSubject();
-        subject.Initialise(new List<BudgetBucketDto>());
+        var subject = CreateSubject().Initialise(new List<BudgetBucketDto>());
 
         Assert.IsTrue(subject.IsValidCode(PayCreditCardBucket.PayCreditCardCode));
         Assert.IsInstanceOfType(subject.GetByCode(PayCreditCardBucket.PayCreditCardCode), typeof(PayCreditCardBucket));
@@ -22,8 +21,7 @@ public class InMemoryBudgetBucketRepositoryTest
     [TestMethod]
     public void AfterInitialiseSurplusBucketShouldExist()
     {
-        var subject = CreateSubject();
-        subject.Initialise(new List<BudgetBucketDto>());
+        var subject = CreateSubject().Initialise(new List<BudgetBucketDto>());
 
         Assert.IsTrue(subject.IsValidCode(SurplusBucket.SurplusCode));
         Assert.IsInstanceOfType(subject.GetByCode(SurplusBucket.SurplusCode), typeof(SurplusBucket));
@@ -183,8 +181,7 @@ public class InMemoryBudgetBucketRepositoryTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void InitialiseShouldThrowGivenNullBucketsArgument()
     {
-        var subject = CreateSubject();
-        subject.Initialise(null);
+        CreateSubject().Initialise(null);
 
         Assert.Fail();
     }

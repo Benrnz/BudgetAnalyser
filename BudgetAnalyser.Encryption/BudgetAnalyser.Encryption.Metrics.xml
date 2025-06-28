@@ -4,22 +4,22 @@
     <Target Name="BudgetAnalyser.Encryption.csproj">
       <Assembly Name="BudgetAnalyser.Encryption, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
         <Metrics>
-          <Metric Name="MaintainabilityIndex" Value="83" />
-          <Metric Name="CyclomaticComplexity" Value="37" />
+          <Metric Name="MaintainabilityIndex" Value="84" />
+          <Metric Name="CyclomaticComplexity" Value="39" />
           <Metric Name="ClassCoupling" Value="35" />
           <Metric Name="DepthOfInheritance" Value="1" />
-          <Metric Name="SourceLines" Value="401" />
-          <Metric Name="ExecutableLines" Value="81" />
+          <Metric Name="SourceLines" Value="434" />
+          <Metric Name="ExecutableLines" Value="83" />
         </Metrics>
         <Namespaces>
           <Namespace Name="BudgetAnalyser.Encryption">
             <Metrics>
-              <Metric Name="MaintainabilityIndex" Value="83" />
-              <Metric Name="CyclomaticComplexity" Value="37" />
+              <Metric Name="MaintainabilityIndex" Value="84" />
+              <Metric Name="CyclomaticComplexity" Value="39" />
               <Metric Name="ClassCoupling" Value="35" />
               <Metric Name="DepthOfInheritance" Value="1" />
-              <Metric Name="SourceLines" Value="401" />
-              <Metric Name="ExecutableLines" Value="81" />
+              <Metric Name="SourceLines" Value="434" />
+              <Metric Name="ExecutableLines" Value="83" />
             </Metrics>
             <Types>
               <NamedType Name="EncryptedLocalDiskReaderWriter">
@@ -34,15 +34,15 @@
               </NamedType>
               <NamedType Name="FileEncryptor">
                 <Metrics>
-                  <Metric Name="MaintainabilityIndex" Value="70" />
-                  <Metric Name="CyclomaticComplexity" Value="7" />
+                  <Metric Name="MaintainabilityIndex" Value="72" />
+                  <Metric Name="CyclomaticComplexity" Value="8" />
                   <Metric Name="ClassCoupling" Value="23" />
                   <Metric Name="DepthOfInheritance" Value="1" />
-                  <Metric Name="SourceLines" Value="57" />
-                  <Metric Name="ExecutableLines" Value="24" />
+                  <Metric Name="SourceLines" Value="63" />
+                  <Metric Name="ExecutableLines" Value="26" />
                 </Metrics>
                 <Members>
-                  <Method Name="Stream FileEncryptor.CreateWritableEncryptedStream(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="17">
+                  <Method Name="Stream FileEncryptor.CreateWritableEncryptedStream(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="17">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="78" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -51,7 +51,16 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task&lt;string&gt; FileEncryptor.LoadEncryptedFileAsync(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="23">
+                  <Method Name="Stream FileEncryptor.CreateReadableEncryptedStream(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="23">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="84" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="Task&lt;string&gt; FileEncryptor.LoadEncryptedFileAsync(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="29">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="90" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -60,7 +69,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task&lt;string&gt; FileEncryptor.LoadFirstLinesFromDiskAsync(string fileName, int lineCount, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="28">
+                  <Method Name="Task&lt;string&gt; FileEncryptor.LoadFirstLinesFromDiskAsync(string fileName, int lineCount, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="34">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="56" />
                       <Metric Name="CyclomaticComplexity" Value="3" />
@@ -69,7 +78,7 @@
                       <Metric Name="ExecutableLines" Value="16" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task FileEncryptor.SaveStringDataToEncryptedFileAsync(string fileName, string data, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="56">
+                  <Method Name="Task FileEncryptor.SaveStringDataToEncryptedFileAsync(string fileName, string data, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="62">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="90" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -78,7 +87,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Method>
-                  <Method Name="bool FileEncryptor.FileExists(string fileName)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="61">
+                  <Method Name="bool FileEncryptor.FileExists(string fileName)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\FileEncryptor.cs" Line="67">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -92,14 +101,14 @@
               <NamedType Name="IFileEncryptor">
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="100" />
-                  <Metric Name="CyclomaticComplexity" Value="4" />
+                  <Metric Name="CyclomaticComplexity" Value="5" />
                   <Metric Name="ClassCoupling" Value="4" />
                   <Metric Name="DepthOfInheritance" Value="0" />
-                  <Metric Name="SourceLines" Value="37" />
+                  <Metric Name="SourceLines" Value="44" />
                   <Metric Name="ExecutableLines" Value="0" />
                 </Metrics>
                 <Members>
-                  <Method Name="Stream IFileEncryptor.CreateWritableEncryptedStream(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="15">
+                  <Method Name="Stream IFileEncryptor.CreateReadableEncryptedStream(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="15">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -108,7 +117,16 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task&lt;string&gt; IFileEncryptor.LoadEncryptedFileAsync(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="23">
+                  <Method Name="Stream IFileEncryptor.CreateWritableEncryptedStream(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="Task&lt;string&gt; IFileEncryptor.LoadEncryptedFileAsync(string fileName, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="30">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -117,7 +135,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task&lt;string&gt; IFileEncryptor.LoadFirstLinesFromDiskAsync(string fileName, int lineCount, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="32">
+                  <Method Name="Task&lt;string&gt; IFileEncryptor.LoadFirstLinesFromDiskAsync(string fileName, int lineCount, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="39">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -126,7 +144,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task IFileEncryptor.SaveStringDataToEncryptedFileAsync(string fileName, string data, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="40">
+                  <Method Name="Task IFileEncryptor.SaveStringDataToEncryptedFileAsync(string fileName, string data, SecureString passphrase)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\IFileEncryptor.cs" Line="47">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -147,7 +165,7 @@
                   <Metric Name="ExecutableLines" Value="12" />
                 </Metrics>
                 <Members>
-                  <Field Name="IFileReaderWriter LocalDiskReaderWriterSelector.encryptedReaderWriter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\LocalDiskReaderWriterSelector.cs" Line="10">
+                  <Field Name="IFileReaderWriter LocalDiskReaderWriterSelector.encryptedReaderWriter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\LocalDiskReaderWriterSelector.cs" Line="10">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -156,7 +174,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Field Name="IFileReaderWriter LocalDiskReaderWriterSelector.unprotectedRaderWriter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\LocalDiskReaderWriterSelector.cs" Line="11">
+                  <Field Name="IFileReaderWriter LocalDiskReaderWriterSelector.unprotectedRaderWriter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\LocalDiskReaderWriterSelector.cs" Line="11">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -165,7 +183,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Method Name="LocalDiskReaderWriterSelector.LocalDiskReaderWriterSelector(IEnumerable&lt;IFileReaderWriter&gt; allReaderWriters)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\LocalDiskReaderWriterSelector.cs" Line="13">
+                  <Method Name="LocalDiskReaderWriterSelector.LocalDiskReaderWriterSelector(IEnumerable&lt;IFileReaderWriter&gt; allReaderWriters)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\LocalDiskReaderWriterSelector.cs" Line="13">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="72" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -174,7 +192,7 @@
                       <Metric Name="ExecutableLines" Value="5" />
                     </Metrics>
                   </Method>
-                  <Method Name="IFileReaderWriter LocalDiskReaderWriterSelector.SelectReaderWriter(bool isEncrypted)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\LocalDiskReaderWriterSelector.cs" Line="31">
+                  <Method Name="IFileReaderWriter LocalDiskReaderWriterSelector.SelectReaderWriter(bool isEncrypted)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\LocalDiskReaderWriterSelector.cs" Line="31">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="70" />
                       <Metric Name="CyclomaticComplexity" Value="5" />
@@ -195,7 +213,7 @@
                   <Metric Name="ExecutableLines" Value="41" />
                 </Metrics>
                 <Members>
-                  <Field Name="bool SecureStringCredentialStore.disposed" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="13">
+                  <Field Name="bool SecureStringCredentialStore.disposed" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="13">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -204,7 +222,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Field Name="SecureString SecureStringCredentialStore.passPhrase" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="14">
+                  <Field Name="SecureString SecureStringCredentialStore.passPhrase" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="14">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -213,7 +231,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Method Name="object? SecureStringCredentialStore.RetrievePasskey()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="20">
+                  <Method Name="object? SecureStringCredentialStore.RetrievePasskey()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="20">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="90" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -222,7 +240,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Method>
-                  <Method Name="void SecureStringCredentialStore.SetPasskey(object? passkey)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="28">
+                  <Method Name="void SecureStringCredentialStore.SetPasskey(object? passkey)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="28">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="83" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -231,7 +249,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="bool SecureStringCredentialStore.AreEqual(object? compareTo)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="36">
+                  <Method Name="bool SecureStringCredentialStore.AreEqual(object? compareTo)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="36">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="51" />
                       <Metric Name="CyclomaticComplexity" Value="9" />
@@ -240,7 +258,7 @@
                       <Metric Name="ExecutableLines" Value="24" />
                     </Metrics>
                   </Method>
-                  <Method Name="void SecureStringCredentialStore.Dispose()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="97">
+                  <Method Name="void SecureStringCredentialStore.Dispose()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="97">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="72" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -249,7 +267,7 @@
                       <Metric Name="ExecutableLines" Value="5" />
                     </Metrics>
                   </Method>
-                  <Method Name="string SecureStringCredentialStore.SecureStringToString(SecureString value)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="121">
+                  <Method Name="string SecureStringCredentialStore.SecureStringToString(SecureString value)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="121">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="75" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -258,7 +276,7 @@
                       <Metric Name="ExecutableLines" Value="5" />
                     </Metrics>
                   </Method>
-                  <Method Name="SecureStringCredentialStore.~SecureStringCredentialStore()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="143">
+                  <Method Name="SecureStringCredentialStore.~SecureStringCredentialStore()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\SecureStringCredentialStore.cs" Line="143">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -279,7 +297,7 @@
                   <Metric Name="ExecutableLines" Value="2" />
                 </Metrics>
                 <Members>
-                  <Field Name="string StorageConstants.UnprotectedInstanceName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\StorageConstants.cs" Line="5">
+                  <Field Name="string StorageConstants.UnprotectedInstanceName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\StorageConstants.cs" Line="5">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -288,7 +306,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="string StorageConstants.EncryptedInstanceName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Encryption\StorageConstants.cs" Line="6">
+                  <Field Name="string StorageConstants.EncryptedInstanceName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working1\BudgetAnalyser.Encryption\StorageConstants.cs" Line="6">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />

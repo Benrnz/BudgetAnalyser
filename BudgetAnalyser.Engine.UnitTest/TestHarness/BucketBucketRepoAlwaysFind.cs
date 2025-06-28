@@ -45,9 +45,10 @@ public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
             : GetOrCreateNew(code, () => new SavedUpForExpenseBucket(code, code));
     }
 
-    public override void Initialise(IEnumerable<BudgetBucketDto> buckets)
+    public override IBudgetBucketRepository Initialise(IEnumerable<BudgetBucketDto> buckets)
     {
         InitialiseMandatorySpecialBuckets();
+        return this;
     }
 
     public override bool IsValidCode(string code)
