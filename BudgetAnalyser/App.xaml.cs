@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
 using BudgetAnalyser.Engine;
+using Microsoft.Extensions.Hosting;
 
 namespace BudgetAnalyser;
 
@@ -18,9 +19,36 @@ public partial class App
     private ILogger? logger;
     private ShellController? shellController;
 
-    protected override void OnStartup(StartupEventArgs e)
+    public App()
     {
+        // TODO Ideally this should be in the CompositionRoot
+        AppHost = Host.CreateDefaultBuilder()
+            .ConfigureServices((context, services) =>
+            {
+                // TODO Populate service registrations here
+                //services.AddSingleton<MainWindow>();
+                //services.AddTransient<IMyService, MyService>();
+            })
+            .Build();
+    }
+
+    public static IHost AppHost { get; private set; } = null!;
+
+    // ReSharper disable once AsyncVoidMethod - Override of OnExit in WPF applications must be async void.
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        // Occurs before Application Exit event - calling base will raise the event.
+        await AppHost.StopAsync();
+        AppHost.Dispose();
+        base.OnExit(e);
+    }
+
+    // ReSharper disable once AsyncVoidMethod - Override of OnStartup in WPF applications must be async void.
+    protected override async void OnStartup(StartupEventArgs e)
+    {
+        await AppHost.StartAsync();
         base.OnStartup(e);
+
         // Ensure the current culture passed into bindings is the OS culture.
         // By default, WPF uses en-US as the culture, regardless of the system settings.
         FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
@@ -30,21 +58,24 @@ public partial class App
 
         Current.Exit += OnApplicationExit;
 
+        // TODO Pass the IHost to the CompositionRoot so it can be used to resolve services?
         this.compositionRoot = new CompositionRoot();
         this.logger = this.compositionRoot.Logger;
 
         this.logger.LogAlways(_ => "=========== Budget Analyser Starting ===========");
         this.logger.LogAlways(_ => this.compositionRoot.ShellController.DashboardController.VersionString);
+
         this.shellController = this.compositionRoot.ShellController;
         this.shellController.Initialize();
 
         this.compositionRoot.ShellWindow.DataContext = this.compositionRoot.ShellController;
         this.logger.LogInfo(_ => "Initialisation finished.");
         this.compositionRoot.ShellWindow.Show();
+        // TODO Can the shell window be referenced here rather than in the CompositionRoot?
     }
 
     [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-        Justification = "All exceptions are already logged, any further exceptions attempting to gracefully shutdown can be ignored.")]
+        Justification = "All exceptions are already logged, if there are any further exceptions when attempting to gracefully shutdown, they can be ignored.")]
     private void LogUnhandledException(string origin, object ex)
     {
         if (this.logger is not null)
@@ -53,7 +84,7 @@ public partial class App
             builder.AppendLine(string.Empty);
             builder.AppendLine("=====================================================================================");
             builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
-            builder.AppendLine("Unhandled exception was thrown from orgin: " + origin);
+            builder.AppendLine("Unhandled exception was thrown from origin: " + origin);
             builder.AppendLine(ex.ToString());
             this.logger.LogError(_ => builder.ToString());
         }
