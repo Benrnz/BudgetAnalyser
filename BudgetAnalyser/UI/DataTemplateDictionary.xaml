@@ -18,7 +18,7 @@
         <overallPerformance:OverallPerformanceView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type budget:BudgetController}">
+    <DataTemplate DataType="{x:Type budget:TabBudgetController}">
         <budget:BudgetMaintenance />
     </DataTemplate>
 
@@ -34,11 +34,11 @@
         <budget:BudgetSelectionView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type dashboard:DashboardController}">
+    <DataTemplate DataType="{x:Type dashboard:TabDashboardController}">
         <dashboard:DashboardUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
+    <DataTemplate DataType="{x:Type ledgerBook:TabLedgerBookController}">
         <ledgerBook:LedgerBookUserControl />
     </DataTemplate>
 
@@ -46,11 +46,11 @@
         <statement:LoadFileView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type statement:StatementController}">
+    <DataTemplate DataType="{x:Type statement:TabTransactionsController}">
         <statement:StatementUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
+    <DataTemplate DataType="{x:Type reportsCatalog:TabReportsCatalogController}">
         <reportsCatalog:ReportsCatalogUserControl />
     </DataTemplate>
 

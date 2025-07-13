@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance reportsCatalog:ReportsCatalogController}">
+             d:DataContext="{d:DesignInstance reportsCatalog:TabReportsCatalogController}">
 
     <Grid Background="{StaticResource Brush.TileBackground}">
         <Grid.RowDefinitions>

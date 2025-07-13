@@ -7,7 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              DataContextChanged="OnDataContextChanged"
-             d:DataContext="{d:DesignInstance statement:StatementController}">
+             d:DataContext="{d:DesignInstance statement:TabTransactionsController}">
 
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
@@ -96,8 +96,8 @@
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <!-- Oil light -->
             <StackPanel Grid.Column="0"

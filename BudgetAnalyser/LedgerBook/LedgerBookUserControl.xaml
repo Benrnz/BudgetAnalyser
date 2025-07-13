@@ -7,8 +7,8 @@
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
              mc:Ignorable="d"
              Background="{StaticResource Brush.MainBackground}"
-             DataContextChanged="OnDataContextChanged" 
-             d:DataContext="{d:DesignInstance ledgerBook:LedgerBookController}">
+             DataContextChanged="OnDataContextChanged"
+             d:DataContext="{d:DesignInstance ledgerBook:TabLedgerBookController}">
 
     <UserControl.Resources>
 
@@ -96,11 +96,11 @@
                     IsEnabled="{Binding ViewModel.LedgerBook, Converter={StaticResource Converter.NotNullIsTrue}}"
                     ToolTip="Add new ledger"
                     Click="OnAddLedgerClicked" />
-            <Button 
-                    Click="OnUnlockCurrentLedgerLineClicked"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource Button.Round.Unlock}"
-                    ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line.">
+            <Button
+                Click="OnUnlockCurrentLedgerLineClicked"
+                HorizontalAlignment="Left"
+                Style="{StaticResource Button.Round.Unlock}"
+                ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line.">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource Converter.MultiAndBool}">
                         <Binding Path="ViewModel.NewLedgerLine"
