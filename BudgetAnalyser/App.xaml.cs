@@ -12,21 +12,25 @@ namespace BudgetAnalyser;
 [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This is the root object in the App")]
 public partial class App
 {
-    private CompositionRoot? compositionRoot;
-    private ILogger? logger;
-    private ShellController? shellController;
+    private readonly CompositionRoot compositionRoot; // TODO no need for this under MS DI. Disposal is handled by the host.
+    private readonly ILogger logger;
+    private readonly ShellController shellController;
 
     public App()
     {
+        this.compositionRoot = new CompositionRoot();
+
         // TODO Ideally this should be in the CompositionRoot
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                // TODO Populate service registrations here
-                //services.AddSingleton<MainWindow>();
-                //services.AddTransient<IMyService, MyService>();
+                // this.compositionRoot = new CompositionRoot(services);
+                // All registrations go in here
             })
             .Build();
+
+        this.logger = this.compositionRoot.Logger;
+        this.shellController = this.compositionRoot.ShellController;
     }
 
     public static IHost AppHost { get; private set; } = null!;
@@ -46,8 +50,7 @@ public partial class App
         await AppHost.StartAsync();
         base.OnStartup(e);
 
-        // Ensure the current culture passed into bindings is the OS culture.
-        // By default, WPF uses en-US as the culture, regardless of the system settings.
+        // Ensure the current culture passed into bindings is the OS culture. By default, WPF uses en-US as the culture, regardless of the system settings.
         FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
         DispatcherUnhandledException += OnDispatcherUnhandledException;
@@ -55,36 +58,28 @@ public partial class App
 
         Current.Exit += OnApplicationExit;
 
-        // TODO Pass the IHost to the CompositionRoot so it can be used to resolve services?
-        this.compositionRoot = new CompositionRoot();
-        this.logger = this.compositionRoot.Logger;
-
         this.logger.LogAlways(_ => "=========== Budget Analyser is Starting ===========");
         this.logger.LogAlways(_ => this.compositionRoot.ShellController.TabDashboardController.VersionString);
 
-        this.shellController = this.compositionRoot.ShellController;
         this.shellController.Initialize();
 
-        this.compositionRoot.ShellWindow.DataContext = this.compositionRoot.ShellController;
         this.logger.LogInfo(_ => "Initialisation finished.");
-        this.compositionRoot.ShellWindow.Show();
-        // TODO Can the shell window be referenced here rather than in the CompositionRoot?
+
+        var topLevelWindow = new ShellWindow { DataContext = this.shellController };
+        topLevelWindow.Show();
     }
 
     [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
         Justification = "All exceptions are already logged, if there are any further exceptions when attempting to gracefully shutdown, they can be ignored.")]
     private void LogUnhandledException(string origin, object ex)
     {
-        if (this.logger is not null)
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(string.Empty);
-            builder.AppendLine("=====================================================================================");
-            builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
-            builder.AppendLine("Unhandled exception was thrown from origin: " + origin);
-            builder.AppendLine(ex.ToString());
-            this.logger.LogError(_ => builder.ToString());
-        }
+        var builder = new StringBuilder();
+        builder.AppendLine(string.Empty);
+        builder.AppendLine("=====================================================================================");
+        builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
+        builder.AppendLine("Unhandled exception was thrown from origin: " + origin);
+        builder.AppendLine(ex.ToString());
+        this.logger.LogError(_ => builder.ToString());
 
         // If you get a NullReference Exception with no inner exception here its most likely because a class takes an interface in its constructor that Autofac doesn't have a registration for.
         // Most likely you forgot to annotate an implementation of an interface with [AutoRegisterWithIoc]
@@ -101,8 +96,9 @@ public partial class App
     private void OnApplicationExit(object? sender, ExitEventArgs e)
     {
         Current.Exit -= OnApplicationExit;
-        this.compositionRoot?.Dispose();
-        this.logger?.LogAlways(_ => "=========== Application Exiting ===========");
+        this.compositionRoot.Dispose();
+        AppHost.Dispose();
+        this.logger.LogAlways(_ => "=========== Application Exiting ===========");
     }
 
     private void OnCurrentDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)
