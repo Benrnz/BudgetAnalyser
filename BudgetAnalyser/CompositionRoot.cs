@@ -28,66 +28,65 @@ using IPersistApplicationState = BudgetAnalyser.ApplicationState.IPersistApplica
 namespace BudgetAnalyser;
 
 /// <summary>
-///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all required objects, the whole graph for use for
-///     the process lifetime of the application. This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used anywhere else in the application to prevent
-///     the Service Locator anti-pattern from appearing.
+///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all instances that make up the app. The whole graph
+///     for use for the process lifetime of the application. This class also contains all usage of DI to this class.  It should not be used anywhere else in the application to
+///     prevent the Service Locator anti-pattern from appearing.
 /// </summary>
 [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
 public sealed class CompositionRoot : IDisposable
 {
     private const string InputBoxView = "InputBoxView";
+
+    private readonly ContainerBuilder builder;
+
     // TODO Won't be needed under AppHost and Ms DI.
     private readonly List<IDisposable> disposables = new();
+    private readonly Assembly engineAssembly;
+    private readonly Assembly storageAssembly;
+    private readonly Assembly thisAssembly;
+    private readonly long timeTakenToRegister;
     private bool disposed;
 
     public CompositionRoot()
     {
         Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
-        var builder = new ContainerBuilder();
-        var engineAssembly = typeof(TransactionSetModel).GetTypeInfo().Assembly;
-        var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
-        var thisAssembly = GetType().GetTypeInfo().Assembly;
+        this.builder = new ContainerBuilder();
+        this.engineAssembly = typeof(TransactionSetModel).GetTypeInfo().Assembly;
+        this.storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
+        this.thisAssembly = GetType().GetTypeInfo().Assembly;
 
         var stopwatch = Stopwatch.StartNew();
-        builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
 
-        ComposeTypesWithDefaultImplementations(storageAssembly, builder);
-        ComposeTypesWithDefaultImplementations(engineAssembly, builder);
-        ComposeTypesWithDefaultImplementations(thisAssembly, builder);
+        // TODO Experiment without this. Should not really be allowing concrete types to be injected.
+        // this.builder.RegisterAssemblyTypes(this.thisAssembly).AsSelf();
+
+        RegisterTypesWithDefaultImplementations(this.storageAssembly, this.builder);
+        RegisterTypesWithDefaultImplementations(this.engineAssembly, this.builder);
+        RegisterTypesWithDefaultImplementations(this.thisAssembly, this.builder);
 
         // Register Messenger Singleton from MVVM CommunityToolkit
         // NOTE This should be the only place we refer to WeakReferenceMessenger.Default
         // Choosing to customise this could result in two messengers being used in the application. Controllers currently rely on the default messenger set in the base class, not this one.
-        builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", WeakReferenceMessenger.Default);
+        this.builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", WeakReferenceMessenger.Default);
 
         // Registrations from Rees.Wpf - There are no automatic registrations in this assembly.
-        RegistrationsForReesWpf(builder);
+        RegistrationsForReesWpf(this.builder);
 
-        AllLocalNonAutomaticRegistrations(builder);
-        var timeTakenToRegister = stopwatch.ElapsedMilliseconds;
-        stopwatch = Stopwatch.StartNew();
+        AllLocalNonAutomaticRegistrations(this.builder);
 
-        var container = builder.Build();
-
-        Logger = container.Resolve<ILogger>();
-        Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
-
-        BuildApplicationObjectGraph(container, engineAssembly, thisAssembly, storageAssembly);
-        ShellController = container.Resolve<ShellController>();
         stopwatch.Stop();
-        var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
-        Logger.LogAlways(_ => $"Enumerating all types and registering types took: {timeTakenToRegister}ms. Building the object graph took: {timeTakenToBuildObjectGraph}ms.");
+        this.timeTakenToRegister = stopwatch.ElapsedMilliseconds;
     }
 
     /// <summary>
     ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger has not been available.
     /// </summary>
-    public ILogger Logger { get; }
+    public ILogger Logger { get; private set; } = null!;
 
     /// <summary>
     ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first object to be called following execution of this Composition Root.
     /// </summary>
-    public ShellController ShellController { get; }
+    public ShellController ShellController { get; private set; } = null!;
 
     /// <summary>
     ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -109,14 +108,29 @@ public sealed class CompositionRoot : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public void Build()
+    {
+        var stopwatch = Stopwatch.StartNew();
+        var container = this.builder.Build();
+
+        Logger = container.Resolve<ILogger>();
+        Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
+
+        BuildApplicationObjectGraph(container, this.engineAssembly, this.thisAssembly, this.storageAssembly);
+        ShellController = container.Resolve<ShellController>();
+        stopwatch.Stop();
+        var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
+        Logger.LogAlways(_ => $"Enumerating all types and registering types took: {this.timeTakenToRegister}ms. Building the object graph took: {timeTakenToBuildObjectGraph}ms.");
+    }
+
     /// <summary>
     ///     Register any special mappings that have not been registered with automatic mappings. Explicit object creation below is necessary to correctly register with IoC container.
     /// </summary>
     [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "builder", Justification = "Good template code and likely use in the future")]
     private static void AllLocalNonAutomaticRegistrations(ContainerBuilder builder)
     {
+        // Logger is manually registered to ensure the correct logger is used globally. Multiple logger implementations are included in the solution.
         builder.RegisterType<DebugLogger>().As<ILogger>();
-        builder.RegisterType<UiContext>().As<IUiContext>().SingleInstance();
     }
 
     private void BuildApplicationObjectGraph(IContainer container, params Assembly[] assemblies)
@@ -124,13 +138,14 @@ public sealed class CompositionRoot : IDisposable
         // Instantiate and store all controllers...
         // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
 
+        // Discover all Property Injection requirements in the assemblies, and satisfy them.
         foreach (var assembly in assemblies)
         {
             var requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);
             foreach (var requirement in requiredPropertyInjections)
             {
                 // Some reasonably awkward Autofac usage here to allow testability.  (Extension methods aren't easy to test)
-                var typedService = new TypedService(requirement.DependencyRequired);
+                var typedService = new TypedService(requirement.Type);
                 var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out var registration);
                 if (success)
                 {
@@ -141,37 +156,10 @@ public sealed class CompositionRoot : IDisposable
             }
         }
 
-        // Kick it off
         ConstructUiContext(container);
+
         // TODO Don't need to do this if the AppHost is disposed.
         this.disposables.AddIfSomething(container.Resolve<ICredentialStore>() as IDisposable);
-    }
-
-    private static void ComposeTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)
-    {
-        var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(assembly);
-        foreach (var dependency in dependencies)
-        {
-            IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> registration;
-            if (dependency.IsSingleInstance)
-            {
-                // Singleton
-                registration = builder.RegisterType(dependency.DependencyRequired).SingleInstance();
-            }
-            else
-            {
-                // Transient
-                registration = builder.RegisterType(dependency.DependencyRequired).InstancePerDependency();
-            }
-
-            if (dependency.NamedInstanceName is not null)
-            {
-                // Named Dependency
-                registration = registration.Named(dependency.NamedInstanceName, dependency.DependencyRequired);
-            }
-
-            registration.AsImplementedInterfaces().AsSelf();
-        }
     }
 
     /// <summary>
@@ -230,6 +218,33 @@ public sealed class CompositionRoot : IDisposable
         return Application.Current.Dispatcher.CheckAccess();
     }
 
+    private static void RegisterTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)
+    {
+        var assemblyTypesToRegister = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(assembly);
+        foreach (var typeRegistration in assemblyTypesToRegister)
+        {
+            IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> registration;
+            if (typeRegistration.IsSingleInstance)
+            {
+                // Singleton
+                registration = builder.RegisterType(typeRegistration.Type).SingleInstance();
+            }
+            else
+            {
+                // Transient
+                registration = builder.RegisterType(typeRegistration.Type).InstancePerDependency();
+            }
+
+            if (typeRegistration.NamedInstanceName is not null)
+            {
+                // Named Dependency
+                registration = registration.Named(typeRegistration.NamedInstanceName, typeRegistration.Type);
+            }
+
+            registration.AsImplementedInterfaces().AsSelf();
+        }
+    }
+
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Required here, Composition Root pattern")]
     private static void RegistrationsForReesWpf(ContainerBuilder builder)
     {
@@ -242,10 +257,8 @@ public sealed class CompositionRoot : IDisposable
         builder.Register(c => new WindowsInputBox(c.ResolveNamed<IViewLoader>(InputBoxView))).As<IUserInputBox>();
         builder.RegisterType<WindowsMessageBox>().As<IUserMessageBox>().SingleInstance();
         builder.RegisterType<WindowsQuestionBoxYesNo>().As<IUserQuestionBoxYesNo>().SingleInstance();
-        builder.Register(_ => new Func<IUserPromptOpenFile>(() => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true }))
-            .SingleInstance();
-        builder.Register(_ => new Func<IUserPromptSaveFile>(() => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true }))
-            .SingleInstance();
+        builder.Register(_ => new Func<IUserPromptOpenFile>(() => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true })).SingleInstance();
+        builder.Register(_ => new Func<IUserPromptSaveFile>(() => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true })).SingleInstance();
     }
 
     /// <summary>

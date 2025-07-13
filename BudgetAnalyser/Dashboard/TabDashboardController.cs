@@ -8,7 +8,6 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Dashboard;
 
-//[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Necessary in this case, this class is used to monitor all parts of the system.")]
 [AutoRegisterWithIoC(SingleInstance = true)]
 public sealed class TabDashboardController : ControllerBase, IShowableController
 {

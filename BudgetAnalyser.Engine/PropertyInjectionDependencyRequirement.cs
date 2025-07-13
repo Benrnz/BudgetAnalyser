@@ -7,12 +7,12 @@
 public class PropertyInjectionDependencyRequirement
 {
     /// <summary>
-    ///     Get or set a type describing the Type of the dependency required.
-    /// </summary>
-    public required Type DependencyRequired { get; init; }
-
-    /// <summary>
     ///     Get or set the delegate that can assign a concrete dependency into a Property that requires it.
     /// </summary>
     public required Action<object> PropertyInjectionAssignment { get; init; }
+
+    /// <summary>
+    ///     Get or set a type describing the Type of the dependency required.
+    /// </summary>
+    public required Type Type { get; init; }
 }

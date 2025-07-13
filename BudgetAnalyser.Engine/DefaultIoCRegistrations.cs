@@ -61,15 +61,14 @@ public static class DefaultIoCRegistrations
                 var injectionAttribute = property.GetCustomAttribute<PropertyInjectionAttribute>();
                 if (injectionAttribute is not null)
                 {
-                    yield return new PropertyInjectionDependencyRequirement { DependencyRequired = property.PropertyType, PropertyInjectionAssignment = instance => property.SetValue(null, instance) };
+                    yield return new PropertyInjectionDependencyRequirement { Type = property.PropertyType, PropertyInjectionAssignment = instance => property.SetValue(null, instance) };
                 }
             }
         }
     }
 
     /// <summary>
-    ///     Finds all types that need to be registered with the hosting application's IoC container.  The host application
-    ///     needs to register these with the container of its choosing.
+    ///     Finds all types that need to be registered with the hosting application's IoC container.  The host application needs to register these with the container of its choosing.
     ///     See the attribute for registration options. No dependent assemblies are searched.
     /// </summary>
     /// <param name="assembly">The assembly in which to search for automatic registrations.</param>
@@ -89,7 +88,7 @@ public static class DefaultIoCRegistrations
             .ToArray();
 
         return from type in allTypes
-               let autoRegisterAttribute = type.GetTypeInfo().GetCustomAttribute<AutoRegisterWithIoCAttribute>()
-               select new DependencyRegistrationRequirement { DependencyRequired = type, IsSingleInstance = autoRegisterAttribute.SingleInstance, NamedInstanceName = autoRegisterAttribute.Named };
+            let autoRegisterAttribute = type.GetTypeInfo().GetCustomAttribute<AutoRegisterWithIoCAttribute>()
+            select new DependencyRegistrationRequirement { Type = type, IsSingleInstance = autoRegisterAttribute.SingleInstance, NamedInstanceName = autoRegisterAttribute.Named };
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Security;
 using System.Windows.Input;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
@@ -9,6 +10,7 @@ using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IApplicationDatabaseFacade appDbService;

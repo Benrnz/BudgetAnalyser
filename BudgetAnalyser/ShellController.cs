@@ -14,6 +14,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class ShellController : ControllerBase, IInitializableController
 {
     private readonly PersistenceOperations persistenceOperations;

@@ -15,7 +15,7 @@ public sealed class AutoRegisterWithIoCAttribute : Attribute
     public string? Named { get; set; }
 
     /// <summary>
-    ///     Optional, register as a single instance by setting this to true. The default is false, transient.
+    ///     Optional, register as a singleton instance by setting this to true. The default is false, transient.
     /// </summary>
     public bool SingleInstance { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Threading;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
@@ -8,6 +9,7 @@ using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Statement;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class StatementControllerFileOperations : ControllerBase
 {
     private readonly LoadFileController loadFileController;

@@ -26,9 +26,12 @@ public partial class App
             {
                 // this.compositionRoot = new CompositionRoot(services);
                 // All registrations go in here
+                // services.AddBudgetAnalyserEngineServices();
+                // services.AddBudgetAnalyserServices();
             })
             .Build();
 
+        this.compositionRoot.Build();
         this.logger = this.compositionRoot.Logger;
         this.shellController = this.compositionRoot.ShellController;
     }

@@ -7,14 +7,9 @@ namespace BudgetAnalyser.Engine;
 ///     dependency in its IoC container. This class is IoC container independent. By default, all registrations should be self registered to its own class name as well as all directly implemented
 ///     interfaces.
 /// </summary>
-[DebuggerDisplay("DependencyRegistrationRequirement: DependencyRequired:{DependencyRequired} Named:{NamedInstanceName}")]
+[DebuggerDisplay("DependencyRegistrationRequirement: DependencyRequired:{Type} Named:{NamedInstanceName}")]
 public class DependencyRegistrationRequirement
 {
-    /// <summary>
-    ///     Get or set a type describing the Type of the dependency required.
-    /// </summary>
-    public required Type DependencyRequired { get; init; }
-
     /// <summary>
     ///     Get or sets a value indicating if the dependency instance needs to be a singleton. If false, register as a transient, or per-call. Intentionally not called Singleton, as it is possible
     ///     to use more than one, but only one per IoC container.
@@ -25,4 +20,9 @@ public class DependencyRegistrationRequirement
     ///     Get or sets an optional value to register under a specific name. If null, it can be registered to its type and implemented interfaces.
     /// </summary>
     public string? NamedInstanceName { get; init; }
+
+    /// <summary>
+    ///     Get or set a type describing the Type of the dependency required.
+    /// </summary>
+    public required Type Type { get; init; }
 }

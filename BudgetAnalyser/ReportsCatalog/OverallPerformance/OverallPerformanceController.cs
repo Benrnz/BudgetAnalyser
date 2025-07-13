@@ -9,6 +9,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog.OverallPerformance;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class OverallPerformanceController(IMessenger messenger, IOverallPerformanceChartService chartService) : ControllerBase(messenger)
 {
     private readonly IOverallPerformanceChartService chartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
