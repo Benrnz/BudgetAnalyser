@@ -14,7 +14,7 @@ public class AppliedRulesController : ControllerBase
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionRuleService ruleService;
-    private readonly StatementController statementController;
+    private readonly TabTransactionsController tabTransactionsController;
     private bool doNotUseDirty;
 
     public AppliedRulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
@@ -28,7 +28,7 @@ public class AppliedRulesController : ControllerBase
         RulesController = uiContext.Controller<RulesController>();
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
-        this.statementController = uiContext.Controller<StatementController>();
+        this.tabTransactionsController = uiContext.Controller<TabTransactionsController>();
         this.messageBox = uiContext.UserPrompts.MessageBox;
         this.ruleService.Saved += OnSavedNotificationReceived;
     }
@@ -67,12 +67,12 @@ public class AppliedRulesController : ControllerBase
 
     private bool CanExecuteCreateRuleCommand()
     {
-        return this.statementController.ViewModel.SelectedRow is not null;
+        return this.tabTransactionsController.ViewModel.SelectedRow is not null;
     }
 
     private void OnApplyRulesCommandExecute()
     {
-        var statement = this.statementController.ViewModel.Statement ?? throw new InvalidOperationException("The statement model is null, not initialised or not loaded.");
+        var statement = this.tabTransactionsController.ViewModel.Statement ?? throw new InvalidOperationException("The statement model is null, not initialised or not loaded.");
         if (this.ruleService.Match(statement.Transactions))
         {
             Dirty = true;
@@ -82,13 +82,13 @@ public class AppliedRulesController : ControllerBase
 
     private void OnCreateRuleCommandExecute()
     {
-        if (this.statementController.ViewModel.SelectedRow is null)
+        if (this.tabTransactionsController.ViewModel.SelectedRow is null)
         {
             this.messageBox.Show("No row selected.");
             return;
         }
 
-        RulesController.CreateNewRuleFromTransaction(this.statementController.ViewModel.SelectedRow);
+        RulesController.CreateNewRuleFromTransaction(this.tabTransactionsController.ViewModel.SelectedRow);
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)

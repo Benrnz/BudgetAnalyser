@@ -8,13 +8,10 @@ namespace BudgetAnalyser;
 ///     Controllers required by the <see cref="ShellController" /> and most other <see cref="ControllerBase" /> controllers grouped together for convenience.
 ///     This follows an Ambient Context pattern. Not using Thread Local Storage for ease of testing.
 /// </summary>
-//[AutoRegisterWithIoC(SingleInstance = true)]
 public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger logger) : IUiContext
 {
     private readonly Dictionary<Type, Lazy<ControllerBase>> controllerDic = new();
     private IReadOnlySet<ControllerBase> doNotUseControllers = new HashSet<ControllerBase>();
-
-    public IEnumerable<IShowableController> ShowableControllers => Controllers.OfType<IShowableController>();
 
     public IReadOnlySet<ControllerBase> Controllers
     {

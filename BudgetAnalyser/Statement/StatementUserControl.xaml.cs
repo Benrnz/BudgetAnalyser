@@ -27,7 +27,7 @@ public partial class StatementUserControl
         InitializeComponent();
     }
 
-    private StatementController Controller => (StatementController)DataContext;
+    private TabTransactionsController Controller => (TabTransactionsController)DataContext;
 
     private static void AnimateWidth(FrameworkElement element, double from, double to)
     {
@@ -60,11 +60,11 @@ public partial class StatementUserControl
                     var txn = (Transaction)t;
                     return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
                 }
-            : t =>
-            {
-                var txn = (Transaction)t;
-                return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
-            };
+                : t =>
+                {
+                    var txn = (Transaction)t;
+                    return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
+                };
         }
     }
 
@@ -117,7 +117,7 @@ public partial class StatementUserControl
 
         if (Controller is null)
         {
-            ((StatementController)e.OldValue).ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            ((TabTransactionsController)e.OldValue).ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
             return;
         }
 

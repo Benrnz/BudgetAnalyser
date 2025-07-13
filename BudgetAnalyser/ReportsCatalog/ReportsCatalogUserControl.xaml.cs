@@ -15,6 +15,6 @@ public partial class ReportsCatalogUserControl : UserControl
 
     private void OverallPerformanceClicked(object? sender, RoutedEventArgs e)
     {
-        ((ReportsCatalogController)DataContext).ShowOverallPerformanceReport();
+        ((TabReportsCatalogController)DataContext).ShowOverallPerformanceReport();
     }
 }

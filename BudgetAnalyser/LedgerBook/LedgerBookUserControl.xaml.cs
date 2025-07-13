@@ -15,7 +15,7 @@ public partial class LedgerBookUserControl
         InitializeComponent();
     }
 
-    private LedgerBookController Controller => (LedgerBookController)DataContext;
+    private TabLedgerBookController Controller => (TabLedgerBookController)DataContext;
 
     private void DynamicallyCreateLedgerBookGrid()
     {
@@ -47,13 +47,13 @@ public partial class LedgerBookUserControl
 
         if (e.OldValue is not null)
         {
-            ((LedgerBookController)e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
-            ((LedgerBookController)e.OldValue).DeregisterListener(this);
+            ((TabLedgerBookController)e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
+            ((TabLedgerBookController)e.OldValue).DeregisterListener(this);
         }
 
         if (e.NewValue is not null)
         {
-            ((LedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
+            ((TabLedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
             Controller.RegisterListener(this, static (r, m) => r.OnLedgerBookReadyMessageReceived(m));
         }
 

@@ -2,7 +2,6 @@
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
@@ -23,33 +22,11 @@ public class MainMenuController : ControllerBase, IInitializableController
     private bool doNotUseReportsToggle;
     private bool doNotUseTransactionsToggle;
 
-    public MainMenuController(
-        IUiContext uiContext,
-        IDashboardService dashboardService,
-        DemoFileHelper demoFileHelper)
-        : base(uiContext.Messenger)
+    public MainMenuController(IUiContext uiContext) : base(uiContext.Messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        if (dashboardService is null)
-        {
-            throw new ArgumentNullException(nameof(dashboardService));
-        }
-
-        if (demoFileHelper is null)
-        {
-            throw new ArgumentNullException(nameof(demoFileHelper));
-        }
-
-        this.uiContext = uiContext;
+        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
-
-    [UsedImplicitly]
-    public ICommand BudgetCommand => new RelayCommand(OnBudgetExecuted);
 
     public bool BudgetToggle
     {
@@ -61,8 +38,6 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    public ICommand DashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
-
     public bool DashboardToggle
     {
         get => this.doNotUseDashboardToggle;
@@ -72,9 +47,6 @@ public class MainMenuController : ControllerBase, IInitializableController
             OnPropertyChanged();
         }
     }
-
-    [UsedImplicitly]
-    public ICommand LedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
 
     public bool LedgerBookToggle
     {
@@ -86,9 +58,6 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    [UsedImplicitly]
-    public ICommand ReportsCommand => new RelayCommand(OnReportsExecuted);
-
     public bool ReportsToggle
     {
         get => this.doNotUseReportsToggle;
@@ -99,8 +68,15 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    [UsedImplicitly]
-    public ICommand TransactionsCommand => new RelayCommand(OnTransactionExecuted);
+    public ICommand ShowBudgetTabCommand => new RelayCommand(OnShowBudgetTabExecuted);
+
+    public ICommand ShowDashboardTabCommand => new RelayCommand(OnShowDashboardTabExecuted, CanExecuteDashboardCommand);
+
+    public ICommand ShowLedgerBookTabCommand => new RelayCommand(OnShowLedgerBookTabExecuted);
+
+    public ICommand ShowReportsTabCommand => new RelayCommand(OnShowReportsTabExecuted);
+
+    public ICommand ShowTransactionsTabCommand => new RelayCommand(OnShowTransactionsTabExecuted);
 
     public bool TransactionsToggle
     {
@@ -114,21 +90,16 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     public void Initialize()
     {
-        DashboardCommand.Execute(null);
+        ShowDashboardTabCommand.Execute(null);
     }
 
     private void AfterTabExecutedCommon()
     {
-        foreach (var controller in this.uiContext.ShowableControllers)
-        {
-            controller.Shown = false;
-        }
-
-        this.uiContext.Controller<DashboardController>().Shown = DashboardToggle;
-        this.uiContext.Controller<StatementController>().Shown = TransactionsToggle;
-        this.uiContext.Controller<LedgerBookController>().Shown = LedgerBookToggle;
-        this.uiContext.Controller<BudgetController>().Shown = BudgetToggle;
-        this.uiContext.Controller<ReportsCatalogController>().Shown = ReportsToggle;
+        this.uiContext.Controller<TabDashboardController>().Shown = DashboardToggle;
+        this.uiContext.Controller<TabTransactionsController>().Shown = TransactionsToggle;
+        this.uiContext.Controller<TabLedgerBookController>().Shown = LedgerBookToggle;
+        this.uiContext.Controller<TabBudgetController>().Shown = BudgetToggle;
+        this.uiContext.Controller<TabReportsCatalogController>().Shown = ReportsToggle;
     }
 
     private void BeforeTabExecutedCommon()
@@ -145,35 +116,35 @@ public class MainMenuController : ControllerBase, IInitializableController
         return true;
     }
 
-    private void OnBudgetExecuted()
+    private void OnShowBudgetTabExecuted()
     {
         BeforeTabExecutedCommon();
         BudgetToggle = true;
         AfterTabExecutedCommon();
     }
 
-    private void OnDashboardExecuted()
+    private void OnShowDashboardTabExecuted()
     {
         BeforeTabExecutedCommon();
         DashboardToggle = true;
         AfterTabExecutedCommon();
     }
 
-    private void OnLedgerBookExecuted()
+    private void OnShowLedgerBookTabExecuted()
     {
         BeforeTabExecutedCommon();
         LedgerBookToggle = true;
         AfterTabExecutedCommon();
     }
 
-    private void OnReportsExecuted()
+    private void OnShowReportsTabExecuted()
     {
         BeforeTabExecutedCommon();
         ReportsToggle = true;
         AfterTabExecutedCommon();
     }
 
-    private void OnTransactionExecuted()
+    private void OnShowTransactionsTabExecuted()
     {
         BeforeTabExecutedCommon();
         TransactionsToggle = true;
@@ -204,7 +175,7 @@ public class MainMenuController : ControllerBase, IInitializableController
 
         if (message.Widget is DaysSinceLastImport)
         {
-            OnTransactionExecuted();
+            OnShowTransactionsTabExecuted();
             return;
         }
 
@@ -259,7 +230,6 @@ public class MainMenuController : ControllerBase, IInitializableController
 
         message.Handled = true;
 
-        // Could possibily go direct to PersistenceOperation class here.
         PersistenceOperationCommands.LoadDemoDatabaseCommand.Execute(this);
     }
 }

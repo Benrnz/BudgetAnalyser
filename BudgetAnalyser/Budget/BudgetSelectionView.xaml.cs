@@ -17,7 +17,7 @@ public partial class BudgetSelectionView : UserControl
 
     private void OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
-        if (e.NewValue is BudgetController budgetController)
+        if (e.NewValue is TabBudgetController budgetController)
         {
             var view = CollectionViewSource.GetDefaultView(budgetController.Budgets);
             view.SortDescriptions.Add(new SortDescription("EffectiveFrom", ListSortDirection.Descending));

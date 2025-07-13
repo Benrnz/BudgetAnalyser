@@ -74,15 +74,12 @@ public sealed class CompositionRoot : IDisposable
     }
 
     /// <summary>
-    ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger has not
-    ///     been available.
-    ///     (An alternative would be to pass the logger into the Composition Root).
+    ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger has not been available.
     /// </summary>
     public ILogger Logger { get; }
 
     /// <summary>
-    ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first
-    ///     object to be called following execution of this Composition Root.
+    ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first object to be called following execution of this Composition Root.
     /// </summary>
     public ShellController ShellController { get; }
 
@@ -96,33 +93,26 @@ public sealed class CompositionRoot : IDisposable
     /// </summary>
     public void Dispose()
     {
+        // This method is only called by the Main Thread, and does not need to be thread safe.
         // Check to see if Dispose has already been called.
         if (!this.disposed)
         {
-            // Release unmanaged resources. If disposing is false,
-            // only the following code is executed.
+            // Release unmanaged resources. If disposing is false, only the following code is executed.
             this.disposables.ForEach(x => x.Dispose());
-            // Note that this is not thread safe.
-            // Another thread could start disposing the object
-            // after the managed resources are disposed,
-            // but before the disposed flag is set to true.
-            // If thread safety is necessary, it must be
-            // implemented by the client.
         }
 
         this.disposed = true;
 
-        // Take yourself off the Finalization queue
-        // to prevent finalization code for this object
-        // from executing a second time.
+        // Take this object off the Finalization queue to prevent finalization code for this object from executing a second time.
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    ///     Register any special mappings that have not been registered with automatic mappings. Explicit object creation below is necessary to correctly register with IoC container.
+    /// </summary>
     [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "builder", Justification = "Good template code and likely use in the future")]
     private static void AllLocalNonAutomaticRegistrations(ContainerBuilder builder)
     {
-        // Register any special mappings that have not been registered with automatic mappings.
-        // Explicit object creation below is necessary to correctly register with IoC container.
         builder.RegisterType<DebugLogger>().As<ILogger>();
         builder.RegisterType<UiContext>().As<IUiContext>().SingleInstance();
     }
@@ -143,7 +133,6 @@ public sealed class CompositionRoot : IDisposable
                 if (success)
                 {
                     var requestToResolve = new ResolveRequest(typedService, registration, []);
-                    //object dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
                     var dependency = container.ResolveComponent(requestToResolve);
                     requirement.PropertyInjectionAssignment(dependency);
                 }
@@ -196,16 +185,16 @@ public sealed class CompositionRoot : IDisposable
         [
             typeof(AddLedgerReconciliationController),
             typeof(AppliedRulesController),
-            typeof(BudgetController),
+            typeof(TabBudgetController),
             typeof(ChooseBudgetBucketController),
             typeof(CreateNewFixedBudgetController),
             typeof(CreateNewSurprisePaymentMonitorController),
-            typeof(DashboardController),
+            typeof(TabDashboardController),
             typeof(DisusedRulesController),
             typeof(EditingTransactionController),
             typeof(EncryptFileController),
             typeof(GlobalFilterController),
-            typeof(LedgerBookController),
+            typeof(TabLedgerBookController),
             typeof(LedgerBucketViewController),
             typeof(LedgerRemarksController),
             typeof(LedgerTransactionsController),
@@ -214,11 +203,11 @@ public sealed class CompositionRoot : IDisposable
             typeof(NewRuleController),
             typeof(OverallPerformanceController),
             typeof(ReconciliationToDoListController),
-            typeof(ReportsCatalogController),
+            typeof(TabReportsCatalogController),
             typeof(RulesController),
             typeof(ShowSurplusBalancesController),
             typeof(SplitTransactionController),
-            typeof(StatementController),
+            typeof(TabTransactionsController),
             typeof(TransferFundsController),
             typeof(UploadMobileDataController)
         ];

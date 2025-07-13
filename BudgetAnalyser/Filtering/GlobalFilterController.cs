@@ -41,7 +41,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         this.appDbService.NewDataSourceAvailable += OnNewFilter;
         this.userMessageBox = uiContext.UserPrompts.MessageBox;
         this.doNotUseCriteria = new GlobalFilterCriteria();
-        this.currentBudget = uiContext.Controller<BudgetController>().CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
+        this.currentBudget = uiContext.Controller<TabBudgetController>().CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 
         Messenger.Register<GlobalFilterController, RequestFilterMessage>(this, static (r, m) => r.OnGlobalFilterRequested(m));
         Messenger.Register<GlobalFilterController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));

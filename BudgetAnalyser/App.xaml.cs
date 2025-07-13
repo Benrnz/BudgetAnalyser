@@ -9,9 +9,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace BudgetAnalyser;
 
-/// <summary>
-///     Interaction logic for App.xaml
-/// </summary>
 [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This is the root object in the App")]
 public partial class App
 {
@@ -62,8 +59,8 @@ public partial class App
         this.compositionRoot = new CompositionRoot();
         this.logger = this.compositionRoot.Logger;
 
-        this.logger.LogAlways(_ => "=========== Budget Analyser Starting ===========");
-        this.logger.LogAlways(_ => this.compositionRoot.ShellController.DashboardController.VersionString);
+        this.logger.LogAlways(_ => "=========== Budget Analyser is Starting ===========");
+        this.logger.LogAlways(_ => this.compositionRoot.ShellController.TabDashboardController.VersionString);
 
         this.shellController = this.compositionRoot.ShellController;
         this.shellController.Initialize();

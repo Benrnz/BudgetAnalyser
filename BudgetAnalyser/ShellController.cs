@@ -52,26 +52,27 @@ public class ShellController : ControllerBase, IInitializableController
         this.persistenceOperations = persistenceOperations;
         this.uiContext = uiContext;
 
-        LedgerBookDialog = new ShellDialogController(Messenger);
-        DashboardDialog = new ShellDialogController(Messenger);
-        TransactionsDialog = new ShellDialogController(Messenger);
-        BudgetDialog = new ShellDialogController(Messenger);
-        ReportsDialog = new ShellDialogController(Messenger);
+        LedgerBookTabDialog = new ShellDialogController(Messenger);
+        DashboardTabDialog = new ShellDialogController(Messenger);
+        TransactionsTabDialog = new ShellDialogController(Messenger);
+        BudgetTabDialog = new ShellDialogController(Messenger);
+        ReportsTabDialog = new ShellDialogController(Messenger);
     }
 
-    public BudgetController BudgetController => this.uiContext.Controller<BudgetController>();
-    public ShellDialogController BudgetDialog { get; }
-    public DashboardController DashboardController => this.uiContext.Controller<DashboardController>();
-    public ShellDialogController DashboardDialog { get; }
+    public ShellDialogController BudgetTabDialog { get; }
+    public ShellDialogController DashboardTabDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
-    public LedgerBookController LedgerBookController => this.uiContext.Controller<LedgerBookController>();
-    public ShellDialogController LedgerBookDialog { get; }
+    public ShellDialogController LedgerBookTabDialog { get; }
     public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
-    public ReportsCatalogController ReportsCatalogController => this.uiContext.Controller<ReportsCatalogController>();
-    public ShellDialogController ReportsDialog { get; }
+    public ShellDialogController ReportsTabDialog { get; }
     public RulesController RulesController => this.uiContext.Controller<RulesController>();
-    public StatementController StatementController => this.uiContext.Controller<StatementController>();
-    public ShellDialogController TransactionsDialog { get; }
+
+    public TabBudgetController TabBudgetController => this.uiContext.Controller<TabBudgetController>();
+    public TabDashboardController TabDashboardController => this.uiContext.Controller<TabDashboardController>();
+    public TabLedgerBookController TabLedgerBookController => this.uiContext.Controller<TabLedgerBookController>();
+    public TabReportsCatalogController TabReportsCatalogController => this.uiContext.Controller<TabReportsCatalogController>();
+    public TabTransactionsController TabTransactionsController => this.uiContext.Controller<TabTransactionsController>();
+    public ShellDialogController TransactionsTabDialog { get; }
     internal Point WindowSize { get; private set; }
     public string WindowTitle => "Budget Analyser";
     internal Point WindowTopLeft { get; private set; }
@@ -124,7 +125,6 @@ public class ShellController : ControllerBase, IInitializableController
     public void OnViewReady()
     {
         // Re-run the initializers. This allows any controller who couldn't initialise until the views are loaded to now reattempt to initialise.
-        this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         if (this.originalWindowTopLeft != new Point())
         {
             WindowTopLeft = this.originalWindowTopLeft;
@@ -193,7 +193,7 @@ public class ShellController : ControllerBase, IInitializableController
                 this.originalWindowTopLeft = shellState.TopLeft;
             }
 
-            StatementController.PageSize = shellState.ListPageSize;
+            TabTransactionsController.PageSize = shellState.ListPageSize;
         }
 
         var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
@@ -209,7 +209,7 @@ public class ShellController : ControllerBase, IInitializableController
         {
             Size = WindowSize,
             TopLeft = WindowTopLeft,
-            ListPageSize = StatementController.PageSize
+            ListPageSize = TabTransactionsController.PageSize
         };
         message.PersistThisModel(shellPersistentStateV1);
 
@@ -223,23 +223,23 @@ public class ShellController : ControllerBase, IInitializableController
         switch (message.Location)
         {
             case BudgetAnalyserFeature.LedgerBook:
-                LedgerBookDialog.ShowFromShell(message);
+                LedgerBookTabDialog.ShowFromShell(message);
                 break;
 
             case BudgetAnalyserFeature.Dashboard:
-                DashboardDialog.ShowFromShell(message);
+                DashboardTabDialog.ShowFromShell(message);
                 break;
 
             case BudgetAnalyserFeature.Budget:
-                BudgetDialog.ShowFromShell(message);
+                BudgetTabDialog.ShowFromShell(message);
                 break;
 
             case BudgetAnalyserFeature.Transactions:
-                TransactionsDialog.ShowFromShell(message);
+                TransactionsTabDialog.ShowFromShell(message);
                 break;
 
             case BudgetAnalyserFeature.Reports:
-                ReportsDialog.ShowFromShell(message);
+                ReportsTabDialog.ShowFromShell(message);
                 break;
 
             default:

@@ -13,11 +13,11 @@ public partial class BudgetMaintenance
         InitializeComponent();
     }
 
-    private BudgetController Controller => (BudgetController)DataContext;
+    private TabBudgetController Controller => (TabBudgetController)DataContext;
 
     private void OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
-        if (e.OldValue is BudgetController controller)
+        if (e.OldValue is TabBudgetController controller)
         {
             controller.Expenses.ListChanged -= OnExpensesListChanged;
             controller.Incomes.ListChanged -= OnIncomesListChanged;

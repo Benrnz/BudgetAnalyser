@@ -5,16 +5,16 @@ namespace BudgetAnalyser.LedgerBook;
 [AutoRegisterWithIoC]
 public class LedgerBookGridBuilderFactory
 {
-    public virtual ILedgerBookGridBuilder GridBuilderV2(LedgerBookController ledgerBookController)
+    public virtual ILedgerBookGridBuilder GridBuilderV2(TabLedgerBookController tabLedgerBookController)
     {
-        return ledgerBookController is null
-            ? throw new ArgumentNullException(nameof(ledgerBookController))
+        return tabLedgerBookController is null
+            ? throw new ArgumentNullException(nameof(tabLedgerBookController))
             : (ILedgerBookGridBuilder)new LedgerBookGridBuilderV2(
-                ledgerBookController.ShowTransactionsCommand,
-                ledgerBookController.ShowBankBalancesCommand,
-                ledgerBookController.ShowRemarksCommand,
-                ledgerBookController.ShowHidePeriodsCommand,
-                ledgerBookController.ShowSurplusBalancesCommand,
-                ledgerBookController.ShowLedgerBucketDetailsCommand);
+                tabLedgerBookController.ShowTransactionsCommand,
+                tabLedgerBookController.ShowBankBalancesCommand,
+                tabLedgerBookController.ShowRemarksCommand,
+                tabLedgerBookController.ShowHidePeriodsCommand,
+                tabLedgerBookController.ShowSurplusBalancesCommand,
+                tabLedgerBookController.ShowLedgerBucketDetailsCommand);
     }
 }

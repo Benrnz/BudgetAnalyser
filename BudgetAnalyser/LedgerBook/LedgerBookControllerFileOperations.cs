@@ -37,7 +37,7 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     }
 
     /// <summary>
-    ///     Gets or sets the ledger service. Will be set by the <see cref="LedgerBookController" /> during its initialisation.
+    ///     Gets or sets the ledger service. Will be set by the <see cref="TabLedgerBookController" /> during its initialisation.
     /// </summary>
     internal ILedgerService? LedgerService { get; set; }
 
