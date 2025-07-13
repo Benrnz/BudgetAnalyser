@@ -25,6 +25,7 @@ public class AppliedRulesController : ControllerBase
             throw new ArgumentNullException(nameof(uiContext));
         }
 
+        // TODO Direct controller references are not ideal.
         RulesController = uiContext.Controller<RulesController>();
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));

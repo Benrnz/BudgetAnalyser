@@ -30,7 +30,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
 
     public TabTransactionsController(
         IUiContext uiContext,
-        StatementControllerFileOperations fileOperations,
+        TransactionSetControllerFileOperations fileOperations,
         ITransactionManagerService transactionService)
         : base(uiContext.Messenger)
     {
@@ -119,7 +119,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
     internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
-    public StatementControllerFileOperations FileOperations { get; }
+    public TransactionSetControllerFileOperations FileOperations { get; }
 
     public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
 

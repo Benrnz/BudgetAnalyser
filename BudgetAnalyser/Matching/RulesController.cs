@@ -42,6 +42,8 @@ public class RulesController : ControllerBase, IShowableController
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
         this.questionBox = uiContext.UserPrompts.YesNoBox;
+
+        // TODO Direct controller references are not ideal.
         NewRuleController = uiContext.Controller<NewRuleController>();
 
         this.ruleService.Closed += OnClosedNotificationReceived;

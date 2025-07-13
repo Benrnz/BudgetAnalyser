@@ -64,6 +64,8 @@ public class ShellController : ControllerBase, IInitializableController
     public ShellDialogController DashboardTabDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
     public ShellDialogController LedgerBookTabDialog { get; }
+
+    // TODO Direct controller references are not ideal.
     public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
     public ShellDialogController ReportsTabDialog { get; }
     public RulesController RulesController => this.uiContext.Controller<RulesController>();

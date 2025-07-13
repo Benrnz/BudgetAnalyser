@@ -15,16 +15,31 @@ namespace BudgetAnalyser;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class MainMenuController : ControllerBase, IInitializableController
 {
-    private readonly IUiContext uiContext;
+    private readonly TabBudgetController budgetController;
+    private readonly TabDashboardController dashboardController;
+    private readonly TabLedgerBookController ledgerBookController;
+    private readonly TabReportsCatalogController reportsCatalogController;
+    private readonly TabTransactionsController transactionsController;
     private bool doNotUseBudgetToggle;
     private bool doNotUseDashboardToggle;
     private bool doNotUseLedgerBookToggle;
     private bool doNotUseReportsToggle;
     private bool doNotUseTransactionsToggle;
 
-    public MainMenuController(IUiContext uiContext) : base(uiContext.Messenger)
+    public MainMenuController(
+        IUiContext uiContext,
+        TabDashboardController dashboardController,
+        TabTransactionsController transactionsController,
+        TabLedgerBookController ledgerBookController,
+        TabBudgetController budgetController,
+        TabReportsCatalogController reportsCatalogController)
+        : base(uiContext.Messenger)
     {
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+        this.dashboardController = dashboardController ?? throw new ArgumentNullException(nameof(dashboardController));
+        this.transactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
+        this.ledgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
+        this.budgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
+        this.reportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
 
@@ -95,11 +110,11 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     private void AfterTabExecutedCommon()
     {
-        this.uiContext.Controller<TabDashboardController>().Shown = DashboardToggle;
-        this.uiContext.Controller<TabTransactionsController>().Shown = TransactionsToggle;
-        this.uiContext.Controller<TabLedgerBookController>().Shown = LedgerBookToggle;
-        this.uiContext.Controller<TabBudgetController>().Shown = BudgetToggle;
-        this.uiContext.Controller<TabReportsCatalogController>().Shown = ReportsToggle;
+        this.dashboardController.Shown = DashboardToggle;
+        this.transactionsController.Shown = TransactionsToggle;
+        this.ledgerBookController.Shown = LedgerBookToggle;
+        this.budgetController.Shown = BudgetToggle;
+        this.reportsCatalogController.Shown = ReportsToggle;
     }
 
     private void BeforeTabExecutedCommon()

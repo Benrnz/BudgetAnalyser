@@ -5,9 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 namespace Rees.Wpf;
 
 /// <summary>
-///     Extension to the Community Toolkit <see cref="ObservableRecipient" /> to include a reference to the Dispatcher for the thread
-///     that
-///     executes the constructor.
+///     Extension to the Community Toolkit <see cref="ObservableRecipient" /> to include a reference to the Dispatcher for the thread that executes the constructor.
 /// </summary>
 public abstract class ControllerBase : ObservableRecipient
 {
@@ -16,8 +14,7 @@ public abstract class ControllerBase : ObservableRecipient
     /// </summary>
     protected ControllerBase(IMessenger messenger) : base(messenger)
     {
-        // This relies on the Xaml being responsible for instantiating the controller.
-        // Or at least the main UI thread.
+        // This relies on the Xaml being responsible for instantiating the controller. Or at least on the main UI thread.
         Dispatcher = Dispatcher.CurrentDispatcher;
     }
 

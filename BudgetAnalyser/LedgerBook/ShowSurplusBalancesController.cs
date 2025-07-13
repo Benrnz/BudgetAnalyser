@@ -11,13 +11,9 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class ShowSurplusBalancesController : ControllerBase
+public class ShowSurplusBalancesController(IMessenger messenger) : ControllerBase(messenger)
 {
     private LedgerEntryLine? ledgerEntryLine;
-
-    public ShowSurplusBalancesController(IMessenger messenger) : base(messenger)
-    {
-    }
 
     [UsedImplicitly]
     public bool HasNegativeBalances => SurplusBalances.Any(b => b.Balance < 0);
