@@ -31,7 +31,7 @@ public class BankStatementImporterRepository : IBankStatementImporterRepository
     ///     Import the given file.
     ///     If the file cannot be imported by any of these importers a <see cref="NotSupportedException" /> will be thrown.
     /// </summary>
-    public async Task<StatementModel> ImportAsync(string fullFileName, Account account)
+    public async Task<TransactionSetModel> ImportAsync(string fullFileName, Account account)
     {
         foreach (var importer in this.importers)
         {

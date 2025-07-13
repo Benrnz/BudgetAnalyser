@@ -20,7 +20,7 @@ public interface IReconciliationService
     ///     An optional validation method the UI can call before invoking <see cref="PeriodEndReconciliation" /> to test for validation warnings. If validation fails a new
     ///     <see cref="ValidationWarningException" /> is thrown; otherwise the method returns.
     /// </summary>
-    void BeforeReconciliationValidation(LedgerBook book, StatementModel model);
+    void BeforeReconciliationValidation(LedgerBook book, TransactionSetModel model);
 
     /// <summary>
     ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
@@ -46,14 +46,17 @@ public interface IReconciliationService
     ///     transactions from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting reconciliation which is the end date for the period.
     /// </param>
     /// <param name="budgetCollection">The collection of budgets. The Reconciliation engine classes will make a decision which budget to choose.</param>
-    /// <param name="statement">The currently loaded statement. Global filter will not be used to select transactions from the statement. Selection is made based on<paramref name="reconciliationDate" />.</param>
+    /// <param name="transactionSet">
+    ///     The currently loaded statement. Global filter will not be used to select transactions from the statement. Selection is made based on<paramref name="reconciliationDate" />
+    ///     .
+    /// </param>
     /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
     /// <param name="balances">The bank balances as at the <paramref name="reconciliationDate" /> to include in this new single line of the ledger book.</param>
     /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
     LedgerEntryLine PeriodEndReconciliation(LedgerBook ledgerBook,
         DateOnly reconciliationDate,
         BudgetCollection budgetCollection,
-        StatementModel statement,
+        TransactionSetModel transactionSet,
         bool ignoreWarnings,
         params BankBalance[] balances);
 

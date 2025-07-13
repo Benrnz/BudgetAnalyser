@@ -168,7 +168,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public string CloseButtonToolTip => "Cancel";
 
-    public Task RequestUserInputForMerging(StatementModel currentStatement)
+    public Task RequestUserInputForMerging(TransactionSetModel currentTransactionSet)
     {
         if (this.disposed)
         {
@@ -179,7 +179,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
         SuggestedDateRange = string.Empty;
         Title = "Merge Statement";
         ActionButtonToolTip = "Merge transactions from the selected file into the current statement file.";
-        CalculateSuggestedDateRange(currentStatement);
+        CalculateSuggestedDateRange(currentTransactionSet);
 
         return RequestUserInputCommomPreparation();
     }
@@ -194,9 +194,9 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
         FileName = null;
     }
 
-    private void CalculateSuggestedDateRange(StatementModel currentStatement)
+    private void CalculateSuggestedDateRange(TransactionSetModel currentTransactionSet)
     {
-        var lastTransactionDate = currentStatement.AllTransactions.Max(t => t.Date).AddDays(1);
+        var lastTransactionDate = currentTransactionSet.AllTransactions.Max(t => t.Date).AddDays(1);
         var maxDate = DateTime.Today;
         if (maxDate.DayOfWeek == DayOfWeek.Monday)
         {

@@ -38,14 +38,14 @@ internal class WestpacAccountStatementImporterV1 : IBankStatementImporter
     }
 
     /// <summary>
-    ///     Load the given file into a <see cref="StatementModel" />.
+    ///     Load the given file into a <see cref="TransactionSetModel" />.
     /// </summary>
     /// <param name="fileName">The file to load.</param>
     /// <param name="account">
     ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
     ///     merging a cheque account export with visa account export, each can be classified using an account.
     /// </param>
-    public async Task<StatementModel> LoadAsync(string fileName, Account account)
+    public async Task<TransactionSetModel> LoadAsync(string fileName, Account account)
     {
         try
         {
@@ -87,7 +87,7 @@ internal class WestpacAccountStatementImporterV1 : IBankStatementImporter
             transactions.Add(transaction);
         }
 
-        var statement = new StatementModel(this.logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
+        var statement = new TransactionSetModel(this.logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
 
         return statement;
     }

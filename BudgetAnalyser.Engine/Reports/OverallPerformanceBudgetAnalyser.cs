@@ -18,24 +18,24 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
     private DateOnly endDate;
     private BudgetModel? latestBudget;
     private GlobalFilterCriteria? rawCriteria;
-    private StatementModel? statement;
+    private TransactionSetModel? statement;
 
     /// <summary>
     ///     Analyses the supplied statement using the supplied budget within the criteria given to this method.
     /// </summary>
     /// <param name="budgets">The current budgets collection.</param>
     /// <param name="criteria">The criteria to limit the analysis.</param>
-    /// <param name="statementModel">The current statement model.</param>
+    /// <param name="transactionSetModel">The current statement model.</param>
     /// <exception cref="BudgetException">
     ///     Will be thrown if no budget is supplied or if no budget can be found for the dates
     ///     given in the criteria.
     /// </exception>
     /// <exception cref="ArgumentException">If statement or budget is null.</exception>
-    public OverallPerformanceBudgetResult Analyse(StatementModel statementModel,
+    public OverallPerformanceBudgetResult Analyse(TransactionSetModel transactionSetModel,
         BudgetCollection budgets,
         GlobalFilterCriteria criteria)
     {
-        this.statement = statementModel;
+        this.statement = transactionSetModel;
         this.budgetCollection = budgets;
         this.rawCriteria = criteria;
         AnalysisPreconditions();

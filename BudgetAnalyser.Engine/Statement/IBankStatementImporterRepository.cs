@@ -11,5 +11,5 @@ public interface IBankStatementImporterRepository
     ///     Import the given file.
     ///     be imported by any of these importers a <see cref="NotSupportedException" /> will be thrown.
     /// </summary>
-    Task<StatementModel> ImportAsync(string fullFileName, Account account);
+    Task<TransactionSetModel> ImportAsync(string fullFileName, Account account);
 }

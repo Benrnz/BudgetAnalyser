@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Statement;
 public interface IBankStatementImporter
 {
     /// <summary>
-    ///     Load the given file into a <see cref="StatementModel" />.
+    ///     Load the given file into a <see cref="TransactionSetModel" />.
     /// </summary>
     /// <param name="fileName">The file to load.</param>
     /// <param name="account">
@@ -20,7 +20,7 @@ public interface IBankStatementImporter
     ///     merging a cheque account
     ///     export with visa account export, each can be classified using an account.
     /// </param>
-    Task<StatementModel> LoadAsync(string fileName, Account account);
+    Task<TransactionSetModel> LoadAsync(string fileName, Account account);
 
     /// <summary>
     ///     Test the given file to see if this importer implementation can read and import it.

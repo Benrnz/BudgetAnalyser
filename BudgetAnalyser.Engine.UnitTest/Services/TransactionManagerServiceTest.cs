@@ -19,7 +19,7 @@ public class TransactionManagerServiceTest
     private Mock<IBudgetBucketRepository> mockBudgetBucketRepo;
     private Mock<IStatementRepository> mockStatementRepo;
     private TransactionManagerService subject;
-    private StatementModel testData;
+    private TransactionSetModel testData;
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
@@ -154,7 +154,7 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public void FilterTransactions_ShouldCallStatementModel_GivenFilterObject()
     {
-        this.testData = new StatementModelTestHarness();
+        this.testData = new TransactionSetModelTestHarness();
         this.testData.LoadTransactions(new List<Transaction>());
         var criteria = new GlobalFilterCriteria { BeginDate = new DateOnly(2014, 07, 01), EndDate = new DateOnly(2014, 08, 01) };
 
@@ -162,7 +162,7 @@ public class TransactionManagerServiceTest
 
         this.subject.FilterTransactions(criteria);
 
-        Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).FilterByCriteriaWasCalled);
+        Assert.AreEqual(1, ((TransactionSetModelTestHarness)this.testData).FilterByCriteriaWasCalled);
     }
 
     [TestMethod]
@@ -189,7 +189,7 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public async Task ImportAndMergeBankStatement_ShouldMergeTheModel_GivenStorageKeyAndAccount()
     {
-        this.testData = new StatementModelTestHarness();
+        this.testData = new TransactionSetModelTestHarness();
         this.testData.LoadTransactions(new List<Transaction>());
 
         Arrange();
@@ -201,7 +201,7 @@ public class TransactionManagerServiceTest
 
         await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
 
-        Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).MergeWasCalled);
+        Assert.AreEqual(1, ((TransactionSetModelTestHarness)this.testData).MergeWasCalled);
     }
 
     [TestMethod]
@@ -250,10 +250,10 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public async Task LoadStatementModelAsync_ShouldReturnAStatementModel_GivenValidStorageKey()
     {
-        StatementModel testStatement = new StatementModelTestHarness();
-        testStatement.LoadTransactions(new List<Transaction>());
+        TransactionSetModel testTransactionSet = new TransactionSetModelTestHarness();
+        testTransactionSet.LoadTransactions(new List<Transaction>());
 
-        this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.FromResult(testStatement));
+        this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.FromResult(testTransactionSet));
 
         await this.subject.LoadAsync(this.testAppDb);
 
@@ -271,14 +271,14 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public void RemoveTransaction_ShouldCallStatementModelRemove_GivenATransaction()
     {
-        this.testData = new StatementModelTestHarness();
+        this.testData = new TransactionSetModelTestHarness();
         this.testData.LoadTransactions(StatementModelTestData.TestData2().Transactions);
         Arrange();
         var transaction = this.testData.Transactions.Skip(1).First();
 
         this.subject.RemoveTransaction(transaction);
 
-        Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).RemoveTransactionWasCalled);
+        Assert.AreEqual(1, ((TransactionSetModelTestHarness)this.testData).RemoveTransactionWasCalled);
     }
 
     [TestMethod]
@@ -297,7 +297,7 @@ public class TransactionManagerServiceTest
         mockAppDb.Setup(m => m.FullPath(It.IsAny<string>())).Returns("Foo");
         await this.subject.SaveAsync(mockAppDb.Object);
 
-        this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>(), It.IsAny<bool>()), Times.Once);
+        this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<TransactionSetModel>(), It.IsAny<bool>()), Times.Once);
     }
 
     [TestMethod]
@@ -306,13 +306,13 @@ public class TransactionManagerServiceTest
         this.subject = CreateSubject();
         await this.subject.SaveAsync(It.IsAny<ApplicationDatabase>());
 
-        this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>(), It.IsAny<bool>()), Times.Never);
+        this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<TransactionSetModel>(), It.IsAny<bool>()), Times.Never);
     }
 
     [TestMethod]
     public void SplitTransaction_ShouldCallStatementModel_GivenValidParams()
     {
-        this.testData = new StatementModelTestHarness();
+        this.testData = new TransactionSetModelTestHarness();
         this.testData.LoadTransactions(new List<Transaction>());
 
         var transaction = new Transaction { Account = StatementModelTestData.VisaAccount };
@@ -321,7 +321,7 @@ public class TransactionManagerServiceTest
 
         this.subject.SplitTransaction(transaction, 100, 200, StatementModelTestData.CarMtcBucket, StatementModelTestData.HairBucket);
 
-        Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).SplitTransactionWasCalled);
+        Assert.AreEqual(1, ((TransactionSetModelTestHarness)this.testData).SplitTransactionWasCalled);
     }
 
     [TestInitialize]

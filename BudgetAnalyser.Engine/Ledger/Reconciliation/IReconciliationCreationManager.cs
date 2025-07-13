@@ -16,18 +16,18 @@ internal interface IReconciliationCreationManager
     ///     be 20-May. This will select transactions based on transaction date less than 20-May.  The <see cref="LedgerEntryLine.Date" /> will also be stamped 20-May.
     /// </param>
     /// <param name="budgetCollection">The collection of budgets. The Reconciliation engine classes will make a decision which budget to choose.</param>
-    /// <param name="statement">The currently loaded statement.</param>
+    /// <param name="transactionSet">The currently loaded statement.</param>
     /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
     /// <param name="currentBankBalances">The bank balances as at the reconciliation date to include in this new single line of the ledger book.</param>
     /// <exception cref="ArgumentException">Thrown when the <paramref name="budgetCollection" /> is in an invalid state, ie the supplied budget is not active.</exception>
     /// <exception cref="ValidationWarningException">
-    ///     Thrown when there are outstanding validation errors in the <paramref name="statement" />, <paramref name="budgetCollection" />, or <paramref name="ledgerBook" />.
+    ///     Thrown when there are outstanding validation errors in the <paramref name="transactionSet" />, <paramref name="budgetCollection" />, or <paramref name="ledgerBook" />.
     /// </exception>
     /// <exception cref="InvalidOperationException">Thrown when the supplied dates are invalid or not consistent with the<paramref name="ledgerBook" />.</exception>
     ReconciliationResult PeriodEndReconciliation(LedgerBook ledgerBook,
         DateOnly closingDateExclusive,
         BudgetCollection budgetCollection,
-        StatementModel statement,
+        TransactionSetModel transactionSet,
         bool ignoreWarnings,
         params BankBalance[] currentBankBalances);
 
@@ -41,5 +41,5 @@ internal interface IReconciliationCreationManager
     ///     If any transactions are found, the statement is then examined to see if the transactions appear, if they do not a new <see cref="ValidationWarningException" />
     ///     is thrown; otherwise the method returns.
     /// </summary>
-    void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, StatementModel statement);
+    void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, TransactionSetModel transactionSet);
 }

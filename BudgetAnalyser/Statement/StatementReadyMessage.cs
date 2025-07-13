@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Statement;
 /// </summary>
 public class StatementReadyMessage : MessageBase
 {
-    public StatementReadyMessage(StatementModel? statement)
+    public StatementReadyMessage(TransactionSetModel? statement)
     {
         StatementModel = statement;
     }
@@ -16,5 +16,5 @@ public class StatementReadyMessage : MessageBase
     /// <summary>
     ///     The new statement model.  This may be null if the statement is closed.
     /// </summary>
-    public StatementModel? StatementModel { get; private set; }
+    public TransactionSetModel? StatementModel { get; private set; }
 }

@@ -3,10 +3,10 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using Shouldly;
-
 
 namespace BudgetAnalyser.Engine.XUnit.Services;
 
@@ -25,7 +25,7 @@ public class MonitorableDependenciesTests
     public void Constructor_ShouldInitializeDependencies()
     {
         var sut = new FakeMonitorableDependencies();
-        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(StatementModel));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(TransactionSetModel));
         sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(BudgetCollection));
         sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(IBudgetCurrencyContext));
         sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(LedgerBook));
@@ -39,15 +39,9 @@ public class MonitorableDependenciesTests
     }
 
     [Fact]
-    public void NotifyOfDependencyChange_ShouldThrow_WhenDependencyIsInvalid()
-    {
-        Should.Throw<KeyNotFoundException>(() => this.service.NotifyOfDependencyChange(this));
-    }
-
-    [Fact]
     public void NotifyOfDependencyChange_ShouldReturnFalse_WhenDependencyIsNull()
     {
-        var result = this.service.NotifyOfDependencyChange<StatementModel>(null);
+        var result = this.service.NotifyOfDependencyChange<TransactionSetModel>(null);
         result.ShouldBeFalse();
     }
 
@@ -60,9 +54,15 @@ public class MonitorableDependenciesTests
     }
 
     [Fact]
+    public void NotifyOfDependencyChange_ShouldThrow_WhenDependencyIsInvalid()
+    {
+        Should.Throw<KeyNotFoundException>(() => this.service.NotifyOfDependencyChange(this));
+    }
+
+    [Fact]
     public void NotifyOfDependencyChange_ShouldTriggerEvent_WhenDependencyHasSignificantlyChanged()
     {
-        var statementModel = TestData.StatementModelTestData.TestData1();
+        var statementModel = StatementModelTestData.TestData1();
         var eventTriggered = false;
         this.service.DependencyChanged += (sender, args) => eventTriggered = true;
 

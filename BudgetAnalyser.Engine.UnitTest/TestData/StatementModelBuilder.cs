@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData;
 public class StatementModelBuilder
 {
     private readonly List<Transaction> additionalTransactions = new();
-    private StatementModel model = new(new FakeLogger());
+    private TransactionSetModel model = new(new FakeLogger());
 
     public StatementModelBuilder AppendTransaction(Transaction transaction)
     {
@@ -14,7 +14,7 @@ public class StatementModelBuilder
         return this;
     }
 
-    public StatementModel Build()
+    public TransactionSetModel Build()
     {
         if (this.additionalTransactions.None())
         {
@@ -24,14 +24,14 @@ public class StatementModelBuilder
         // IEnumerable<MethodInfo> privateMergeMethods = this.model.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).Where(m => m.Name == "Merge");
         // MethodInfo privateMergeMethod = privateMergeMethods.First(m => m.IsPrivate);
         // privateMergeMethod.Invoke(this.model, new object[] { this.additionalTransactions });
-        var additionalTransactionsModel = new StatementModel(new FakeLogger()) { LastImport = this.additionalTransactions.Max(t => t.Date).ToDateTime(TimeOnly.MinValue) };
+        var additionalTransactionsModel = new TransactionSetModel(new FakeLogger()) { LastImport = this.additionalTransactions.Max(t => t.Date).ToDateTime(TimeOnly.MinValue) };
         additionalTransactionsModel.LoadTransactions(this.additionalTransactions);
         return this.model.Merge(additionalTransactionsModel);
     }
 
-    public StatementModelBuilder Merge(StatementModel anotherStatementModel)
+    public StatementModelBuilder Merge(TransactionSetModel anotherTransactionSetModel)
     {
-        this.model.Merge(anotherStatementModel);
+        this.model.Merge(anotherTransactionSetModel);
         return this;
     }
 

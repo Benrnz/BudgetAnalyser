@@ -68,7 +68,7 @@ public class ApplicationDatabase
 
     /// <summary>
     ///     Gets the statement model storage key.
-    ///     This is used to locate and load the <see cref="StatementModel" />.
+    ///     This is used to locate and load the <see cref="TransactionSetModel" />.
     /// </summary>
     public string StatementModelStorageKey { get; internal set; } = string.Empty;
 

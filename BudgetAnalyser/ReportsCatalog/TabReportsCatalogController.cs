@@ -15,7 +15,7 @@ public class TabReportsCatalogController : ControllerBase, IShowableController
 {
     private readonly NewWindowViewLoader newWindowViewLoader;
     private BudgetCollection? budgets;
-    private StatementModel? currentStatementModel;
+    private TransactionSetModel? currentStatementModel;
     private bool doNotUseShown;
 
     public TabReportsCatalogController(IUiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)

@@ -16,15 +16,15 @@ public class BudgetBucketMonitorWidgetTest
     private GlobalFilterCriteria criteriaTestData;
     private LedgerBook ledgerBookTestData;
     private LedgerCalculation ledgerCalculation;
-    private StatementModel statementTestData;
     private BudgetBucketMonitorWidget subject;
+    private TransactionSetModel transactionSetTestData;
 
     [TestMethod]
     public void OutputTestData()
     {
         this.ledgerBookTestData.Output(true);
         this.budgetTestData.Output();
-        this.statementTestData.Output(DateOnly.MinValue);
+        this.transactionSetTestData.Output(DateOnly.MinValue);
     }
 
     [TestInitialize]
@@ -49,7 +49,7 @@ public class BudgetBucketMonitorWidgetTest
     [Description("A transfer has taken place from InsHome in Savings, to Phone in Cheque for $100. This should be excluded from running balance of both buckets.")]
     public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
     {
-        this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
+        this.subject.Update(this.budgetTestData, this.transactionSetTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
 
         // Starting Phone Balance is Budget Amount: 150.00
         // Total Phone Statement transactions are: -20.00
@@ -79,7 +79,7 @@ public class BudgetBucketMonitorWidgetTest
 
     private void CreateStatementTestData()
     {
-        this.statementTestData = new StatementModelBuilder()
+        this.transactionSetTestData = new StatementModelBuilder()
             .AppendTransaction(
                 new Transaction
                 {

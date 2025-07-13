@@ -25,9 +25,9 @@ public static class StatementModelTestData
     /// <summary>
     ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
     /// </summary>
-    public static StatementModel TestData1()
+    public static TransactionSetModel TestData1()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData1\FooStatement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new TransactionSetModel(new FakeLogger()) { StorageKey = @"C:\TestData1\FooStatement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions1();
         statement.LoadTransactions(transactions);
@@ -38,9 +38,9 @@ public static class StatementModelTestData
     ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
     ///     Includes income transactions.
     /// </summary>
-    public static StatementModel TestData2()
+    public static TransactionSetModel TestData2()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new TransactionSetModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions2();
         statement.LoadTransactions(transactions);
@@ -52,9 +52,9 @@ public static class StatementModelTestData
     ///     Includes income transactions.
     ///     Same as TestData2 but with another transaction for PhNet in August.
     /// </summary>
-    public static StatementModel TestData2A()
+    public static TransactionSetModel TestData2A()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new TransactionSetModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         IList<Transaction> transactions = CreateTransactions2().ToList();
         var modTransaction = transactions.Single(t => t.Date == new DateOnly(2013, 07, 16) && t.BudgetBucket == PhoneBucket);
@@ -68,9 +68,9 @@ public static class StatementModelTestData
     ///     Includes income transactions.
     ///     Adjusted for use with LedgerCalculator - No ledgers will be overdrawn when using LedgerBook TestData 1.
     /// </summary>
-    public static StatementModel TestData3()
+    public static TransactionSetModel TestData3()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData3\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new TransactionSetModel(new FakeLogger()) { StorageKey = @"C:\TestData3\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions3();
         statement.LoadTransactions(transactions);
@@ -83,9 +83,9 @@ public static class StatementModelTestData
     ///     Adjusted for use with LedgerCalculator - No ledgers will be overdrawn when using LedgerBook TestData 1.
     ///     Includes some duplicate transactions
     /// </summary>
-    public static StatementModel TestData4()
+    public static TransactionSetModel TestData4()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData4\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new TransactionSetModel(new FakeLogger()) { StorageKey = @"C:\TestData4\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions3().ToList();
         transactions.AddRange(CreateTransactions1());
@@ -100,16 +100,16 @@ public static class StatementModelTestData
     ///     InsHome transfer transaction move funds into Savings, this transactions should be automatched when used with
     ///     LedgerBookTestData5 and a Reconciliation is performed.
     /// </summary>
-    public static StatementModel TestData5()
+    public static TransactionSetModel TestData5()
     {
-        var statement = new StatementModel(new FakeLogger()) { StorageKey = @"C:\TestData5\Foo5Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var statement = new TransactionSetModel(new FakeLogger()) { StorageKey = @"C:\TestData5\Foo5Statement.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions5();
         statement.LoadTransactions(transactions);
         return statement;
     }
 
-    public static StatementModel WithNullBudgetBuckets(this StatementModel instance)
+    public static TransactionSetModel WithNullBudgetBuckets(this TransactionSetModel instance)
     {
         foreach (var txn in instance.AllTransactions)
         {

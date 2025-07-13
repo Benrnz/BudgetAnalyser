@@ -307,7 +307,7 @@ public class LedgerCalculationTest
                 });
     }
 
-    private static StatementModel CreateStatementTestData()
+    private static TransactionSetModel CreateStatementTestData()
     {
         return CreateStatementBuilder().Build();
     }

@@ -127,7 +127,7 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
     /// </summary>
     public bool CanExecuteSaveButton => false;
 
-    private async Task AttemptUploadAsync(BudgetModel budget, StatementModel statement, Engine.Ledger.LedgerBook ledgerBook, GlobalFilterCriteria filter)
+    private async Task AttemptUploadAsync(BudgetModel budget, TransactionSetModel transactionSet, Engine.Ledger.LedgerBook ledgerBook, GlobalFilterCriteria filter)
     {
         if (this.widget is null)
         {
@@ -139,7 +139,7 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         {
             this.widget.LockWhileUploading(true);
             // This validation should already be done by the Widget itself, but double check here.
-            var export = this.dataExporter.CreateExportObject(statement, budget, ledgerBook, filter);
+            var export = this.dataExporter.CreateExportObject(transactionSet, budget, ledgerBook, filter);
 
             await Task.Run(() => this.dataExporter.SaveCopyAsync(export));
 

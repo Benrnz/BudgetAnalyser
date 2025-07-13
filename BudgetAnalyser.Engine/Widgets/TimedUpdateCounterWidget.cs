@@ -22,7 +22,7 @@ public class TimedUpdateCounterWidget : Widget
         Category = WidgetGroup.OverviewSectionName;
         Dependencies =
         [
-            typeof(StatementModel),
+            typeof(TransactionSetModel),
             typeof(BudgetCollection),
             typeof(IBudgetCurrencyContext),
             typeof(LedgerBook),

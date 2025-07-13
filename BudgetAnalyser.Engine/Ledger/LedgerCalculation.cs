@@ -45,7 +45,7 @@ public class LedgerCalculation
     /// <summary>
     ///     Calculates the current period bucket spend.  In theory other periods are possible.
     /// </summary>
-    public decimal CalculateCurrentPeriodBucketSpend(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, StatementModel statement, string bucketCode)
+    public decimal CalculateCurrentPeriodBucketSpend(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, TransactionSetModel transactionSet, string bucketCode)
     {
         CheckCacheForCleanUp();
         if (ledgerLine is null)
@@ -58,9 +58,9 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(filter));
         }
 
-        if (statement is null)
+        if (transactionSet is null)
         {
-            throw new ArgumentNullException(nameof(statement));
+            throw new ArgumentNullException(nameof(transactionSet));
         }
 
         if (bucketCode.IsNothing())
@@ -73,7 +73,7 @@ public class LedgerCalculation
             return 0;
         }
 
-        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, statement, ledgerLine, bucketCode);
+        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, transactionSet, ledgerLine, bucketCode);
         return transactionTotal;
     }
 
@@ -81,7 +81,7 @@ public class LedgerCalculation
     ///     Calculates the current period ledger balances. Period is set by the two dates. In theory other periods are possible.
     /// </summary>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentPeriodLedgerBalances(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, StatementModel statement)
+    public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentPeriodLedgerBalances(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, TransactionSetModel transactionSet)
     {
         CheckCacheForCleanUp();
         if (ledgerLine is null)
@@ -94,9 +94,9 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(filter));
         }
 
-        if (statement is null)
+        if (transactionSet is null)
         {
-            throw new ArgumentNullException(nameof(statement));
+            throw new ArgumentNullException(nameof(transactionSet));
         }
 
         var ledgers = new Dictionary<BudgetBucket, decimal>();
@@ -106,10 +106,10 @@ public class LedgerCalculation
             return ledgers;
         }
 
-        ledgers = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
+        ledgers = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, transactionSet);
 
         // Check Surplus
-        var surplusBalance = CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statement);
+        var surplusBalance = CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, transactionSet);
         ledgers.Add(new SurplusBucket(), surplusBalance);
 
         return ledgers;
@@ -118,7 +118,7 @@ public class LedgerCalculation
     /// <summary>
     ///     Calculates the current period surplus balance.  In theory other periods are possible.
     /// </summary>
-    public decimal CalculateCurrentPeriodSurplusBalance(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, StatementModel statement)
+    public decimal CalculateCurrentPeriodSurplusBalance(LedgerEntryLine ledgerLine, GlobalFilterCriteria filter, TransactionSetModel transactionSet)
     {
         CheckCacheForCleanUp();
         if (ledgerLine is null)
@@ -131,9 +131,9 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(filter));
         }
 
-        if (statement is null)
+        if (transactionSet is null)
         {
-            throw new ArgumentNullException(nameof(statement));
+            throw new ArgumentNullException(nameof(transactionSet));
         }
 
         if (filter.Cleared || filter.BeginDate == null || filter.EndDate == null)
@@ -144,12 +144,12 @@ public class LedgerCalculation
         var balance = ledgerLine.CalculatedSurplus;
         // This includes transactions coded as SURPLUS.
         // This used to include Savings Commitment bucket transaction, a SavedUpForExpenseBucket should be used instead.
-        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, statement, ledgerLine, SurplusBucket.SurplusCode);
+        var transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, filter.EndDate.Value, transactionSet, ledgerLine, SurplusBucket.SurplusCode);
 
         balance += transactionTotal;
 
         // Find any ledgers that are overpsent and subtract them from the Surplus total.  This is actually what is happening when you overspend a ledger, it spills over and spend Surplus.
-        var ledgersSummary = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, statement);
+        var ledgersSummary = CalculateLedgersCurrentBalances(ledgerLine, filter.BeginDate.Value, filter.EndDate.Value, transactionSet);
         balance += ledgersSummary.Where(kvp => kvp.Value < 0).Sum(kvp => kvp.Value);
 
         return balance;
@@ -159,13 +159,13 @@ public class LedgerCalculation
     ///     Finds any overspent ledgers for the period and returns the date and value the of the total overspend.  This resulting collection can then be used to offset overdrawn balances from
     ///     Surplus. (Not done here). Negative values indicate overdrawn ledgers.  Only Ledgers tracked by the LedgerBook are examined for overdrawn balances.
     /// </summary>
-    public IEnumerable<ReportTransaction> CalculateOverSpentLedgers(StatementModel statement, LedgerEntryLine ledgerLine, DateOnly inclBeginDate, DateOnly inclEndDate)
+    public IEnumerable<ReportTransaction> CalculateOverSpentLedgers(TransactionSetModel transactionSet, LedgerEntryLine ledgerLine, DateOnly inclBeginDate, DateOnly inclEndDate)
     {
         CheckCacheForCleanUp();
 
-        if (statement is null)
+        if (transactionSet is null)
         {
-            throw new ArgumentNullException(nameof(statement));
+            throw new ArgumentNullException(nameof(transactionSet));
         }
 
         if (ledgerLine is null)
@@ -184,7 +184,7 @@ public class LedgerCalculation
             do
             {
                 var currentDateCopy = currentDate;
-                foreach (var transaction in statement.Transactions.Where(t => t.Date == currentDateCopy && t.BudgetBucket is not null))
+                foreach (var transaction in transactionSet.Transactions.Where(t => t.Date == currentDateCopy && t.BudgetBucket is not null))
                 {
                     if (runningBalances.ContainsKey(transaction.BudgetBucket!))
                     {
@@ -200,7 +200,7 @@ public class LedgerCalculation
             return overSpendTransactions;
         }
 
-        var cacheKey = BuildCacheKey("CalculateOverSpentLedgers", statement, ledgerLine, inclBeginDate);
+        var cacheKey = BuildCacheKey("CalculateOverSpentLedgers", transactionSet, ledgerLine, inclBeginDate);
         return (IEnumerable<ReportTransaction>)GetOrAddFromCache(cacheKey, GetOverSpentTransactions);
     }
 
@@ -287,12 +287,12 @@ public class LedgerCalculation
         return keyString;
     }
 
-    private Dictionary<BudgetBucket, decimal> CalculateLedgersCurrentBalances(LedgerEntryLine ledgerLine, DateOnly inclBeginDate, DateOnly inclEndDate, StatementModel statement)
+    private Dictionary<BudgetBucket, decimal> CalculateLedgersCurrentBalances(LedgerEntryLine ledgerLine, DateOnly inclBeginDate, DateOnly inclEndDate, TransactionSetModel transactionSet)
     {
         var ledgersSummary = new Dictionary<BudgetBucket, decimal>();
         foreach (var entry in ledgerLine.Entries)
         {
-            var transactionTotal = CalculateTransactionTotal(inclBeginDate, inclEndDate, statement, ledgerLine, entry.LedgerBucket.BudgetBucket.Code);
+            var transactionTotal = CalculateTransactionTotal(inclBeginDate, inclEndDate, transactionSet, ledgerLine, entry.LedgerBucket.BudgetBucket.Code);
             var currentBalance = entry.Balance + transactionTotal;
             ledgersSummary.Add(entry.LedgerBucket.BudgetBucket, currentBalance);
         }
@@ -300,11 +300,11 @@ public class LedgerCalculation
         return ledgersSummary;
     }
 
-    private decimal CalculateTransactionTotal(DateOnly inclBeginDate, DateOnly inclEndDate, StatementModel statement, LedgerEntryLine entryLine, string bucketCode)
+    private decimal CalculateTransactionTotal(DateOnly inclBeginDate, DateOnly inclEndDate, TransactionSetModel transactionSet, LedgerEntryLine entryLine, string bucketCode)
     {
-        var autoMatchLedgerTransactions = GetAutoMatchingTransactions(statement, entryLine, inclBeginDate);
+        var autoMatchLedgerTransactions = GetAutoMatchingTransactions(transactionSet, entryLine, inclBeginDate);
         // This needs to query .AllTransactions, not just .Transactions, when changing the date range the statement may not have had its internal filter changed when this runs.
-        var transactions = statement.AllTransactions
+        var transactions = transactionSet.AllTransactions
             .Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate)
             .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
 
@@ -347,9 +347,9 @@ public class LedgerCalculation
         }
     }
 
-    private IEnumerable<LedgerTransaction> GetAutoMatchingTransactions(StatementModel statement, LedgerEntryLine entryLine, DateOnly inclBeginDate)
+    private IEnumerable<LedgerTransaction> GetAutoMatchingTransactions(TransactionSetModel transactionSet, LedgerEntryLine entryLine, DateOnly inclBeginDate)
     {
-        var key = BuildCacheKey("GetAutoMatchingTransactions", statement, entryLine, inclBeginDate);
+        var key = BuildCacheKey("GetAutoMatchingTransactions", transactionSet, entryLine, inclBeginDate);
         var autoMatchLedgerTransactions = (List<LedgerTransaction>)GetOrAddFromCache(key, () => ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList());
 
         this.logger.LogInfo(

@@ -17,14 +17,14 @@ public class RemainingActualSurplusWidgetTest
     private GlobalFilterCriteria criteriaTestData;
     private LedgerBook ledgerBookTestData;
     private LedgerCalculation ledgerCalculation;
-    private StatementModel statementTestData;
     private RemainingActualSurplusWidget subject;
+    private TransactionSetModel transactionSetTestData;
 
     [TestMethod]
     public void OutputTestData()
     {
         this.ledgerBookTestData.Output(true);
-        this.statementTestData.Output(DateOnly.MinValue);
+        this.transactionSetTestData.Output(DateOnly.MinValue);
     }
 
     [TestInitialize]
@@ -36,7 +36,7 @@ public class RemainingActualSurplusWidgetTest
 
         StatementModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
         StatementModelTestDataForThisTest.BudgetBucketRepo = new BucketBucketRepoAlwaysFind();
-        this.statementTestData = StatementModelTestDataForThisTest.TestDataGenerated();
+        this.transactionSetTestData = StatementModelTestDataForThisTest.TestDataGenerated();
 
         this.ledgerBookTestData = new LedgerBookBuilder { StorageKey = "RemainingActualSurplusWidgetTest.xml", Modified = new DateTime(2015, 11, 23), Name = "Smith Budget 2015" }
             .IncludeLedger(LedgerBookTestData.PhoneLedger, 130M)
@@ -64,11 +64,11 @@ public class RemainingActualSurplusWidgetTest
     public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
     {
         Console.WriteLine($"StartDate: {this.criteriaTestData.BeginDate}; EndDate: {this.criteriaTestData.EndDate}");
-        this.statementTestData.Output(this.criteriaTestData.BeginDate.Value);
+        this.transactionSetTestData.Output(this.criteriaTestData.BeginDate.Value);
         this.ledgerBookTestData.Output(true);
         this.budgetCurrencyContextTestData.Model.Output();
 
-        this.subject.Update(this.statementTestData, this.criteriaTestData, this.ledgerBookTestData, this.ledgerCalculation, this.budgetCurrencyContextTestData, new DebugLogger());
+        this.subject.Update(this.transactionSetTestData, this.criteriaTestData, this.ledgerBookTestData, this.ledgerCalculation, this.budgetCurrencyContextTestData, new DebugLogger());
 
         Assert.AreEqual(-2433.34, this.subject.Value);
     }
@@ -80,9 +80,9 @@ public class RemainingActualSurplusWidgetTest
 
         /// <summary>THIS IS GENERATED CODE </summary>
         [GeneratedCode("StatementModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]
-        public static StatementModel TestDataGenerated()
+        public static TransactionSetModel TestDataGenerated()
         {
-            var model = new StatementModel(new FakeLogger()) { StorageKey = @"C:\Foo\StatementModel.csv", LastImport = new DateTime(2015, 11, 21) };
+            var model = new TransactionSetModel(new FakeLogger()) { StorageKey = @"C:\Foo\StatementModel.csv", LastImport = new DateTime(2015, 11, 21) };
 
             var transactions = new List<Transaction>
             {

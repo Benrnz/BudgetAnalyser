@@ -24,7 +24,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     public FixedBudgetMonitorWidget()
     {
         Category = WidgetGroup.ProjectsSectionName;
-        Dependencies = [typeof(StatementModel), typeof(IBudgetBucketRepository)];
+        Dependencies = [typeof(TransactionSetModel), typeof(IBudgetBucketRepository)];
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
         this.standardStyle = "WidgetStandardStyle1";
 
@@ -51,7 +51,13 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     /// <summary>
     ///     Gets the statement model.
     /// </summary>
-    public StatementModel? Statement { get; private set; }
+    public TransactionSetModel? Statement { get; private set; }
+
+    /// <summary>
+    ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
+    ///     the user interface.
+    /// </summary>
+    public Type WidgetType => GetType();
 
     /// <summary>
     ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
@@ -66,12 +72,6 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
             BucketCode = Id;
         }
     }
-
-    /// <summary>
-    ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
-    ///     the user interface.
-    /// </summary>
-    public Type WidgetType => GetType();
 
     /// <summary>
     ///     Updates the widget with new input.
@@ -91,7 +91,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
             return;
         }
 
-        Statement = input[0] as StatementModel;
+        Statement = input[0] as TransactionSetModel;
         this.bucketRepository = (IBudgetBucketRepository)input[1];
 
         if (!this.bucketRepository.IsValidCode(BucketCode))

@@ -16,7 +16,7 @@ public class MobileDataExporterTest
     private readonly ITestOutputHelper outputHelper;
     private readonly GlobalFilterCriteria testCriteria = new() { BeginDate = new DateOnly(2013, 7, 15), EndDate = new DateOnly(2013, 8, 14) };
     private readonly LedgerBook testLedger = LedgerBookTestData.TestData1();
-    private readonly StatementModel testStatement = StatementModelTestData.TestData1();
+    private readonly TransactionSetModel testTransactionSet = StatementModelTestData.TestData1();
 
     public MobileDataExporterTest(ITestOutputHelper outputHelper)
     {
@@ -82,7 +82,7 @@ public class MobileDataExporterTest
             }
         ]);
 
-        var result = this.exporter.CreateExportObject(this.testStatement, BudgetModelTestData.CreateTestData5(), this.testLedger, this.testCriteria);
+        var result = this.exporter.CreateExportObject(this.testTransactionSet, BudgetModelTestData.CreateTestData5(), this.testLedger, this.testCriteria);
         expected.Exported = result.Exported; //Ignoring DateTime checking here
 
         result.ShouldBeEquivalentTo(expected);
@@ -92,25 +92,25 @@ public class MobileDataExporterTest
     public void CreateExportObject_ShouldThrowArgumentException_WhenFilterDatesAreNull()
     {
         var filter = new GlobalFilterCriteria();
-        Assert.Throws<ArgumentException>(() => this.exporter.CreateExportObject(this.testStatement, new BudgetModel(), this.testLedger, filter));
+        Assert.Throws<ArgumentException>(() => this.exporter.CreateExportObject(this.testTransactionSet, new BudgetModel(), this.testLedger, filter));
     }
 
     [Fact]
     public void CreateExportObject_ShouldThrowArgumentNullException_WhenCurrentBudgetIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => this.exporter.CreateExportObject(this.testStatement, null!, this.testLedger, this.testCriteria));
+        Assert.Throws<ArgumentNullException>(() => this.exporter.CreateExportObject(this.testTransactionSet, null!, this.testLedger, this.testCriteria));
     }
 
     [Fact]
     public void CreateExportObject_ShouldThrowArgumentNullException_WhenFilterIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => this.exporter.CreateExportObject(this.testStatement, new BudgetModel(), this.testLedger, null!));
+        Assert.Throws<ArgumentNullException>(() => this.exporter.CreateExportObject(this.testTransactionSet, new BudgetModel(), this.testLedger, null!));
     }
 
     [Fact]
     public void CreateExportObject_ShouldThrowArgumentNullException_WhenLedgerBookIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => this.exporter.CreateExportObject(this.testStatement, new BudgetModel(), null!, this.testCriteria));
+        Assert.Throws<ArgumentNullException>(() => this.exporter.CreateExportObject(this.testTransactionSet, new BudgetModel(), null!, this.testCriteria));
     }
 
     [Fact]

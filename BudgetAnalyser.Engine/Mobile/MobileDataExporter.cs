@@ -31,7 +31,7 @@ internal class MobileDataExporter : IMobileDataExporter
     /// </summary>
     /// <returns>An object containing the summarised data.</returns>
     public SummarisedLedgerMobileData CreateExportObject(
-        StatementModel transactions,
+        TransactionSetModel transactions,
         BudgetModel currentBudget,
         LedgerBook ledgerBook,
         GlobalFilterCriteria filter)

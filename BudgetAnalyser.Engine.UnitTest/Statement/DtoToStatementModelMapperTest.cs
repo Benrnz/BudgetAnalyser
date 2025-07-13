@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement;
 [TestClass]
 public class DtoToStatementModelMapperTest
 {
-    private StatementModel Result { get; set; }
+    private TransactionSetModel Result { get; set; }
     private TransactionSetDto TestData => TransactionSetDtoTestData.TestData2();
 
     [TestMethod]

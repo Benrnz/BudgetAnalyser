@@ -20,7 +20,7 @@ public class ReconciliationBuilderTest
     private IEnumerable<BankBalance> currentBankBalances;
     private ReconciliationBuilder subject;
     private IBudgetCurrencyContext testDataBudgetContext;
-    private StatementModel testDataStatement;
+    private TransactionSetModel testDataTransactionSet;
 
     [TestMethod]
     public void AddLedger_ShouldIncludeNewLedgerInNextReconcile_GivenTestData1()
@@ -50,11 +50,11 @@ public class ReconciliationBuilderTest
     public void Reconcile_ShouldAutoMatchTransactionsAndLinkIdToStatementTransaction_GivenTestData5()
     {
         // The auto-matched credit ledger transaction from last month should be linked to the statement transaction.
-        this.testDataStatement = StatementModelTestData.TestData5();
-        var statementTransactions = this.testDataStatement.AllTransactions.Where(t => t.Reference1 == "agkT9kC").ToList();
+        this.testDataTransactionSet = StatementModelTestData.TestData5();
+        var statementTransactions = this.testDataTransactionSet.AllTransactions.Where(t => t.Reference1 == "agkT9kC").ToList();
         Debug.Assert(statementTransactions.Count() == 2);
 
-        ActPeriodEndReconciliationOnTestData5(this.testDataStatement);
+        ActPeriodEndReconciliationOnTestData5(this.testDataTransactionSet);
         var previousMonthLine =
             this.subject.LedgerBook.Reconciliations.Single(line => line.Date == new DateOnly(2013, 08, 15)).Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket);
         var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
@@ -139,11 +139,11 @@ public class ReconciliationBuilderTest
     public void Reconcile_ShouldNotCreateTasksForUserTransfersOfBudgetedAmounts_GivenTestData5AndPaymentFromDifferentAccount()
     {
         // Modify a InsHome payment transaction, originally coming out of the Savings account where the ledger is stored, to the Cheque account.
-        this.testDataStatement = StatementModelTestData.TestData5();
-        var insHomePayment = this.testDataStatement.AllTransactions.Single(t => t.BudgetBucket == StatementModelTestData.InsHomeBucket && t.Amount == -1000M);
+        this.testDataTransactionSet = StatementModelTestData.TestData5();
+        var insHomePayment = this.testDataTransactionSet.AllTransactions.Single(t => t.BudgetBucket == StatementModelTestData.InsHomeBucket && t.Amount == -1000M);
         insHomePayment.Account = StatementModelTestData.ChequeAccount;
 
-        var result = ActPeriodEndReconciliationOnTestData5(this.testDataStatement);
+        var result = ActPeriodEndReconciliationOnTestData5(this.testDataTransactionSet);
         OutputToDoList(result.Tasks);
 
         // Given the test data 5 set, there should only be one transfer task.
@@ -163,11 +163,11 @@ public class ReconciliationBuilderTest
     {
         var budgetCollection = BudgetModelTestData.CreateCollectionWith5();
         this.testDataBudgetContext = new BudgetCurrencyContext(budgetCollection, budgetCollection.CurrentActiveBudget);
-        var testTransaction = this.testDataStatement.AllTransactions.Last();
+        var testTransaction = this.testDataTransactionSet.AllTransactions.Last();
         testTransaction.BudgetBucket = LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket;
         testTransaction.Account = StatementModelTestData.ChequeAccount;
         testTransaction.Amount = -1250;
-        this.testDataStatement.Output(DateOnly.MinValue);
+        this.testDataTransactionSet.Output(DateOnly.MinValue);
 
         var reconResult = ActPeriodEndReconciliation(bankBalances: new[]
         {
@@ -182,7 +182,7 @@ public class ReconciliationBuilderTest
     public void Reconcile_WithStatementSavedUpForHairLedgerShouldHaveBalance55_GivenTestData1()
     {
         TestIntialise(1);
-        var additionalTransactions = this.testDataStatement.AllTransactions.ToList();
+        var additionalTransactions = this.testDataTransactionSet.AllTransactions.ToList();
 
         additionalTransactions.Add(new Transaction
         {
@@ -191,7 +191,7 @@ public class ReconciliationBuilderTest
             BudgetBucket = additionalTransactions.First(t => t.BudgetBucket.Code == TestDataConstants.HairBucketCode).BudgetBucket,
             Date = new DateOnly(2013, 09, 13)
         });
-        this.testDataStatement.LoadTransactions(additionalTransactions);
+        this.testDataTransactionSet.LoadTransactions(additionalTransactions);
 
         var result = ActPeriodEndReconciliation();
 
@@ -254,7 +254,7 @@ public class ReconciliationBuilderTest
 
         var result = this.subject.CreateNewMonthlyReconciliation(reconciliationDate ?? TestDataReconcileDate,
             this.testDataBudgetContext.Model,
-            this.testDataStatement,
+            this.testDataTransactionSet,
             this.currentBankBalances.ToArray());
 
         Debug.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
@@ -263,11 +263,11 @@ public class ReconciliationBuilderTest
         return result;
     }
 
-    private ReconciliationResult ActPeriodEndReconciliationOnTestData5(StatementModel statementModelTestData = null, bool ignoreWarnings = false)
+    private ReconciliationResult ActPeriodEndReconciliationOnTestData5(TransactionSetModel transactionSetModelTestData = null, bool ignoreWarnings = false)
     {
         var budgetCollection = BudgetModelTestData.CreateCollectionWith5();
         this.testDataBudgetContext = new BudgetCurrencyContext(budgetCollection, budgetCollection.CurrentActiveBudget);
-        this.testDataStatement = statementModelTestData ?? StatementModelTestData.TestData5();
+        this.testDataTransactionSet = transactionSetModelTestData ?? StatementModelTestData.TestData5();
 
         var result = ActPeriodEndReconciliation(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) },
             ignoreWarnings: ignoreWarnings);
@@ -300,14 +300,14 @@ public class ReconciliationBuilderTest
         {
             case 1:
                 this.testDataBudgetContext = new BudgetCurrencyContext(budgetCollection, budgetCollection.ForDate(TestDataReconcileDate)); // Should be BudgetModelTestData.CreateTestData1()
-                this.testDataStatement = new StatementModelBuilder()
+                this.testDataTransactionSet = new StatementModelBuilder()
                     .TestData1()
                     .Build();
                 this.subject.LedgerBook = ledgerBook ?? LedgerBookTestData.TestData1();
                 break;
             case 5:
                 this.testDataBudgetContext = new BudgetCurrencyContext(budgetCollection, budgetCollection.CurrentActiveBudget);
-                this.testDataStatement = new StatementModelBuilder()
+                this.testDataTransactionSet = new StatementModelBuilder()
                     .TestData5()
                     .AppendTransaction(new Transaction
                     {

@@ -13,7 +13,7 @@ public interface IMobileDataExporter
     ///     Create the export object
     /// </summary>
     /// <returns>An object containing the summarised data.</returns>
-    SummarisedLedgerMobileData CreateExportObject(StatementModel transactions, BudgetModel currentBudget, LedgerBook ledgerBook, GlobalFilterCriteria filter);
+    SummarisedLedgerMobileData CreateExportObject(TransactionSetModel transactions, BudgetModel currentBudget, LedgerBook ledgerBook, GlobalFilterCriteria filter);
 
     /// <summary>
     ///     Save a copy of the data export file locally.

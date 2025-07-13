@@ -8,16 +8,16 @@ internal class CsvOnDiskStatementModelRepositoryV2TestHarness : CsvOnDiskStateme
 {
     public CsvOnDiskStatementModelRepositoryV2TestHarness(
         ILogger logger,
-        IDtoMapper<TransactionSetDto, StatementModel> mapper,
+        IDtoMapper<TransactionSetDto, TransactionSetModel> mapper,
         IReaderWriterSelector readerWriterSelector)
         : base(new BankImportUtilitiesTestHarness(), logger, mapper, readerWriterSelector)
     {
     }
 
-    public MemoryStream? WriteStream { get; set; } = new();
-
     public TransactionSetDto? Dto { get; set; }
     public string SerialisedData { get; set; } = string.Empty;
+
+    public MemoryStream? WriteStream { get; set; } = new();
 
     protected override Stream CreateWritableStream(string storageKey, IFileReaderWriter writer)
     {
@@ -29,7 +29,7 @@ internal class CsvOnDiskStatementModelRepositoryV2TestHarness : CsvOnDiskStateme
         return WriteStream;
     }
 
-    protected override TransactionSetDto MapToDto(StatementModel model)
+    protected override TransactionSetDto MapToDto(TransactionSetModel model)
     {
         if (Dto is null)
         {

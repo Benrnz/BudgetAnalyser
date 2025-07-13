@@ -19,7 +19,7 @@ internal class ReconciliationService(IReconciliationCreationManager reconciliati
     public ToDoCollection ReconciliationToDoList { get; private set; } = new();
 
     /// <inheritdoc />
-    public void BeforeReconciliationValidation(LedgerBook book, StatementModel model)
+    public void BeforeReconciliationValidation(LedgerBook book, TransactionSetModel model)
     {
         this.reconciliationManager.ValidateAgainstOrphanedAutoMatchingTransactions(book, model);
     }
@@ -92,11 +92,11 @@ internal class ReconciliationService(IReconciliationCreationManager reconciliati
     public LedgerEntryLine PeriodEndReconciliation(LedgerBook ledgerBook,
         DateOnly reconciliationDate,
         BudgetCollection budgetCollection,
-        StatementModel statement,
+        TransactionSetModel transactionSet,
         bool ignoreWarnings,
         params BankBalance[] balances)
     {
-        var reconResult = this.reconciliationManager.PeriodEndReconciliation(ledgerBook, reconciliationDate, budgetCollection, statement, ignoreWarnings, balances);
+        var reconResult = this.reconciliationManager.PeriodEndReconciliation(ledgerBook, reconciliationDate, budgetCollection, transactionSet, ignoreWarnings, balances);
         ReconciliationToDoList.Clear();
         reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);
         return reconResult.Reconciliation;

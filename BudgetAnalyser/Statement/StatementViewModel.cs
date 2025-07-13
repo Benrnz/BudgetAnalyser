@@ -15,7 +15,7 @@ public class StatementViewModel : ObservableRecipient
     private string? doNotUseDuplicateSummary;
     private ObservableCollection<Transaction> doNotUsePagedTransactions = new();
     private Transaction? doNotUseSelectedRow;
-    private StatementModel? doNotUseStatement;
+    private TransactionSetModel? doNotUseStatement;
     private List<Transaction> doNotUseTransactions = new();
 
     public StatementViewModel(IApplicationDatabaseFacade applicationDatabaseService, ITransactionManagerService transactionService)
@@ -79,7 +79,7 @@ public class StatementViewModel : ObservableRecipient
         }
     }
 
-    public StatementModel? Statement
+    public TransactionSetModel? Statement
     {
         get => this.doNotUseStatement;
 

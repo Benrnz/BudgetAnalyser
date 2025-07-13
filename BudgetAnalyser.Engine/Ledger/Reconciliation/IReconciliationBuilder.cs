@@ -22,6 +22,6 @@ internal interface IReconciliationBuilder
     ReconciliationResult CreateNewMonthlyReconciliation(
         DateOnly reconciliationClosingDateExclusive,
         BudgetModel budget,
-        StatementModel statement,
+        TransactionSetModel transactionSet,
         params BankBalance[] bankBalances);
 }

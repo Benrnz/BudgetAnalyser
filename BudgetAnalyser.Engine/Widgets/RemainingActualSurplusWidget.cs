@@ -17,7 +17,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
     private LedgerBook? ledgerBook;
     private LedgerCalculation? ledgerCalculator;
     private ILogger? logger;
-    private StatementModel? statement;
+    private TransactionSetModel? statement;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RemainingActualSurplusWidget" /> class.
@@ -27,7 +27,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         Category = WidgetGroup.PeriodicTrackingSectionName;
         DetailedText = "Bank Surplus";
         Name = "Surplus A";
-        Dependencies = [typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation), typeof(IBudgetCurrencyContext), typeof(ILogger)];
+        Dependencies = [typeof(TransactionSetModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation), typeof(IBudgetCurrencyContext), typeof(ILogger)];
         this.standardStyle = "WidgetStandardStyle3";
     }
 
@@ -49,7 +49,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
             return;
         }
 
-        this.statement = input[0] as StatementModel;
+        this.statement = input[0] as TransactionSetModel;
         this.filter = input[1] as GlobalFilterCriteria;
         this.ledgerBook = input[2] as LedgerBook;
         this.ledgerCalculator = input[3] as LedgerCalculation;

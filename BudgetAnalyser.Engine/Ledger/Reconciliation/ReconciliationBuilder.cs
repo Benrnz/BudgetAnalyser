@@ -24,12 +24,12 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
     ///     off this period with a reconciliation will mean a date of 20-July will be passed into this method.
     /// </param>
     /// <param name="budget">The current applicable budget</param>
-    /// <param name="statement">The current period statement.</param>
+    /// <param name="transactionSet">The current period statement.</param>
     /// <param name="bankBalances">A list of bank balances for the reconciliation, one for each account. (Excluding credit cards). </param>
     public ReconciliationResult CreateNewMonthlyReconciliation(
         DateOnly reconciliationClosingDateExclusive,
         BudgetModel budget,
-        StatementModel statement,
+        TransactionSetModel transactionSet,
         params BankBalance[] bankBalances)
     {
         if (bankBalances is null)
@@ -42,9 +42,9 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
             throw new ArgumentNullException(nameof(budget));
         }
 
-        if (statement is null)
+        if (transactionSet is null)
         {
-            throw new ArgumentNullException(nameof(statement));
+            throw new ArgumentNullException(nameof(transactionSet));
         }
 
         if (LedgerBook is null)
@@ -54,7 +54,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
 
         var line = new LedgerEntryLine(reconciliationClosingDateExclusive, bankBalances);
         var periodBeginDate = CalculateBeginDateForReconciliationPeriod(LedgerBook!, reconciliationClosingDateExclusive, budget.BudgetCycle);
-        AddNew(line, budget, statement, periodBeginDate);
+        AddNew(line, budget, transactionSet, periodBeginDate);
         return new ReconciliationResult { Reconciliation = line, Tasks = this.toDoList };
     }
 
@@ -114,7 +114,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
         return sortedTransactions;
     }
 
-    private void AddNew(LedgerEntryLine line, BudgetModel budget, StatementModel statement, DateOnly startDateIncl)
+    private void AddNew(LedgerEntryLine line, BudgetModel budget, TransactionSetModel transactionSet, DateOnly startDateIncl)
     {
         if (!line.IsNew)
         {
@@ -126,7 +126,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
         // For example for a monthly budget if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
         // 20/Jan (inclusive) and 19/Feb (inclusive) but not including anything for the 20th of Feb.
         // Why? Because the new ledger entry is intended to show the starting balances for the new period, so you can plan for the upcoming period.
-        var filteredStatementTransactions = statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList();
+        var filteredStatementTransactions = transactionSet.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList();
 
         var previousLedgerBalances = CompileLedgersAndBalances(LedgerBook!);
 
@@ -165,7 +165,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
 
         foreach (var behaviour in ReconciliationBehaviourFactory.ListAllBehaviours())
         {
-            behaviour.Initialise(filteredStatementTransactions, line, this.toDoList, this.logger, statement);
+            behaviour.Initialise(filteredStatementTransactions, line, this.toDoList, this.logger, transactionSet);
             behaviour.ApplyBehaviour();
         }
 

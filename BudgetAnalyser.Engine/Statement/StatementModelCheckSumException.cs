@@ -1,7 +1,7 @@
 ﻿namespace BudgetAnalyser.Engine.Statement;
 
 /// <summary>
-///     An exception to represent an inconsistency in the <see cref="StatementModel" /> loaded. The check sum does not
+///     An exception to represent an inconsistency in the <see cref="TransactionSetModel" /> loaded. The check sum does not
 ///     match the data.
 /// </summary>
 public class StatementModelChecksumException : Exception

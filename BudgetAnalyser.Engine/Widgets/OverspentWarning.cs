@@ -24,7 +24,7 @@ public class OverspentWarning : Widget
     {
         Category = WidgetGroup.PeriodicTrackingSectionName;
         this.logger = new NullLogger();
-        Dependencies = [typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation)];
+        Dependencies = [typeof(TransactionSetModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation)];
         DetailedText = "Overspent";
         ImageResourceName = null;
         RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(15);
@@ -72,7 +72,7 @@ public class OverspentWarning : Widget
 
         if (input[1] is not IBudgetCurrencyContext budget
             || input[3] is not LedgerBook ledgerBook
-            || input[0] is not StatementModel statement
+            || input[0] is not TransactionSetModel statement
             || input[4] is not LedgerCalculation ledgerCalculator
             || input[2] is not GlobalFilterCriteria filter
             || filter.Cleared
@@ -143,14 +143,14 @@ public class OverspentWarning : Widget
     }
 
     private int SearchForOtherNonLedgerBookOverspentBuckets(
-        StatementModel statement,
+        TransactionSetModel transactionSet,
         DateOnly inclBeginDate,
         DateOnly inclEndDate,
         IBudgetCurrencyContext budget,
         IDictionary<BudgetBucket, decimal> currentLedgerBalances)
     {
         var warnings = 0;
-        var transactions = statement.Transactions.Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate).ToList();
+        var transactions = transactionSet.Transactions.Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate).ToList();
         this.logger.LogInfo(l => l.Format("SearchForOtherNonLedgerBookOverSpentBuckets: {0} statement transactions found.", transactions.Count()));
         foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is ExpenseBucket))
         {

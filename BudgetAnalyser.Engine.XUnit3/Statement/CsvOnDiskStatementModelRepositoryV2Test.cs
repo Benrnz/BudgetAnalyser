@@ -33,7 +33,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
             new CsvOnDiskStatementModelRepositoryV2(
                 null!,
                 new FakeLogger(),
-                new DtoMapperStub<TransactionSetDto, StatementModel>(),
+                new DtoMapperStub<TransactionSetDto, TransactionSetModel>(),
                 this.mockReaderWriterSelector));
     }
 
@@ -44,7 +44,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
             new CsvOnDiskStatementModelRepositoryV2(
                 new BankImportUtilities(new FakeLogger()),
                 null!,
-                new DtoMapperStub<TransactionSetDto, StatementModel>(),
+                new DtoMapperStub<TransactionSetDto, TransactionSetModel>(),
                 this.mockReaderWriterSelector));
     }
 

@@ -26,7 +26,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         Dependencies =
         [
             typeof(IBudgetCurrencyContext),
-            typeof(StatementModel),
+            typeof(TransactionSetModel),
             typeof(GlobalFilterCriteria),
             typeof(IBudgetBucketRepository),
             typeof(LedgerBook),
@@ -82,7 +82,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     /// <summary>
     ///     Gets the statement model.
     /// </summary>
-    protected StatementModel? Statement { get; private set; }
+    protected TransactionSetModel? Statement { get; private set; }
 
     /// <summary>
     ///     Updates the widget with new input.
@@ -101,7 +101,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
 
         Budget = (IBudgetCurrencyContext)input[0];
-        Statement = (StatementModel)input[1];
+        Statement = (TransactionSetModel)input[1];
         Filter = (GlobalFilterCriteria)input[2];
         this.bucketRepository = (IBudgetBucketRepository)input[3];
         LedgerBook = (LedgerBook)input[4];

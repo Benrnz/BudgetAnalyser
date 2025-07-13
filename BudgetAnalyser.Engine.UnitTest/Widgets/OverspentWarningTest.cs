@@ -22,13 +22,13 @@ public class OverspentWarningTest
 
     private LedgerBook LedgerBook { get; set; }
     private LedgerCalculation LedgerCalculator { get; set; }
-    private StatementModel Statement { get; set; }
     private OverspentWarning Subject { get; set; }
+    private TransactionSetModel TransactionSet { get; set; }
 
     [TestInitialize]
     public void TestInitialise()
     {
-        Statement = StatementModelTestData.TestData2A();
+        TransactionSet = StatementModelTestData.TestData2A();
 
         // Mocking out the Calculator means we don't need the LedgerBook
         LedgerBook = new LedgerBookTestHarness { StorageKey = "Test Ledger Book.xaml" };
@@ -36,7 +36,7 @@ public class OverspentWarningTest
 
         Subject = new OverspentWarning(new FakeLogger())
         {
-            Tolerance = 10,
+            Tolerance = 10
         };
         Act();
     }
@@ -62,7 +62,7 @@ public class OverspentWarningTest
     [TestMethod]
     public void UpdateShouldSetEnabledToFalseGivenStatementIsNull()
     {
-        Statement = null;
+        TransactionSet = null;
         Act();
         Assert.IsFalse(Subject.Enabled);
     }
@@ -122,7 +122,7 @@ public class OverspentWarningTest
         ledgerCalculatorMock.Setup(m => m.CalculateCurrentPeriodLedgerBalances(
             It.IsAny<LedgerEntryLine>(),
             It.IsAny<GlobalFilterCriteria>(),
-            It.IsAny<StatementModel>())).Returns(LedgerBalancesFake);
+            It.IsAny<TransactionSetModel>())).Returns(LedgerBalancesFake);
 
         // Create a stubbed LedgerEntryLine to satisfy LocateApplicableLedgerLine.  This stub is passed into the mock calculator above.
         var ledgerReconLine = new LedgerEntryLine();
@@ -134,7 +134,7 @@ public class OverspentWarningTest
         LedgerCalculator = ledgerCalculatorMock.Object;
 
 
-        Subject.Update(Statement, BudgetCurrencyContext, Filter, LedgerBook, LedgerCalculator);
+        Subject.Update(TransactionSet, BudgetCurrencyContext, Filter, LedgerBook, LedgerCalculator);
     }
 
     private void SetLedgerBalancesFakeDataNoOverSpentBuckets()

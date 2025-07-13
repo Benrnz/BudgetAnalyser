@@ -36,7 +36,7 @@ internal class AnzVisaStatementImporterV1 : IBankStatementImporter
     }
 
     /// <summary>
-    ///     Load the given file into a <see cref="StatementModel" />.
+    ///     Load the given file into a <see cref="TransactionSetModel" />.
     /// </summary>
     /// <param name="fileName">The file to load.</param>
     /// <param name="account">
@@ -44,7 +44,7 @@ internal class AnzVisaStatementImporterV1 : IBankStatementImporter
     ///     merging a cheque account
     ///     export with visa account export, each can be classified using an account.
     /// </param>
-    public async Task<StatementModel> LoadAsync(string fileName, Account account)
+    public async Task<TransactionSetModel> LoadAsync(string fileName, Account account)
     {
         try
         {
@@ -85,7 +85,7 @@ internal class AnzVisaStatementImporterV1 : IBankStatementImporter
             transactions.Add(transaction);
         }
 
-        return new StatementModel(this.logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
+        return new TransactionSetModel(this.logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
     }
 
     /// <summary>

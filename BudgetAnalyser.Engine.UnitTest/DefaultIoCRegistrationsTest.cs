@@ -38,10 +38,10 @@ public class DefaultIoCRegistrationsTest
     {
         try
         {
-            var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(StatementModel).Assembly).ToList();
+            var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(TransactionSetModel).Assembly).ToList();
             dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(SecureStringCredentialStore).Assembly));
 
-            var interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
+            var interfaces = typeof(TransactionSetModel).Assembly.GetTypes().Where(t => t.IsInterface);
 
             var exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();
             foreach (var interfaceType in interfaces.Except(ExemptionList))

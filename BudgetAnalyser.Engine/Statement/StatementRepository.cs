@@ -26,7 +26,7 @@ internal class StatementRepository(IVersionedStatementModelRepository statementM
         await this.statementModelRepository.CreateNewAndSaveAsync(storageKey);
     }
 
-    public async Task<StatementModel> ImportBankStatementAsync(
+    public async Task<TransactionSetModel> ImportBankStatementAsync(
         string storageKey,
         Account account)
     {
@@ -40,20 +40,20 @@ internal class StatementRepository(IVersionedStatementModelRepository statementM
             : await this.importerRepository.ImportAsync(storageKey, account);
     }
 
-    public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
+    public async Task<TransactionSetModel> LoadAsync(string storageKey, bool isEncrypted)
     {
         return storageKey is null
             ? throw new FileNotFoundException("storageKey")
             : await this.statementModelRepository.LoadAsync(storageKey, isEncrypted);
     }
 
-    public async Task SaveAsync(StatementModel statementModel, bool isEncrypted)
+    public async Task SaveAsync(TransactionSetModel transactionSetModel, bool isEncrypted)
     {
-        if (statementModel is null)
+        if (transactionSetModel is null)
         {
-            throw new ArgumentNullException(nameof(statementModel));
+            throw new ArgumentNullException(nameof(transactionSetModel));
         }
 
-        await this.statementModelRepository.SaveAsync(statementModel, isEncrypted);
+        await this.statementModelRepository.SaveAsync(transactionSetModel, isEncrypted);
     }
 }

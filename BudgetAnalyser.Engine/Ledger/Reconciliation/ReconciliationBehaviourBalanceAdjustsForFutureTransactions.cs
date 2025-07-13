@@ -9,7 +9,7 @@ internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IRec
 {
     public LedgerEntryLine? NewReconLine { get; private set; }
 
-    public StatementModel? Statement { get; private set; }
+    public TransactionSetModel? Statement { get; private set; }
     public IList<ToDoTask>? TodoTasks { get; private set; }
 
     public void Initialise(params object[] anyParameters)
@@ -18,7 +18,7 @@ internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IRec
         {
             TodoTasks = TodoTasks ?? argument as IList<ToDoTask>;
             NewReconLine = NewReconLine ?? argument as LedgerEntryLine;
-            Statement = Statement ?? argument as StatementModel;
+            Statement = Statement ?? argument as TransactionSetModel;
         }
 
         if (TodoTasks is null)
@@ -45,10 +45,10 @@ internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IRec
         }
     }
 
-    private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, LedgerEntryLine reconciliation, IList<ToDoTask> tasks)
+    private void AddBalanceAdjustmentsForFutureTransactions(TransactionSetModel transactionSet, LedgerEntryLine reconciliation, IList<ToDoTask> tasks)
     {
         var adjustmentsMade = false;
-        foreach (var futureTransaction in statement.AllTransactions
+        foreach (var futureTransaction in transactionSet.AllTransactions
                      .Where(t => t.Account.AccountType != AccountType.CreditCard
                                  && t.Date >= reconciliation.Date
                                  && !(t.BudgetBucket is PayCreditCardBucket)))

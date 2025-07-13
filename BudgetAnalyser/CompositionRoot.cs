@@ -43,7 +43,7 @@ public sealed class CompositionRoot : IDisposable
     {
         Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
         var builder = new ContainerBuilder();
-        var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
+        var engineAssembly = typeof(TransactionSetModel).GetTypeInfo().Assembly;
         var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
         var thisAssembly = GetType().GetTypeInfo().Assembly;
 

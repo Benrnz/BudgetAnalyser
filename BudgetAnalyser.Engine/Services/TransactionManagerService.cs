@@ -142,7 +142,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     }
 
     /// <inheritdoc />
-    public StatementModel? StatementModel { get; private set; }
+    public TransactionSetModel? StatementModel { get; private set; }
 
     /// <inheritdoc />
     public decimal TotalCount => this.transactions.None() ? 0 : this.transactions.Count();

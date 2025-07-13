@@ -23,7 +23,7 @@ internal class MonitorableDependencies : IMonitorableDependencies
     {
         this.availableDependencies = new Dictionary<Type, object?>
         {
-            [typeof(StatementModel)] = null,
+            [typeof(TransactionSetModel)] = null,
             [typeof(BudgetCollection)] = null,
             [typeof(IBudgetCurrencyContext)] = null,
             [typeof(LedgerBook)] = null,
@@ -33,7 +33,7 @@ internal class MonitorableDependencies : IMonitorableDependencies
             [typeof(ApplicationDatabase)] = null,
             [typeof(ITransactionRuleService)] = null,
             [typeof(ILogger)] = logger,
-            [typeof(IDirtyDataService)] = null,
+            [typeof(IDirtyDataService)] = null
         };
     }
 

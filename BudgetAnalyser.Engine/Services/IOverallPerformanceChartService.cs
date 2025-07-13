@@ -12,9 +12,9 @@ public interface IOverallPerformanceChartService : IServiceFoundation
     /// <summary>
     ///     Builds the chart.
     /// </summary>
-    /// <param name="statementModel">The current statement model.</param>
+    /// <param name="transactionSetModel">The current statement model.</param>
     /// <param name="budgets">The current budgets.</param>
     /// <param name="criteria">The criteria.</param>
     /// <returns>A data result object that contains the results of the analysis ready for binding in the UI.</returns>
-    OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria);
+    OverallPerformanceBudgetResult BuildChart(TransactionSetModel transactionSetModel, BudgetCollection budgets, GlobalFilterCriteria criteria);
 }
