@@ -30,12 +30,13 @@ namespace BudgetAnalyser;
 /// <summary>
 ///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all required objects, the whole graph for use for
 ///     the process lifetime of the application. This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used anywhere else in the application to prevent
-///     the Service Locator anti pattern from appearing.
+///     the Service Locator anti-pattern from appearing.
 /// </summary>
 [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
 public sealed class CompositionRoot : IDisposable
 {
     private const string InputBoxView = "InputBoxView";
+    // TODO Won't be needed under AppHost and Ms DI.
     private readonly List<IDisposable> disposables = new();
     private bool disposed;
 
@@ -47,6 +48,7 @@ public sealed class CompositionRoot : IDisposable
         var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
         var thisAssembly = GetType().GetTypeInfo().Assembly;
 
+        var stopwatch = Stopwatch.StartNew();
         builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
 
         ComposeTypesWithDefaultImplementations(storageAssembly, builder);
@@ -62,6 +64,8 @@ public sealed class CompositionRoot : IDisposable
         RegistrationsForReesWpf(builder);
 
         AllLocalNonAutomaticRegistrations(builder);
+        var timeTakenToRegister = stopwatch.ElapsedMilliseconds;
+        stopwatch = Stopwatch.StartNew();
 
         var container = builder.Build();
 
@@ -70,7 +74,9 @@ public sealed class CompositionRoot : IDisposable
 
         BuildApplicationObjectGraph(container, engineAssembly, thisAssembly, storageAssembly);
         ShellController = container.Resolve<ShellController>();
-        ShellWindow = new ShellWindow { DataContext = ShellController };
+        stopwatch.Stop();
+        var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
+        Logger.LogAlways(_ => $"Enumerating all types and registering types took: {timeTakenToRegister}ms. Building the object graph took: {timeTakenToBuildObjectGraph}ms.");
     }
 
     /// <summary>
@@ -84,15 +90,11 @@ public sealed class CompositionRoot : IDisposable
     public ShellController ShellController { get; }
 
     /// <summary>
-    ///     The top level Window that binds to the <see cref="ShellController" />.
-    /// </summary>
-    public Window ShellWindow { get; }
-
-    /// <summary>
     ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     public void Dispose()
     {
+        // TODO Wont be needed under AppHost and Ms DI.
         // This method is only called by the Main Thread, and does not need to be thread safe.
         // Check to see if Dispose has already been called.
         if (!this.disposed)
@@ -141,6 +143,7 @@ public sealed class CompositionRoot : IDisposable
 
         // Kick it off
         ConstructUiContext(container);
+        // TODO Don't need to do this if the AppHost is disposed.
         this.disposables.AddIfSomething(container.Resolve<ICredentialStore>() as IDisposable);
     }
 
