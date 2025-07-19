@@ -114,7 +114,7 @@
                        Text="{Binding ViewModel.LedgerBook.Name}"
                        MouseUp="OnLedgerBookNameClick" />
             <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    Visibility="{Binding ViewModel.NoStatementLoaded, Converter={StaticResource Converter.BoolToVis}}">
+                    Visibility="{Binding ViewModel.NoTransactionsLoaded, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock Text="No Statement"
                            Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                            ToolTip="Warning! No statement is loaded, therefore adding a reconciliation will not auto-match transactions." />
