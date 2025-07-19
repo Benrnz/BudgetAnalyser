@@ -2,7 +2,7 @@
 
 namespace BudgetAnalyser.Engine.Statement;
 
-public static class StatementCalculations
+public static class TransactionsCalculations
 {
     /// <summary>
     ///     Calculates the duration in months from the beginning of the period to the end.

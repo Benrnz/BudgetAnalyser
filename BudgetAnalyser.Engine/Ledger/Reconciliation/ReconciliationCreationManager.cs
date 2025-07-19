@@ -179,11 +179,11 @@ internal class ReconciliationCreationManager(
             return;
         }
 
-        var statementSubSet = transactionSet.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+        var transactionsSubSet = transactionSet.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
         foreach (var ledgerTransaction in unmatchedTxns)
         {
-            var statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference!);
-            if (statementTxns.None())
+            var transactionsTxns = ReconciliationBuilder.TransactionsToAutoMatch(transactionsSubSet, ledgerTransaction.AutoMatchingReference!);
+            if (transactionsTxns.None())
             {
                 this.logger.LogWarning(
                     l =>
@@ -197,7 +197,7 @@ internal class ReconciliationCreationManager(
                             ledgerTransaction.Id,
                             ledgerTransaction.AutoMatchingReference,
                             ledgerTransaction.Amount))
-                { Source = "1" };
+                    { Source = "1" };
             }
         }
     }

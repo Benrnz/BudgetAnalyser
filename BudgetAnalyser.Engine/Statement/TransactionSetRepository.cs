@@ -15,8 +15,8 @@ namespace BudgetAnalyser.Engine.Statement;
 /// </summary>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC")]
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class StatementRepository(IVersionedStatementModelRepository statementModelRepository, IBankStatementImporterRepository importerRepository)
-    : IStatementRepository
+internal class TransactionSetRepository(IVersionedStatementModelRepository statementModelRepository, IBankStatementImporterRepository importerRepository)
+    : ITransactionSetRepository
 {
     private readonly IBankStatementImporterRepository importerRepository = importerRepository ?? throw new ArgumentNullException(nameof(importerRepository));
     private readonly IVersionedStatementModelRepository statementModelRepository = statementModelRepository ?? throw new ArgumentNullException(nameof(statementModelRepository));

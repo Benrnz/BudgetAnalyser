@@ -72,16 +72,16 @@ public class OverspentWarning : Widget
 
         if (input[1] is not IBudgetCurrencyContext budget
             || input[3] is not LedgerBook ledgerBook
-            || input[0] is not TransactionSetModel statement
+            || input[0] is not TransactionSetModel transactionSet
             || input[4] is not LedgerCalculation ledgerCalculator
             || input[2] is not GlobalFilterCriteria filter
             || filter.Cleared
             || filter.BeginDate is null
             || filter.EndDate is null)
         {
-            this.logger.LogInfo(_ => "Statement, budget, ledger book, or ledger calculator are null. Or date filter is invalid.");
+            this.logger.LogInfo(_ => "Transactions, budget, ledger book, or ledger calculator are null. Or date filter is invalid.");
             Enabled = false;
-            ToolTip = "LedgerBook, Statement, or Filter are not set/loaded.";
+            ToolTip = "LedgerBook, Transactions, or Filter are not set/loaded.";
             return;
         }
 
@@ -102,7 +102,7 @@ public class OverspentWarning : Widget
 
         Enabled = true;
         this.logger.LogInfo(l => l.Format("Using this LedgerEntryLine: {0}", ledgerLine.Date));
-        var currentLedgerBalances = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, statement);
+        var currentLedgerBalances = ledgerCalculator.CalculateCurrentPeriodLedgerBalances(ledgerLine, filter, transactionSet);
         this.logger.LogInfo(l =>
         {
             var builder = new StringBuilder();
@@ -116,7 +116,7 @@ public class OverspentWarning : Widget
         var logWarning = warnings;
         this.logger.LogInfo(l => l.Format("{0} overspent ledgers within tolerance {1} detected.", logWarning, this.tolerance));
         // Check other budget buckets that are not represented in the ledger book.
-        warnings += SearchForOtherNonLedgerBookOverspentBuckets(statement, filter.BeginDate.Value, filter.EndDate.Value, budget, currentLedgerBalances);
+        warnings += SearchForOtherNonLedgerBookOverspentBuckets(transactionSet, filter.BeginDate.Value, filter.EndDate.Value, budget, currentLedgerBalances);
 
         if (warnings > 0)
         {
@@ -151,7 +151,7 @@ public class OverspentWarning : Widget
     {
         var warnings = 0;
         var transactions = transactionSet.Transactions.Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate).ToList();
-        this.logger.LogInfo(l => l.Format("SearchForOtherNonLedgerBookOverSpentBuckets: {0} statement transactions found.", transactions.Count()));
+        this.logger.LogInfo(l => l.Format("SearchForOtherNonLedgerBookOverSpentBuckets: {0} transactions found.", transactions.Count()));
         foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is ExpenseBucket))
         {
             if (currentLedgerBalances.ContainsKey(expense.Bucket!))

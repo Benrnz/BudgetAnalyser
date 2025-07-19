@@ -17,7 +17,7 @@ public class TransactionManagerServiceTest
     private readonly ApplicationDatabase testAppDb = new();
     private IBudgetBucketRepository budgetBucketRepo; // By default set to return mockBudgetBucketRepo.Object;
     private Mock<IBudgetBucketRepository> mockBudgetBucketRepo;
-    private Mock<IStatementRepository> mockStatementRepo;
+    private Mock<ITransactionSetRepository> mockStatementRepo;
     private TransactionManagerService subject;
     private TransactionSetModel testData;
 
@@ -257,7 +257,7 @@ public class TransactionManagerServiceTest
 
         await this.subject.LoadAsync(this.testAppDb);
 
-        Assert.IsNotNull(this.subject.StatementModel);
+        Assert.IsNotNull(this.subject.TransactionSetModel);
     }
 
     [TestMethod]
@@ -327,12 +327,12 @@ public class TransactionManagerServiceTest
     [TestInitialize]
     public void TestInit()
     {
-        PrivateAccessor.SetProperty(this.testAppDb, "StatementModelStorageKey", @"Foo.csv");
+        PrivateAccessor.SetProperty(this.testAppDb, "TransactionsSetModelStorageKey", @"Foo.csv");
         PrivateAccessor.SetProperty(this.testAppDb, "FileName", @"C:\AppDb.bax");
         this.testData = StatementModelTestData.TestData2();
 
         this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
-        this.mockStatementRepo = new Mock<IStatementRepository>();
+        this.mockStatementRepo = new Mock<ITransactionSetRepository>();
 
         this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>()))
             .Returns(Task.FromResult(this.testData))

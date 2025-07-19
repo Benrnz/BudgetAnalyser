@@ -10,11 +10,6 @@ namespace BudgetAnalyser.Engine.Services;
 public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFoundation
 {
     /// <summary>
-    ///     Gets the statement model.
-    /// </summary>
-    TransactionSetModel? StatementModel { get; }
-
-    /// <summary>
     ///     Gets the calculated total count.
     /// </summary>
     decimal TotalCount { get; }
@@ -30,12 +25,17 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     decimal TotalDebits { get; }
 
     /// <summary>
+    ///     Gets the statement model.
+    /// </summary>
+    TransactionSetModel? TransactionSetModel { get; }
+
+    /// <summary>
     ///     Clears the bucket and text filters.
     /// </summary>
     List<Transaction> ClearBucketAndTextFilters();
 
     /// <summary>
-    ///     Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for displaying in the UI.
+    ///     Detects duplicate transactions in the current <see cref="TransactionSetModel" /> and returns a summary string for displaying in the UI.
     ///     Each individual duplicate transactions will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" /> property.
     /// </summary>
     /// <returns>A textual summary of duplicates found. Null if none are detected or no statement is loaded.</returns>
@@ -69,7 +69,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     void FilterTransactions(GlobalFilterCriteria criteria);
 
     /// <summary>
-    ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement. This method should not be used without a <see cref="StatementModel" /> loaded.
+    ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement. This method should not be used without a <see cref="TransactionSetModel" /> loaded.
     ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
     /// </summary>
     /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
@@ -99,7 +99,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
         BudgetBucket splinterBucket2);
 
     /// <summary>
-    ///     Validates the currently loaded <see cref="StatementModel" /> against the provided budgets and ensures all buckets used by the transactions exist in the budgets.
+    ///     Validates the currently loaded <see cref="TransactionSetModel" /> against the provided budgets and ensures all buckets used by the transactions exist in the budgets.
     ///     This is performed asynchronously. This method can be called when a budget is loaded or changed or when a new Budget Analyser Statement is loaded.
     /// </summary>
     /// <param name="budgets">

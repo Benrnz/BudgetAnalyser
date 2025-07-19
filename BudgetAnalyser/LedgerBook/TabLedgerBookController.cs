@@ -64,7 +64,7 @@ public class TabLedgerBookController : ControllerBase, IShowableController
         this.transferFundsController = uiContext.Controller<TransferFundsController>();
 
         Messenger.Register<TabLedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
-        Messenger.Register<TabLedgerBookController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
+        Messenger.Register<TabLedgerBookController, TransactionSetModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
         Messenger.Register<TabLedgerBookController, LedgerBookReadyMessage>(this, (_, _) => ShowRemarksCommand.NotifyCanExecuteChanged());
         Messenger.Register<TabLedgerBookController, LedgerBucketTransferCommandMessage>(this, static (r, m) => r.OnTransferFundsCommandReceived(m));
 
@@ -152,7 +152,7 @@ public class TabLedgerBookController : ControllerBase, IShowableController
     {
         try
         {
-            this.reconService.BeforeReconciliationValidation(ViewModel.LedgerBook!, ViewModel.CurrentStatement!);
+            this.reconService.BeforeReconciliationValidation(ViewModel.LedgerBook!, ViewModel.CurrentTransactionSet!);
         }
         catch (ValidationWarningException ex)
         {
@@ -221,7 +221,7 @@ public class TabLedgerBookController : ControllerBase, IShowableController
             ViewModel.NewLedgerLine = this.reconService.PeriodEndReconciliation(ViewModel.LedgerBook!,
                 reconciliationDate,
                 budgetCollection,
-                ViewModel.CurrentStatement!,
+                ViewModel.CurrentTransactionSet!,
                 ignoreWarnings,
                 this.addLedgerReconciliationController.BankBalances.Cast<BankBalance>().ToArray());
 
@@ -413,9 +413,9 @@ public class TabLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    private void OnStatementReadyMessageReceived(StatementReadyMessage message)
+    private void OnTransactionsReadyMessageReceived(TransactionSetModelReadyMessage message)
     {
-        ViewModel.CurrentStatement = message.StatementModel;
+        ViewModel.CurrentTransactionSet = message.TransactionsSetModel;
     }
 
     private void OnTransferFundsCommandReceived(LedgerBucketTransferCommandMessage message)

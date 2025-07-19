@@ -48,7 +48,7 @@ public sealed class UpdateMobileDataWidget : Widget
     /// <summary>
     ///     The current Statement Model held by this widget
     /// </summary>
-    public TransactionSetModel? StatementModel { get; private set; }
+    public TransactionSetModel? TransactionsModel { get; private set; }
 
     /// <summary>
     ///     This method is used to disable the widget while upload is active.
@@ -78,11 +78,11 @@ public sealed class UpdateMobileDataWidget : Widget
         }
 
         LedgerBook = (LedgerBook)input[0];
-        StatementModel = (TransactionSetModel)input[1];
+        TransactionsModel = (TransactionSetModel)input[1];
         BudgetCollection = (BudgetCollection)input[2];
         Filter = (GlobalFilterCriteria)input[3];
 
-        if (LedgerBook is null || StatementModel is null || BudgetCollection is null || BudgetCollection.CurrentActiveBudget is null || Filter is null)
+        if (LedgerBook is null || TransactionsModel is null || BudgetCollection is null || BudgetCollection.CurrentActiveBudget is null || Filter is null)
         {
             return;
         }

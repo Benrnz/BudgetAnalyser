@@ -15,7 +15,7 @@ public class TabReportsCatalogController : ControllerBase, IShowableController
 {
     private readonly NewWindowViewLoader newWindowViewLoader;
     private BudgetCollection? budgets;
-    private TransactionSetModel? currentStatementModel;
+    private TransactionSetModel? currentTransactionsModel;
     private bool doNotUseShown;
 
     public TabReportsCatalogController(IUiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
@@ -28,7 +28,7 @@ public class TabReportsCatalogController : ControllerBase, IShowableController
         this.newWindowViewLoader = newWindowViewLoader ?? throw new ArgumentNullException(nameof(newWindowViewLoader));
         OverallPerformanceController = uiContext.Controller<OverallPerformanceController>();
 
-        Messenger.Register<TabReportsCatalogController, StatementReadyMessage>(this, static (r, m) => r.OnStatementReadyMessageReceived(m));
+        Messenger.Register<TabReportsCatalogController, TransactionSetModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
         Messenger.Register<TabReportsCatalogController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
     }
 
@@ -41,8 +41,8 @@ public class TabReportsCatalogController : ControllerBase, IShowableController
     public OverallPerformanceController OverallPerformanceController { get; }
 
     public bool OverallPerformanceReportIsAvailable =>
-        this.currentStatementModel is not null
-        && this.currentStatementModel.Transactions.Any()
+        this.currentTransactionsModel is not null
+        && this.currentTransactionsModel.Transactions.Any()
         && this.budgets?.CurrentActiveBudget is not null;
 
     public bool Shown
@@ -62,13 +62,13 @@ public class TabReportsCatalogController : ControllerBase, IShowableController
 
     public void ShowOverallPerformanceReport()
     {
-        if (this.currentStatementModel is null || this.budgets is null)
+        if (this.currentTransactionsModel is null || this.budgets is null)
         {
             return;
         }
 
         var filter = RequestCurrentFilter() ?? new GlobalFilterCriteria();
-        OverallPerformanceController.Load(this.currentStatementModel, this.budgets, filter);
+        OverallPerformanceController.Load(this.currentTransactionsModel, this.budgets, filter);
 
         this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 650;
         this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 740;
@@ -81,9 +81,9 @@ public class TabReportsCatalogController : ControllerBase, IShowableController
         OnPropertyChanged(nameof(OverallPerformanceReportIsAvailable));
     }
 
-    private void OnStatementReadyMessageReceived(StatementReadyMessage message)
+    private void OnTransactionsReadyMessageReceived(TransactionSetModelReadyMessage message)
     {
-        this.currentStatementModel = message.StatementModel;
+        this.currentTransactionsModel = message.TransactionsSetModel;
         OnPropertyChanged(nameof(OverallPerformanceReportIsAvailable));
     }
 

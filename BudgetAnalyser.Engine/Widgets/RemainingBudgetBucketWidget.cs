@@ -82,7 +82,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     /// <summary>
     ///     Gets the statement model.
     /// </summary>
-    protected TransactionSetModel? Statement { get; private set; }
+    protected TransactionSetModel? TransactionSet { get; private set; }
 
     /// <summary>
     ///     Updates the widget with new input.
@@ -101,14 +101,14 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
 
         Budget = (IBudgetCurrencyContext)input[0];
-        Statement = (TransactionSetModel)input[1];
+        TransactionSet = (TransactionSetModel)input[1];
         Filter = (GlobalFilterCriteria)input[2];
         this.bucketRepository = (IBudgetBucketRepository)input[3];
         LedgerBook = (LedgerBook)input[4];
         LedgerCalculation = (LedgerCalculation)input[5];
         this.logger = input[6] as ILogger;
 
-        if (Statement is null
+        if (TransactionSet is null
             || Budget is null
             || Filter is null
             || Filter.Cleared
@@ -168,7 +168,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 
     protected virtual decimal CalculateTotalSpendInPeriod(LedgerEntryLine line)
     {
-        return LedgerCalculation!.CalculateCurrentPeriodBucketSpend(line, Filter!, Statement!, BucketCode);
+        return LedgerCalculation!.CalculateCurrentPeriodBucketSpend(line, Filter!, TransactionSet!, BucketCode);
     }
 
     /// <summary>

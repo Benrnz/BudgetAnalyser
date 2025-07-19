@@ -14,10 +14,10 @@ namespace BudgetAnalyser.Engine.Services;
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class TransactionManagerService : ITransactionManagerService, ISupportsModelPersistence
 {
+    private readonly ITransactionSetRepository _transactionSetRepository;
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly ILogger logger;
     private readonly IMonitorableDependencies monitorableDependencies;
-    private readonly IStatementRepository statementRepository;
     private BudgetCollection? budgetCollection;
     private int budgetHash;
     private List<Transaction> transactions = new();
@@ -26,14 +26,14 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     ///     Initializes a new instance of the <see cref="TransactionManagerService" /> class.
     /// </summary>
     /// <param name="bucketRepository">The bucket repository.</param>
-    /// <param name="statementRepository">The statement repository.</param>
+    /// <param name="transactionSetRepository">The transactions model repository.</param>
     /// <param name="logger">The logger.</param>
     /// <param name="monitorableDependencies">The dependency monitor manager</param>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public TransactionManagerService(IBudgetBucketRepository bucketRepository, IStatementRepository statementRepository, ILogger logger, IMonitorableDependencies monitorableDependencies)
+    public TransactionManagerService(IBudgetBucketRepository bucketRepository, ITransactionSetRepository transactionSetRepository, ILogger logger, IMonitorableDependencies monitorableDependencies)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
-        this.statementRepository = statementRepository ?? throw new ArgumentNullException(nameof(statementRepository));
+        this._transactionSetRepository = transactionSetRepository ?? throw new ArgumentNullException(nameof(transactionSetRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
     }
@@ -63,8 +63,8 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     public void Close()
     {
         this.transactions = new List<Transaction>();
-        StatementModel?.Dispose();
-        StatementModel = null;
+        TransactionSetModel?.Dispose();
+        TransactionSetModel = null;
         this.budgetCollection = null;
         this.budgetHash = 0;
         var handler = Closed;
@@ -74,12 +74,12 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <inheritdoc />
     public async Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
-        if (applicationDatabase.StatementModelStorageKey.IsNothing())
+        if (applicationDatabase.TransactionsSetModelStorageKey.IsNothing())
         {
             throw new ArgumentNullException(nameof(applicationDatabase));
         }
 
-        await this.statementRepository.CreateNewAndSaveAsync(applicationDatabase.StatementModelStorageKey);
+        await this._transactionSetRepository.CreateNewAndSaveAsync(applicationDatabase.TransactionsSetModelStorageKey);
         await LoadAsync(applicationDatabase);
     }
 
@@ -91,14 +91,14 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new ArgumentNullException(nameof(applicationDatabase));
         }
 
-        StatementModel?.Dispose();
+        TransactionSetModel?.Dispose();
         try
         {
-            StatementModel = await this.statementRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey), applicationDatabase.IsEncrypted);
+            TransactionSetModel = await this._transactionSetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.TransactionsSetModelStorageKey), applicationDatabase.IsEncrypted);
         }
-        catch (StatementModelChecksumException ex)
+        catch (TransactionsModelChecksumException ex)
         {
-            throw new DataFormatException("Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
+            throw new DataFormatException("Transactions Model data is corrupt and has been tampered with. Unable to load.", ex);
         }
 
         NewDataAvailable();
@@ -107,7 +107,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <inheritdoc />
     public async Task SaveAsync(ApplicationDatabase applicationDatabase)
     {
-        if (StatementModel is null)
+        if (TransactionSetModel is null)
         {
             return;
         }
@@ -121,9 +121,9 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new ValidationWarningException("Unable to save transactions at this time, some data is invalid. " + messages);
         }
 
-        StatementModel.StorageKey = applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey);
-        await this.statementRepository.SaveAsync(StatementModel, applicationDatabase.IsEncrypted);
-        this.monitorableDependencies.NotifyOfDependencyChange(StatementModel);
+        TransactionSetModel.StorageKey = applicationDatabase.FullPath(applicationDatabase.TransactionsSetModelStorageKey);
+        await this._transactionSetRepository.SaveAsync(TransactionSetModel, applicationDatabase.IsEncrypted);
+        this.monitorableDependencies.NotifyOfDependencyChange(TransactionSetModel);
         Saved?.Invoke(this, EventArgs.Empty);
     }
 
@@ -142,7 +142,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     }
 
     /// <inheritdoc />
-    public TransactionSetModel? StatementModel { get; private set; }
+    public TransactionSetModel? TransactionSetModel { get; private set; }
 
     /// <inheritdoc />
     public decimal TotalCount => this.transactions.None() ? 0 : this.transactions.Count();
@@ -163,12 +163,12 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <inheritdoc />
     public string DetectDuplicateTransactions()
     {
-        if (StatementModel is null)
+        if (TransactionSetModel is null)
         {
             return string.Empty;
         }
 
-        var duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
+        var duplicates = TransactionSetModel.ValidateAgainstDuplicates().ToList();
         return duplicates.Any() ? $"{duplicates.Sum(group => group.Count())} suspected duplicates!" : string.Empty;
     }
 
@@ -185,31 +185,31 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <inheritdoc />
     public List<Transaction> FilterByBucket(string? bucketCode)
     {
-        if (StatementModel is null)
+        if (TransactionSetModel is null)
         {
             throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
 
         if (bucketCode == TransactionConstants.UncategorisedFilter)
         {
-            return this.transactions = new List<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket is null));
+            return this.transactions = new List<Transaction>(TransactionSetModel.Transactions.Where(t => t.BudgetBucket is null));
         }
 
         var bucket = bucketCode is null ? null : this.bucketRepository.GetByCode(bucketCode);
 
         if (bucket is null)
         {
-            return new List<Transaction>(StatementModel.Transactions);
+            return new List<Transaction>(TransactionSetModel.Transactions);
         }
 
         var paternityTest = new BudgetBucketPaternity();
-        return this.transactions = new List<Transaction>(StatementModel.Transactions.Where(t => paternityTest.OfSameBucketFamily(t.BudgetBucket, bucket)));
+        return this.transactions = new List<Transaction>(TransactionSetModel.Transactions.Where(t => paternityTest.OfSameBucketFamily(t.BudgetBucket, bucket)));
     }
 
     /// <inheritdoc />
     public List<Transaction> FilterBySearchText(string? searchText)
     {
-        if (StatementModel is null)
+        if (TransactionSetModel is null)
         {
             throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
@@ -224,7 +224,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             return ClearBucketAndTextFilters();
         }
 
-        this.transactions = new List<Transaction>(StatementModel.Transactions
+        this.transactions = new List<Transaction>(TransactionSetModel.Transactions
             .Where(t => MatchTransactionText(t, searchText))
             .AsParallel()
             .ToList());
@@ -234,7 +234,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <inheritdoc />
     public void FilterTransactions(GlobalFilterCriteria criteria)
     {
-        if (StatementModel is null)
+        if (TransactionSetModel is null)
         {
             throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
@@ -245,7 +245,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         }
 
         this.monitorableDependencies.NotifyOfDependencyChange(criteria);
-        StatementModel.Filter(criteria);
+        TransactionSetModel.Filter(criteria);
     }
 
     /// <inheritdoc />
@@ -261,13 +261,13 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new ArgumentNullException(nameof(account));
         }
 
-        if (StatementModel is null)
+        if (TransactionSetModel is null)
         {
             throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
 
-        var additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
-        var combinedModel = StatementModel.Merge(additionalModel);
+        var additionalModel = await this._transactionSetRepository.ImportBankStatementAsync(storageKey, account);
+        var combinedModel = TransactionSetModel.Merge(additionalModel);
         var minDate = additionalModel.AllTransactions.Min(t => t.Date);
         var maxDate = additionalModel.AllTransactions.Max(t => t.Date);
         IEnumerable<IGrouping<int, Transaction>> duplicates = combinedModel.ValidateAgainstDuplicates(minDate, maxDate).ToList();
@@ -276,15 +276,15 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new TransactionsAlreadyImportedException();
         }
 
-        StatementModel.Dispose();
-        StatementModel = combinedModel;
+        TransactionSetModel.Dispose();
+        TransactionSetModel = combinedModel;
         NewDataAvailable();
     }
 
     /// <inheritdoc />
     public void RemoveTransaction(Transaction transactionToRemove)
     {
-        if (StatementModel is null)
+        if (TransactionSetModel is null)
         {
             throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
@@ -294,13 +294,13 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new ArgumentNullException(nameof(transactionToRemove));
         }
 
-        StatementModel.RemoveTransaction(transactionToRemove);
+        TransactionSetModel.RemoveTransaction(transactionToRemove);
     }
 
     /// <inheritdoc />
     public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
     {
-        if (StatementModel is null)
+        if (TransactionSetModel is null)
         {
             throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
@@ -320,7 +320,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new ArgumentNullException(nameof(splinterBucket2));
         }
 
-        StatementModel.SplitTransaction(
+        TransactionSetModel.SplitTransaction(
             originalTransaction,
             splinterAmount1,
             splinterAmount2,
@@ -339,7 +339,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         this.budgetCollection = budgets ?? this.budgetCollection;
 
-        if (StatementModel is null || this.budgetCollection is null)
+        if (TransactionSetModel is null || this.budgetCollection is null)
         {
             // Can't check yet, statement hasn't been loaded yet. Everything is ok for now.
             return true;
@@ -356,7 +356,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         var allTransactionHaveABucket = await Task.Run(
             () =>
             {
-                return StatementModel.AllTransactions
+                return TransactionSetModel.AllTransactions
                     .Where(t => t.BudgetBucket is not null)
                     .AsParallel()
                     .All(
@@ -417,12 +417,12 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     private void NewDataAvailable()
     {
         ResetTransactionsCollection();
-        this.monitorableDependencies.NotifyOfDependencyChange(StatementModel);
+        this.monitorableDependencies.NotifyOfDependencyChange(TransactionSetModel);
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
     }
 
     private void ResetTransactionsCollection()
     {
-        this.transactions = StatementModel is null ? new List<Transaction>() : new List<Transaction>(StatementModel.Transactions);
+        this.transactions = TransactionSetModel is null ? new List<Transaction>() : new List<Transaction>(TransactionSetModel.Transactions);
     }
 }

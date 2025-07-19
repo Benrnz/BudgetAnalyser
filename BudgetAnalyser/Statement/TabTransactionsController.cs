@@ -30,7 +30,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
 
     public TabTransactionsController(
         IUiContext uiContext,
-        TransactionSetControllerFileOperations fileOperations,
+        TransactionsControllerFileOperations fileOperations,
         ITransactionManagerService transactionService)
         : base(uiContext.Messenger)
     {
@@ -119,7 +119,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
     internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
-    public TransactionSetControllerFileOperations FileOperations { get; }
+    public TransactionsControllerFileOperations FileOperations { get; }
 
     public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
 
@@ -168,7 +168,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
 
     public int TotalPages => (ViewModel.Transactions.Count + PageSize - 1) / PageSize;
 
-    public StatementViewModel ViewModel => FileOperations.ViewModel;
+    public TransactionsViewModel ViewModel => FileOperations.ViewModel;
 
     public bool Shown
     {
@@ -207,7 +207,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
         }
     }
 
-    public void RegisterListener<TMessage>(StatementUserControl recipient, MessageHandler<StatementUserControl, TMessage> handler) where TMessage : MessageBase
+    public void RegisterListener<TMessage>(TransactionsModelUserControl recipient, MessageHandler<TransactionsModelUserControl, TMessage> handler) where TMessage : MessageBase
     {
         Messenger.Register(recipient, handler);
     }
@@ -310,7 +310,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
             return;
         }
 
-        if (ViewModel.Statement is null)
+        if (ViewModel.TransactionsModel is null)
         {
             return;
         }
@@ -318,8 +318,8 @@ public class TabTransactionsController : ControllerBase, IShowableController
         var bucketFilter = BucketFilter;
         BucketFilter = null;
         this.transactionService.FilterTransactions(message.Criteria);
-        ViewModel.Statement = this.transactionService.StatementModel;
-        ViewModel.Transactions = ViewModel.Statement!.Transactions.ToList();
+        ViewModel.TransactionsModel = this.transactionService.TransactionSetModel;
+        ViewModel.Transactions = ViewModel.TransactionsModel!.Transactions.ToList();
         CurrentPage = 1;
         ViewModel.TriggerRefreshTotalsRow();
         BucketFilter = bucketFilter;

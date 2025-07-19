@@ -8,13 +8,13 @@ namespace BudgetAnalyser.LedgerBook;
 public class LedgerBookViewModel : ObservableRecipient
 {
     private IBudgetCurrencyContext? doNotUseCurrentBudget;
-    private TransactionSetModel? doNotUseCurrentStatement;
+    private TransactionSetModel? doNotUseCurrentTransactionSet;
     private Engine.Ledger.LedgerBook? doNotUseLedgerBook;
     private LedgerEntryLine? doNotUseNewLedgerLine;
 
     public bool AddNewReconciliationIsEnabled =>
         // Decided not to validate budget here, budget for dates is a more complicated decision / validation for the engine.
-        CurrentStatement is not null && LedgerBook is not null;
+        CurrentTransactionSet is not null && LedgerBook is not null;
 
     /// <summary>
     ///     CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
@@ -30,20 +30,20 @@ public class LedgerBookViewModel : ObservableRecipient
         }
     }
 
-    internal TransactionSetModel? CurrentStatement
+    internal TransactionSetModel? CurrentTransactionSet
     {
-        get => this.doNotUseCurrentStatement;
+        get => this.doNotUseCurrentTransactionSet;
 
         set
         {
-            if (Equals(value, this.doNotUseCurrentStatement))
+            if (Equals(value, this.doNotUseCurrentTransactionSet))
             {
                 return;
             }
 
-            this.doNotUseCurrentStatement = value;
+            this.doNotUseCurrentTransactionSet = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(NoStatementLoaded));
+            OnPropertyChanged(nameof(NoTransactionsLoaded));
             OnPropertyChanged(nameof(AddNewReconciliationIsEnabled));
         }
     }
@@ -90,5 +90,5 @@ public class LedgerBookViewModel : ObservableRecipient
     public bool NoBudgetLoaded => CurrentBudget is null;
 
     public bool NoLedgerBookLoaded => LedgerBook is null;
-    public bool NoStatementLoaded => CurrentStatement is null;
+    public bool NoTransactionsLoaded => CurrentTransactionSet is null;
 }

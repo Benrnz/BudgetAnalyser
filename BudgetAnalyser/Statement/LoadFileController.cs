@@ -180,7 +180,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
         MergeMode = true;
         SuggestedDateRange = string.Empty;
         Title = "Merge Statement";
-        ActionButtonToolTip = "Merge transactions from the selected file into the current statement file.";
+        ActionButtonToolTip = "Merge transactions from the selected file into the current transactions set file.";
         CalculateSuggestedDateRange(currentTransactionSet);
 
         return RequestUserInputCommomPreparation();

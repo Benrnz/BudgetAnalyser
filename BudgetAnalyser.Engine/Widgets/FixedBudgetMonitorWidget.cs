@@ -28,7 +28,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
         this.standardStyle = "WidgetStandardStyle1";
 
-        this.disabledToolTip = "No Statement file is loaded, or bucket doesn't exist.";
+        this.disabledToolTip = "No Transactions are loaded, or bucket doesn't exist.";
         this.remainingBudgetToolTip = "{0} Remaining budget for this project: {1:C}. Total Spend {2:C}";
         Enabled = false;
         BucketCode = NotSet;
@@ -51,7 +51,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     /// <summary>
     ///     Gets the statement model.
     /// </summary>
-    public TransactionSetModel? Statement { get; private set; }
+    public TransactionSetModel? TransactionSetModel { get; private set; }
 
     /// <summary>
     ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
@@ -91,7 +91,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
             return;
         }
 
-        Statement = input[0] as TransactionSetModel;
+        TransactionSetModel = input[0] as TransactionSetModel;
         this.bucketRepository = (IBudgetBucketRepository)input[1];
 
         if (!this.bucketRepository.IsValidCode(BucketCode))
@@ -101,7 +101,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
             return;
         }
 
-        if (Statement is null)
+        if (TransactionSetModel is null)
         {
             ToolTip = this.disabledToolTip;
             Enabled = false;
@@ -116,7 +116,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
 
         // Debit transactions are negative so normally the total spend will be a negative number.
         var totalSpend =
-            Statement.AllTransactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == BucketCode)
+            TransactionSetModel.AllTransactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == BucketCode)
                 .Sum(t => t.Amount);
         var remainingBudget = totalBudget + totalSpend;
 

@@ -15,7 +15,7 @@ public class MapperApplicationDatabaseToStorageRoot3 : IDtoMapper<BudgetAnalyser
         {
             BudgetCollectionRootDto = model.BudgetCollectionStorageKey,
             LedgerBookRootDto = model.LedgerBookStorageKey,
-            StatementModelRootDto = model.StatementModelStorageKey,
+            StatementModelRootDto = model.TransactionsSetModelStorageKey,
             LedgerReconciliationToDoCollection = this.todoMapper.ToDto(model.LedgerReconciliationToDoCollection),
             MatchingRulesCollectionRootDto = model.MatchingRulesCollectionStorageKey,
             WidgetCollectionRootDto = model.WidgetsCollectionStorageKey,
@@ -31,7 +31,7 @@ public class MapperApplicationDatabaseToStorageRoot3 : IDtoMapper<BudgetAnalyser
         {
             BudgetCollectionStorageKey = dto.BudgetCollectionRootDto,
             LedgerBookStorageKey = dto.LedgerBookRootDto,
-            StatementModelStorageKey = dto.StatementModelRootDto,
+            TransactionsSetModelStorageKey = dto.StatementModelRootDto,
             MatchingRulesCollectionStorageKey = dto.MatchingRulesCollectionRootDto,
             IsEncrypted = dto.IsEncrypted,
             LedgerReconciliationToDoCollection = this.todoMapper.ToModel(dto.LedgerReconciliationToDoCollection),

@@ -17,7 +17,7 @@ public class RemainingSurplusWidget : RemainingBudgetBucketWidget
     {
         DetailedText = "Budgeted Surplus";
         Name = "Surplus B";
-        DependencyMissingToolTip = "A Statement, Budget, or a Filter are not present, surplus cannot be calculated.";
+        DependencyMissingToolTip = "Transactions, Budget, or a Filter are not present, surplus cannot be calculated.";
         RemainingBudgetToolTip = "Remaining Surplus for period is {0:C} {1:P0}";
         BucketCode = SurplusBucket.SurplusCode;
     }
@@ -25,7 +25,7 @@ public class RemainingSurplusWidget : RemainingBudgetBucketWidget
     protected override decimal CalculateTotalSpendInPeriod(LedgerEntryLine line)
     {
         var spend = base.CalculateTotalSpendInPeriod(line);
-        var overspentLedgers = LedgerCalculation!.CalculateOverSpentLedgers(Statement!, line, Filter!.BeginDate!.Value, Filter!.EndDate!.Value);
+        var overspentLedgers = LedgerCalculation!.CalculateOverSpentLedgers(TransactionSet!, line, Filter!.BeginDate!.Value, Filter!.EndDate!.Value);
         var overdrawnBalance = overspentLedgers.Sum(t => t.Amount);
         return spend + overdrawnBalance;
     }

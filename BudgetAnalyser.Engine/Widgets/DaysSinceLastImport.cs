@@ -41,8 +41,8 @@ public class DaysSinceLastImport : Widget
         }
 
         Enabled = true;
-        var statement = (TransactionSetModel)input[0];
-        var days = Convert.ToInt32(DateTime.Today.Subtract(statement.LastImport).TotalDays);
+        var transactionSetModel = (TransactionSetModel)input[0];
+        var days = Convert.ToInt32(DateTime.Today.Subtract(transactionSetModel.LastImport).TotalDays);
         if (days < 0)
         {
             days = 0;

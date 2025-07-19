@@ -53,6 +53,6 @@ public class DtoToApplicationDatabaseMapperTest
     [Fact]
     public void ShouldMapStatementModelRootDto()
     {
-        this.result.StatementModelStorageKey.ShouldBe("Statement.xml");
+        this.result.TransactionsSetModelStorageKey.ShouldBe("Statement.xml");
     }
 }

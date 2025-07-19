@@ -67,15 +67,15 @@ public class ApplicationDatabase
     public string MatchingRulesCollectionStorageKey { get; internal set; } = string.Empty;
 
     /// <summary>
-    ///     Gets the statement model storage key.
-    ///     This is used to locate and load the <see cref="TransactionSetModel" />.
-    /// </summary>
-    public string StatementModelStorageKey { get; internal set; } = string.Empty;
-
-    /// <summary>
     ///     Gets the storage path that identifies this budget analyser file.
     /// </summary>
     private string StoragePath => Path.GetDirectoryName(FileName) ?? ".\\";
+
+    /// <summary>
+    ///     Gets the statement model storage key.
+    ///     This is used to locate and load the <see cref="TransactionSetModel" />.
+    /// </summary>
+    public string TransactionsSetModelStorageKey { get; internal set; } = string.Empty;
 
     /// <summary>
     ///     Gets the widgets collection storage key. This is used to locate and load the collection of <see cref="Widget" />.
@@ -93,7 +93,7 @@ public class ApplicationDatabase
         LedgerBookStorageKey = string.Empty;
         MatchingRulesCollectionStorageKey = string.Empty;
         MatchingRulesCollectionStorageKey = string.Empty;
-        StatementModelStorageKey = string.Empty;
+        TransactionsSetModelStorageKey = string.Empty;
         LedgerReconciliationToDoCollection = new ToDoCollection();
     }
 

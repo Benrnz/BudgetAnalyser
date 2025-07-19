@@ -10,7 +10,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Statement;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class TransactionSetControllerFileOperations : ControllerBase
+public class TransactionsControllerFileOperations : ControllerBase
 {
     // TODO Direct controller references are not ideal.
     private readonly LoadFileController loadFileController;
@@ -18,7 +18,7 @@ public class TransactionSetControllerFileOperations : ControllerBase
     private readonly ITransactionManagerService transactionService;
     private bool doNotUseLoadingData;
 
-    public TransactionSetControllerFileOperations(
+    public TransactionsControllerFileOperations(
         IUiContext uiContext,
         LoadFileController loadFileController,
         IApplicationDatabaseFacade applicationDatabaseService,
@@ -38,7 +38,7 @@ public class TransactionSetControllerFileOperations : ControllerBase
         this.messageBox = uiContext.UserPrompts.MessageBox;
         this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
         this.transactionService = transactionManagerService ?? throw new ArgumentNullException(nameof(transactionManagerService));
-        ViewModel = new StatementViewModel(applicationDatabaseService, this.transactionService);
+        ViewModel = new TransactionsViewModel(applicationDatabaseService, this.transactionService);
     }
 
     public bool LoadingData
@@ -56,14 +56,14 @@ public class TransactionSetControllerFileOperations : ControllerBase
         }
     }
 
-    internal StatementViewModel ViewModel { get; }
+    internal TransactionsViewModel ViewModel { get; }
 
     internal void Close()
     {
-        ViewModel.Statement = null;
+        ViewModel.TransactionsModel = null;
         NotifyOfReset();
         ViewModel.TriggerRefreshTotalsRow();
-        Messenger.Send(new StatementReadyMessage(null));
+        Messenger.Send(new TransactionSetModelReadyMessage(null));
     }
 
     internal async Task MergeInNewTransactions()
@@ -71,7 +71,7 @@ public class TransactionSetControllerFileOperations : ControllerBase
         PersistenceOperationCommands.SaveDatabaseCommand.Execute(this);
 
         var fileName = await GetFileNameFromUser();
-        if (string.IsNullOrWhiteSpace(fileName) || this.loadFileController.SelectedExistingAccountName is null)
+        if (string.IsNullOrWhiteSpace(fileName))
         {
             // User cancelled
             return;
@@ -79,7 +79,7 @@ public class TransactionSetControllerFileOperations : ControllerBase
 
         try
         {
-            var account = this.loadFileController.SelectedExistingAccountName;
+            var account = this.loadFileController.SelectedExistingAccountName ?? throw new NotSupportedException("No Account selected to import transactions into.");
             await this.transactionService.ImportAndMergeBankStatementAsync(fileName, account);
 
             await SyncWithServiceAsync();
@@ -87,7 +87,7 @@ public class TransactionSetControllerFileOperations : ControllerBase
             OnPropertyChanged(nameof(ViewModel));
             NotifyOfEdit();
             ViewModel.TriggerRefreshTotalsRow();
-            Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
+            Messenger.Send(new TransactionSetModelReadyMessage(ViewModel.TransactionsModel));
         }
         catch (NotSupportedException ex)
         {
@@ -110,13 +110,13 @@ public class TransactionSetControllerFileOperations : ControllerBase
     internal void NotifyOfEdit()
     {
         ViewModel.Dirty = true;
-        Messenger.Send(new StatementHasBeenModifiedMessage());
+        Messenger.Send(new TransactionSetModelHasBeenModifiedMessage());
     }
 
     internal async Task SyncWithServiceAsync()
     {
-        var statementModel = this.transactionService.StatementModel;
-        ViewModel.Statement = null; // Prevent events from firing while updating the model.
+        var transactionsModel = this.transactionService.TransactionSetModel;
+        ViewModel.TransactionsModel = null; // Prevent events from firing while updating the model.
         LoadingData = true;
         await Dispatcher.CurrentDispatcher.BeginInvoke(
             DispatcherPriority.Normal,
@@ -130,10 +130,10 @@ public class TransactionSetControllerFileOperations : ControllerBase
                     this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
                 }
 
-                ViewModel.Statement = statementModel;
+                ViewModel.TransactionsModel = transactionsModel;
                 ViewModel.TriggerRefreshTotalsRow();
 
-                Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
+                Messenger.Send(new TransactionSetModelReadyMessage(ViewModel.TransactionsModel));
 
                 LoadingData = false;
             });
@@ -153,21 +153,21 @@ public class TransactionSetControllerFileOperations : ControllerBase
     /// </returns>
     private async Task<string> GetFileNameFromUser()
     {
-        var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
-        await this.loadFileController.RequestUserInputForMerging(statement);
+        var transactionsModel = ViewModel.TransactionsModel ?? throw new InvalidOperationException("Transactions Set Model is null, uninitialised or not loaded.");
+        await this.loadFileController.RequestUserInputForMerging(transactionsModel);
 
         return this.loadFileController.FileName ?? string.Empty;
     }
 
     private void NotifyOfReset()
     {
-        if (ViewModel is { Dirty: false, Statement: null })
+        if (ViewModel is { Dirty: false, TransactionsModel: null })
         {
             // No need to notify of reset if the statement is already null. This happens during first load before the statement is loaded
             return;
         }
 
         ViewModel.Dirty = false;
-        Messenger.Send(new StatementHasBeenModifiedMessage());
+        Messenger.Send(new TransactionSetModelHasBeenModifiedMessage());
     }
 }

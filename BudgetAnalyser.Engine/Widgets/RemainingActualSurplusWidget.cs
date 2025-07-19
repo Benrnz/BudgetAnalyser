@@ -17,7 +17,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
     private LedgerBook? ledgerBook;
     private LedgerCalculation? ledgerCalculator;
     private ILogger? logger;
-    private TransactionSetModel? statement;
+    private TransactionSetModel? transactionSet;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RemainingActualSurplusWidget" /> class.
@@ -49,7 +49,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
             return;
         }
 
-        this.statement = input[0] as TransactionSetModel;
+        this.transactionSet = input[0] as TransactionSetModel;
         this.filter = input[1] as GlobalFilterCriteria;
         this.ledgerBook = input[2] as LedgerBook;
         this.ledgerCalculator = input[3] as LedgerCalculation;
@@ -58,7 +58,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
 
         if (this.ledgerBook is null
             || this.budget is null
-            || this.statement is null
+            || this.transactionSet is null
             || this.ledgerCalculator is null
             || this.filter is null
             || this.filter.Cleared
@@ -92,7 +92,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
 
         Logger.LogInfo(_ => $"LedgerLine: {ledgerLine.Date:d} TotalBankBalance {ledgerLine.TotalBankBalance:C}");
 
-        var remainingBalance = this.ledgerCalculator.CalculateCurrentPeriodSurplusBalance(ledgerLine, this.filter, this.statement);
+        var remainingBalance = this.ledgerCalculator.CalculateCurrentPeriodSurplusBalance(ledgerLine, this.filter, this.transactionSet);
         Logger.LogInfo(_ => $"Remaining period surplus balance is: {remainingBalance:C}");
 
         Maximum = Convert.ToDouble(openingBalance);

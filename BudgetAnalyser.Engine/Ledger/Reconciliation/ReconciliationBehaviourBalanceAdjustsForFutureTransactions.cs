@@ -8,17 +8,17 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IReconciliationBehaviour
 {
     public LedgerEntryLine? NewReconLine { get; private set; }
-
-    public TransactionSetModel? Statement { get; private set; }
     public IList<ToDoTask>? TodoTasks { get; private set; }
+
+    public TransactionSetModel? TransactionSet { get; private set; }
 
     public void Initialise(params object[] anyParameters)
     {
         foreach (var argument in anyParameters)
         {
-            TodoTasks = TodoTasks ?? argument as IList<ToDoTask>;
-            NewReconLine = NewReconLine ?? argument as LedgerEntryLine;
-            Statement = Statement ?? argument as TransactionSetModel;
+            TodoTasks ??= argument as IList<ToDoTask>;
+            NewReconLine ??= argument as LedgerEntryLine;
+            TransactionSet ??= argument as TransactionSetModel;
         }
 
         if (TodoTasks is null)
@@ -31,17 +31,17 @@ internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IRec
             throw new ArgumentNullException(nameof(NewReconLine));
         }
 
-        if (Statement is null)
+        if (TransactionSet is null)
         {
-            throw new ArgumentNullException(nameof(Statement));
+            throw new ArgumentNullException(nameof(TransactionSet));
         }
     }
 
     public void ApplyBehaviour()
     {
-        if (Statement is not null)
+        if (TransactionSet is not null)
         {
-            AddBalanceAdjustmentsForFutureTransactions(Statement, NewReconLine!, TodoTasks!);
+            AddBalanceAdjustmentsForFutureTransactions(TransactionSet, NewReconLine!, TodoTasks!);
         }
     }
 

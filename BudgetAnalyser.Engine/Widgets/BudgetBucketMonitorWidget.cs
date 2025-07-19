@@ -15,8 +15,13 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     public BudgetBucketMonitorWidget()
     {
         this.disabledToolTip =
-            "Either a Statement or Budget are not present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget cannot be calculated.";
+            "Either transactions are not loaded or Budget are not present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget cannot be calculated.";
     }
+
+    /// <summary>
+    ///     Gets the type of the widget. In this case same as GetType().Name
+    /// </summary>
+    public Type WidgetType => GetType();
 
     /// <summary>
     ///     Gets or sets a unique identifier for this widget. This is the Bucket Code in this case.
@@ -30,11 +35,6 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
             OnPropertyChanged();
         }
     }
-
-    /// <summary>
-    ///     Gets the type of the widget. In this case same as GetType().Name
-    /// </summary>
-    public Type WidgetType => GetType();
 
     /// <summary>
     ///     Updates the widget values with updated input.

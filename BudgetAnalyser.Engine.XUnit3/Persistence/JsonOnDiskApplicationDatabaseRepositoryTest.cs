@@ -5,7 +5,6 @@ using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Persistence;
 
 public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable
@@ -31,7 +30,7 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable
     {
         this.resultingModel = await this.subject.CreateNewAsync("Test");
         this.resultingModel.ShouldNotBeNull();
-        this.resultingModel.StatementModelStorageKey.ShouldBe("Test.Transactions.csv");
+        this.resultingModel.TransactionsSetModelStorageKey.ShouldBe("Test.Transactions.csv");
         this.resultingModel.BudgetCollectionStorageKey.ShouldBe("Test.Budget.json");
         this.resultingModel.LedgerBookStorageKey.ShouldBe("Test.LedgerBook.json");
         this.resultingModel.WidgetsCollectionStorageKey.ShouldBe("Test.Widgets.json");
@@ -97,7 +96,7 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable
     public async Task Load_ShouldSetStatementModelStorageKey_GivenDemoFile()
     {
         this.resultingModel = await this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
-        this.resultingModel.StatementModelStorageKey.ShouldBe("DemoTransactions.csv");
+        this.resultingModel.TransactionsSetModelStorageKey.ShouldBe("DemoTransactions.csv");
     }
 
     [Fact]
@@ -138,7 +137,7 @@ public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable
         {
             BudgetCollectionStorageKey = "Test.Budget.json",
             LedgerBookStorageKey = "Test.LedgerBook.json",
-            StatementModelStorageKey = "Test.Transactions.csv",
+            TransactionsSetModelStorageKey = "Test.Transactions.csv",
             LedgerReconciliationToDoCollection = new ToDoCollection(),
             MatchingRulesCollectionStorageKey = "Test.MatchingRules.json",
             WidgetsCollectionStorageKey = "Test.Widgets.json",

@@ -155,7 +155,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectChecksum()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
 
-        await Should.ThrowAsync<StatementModelChecksumException>(() => subject.LoadAsync("foo.foo", false));
+        await Should.ThrowAsync<TransactionsModelChecksumException>(() => subject.LoadAsync("foo.foo", false));
     }
 
     [Fact]

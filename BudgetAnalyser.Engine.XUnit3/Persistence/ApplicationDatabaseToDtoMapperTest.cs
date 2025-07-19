@@ -18,7 +18,7 @@ public class ApplicationDatabaseToDtoMapperTest
         PrivateAccessor.SetProperty(this.testData, "FileName", "C:\\Foo\\TestData.bax");
         PrivateAccessor.SetProperty(this.testData, "LedgerBookStorageKey", "Ledger.xml");
         PrivateAccessor.SetProperty(this.testData, "MatchingRulesCollectionStorageKey", "Rules.xml");
-        PrivateAccessor.SetProperty(this.testData, "StatementModelStorageKey", "Statement.xml");
+        PrivateAccessor.SetProperty(this.testData, "TransactionsSetModelStorageKey", "Statement.xml");
         PrivateAccessor.SetProperty(this.testData, "LedgerReconciliationToDoCollection", todoCollection);
 
         var subject = new MapperApplicationDatabaseToStorageRoot3();

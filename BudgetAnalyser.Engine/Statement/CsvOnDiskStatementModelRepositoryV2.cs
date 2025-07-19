@@ -76,7 +76,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         var transactionSet = MapToDto(model);
         if (model.AllTransactions.Count() != transactionSet.Transactions.Count())
         {
-            throw new StatementModelChecksumException(
+            throw new TransactionsModelChecksumException(
                 $"Only {transactionSet.Transactions.Count()} out of {model.AllTransactions.Count()} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.");
         }
 
@@ -405,7 +405,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         {
             this.logger.LogError(l =>
                 l.Format("BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", transactionSet.Checksum, calcTxnCheckSum));
-            throw new StatementModelChecksumException($"The statement being loaded, does not match the internal checksum. {calcTxnCheckSum} {transactionSet.Checksum}");
+            throw new TransactionsModelChecksumException($"The statement being loaded, does not match the internal checksum. {calcTxnCheckSum} {transactionSet.Checksum}");
         }
     }
 
