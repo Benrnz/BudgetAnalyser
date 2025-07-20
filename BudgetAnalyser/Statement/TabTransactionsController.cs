@@ -11,6 +11,7 @@ using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Statement;
 
@@ -18,7 +19,8 @@ namespace BudgetAnalyser.Statement;
 public class TabTransactionsController : ControllerBase, IShowableController
 {
     private readonly ITransactionManagerService transactionService;
-    private readonly IUiContext uiContext;
+    private readonly IUserMessageBox userMessageBox;
+    private readonly IUserQuestionBoxYesNo userQuestionBox;
     private string? doNotUseBucketFilter;
     private bool doNotUseCanNavigateNext;
     private bool doNotUseCanNavigatePrevious;
@@ -31,12 +33,19 @@ public class TabTransactionsController : ControllerBase, IShowableController
     public TabTransactionsController(
         IUiContext uiContext,
         TransactionsControllerFileOperations fileOperations,
-        ITransactionManagerService transactionService)
+        ITransactionManagerService transactionService,
+        AppliedRulesController appliedRulesController,
+        EditingTransactionController editingTransactionController,
+        SplitTransactionController splitTransactionController)
         : base(uiContext.Messenger)
     {
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+        EditingTransactionController = editingTransactionController ?? throw new ArgumentNullException(nameof(editingTransactionController));
+        AppliedRulesController = appliedRulesController ?? throw new ArgumentNullException(nameof(appliedRulesController));
+        SplitTransactionController = splitTransactionController ?? throw new ArgumentNullException(nameof(splitTransactionController));
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
+        this.userMessageBox = uiContext.UserPrompts.MessageBox;
+        this.userQuestionBox = uiContext.UserPrompts.YesNoBox;
 
         Messenger.Register<TabTransactionsController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
         Messenger.Register<TabTransactionsController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
@@ -47,14 +56,11 @@ public class TabTransactionsController : ControllerBase, IShowableController
         this.transactionService.Saved += OnSavedNotificationReceived;
     }
 
-    public AppliedRulesController AppliedRulesController => this.uiContext.Controller<AppliedRulesController>();
+    public AppliedRulesController AppliedRulesController { get; private set; }
 
     /// <summary>
-    ///     Gets or sets the bucket filter.
-    ///     This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a
-    ///     bucket.
-    ///     Only relevant when the view is displaying transactions by date.  The filter is hidden when shown in GroupByBucket
-    ///     mode.
+    ///     Gets or sets the bucket filter. This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a bucket. Only relevant when the view is
+    ///     displaying transactions by date.  The filter is hidden when shown in GroupByBucket mode.
     /// </summary>
     public string? BucketFilter
     {
@@ -117,7 +123,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
     }
 
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
-    internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
+    internal EditingTransactionController EditingTransactionController { get; }
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
     public TransactionsControllerFileOperations FileOperations { get; }
 
@@ -146,7 +152,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
 
     public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
-    internal SplitTransactionController SplitTransactionController => this.uiContext.Controller<SplitTransactionController>();
+    internal SplitTransactionController SplitTransactionController { get; }
 
     public string? TextFilter
     {
@@ -216,7 +222,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
     {
         if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
         {
-            this.uiContext.UserPrompts.MessageBox.Show(
+            this.userMessageBox.Show(
                 "WARNING! By loading a different budget with a Statement loaded, data loss may occur. There may be budget buckets used in the Statement that do not exist in the new loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
                 "Data Loss Warning!");
         }
@@ -240,7 +246,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
         {
             if (SplitTransactionController.SplinterBucket1 is null || SplitTransactionController.SplinterBucket2 is null)
             {
-                this.uiContext.UserPrompts.MessageBox.Show("Splinter buckets cannot be empty.", "Split Transaction Validation Error");
+                this.userMessageBox.Show("Splinter buckets cannot be empty.", "Split Transaction Validation Error");
                 return;
             }
 
@@ -281,9 +287,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
             return;
         }
 
-        var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
-            "Are you sure you want to delete this transaction?",
-            "Delete Transaction");
+        var confirm = this.userQuestionBox.Show("Are you sure you want to delete this transaction?", "Delete Transaction");
         if (confirm is not null && confirm.Value)
         {
             this.transactionService.RemoveTransaction(ViewModel.SelectedRow);

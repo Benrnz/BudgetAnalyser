@@ -8,6 +8,9 @@ using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Matching;
 
+/// <summary>
+///     The applied Rules Controller is responsible for applying rules to transactions and displaying delegating to the Rules Controller to display and edit the rules.
+/// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class AppliedRulesController : ControllerBase
 {
@@ -17,7 +20,11 @@ public class AppliedRulesController : ControllerBase
     private readonly TabTransactionsController tabTransactionsController;
     private bool doNotUseDirty;
 
-    public AppliedRulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
+    public AppliedRulesController(
+        IUiContext uiContext,
+        ITransactionRuleService ruleService,
+        IApplicationDatabaseFacade applicationDatabaseService,
+        RulesController rulesController)
         : base(uiContext.Messenger)
     {
         if (uiContext is null)
@@ -25,8 +32,7 @@ public class AppliedRulesController : ControllerBase
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        // TODO Direct controller references are not ideal.
-        RulesController = uiContext.Controller<RulesController>();
+        RulesController = rulesController ?? throw new ArgumentNullException(nameof(rulesController));
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.tabTransactionsController = uiContext.Controller<TabTransactionsController>();

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
@@ -12,7 +11,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Matching;
 
 /// <summary>
-///     The Controller for <see cref="EditRulesUserControl" /> .
+///     The Controller for <see cref="EditRulesUserControl" />. The Rules Controller is responsible for displaying, editing, and delegating down to the NewRulesController to create new rules.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class RulesController : ControllerBase, IShowableController
@@ -23,6 +22,7 @@ public class RulesController : ControllerBase, IShowableController
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly ITransactionRuleService ruleService;
+    private readonly IUserMessageBox userMessageBox;
     private bool doNotUseEditingRule;
     private bool doNotUseFlatListBoxVisibility;
     private bool doNotUseGroupByListBoxVisibility;
@@ -30,7 +30,7 @@ public class RulesController : ControllerBase, IShowableController
     private bool doNotUseShown;
     private string? doNotUseSortBy;
 
-    public RulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
+    public RulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService, NewRuleController newRuleController)
         : base(uiContext.Messenger)
     {
         if (uiContext is null)
@@ -41,10 +41,10 @@ public class RulesController : ControllerBase, IShowableController
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
+        this.userMessageBox = uiContext.UserPrompts.MessageBox;
         this.questionBox = uiContext.UserPrompts.YesNoBox;
 
-        // TODO Direct controller references are not ideal.
-        NewRuleController = uiContext.Controller<NewRuleController>();
+        NewRuleController = newRuleController ?? throw new ArgumentNullException(nameof(newRuleController));
 
         this.ruleService.Closed += OnClosedNotificationReceived;
         this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -191,7 +191,7 @@ public class RulesController : ControllerBase, IShowableController
 
         if (string.IsNullOrWhiteSpace(transaction.BudgetBucket?.Code))
         {
-            MessageBox.Show("Select a Bucket code first.");
+            this.userMessageBox.Show("Select a Bucket code first.");
             return;
         }
 

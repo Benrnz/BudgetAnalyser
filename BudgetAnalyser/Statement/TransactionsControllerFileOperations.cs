@@ -12,7 +12,6 @@ namespace BudgetAnalyser.Statement;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class TransactionsControllerFileOperations : ControllerBase
 {
-    // TODO Direct controller references are not ideal.
     private readonly LoadFileController loadFileController;
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionManagerService transactionService;
