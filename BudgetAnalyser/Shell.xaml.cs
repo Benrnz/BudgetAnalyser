@@ -49,8 +49,8 @@ public partial class ShellWindow
 
     private async void ShellWindow_OnClosing(object? sender, CancelEventArgs e)
     {
-        // While the application is closing using async tasks and the task factory is error prone.
-        // Must wait for the ShellClosing method to complete before continueing to close.
+        // While the application is closing using async tasks and the task factory is error-prone.
+        // Must wait for the ShellClosing method to complete before continuing to close.
         Controller.SaveApplicationState();
         if (Controller.HasUnsavedChanges)
         {

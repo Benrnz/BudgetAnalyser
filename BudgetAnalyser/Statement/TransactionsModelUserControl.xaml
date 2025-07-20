@@ -94,6 +94,7 @@
                         ToolTip="Merge in new Transactions. This will also save any unsaved changes before merging new transactions." />
             </StackPanel>
         </Grid>
+        <!-- Oil light & Navigation bar -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

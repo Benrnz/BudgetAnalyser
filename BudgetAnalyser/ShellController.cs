@@ -11,6 +11,7 @@ using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser;
 
@@ -19,15 +20,24 @@ public class ShellController : ControllerBase, IInitializableController
 {
     private readonly PersistenceOperations persistenceOperations;
     private readonly IPersistApplicationState statePersistence;
-    private readonly IUiContext uiContext;
+    private readonly IUserQuestionBoxYesNo userPromptToSave;
     private bool initialised;
     private Point originalWindowSize;
     private Point originalWindowTopLeft;
+    private readonly ILogger logger;
+    private readonly IInitializableController[] initializableControllers;
 
     public ShellController(
         IUiContext uiContext,
         IPersistApplicationState statePersistence,
-        PersistenceOperations persistenceOperations)
+        PersistenceOperations persistenceOperations,
+        MainMenuController mainMenuController,
+        TabDashboardController dashboardController,
+        TabTransactionsController transactionsController,
+        TabLedgerBookController ledgerBookController,
+        TabBudgetController budgetController,
+        TabReportsCatalogController reportsCatalogController,
+        RulesController rulesController)
         : base(uiContext.Messenger)
     {
         if (uiContext is null)
@@ -35,23 +45,25 @@ public class ShellController : ControllerBase, IInitializableController
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        if (statePersistence is null)
-        {
-            throw new ArgumentNullException(nameof(statePersistence));
-        }
+        this.logger = uiContext.Logger;
+        this.userPromptToSave = uiContext.UserPrompts.YesNoBox;
+        // TODO Ideally this list of InitializableControllers should be passed in from DI.
+        this.initializableControllers = uiContext.Controllers.OfType<IInitializableController>().ToArray();
+        this.statePersistence = statePersistence ?? throw new ArgumentNullException(nameof(statePersistence));
+        this.persistenceOperations = persistenceOperations ?? throw new ArgumentNullException(nameof(persistenceOperations));
+        MainMenuController = mainMenuController ?? throw new ArgumentNullException(nameof(mainMenuController));
+        TabDashboardController = dashboardController ?? throw new ArgumentNullException(nameof(dashboardController));
+        TabTransactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
+        TabLedgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
+        TabBudgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
+        TabReportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
 
-        if (persistenceOperations is null)
-        {
-            throw new ArgumentNullException(nameof(persistenceOperations));
-        }
+        // TODO Ideally should change so that Rules Controller is owned and managed by the TabTransactionsController.
+        RulesController = rulesController ?? throw new ArgumentNullException(nameof(rulesController));
 
         Messenger.Register<ShellController, ShellDialogRequestMessage>(this, static (r, m) => r.OnDialogRequested(m));
         Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
         Messenger.Register<ShellController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
-
-        this.statePersistence = statePersistence;
-        this.persistenceOperations = persistenceOperations;
-        this.uiContext = uiContext;
 
         LedgerBookTabDialog = new ShellDialogController(Messenger);
         DashboardTabDialog = new ShellDialogController(Messenger);
@@ -65,16 +77,15 @@ public class ShellController : ControllerBase, IInitializableController
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
     public ShellDialogController LedgerBookTabDialog { get; }
 
-    // TODO Direct controller references are not ideal.
-    public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
+    public MainMenuController MainMenuController { get; private set; }
     public ShellDialogController ReportsTabDialog { get; }
-    public RulesController RulesController => this.uiContext.Controller<RulesController>();
+    public RulesController RulesController { get; private set; }
 
-    public TabBudgetController TabBudgetController => this.uiContext.Controller<TabBudgetController>();
-    public TabDashboardController TabDashboardController => this.uiContext.Controller<TabDashboardController>();
-    public TabLedgerBookController TabLedgerBookController => this.uiContext.Controller<TabLedgerBookController>();
-    public TabReportsCatalogController TabReportsCatalogController => this.uiContext.Controller<TabReportsCatalogController>();
-    public TabTransactionsController TabTransactionsController => this.uiContext.Controller<TabTransactionsController>();
+    public TabBudgetController TabBudgetController { get; private set; }
+    public TabDashboardController TabDashboardController { get; private set; }
+    public TabLedgerBookController TabLedgerBookController { get; private set; }
+    public TabReportsCatalogController TabReportsCatalogController { get; private set; }
+    public TabTransactionsController TabTransactionsController { get; private set; }
     public ShellDialogController TransactionsTabDialog { get; }
     internal Point WindowSize { get; private set; }
     public string WindowTitle => "Budget Analyser";
@@ -87,7 +98,7 @@ public class ShellController : ControllerBase, IInitializableController
             return;
         }
 
-        this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
+        this.logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
         this.initialised = true;
         IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load().ToList();
 
@@ -99,19 +110,19 @@ public class ShellController : ControllerBase, IInitializableController
         // Create a distinct list of sequences.
         var sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
 
-        this.uiContext.Logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
-        this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
+        this.logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
+        Array.ForEach(this.initializableControllers, i => i.Initialize());
 
         // Send state load messages in order.
         foreach (var sequence in sequences)
         {
             var sequenceCopy = sequence;
             var models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
-            this.uiContext.Logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
+            this.logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
             Messenger.Send(new ApplicationStateLoadedMessage(models));
         }
 
-        this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise completing. Sending ApplicationStateLoadFinishedMessage. {DateTime.Now}");
+        this.logger.LogInfo(_ => $"ShellController Initialise completing. Sending ApplicationStateLoadFinishedMessage. {DateTime.Now}");
         Messenger.Send(new ApplicationStateLoadFinishedMessage());
     }
 
@@ -157,7 +168,7 @@ public class ShellController : ControllerBase, IInitializableController
     {
         if (this.persistenceOperations.HasUnsavedChanges)
         {
-            var result = this.uiContext.UserPrompts.YesNoBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
+            var result = this.userPromptToSave.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
             if (result is not null && result.Value)
             {
                 // Save must be run carefully because the application is exiting.  If run using the task factory with defaults the task will stall, as background tasks are waiting to be marshalled back to main context
