@@ -1,7 +1,7 @@
 ﻿namespace BudgetAnalyser.Engine.Statement.Data;
 
 /// <summary>
-///     A Dto to persist a single transaction from a statement.
+///     A Dto to persist a single transaction from a transactions-model.
 /// </summary>
 public record TransactionDto(
     string Account,

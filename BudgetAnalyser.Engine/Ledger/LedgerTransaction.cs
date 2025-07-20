@@ -4,8 +4,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Ledger;
 
 /// <summary>
-///     A transaction inside a Ledger Bucket. These may map to a bank transaction but not necessarily. (IE: the user can
-///     create their own <see cref="LedgerTransaction" />s).
+///     A transaction inside a Ledger Bucket. These may map to a bank transaction but not necessarily. (IE: the user can create their own <see cref="LedgerTransaction" />s).
 /// </summary>
 public abstract class LedgerTransaction
 {
@@ -26,16 +25,13 @@ public abstract class LedgerTransaction
     }
 
     /// <summary>
-    ///     Gets the amount.
-    ///     Credits are positive and debits are negative.
+    ///     Gets the amount. Credits are positive and debits are negative.
     /// </summary>
     public decimal Amount { get; internal set; }
 
     /// <summary>
-    ///     Gets or sets the automatic matching reference.
-    ///     This is allocated by the system so that when a real transactions is performed this reference number can be entered
-    ///     against the transaction.
-    ///     When the next reconciliation is done the real transaction will be matched using this reference number.
+    ///     Gets or sets the automatic matching reference. This is allocated by the system so that when a real transactions is performed this reference number can be entered
+    ///     against the transaction. When the next reconciliation is done the real transaction will be matched using this reference number.
     /// </summary>
     /// <value>
     ///     The automatic matching reference.
@@ -48,9 +44,8 @@ public abstract class LedgerTransaction
     public DateOnly? Date { get; internal set; }
 
     /// <summary>
-    ///     Gets or sets the Transaction ID. This is the same ID as the <see cref="TransactionSetModel" />'s
-    ///     <see cref="Transaction" />.
-    ///     This can be used to link back to the statement and show more transaction specific data.
+    ///     Gets or sets the Transaction ID. This is the same ID as the <see cref="TransactionSetModel" />'s  <see cref="Transaction" />.
+    ///     This can be used to link back to the transactions-model and show more transaction specific data.
     /// </summary>
     public Guid Id { get; internal set; }
 

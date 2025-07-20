@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services;
 
 /// <summary>
-///     A service to control the reconciliation process from the UI. A reconciliation is a process of closing off a period of time and importing statement transactions into the ledger book.
+///     A service to control the reconciliation process from the UI. A reconciliation is a process of closing off a period of time and importing transactions-model transactions into the ledger book.
 ///     This service primarily manages the creation of <see cref="LedgerEntryLine" /> and adding it to a <see cref="LedgerBook" />.
 /// </summary>
 public interface IReconciliationService
@@ -47,7 +47,7 @@ public interface IReconciliationService
     /// </param>
     /// <param name="budgetCollection">The collection of budgets. The Reconciliation engine classes will make a decision which budget to choose.</param>
     /// <param name="transactionSet">
-    ///     The currently loaded statement. Global filter will not be used to select transactions from the statement. Selection is made based on<paramref name="reconciliationDate" />
+    ///     The currently loaded transactions-model. Global filter will not be used to select transactions from the transactions-model. Selection is made based on<paramref name="reconciliationDate" />
     ///     .
     /// </param>
     /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>

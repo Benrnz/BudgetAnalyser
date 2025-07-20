@@ -41,10 +41,7 @@ internal class WestpacAccountStatementImporterV1 : IBankStatementImporter
     ///     Load the given file into a <see cref="TransactionSetModel" />.
     /// </summary>
     /// <param name="fileName">The file to load.</param>
-    /// <param name="account">
-    ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
-    ///     merging a cheque account export with visa account export, each can be classified using an account.
-    /// </param>
+    /// <param name="account">The account to classify these transactions.</param>
     public async Task<TransactionSetModel> LoadAsync(string fileName, Account account)
     {
         try

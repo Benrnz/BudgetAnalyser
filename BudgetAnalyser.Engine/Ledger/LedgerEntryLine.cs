@@ -6,11 +6,9 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger;
 
 /// <summary>
-///     This represents a reconciliation as at a date in the <see cref="LedgerBook" /> that crosses all
-///     <see cref="LedgerBucket" />s
-///     for the reconciliation date.  It shows the financial position at a point in time, the reconciliation date.
-///     An instance of this class contains many <see cref="LedgerEntry" />s show the financial position of that
-///     <see cref="LedgerBucket" /> as at the reconciliation date.
+///     This represents a reconciliation as at a date in the <see cref="LedgerBook" /> that crosses all <see cref="LedgerBucket" />s for the reconciliation date.  It shows the financial position at a
+///     point in time, the reconciliation date. An instance of this class contains many <see cref="LedgerEntry" />s show the financial position of that <see cref="LedgerBucket" /> as at the
+///     reconciliation date.
 /// </summary>
 public class LedgerEntryLine
 {
@@ -30,7 +28,6 @@ public class LedgerEntryLine
     ///     This constructor is used by persistence to create a new instance of <see cref="LedgerEntryLine" />.
     /// </summary>
     internal LedgerEntryLine(IEnumerable<BankBalanceAdjustmentTransaction> bankBalanceAdjustments, IEnumerable<BankBalance> bankBalances, IEnumerable<LedgerEntry> ledgerEntries)
-        : this()
     {
         BankBalanceAdjustments = bankBalanceAdjustments.ToList();
         BankBalances = bankBalances.ToList();
@@ -39,13 +36,11 @@ public class LedgerEntryLine
     }
 
     /// <summary>
-    ///     Constructs a new instance of <see cref="LedgerEntryLine" />.
-    ///     Use this constructor for adding a new line when reconciling once a month.
+    ///     Constructs a new instance of <see cref="LedgerEntryLine" />. Use this constructor for adding a new line when reconciling once a month.
     /// </summary>
     /// <param name="reconciliationDate">The date of the line</param>
     /// <param name="bankBalances">The bank balances for this date.</param>
-    internal LedgerEntryLine(DateOnly reconciliationDate, IEnumerable<BankBalance> bankBalances)
-        : this()
+    internal LedgerEntryLine(DateOnly reconciliationDate, IEnumerable<BankBalance> bankBalances) : this()
     {
         if (bankBalances is null)
         {
@@ -62,10 +57,8 @@ public class LedgerEntryLine
     }
 
     /// <summary>
-    ///     A collection of optional adjustments to the bank balance that can be added during a reconciliation.
-    ///     This is to compensate for transactions that may not have been reflected in the bank account at the time of the
-    ///     reconciliation.
-    ///     Most commonly this is a credit card payment once the user has ascertained how much surplus they have.
+    ///     A collection of optional adjustments to the bank balance that can be added during a reconciliation. This is to compensate for transactions that may not have been reflected in the bank
+    ///     account at the time of the reconciliation. Most commonly this is a credit card payment once the user has ascertained how much surplus they have.
     /// </summary>
     public IEnumerable<BankBalanceAdjustmentTransaction> BankBalanceAdjustments
     {
@@ -75,8 +68,7 @@ public class LedgerEntryLine
     }
 
     /// <summary>
-    ///     The bank balances of all the bank accounts being tracked by the ledger book.
-    ///     These balances do not include balance adjustments.
+    ///     The bank balances of all the bank accounts being tracked by the ledger book. These balances do not include balance adjustments.
     /// </summary>
     public IEnumerable<BankBalance> BankBalances
     {
@@ -86,18 +78,14 @@ public class LedgerEntryLine
     }
 
     /// <summary>
-    ///     The total surplus as at the given date.  This is the total surplus across all the bank accounts being tracked by
-    ///     the ledger book.
-    ///     This is the amount of money left over after funds have been allocated to all budget buckets being tracked by the
-    ///     ledger entries.
+    ///     The total surplus as at the given date.  This is the total surplus across all the bank accounts being tracked by the ledger book.
+    ///     This is the amount of money left over after funds have been allocated to all budget buckets being tracked by the ledger entries.
     /// </summary>
     public decimal CalculatedSurplus => LedgerBalance - Entries.Sum(e => e.Balance);
 
     /// <summary>
-    ///     This is the "as-at" date. It is the date of the fixed snapshot in time when this reconciliation line was created.
-    ///     It is not editable as it is used to match transactions from the statement.  Changing this date would mean all
-    ///     transactions
-    ///     now falling outside the date range would need to be removed, thus affected balances.
+    ///     This is the "as-at" date. It is the date of the fixed snapshot in time when this reconciliation line was created. It is not editable as it is used to match transactions from the
+    ///     transactions-model.  Changing this date would mean all transactions now falling outside the date range would need to be removed, thus affecting balances.
     /// </summary>
     public DateOnly Date { get; internal set; }
 
@@ -111,11 +99,8 @@ public class LedgerEntryLine
     }
 
     /// <summary>
-    ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
-    ///     loading from file.
-    ///     This variable is intentionally not persisted.
-    ///     AutoMapper always sets this to false.
-    ///     When a LedgerBook is saved the whole book is reloaded which will set this to false.
+    ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from loading from file. This variable is intentionally not persisted. DTO-Mapping
+    ///     always sets this to false. When a LedgerBook is saved the whole book is reloaded which will set this to false.
     /// </summary>
     internal bool IsNew { get; private set; }
 
@@ -130,8 +115,7 @@ public class LedgerEntryLine
     public string Remarks { get; internal set; } = string.Empty;
 
     /// <summary>
-    ///     The individual surplus balance in each bank account being tracked by the Ledger book.  These will add up to the
-    ///     <see cref="CalculatedSurplus" />.
+    ///     The individual surplus balance in each bank account being tracked by the Ledger book.  These will add up to the <see cref="CalculatedSurplus" />.
     /// </summary>
     public IEnumerable<BankBalance> SurplusBalances
     {

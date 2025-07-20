@@ -145,11 +145,10 @@ public class TransactionsControllerFileOperations : ControllerBase
     }
 
     /// <summary>
-    ///     Prompts the user for a filename and other required parameters to be able to merge the statement file.
+    ///     Prompts the user for a filename and other required parameters to be able to merge in a new bank statement export file.
     /// </summary>
     /// <returns>
-    ///     The user selected filename. All other required parameters are accessible from the
-    ///     <see cref="LoadFileController" />.
+    ///     The user selected filename. All other required parameters are accessible from the ef="LoadFileController" />.
     /// </returns>
     private async Task<string> GetFileNameFromUser()
     {
@@ -163,7 +162,7 @@ public class TransactionsControllerFileOperations : ControllerBase
     {
         if (ViewModel is { Dirty: false, TransactionsModel: null })
         {
-            // No need to notify of reset if the statement is already null. This happens during first load before the statement is loaded
+            // No need to notify of reset if the transactions-model is already null. This happens during first load before the transactions-model is loaded
             return;
         }
 

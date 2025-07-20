@@ -258,7 +258,7 @@ public class TabTransactionsController : ControllerBase, IShowableController
 
     private async void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
     {
-        // Budget ready message will always arrive before statement is loaded from application state.
+        // Budget ready message will always arrive before transactions-model is loaded from application state.
         if (!message.ActiveBudget.BudgetActive)
         {
             // Not the current budget for today so ignore this one.

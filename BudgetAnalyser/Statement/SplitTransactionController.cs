@@ -169,7 +169,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             return;
         }
 
-        // StatementController processes the request to add the two new transactions.
+        // Transactions-Model Controller processes the request to add the two new transactions.
         this.dialogCorrelationId = Guid.Empty;
         OriginalTransaction = null;
     }

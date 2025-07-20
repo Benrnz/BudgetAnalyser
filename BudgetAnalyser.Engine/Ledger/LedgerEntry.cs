@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Ledger;
 /// <summary>
 ///     A single entry on a <see cref="BudgetBucket" /> for a date (which comes from the <see cref="LedgerEntryLine" />). This instance can contain one or more <see cref="LedgerTransaction" />s
 ///     defining all movements for this <see cref="Budget.BudgetBucket" /> for this date. Possible transactions include budgeted 'saved up for expenses' credited into this
-///     <see cref="BudgetBucket" /> and all statement transactions that are debitted to this budget bucket ledger.
+///     <see cref="BudgetBucket" /> and all transactions-model transactions that are debitted to this budget bucket ledger.
 /// </summary>
 public class LedgerEntry
 {

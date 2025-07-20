@@ -72,7 +72,7 @@ public class ApplicationDatabase
     private string StoragePath => Path.GetDirectoryName(FileName) ?? ".\\";
 
     /// <summary>
-    ///     Gets the statement model storage key.
+    ///     Gets the transactions-model storage key.
     ///     This is used to locate and load the <see cref="TransactionSetModel" />.
     /// </summary>
     public string TransactionsSetModelStorageKey { get; internal set; } = string.Empty;

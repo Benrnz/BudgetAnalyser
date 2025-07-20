@@ -49,7 +49,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     }
 
     /// <summary>
-    ///     Gets the statement model.
+    ///     Gets the transactions-model.
     /// </summary>
     public TransactionSetModel? TransactionSetModel { get; private set; }
 

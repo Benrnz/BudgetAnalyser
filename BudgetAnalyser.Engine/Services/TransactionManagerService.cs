@@ -7,14 +7,14 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services;
 
 /// <summary>
-///     A service to manipulate and manage transactions and statements.
+///     A service to manipulate and manage transactions and the transactions-model.
 /// </summary>
 /// <seealso cref="ITransactionManagerService" />
 /// <seealso cref="ISupportsModelPersistence" />
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class TransactionManagerService : ITransactionManagerService, ISupportsModelPersistence
 {
-    private readonly ITransactionSetRepository _transactionSetRepository;
+    private readonly ITransactionSetRepository transactionSetRepository;
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly ILogger logger;
     private readonly IMonitorableDependencies monitorableDependencies;
@@ -33,7 +33,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     public TransactionManagerService(IBudgetBucketRepository bucketRepository, ITransactionSetRepository transactionSetRepository, ILogger logger, IMonitorableDependencies monitorableDependencies)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
-        this._transactionSetRepository = transactionSetRepository ?? throw new ArgumentNullException(nameof(transactionSetRepository));
+        this.transactionSetRepository = transactionSetRepository ?? throw new ArgumentNullException(nameof(transactionSetRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
     }
@@ -79,7 +79,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new ArgumentNullException(nameof(applicationDatabase));
         }
 
-        await this._transactionSetRepository.CreateNewAndSaveAsync(applicationDatabase.TransactionsSetModelStorageKey);
+        await this.transactionSetRepository.CreateNewAndSaveAsync(applicationDatabase.TransactionsSetModelStorageKey);
         await LoadAsync(applicationDatabase);
     }
 
@@ -94,7 +94,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         TransactionSetModel?.Dispose();
         try
         {
-            TransactionSetModel = await this._transactionSetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.TransactionsSetModelStorageKey), applicationDatabase.IsEncrypted);
+            TransactionSetModel = await this.transactionSetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.TransactionsSetModelStorageKey), applicationDatabase.IsEncrypted);
         }
         catch (TransactionsModelChecksumException ex)
         {
@@ -122,7 +122,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         }
 
         TransactionSetModel.StorageKey = applicationDatabase.FullPath(applicationDatabase.TransactionsSetModelStorageKey);
-        await this._transactionSetRepository.SaveAsync(TransactionSetModel, applicationDatabase.IsEncrypted);
+        await this.transactionSetRepository.SaveAsync(TransactionSetModel, applicationDatabase.IsEncrypted);
         this.monitorableDependencies.NotifyOfDependencyChange(TransactionSetModel);
         Saved?.Invoke(this, EventArgs.Empty);
     }
@@ -137,7 +137,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     {
         Validating?.Invoke(this, new ValidatingEventArgs());
 
-        // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
+        // In the case of the Transactions-Model all edits are validated and resolved during data edits. No need for an overall consistency check.
         return true;
     }
 
@@ -266,7 +266,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
 
-        var additionalModel = await this._transactionSetRepository.ImportBankStatementAsync(storageKey, account);
+        var additionalModel = await this.transactionSetRepository.ImportBankStatementAsync(storageKey, account);
         var combinedModel = TransactionSetModel.Merge(additionalModel);
         var minDate = additionalModel.AllTransactions.Min(t => t.Date);
         var maxDate = additionalModel.AllTransactions.Max(t => t.Date);
@@ -341,13 +341,13 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         if (TransactionSetModel is null || this.budgetCollection is null)
         {
-            // Can't check yet, statement hasn't been loaded yet. Everything is ok for now.
+            // Can't check yet, transactions-model hasn't been loaded yet. Everything is ok for now.
             return true;
         }
 
         if (this.budgetCollection.GetHashCode() == this.budgetHash)
         {
-            // This budget has already been checked against this statement. No need to repeatedly check the validity below, this is an expensive operation.
+            // This budget has already been checked against this transactions-model. No need to repeatedly check the validity below, this is an expensive operation.
             // Everything is ok.
             return true;
         }

@@ -4,14 +4,9 @@ using BudgetAnalyser.Engine.BankAccount;
 namespace BudgetAnalyser.Engine.Statement;
 
 /// <summary>
-///     The Statement File Manager is responsible for loading any kind of statement file, whether it be an existing budget
-///     analyser statement file or a downloaded bank statement export to merge or load. If the filename is already known
-///     it is loaded with no prompting, otherwise the user is prompted for a filename.
-///     It also is responsible for saving  any open statement file into a budget analyser statement file.
-///     To function it orchestrates across the  <see cref="IVersionedStatementModelRepository" /> and the
-///     <see cref="IBankStatementImporterRepository" />.
-///     This implementation is strictly not thread safe and should be single threaded only.  Don't allow multiple threads
-///     to use it at the same time.
+///     The Transactions-Model File Manager is responsible for loading and saving the BudgetAnalyser transactions-model file. It also is responsible for importing new bank statement exported files.
+///     To function it orchestrates across the  <see cref="IVersionedStatementModelRepository" /> and the <see cref="IBankStatementImporterRepository" />. This implementation is strictly not thread
+///     safe and should be single threaded only.  Don't allow multiple threads to use it at the same time.
 /// </summary>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC")]
 [AutoRegisterWithIoC(SingleInstance = true)]

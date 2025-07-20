@@ -141,11 +141,8 @@ internal class ReconciliationCreationManager(
     }
 
     /// <summary>
-    ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to
-    ///     transactions imported in the current month.
-    ///     If any transactions are found, the statement is then examined to see if the transactions appear, if they do not a
-    ///     new <see cref="ValidationWarningException" />
-    ///     is thrown; otherwise the method returns.
+    ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to transactions imported in the current month. If any transactions are found, the
+    ///     transactions-model is then examined to see if the transactions appear, if they do not a new <see cref="ValidationWarningException" /> is thrown; otherwise the method returns.
     /// </summary>
     public void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, TransactionSetModel transactionSet)
     {
@@ -197,7 +194,7 @@ internal class ReconciliationCreationManager(
                             ledgerTransaction.Id,
                             ledgerTransaction.AutoMatchingReference,
                             ledgerTransaction.Amount))
-                    { Source = "1" };
+                { Source = "1" };
             }
         }
     }

@@ -400,7 +400,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
     private void ValidateChecksumIntegrity(TransactionSetDto transactionSet)
     {
         var calcTxnCheckSum = CalculateTransactionCheckSum(transactionSet);
-        // Ignore a checksum of 1, this is used as a special case to bypass transaction checksum test. Useful for manual manipulation of the statement csv.
+        // Ignore a checksum of 1, this is used as a special case to bypass transaction checksum test. Useful for manual manipulation of the transactions-model csv.
         if (transactionSet.Checksum > 1 && transactionSet.Checksum != calcTxnCheckSum)
         {
             this.logger.LogError(l =>

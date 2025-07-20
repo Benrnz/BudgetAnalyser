@@ -3,7 +3,7 @@
 namespace BudgetAnalyser.Engine.Statement;
 
 /// <summary>
-///     The Statement Repository is responsible for loading <see cref="TransactionSetModel" />s and Bank Extracts for the purpose of merging with an existing <see cref="TransactionSetModel" />.
+///     The Transactions-Model Repository is responsible for loading <see cref="TransactionSetModel" /> and Bank Extracts for the purpose of merging with an existing <see cref="TransactionSetModel" />.
 ///     It also is responsible for saving <see cref="TransactionSetModel" />s. To function it orchestrates across the <see cref="IVersionedStatementModelRepository" /> and the
 ///     <see cref="IBankStatementImporterRepository" />.
 /// </summary>
@@ -16,10 +16,7 @@ public interface ITransactionSetRepository
     Task CreateNewAndSaveAsync(string storageKey);
 
     /// <summary>
-    ///     Imports a bank's transaction extract and returns it as a new <see cref="TransactionSetModel" />.  This can then be merged with another <see cref="TransactionSetModel" /> using the
-    ///     <see cref="TransactionSetModel.Merge(BudgeTransactionSetModel method.
-    /// 
-    /// 
+    ///     Imports a bank's transaction extract and returns it as a new <see cref="TransactionSetModel" />.
     /// </summary>
     /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
     /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given<paramref name="storageKey" /></exception>
@@ -32,7 +29,7 @@ public interface ITransactionSetRepository
     /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
     /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
     /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given <paramref name="storageKey" /></exception>
-    /// <exception cref="TransactionsModelChecksumException">Will be thrown if the statement model's internal checksum detects corrupt data indicating tampering.</exception>
+    /// <exception cref="TransactionsModelChecksumException">Will be thrown if the transactions-model internal checksum detects corrupt data indicating tampering.</exception>
     /// <exception cref="DataFormatException">Will be thrown if the format of the bank extract contains unexpected data indicating it is corrupt or an old file.</exception>
     Task<TransactionSetModel> LoadAsync(string storageKey, bool isEncrypted);
 

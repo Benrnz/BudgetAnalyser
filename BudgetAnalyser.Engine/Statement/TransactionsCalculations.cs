@@ -8,8 +8,7 @@ public static class TransactionsCalculations
     ///     Calculates the duration in months from the beginning of the period to the end.
     /// </summary>
     /// <param name="criteria">
-    ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
-    ///     statement dates.
+    ///     The criteria that is currently applied to the Transactions-Model. Pass in null to use first and lastctions-model dates.
     /// </param>
     /// <param name="transactions">The list of transactions to use to determine duration.</param>
     public static int CalculateDurationInFortnights(GlobalFilterCriteria? criteria, IEnumerable<Transaction> transactions)
@@ -22,8 +21,7 @@ public static class TransactionsCalculations
     ///     Calculates the duration in months from the beginning of the period to the end.
     /// </summary>
     /// <param name="criteria">
-    ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
-    ///     statement dates.
+    ///     The criteria that is currently applied to the Transactions-Model. Pass in null to use first and last transactions-model dates.
     /// </param>
     /// <param name="transactions">The list of transactions to use to determine duration.</param>
     public static int CalculateDurationInMonths(GlobalFilterCriteria? criteria, IEnumerable<Transaction> transactions)

@@ -3,7 +3,7 @@
 namespace BudgetAnalyser.Engine.Statement;
 
 /// <summary>
-///     An individual bank statement export file importer.
+///     An individual bank statement file importer.
 ///     One of these will be implemented for each export file format a bank uses.
 ///     For example ANZ exports a different file format for Credit Card accounts and Chequing and Saving Accounts. In this
 ///     case two implementations
@@ -16,9 +16,8 @@ public interface IBankStatementImporter
     /// </summary>
     /// <param name="fileName">The file to load.</param>
     /// <param name="account">
-    ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
-    ///     merging a cheque account
-    ///     export with visa account export, each can be classified using an account.
+    ///     The account to classify these transactions. This is useful when merging one transactions-model to another. For example,
+    ///     merging a cheque account with visa account export, each can be classified using an account.
     /// </param>
     Task<TransactionSetModel> LoadAsync(string fileName, Account account);
 

@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Widgets;
 
 /// <summary>
-///     Monitors the number of days since bank statement data was last imported.
+///     Monitors the number of days since transactions-model data was last imported.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
 [UsedImplicitly] // Instantiated by Widget Service/Repo

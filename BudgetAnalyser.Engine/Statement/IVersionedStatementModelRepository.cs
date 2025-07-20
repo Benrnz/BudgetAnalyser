@@ -32,7 +32,7 @@ public interface IVersionedStatementModelRepository
     ///     Saves the <see cref="TransactionSetModel" />.
     /// </summary>
     /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
-    /// <param name="model">The statement model to save.</param>
+    /// <param name="model">The transactions-model to save.</param>
     /// <exception cref="System.ArgumentNullException">Will be thrown if any arguments are null.</exception>
     /// <exception cref="TransactionsModelChecksumException">Will be thrown if serialisation resulted in data that doesn't match the checksum.</exception>
     Task SaveAsync(TransactionSetModel model, bool isEncrypted);
