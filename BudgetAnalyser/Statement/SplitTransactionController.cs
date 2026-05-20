@@ -13,8 +13,6 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private Guid dialogCorrelationId;
-    private string? doNotUseInvalidMessage;
-    private Transaction? doNotUseOriginalTransaction;
     private decimal doNotUseSplinterAmount1;
     private decimal doNotUseSplinterAmount2;
 
@@ -33,30 +31,30 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
 
     public string? InvalidMessage
     {
-        get => this.doNotUseInvalidMessage;
+        get;
         private set
         {
-            if (value == this.doNotUseInvalidMessage)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseInvalidMessage = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     public Transaction? OriginalTransaction
     {
-        get => this.doNotUseOriginalTransaction;
+        get;
         private set
         {
-            if (Equals(value, this.doNotUseOriginalTransaction))
+            if (Equals(value, field))
             {
                 return;
             }
 
-            this.doNotUseOriginalTransaction = value;
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(Valid));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
