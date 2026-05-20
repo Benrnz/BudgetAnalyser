@@ -110,10 +110,7 @@ public partial class StatementUserControl
             Controller.RegisterListener<ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
         }
 
-        if (Controller is not null)
-        {
-            Controller.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        }
+        Controller?.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
         if (Controller is null)
         {

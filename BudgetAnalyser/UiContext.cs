@@ -12,7 +12,6 @@ namespace BudgetAnalyser;
 public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger logger) : IUiContext
 {
     private readonly Dictionary<Type, Lazy<ControllerBase>> controllerDic = new();
-    private IReadOnlySet<ControllerBase> doNotUseControllers = new HashSet<ControllerBase>();
 
     public IEnumerable<IShowableController> ShowableControllers => Controllers.OfType<IShowableController>();
 
@@ -20,14 +19,14 @@ public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger lo
     {
         get
         {
-            if (this.doNotUseControllers.Any())
+            if (field.Any())
             {
-                return this.doNotUseControllers;
+                return field;
             }
 
-            return this.doNotUseControllers = this.controllerDic.Values.Select(c => c.Value).ToHashSet();
+            return field = this.controllerDic.Values.Select(c => c.Value).ToHashSet();
         }
-    }
+    } = new HashSet<ControllerBase>();
 
     public T Controller<T>() where T : ControllerBase
     {

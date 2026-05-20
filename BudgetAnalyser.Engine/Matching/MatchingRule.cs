@@ -17,15 +17,6 @@ namespace BudgetAnalyser.Engine.Matching;
 public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
 {
     private readonly IBudgetBucketRepository bucketRepository;
-    private decimal? doNotUseAmount;
-    private bool doNotUseAnd;
-    private string? doNotUseDescription;
-    private DateTime? doNotUseLastMatch;
-    private int doNotUseMatchCount;
-    private string? doNotUseReference1;
-    private string? doNotUseReference2;
-    private string? doNotUseReference3;
-    private string? doNotUseTransactionType;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="MatchingRule" /> class.
@@ -52,10 +43,10 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public decimal? Amount
     {
-        get => this.doNotUseAmount;
+        get;
         set
         {
-            this.doNotUseAmount = value == 0 ? null : value;
+            field = value == 0 ? null : value;
             OnPropertyChanged();
         }
     }
@@ -65,10 +56,10 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public bool And
     {
-        get => this.doNotUseAnd;
+        get;
         set
         {
-            this.doNotUseAnd = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -95,10 +86,10 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public string? Description
     {
-        get => this.doNotUseDescription;
+        get;
         set
         {
-            this.doNotUseDescription = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -113,10 +104,10 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public DateTime? LastMatch
     {
-        get => this.doNotUseLastMatch;
+        get;
         internal set
         {
-            this.doNotUseLastMatch = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -126,10 +117,10 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public int MatchCount
     {
-        get => this.doNotUseMatchCount;
+        get;
         internal set
         {
-            this.doNotUseMatchCount = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -140,11 +131,11 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public string? Reference1
     {
-        get => this.doNotUseReference1;
+        get;
 
         set
         {
-            this.doNotUseReference1 = value?.Trim();
+            field = value?.Trim();
             OnPropertyChanged();
         }
     }
@@ -155,11 +146,11 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public string? Reference2
     {
-        get => this.doNotUseReference2;
+        get;
 
         set
         {
-            this.doNotUseReference2 = value?.Trim();
+            field = value?.Trim();
             OnPropertyChanged();
         }
     }
@@ -170,11 +161,11 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public string? Reference3
     {
-        get => this.doNotUseReference3;
+        get;
 
         set
         {
-            this.doNotUseReference3 = value?.Trim();
+            field = value?.Trim();
             OnPropertyChanged();
         }
     }
@@ -190,10 +181,10 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     /// </summary>
     public string? TransactionType
     {
-        get => this.doNotUseTransactionType;
+        get;
         set
         {
-            this.doNotUseTransactionType = value;
+            field = value;
             OnPropertyChanged();
         }
     }

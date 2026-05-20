@@ -12,46 +12,41 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance;
 public class OverallPerformanceController(IMessenger messenger, IOverallPerformanceChartService chartService) : ControllerBase(messenger)
 {
     private readonly IOverallPerformanceChartService chartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
-    private string doNotUseDurationLabel = string.Empty;
-    private bool doNotUseExpenseFilter = true;
-    private bool doNotUseIncomeFilter;
-    private bool doNotUseShowValidationMessage;
-    private string doNotUseValidationMessage = string.Empty;
 
     public OverallPerformanceBudgetResult? Analysis { get; private set; }
 
     public string DurationLabel
     {
-        get => this.doNotUseDurationLabel;
+        get;
         private set
         {
-            if (value != this.doNotUseDurationLabel)
+            if (value != field)
             {
-                this.doNotUseDurationLabel = value;
+                field = value;
                 OnPropertyChanged();
             }
         }
-    }
+    } = string.Empty;
 
     public bool ExpenseFilter
     {
-        get => this.doNotUseExpenseFilter;
+        get;
 
         set
         {
-            this.doNotUseExpenseFilter = value;
+            field = value;
             OnPropertyChanged();
             RefreshCollection();
         }
-    }
+    } = true;
 
     public bool IncomeFilter
     {
-        get => this.doNotUseIncomeFilter;
+        get;
 
         set
         {
-            this.doNotUseIncomeFilter = value;
+            field = value;
             OnPropertyChanged();
             RefreshCollection();
         }
@@ -61,12 +56,12 @@ public class OverallPerformanceController(IMessenger messenger, IOverallPerforma
 
     public bool ShowValidationMessage
     {
-        get => this.doNotUseShowValidationMessage;
+        get;
         private set
         {
-            if (value != this.doNotUseShowValidationMessage)
+            if (value != field)
             {
-                this.doNotUseShowValidationMessage = value;
+                field = value;
                 OnPropertyChanged();
             }
         }
@@ -76,17 +71,17 @@ public class OverallPerformanceController(IMessenger messenger, IOverallPerforma
 
     public string ValidationMessage
     {
-        get => this.doNotUseValidationMessage;
+        get;
 
         private set
         {
-            if (value != this.doNotUseValidationMessage)
+            if (value != field)
             {
-                this.doNotUseValidationMessage = value;
+                field = value;
                 OnPropertyChanged();
             }
         }
-    }
+    } = string.Empty;
 
     public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
     {

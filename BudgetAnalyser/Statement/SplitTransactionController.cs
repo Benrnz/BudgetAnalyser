@@ -13,8 +13,6 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private Guid dialogCorrelationId;
-    private string? doNotUseInvalidMessage;
-    private Transaction? doNotUseOriginalTransaction;
     private decimal doNotUseSplinterAmount1;
     private decimal doNotUseSplinterAmount2;
 
@@ -33,30 +31,30 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
 
     public string? InvalidMessage
     {
-        get => this.doNotUseInvalidMessage;
+        get;
         private set
         {
-            if (value == this.doNotUseInvalidMessage)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseInvalidMessage = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     public Transaction? OriginalTransaction
     {
-        get => this.doNotUseOriginalTransaction;
+        get;
         private set
         {
-            if (Equals(value, this.doNotUseOriginalTransaction))
+            if (Equals(value, field))
             {
                 return;
             }
 
-            this.doNotUseOriginalTransaction = value;
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(Valid));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
@@ -74,7 +72,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             }
 
             this.doNotUseSplinterAmount1 = value;
-            this.doNotUseSplinterAmount2 = OriginalTransaction?.Amount ?? 0 - value;
+            this.doNotUseSplinterAmount2 = OriginalTransaction?.Amount ?? (0 - value);
             OnPropertyChanged();
             OnPropertyChanged(nameof(SplinterAmount2));
             OnPropertyChanged(nameof(TotalAmount));
@@ -94,7 +92,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             }
 
             this.doNotUseSplinterAmount2 = value;
-            this.doNotUseSplinterAmount1 = OriginalTransaction?.Amount ?? 0 - value;
+            this.doNotUseSplinterAmount1 = OriginalTransaction?.Amount ?? (0 - value);
             OnPropertyChanged(nameof(SplinterAmount1));
             OnPropertyChanged();
             OnPropertyChanged(nameof(TotalAmount));

@@ -17,6 +17,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Engine.XUnit3", "BudgetAnalyser.Engine.XUnit3\BudgetAnalyser.Engine.XUnit3.csproj", "{1B76E3B5-4CDF-47AD-9578-DD32B1955CD2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{53D5700D-77BB-4836-9DAF-CF79B4E87B37}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		AGENTS.md = AGENTS.md
+		README.md = README.md
+		BudgetAnalyser.sln.DotSettings = BudgetAnalyser.sln.DotSettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

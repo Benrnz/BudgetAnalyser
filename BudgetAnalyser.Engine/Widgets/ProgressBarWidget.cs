@@ -9,10 +9,6 @@ namespace BudgetAnalyser.Engine.Widgets;
 public abstract class ProgressBarWidget : Widget
 {
     private bool doNotUseEnabled;
-    private double doNotUseMaximum;
-    private double doNotUseMinimum;
-    private bool doNotUseProgressBarVisibility;
-    private double doNotUseValue;
 
     /// <summary>
     ///     Gets or sets a value indicating whether this <see cref="Widget" /> is enabled, showing data, and clickable.
@@ -47,15 +43,15 @@ public abstract class ProgressBarWidget : Widget
     /// </summary>
     public double Maximum
     {
-        get => this.doNotUseMaximum;
+        get;
         protected set
         {
-            if (Math.Abs(value - this.doNotUseMaximum) < 0.001)
+            if (Math.Abs(value - field) < 0.001)
             {
                 return;
             }
 
-            this.doNotUseMaximum = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -65,15 +61,15 @@ public abstract class ProgressBarWidget : Widget
     /// </summary>
     public double Minimum
     {
-        get => this.doNotUseMinimum;
+        get;
         protected set
         {
-            if (Math.Abs(value - this.doNotUseMinimum) < 0.001)
+            if (Math.Abs(value - field) < 0.001)
             {
                 return;
             }
 
-            this.doNotUseMinimum = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -84,10 +80,10 @@ public abstract class ProgressBarWidget : Widget
     [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for Data binding")]
     public bool ProgressBarVisibility
     {
-        get => this.doNotUseProgressBarVisibility;
+        get;
         protected set
         {
-            this.doNotUseProgressBarVisibility = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -97,15 +93,15 @@ public abstract class ProgressBarWidget : Widget
     /// </summary>
     public double Value
     {
-        get => this.doNotUseValue;
+        get;
         set
         {
-            if (Math.Abs(value - this.doNotUseValue) < 0.001)
+            if (Math.Abs(value - field) < 0.001)
             {
                 return;
             }
 
-            this.doNotUseValue = value;
+            field = value;
             OnPropertyChanged();
         }
     }

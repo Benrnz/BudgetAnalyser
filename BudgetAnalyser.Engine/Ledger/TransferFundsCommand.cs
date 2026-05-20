@@ -11,12 +11,6 @@ namespace BudgetAnalyser.Engine.Ledger;
 /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
 public class TransferFundsCommand : INotifyPropertyChanged
 {
-    private string doNotUseAutoMatchingReference = string.Empty;
-    private bool doNotUseBankTransferRequired;
-    private LedgerBucket? doNotUseFromLedger;
-    private string doNotUseNarrative = string.Empty;
-    private LedgerBucket? doNotUseToLedger;
-    private decimal doNotUseTransferAmount;
     private bool isValid;
 
     /// <summary>
@@ -32,18 +26,18 @@ public class TransferFundsCommand : INotifyPropertyChanged
     /// </value>
     public string AutoMatchingReference
     {
-        get => this.doNotUseAutoMatchingReference;
+        get;
         set
         {
-            if (value == this.doNotUseAutoMatchingReference)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseAutoMatchingReference = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = string.Empty;
 
     /// <summary>
     ///     Gets or sets a value indicating whether a bank transfer is required.
@@ -52,15 +46,15 @@ public class TransferFundsCommand : INotifyPropertyChanged
     /// </summary>
     public bool BankTransferRequired
     {
-        get => this.doNotUseBankTransferRequired;
+        get;
         set
         {
-            if (value == this.doNotUseBankTransferRequired)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseBankTransferRequired = value;
+            field = value;
             OnPropertyChanged();
             if (BankTransferRequired && AutoMatchingReference.IsNothing())
             {
@@ -74,15 +68,15 @@ public class TransferFundsCommand : INotifyPropertyChanged
     /// </summary>
     public LedgerBucket? FromLedger
     {
-        get => this.doNotUseFromLedger;
+        get;
         set
         {
-            if (Equals(value, this.doNotUseFromLedger))
+            if (Equals(value, field))
             {
                 return;
             }
 
-            this.doNotUseFromLedger = value;
+            field = value;
             OnPropertyChanged();
             SetBankTransferRequired();
             if (IsValid != this.isValid)
@@ -131,15 +125,15 @@ public class TransferFundsCommand : INotifyPropertyChanged
     /// </summary>
     public string Narrative
     {
-        get => this.doNotUseNarrative;
+        get;
         set
         {
-            if (value == this.doNotUseNarrative)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseNarrative = value;
+            field = value;
             OnPropertyChanged();
             if (IsValid != this.isValid)
             {
@@ -147,22 +141,22 @@ public class TransferFundsCommand : INotifyPropertyChanged
                 OnPropertyChanged(nameof(IsValid));
             }
         }
-    }
+    } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the destination ledger to transfer into.
     /// </summary>
     public LedgerBucket? ToLedger
     {
-        get => this.doNotUseToLedger;
+        get;
         set
         {
-            if (Equals(value, this.doNotUseToLedger))
+            if (Equals(value, field))
             {
                 return;
             }
 
-            this.doNotUseToLedger = value;
+            field = value;
             OnPropertyChanged();
             SetBankTransferRequired();
             if (IsValid != this.isValid)
@@ -178,15 +172,15 @@ public class TransferFundsCommand : INotifyPropertyChanged
     /// </summary>
     public decimal TransferAmount
     {
-        get => this.doNotUseTransferAmount;
+        get;
         set
         {
-            if (value == this.doNotUseTransferAmount)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseTransferAmount = value;
+            field = value;
             OnPropertyChanged();
             if (IsValid != this.isValid)
             {

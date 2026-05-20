@@ -8,7 +8,6 @@ namespace BudgetAnalyser.Engine;
 public class DebugLogger : ILogger
 {
     private readonly bool isDebuggerAttached;
-    private LogLevel logLevelFilter = LogLevel.Always;
 
     /// <summary>
     ///     A logging implementation that simply outputs to the Debug stream <see cref="System.Diagnostics.Debug" />. Only if the debugger is attached, otherwise does nothing.
@@ -20,18 +19,18 @@ public class DebugLogger : ILogger
 
     public LogLevel LogLevelFilter
     {
-        get => this.logLevelFilter;
+        get;
         set
         {
-            if (value == this.logLevelFilter)
+            if (value == field)
             {
                 return;
             }
 
-            LogAlways(l => l.Format("Logging Filter Level change from {0} to {1}.", this.logLevelFilter, value));
-            this.logLevelFilter = value;
+            LogAlways(l => l.Format("Logging Filter Level change from {0} to {1}.", field, value));
+            field = value;
         }
-    }
+    } = LogLevel.Always;
 
     /// <summary>
     ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always English.

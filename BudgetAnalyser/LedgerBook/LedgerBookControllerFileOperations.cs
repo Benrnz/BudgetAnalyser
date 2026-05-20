@@ -10,7 +10,6 @@ namespace BudgetAnalyser.LedgerBook;
 public class LedgerBookControllerFileOperations : INotifyPropertyChanged
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
-    private bool doNotUseDirty;
 
     public LedgerBookControllerFileOperations(IMessenger messenger, IApplicationDatabaseFacade applicationDatabaseService)
     {
@@ -24,10 +23,10 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
 
     internal bool Dirty
     {
-        get => this.doNotUseDirty;
+        get;
         set
         {
-            this.doNotUseDirty = value;
+            field = value;
             OnPropertyChanged();
             if (value)
             {

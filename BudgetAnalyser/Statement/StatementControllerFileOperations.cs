@@ -13,7 +13,6 @@ public class StatementControllerFileOperations : ControllerBase
     private readonly LoadFileController loadFileController;
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionManagerService transactionService;
-    private bool doNotUseLoadingData;
 
     public StatementControllerFileOperations(
         IUiContext uiContext,
@@ -40,15 +39,15 @@ public class StatementControllerFileOperations : ControllerBase
 
     public bool LoadingData
     {
-        get => this.doNotUseLoadingData;
+        get;
         private set
         {
-            if (this.doNotUseLoadingData == value)
+            if (field == value)
             {
                 return;
             }
 
-            this.doNotUseLoadingData = value;
+            field = value;
             OnPropertyChanged();
         }
     }

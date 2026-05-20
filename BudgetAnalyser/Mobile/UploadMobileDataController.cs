@@ -36,9 +36,6 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
     private readonly ILogger logger;
     private readonly IUserMessageBox messageBoxService;
     private readonly IMobileDataUploader uploader;
-    private string doNotUseAccessKeyId = string.Empty;
-    private string doNotUseAccessKeySecret = string.Empty;
-    private string doNotUseAmazonRegion = string.Empty;
     private UpdateMobileDataWidget? widget;
 
     public UploadMobileDataController(
@@ -65,50 +62,50 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
 
     public string AccessKeyId
     {
-        get => this.doNotUseAccessKeyId;
+        get;
         set
         {
-            if (value == this.doNotUseAccessKeyId)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseAccessKeyId = value;
+            field = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    }
+    } = string.Empty;
 
     public string AccessKeySecret
     {
-        get => this.doNotUseAccessKeySecret;
+        get;
         set
         {
-            if (value == this.doNotUseAccessKeySecret)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseAccessKeySecret = value;
+            field = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    }
+    } = string.Empty;
 
     public string AmazonRegion
     {
-        get => this.doNotUseAmazonRegion;
+        get;
         set
         {
-            if (value == this.doNotUseAmazonRegion)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseAmazonRegion = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = string.Empty;
 
     public IEnumerable<string> AmazonRegions => this.amazonRegions;
 
