@@ -9,9 +9,7 @@ namespace BudgetAnalyser.Engine;
 /// </summary>
 public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDataChangeDetection
 {
-    private DateOnly? doNotUseBeginDate;
     private bool doNotUseCleared;
-    private DateOnly? doNotUseEndDate;
 
     /// <summary>
     ///     Constructs a new instance of <see cref="GlobalFilterCriteria" />
@@ -31,15 +29,15 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
     /// </summary>
     public DateOnly? BeginDate
     {
-        get => this.doNotUseBeginDate;
+        get;
         set
         {
-            if (value == this.doNotUseBeginDate)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseBeginDate = value;
+            field = value;
             OnPropertyChanged();
             CheckConsistency();
         }
@@ -63,15 +61,15 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
     /// </summary>
     public DateOnly? EndDate
     {
-        get => this.doNotUseEndDate;
+        get;
         set
         {
-            if (value == this.doNotUseEndDate)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseEndDate = value;
+            field = value;
             OnPropertyChanged();
             CheckConsistency();
         }
@@ -84,9 +82,9 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
     {
         unchecked
         {
-            var hashCode = this.doNotUseBeginDate.GetHashCode();
+            var hashCode = BeginDate.GetHashCode();
             hashCode = (hashCode * 397) ^ this.doNotUseCleared.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.doNotUseEndDate.GetHashCode();
+            hashCode = (hashCode * 397) ^ EndDate.GetHashCode();
             return hashCode;
         }
     }

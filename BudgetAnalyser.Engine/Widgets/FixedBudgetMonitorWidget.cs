@@ -15,8 +15,6 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     private readonly string remainingBudgetToolTip;
     private readonly string standardStyle;
     private IBudgetBucketRepository? bucketRepository;
-    private string doNotUseBucketCode = NotSet;
-    private string doNotUseId = NotSet;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="FixedBudgetMonitorWidget" /> class.
@@ -39,14 +37,14 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     /// </summary>
     public string BucketCode
     {
-        get => this.doNotUseBucketCode;
+        get;
         set
         {
-            this.doNotUseBucketCode = value;
+            field = value;
             OnPropertyChanged();
             DetailedText = BucketCode;
         }
-    }
+    } = NotSet;
 
     /// <summary>
     ///     Gets the statement model.
@@ -54,24 +52,24 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     public StatementModel? Statement { get; private set; }
 
     /// <summary>
-    ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
-    /// </summary>
-    public string Id
-    {
-        get => this.doNotUseId;
-        set
-        {
-            this.doNotUseId = value;
-            OnPropertyChanged();
-            BucketCode = Id;
-        }
-    }
-
-    /// <summary>
     ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
     ///     the user interface.
     /// </summary>
     public Type WidgetType => GetType();
+
+    /// <summary>
+    ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
+    /// </summary>
+    public string Id
+    {
+        get;
+        set
+        {
+            field = value;
+            OnPropertyChanged();
+            BucketCode = Id;
+        }
+    } = NotSet;
 
     /// <summary>
     ///     Updates the widget with new input.

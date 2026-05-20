@@ -18,10 +18,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     private bool doNotUseDecryptFileMode;
     private bool doNotUseEncryptFileMode;
     private bool doNotUseEnterPasswordMode;
-    private bool doNotUseIsEncrypted;
-    private string doNotUseValidationMessage = string.Empty;
     private SecureString? password;
-    private bool passwordConfirmed;
 
     public EncryptFileController(IUiContext uiContext, IApplicationDatabaseFacade appDbService) : base(uiContext.Messenger)
     {
@@ -106,33 +103,33 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 
     public bool IsEncrypted
     {
-        get => this.doNotUseIsEncrypted;
+        get;
         private set
         {
-            if (value == this.doNotUseIsEncrypted)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseIsEncrypted = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     public string ValidationMessage
     {
-        get => this.doNotUseValidationMessage;
+        get;
         private set
         {
-            if (value == this.doNotUseValidationMessage)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseValidationMessage = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = string.Empty;
 
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
@@ -142,9 +139,13 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
     /// </summary>
-    public bool CanExecuteOkButton => EncryptFileMode
-        ? this.password is not null && this.password.Length > 4 && this.passwordConfirmed
-        : this.password is not null && this.password.Length > 4;
+    public bool CanExecuteOkButton
+    {
+        get => EncryptFileMode
+            ? this.password is not null && this.password.Length > 4 && field
+            : this.password is not null && this.password.Length > 4;
+        private set;
+    }
 
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
@@ -183,7 +184,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 
     internal void SetConfirmedPassword(bool confirmed)
     {
-        this.passwordConfirmed = confirmed;
+        CanExecuteOkButton = confirmed;
         CommandManager.InvalidateRequerySuggested(); // This stopped working here after the conversion to .NET8. The RelayCommand on ShellDialogController is not refreshed.
         Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
@@ -295,7 +296,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 
     private void ShowEncryptDecryptDialogCommon()
     {
-        this.passwordConfirmed = false;
+        CanExecuteOkButton = false;
         FileName = string.Empty;
 
         if (this.appDbService.HasUnsavedChanges)

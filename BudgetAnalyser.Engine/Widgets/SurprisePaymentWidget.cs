@@ -19,8 +19,6 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     private const int WeeklyPaymentsInOneNormalMonth = 4;
     private IBudgetBucketRepository? bucketRepository;
     private ILogger? diagLogger;
-    private WeeklyOrFortnightly doNotUseFrequency;
-    private string doNotUseId = NotSet;
     private GlobalFilterCriteria? filter;
     private int multiplier = 1;
 
@@ -49,10 +47,10 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     /// </summary>
     public WeeklyOrFortnightly Frequency
     {
-        get => this.doNotUseFrequency;
+        get;
         set
         {
-            this.doNotUseFrequency = value;
+            field = value;
             this.multiplier = Frequency == WeeklyOrFortnightly.Weekly ? 1 : 2;
         }
     }
@@ -73,13 +71,13 @@ public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     /// </summary>
     public string Id
     {
-        get => this.doNotUseId;
+        get;
         set
         {
-            this.doNotUseId = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = NotSet;
 
     /// <summary>
     ///     Updates the widget with new input.

@@ -60,11 +60,11 @@ public partial class StatementUserControl
                     var txn = (Transaction)t;
                     return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
                 }
-            : t =>
-            {
-                var txn = (Transaction)t;
-                return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
-            };
+                : t =>
+                {
+                    var txn = (Transaction)t;
+                    return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
+                };
         }
     }
 
@@ -110,10 +110,7 @@ public partial class StatementUserControl
             Controller.RegisterListener<ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
         }
 
-        if (Controller is not null)
-        {
-            Controller.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        }
+        Controller?.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
         if (Controller is null)
         {
