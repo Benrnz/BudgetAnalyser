@@ -11,6 +11,12 @@ public class StatementViewModel : ObservableRecipient
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly ITransactionManagerService transactionService;
+    private bool doNotUseDirty;
+    private string? doNotUseDuplicateSummary;
+    private ObservableCollection<Transaction> doNotUsePagedTransactions = new();
+    private Transaction? doNotUseSelectedRow;
+    private StatementModel? doNotUseStatement;
+    private List<Transaction> doNotUseTransactions = new();
 
     public StatementViewModel(IApplicationDatabaseFacade applicationDatabaseService, ITransactionManagerService transactionService)
     {
@@ -20,11 +26,11 @@ public class StatementViewModel : ObservableRecipient
 
     public bool Dirty
     {
-        get;
+        get => this.doNotUseDirty;
 
         set
         {
-            field = value;
+            this.doNotUseDirty = value;
             OnPropertyChanged();
             if (value)
             {
@@ -35,11 +41,11 @@ public class StatementViewModel : ObservableRecipient
 
     public string? DuplicateSummary
     {
-        get;
+        get => this.doNotUseDuplicateSummary;
 
         private set
         {
-            field = value;
+            this.doNotUseDuplicateSummary = value;
             OnPropertyChanged();
         }
     }
@@ -50,36 +56,36 @@ public class StatementViewModel : ObservableRecipient
 
     public ObservableCollection<Transaction> PagedTransactions
     {
-        get;
+        get => this.doNotUsePagedTransactions;
         internal set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUsePagedTransactions))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUsePagedTransactions = value;
             OnPropertyChanged();
         }
-    } = new();
+    }
 
     public Transaction? SelectedRow
     {
-        get;
+        get => this.doNotUseSelectedRow;
         set
         {
-            field = value;
+            this.doNotUseSelectedRow = value;
             OnPropertyChanged();
         }
     }
 
     public StatementModel? Statement
     {
-        get;
+        get => this.doNotUseStatement;
 
         set
         {
-            field = value;
+            this.doNotUseStatement = value;
 
             OnPropertyChanged();
             Transactions = this.transactionService.ClearBucketAndTextFilters();
@@ -96,13 +102,13 @@ public class StatementViewModel : ObservableRecipient
     // TODO Does this need to be an ObservableCollection?
     public List<Transaction> Transactions
     {
-        get;
+        get => this.doNotUseTransactions;
         internal set
         {
-            field = value;
+            this.doNotUseTransactions = value;
             OnPropertyChanged();
         }
-    } = new();
+    }
 
     public bool HasSelectedRow()
     {

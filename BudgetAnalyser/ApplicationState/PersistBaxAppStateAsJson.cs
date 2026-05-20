@@ -15,6 +15,8 @@ public class PersistBaxAppStateAsJson : IPersistApplicationState
     private const string FileName = "BudgetAnalyserAppState.json";
     private readonly IUserMessageBox userMessageBox;
 
+    private string doNotUseFullFileName = string.Empty;
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="PersistBaxAppStateAsJson" /> class.
     /// </summary>
@@ -32,14 +34,14 @@ public class PersistBaxAppStateAsJson : IPersistApplicationState
     {
         get
         {
-            if (string.IsNullOrEmpty(field))
+            if (string.IsNullOrEmpty(this.doNotUseFullFileName))
             {
-                field = DefaultFileName();
+                this.doNotUseFullFileName = DefaultFileName();
             }
 
-            return field;
+            return this.doNotUseFullFileName;
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Load the user state from the Json file on the local disk.
