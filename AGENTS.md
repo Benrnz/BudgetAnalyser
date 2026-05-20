@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Budget Analyser** is a 2-tier .NET 9.0 WPF desktop budgeting application with clean engine/UI separation. All business logic is in the **Engine** assembly; the UI is **WPF** using MVVM. Data is persisted as JSON locally; no databases used.
+**Budget Analyser** is a 2-tier .NET 10.0 WPF desktop budgeting application with clean engine/UI separation. All business logic is in the **Engine** assembly; the UI is **WPF** using MVVM. Data is persisted as JSON locally; no databases used.
 
 ### Key Architecture Files
 - `CompositionRoot.cs` - IoC setup (Autofac + MVVM CommunityToolkit)

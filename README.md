@@ -20,8 +20,8 @@ Features
  - Analyse any period of time to find averages and improve your monthly budget.
  - Plan for long term goals and ad-hoc/annual bills with "saved-up-for" budget categories.
  - Figure out how much surplus you have with actual bank statement data while still ensuring you don't spend money set aside for longer term goals/bills.
-  
- 
+
+
 Overview
 --------
 It's a simple 2 tier application at the moment with all business logic residing in the engine assembly. The UI is currently WPF, but the intention is to create others as well. All data is saved only locally, no data is uploaded anywhere. This project has a fundamental goal not to upload any user's personal budgeting or bank statement data online to protect privacy by removing the risk.
@@ -29,11 +29,15 @@ No databases are currently used, data is saved in JSON format.  It is the user's
 
 Security
 --------
-This application does not upload any information provided to the Internet.  All provided data is saved locally to disk.  The user is responsible for securing the saved file data, if necessary.  This application is intentionally written as a client-side only Windows application for maximum security. Because no information is shared, no information can be leaked. Optionally the user can use a companion mobile app and to support this summarised data must be uploaded to an S3 bucket. 
+This application does not upload any information provided to the Internet.  All provided data is saved locally to disk.  The user is responsible for securing the saved file data, if necessary.  This application is intentionally written as a client-side only Windows application for maximum security. Because no information is shared, no information can be leaked. Optionally the user can use a companion mobile app and to support this summarised data must be uploaded to an S3 bucket.
 
 Getting Started
 ---------------
 No binaries are currently uploaded, so you will need to build the solution yourself.
+
+**Requirements:**
+* .NET 10.0 SDK or runtime
+* Windows OS (due to WPF dependency)
 
 Dependencies:
 * Rees.UserInteraction.Contracts - this is a Nuget package and stable releases are available on Nuget.org. Pre-release versions are available on Myget.org (https://www.myget.org/F/benrnz/api/v2/package/Rees.UserInteraction.Contracts).  See https://github.com/Benrnz/ReesUserInteraction for more information about this library. The BudgetAnalyser uses this library, and may reference pre-release versions from time to time. If you experience difficulties building the code, please add MyGet.Org as a Nuget package source (https://www.myget.org/F/benrnz).
@@ -44,8 +48,8 @@ Terminology
 * _Bucket_
 
 A Bucket is a metaphor used to describe a container that contains a set amount of funds ready to be spent.  When the bucket is empty, there is no more money to spend.  Buckets cannot have an overdrawn (negative) balance. Any overspending is automatically taken from the Surplus bucket, if there's no Surplus remaining, get ready to bounce.
-There are a few different kinds of buckets: A Spent-Monthly-Bucket is a bucket that will automatically empty any remaining funds into Surplus at the end of the month, if all funds are not spent. A Saved-Up-For-Bucket will not empty itself at the end of the month, so if all funds are not spent the bucket will get bigger over time. This is useful for expenses that are paid annually or ad-hoc, ie not paid on a regular date each month. 
-When setting up a Budget you create Buckets and set a monthly amount you wish to allocate from your salary.  
+There are a few different kinds of buckets: A Spent-Monthly-Bucket is a bucket that will automatically empty any remaining funds into Surplus at the end of the month, if all funds are not spent. A Saved-Up-For-Bucket will not empty itself at the end of the month, so if all funds are not spent the bucket will get bigger over time. This is useful for expenses that are paid annually or ad-hoc, ie not paid on a regular date each month.
+When setting up a Budget you create Buckets and set a monthly amount you wish to allocate from your salary.
 
 The Dashboard
 -------------

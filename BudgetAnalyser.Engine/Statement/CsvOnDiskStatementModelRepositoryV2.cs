@@ -299,7 +299,8 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         while (charsRead > 0)
         {
             chunksRead++;
-            var finishedReading = streamReader.EndOfStream;
+            // If charsRead < blockBuffer.Length, we've reached end of stream
+            var finishedReading = charsRead < blockBuffer.Length;
             var lineBeginIndex = 0;
 
             // Find next end of line char.
