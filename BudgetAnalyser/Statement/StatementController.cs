@@ -19,13 +19,6 @@ public class StatementController : ControllerBase, IShowableController
 {
     private readonly ITransactionManagerService transactionService;
     private readonly IUiContext uiContext;
-    private string? doNotUseBucketFilter;
-    private bool doNotUseCanNavigateNext;
-    private bool doNotUseCanNavigatePrevious;
-    private int doNotUseCurrentPage = 1;
-    private int doNotUsePageSize = 10;
-    private bool doNotUseShown;
-    private string? doNotUseTextFilter;
     private Guid shellDialogCorrelationId;
 
     public StatementController(
@@ -58,16 +51,16 @@ public class StatementController : ControllerBase, IShowableController
     /// </summary>
     public string? BucketFilter
     {
-        get => this.doNotUseBucketFilter;
+        get;
 
         set
         {
-            if (Equals(value, this.doNotUseBucketFilter))
+            if (Equals(value, field))
             {
                 return;
             }
 
-            this.doNotUseBucketFilter = value;
+            field = value;
             OnPropertyChanged();
             ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
             ViewModel.TriggerRefreshTotalsRow();
@@ -77,44 +70,44 @@ public class StatementController : ControllerBase, IShowableController
 
     public bool CanNavigateNext
     {
-        get => this.doNotUseCanNavigateNext;
+        get;
         private set
         {
-            if (value == this.doNotUseCanNavigateNext)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseCanNavigateNext = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     public bool CanNavigatePrevious
     {
-        get => this.doNotUseCanNavigatePrevious;
+        get;
         private set
         {
-            if (value == this.doNotUseCanNavigatePrevious)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseCanNavigatePrevious = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     public int CurrentPage
     {
-        get => this.doNotUseCurrentPage;
+        get;
         set
         {
-            this.doNotUseCurrentPage = value;
+            field = value;
             UpdatePagedTransactions();
             OnPropertyChanged();
         }
-    }
+    } = 1;
 
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
     internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
@@ -125,10 +118,10 @@ public class StatementController : ControllerBase, IShowableController
 
     public int PageSize
     {
-        get => this.doNotUsePageSize;
+        get;
         set
         {
-            if (value == this.doNotUsePageSize)
+            if (value == field)
             {
                 return;
             }
@@ -138,11 +131,11 @@ public class StatementController : ControllerBase, IShowableController
                 value = 10;
             }
 
-            this.doNotUsePageSize = value;
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(TotalPages));
         }
-    }
+    } = 10;
 
     public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
@@ -150,15 +143,15 @@ public class StatementController : ControllerBase, IShowableController
 
     public string? TextFilter
     {
-        get => this.doNotUseTextFilter;
+        get;
         set
         {
-            if (Equals(value, this.doNotUseTextFilter))
+            if (Equals(value, field))
             {
                 return;
             }
 
-            this.doNotUseTextFilter = string.IsNullOrEmpty(value) ? null : value;
+            field = string.IsNullOrEmpty(value) ? null : value;
             OnPropertyChanged();
             ViewModel.Transactions = this.transactionService.FilterBySearchText(TextFilter);
             ViewModel.TriggerRefreshTotalsRow();
@@ -172,15 +165,15 @@ public class StatementController : ControllerBase, IShowableController
 
     public bool Shown
     {
-        get => this.doNotUseShown;
+        get;
         set
         {
-            if (value == this.doNotUseShown)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseShown = value;
+            field = value;
             OnPropertyChanged();
         }
     }

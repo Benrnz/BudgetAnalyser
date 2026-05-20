@@ -28,8 +28,6 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     // Track whether Dispose has been called.
     private bool disposed;
     private List<Transaction> doNotUseAllTransactions = new();
-    private int doNotUseDurationInMonths;
-    private IEnumerable<Transaction> doNotUseTransactions = new List<Transaction>();
     private IEnumerable<IGrouping<int, Transaction>>? duplicates;
     private int fullDuration;
 
@@ -69,11 +67,11 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     /// </summary>
     public int DurationInMonths
     {
-        get => this.doNotUseDurationInMonths;
+        get;
 
         private set
         {
-            this.doNotUseDurationInMonths = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -98,15 +96,15 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
     /// </summary>
     public IEnumerable<Transaction> Transactions
     {
-        get => this.doNotUseTransactions;
+        get;
 
         private set
         {
-            this.doNotUseTransactions = value;
+            field = value;
             this.changeHash = Guid.NewGuid();
             OnPropertyChanged();
         }
-    }
+    } = new List<Transaction>();
 
     /// <summary>
     ///     Calculates a hash that represents a data state for the current instance.  When the data state changes the hash will change.
@@ -322,14 +320,13 @@ public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDis
                 .AsParallel()
                 .ToList();
         this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
-        query.ForEach(
-            duplicate =>
+        query.ForEach(duplicate =>
+        {
+            foreach (var txn in duplicate)
             {
-                foreach (var txn in duplicate)
-                {
-                    txn.IsSuspectedDuplicate = true;
-                }
-            });
+                txn.IsSuspectedDuplicate = true;
+            }
+        });
         this.duplicates = query;
         return this.duplicates;
     }

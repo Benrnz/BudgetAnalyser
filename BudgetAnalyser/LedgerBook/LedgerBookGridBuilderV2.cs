@@ -114,9 +114,9 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         {
             panel.Children.Add(textBlock);
         }
-        else if (decorator is not null)
+        else
         {
-            decorator.Child = textBlock;
+            decorator?.Child = textBlock;
         }
 
         return textBlock;

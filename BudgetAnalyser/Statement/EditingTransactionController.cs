@@ -11,8 +11,6 @@ namespace BudgetAnalyser.Statement;
 public class EditingTransactionController : ControllerBase
 {
     private readonly IBudgetBucketRepository bucketRepo;
-    private IEnumerable<BudgetBucket> doNotUseBuckets = Array.Empty<BudgetBucket>();
-    private Transaction? doNotUseTransaction;
     private BudgetBucket? originalBucket;
 
     public EditingTransactionController(IUiContext uiContext, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
@@ -28,13 +26,13 @@ public class EditingTransactionController : ControllerBase
     public IEnumerable<BudgetBucket> Buckets
     {
         [UsedImplicitly]
-        get => this.doNotUseBuckets;
+        get;
         private set
         {
-            this.doNotUseBuckets = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = Array.Empty<BudgetBucket>();
 
     public bool HasChanged => Transaction is not null && (OriginalHash != Transaction.GetEqualityHashCode() || this.originalBucket != Transaction.BudgetBucket);
 
@@ -42,12 +40,12 @@ public class EditingTransactionController : ControllerBase
 
     public Transaction? Transaction
     {
-        get => this.doNotUseTransaction;
+        get;
         set
         {
             OriginalHash = value?.GetEqualityHashCode() ?? 0;
 
-            this.doNotUseTransaction = value;
+            field = value;
         }
     }
 

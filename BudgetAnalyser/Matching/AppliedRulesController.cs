@@ -15,7 +15,6 @@ public class AppliedRulesController : ControllerBase
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionRuleService ruleService;
     private readonly StatementController statementController;
-    private bool doNotUseDirty;
 
     public AppliedRulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
         : base(uiContext.Messenger)
@@ -41,11 +40,11 @@ public class AppliedRulesController : ControllerBase
 
     public bool Dirty
     {
-        get => this.doNotUseDirty;
+        get;
 
         set
         {
-            this.doNotUseDirty = value;
+            field = value;
             if (Dirty)
             {
                 this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);

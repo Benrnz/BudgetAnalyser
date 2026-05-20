@@ -17,15 +17,8 @@ namespace BudgetAnalyser.Engine.Statement;
     Justification = "IComparable is implemented for sorting only. One transactions is not considered < or > than another. Also Equals is not overriden.")]
 public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Transaction>
 {
+    // ReSharper disable once ReplaceWithFieldKeyword - Required field for unit testing private accessor
     private BudgetBucket? budgetBucket;
-    private Account doNotUseAccount = new ChequeAccount(string.Empty);
-    private decimal doNotUseAmount;
-    private DateOnly doNotUseDate;
-    private string? doNotUseDescription;
-    private string? doNotUseReference1 = string.Empty;
-    private string? doNotUseReference2 = string.Empty;
-    private string? doNotUseReference3 = string.Empty;
-    private TransactionType doNotUseTransactionType = NamedTransaction.Empty;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="Transaction" /> class.
@@ -45,23 +38,23 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </summary>
     public Account Account
     {
-        get => this.doNotUseAccount;
+        get;
         set
         {
-            this.doNotUseAccount = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = new ChequeAccount(string.Empty);
 
     /// <summary>
     ///     Gets or sets the transaction amount.
     /// </summary>
     public decimal Amount
     {
-        get => this.doNotUseAmount;
+        get;
         set
         {
-            this.doNotUseAmount = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -94,10 +87,10 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </summary>
     public DateOnly Date
     {
-        get => this.doNotUseDate;
+        get;
         set
         {
-            this.doNotUseDate = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -107,10 +100,10 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </summary>
     public string? Description
     {
-        get => this.doNotUseDescription;
+        get;
         set
         {
-            this.doNotUseDescription = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -135,52 +128,52 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     public string? Reference1
     {
         // Please make this non-nullable defaulting to string.empty
-        get => this.doNotUseReference1;
+        get;
         set
         {
-            this.doNotUseReference1 = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the transaction reference2.
     /// </summary>
     public string? Reference2
     {
-        get => this.doNotUseReference2;
+        get;
         set
         {
-            this.doNotUseReference2 = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the transaction reference3.
     /// </summary>
     public string? Reference3
     {
-        get => this.doNotUseReference3;
+        get;
         set
         {
-            this.doNotUseReference3 = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the type of the transaction. This is a type classification provided by the bank.
     /// </summary>
     public TransactionType TransactionType
     {
-        get => this.doNotUseTransactionType;
+        get;
         set
         {
-            this.doNotUseTransactionType = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = NamedTransaction.Empty;
 
     /// <summary>
     ///     Clones this transaction into a new instance.

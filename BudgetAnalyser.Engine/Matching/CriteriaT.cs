@@ -13,9 +13,6 @@ namespace BudgetAnalyser.Engine.Matching;
 /// </typeparam>
 public abstract class Criteria<T> : INotifyPropertyChanged
 {
-    private bool doNotUseApplicable;
-    private T? doNotUseValue;
-
     /// <summary>
     ///     Occurs when a property value changes.
     /// </summary>
@@ -29,15 +26,15 @@ public abstract class Criteria<T> : INotifyPropertyChanged
     /// </value>
     public bool Applicable
     {
-        get => this.doNotUseApplicable;
+        get;
         set
         {
-            if (value == this.doNotUseApplicable)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseApplicable = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -47,15 +44,15 @@ public abstract class Criteria<T> : INotifyPropertyChanged
     /// </summary>
     public T? Value
     {
-        get => this.doNotUseValue;
+        get;
         set
         {
-            if (Equals(value, this.doNotUseValue))
+            if (Equals(value, field))
             {
                 return;
             }
 
-            this.doNotUseValue = value;
+            field = value;
             OnPropertyChanged();
         }
     }
