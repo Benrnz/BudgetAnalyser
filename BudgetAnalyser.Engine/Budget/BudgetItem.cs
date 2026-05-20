@@ -13,6 +13,9 @@ namespace BudgetAnalyser.Engine.Budget;
 [DebuggerDisplay("{GetType().Name} {Bucket.Code} ${Amount}")]
 public abstract class BudgetItem : INotifyPropertyChanged
 {
+    private decimal doNotUseAmount;
+    private BudgetBucket? doNotUseBucket;
+
     /// <summary>
     ///     Occurs when a property value changes.
     /// </summary>
@@ -23,16 +26,16 @@ public abstract class BudgetItem : INotifyPropertyChanged
     /// </summary>
     public decimal Amount
     {
-        get;
+        get => this.doNotUseAmount;
 
         set
         {
-            if (value == field)
+            if (value == this.doNotUseAmount)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseAmount = value;
             OnPropertyChanged();
         }
     }
@@ -42,18 +45,24 @@ public abstract class BudgetItem : INotifyPropertyChanged
     /// </summary>
     public BudgetBucket? Bucket
     {
-        get;
+        get => this.doNotUseBucket;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseBucket)
             {
                 return;
             }
 
-            field?.PropertyChanged -= OnBucketPropertyChanged;
+            if (this.doNotUseBucket is not null)
+            {
+                this.doNotUseBucket.PropertyChanged -= OnBucketPropertyChanged;
+            }
 
-            field = value;
-            field?.PropertyChanged += OnBucketPropertyChanged;
+            this.doNotUseBucket = value;
+            if (this.doNotUseBucket is not null)
+            {
+                this.doNotUseBucket.PropertyChanged += OnBucketPropertyChanged;
+            }
 
             OnPropertyChanged();
         }

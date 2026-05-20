@@ -17,6 +17,11 @@ namespace BudgetAnalyser;
 public class MainMenuController : ControllerBase, IInitializableController
 {
     private readonly IUiContext uiContext;
+    private bool doNotUseBudgetToggle;
+    private bool doNotUseDashboardToggle;
+    private bool doNotUseLedgerBookToggle;
+    private bool doNotUseReportsToggle;
+    private bool doNotUseTransactionsToggle;
 
     public MainMenuController(
         IUiContext uiContext,
@@ -48,10 +53,10 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     public bool BudgetToggle
     {
-        get;
+        get => this.doNotUseBudgetToggle;
         set
         {
-            field = value;
+            this.doNotUseBudgetToggle = value;
             OnPropertyChanged();
         }
     }
@@ -60,10 +65,10 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     public bool DashboardToggle
     {
-        get;
+        get => this.doNotUseDashboardToggle;
         set
         {
-            field = value;
+            this.doNotUseDashboardToggle = value;
             OnPropertyChanged();
         }
     }
@@ -73,10 +78,10 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     public bool LedgerBookToggle
     {
-        get;
+        get => this.doNotUseLedgerBookToggle;
         set
         {
-            field = value;
+            this.doNotUseLedgerBookToggle = value;
             OnPropertyChanged();
         }
     }
@@ -86,10 +91,10 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     public bool ReportsToggle
     {
-        get;
+        get => this.doNotUseReportsToggle;
         set
         {
-            field = value;
+            this.doNotUseReportsToggle = value;
             OnPropertyChanged();
         }
     }
@@ -99,10 +104,10 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     public bool TransactionsToggle
     {
-        get;
+        get => this.doNotUseTransactionsToggle;
         set
         {
-            field = value;
+            this.doNotUseTransactionsToggle = value;
             OnPropertyChanged();
         }
     }

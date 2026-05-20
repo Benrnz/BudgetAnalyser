@@ -16,6 +16,9 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
+    private WeeklyOrFortnightly doNotUseFrequency;
+    private DateOnly doNotUsePaymentStartDate;
+    private BudgetBucket? doNotUseSelected;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public CreateNewSurprisePaymentMonitorController(IUiContext uiContext, IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
@@ -40,25 +43,25 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
 
     public WeeklyOrFortnightly Frequency
     {
-        get;
+        get => this.doNotUseFrequency;
         set
         {
-            field = value;
+            this.doNotUseFrequency = value;
             OnPropertyChanged();
         }
     }
 
     public DateOnly PaymentStartDate
     {
-        get;
+        get => this.doNotUsePaymentStartDate;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUsePaymentStartDate))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUsePaymentStartDate = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
@@ -66,16 +69,16 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
 
     public BudgetBucket? Selected
     {
-        get;
+        get => this.doNotUseSelected;
         [UsedImplicitly]
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseSelected))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseSelected = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }

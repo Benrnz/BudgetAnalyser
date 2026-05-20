@@ -7,6 +7,13 @@ namespace BudgetAnalyser.Engine.Matching;
 /// </summary>
 public class SimilarMatchedRule : MatchingRule
 {
+    private bool doNotUseAmountMatched;
+    private bool doNotUseDescriptionMatched;
+    private bool doNotUseReference1Matched;
+    private bool doNotUseReference2Matched;
+    private bool doNotUseReference3Matched;
+    private bool doNotUseTransactionTypeMatched;
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="SimilarMatchedRule" /> class.
     /// </summary>
@@ -37,15 +44,15 @@ public class SimilarMatchedRule : MatchingRule
     /// </summary>
     public bool AmountMatched
     {
-        get;
+        get => this.doNotUseAmountMatched;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseAmountMatched)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseAmountMatched = value;
             OnPropertyChanged();
         }
     }
@@ -55,15 +62,15 @@ public class SimilarMatchedRule : MatchingRule
     /// </summary>
     public bool DescriptionMatched
     {
-        get;
+        get => this.doNotUseDescriptionMatched;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseDescriptionMatched)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseDescriptionMatched = value;
             OnPropertyChanged();
         }
     }
@@ -73,15 +80,15 @@ public class SimilarMatchedRule : MatchingRule
     /// </summary>
     public bool Reference1Matched
     {
-        get;
+        get => this.doNotUseReference1Matched;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseReference1Matched)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseReference1Matched = value;
             OnPropertyChanged();
         }
     }
@@ -91,15 +98,15 @@ public class SimilarMatchedRule : MatchingRule
     /// </summary>
     public bool Reference2Matched
     {
-        get;
+        get => this.doNotUseReference2Matched;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseReference2Matched)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseReference2Matched = value;
             OnPropertyChanged();
         }
     }
@@ -109,15 +116,15 @@ public class SimilarMatchedRule : MatchingRule
     /// </summary>
     public bool Reference3Matched
     {
-        get;
+        get => this.doNotUseReference3Matched;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseReference3Matched)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseReference3Matched = value;
             OnPropertyChanged();
         }
     }
@@ -137,15 +144,15 @@ public class SimilarMatchedRule : MatchingRule
     /// </summary>
     public bool TransactionTypeMatched
     {
-        get;
+        get => this.doNotUseTransactionTypeMatched;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseTransactionTypeMatched)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseTransactionTypeMatched = value;
             OnPropertyChanged();
         }
     }

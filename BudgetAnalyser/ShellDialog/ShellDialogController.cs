@@ -9,6 +9,13 @@ namespace BudgetAnalyser.ShellDialog;
 public class ShellDialogController : ControllerBase
 {
     private readonly RelayCommand<ShellDialogButton> dialogRelayCommand;
+    private bool doNotUseCancelButtonVisible;
+    private object? doNotUseContent;
+    private ShellDialogType doNotUseDialogType;
+    private bool doNotUseHelpButtonVisible;
+    private bool doNotUseOkButtonVisible;
+    private bool doNotUseSaveButtonVisible;
+    private string doNotUseTitle = string.Empty;
 
     public ShellDialogController(IMessenger messenger) : base(messenger)
     {
@@ -22,10 +29,10 @@ public class ShellDialogController : ControllerBase
 
     public bool CancelButtonVisible
     {
-        get;
+        get => this.doNotUseCancelButtonVisible;
         set
         {
-            field = value;
+            this.doNotUseCancelButtonVisible = value;
             OnPropertyChanged();
         }
     }
@@ -34,15 +41,15 @@ public class ShellDialogController : ControllerBase
 
     public object? Content
     {
-        get;
+        get => this.doNotUseContent;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseContent))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseContent = value;
             OnPropertyChanged();
             this.dialogRelayCommand.NotifyCanExecuteChanged();
         }
@@ -54,15 +61,15 @@ public class ShellDialogController : ControllerBase
 
     public ShellDialogType DialogType
     {
-        get;
+        get => this.doNotUseDialogType;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseDialogType)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseDialogType = value;
             OkButtonVisible = DialogType == ShellDialogType.Ok || DialogType == ShellDialogType.OkCancel;
             SaveButtonVisible = DialogType == ShellDialogType.SaveCancel;
             CancelButtonVisible = DialogType != ShellDialogType.Ok;
@@ -75,30 +82,30 @@ public class ShellDialogController : ControllerBase
     public bool HelpButtonVisible
     {
         [UsedImplicitly]
-        get;
+        get => this.doNotUseHelpButtonVisible;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseHelpButtonVisible)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseHelpButtonVisible = value;
             OnPropertyChanged();
         }
     }
 
     public bool OkButtonVisible
     {
-        get;
+        get => this.doNotUseOkButtonVisible;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseOkButtonVisible)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseOkButtonVisible = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(OkIsCancel));
         }
@@ -108,15 +115,15 @@ public class ShellDialogController : ControllerBase
 
     public bool SaveButtonVisible
     {
-        get;
+        get => this.doNotUseSaveButtonVisible;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseSaveButtonVisible)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseSaveButtonVisible = value;
             OnPropertyChanged();
         }
     }
@@ -124,18 +131,18 @@ public class ShellDialogController : ControllerBase
     public string Title
     {
         [UsedImplicitly]
-        get;
+        get => this.doNotUseTitle;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseTitle)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseTitle = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Intended to be called from the <see cref="ShellController" /> so it can orchestrate showing the dialog.

@@ -18,6 +18,12 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private readonly IAccountTypeRepository accountTypeRepository;
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
+    private bool doNotUseAddBalanceVisibility;
+    private IEnumerable<Account> doNotUseBankAccounts = Array.Empty<Account>();
+    private decimal doNotUseBankBalance;
+    private DateOnly doNotUseDate;
+    private bool doNotUseEditable;
+    private Account? doNotUseSelectedBankAccount;
     private Engine.Ledger.LedgerBook? parentBook;
 
     public AddLedgerReconciliationController(IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(uiContext.Messenger)
@@ -42,15 +48,15 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public bool AddBalanceVisibility
     {
-        get;
+        get => this.doNotUseAddBalanceVisibility;
         private set
         {
-            if (value == field)
+            if (value == this.doNotUseAddBalanceVisibility)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseAddBalanceVisibility = value;
             OnPropertyChanged();
         }
     }
@@ -61,30 +67,30 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public IEnumerable<Account> BankAccounts
     {
-        get;
+        get => this.doNotUseBankAccounts;
         private set
         {
-            if (ReferenceEquals(value, field))
+            if (ReferenceEquals(value, this.doNotUseBankAccounts))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseBankAccounts = value;
             OnPropertyChanged();
         }
-    } = Array.Empty<Account>();
+    }
 
     public decimal BankBalance
     {
-        get;
+        get => this.doNotUseBankBalance;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseBankBalance)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseBankBalance = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(BankBalanceTotal));
             OnPropertyChanged(nameof(AdjustedBankBalanceTotal));
@@ -99,15 +105,15 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public DateOnly Date
     {
-        get;
+        get => this.doNotUseDate;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseDate))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseDate = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
@@ -115,15 +121,15 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public bool Editable
     {
-        get;
+        get => this.doNotUseEditable;
         private set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseEditable))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseEditable = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
@@ -140,10 +146,10 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
     public Account? SelectedBankAccount
     {
-        get;
+        get => this.doNotUseSelectedBankAccount;
         set
         {
-            field = value;
+            this.doNotUseSelectedBankAccount = value;
             OnPropertyChanged();
         }
     }

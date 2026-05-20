@@ -12,14 +12,18 @@ namespace BudgetAnalyser.LedgerBook;
 public class ReconciliationToDoListController(IMessenger messenger, IApplicationDatabaseFacade applicationDatabaseService) : ControllerBase(messenger)
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
+    private bool doNotUseAddingNewTask;
+    private string doNotUseNewTaskDescription = string.Empty;
+    private ToDoTask? doNotUseSelectedTask;
+    private ToDoCollection? doNotUseTasks;
 
     public bool AddingNewTask
     {
         [UsedImplicitly]
-        get;
+        get => this.doNotUseAddingNewTask;
         private set
         {
-            field = value;
+            this.doNotUseAddingNewTask = value;
             OnPropertyChanged();
         }
     }
@@ -30,14 +34,14 @@ public class ReconciliationToDoListController(IMessenger messenger, IApplication
 
     public string NewTaskDescription
     {
-        get;
+        get => this.doNotUseNewTaskDescription;
         [UsedImplicitly]
         set
         {
-            field = value;
+            this.doNotUseNewTaskDescription = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     public ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t is not null);
 
@@ -45,20 +49,20 @@ public class ReconciliationToDoListController(IMessenger messenger, IApplication
 
     public ToDoTask? SelectedTask
     {
-        get;
+        get => this.doNotUseSelectedTask;
         set
         {
-            field = value;
+            this.doNotUseSelectedTask = value;
             OnPropertyChanged();
         }
     }
 
     public ToDoCollection? Tasks
     {
-        get;
+        get => this.doNotUseTasks;
         private set
         {
-            field = value;
+            this.doNotUseTasks = value;
             OnPropertyChanged();
         }
     }

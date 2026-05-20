@@ -13,6 +13,8 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
 {
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
+    private BudgetCycle doNotUseBudgetCycle;
+    private DateOnly doNotUseEffectiveFrom;
 
     public NewBudgetModelController(IUiContext uiContext) : base(uiContext.Messenger)
     {
@@ -35,15 +37,15 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public BudgetCycle BudgetCycle
     {
-        get;
+        get => this.doNotUseBudgetCycle;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseBudgetCycle)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseBudgetCycle = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(FortnightlyChecked));
             OnPropertyChanged(nameof(MonthlyChecked));
@@ -53,15 +55,15 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     // ReSharper disable once MemberCanBePrivate.Global
     public DateOnly EffectiveFrom
     {
-        get;
+        get => this.doNotUseEffectiveFrom;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseEffectiveFrom)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseEffectiveFrom = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteSaveButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();

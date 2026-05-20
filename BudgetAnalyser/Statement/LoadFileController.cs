@@ -19,6 +19,11 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
     private readonly Func<IUserPromptOpenFile> userPromptOpenFileFactory;
     private Guid dialogCorrelationId;
     private bool disposed;
+    private bool doNotUseCanExecuteOkButton;
+    private string? doNotUseFileName;
+    private bool doNotUseFileTypeSelectionReady;
+    private Account? doNotUseSelectedExistingAccountName;
+    private string doNotUseTitle = string.Empty;
     private Task fileSelectionTask = Task.CompletedTask;
     private bool showingDialog;
 
@@ -45,16 +50,16 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public string? FileName
     {
-        get;
+        get => this.doNotUseFileName;
 
         set
         {
-            if (value == field)
+            if (value == this.doNotUseFileName)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseFileName = value;
             OnPropertyChanged();
             if (!string.IsNullOrWhiteSpace(FileName))
             {
@@ -70,15 +75,15 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public bool FileTypeSelectionReady
     {
-        get;
+        get => this.doNotUseFileTypeSelectionReady;
         private set
         {
-            if (value == field)
+            if (value == this.doNotUseFileTypeSelectionReady)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseFileTypeSelectionReady = value;
             OnPropertyChanged();
         }
     }
@@ -91,16 +96,16 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public Account? SelectedExistingAccountName
     {
-        get;
+        get => this.doNotUseSelectedExistingAccountName;
 
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseSelectedExistingAccountName))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseSelectedExistingAccountName = value;
             OnPropertyChanged();
             CheckAccountName();
             CheckFileName();
@@ -111,18 +116,18 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public string Title
     {
-        get;
+        get => this.doNotUseTitle;
         private set
         {
-            if (value == field)
+            if (value == this.doNotUseTitle)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseTitle = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Implement IDisposable.
@@ -143,15 +148,15 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public bool CanExecuteOkButton
     {
-        get;
+        get => this.doNotUseCanExecuteOkButton;
         private set
         {
-            if (value == field)
+            if (value == this.doNotUseCanExecuteOkButton)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseCanExecuteOkButton = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }

@@ -15,6 +15,8 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
     private readonly IBudgetBucketRepository bucketRepository;
     private Guid dialogCorrelationId;
     private IEnumerable<BudgetBucket> doNotUseBudgetBuckets;
+    private string doNotUseFilterDescription = string.Empty;
+    private BudgetBucket? doNotUseSelected;
     private bool filtered;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
@@ -54,30 +56,30 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
     public string FilterDescription
     {
         [UsedImplicitly]
-        get;
+        get => this.doNotUseFilterDescription;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseFilterDescription)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseFilterDescription = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     public BudgetBucket? Selected
     {
-        get;
+        get => this.doNotUseSelected;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseSelected))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseSelected = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteOkButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();

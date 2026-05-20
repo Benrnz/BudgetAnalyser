@@ -14,6 +14,9 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
+    private decimal doNotUseAmount;
+    private string doNotUseCode = string.Empty;
+    private string doNotUseDescription = string.Empty;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public CreateNewFixedBudgetController(IUiContext uiContext, IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
@@ -32,16 +35,16 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
 
     public decimal Amount
     {
-        get;
+        get => this.doNotUseAmount;
         [UsedImplicitly]
         set
         {
-            if (value == field)
+            if (value == this.doNotUseAmount)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseAmount = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
@@ -49,37 +52,37 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
 
     public string Code
     {
-        get;
+        get => this.doNotUseCode;
         [UsedImplicitly]
         set
         {
-            if (value == field)
+            if (value == this.doNotUseCode)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseCode = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    } = string.Empty;
+    }
 
     public string Description
     {
-        get;
+        get => this.doNotUseDescription;
         [UsedImplicitly]
         set
         {
-            if (value == field)
+            if (value == this.doNotUseDescription)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseDescription = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Will be called to ascertain the availability of the button.

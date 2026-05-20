@@ -18,8 +18,14 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
     private readonly ILogger logger;
     private readonly IUserMessageBox messageBoxService;
     private readonly ITransactionRuleService rulesService;
+    private DecimalCriteria doNotUseAmount = new();
     private bool doNotUseAndChecked;
+    private StringCriteria doNotUseDescription = new();
     private bool doNotUseOrChecked;
+    private StringCriteria doNotUseReference1 = new();
+    private StringCriteria doNotUseReference2 = new();
+    private StringCriteria doNotUseReference3 = new();
+    private StringCriteria doNotUseTransactionType = new();
     private Guid shellDialogCorrelationId;
 
     public NewRuleController(IUiContext uiContext, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
@@ -41,20 +47,20 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
 
     public DecimalCriteria Amount
     {
-        get;
+        get => this.doNotUseAmount;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseAmount))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseAmount = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteSaveButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    } = new();
+    }
 
     public bool AndChecked
     {
@@ -77,20 +83,20 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
 
     public StringCriteria Description
     {
-        get;
+        get => this.doNotUseDescription;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseDescription))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseDescription = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteSaveButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    } = new();
+    }
 
     public MatchingRule? NewRule { get; set; }
 
@@ -114,54 +120,54 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
 
     public StringCriteria Reference1
     {
-        get;
+        get => this.doNotUseReference1;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseReference1))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseReference1 = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteSaveButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    } = new();
+    }
 
     public StringCriteria Reference2
     {
-        get;
+        get => this.doNotUseReference2;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseReference2))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseReference2 = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteSaveButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    } = new();
+    }
 
     public StringCriteria Reference3
     {
-        get;
+        get => this.doNotUseReference3;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseReference3))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseReference3 = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteSaveButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    } = new();
+    }
 
     public IEnumerable<SimilarMatchedRule>? SimilarRules { get; private set; }
 
@@ -171,20 +177,20 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
 
     public StringCriteria TransactionType
     {
-        get;
+        get => this.doNotUseTransactionType;
         set
         {
-            if (Equals(value, field))
+            if (Equals(value, this.doNotUseTransactionType))
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseTransactionType = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanExecuteSaveButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
-    } = new();
+    }
 
     public void Initialize()
     {

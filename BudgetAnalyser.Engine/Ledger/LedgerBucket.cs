@@ -23,16 +23,18 @@ public abstract class LedgerBucket
     /// </summary>
     protected const string SupplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
 
+    private BudgetBucket? budgetBucket;
+
     /// <summary>
     ///     Gets or sets the Budget Bucket this ledger column is tracking.
     /// </summary>
     public required BudgetBucket BudgetBucket
     {
-        get => field!;
+        get => this.budgetBucket!;
         set
         {
             ValidateBucketSet(value);
-            field = value;
+            this.budgetBucket = value;
         }
     }
 

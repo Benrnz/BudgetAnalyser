@@ -12,6 +12,9 @@ public class LedgerRemarksController : ControllerBase
 {
     private readonly IReconciliationService reconciliationService;
     private Guid dialogCorrelationId;
+    private bool doNotUseIsReadOnly;
+    private LedgerEntryLine? doNotUseLedgerEntryLine;
+    private string doNotUseRemarks = string.Empty;
 
     public LedgerRemarksController(IUiContext uiContext, IReconciliationService reconciliationService) : base(uiContext.Messenger)
     {
@@ -28,33 +31,33 @@ public class LedgerRemarksController : ControllerBase
 
     public bool IsReadOnly
     {
-        get;
+        get => this.doNotUseIsReadOnly;
         private set
         {
-            field = value;
+            this.doNotUseIsReadOnly = value;
             OnPropertyChanged();
         }
     }
 
     public LedgerEntryLine? LedgerEntryLine
     {
-        get;
+        get => this.doNotUseLedgerEntryLine;
         private set
         {
-            field = value;
+            this.doNotUseLedgerEntryLine = value;
             OnPropertyChanged();
         }
     }
 
     public string Remarks
     {
-        get;
+        get => this.doNotUseRemarks;
         set
         {
-            field = value;
+            this.doNotUseRemarks = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     public void Show(LedgerEntryLine line, bool isNew)
     {

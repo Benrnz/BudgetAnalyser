@@ -25,7 +25,10 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private readonly IUserMessageBox userMessageBox;
     private BudgetModel? currentBudget;
     private Guid dialogCorrelationId;
+    private string doNotUseAccountTypeSummary = string.Empty;
     private GlobalFilterCriteria doNotUseCriteria;
+    private string doNotUseDateSummaryLine1 = string.Empty;
+    private string doNotUseDateSummaryLine2 = string.Empty;
 
     public GlobalFilterController(IUiContext uiContext, IApplicationDatabaseService appDbService) : base(uiContext.Messenger)
     {
@@ -50,13 +53,13 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     public string AccountTypeSummary
     {
         [UsedImplicitly]
-        get;
+        get => this.doNotUseAccountTypeSummary;
         private set
         {
-            field = value;
+            this.doNotUseAccountTypeSummary = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     [UsedImplicitly]
     public ICommand AddPeriodCommand => new RelayCommand<DateOnly>(OnAddPeriodCommandExecute, d => d != DateOnly.MinValue);
@@ -86,24 +89,24 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     public string DateSummaryLine1
     {
         [UsedImplicitly]
-        get;
+        get => this.doNotUseDateSummaryLine1;
         private set
         {
-            field = value;
+            this.doNotUseDateSummaryLine1 = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     public string DateSummaryLine2
     {
         [UsedImplicitly]
-        get;
+        get => this.doNotUseDateSummaryLine2;
         private set
         {
-            field = value;
+            this.doNotUseDateSummaryLine2 = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     public string ActionButtonToolTip => "Apply filter and close.";
 

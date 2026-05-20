@@ -42,8 +42,21 @@ public abstract class Widget : INotifyPropertyChanged
     protected const string WidgetWarningStyle = "WidgetWarningStyle";
 
     protected const string NotSet = "<NOT SET>";
+
+    private readonly string doNotUseCategory = string.Empty;
+    private readonly string doNotUseWidgetStyle = string.Empty;
+
     private bool clickableWhenEnabled;
+    private bool doNotUseClickable;
+    private string doNotUseColour = string.Empty;
+    private string doNotUseDetailedText = NotSet;
     private bool doNotUseEnabled;
+    private string? doNotUseImageResourceName;
+    private string? doNotUseImageResourceName2;
+    private string doNotUseLargeNumber = string.Empty;
+    private WidgetSize doNotUseSize;
+    private string? doNotUseToolTip;
+    private bool doNotUseVisibility;
 
     /// <summary>
     ///     Constructs a new instance of the <see cref="Widget" /> class.
@@ -73,23 +86,23 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public string Category
     {
-        get;
+        get => this.doNotUseCategory;
         protected init
         {
-            field = value;
+            this.doNotUseCategory = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Gets or sets a value indicating whether this <see cref="Widget" /> is clickable.
     /// </summary>
     public bool Clickable
     {
-        get;
+        get => this.doNotUseClickable;
         set
         {
-            field = value;
+            this.doNotUseClickable = value;
             OnPropertyChanged();
         }
     }
@@ -99,13 +112,13 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public string ColourStyleName
     {
-        get;
+        get => this.doNotUseColour;
         protected set
         {
-            field = value;
+            this.doNotUseColour = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Gets or sets the dependencies for this widget to function. See
@@ -118,13 +131,13 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public string DetailedText
     {
-        get;
+        get => this.doNotUseDetailedText;
         protected set
         {
-            field = value;
+            this.doNotUseDetailedText = value;
             OnPropertyChanged();
         }
-    } = NotSet;
+    }
 
     /// <summary>
     ///     Gets or sets a value indicating whether this <see cref="Widget" /> is enabled, showing data, and clickable.
@@ -136,7 +149,7 @@ public abstract class Widget : INotifyPropertyChanged
         {
             this.doNotUseEnabled = value;
             OnPropertyChanged();
-            if (!this.doNotUseEnabled && Clickable)
+            if (this.doNotUseEnabled == false && Clickable)
             {
                 this.clickableWhenEnabled = true;
                 Clickable = false;
@@ -153,10 +166,10 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public string? ImageResourceName
     {
-        get;
+        get => this.doNotUseImageResourceName;
         protected set
         {
-            field = value;
+            this.doNotUseImageResourceName = value;
             OnPropertyChanged();
         }
     }
@@ -166,10 +179,10 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public string? ImageResourceName2
     {
-        get;
+        get => this.doNotUseImageResourceName2;
         set
         {
-            field = value;
+            this.doNotUseImageResourceName2 = value;
             OnPropertyChanged();
         }
     }
@@ -179,13 +192,13 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public string LargeNumber
     {
-        get;
+        get => this.doNotUseLargeNumber;
         protected set
         {
-            field = value;
+            this.doNotUseLargeNumber = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Gets or sets the name of the widget.
@@ -207,10 +220,10 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     protected WidgetSize Size
     {
-        get;
+        get => this.doNotUseSize;
         set
         {
-            field = value;
+            this.doNotUseSize = value;
             OnPropertyChanged();
         }
     }
@@ -220,10 +233,10 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public string? ToolTip
     {
-        get;
+        get => this.doNotUseToolTip;
         protected set
         {
-            field = value;
+            this.doNotUseToolTip = value;
             OnPropertyChanged();
         }
     }
@@ -234,10 +247,10 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public bool Visibility
     {
-        get;
+        get => this.doNotUseVisibility;
         set
         {
-            field = value;
+            this.doNotUseVisibility = value;
             OnPropertyChanged();
         }
     }
@@ -247,13 +260,13 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public string WidgetStyle
     {
-        get;
+        get => this.doNotUseWidgetStyle;
         protected init
         {
-            field = value;
+            this.doNotUseWidgetStyle = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Updates the widget with new input. Is called when data changes as well as when <see cref="RecommendedTimeIntervalUpdate" /> has elapsed.

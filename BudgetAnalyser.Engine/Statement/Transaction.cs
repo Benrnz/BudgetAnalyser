@@ -17,6 +17,16 @@ namespace BudgetAnalyser.Engine.Statement;
     Justification = "IComparable is implemented for sorting only. One transactions is not considered < or > than another. Also Equals is not overriden.")]
 public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Transaction>
 {
+    private BudgetBucket? budgetBucket;
+    private Account doNotUseAccount = new ChequeAccount(string.Empty);
+    private decimal doNotUseAmount;
+    private DateOnly doNotUseDate;
+    private string? doNotUseDescription;
+    private string? doNotUseReference1 = string.Empty;
+    private string? doNotUseReference2 = string.Empty;
+    private string? doNotUseReference3 = string.Empty;
+    private TransactionType doNotUseTransactionType = NamedTransaction.Empty;
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="Transaction" /> class.
     /// </summary>
@@ -35,23 +45,23 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </summary>
     public Account Account
     {
-        get;
+        get => this.doNotUseAccount;
         set
         {
-            field = value;
+            this.doNotUseAccount = value;
             OnPropertyChanged();
         }
-    } = new ChequeAccount(string.Empty);
+    }
 
     /// <summary>
     ///     Gets or sets the transaction amount.
     /// </summary>
     public decimal Amount
     {
-        get;
+        get => this.doNotUseAmount;
         set
         {
-            field = value;
+            this.doNotUseAmount = value;
             OnPropertyChanged();
         }
     }
@@ -65,16 +75,16 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </exception>
     public BudgetBucket? BudgetBucket
     {
-        get;
+        get => this.budgetBucket;
 
         set
         {
-            if (value is null && field is not null)
+            if (value is null && this.budgetBucket is not null)
             {
                 throw new ArgumentNullException(nameof(value), "Setting a budget bucket to null when it already has a non-null value is not allowed.");
             }
 
-            field = value;
+            this.budgetBucket = value;
             OnPropertyChanged();
         }
     }
@@ -84,10 +94,10 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </summary>
     public DateOnly Date
     {
-        get;
+        get => this.doNotUseDate;
         set
         {
-            field = value;
+            this.doNotUseDate = value;
             OnPropertyChanged();
         }
     }
@@ -97,10 +107,10 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     /// </summary>
     public string? Description
     {
-        get;
+        get => this.doNotUseDescription;
         set
         {
-            field = value;
+            this.doNotUseDescription = value;
             OnPropertyChanged();
         }
     }
@@ -125,52 +135,52 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     public string? Reference1
     {
         // Please make this non-nullable defaulting to string.empty
-        get;
+        get => this.doNotUseReference1;
         set
         {
-            field = value;
+            this.doNotUseReference1 = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Gets or sets the transaction reference2.
     /// </summary>
     public string? Reference2
     {
-        get;
+        get => this.doNotUseReference2;
         set
         {
-            field = value;
+            this.doNotUseReference2 = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Gets or sets the transaction reference3.
     /// </summary>
     public string? Reference3
     {
-        get;
+        get => this.doNotUseReference3;
         set
         {
-            field = value;
+            this.doNotUseReference3 = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Gets or sets the type of the transaction. This is a type classification provided by the bank.
     /// </summary>
     public TransactionType TransactionType
     {
-        get;
+        get => this.doNotUseTransactionType;
         set
         {
-            field = value;
+            this.doNotUseTransactionType = value;
             OnPropertyChanged();
         }
-    } = NamedTransaction.Empty;
+    }
 
     /// <summary>
     ///     Clones this transaction into a new instance.

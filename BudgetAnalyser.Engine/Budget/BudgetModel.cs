@@ -15,6 +15,8 @@ public class BudgetModel : INotifyPropertyChanged
     private BudgetCycle doNotUseBudgetCycle;
     private DateOnly doNotUseEffectiveFrom;
     private DateTime doNotUseLastModified;
+    private string doNotUseLastModifiedComment = string.Empty;
+    private string doNotUseName = string.Empty;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetModel" /> class.
@@ -104,36 +106,36 @@ public class BudgetModel : INotifyPropertyChanged
     /// </summary>
     public string LastModifiedComment
     {
-        get;
+        get => this.doNotUseLastModifiedComment;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseLastModifiedComment)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseLastModifiedComment = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Gets or sets the budget name.
     /// </summary>
     public string Name
     {
-        get;
+        get => this.doNotUseName;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseName)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseName = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     /// <summary>
     ///     Gets the calculated surplus amount.

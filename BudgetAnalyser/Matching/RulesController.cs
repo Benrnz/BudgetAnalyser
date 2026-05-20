@@ -23,6 +23,12 @@ public class RulesController : ControllerBase, IShowableController
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly ITransactionRuleService ruleService;
+    private bool doNotUseEditingRule;
+    private bool doNotUseFlatListBoxVisibility;
+    private bool doNotUseGroupByListBoxVisibility;
+    private MatchingRule? doNotUseSelectedRule;
+    private bool doNotUseShown;
+    private string? doNotUseSortBy;
 
     public RulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
         : base(uiContext.Messenger)
@@ -68,10 +74,10 @@ public class RulesController : ControllerBase, IShowableController
 
     public bool EditingRule
     {
-        get;
+        get => this.doNotUseEditingRule;
         private set
         {
-            field = value;
+            this.doNotUseEditingRule = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
         }
@@ -82,20 +88,20 @@ public class RulesController : ControllerBase, IShowableController
 
     public bool FlatListBoxVisibility
     {
-        get;
+        get => this.doNotUseFlatListBoxVisibility;
         set
         {
-            field = value;
+            this.doNotUseFlatListBoxVisibility = value;
             OnPropertyChanged();
         }
     }
 
     public bool GroupByListBoxVisibility
     {
-        get;
+        get => this.doNotUseGroupByListBoxVisibility;
         set
         {
-            field = value;
+            this.doNotUseGroupByListBoxVisibility = value;
             OnPropertyChanged();
         }
     }
@@ -106,10 +112,10 @@ public class RulesController : ControllerBase, IShowableController
 
     public MatchingRule? SelectedRule
     {
-        get;
+        get => this.doNotUseSelectedRule;
         set
         {
-            field = value;
+            this.doNotUseSelectedRule = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
             OnPropertyChanged(nameof(AndOrText));
@@ -127,11 +133,11 @@ public class RulesController : ControllerBase, IShowableController
 
     public string? SortBy
     {
-        get;
+        get => this.doNotUseSortBy;
         set
         {
-            var oldValue = field;
-            field = value;
+            var oldValue = this.doNotUseSortBy;
+            this.doNotUseSortBy = value;
             OnPropertyChanged();
             GroupByListBoxVisibility = false;
             FlatListBoxVisibility = false;
@@ -147,7 +153,7 @@ public class RulesController : ControllerBase, IShowableController
                     break;
 
                 default:
-                    field = oldValue;
+                    this.doNotUseSortBy = oldValue;
                     throw new ArgumentException(value + " is not a valid sort by argument.");
             }
 
@@ -161,15 +167,15 @@ public class RulesController : ControllerBase, IShowableController
 
     public bool Shown
     {
-        get;
+        get => this.doNotUseShown;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseShown)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseShown = value;
             OnPropertyChanged();
         }
     }

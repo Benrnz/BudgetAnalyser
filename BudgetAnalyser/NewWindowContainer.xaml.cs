@@ -18,16 +18,22 @@ public partial class NewWindowContainer
 
     private void OnClosed(object? sender, EventArgs e)
     {
-        this.notifyController?.PropertyChanged -= OnControllerPropertyChanged;
+        if (this.notifyController is not null)
+        {
+            this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
+        }
     }
 
     private void OnControllerPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
     {
         if (this.showableController is not null)
         {
-            if (propertyChangedEventArgs.PropertyName == "Shown" && !this.showableController.Shown)
+            if (propertyChangedEventArgs.PropertyName == "Shown" && this.showableController.Shown == false)
             {
-                this.notifyController?.PropertyChanged -= OnControllerPropertyChanged;
+                if (this.notifyController is not null)
+                {
+                    this.notifyController.PropertyChanged -= OnControllerPropertyChanged;
+                }
 
                 Close();
             }
@@ -42,7 +48,10 @@ public partial class NewWindowContainer
         }
 
         this.notifyController = e.NewValue as INotifyPropertyChanged;
-        this.notifyController?.PropertyChanged += OnControllerPropertyChanged;
+        if (this.notifyController is not null)
+        {
+            this.notifyController.PropertyChanged += OnControllerPropertyChanged;
+        }
 
         this.showableController = e.NewValue as IShowableController;
     }

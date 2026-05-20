@@ -32,6 +32,7 @@ public class LedgerBookController : ControllerBase, IShowableController
     private readonly LedgerBookGridBuilderFactory uiBuilder;
     private readonly IUiContext uiContext;
     private int doNotUseNumberOfPeriodsToShow;
+    private bool doNotUseShown;
 
     public LedgerBookController(
         IUiContext uiContext,
@@ -104,16 +105,16 @@ public class LedgerBookController : ControllerBase, IShowableController
 
     public bool Shown
     {
-        get;
+        get => this.doNotUseShown;
 
         set
         {
-            if (value == field)
+            if (value == this.doNotUseShown)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseShown = value;
             OnPropertyChanged();
         }
     }

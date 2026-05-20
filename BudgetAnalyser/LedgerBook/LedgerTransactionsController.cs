@@ -23,6 +23,13 @@ public class LedgerTransactionsController : ControllerBase
     private readonly ILogger logger;
     private readonly IReconciliationService reconService;
     private Guid dialogCorrelationId = Guid.NewGuid();
+    private bool doNotUseIsReadOnly;
+    private LedgerEntry? doNotUseLedgerEntry;
+    private Account? doNotUseNewTransactionAccount;
+    private decimal doNotUseNewTransactionAmount;
+    private string? doNotUseNewTransactionNarrative;
+    private bool doNotUseShowAddingNewTransactionPanel;
+    private string doNotUseTitle = string.Empty;
     private LedgerEntryLine? entryLine;
     private bool isAddDirty;
     private bool wasChanged;
@@ -60,10 +67,10 @@ public class LedgerTransactionsController : ControllerBase
 
     public bool IsReadOnly
     {
-        get;
+        get => this.doNotUseIsReadOnly;
         set
         {
-            field = value;
+            this.doNotUseIsReadOnly = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(IsAddBalanceAdjustmentAllowed));
         }
@@ -71,10 +78,10 @@ public class LedgerTransactionsController : ControllerBase
 
     public LedgerEntry? LedgerEntry
     {
-        get;
+        get => this.doNotUseLedgerEntry;
         private set
         {
-            field = value;
+            this.doNotUseLedgerEntry = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(InBalanceAdjustmentMode));
             OnPropertyChanged(nameof(InLedgerEntryMode));
@@ -83,30 +90,30 @@ public class LedgerTransactionsController : ControllerBase
 
     public Account? NewTransactionAccount
     {
-        get;
+        get => this.doNotUseNewTransactionAccount;
         set
         {
-            field = value;
+            this.doNotUseNewTransactionAccount = value;
             OnPropertyChanged();
         }
     }
 
     public decimal NewTransactionAmount
     {
-        get;
+        get => this.doNotUseNewTransactionAmount;
         set
         {
-            field = value;
+            this.doNotUseNewTransactionAmount = value;
             OnPropertyChanged();
         }
     }
 
     public string? NewTransactionNarrative
     {
-        get;
+        get => this.doNotUseNewTransactionNarrative;
         set
         {
-            field = value;
+            this.doNotUseNewTransactionNarrative = value;
             OnPropertyChanged();
         }
     }
@@ -115,10 +122,10 @@ public class LedgerTransactionsController : ControllerBase
 
     public bool ShowAddingNewTransactionPanel
     {
-        get;
+        get => this.doNotUseShowAddingNewTransactionPanel;
         private set
         {
-            field = value;
+            this.doNotUseShowAddingNewTransactionPanel = value;
             OnPropertyChanged();
         }
     }
@@ -127,13 +134,13 @@ public class LedgerTransactionsController : ControllerBase
 
     public string Title
     {
-        get;
+        get => this.doNotUseTitle;
         private set
         {
-            field = value;
+            this.doNotUseTitle = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     public decimal TransactionsTotal => ShownTransactions.Sum(t => t.Amount);
 
@@ -353,10 +360,11 @@ public class LedgerTransactionsController : ControllerBase
         {
             if (this.entryLine is null || LedgerEntry is null)
             {
-                this.logger.LogError(l => l.Format(
-                    "Silent error: Attempt to create a new ledger transaction, but LedgerLine or LedgerEntry is null. LedgerLine: {0}, LedgerEntry: {1}",
-                    this.entryLine,
-                    LedgerEntry));
+                this.logger.LogError(
+                    l => l.Format(
+                        "Silent error: Attempt to create a new ledger transaction, but LedgerLine or LedgerEntry is null. LedgerLine: {0}, LedgerEntry: {1}",
+                        this.entryLine,
+                        LedgerEntry));
                 return;
             }
 

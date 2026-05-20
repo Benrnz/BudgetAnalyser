@@ -17,6 +17,8 @@ public sealed class DashboardController : ControllerBase, IShowableController
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
     private readonly IUiContext uiContext;
+    private Guid doNotUseCorrelationId;
+    private bool doNotUseShown;
 
     public DashboardController(IUiContext uiContext, IDashboardService dashboardService) : base(uiContext.Messenger)
     {
@@ -44,10 +46,10 @@ public sealed class DashboardController : ControllerBase, IShowableController
 
     public Guid CorrelationId
     {
-        get;
+        get => this.doNotUseCorrelationId;
         private set
         {
-            field = value;
+            this.doNotUseCorrelationId = value;
             OnPropertyChanged();
         }
     }
@@ -72,15 +74,15 @@ public sealed class DashboardController : ControllerBase, IShowableController
 
     public bool Shown
     {
-        get;
+        get => this.doNotUseShown;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseShown)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseShown = value;
             OnPropertyChanged();
         }
     }

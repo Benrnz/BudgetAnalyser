@@ -23,8 +23,16 @@ public class BudgetController : ControllerBase, IShowableController
     private readonly IBudgetMaintenanceService maintenanceService;
     private readonly IUserMessageBox messageBox;
     private readonly IUserQuestionBoxYesNo questionBox;
+    private string budgetMenuItemName = string.Empty;
     private Guid dialogCorrelationId;
+    private bool doNotUseDirty;
+    private BudgetCurrencyContext? doNotUseModel;
+    private bool doNotUseShownBudget;
+    private decimal expenseTotal;
+    private decimal incomeTotal;
+
     private bool isLoadingBudgetModel;
+    private decimal surplus;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public BudgetController(
@@ -63,7 +71,7 @@ public class BudgetController : ControllerBase, IShowableController
     public string BudgetMenuItemName
     {
         [UsedImplicitly]
-        get;
+        get => this.budgetMenuItemName;
 
         set
         {
@@ -72,17 +80,17 @@ public class BudgetController : ControllerBase, IShowableController
                 return;
             }
 
-            field = value;
+            this.budgetMenuItemName = value;
             OnPropertyChanged();
         }
-    } = string.Empty;
+    }
 
     public BudgetCollection? Budgets { get; private set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public BudgetCurrencyContext? CurrentBudget
     {
-        get;
+        get => this.doNotUseModel;
 
         private set
         {
@@ -90,8 +98,8 @@ public class BudgetController : ControllerBase, IShowableController
             {
                 this.isLoadingBudgetModel = true;
                 ReleaseListBindingEvents();
-                field = value;
-                if (field is null)
+                this.doNotUseModel = value;
+                if (this.doNotUseModel is null)
                 {
                     Incomes = new BindingList<Income>();
                     Expenses = new BindingList<Expense>();
@@ -121,15 +129,15 @@ public class BudgetController : ControllerBase, IShowableController
     // ReSharper disable once MemberCanBePrivate.Global
     public bool Dirty
     {
-        get;
+        get => this.doNotUseDirty;
         private set
         {
-            if (value == field)
+            if (value == this.doNotUseDirty)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseDirty = value;
             OnPropertyChanged();
             if (Dirty && CurrentBudget is not null)
             {
@@ -144,16 +152,16 @@ public class BudgetController : ControllerBase, IShowableController
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal ExpenseTotal
     {
-        get;
+        get => this.expenseTotal;
 
         private set
         {
-            if (value == field)
+            if (value == this.expenseTotal)
             {
                 return;
             }
 
-            field = value;
+            this.expenseTotal = value;
             OnPropertyChanged();
         }
     }
@@ -163,16 +171,16 @@ public class BudgetController : ControllerBase, IShowableController
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal IncomeTotal
     {
-        get;
+        get => this.incomeTotal;
 
         private set
         {
-            if (value == field)
+            if (value == this.incomeTotal)
             {
                 return;
             }
 
-            field = value;
+            this.incomeTotal = value;
             OnPropertyChanged();
         }
     }
@@ -188,15 +196,15 @@ public class BudgetController : ControllerBase, IShowableController
     public decimal Surplus
     {
         [UsedImplicitly]
-        get;
+        get => this.surplus;
         private set
         {
-            if (value == field)
+            if (value == this.surplus)
             {
                 return;
             }
 
-            field = value;
+            this.surplus = value;
             OnPropertyChanged();
         }
     }
@@ -206,18 +214,18 @@ public class BudgetController : ControllerBase, IShowableController
 
     public bool Shown
     {
-        get;
+        get => this.doNotUseShownBudget;
 
         set
         {
-            if (value == field)
+            if (value == this.doNotUseShownBudget)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseShownBudget = value;
             OnPropertyChanged();
-            BudgetMenuItemName = field ? CloseBudgetMenuName : EditBudgetMenuName;
+            BudgetMenuItemName = this.doNotUseShownBudget ? CloseBudgetMenuName : EditBudgetMenuName;
         }
     }
 
@@ -337,7 +345,10 @@ public class BudgetController : ControllerBase, IShowableController
         if (budgetItem is Expense expenseItem)
         {
             expenseItem.PropertyChanged -= OnExpenseAmountPropertyChanged;
-            expenseItem.Bucket?.PropertyChanged -= OnExpenseAmountPropertyChanged;
+            if (expenseItem.Bucket is not null)
+            {
+                expenseItem.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
+            }
 
             Expenses.Remove(expenseItem);
             return;
@@ -346,7 +357,10 @@ public class BudgetController : ControllerBase, IShowableController
         if (budgetItem is Income incomeItem)
         {
             incomeItem.PropertyChanged -= OnIncomeAmountPropertyChanged;
-            incomeItem.Bucket?.PropertyChanged -= OnIncomeAmountPropertyChanged;
+            if (incomeItem.Bucket is not null)
+            {
+                incomeItem.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
+            }
 
             Incomes.Remove(incomeItem);
         }
@@ -441,13 +455,19 @@ public class BudgetController : ControllerBase, IShowableController
         foreach (var item in Incomes)
         {
             item.PropertyChanged -= OnIncomeAmountPropertyChanged;
-            item.Bucket?.PropertyChanged -= OnIncomeAmountPropertyChanged;
+            if (item.Bucket is not null)
+            {
+                item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
+            }
         }
 
         foreach (var item in Expenses)
         {
             item.PropertyChanged -= OnExpenseAmountPropertyChanged;
-            item.Bucket?.PropertyChanged -= OnExpenseAmountPropertyChanged;
+            if (item.Bucket is not null)
+            {
+                item.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
+            }
         }
     }
 
@@ -484,17 +504,25 @@ public class BudgetController : ControllerBase, IShowableController
 
         CurrentBudget.Model.PropertyChanged += BudgetModelOnPropertyChanged;
         Incomes = new BindingList<Income>(CurrentBudget.Model.Incomes.ToList());
-        Incomes.ToList().ForEach(i =>
-        {
-            i.PropertyChanged += OnIncomeAmountPropertyChanged;
-            i.Bucket?.PropertyChanged += OnIncomeAmountPropertyChanged;
-        });
+        Incomes.ToList().ForEach(
+            i =>
+            {
+                i.PropertyChanged += OnIncomeAmountPropertyChanged;
+                if (i.Bucket is not null)
+                {
+                    i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
+                }
+            });
         Expenses = new BindingList<Expense>(CurrentBudget.Model.Expenses.ToList());
-        Expenses.ToList().ForEach(e =>
-        {
-            e.PropertyChanged += OnExpenseAmountPropertyChanged;
-            e.Bucket?.PropertyChanged += OnExpenseAmountPropertyChanged;
-        });
+        Expenses.ToList().ForEach(
+            e =>
+            {
+                e.PropertyChanged += OnExpenseAmountPropertyChanged;
+                if (e.Bucket is not null)
+                {
+                    e.Bucket.PropertyChanged += OnExpenseAmountPropertyChanged;
+                }
+            });
     }
 
     private void SyncDataFromBudgetService()

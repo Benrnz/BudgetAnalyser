@@ -16,6 +16,7 @@ public class ReportsCatalogController : ControllerBase, IShowableController
     private readonly NewWindowViewLoader newWindowViewLoader;
     private BudgetCollection? budgets;
     private StatementModel? currentStatementModel;
+    private bool doNotUseShown;
 
     public ReportsCatalogController(IUiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
     {
@@ -46,15 +47,15 @@ public class ReportsCatalogController : ControllerBase, IShowableController
 
     public bool Shown
     {
-        get;
+        get => this.doNotUseShown;
         set
         {
-            if (value == field)
+            if (value == this.doNotUseShown)
             {
                 return;
             }
 
-            field = value;
+            this.doNotUseShown = value;
             OnPropertyChanged();
         }
     }
