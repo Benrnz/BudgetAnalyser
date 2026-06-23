@@ -25,6 +25,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
 
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
         Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+            CalculateSplinter1Command = new DelegateCommand(CalculateSplinter1);
+            CalculateSplinter2Command = new DelegateCommand(CalculateSplinter2);
     }
 
     public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; } = Array.Empty<BudgetBucket>();
@@ -72,12 +74,10 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             }
 
             this.doNotUseSplinterAmount1 = value;
-            this.doNotUseSplinterAmount2 = OriginalTransaction?.Amount ?? (0 - value);
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(SplinterAmount2));
-            OnPropertyChanged(nameof(TotalAmount));
-            OnPropertyChanged(nameof(Valid));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+                        OnPropertyChanged();
+                        OnPropertyChanged(nameof(TotalAmount));
+                        OnPropertyChanged(nameof(Valid));
+                        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
     }
 
@@ -92,8 +92,6 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             }
 
             this.doNotUseSplinterAmount2 = value;
-            this.doNotUseSplinterAmount1 = OriginalTransaction?.Amount ?? (0 - value);
-            OnPropertyChanged(nameof(SplinterAmount1));
             OnPropertyChanged();
             OnPropertyChanged(nameof(TotalAmount));
             OnPropertyChanged(nameof(Valid));
@@ -104,6 +102,54 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
     public BudgetBucket? SplinterBucket1 { get; set; }
     public BudgetBucket? SplinterBucket2 { get; set; }
     public decimal TotalAmount => SplinterAmount1 + SplinterAmount2;
+
+    public System.Windows.Input.ICommand CalculateSplinter1Command { get; }
+    public System.Windows.Input.ICommand CalculateSplinter2Command { get; }
+
+    private void CalculateSplinter1()
+    {
+        if (OriginalTransaction == null) return;
+        var other = decimal.Round(this.doNotUseSplinterAmount2, 2);
+        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
+        this.doNotUseSplinterAmount1 = calculated;
+        OnPropertyChanged(nameof(SplinterAmount1));
+        OnPropertyChanged(nameof(TotalAmount));
+        OnPropertyChanged(nameof(Valid));
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    private void CalculateSplinter2()
+    {
+        if (OriginalTransaction == null) return;
+        var other = decimal.Round(this.doNotUseSplinterAmount1, 2);
+        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
+        this.doNotUseSplinterAmount2 = calculated;
+        OnPropertyChanged(nameof(SplinterAmount2));
+        OnPropertyChanged(nameof(TotalAmount));
+        OnPropertyChanged(nameof(Valid));
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    private class DelegateCommand : System.Windows.Input.ICommand
+    {
+        private readonly Action execute;
+        private readonly Func<bool>? canExecute;
+
+        public DelegateCommand(Action execute, Func<bool>? canExecute = null)
+        {
+            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            this.canExecute = canExecute;
+        }
+
+        public event EventHandler? CanExecuteChanged
+        {
+            add { System.Windows.Input.CommandManager.RequerySuggested += value; }
+            remove { System.Windows.Input.CommandManager.RequerySuggested -= value; }
+        }
+
+        public bool CanExecute(object? parameter) => this.canExecute?.Invoke() ?? true;
+        public void Execute(object? parameter) => this.execute();
+    }
 
     public bool Valid
     {
@@ -126,7 +172,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
                 return false;
             }
 
-            if (SplinterAmount1 + SplinterAmount2 != OriginalTransaction.Amount)
+            if (decimal.Round(SplinterAmount1 + SplinterAmount2, 2) != decimal.Round(OriginalTransaction.Amount, 2))
             {
                 InvalidMessage = string.Format(CultureInfo.CurrentCulture, "The two amounts do not add up to {0:C}", OriginalTransaction.Amount);
                 return false;

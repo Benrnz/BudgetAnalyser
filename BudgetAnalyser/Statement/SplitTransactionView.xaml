@@ -45,11 +45,21 @@
                   ItemsSource="{Binding BudgetBuckets}"
                   ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
                   SelectedItem="{Binding SplinterBucket1}" />
-        <TextBox x:Name="SplinterAmount1"
-                 Grid.Column="3"
-                 Grid.Row="0"
-                 Margin="5,2,20,2"
-                 Text="{Binding SplinterAmount1, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
+        <Grid Grid.Column="3" Grid.Row="0" Margin="5,2,20,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="SplinterAmount1"
+                                 Grid.Column="0"
+                                 Text="{Binding SplinterAmount1, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Grid.Column="1"
+                                Margin="4,0,0,0"
+                                Width="20"
+                                Height="20"
+                                Command="{Binding CalculateSplinter1Command}"
+                                ToolTip="Calculate amount from other field">↔</Button>
+                    </Grid>
 
         <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
@@ -72,10 +82,21 @@
                   ItemsSource="{Binding BudgetBuckets}"
                   Margin="5,2,5,2"
                   SelectedItem="{Binding SplinterBucket2}" />
-        <TextBox Grid.Column="3"
-                 Grid.Row="2"
-                 Margin="5,2,20,2"
-                 Text="{Binding SplinterAmount2, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
+        <Grid Grid.Column="3" Grid.Row="2" Margin="5,2,20,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="SplinterAmount2"
+                                 Grid.Column="0"
+                                 Text="{Binding SplinterAmount2, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Grid.Column="1"
+                                Margin="4,0,0,0"
+                                Width="20"
+                                Height="20"
+                                Command="{Binding CalculateSplinter2Command}"
+                                ToolTip="Calculate amount from other field">↔</Button>
+                    </Grid>
 
         <TextBlock Grid.Column="2"
                    Grid.Row="4"
