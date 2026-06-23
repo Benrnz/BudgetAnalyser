@@ -104,7 +104,7 @@ public class SplitTransactionControllerTest
 
         subject.SplinterAmount1 = 1M;
         subject.SplinterAmount2 = -101.22M;
-                Assert.IsTrue(subject.Valid);
+        Assert.IsTrue(subject.Valid);
     }
 
     [TestMethod]

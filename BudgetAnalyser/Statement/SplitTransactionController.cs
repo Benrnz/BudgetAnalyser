@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -25,11 +26,14 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
 
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
         Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
-            CalculateSplinter1Command = new DelegateCommand(CalculateSplinter1);
-            CalculateSplinter2Command = new DelegateCommand(CalculateSplinter2);
+        CalculateSplinter1Command = new DelegateCommand(CalculateSplinter2);
+        CalculateSplinter2Command = new DelegateCommand(CalculateSplinter1);
     }
 
     public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; } = Array.Empty<BudgetBucket>();
+
+    public ICommand CalculateSplinter1Command { get; }
+    public ICommand CalculateSplinter2Command { get; }
 
     public string? InvalidMessage
     {
@@ -74,10 +78,10 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             }
 
             this.doNotUseSplinterAmount1 = value;
-                        OnPropertyChanged();
-                        OnPropertyChanged(nameof(TotalAmount));
-                        OnPropertyChanged(nameof(Valid));
-                        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(TotalAmount));
+            OnPropertyChanged(nameof(Valid));
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
     }
 
@@ -102,54 +106,6 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
     public BudgetBucket? SplinterBucket1 { get; set; }
     public BudgetBucket? SplinterBucket2 { get; set; }
     public decimal TotalAmount => SplinterAmount1 + SplinterAmount2;
-
-    public System.Windows.Input.ICommand CalculateSplinter1Command { get; }
-    public System.Windows.Input.ICommand CalculateSplinter2Command { get; }
-
-    private void CalculateSplinter1()
-    {
-        if (OriginalTransaction == null) return;
-        var other = decimal.Round(this.doNotUseSplinterAmount2, 2);
-        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
-        this.doNotUseSplinterAmount1 = calculated;
-        OnPropertyChanged(nameof(SplinterAmount1));
-        OnPropertyChanged(nameof(TotalAmount));
-        OnPropertyChanged(nameof(Valid));
-        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-    }
-
-    private void CalculateSplinter2()
-    {
-        if (OriginalTransaction == null) return;
-        var other = decimal.Round(this.doNotUseSplinterAmount1, 2);
-        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
-        this.doNotUseSplinterAmount2 = calculated;
-        OnPropertyChanged(nameof(SplinterAmount2));
-        OnPropertyChanged(nameof(TotalAmount));
-        OnPropertyChanged(nameof(Valid));
-        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-    }
-
-    private class DelegateCommand : System.Windows.Input.ICommand
-    {
-        private readonly Action execute;
-        private readonly Func<bool>? canExecute;
-
-        public DelegateCommand(Action execute, Func<bool>? canExecute = null)
-        {
-            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            this.canExecute = canExecute;
-        }
-
-        public event EventHandler? CanExecuteChanged
-        {
-            add { System.Windows.Input.CommandManager.RequerySuggested += value; }
-            remove { System.Windows.Input.CommandManager.RequerySuggested -= value; }
-        }
-
-        public bool CanExecute(object? parameter) => this.canExecute?.Invoke() ?? true;
-        public void Execute(object? parameter) => this.execute();
-    }
 
     public bool Valid
     {
@@ -206,6 +162,38 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
         Messenger.Send(dialogRequest);
     }
 
+    private void CalculateSplinter1()
+    {
+        if (OriginalTransaction == null)
+        {
+            return;
+        }
+
+        var other = decimal.Round(this.doNotUseSplinterAmount2, 2);
+        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
+        this.doNotUseSplinterAmount1 = calculated;
+        OnPropertyChanged(nameof(SplinterAmount1));
+        OnPropertyChanged(nameof(TotalAmount));
+        OnPropertyChanged(nameof(Valid));
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    private void CalculateSplinter2()
+    {
+        if (OriginalTransaction == null)
+        {
+            return;
+        }
+
+        var other = decimal.Round(this.doNotUseSplinterAmount1, 2);
+        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
+        this.doNotUseSplinterAmount2 = calculated;
+        OnPropertyChanged(nameof(SplinterAmount2));
+        OnPropertyChanged(nameof(TotalAmount));
+        OnPropertyChanged(nameof(Valid));
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
     {
         if (!message.IsItForMe(this.dialogCorrelationId))
@@ -216,5 +204,33 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
         // StatementController processes the request to add the two new transactions.
         this.dialogCorrelationId = Guid.Empty;
         OriginalTransaction = null;
+    }
+
+    private class DelegateCommand : ICommand
+    {
+        private readonly Func<bool>? canExecute;
+        private readonly Action execute;
+
+        public DelegateCommand(Action execute, Func<bool>? canExecute = null)
+        {
+            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            this.canExecute = canExecute;
+        }
+
+        public event EventHandler? CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
+
+        public bool CanExecute(object? parameter)
+        {
+            return this.canExecute?.Invoke() ?? true;
+        }
+
+        public void Execute(object? parameter)
+        {
+            this.execute();
+        }
     }
 }
