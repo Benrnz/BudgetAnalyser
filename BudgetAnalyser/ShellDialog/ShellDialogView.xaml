@@ -4,17 +4,24 @@
              xmlns:shellDialog="clr-namespace:BudgetAnalyser.ShellDialog"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=shellDialog:ShellDialogController}">
+             d:DataContext="{d:DesignInstance Type=shellDialog:ShellDialogController}"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
 
     <Grid KeyUp="OnShellDialogKeyUp"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
           Visibility="{Binding Content, Converter={StaticResource Converter.NullToVis}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="6*"
-                           MinHeight="75"
-                           MaxHeight="600" />
-            <RowDefinition Height="3*" />
+           <RowDefinition Height="1*" />
+           <RowDefinition Height="6*"
+                          MinHeight="75"
+                          MaxHeight="600" />
+           <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
+        <Rectangle Grid.Row="0"
+                  Grid.RowSpan="3"
+                  Fill="#80000000" />
         <Border Background="{StaticResource Brush.DialogBackground}"
                 Grid.Row="1">
             <Border.Effect>

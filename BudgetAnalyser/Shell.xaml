@@ -24,11 +24,13 @@
     </Window.InputBindings>
 
     <DockPanel>
+        <!-- Tab Bar Menu Control -->
         <Grid DockPanel.Dock="Top">
             <budgetAnalyser:MainMenuUserControl DataContext="{Binding MainMenuController}" />
         </Grid>
-        <Grid>
 
+        <!-- Main Content Area -->
+        <Grid>
             <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding StatementController}" />
                 <shellDialog:ShellDialogView DataContext="{Binding TransactionsDialog}" />

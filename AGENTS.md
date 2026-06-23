@@ -65,6 +65,7 @@ Controllers inherit from `ControllerBase` (from Rees.Wpf):
 - Access other controllers via `uiContext.Controller<T>()`
 - Use `Messenger.Register<>()` for cross-controller messaging
 - AVOID placing any logic in the code-behind of XAML views, this breaks the MVVM pattern. Confirm with the user before adding any logic.
+- DO NOT CREATE NEW IMPLEMENTATIONS OF ICommand, use CommunityToolkit.Mvvm.Input.RelayCommand instead.
 
 Example:
 
