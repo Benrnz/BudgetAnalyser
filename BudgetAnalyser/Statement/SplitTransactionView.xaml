@@ -58,7 +58,7 @@
                     Width="20"
                     Height="20"
                     Command="{Binding CalculateSplinter1Command}"
-                    ToolTip="Calculate amount from other field">
+                    ToolTip="Calculate amount for the other field based on this field.">
                 ↔
             </Button>
         </Grid>

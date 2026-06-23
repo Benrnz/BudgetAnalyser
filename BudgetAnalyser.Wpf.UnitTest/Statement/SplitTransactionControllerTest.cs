@@ -96,6 +96,7 @@ public class SplitTransactionControllerTest
     }
 
     [TestMethod]
+    [Description("Can't mix negative and positive amounts")]
     public void NegativeAmounts_Splinter1_1_Splinter2_Neg101Point22_IsInvalid()
     {
         var subject = CreateSubject();
@@ -104,7 +105,7 @@ public class SplitTransactionControllerTest
 
         subject.SplinterAmount1 = 1M;
         subject.SplinterAmount2 = -101.22M;
-        Assert.IsTrue(subject.Valid);
+        Assert.IsFalse(subject.Valid);
     }
 
     [TestMethod]
@@ -150,7 +151,6 @@ public class SplitTransactionControllerTest
         this.mockMessenger = new Mock<IMessenger>();
         this.mockUiContext = new Mock<IUiContext>();
         this.mockUiContext.Setup(m => m.Messenger).Returns(this.mockMessenger.Object);
-        this.mockUiContext.Setup(m => m.UserPrompts).Returns(() => null!);
 
         this.mockBucketRepo = new Mock<IBudgetBucketRepository>();
         this.mockBucketRepo.Setup(r => r.Buckets).Returns(Array.Empty<BudgetBucket>());

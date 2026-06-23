@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
@@ -26,8 +27,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
 
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
         Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
-        CalculateSplinter1Command = new DelegateCommand(CalculateSplinter2);
-        CalculateSplinter2Command = new DelegateCommand(CalculateSplinter1);
+        CalculateSplinter1Command = new RelayCommand(CalculateSplinter2);
+        CalculateSplinter2Command = new RelayCommand(CalculateSplinter1);
     }
 
     public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; } = Array.Empty<BudgetBucket>();
@@ -128,6 +129,12 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
                 return false;
             }
 
+            if (Math.Abs(SplinterAmount1) + Math.Abs(SplinterAmount2) != Math.Abs(OriginalTransaction.Amount))
+            {
+                InvalidMessage = "Cannot mix debit and credit amounts.";
+                return false;
+            }
+
             if (decimal.Round(SplinterAmount1 + SplinterAmount2, 2) != decimal.Round(OriginalTransaction.Amount, 2))
             {
                 InvalidMessage = string.Format(CultureInfo.CurrentCulture, "The two amounts do not add up to {0:C}", OriginalTransaction.Amount);
@@ -204,33 +211,5 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
         // StatementController processes the request to add the two new transactions.
         this.dialogCorrelationId = Guid.Empty;
         OriginalTransaction = null;
-    }
-
-    private class DelegateCommand : ICommand
-    {
-        private readonly Func<bool>? canExecute;
-        private readonly Action execute;
-
-        public DelegateCommand(Action execute, Func<bool>? canExecute = null)
-        {
-            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            this.canExecute = canExecute;
-        }
-
-        public event EventHandler? CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
-
-        public bool CanExecute(object? parameter)
-        {
-            return this.canExecute?.Invoke() ?? true;
-        }
-
-        public void Execute(object? parameter)
-        {
-            this.execute();
-        }
     }
 }
