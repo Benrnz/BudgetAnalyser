@@ -5,21 +5,7 @@
            TargetType="Thumb">
         <Setter Property="Width"
                 Value="18" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0"
-                                     EndPoint="0,1">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStopCollection>
-                            <GradientStop Color="{StaticResource Colour.BorderLight}"
-                                          Offset="0.0" />
-                            <GradientStop Color="{StaticResource Colour.BorderDark}"
-                                          Offset="1.0" />
-                        </GradientStopCollection>
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Background" Value="{StaticResource Brush.ControlBorder}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
@@ -76,21 +62,8 @@
                         </vsm:VisualStateManager.VisualStateGroups>
                         <Border x:Name="HeaderBorder"
                                 BorderThickness="0,1,0,1"
-                                Padding="2,0,2,0">
-                            <Border.BorderBrush>
-                                <LinearGradientBrush StartPoint="0,0"
-                                                     EndPoint="0,1">
-                                    <LinearGradientBrush.GradientStops>
-                                        <GradientStopCollection>
-                                            <GradientStop Color="{StaticResource Colour.BorderLight}"
-                                                          Offset="0.0" />
-                                            <GradientStop Color="{StaticResource Colour.BorderDark}"
-                                                          Offset="1.0" />
-                                        </GradientStopCollection>
-                                    </LinearGradientBrush.GradientStops>
-                                </LinearGradientBrush>
-
-                            </Border.BorderBrush>
+                                Padding="2,0,2,0"
+                                BorderBrush="{StaticResource Brush.ControlBorder}">
                             <Border.Background>
 
                                 <LinearGradientBrush StartPoint="0,0"
@@ -144,23 +117,11 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="GridViewColumnHeader">
                             <Border Name="HeaderBorder"
-                                    BorderThickness="0,1,0,1">
+                                    BorderThickness="0,1,0,1"
+                                    BorderBrush="{StaticResource Brush.ControlBorder}">
                                 <Border.Background>
                                     <SolidColorBrush Color="{StaticResource Colour.ControlLight}" />
                                 </Border.Background>
-                                <Border.BorderBrush>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                                         EndPoint="0,1">
-                                        <LinearGradientBrush.GradientStops>
-                                            <GradientStopCollection>
-                                                <GradientStop Color="{StaticResource Colour.BorderLight}"
-                                                              Offset="0.0" />
-                                                <GradientStop Color="{StaticResource Colour.BorderDark}"
-                                                              Offset="1.0" />
-                                            </GradientStopCollection>
-                                        </LinearGradientBrush.GradientStops>
-                                    </LinearGradientBrush>
-                                </Border.BorderBrush>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>

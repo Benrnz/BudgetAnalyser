@@ -26,7 +26,7 @@
                 <ResourceDictionary Source="UI/Assets/SaveImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/LockClosedImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/LockOpenImage.xaml" />
-                
+
                 <ResourceDictionary Source="UI/Style/Buttons.xaml" />
 
                 <ResourceDictionary Source="UI/Style/ComboBox.xaml" />
@@ -41,7 +41,7 @@
                 <ResourceDictionary Source="UI/Style/OilLight.xaml" />
                 <ResourceDictionary Source="UI/Style/Expander.xaml" />
                 <ResourceDictionary Source="UI/Style/RadioButton.xaml"/>
-                <ResourceDictionary Source="UI/Style/TransactionListBox.xaml" />
+                <ResourceDictionary Source="Statement/TransactionListBox.xaml" />
                 <ResourceDictionary Source="UI/Style/ModernTiles.xaml" />
                 <ResourceDictionary Source="UI/Style/Menu.xaml" />
                 <ResourceDictionary Source="UI/Assets/DateFilterImage.xaml" />

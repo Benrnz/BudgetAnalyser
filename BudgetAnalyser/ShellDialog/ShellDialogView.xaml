@@ -8,37 +8,47 @@
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch">
 
+    <!-- Take up the entire content area provided by the container (Shell) -->
     <Grid KeyUp="OnShellDialogKeyUp"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           Visibility="{Binding Content, Converter={StaticResource Converter.NullToVis}}">
-        <Grid.RowDefinitions>
-           <RowDefinition Height="1*" />
-           <RowDefinition Height="6*"
-                          MinHeight="75"
-                          MaxHeight="600" />
-           <RowDefinition Height="3*" />
-        </Grid.RowDefinitions>
-        <Rectangle Grid.Row="0"
-                  Grid.RowSpan="3"
-                  Fill="#80000000" />
-        <Border Background="{StaticResource Brush.DialogBackground}"
-                Grid.Row="1">
-            <Border.Effect>
-                <DropShadowEffect />
-            </Border.Effect>
-            <Grid>
+        <!-- Greyed out area behind the dialog -->
+        <Rectangle Fill="#80000000" />
+
+        <!-- Positioning Grid -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="Auto" /> <!-- Dialog goes here -->
+                <RowDefinition Height="8*" />
+            </Grid.RowDefinitions>
+
+            <!-- The dialog border and content -->
+            <Grid Grid.Row="1"
+                  Margin="40,0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" /> <!-- Title -->
+                    <RowDefinition Height="Auto" /> <!-- Content -->
+                    <RowDefinition Height="Auto" /> <!-- Button Bar -->
                 </Grid.RowDefinitions>
+
+                <Border Grid.RowSpan="3"
+                        Background="{StaticResource Brush.DialogBackground}"
+                        BorderBrush="{StaticResource Brush.DialogBorder}"
+                        BorderThickness="2">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="10" />
+                    </Border.Effect>
+                </Border>
                 <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                           Text="{Binding Title}" />
+                           Text="{Binding Title, FallbackValue=Dialog Title}" />
                 <ContentPresenter Grid.Row="1"
                                   Content="{Binding Content}"
-                                  VerticalAlignment="Center"
+                                  VerticalAlignment="Top"
                                   Margin="10" />
+
+                <!-- Button Bar -->
                 <StackPanel Grid.Row="2"
                             HorizontalAlignment="Right"
                             Margin="10"
@@ -79,6 +89,6 @@
                     </Button>
                 </StackPanel>
             </Grid>
-        </Border>
+        </Grid>
     </Grid>
 </UserControl>

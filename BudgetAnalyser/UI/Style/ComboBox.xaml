@@ -67,19 +67,9 @@
             <Border x:Name="MainBorder"
                     Grid.ColumnSpan="2"
                     CornerRadius="2"
-                    BorderThickness="1">
-                <Border.BorderBrush>
-                    <LinearGradientBrush EndPoint="0,1"
-                                         StartPoint="0,0">
-                        <GradientStop Color="{StaticResource Colour.BorderLight}"
-                                      Offset="0" />
-                        <GradientStop Color="{StaticResource Colour.BorderDark}"
-                                      Offset="1" />
-                    </LinearGradientBrush>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <SolidColorBrush Color="Transparent" />
-                </Border.Background>
+                    BorderThickness="1"
+                    BorderBrush="{StaticResource Brush.ControlBorder}"
+                    Background="Transparent">
             </Border>
             <Border Grid.Column="0"
                     CornerRadius="2,0,0,2"
