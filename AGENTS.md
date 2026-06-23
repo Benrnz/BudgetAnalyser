@@ -2,9 +2,11 @@
 
 ## Project Overview
 
-**Budget Analyser** is a 2-tier .NET 10.0 WPF desktop budgeting application with clean engine/UI separation. All business logic is in the **Engine** assembly; the UI is **WPF** using MVVM. Data is persisted as JSON locally; no databases used.
+**Budget Analyser** is a 2-tier .NET 10.0 WPF desktop budgeting application with clean engine/UI separation. All business logic is in the **Engine** assembly; the UI is **WPF** using MVVM. Data is
+persisted as JSON locally; no databases used.
 
 ### Key Architecture Files
+
 - `CompositionRoot.cs` - IoC setup (Autofac + MVVM CommunityToolkit)
 - `IUiContext.cs` / `UiContext.cs` - Ambient context for controllers + services
 - `ApplicationDatabaseFacade.cs` - UI layer access to Engine services
@@ -15,20 +17,26 @@
 ## Critical Patterns & Conventions
 
 ### 1. Automatic Dependency Injection via Attributes
+
 Use `[AutoRegisterWithIoC]` attribute on concrete classes:
+
 ```csharp
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class MyService : IMyService { }
 ```
+
 - Scanned automatically by `DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly()`
 - `SingleInstance = true` → Singleton; default is transient
 - Set `Named = "instanceName"` for multiple implementations of same interface
 - Classes are registered as both themselves and their interfaces
 
-**Important**: The Composition Root scans `BudgetAnalyser.Engine`, `BudgetAnalyser.Encryption`, and `BudgetAnalyser.Wpf` assemblies. Any new service must have this attribute or be manually registered in `CompositionRoot`.
+**Important**: The Composition Root scans `BudgetAnalyser.Engine`, `BudgetAnalyser.Encryption`, and `BudgetAnalyser.Wpf` assemblies. Any new service must have this attribute or be manually registered
+in `CompositionRoot`.
 
 ### 2. Private Field Naming Convention
+
 Use `doNotUse` prefix for private backing fields **only in classes that implement `ControllerBase`, `ObservableRecipient`, or `INotifyPropertyChanged`**:
+
 ```csharp
 private string doNotUseDescription;
 
@@ -42,17 +50,24 @@ public string Description
     }
 }
 ```
-This convention signals "don't access directly; use the property." It's essential for MVVM-aware classes (Controllers, ViewModels, Models with property change notification, and Widgets) where direct field access bypasses the change notification mechanism. **Do not use this prefix in regular service or utility classes** — use standard naming conventions there (e.g., `_description` or `description`).
+
+This convention signals "don't access directly; use the property." It's essential for MVVM-aware classes (Controllers, ViewModels, Models with property change notification, and Widgets) where direct
+field access bypasses the change notification mechanism. **Do not use this prefix in regular service or utility classes** — use standard naming conventions there (e.g., `_description` or
+`description`).
 
 ### 3. MVVM Structure: Controllers = ViewModels
+
 Controllers inherit from `ControllerBase` (from Rees.Wpf):
+
 - Extend `ObservableRecipient` (MVVM CommunityToolkit)
 - Named with `Controller` suffix (e.g., `BudgetController`, `LedgerBookController`)
 - Singleton instances managed by `IUiContext`
 - Access other controllers via `uiContext.Controller<T>()`
 - Use `Messenger.Register<>()` for cross-controller messaging
+- AVOID placing any logic in the code-behind of XAML views, this breaks the MVVM pattern. Confirm with the user before adding any logic.
 
 Example:
+
 ```csharp
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class MyController : ControllerBase, IShowableController
@@ -71,7 +86,9 @@ public class MyController : ControllerBase, IShowableController
 ```
 
 ### 4. Ambient Context Pattern (IUiContext)
+
 Common services are injected via `IUiContext` instead of individual constructor parameters:
+
 ```csharp
 public class SomeController : ControllerBase
 {
@@ -89,6 +106,7 @@ public class SomeController : ControllerBase
 ## Core Data Flow & Key Components
 
 ### Engine Architecture (BudgetAnalyser.Engine)
+
 The Engine is domain-logic only; it doesn't know about WPF or messaging:
 
 - **Models**: `StatementModel`, `BudgetModel`, `LedgerEntryModel`, `MatchingRule` - domain entities
@@ -97,12 +115,14 @@ The Engine is domain-logic only; it doesn't know about WPF or messaging:
 - **GlobalFilterCriteria**: Date range filter applied across the app (changed centrally, affects all views)
 
 ### UI Layer (BudgetAnalyser.Wpf)
+
 - **Controllers** (ViewModels) translate Engine services for UI
 - **Facades**: `IApplicationDatabaseFacade` wraps `IApplicationDatabaseService` for UI use; notifies commands when data changes
 - **Messaging**: Controllers use `Messenger` to send events like `BudgetReadyMessage`, `StatementReadyMessage`
 - **Shell**: `ShellController` + `ShellWindow` (main window); contains `ShellDialogView` for modal dialogs
 
 ### Data Persistence
+
 - **AppState** (UI metadata): Saved to JSON by `PersistBaxAppStateAsJson` (window size, last file loaded)
 - **Engine State** (budget data): Saved by `IApplicationDatabaseService` as JSON in `ApplicationDatabase`
 - Files encrypted using `IFileEncryptor` (optional); credentials stored in `ICredentialStore`
@@ -112,21 +132,24 @@ The Engine is domain-logic only; it doesn't know about WPF or messaging:
 ## Developer Workflows
 
 ### Building
+
 ```powershell
 dotnet build                          # Normal build
 dotnet build -t:Metrics              # Update metrics XML files (complexity, maintainability)
 ```
 
 ### Testing
+
 - **Framework**: MSTest (not XUnit; ignore XUnit3 project)
 - **Mocking**: Moq
 - **Test Projects**:
-  - `BudgetAnalyser.Engine.UnitTest` - Engine logic (uses embedded CSV test data)
-  - `BudgetAnalyser.Wpf.UnitTest` - UI layer (uses Moq for engine services)
+    - `BudgetAnalyser.Engine.UnitTest` - Engine logic (uses embedded CSV test data)
+    - `BudgetAnalyser.Wpf.UnitTest` - UI layer (uses Moq for engine services)
 - **Test Data**: Either embedded as `EmbeddedResource` or in `../TestData/` shared folder
 - **Key Test Utility**: `Rees.UnitTestUtilities` package
 
 Example test usage:
+
 ```csharp
 [TestClass]
 public class MyServiceTest
@@ -138,6 +161,7 @@ public class MyServiceTest
 ```
 
 ### Running Tests from Terminal
+
 ```powershell
 dotnet test BudgetAnalyser.Engine.UnitTest
 dotnet test BudgetAnalyser.Wpf.UnitTest
@@ -147,30 +171,33 @@ dotnet test BudgetAnalyser.Wpf.UnitTest
 
 ## Key Files & Where to Find Patterns
 
-| Pattern | File(s) |
-|---------|---------|
-| IoC Registration | `CompositionRoot.cs`, `DefaultIoCRegistrations.cs`, `AutoRegisterWithIoCAttribute.cs` |
-| Controller/ViewModel | `LedgerBook/LedgerBookController.cs`, `Statement/StatementController.cs` |
-| Model validation | `BudgetAnalyser.Engine/IModelValidate.cs` |
-| Messaging | `ConcurrentMessenger.cs` (wraps `WeakReferenceMessenger.Default`) |
-| MVVM base class | `Rees.Wpf/ControllerBase.cs` |
-| Data persistence | `Engine/Persistence/JsonOnDiskApplicationDatabaseRepository.cs` |
+| Pattern                     | File(s)                                                                                                  |
+|-----------------------------|----------------------------------------------------------------------------------------------------------|
+| IoC Registration            | `CompositionRoot.cs`, `DefaultIoCRegistrations.cs`, `AutoRegisterWithIoCAttribute.cs`                    |
+| Controller/ViewModel        | `LedgerBook/LedgerBookController.cs`, `Statement/StatementController.cs`                                 |
+| Model validation            | `BudgetAnalyser.Engine/IModelValidate.cs`                                                                |
+| Messaging                   | `ConcurrentMessenger.cs` (wraps `WeakReferenceMessenger.Default`)                                        |
+| MVVM base class             | `Rees.Wpf/ControllerBase.cs`                                                                             |
+| Data persistence            | `Engine/Persistence/JsonOnDiskApplicationDatabaseRepository.cs`                                          |
 | `doNotUse` field convention | `Budget/BudgetModel.cs`, `*Controller.cs`, `Widgets/Widget.cs` (for INotifyPropertyChanged classes only) |
-| Widget/Dashboard binding | `Engine/Widgets/Widget.cs` |
-| File dialogs/prompts | `UserPrompts.cs` |
+| Widget/Dashboard binding    | `Engine/Widgets/Widget.cs`                                                                               |
+| File dialogs/prompts        | `UserPrompts.cs`                                                                                         |
 
 ---
 
 ## Cross-Cutting Concerns
 
 ### Logging
+
 ```csharp
 private readonly ILogger logger;
 logger.LogInfo(_ => "Message"); // Error, Warning, Info levels
 ```
 
 ### Validation
+
 Implement `IModelValidate`:
+
 ```csharp
 public bool Validate(StringBuilder messages)
 {
@@ -180,10 +207,13 @@ public bool Validate(StringBuilder messages)
 ```
 
 ### Change Detection
+
 Implement `IDataChangeDetection` to track dirty state for save operations.
 
 ### Encryption
+
 Optional; if encrypted files needed:
+
 1. Users set credential via `ApplicationDatabaseFacade.SetCredential()`
 2. `IFileEncryptor` handles read/write
 3. `LocalDiskReaderWriterSelector` chooses encrypted or unencrypted reader
