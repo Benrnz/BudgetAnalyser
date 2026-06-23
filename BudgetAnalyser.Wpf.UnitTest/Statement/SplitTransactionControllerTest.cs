@@ -11,8 +11,8 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement;
 [TestClass]
 public class SplitTransactionControllerTest
 {
-    private IMessenger messenger;
     private Mock<IBudgetBucketRepository> mockBucketRepo;
+    private Mock<IMessenger> mockMessenger;
     private Mock<IUiContext> mockUiContext;
 
     [TestMethod]
@@ -73,6 +73,55 @@ public class SplitTransactionControllerTest
     }
 
     [TestMethod]
+    public void NegativeAmounts_SetSplinterAmount1_ToNegative50_IsInvalid()
+    {
+        var subject = CreateSubject();
+        var original = new Transaction { Amount = -100.22M, BudgetBucket = new TestBucket("TB", "Test") };
+        subject.ShowDialog(original, Guid.NewGuid());
+
+        subject.SplinterAmount1 = -50M; // direct setter
+        Assert.IsFalse(subject.Valid);
+    }
+
+    [TestMethod]
+    public void NegativeAmounts_Splinter1_0_Splinter2_Neg100Point22_IsInvalid()
+    {
+        var subject = CreateSubject();
+        var original = new Transaction { Amount = -100.22M, BudgetBucket = new TestBucket("TB", "Test") };
+        subject.ShowDialog(original, Guid.NewGuid());
+
+        subject.SplinterAmount1 = 0M;
+        subject.SplinterAmount2 = -100.22M;
+        Assert.IsFalse(subject.Valid);
+    }
+
+    [TestMethod]
+    public void NegativeAmounts_Splinter1_1_Splinter2_Neg101Point22_IsInvalid()
+    {
+        var subject = CreateSubject();
+        var original = new Transaction { Amount = -100.22M, BudgetBucket = new TestBucket("TB", "Test") };
+        subject.ShowDialog(original, Guid.NewGuid());
+
+        subject.SplinterAmount1 = 1M;
+        subject.SplinterAmount2 = -101.22M;
+        Assert.IsFalse(subject.Valid);
+    }
+
+    [TestMethod]
+    public void NegativeAmounts_Splinter1_Neg50_Splinter2_Neg50Point22_IsValid()
+    {
+        var subject = CreateSubject();
+        var original = new Transaction { Amount = -100.22M, BudgetBucket = new TestBucket("TB", "Test") };
+        subject.ShowDialog(original, Guid.NewGuid());
+
+        subject.SplinterAmount1 = -50M;
+        subject.SplinterAmount2 = -50.22M;
+        Console.WriteLine("SpliterAmount1: " + subject.SplinterAmount1);
+        Console.WriteLine("SpliterAmount2: " + subject.SplinterAmount2);
+        Assert.IsTrue(subject.Valid);
+    }
+
+    [TestMethod]
     public void OnShellDialogResponseReceived_MessageWithOkOrSave_ValidRemainsTrue_WhenNotForMe()
     {
         var subject = CreateSubject();
@@ -86,21 +135,21 @@ public class SplitTransactionControllerTest
 
         // Send an Ok response that is NOT for this dialog (CorrelationId empty)
         var messageOk = new ShellDialogResponseMessage(subject, ShellDialogButton.Ok) { CorrelationId = Guid.Empty };
-        this.messenger.Send(messageOk);
+        this.mockMessenger.Object.Send(messageOk);
         Assert.IsTrue(subject.Valid);
 
         // Send a Save response that is NOT for this dialog
         var messageSave = new ShellDialogResponseMessage(subject, ShellDialogButton.Save) { CorrelationId = Guid.Empty };
-        this.messenger.Send(messageSave);
+        this.mockMessenger.Object.Send(messageSave);
         Assert.IsTrue(subject.Valid);
     }
 
     [TestInitialize]
     public void TestInitialise()
     {
-        this.messenger = new WeakReferenceMessenger();
+        this.mockMessenger = new Mock<IMessenger>();
         this.mockUiContext = new Mock<IUiContext>();
-        this.mockUiContext.Setup(m => m.Messenger).Returns(this.messenger);
+        this.mockUiContext.Setup(m => m.Messenger).Returns(this.mockMessenger.Object);
         this.mockUiContext.Setup(m => m.UserPrompts).Returns(() => null!);
 
         this.mockBucketRepo = new Mock<IBudgetBucketRepository>();
@@ -123,6 +172,8 @@ public class SplitTransactionControllerTest
 
     private SplitTransactionController CreateSubject()
     {
+        // Ensure the mock UiContext returns the mock messenger when the controller is constructed.
+        this.mockUiContext.Setup(m => m.Messenger).Returns(this.mockMessenger.Object);
         return new SplitTransactionController(this.mockUiContext.Object, this.mockBucketRepo.Object);
     }
 
