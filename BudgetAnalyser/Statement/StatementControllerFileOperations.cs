@@ -127,6 +127,7 @@ public class StatementControllerFileOperations : ControllerBase
                     this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
                 }
 
+                // Ensures initial first time load triggers load of transactions.
                 ViewModel.Statement = statementModel;
                 ViewModel.TriggerRefreshTotalsRow();
 
