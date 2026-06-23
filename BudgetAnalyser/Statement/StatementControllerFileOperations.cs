@@ -1,4 +1,5 @@
 ﻿using System.Windows.Threading;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
@@ -126,8 +127,12 @@ public class StatementControllerFileOperations : ControllerBase
                     this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
                 }
 
+                // Ensures initial first time load triggers load of transactions.
                 ViewModel.Statement = statementModel;
                 ViewModel.TriggerRefreshTotalsRow();
+
+                // Triggers all UI elements to update
+                Messenger.Send(new FilterAppliedMessage(this, requestCurrentFilterMessage.Criteria ?? new GlobalFilterCriteria()));
 
                 Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
 
