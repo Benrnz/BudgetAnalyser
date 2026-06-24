@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
-using Moq;
+using NSubstitute;
 using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Wpf.UnitTest.ApplicationState;
@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.ApplicationState;
 [TestClass]
 public class PersistBaxAppStateAsJsonTest
 {
-    private Mock<IUserMessageBox> mockUserMessageBox;
+    private IUserMessageBox mockUserMessageBox;
     private PersistBaxAppStateAsJsonTestHarness subject;
 
     [TestMethod]
@@ -50,8 +50,7 @@ public class PersistBaxAppStateAsJsonTest
 
         // Assert
         Assert.AreEqual(0, result.Count, "No objects should be deserialized from invalid JSON.");
-        this.mockUserMessageBox.Verify(m => m.Show(It.IsAny<Exception>(), It.Is<string>(s => s.Contains("Unable to load previously used application preferences"))), Times.Once,
-            "An error message should be shown to the user.");
+        this.mockUserMessageBox.Received(1).Show(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("Unable to load previously used application preferences")));
     }
 
 
@@ -78,7 +77,7 @@ public class PersistBaxAppStateAsJsonTest
     [TestInitialize]
     public void TestInitialize()
     {
-        this.mockUserMessageBox = new Mock<IUserMessageBox>();
-        this.subject = new PersistBaxAppStateAsJsonTestHarness(this.mockUserMessageBox.Object);
+        this.mockUserMessageBox = Substitute.For<IUserMessageBox>();
+        this.subject = new PersistBaxAppStateAsJsonTestHarness(this.mockUserMessageBox);
     }
 }

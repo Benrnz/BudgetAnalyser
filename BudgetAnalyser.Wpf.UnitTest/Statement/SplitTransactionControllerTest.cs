@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
 using CommunityToolkit.Mvvm.Messaging;
-using Moq;
+using NSubstitute;
 using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Wpf.UnitTest.Statement;
@@ -11,9 +11,9 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement;
 [TestClass]
 public class SplitTransactionControllerTest
 {
-    private Mock<IBudgetBucketRepository> mockBucketRepo;
-    private Mock<IMessenger> mockMessenger;
-    private Mock<IUiContext> mockUiContext;
+    private IBudgetBucketRepository mockBucketRepo;
+    private IMessenger mockMessenger;
+    private IUiContext mockUiContext;
 
     [TestMethod]
     public void ChangingSplinterAmount1_MakesValidTrue_WhenAmountsSumToOriginal()
@@ -136,24 +136,24 @@ public class SplitTransactionControllerTest
 
         // Send an Ok response that is NOT for this dialog (CorrelationId empty)
         var messageOk = new ShellDialogResponseMessage(subject, ShellDialogButton.Ok) { CorrelationId = Guid.Empty };
-        this.mockMessenger.Object.Send(messageOk);
+        this.mockMessenger.Send(messageOk);
         Assert.IsTrue(subject.Valid);
 
         // Send a Save response that is NOT for this dialog
         var messageSave = new ShellDialogResponseMessage(subject, ShellDialogButton.Save) { CorrelationId = Guid.Empty };
-        this.mockMessenger.Object.Send(messageSave);
+        this.mockMessenger.Send(messageSave);
         Assert.IsTrue(subject.Valid);
     }
 
     [TestInitialize]
     public void TestInitialise()
     {
-        this.mockMessenger = new Mock<IMessenger>();
-        this.mockUiContext = new Mock<IUiContext>();
-        this.mockUiContext.Setup(m => m.Messenger).Returns(this.mockMessenger.Object);
+        this.mockMessenger = Substitute.For<IMessenger>();
+        this.mockUiContext = Substitute.For<IUiContext>();
+        this.mockUiContext.Messenger.Returns(this.mockMessenger);
 
-        this.mockBucketRepo = new Mock<IBudgetBucketRepository>();
-        this.mockBucketRepo.Setup(r => r.Buckets).Returns(Array.Empty<BudgetBucket>());
+        this.mockBucketRepo = Substitute.For<IBudgetBucketRepository>();
+        this.mockBucketRepo.Buckets.Returns(Array.Empty<BudgetBucket>());
     }
 
     [TestMethod]
@@ -173,8 +173,8 @@ public class SplitTransactionControllerTest
     private SplitTransactionController CreateSubject()
     {
         // Ensure the mock UiContext returns the mock messenger when the controller is constructed.
-        this.mockUiContext.Setup(m => m.Messenger).Returns(this.mockMessenger.Object);
-        return new SplitTransactionController(this.mockUiContext.Object, this.mockBucketRepo.Object);
+        this.mockUiContext.Messenger.Returns(this.mockMessenger);
+        return new SplitTransactionController(this.mockUiContext, this.mockBucketRepo);
     }
 
     private static void SetOriginalTransaction(SplitTransactionController subject, Transaction tx)

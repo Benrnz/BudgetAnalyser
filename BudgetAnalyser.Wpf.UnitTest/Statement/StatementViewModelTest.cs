@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
 using BudgetAnalyser.Wpf.UnitTest.TestData;
-using Moq;
+using NSubstitute;
 using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Wpf.UnitTest.Statement;
@@ -9,8 +9,8 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement;
 [TestClass]
 public class StatementViewModelTest
 {
-    private Mock<ITransactionManagerService> mockTransactionService;
-    private Mock<IUiContext> mockUiContext;
+    private ITransactionManagerService mockTransactionService;
+    private IUiContext mockUiContext;
 
     [TestMethod]
     public void GivenNoDataHasTransactionsShouldBeFalse()
@@ -50,9 +50,9 @@ public class StatementViewModelTest
     [TestInitialize]
     public void TestInitialise()
     {
-        this.mockUiContext = new Mock<IUiContext>();
-        this.mockTransactionService = new Mock<ITransactionManagerService>();
-        this.mockTransactionService.Setup(m => m.DetectDuplicateTransactions()).Returns(string.Empty);
+        this.mockUiContext = Substitute.For<IUiContext>();
+        this.mockTransactionService = Substitute.For<ITransactionManagerService>();
+        this.mockTransactionService.DetectDuplicateTransactions().Returns(string.Empty);
     }
 
     [TestMethod]
@@ -75,11 +75,11 @@ public class StatementViewModelTest
 
     private StatementViewModel CreateSubject()
     {
-        return new StatementViewModel(new Mock<IApplicationDatabaseFacade>().Object, this.mockTransactionService.Object);
+        return new StatementViewModel(Substitute.For<IApplicationDatabaseFacade>(), this.mockTransactionService);
     }
 
     private static IWaitCursor WaitCursorFactory()
     {
-        return new Mock<IWaitCursor>().Object;
+        return Substitute.For<IWaitCursor>();
     }
 }
