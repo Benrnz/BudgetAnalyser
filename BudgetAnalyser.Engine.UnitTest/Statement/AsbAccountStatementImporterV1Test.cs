@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
-    public class AnzAccountStatementImporterV1Test
+    public class AsbAccountStatementImporterV1Test
     {
         private Mock<IReaderWriterSelector> mockReaderWriterSelector;
         private BankImportUtilitiesTestHarness BankImportUtilities { get; set; }
@@ -21,7 +15,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtilities()
         {
-            new AnzAccountStatementImporterV1(null, new FakeLogger(), this.mockReaderWriterSelector.Object);
+            new AsbAccountStatementImporterV1(null, new FakeLogger(), this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
@@ -29,30 +23,44 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new AnzAccountStatementImporterV1(new BankImportUtilities(new FakeLogger()), null, this.mockReaderWriterSelector.Object);
+            new AsbAccountStatementImporterV1(new BankImportUtilities(new FakeLogger()), null, this.mockReaderWriterSelector.Object);
             Assert.Fail();
-        }
-
-        [TestMethod]
-        public async Task LoadShouldParseAFileWithExtraColumns()
-        {
-            var subject = Arrange();
-            subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData2();
-            var result = await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
-
-            Assert.AreEqual(1, result.DurationInMonths);
-            Assert.AreEqual(7, result.AllTransactions.Count());
         }
 
         [TestMethod]
         public async Task LoadShouldParseAGoodFile()
         {
             var subject = Arrange();
-            subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData1();
+            subject.ReadLinesOverride = f => AsbChequeCsvTestData.TestData1();
             var result = await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
             Assert.AreEqual(7, result.AllTransactions.Count());
+        }
+
+        [TestMethod]
+        public async Task LoadShouldParseAFileWithExtraColumns()
+        {
+            var subject = Arrange();
+            subject.ReadLinesOverride = f => AsbChequeCsvTestData.TestData2();
+            var result = await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
+
+            Assert.AreEqual(1, result.DurationInMonths);
+            Assert.AreEqual(7, result.AllTransactions.Count());
+        }
+
+        [TestMethod]
+        public async Task LoadShouldParseAGoodFileAndOutputIt()
+        {
+            var subject = Arrange();
+            subject.ReadLinesOverride = f => AsbChequeCsvTestData.TestData1();
+            var result = await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
+
+            Console.WriteLine("Date        Type             Description    Amount    ");
+            foreach (var txn in result.AllTransactions)
+            {
+                Console.WriteLine($"{txn.Date:dd-MMM-yy} {txn.TransactionType,10} {txn.Description,12} {txn.Amount,10}");
+            }
         }
 
         [TestMethod]
@@ -60,7 +68,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task LoadShouldThrowGivenBadData()
         {
             var subject = Arrange();
-            subject.ReadLinesOverride = filename => AnzChequeCsvTestData.BadTestData1();
+            subject.ReadLinesOverride = filename => AsbChequeCsvTestData.BadTestData1();
             await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
             Assert.Fail();
         }
@@ -103,10 +111,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         }
 
         [TestMethod]
-        public async Task TasteTestShouldReturnFalseGivenTheVisaFormat()
+        public async Task TasteTestShouldReturnFalseGivenTheAnzChequeFormat()
         {
             var subject = Arrange();
-            subject.ReadTextChunkOverride = file => AnzVisaCsvTestData.FirstTwoLines1(); // Visa format given to Cheque parser
+            subject.ReadTextChunkOverride = file => AnzChequeCsvTestData.FirstTwoLines1(); // Anz format given to ASB parser
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
@@ -116,15 +124,6 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         {
             var subject = Arrange();
             subject.ReadTextChunkOverride = file => WestpacChequeCsvTestData.FirstTwoLines1();
-            var result = await subject.TasteTestAsync(@"transumm.CSV");
-            Assert.IsFalse(result);
-        }
-
-        [TestMethod]
-        public async Task TasteTestShouldReturnFalseGivenTheAsbFormat()
-        {
-            var subject = Arrange();
-            subject.ReadTextChunkOverride = file => AsbChequeCsvTestData.FirstNineLines1();
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
@@ -144,9 +143,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             this.mockReaderWriterSelector = new Mock<IReaderWriterSelector>();
         }
 
-        private AnzAccountStatementImporterV1TestHarness Arrange()
+        private AsbAccountStatementImporterV1TestHarness Arrange()
         {
-            return new AnzAccountStatementImporterV1TestHarness(BankImportUtilities, this.mockReaderWriterSelector.Object);
+            return new AsbAccountStatementImporterV1TestHarness(BankImportUtilities, this.mockReaderWriterSelector.Object);
         }
     }
 }

@@ -136,6 +136,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         }
 
         [TestMethod]
+        public async Task TasteTestShouldReturnFalseGivenTheAsbFormat()
+        {
+            var subject = Arrange();
+            subject.ReadTextChunkOverride = file => AsbChequeCsvTestData.FirstNineLines1();
+            var result = await subject.TasteTestAsync(@"transumm.CSV");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public async Task TasteTestShouldReturnTrueGivenAGoodFile()
         {
             var subject = Arrange();
