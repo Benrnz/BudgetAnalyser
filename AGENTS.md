@@ -142,10 +142,11 @@ dotnet build -t:Metrics              # Update metrics XML files (complexity, mai
 ### Testing
 
 - **Framework**: MSTest (not XUnit; ignore XUnit3 project)
-- **Mocking**: Moq
+- **Mocking**: NSubstitute (mandatory; do not use Moq)
+- **Assertions**: Shouldly (preferred over plain Assert statements)
 - **Test Projects**:
     - `BudgetAnalyser.Engine.UnitTest` - Engine logic (uses embedded CSV test data)
-    - `BudgetAnalyser.Wpf.UnitTest` - UI layer (uses Moq for engine services)
+    - `BudgetAnalyser.Wpf.UnitTest` - UI layer (uses NSubstitute for engine services)
 - **Test Data**: Either embedded as `EmbeddedResource` or in `../TestData/` shared folder
 - **Key Test Utility**: `Rees.UnitTestUtilities` package
 
@@ -156,10 +157,22 @@ Example test usage:
 public class MyServiceTest
 {
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void MethodName_ConditionDescription_ShouldThrowWhenNullInput() { }
+    public void MethodName_ConditionDescription_ShouldThrowWhenNullInput()
+    {
+        var mockService = Substitute.For<IService>();
+        var sut = new MyClass(mockService);
+        
+        // Act & Assert
+        var ex = Should.Throw<ArgumentNullException>(() => sut.DoSomething(null));
+        ex.ParamName.ShouldBe("parameter");
+    }
 }
 ```
+
+**Rules and Guidance for Unit Testing**:
+- Use **NSubstitute** for mocking — do not add any additional use of Moq
+- Use **Shouldly** for assertions instead of plain `Assert` statements for more fluent and readable test code
+- Arrange-Act-Assert (AAA) pattern should be clearly evident in test structure
 
 ### Running Tests from Terminal
 
@@ -228,7 +241,7 @@ Optional; if encrypted files needed:
 3. **Add XAML View** → Place in UI folder, bind to Controller via `DataContext`
 4. **If global filter impacts view** → Subscribe to `GlobalFilterController` messages
 5. **Save/load data** → Use `IApplicationDatabaseFacade.NotifyOfChange()` to mark unsaved changes
-6. **Add tests** → Create parallel test project, use MSTest + Moq, embed test data as `EmbeddedResource`
+6. **Add tests** → Create parallel test project, use MSTest + NSubstitute + Shouldly, embed test data as `EmbeddedResource`
 
 ---
 
