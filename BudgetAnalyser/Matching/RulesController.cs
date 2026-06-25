@@ -4,7 +4,7 @@ using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;

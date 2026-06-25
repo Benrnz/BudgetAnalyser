@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 

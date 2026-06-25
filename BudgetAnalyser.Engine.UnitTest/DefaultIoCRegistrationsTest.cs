@@ -3,7 +3,7 @@ using System.Reflection;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
 

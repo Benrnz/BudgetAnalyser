@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;

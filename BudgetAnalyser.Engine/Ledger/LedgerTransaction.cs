@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Ledger;
 

@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.Engine.Statement.Data;
+using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.Engine.Transactions.Data;
 
 namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 

@@ -4,7 +4,7 @@
                     xmlns:budget1="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
                     xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
                     xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
-                    xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
+                    xmlns:statement="clr-namespace:BudgetAnalyser.Transactions"
                     xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
                     xmlns:matching="clr-namespace:BudgetAnalyser.Matching"
                     xmlns:filtering="clr-namespace:BudgetAnalyser.Filtering"

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 

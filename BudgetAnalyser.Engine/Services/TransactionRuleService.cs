@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Services;
 

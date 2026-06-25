@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using Shouldly;

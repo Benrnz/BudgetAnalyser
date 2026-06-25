@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.Statement;
+using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;

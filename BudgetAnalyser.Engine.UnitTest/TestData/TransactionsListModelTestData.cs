@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Rees.UnitTestUtilities;
 

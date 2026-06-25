@@ -8,7 +8,7 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
-using BudgetAnalyser.Statement;
+using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 

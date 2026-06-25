@@ -1,10 +1,10 @@
 ﻿using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
-using BudgetAnalyser.Statement;
+using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 

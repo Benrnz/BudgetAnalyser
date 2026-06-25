@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services;

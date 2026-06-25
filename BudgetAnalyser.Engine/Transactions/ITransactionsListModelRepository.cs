@@ -1,0 +1,43 @@
+﻿using BudgetAnalyser.Engine.BankAccount;
+
+namespace BudgetAnalyser.Engine.Transactions;
+
+/// <summary>
+///     The Statement Repository is responsible for loading <see cref="TransactionsListModel" />s and Bank Extracts for the purpose of merging with an existing <see cref="TransactionsListModel" />.
+///     It also is responsible for saving <see cref="TransactionsListModel" />s. To function it orchestrates across the <see cref="IVersionedTransactionsModelRepository" /> and the
+///     <see cref="IBankExtractImporterRepository" />.
+/// </summary>
+public interface ITransactionsListModelRepository
+{
+    /// <summary>
+    ///     Creates a new empty <see cref="TransactionsListModel" /> at the location indicated by the <paramref name="storageKey" />.
+    ///     Any existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method to load the new collection.
+    /// </summary>
+    Task CreateNewAndSaveAsync(string storageKey);
+
+    /// <summary>
+    ///     Imports a bank's transaction extract and returns it as a new <see cref="TransactionsListModel" />.  This can then be merged with another <see cref="TransactionsListModel" /> using the
+    ///     <see cref="TransactionsListModel.Merge(TransactionsListModel)"/>
+    /// </summary>
+    /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
+    /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given<paramref name="storageKey" /></exception>
+    Task<TransactionsListModel> ImportTransactionsExtractAsync(string storageKey, Account account);
+
+    /// <summary>
+    ///     Loads an existing Budget Analyser Transaction file.
+    /// </summary>
+    /// <param name="storageKey">Pass a known storage key (database identifier or filename) to load.</param>
+    /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
+    /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
+    /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given <paramref name="storageKey" /></exception>
+    /// <exception cref="TransactionsListModelChecksumException">Will be thrown if the statement model's internal checksum detects corrupt data indicating tampering.</exception>
+    /// <exception cref="DataFormatException">Will be thrown if the format of the bank extract contains unexpected data indicating it is corrupt or an old file.</exception>
+    Task<TransactionsListModel> LoadAsync(string storageKey, bool isEncrypted);
+
+    /// <summary>
+    ///     Save the given <see cref="TransactionsListModel" /> into persistent storage. Files are saved into the proprietary Budget Analyser CSV format.
+    /// </summary>
+    /// <param name="transactions">The model to save.</param>
+    /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
+    Task SaveAsync(TransactionsListModel transactions, bool isEncrypted);
+}

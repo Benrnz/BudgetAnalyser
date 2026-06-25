@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Ledger;
 

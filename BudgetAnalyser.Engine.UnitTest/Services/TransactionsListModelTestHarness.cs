@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.Engine.UnitTest.Services

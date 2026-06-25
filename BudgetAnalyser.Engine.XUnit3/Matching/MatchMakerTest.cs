@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Matching;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;

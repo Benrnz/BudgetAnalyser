@@ -1,0 +1,26 @@
+﻿using System.Diagnostics;
+
+namespace BudgetAnalyser.Engine.Transactions;
+
+/// <summary>
+///     Represents any transaction type that could be used on a transaction. These type codes are provided by the bank.
+/// </summary>
+[DebuggerDisplay("TransactionType {Name}")]
+public abstract class TransactionType
+{
+    /// <summary>
+    ///     Gets the transaction type name.
+    /// </summary>
+    public abstract string Name { get; }
+
+    /// <summary>
+    ///     Returns a <see cref="string" /> that represents this instance.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        return Name;
+    }
+}

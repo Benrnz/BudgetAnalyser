@@ -1,4 +1,4 @@
-﻿using BudgetAnalyser.Engine.Statement.Data;
+﻿using BudgetAnalyser.Engine.Transactions.Data;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData;
 

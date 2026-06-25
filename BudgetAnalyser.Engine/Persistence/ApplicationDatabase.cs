@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Matching;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Persistence;

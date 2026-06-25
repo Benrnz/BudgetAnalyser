@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.XUnit.Helpers;
 using BudgetAnalyser.Engine.XUnit.TestData;

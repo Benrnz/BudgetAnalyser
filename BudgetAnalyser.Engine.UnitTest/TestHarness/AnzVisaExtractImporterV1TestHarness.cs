@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness

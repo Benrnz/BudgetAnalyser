@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 
