@@ -8,7 +8,7 @@
              mc:Ignorable="d"
              Background="{StaticResource Brush.MainBackground}"
              DataContextChanged="OnDataContextChanged" 
-             d:DataContext="{d:DesignInstance ledgerBook:LedgerBookController}">
+             d:DataContext="{d:DesignInstance ledgerBook:TopLedgerBookController}">
 
     <UserControl.Resources>
 

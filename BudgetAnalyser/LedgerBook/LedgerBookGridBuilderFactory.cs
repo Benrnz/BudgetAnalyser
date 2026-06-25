@@ -5,7 +5,7 @@ namespace BudgetAnalyser.LedgerBook;
 [AutoRegisterWithIoC]
 public class LedgerBookGridBuilderFactory
 {
-    public virtual ILedgerBookGridBuilder GridBuilderV2(LedgerBookController ledgerBookController)
+    public virtual ILedgerBookGridBuilder GridBuilderV2(TopLedgerBookController ledgerBookController)
     {
         return ledgerBookController is null
             ? throw new ArgumentNullException(nameof(ledgerBookController))

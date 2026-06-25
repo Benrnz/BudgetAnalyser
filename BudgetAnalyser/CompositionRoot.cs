@@ -196,7 +196,7 @@ public sealed class CompositionRoot : IDisposable
         [
             typeof(AddLedgerReconciliationController),
             typeof(AppliedRulesController),
-            typeof(BudgetController),
+            typeof(TopBudgetController),
             typeof(ChooseBudgetBucketController),
             typeof(CreateNewFixedBudgetController),
             typeof(CreateNewSurprisePaymentMonitorController),
@@ -205,7 +205,7 @@ public sealed class CompositionRoot : IDisposable
             typeof(EditingTransactionController),
             typeof(EncryptFileController),
             typeof(GlobalFilterController),
-            typeof(LedgerBookController),
+            typeof(TopLedgerBookController),
             typeof(LedgerBucketViewController),
             typeof(LedgerRemarksController),
             typeof(LedgerTransactionsController),

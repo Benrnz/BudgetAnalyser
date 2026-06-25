@@ -18,7 +18,7 @@
         <overallPerformance:OverallPerformanceView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type budget:BudgetController}">
+    <DataTemplate DataType="{x:Type budget:TopBudgetController}">
         <budget:BudgetMaintenance />
     </DataTemplate>
 
@@ -38,7 +38,7 @@
         <dashboard:DashboardUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
+    <DataTemplate DataType="{x:Type ledgerBook:TopLedgerBookController}">
         <ledgerBook:LedgerBookUserControl />
     </DataTemplate>
 

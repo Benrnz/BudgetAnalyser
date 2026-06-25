@@ -59,12 +59,12 @@ public class ShellController : ControllerBase, IInitializableController
         ReportsDialog = new ShellDialogController(Messenger);
     }
 
-    public BudgetController BudgetController => this.uiContext.Controller<BudgetController>();
+    public TopBudgetController BudgetController => this.uiContext.Controller<TopBudgetController>();
     public ShellDialogController BudgetDialog { get; }
     public DashboardController DashboardController => this.uiContext.Controller<DashboardController>();
     public ShellDialogController DashboardDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
-    public LedgerBookController LedgerBookController => this.uiContext.Controller<LedgerBookController>();
+    public TopLedgerBookController LedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
     public ShellDialogController LedgerBookDialog { get; }
     public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
     public ReportsCatalogController ReportsCatalogController => this.uiContext.Controller<ReportsCatalogController>();
