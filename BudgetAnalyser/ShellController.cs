@@ -67,10 +67,10 @@ public class ShellController : ControllerBase, IInitializableController
     public TopLedgerBookController LedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
     public ShellDialogController LedgerBookDialog { get; }
     public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
-    public ReportsCatalogController ReportsCatalogController => this.uiContext.Controller<ReportsCatalogController>();
+    public TopReportsCatalogController ReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
     public ShellDialogController ReportsDialog { get; }
     public RulesController RulesController => this.uiContext.Controller<RulesController>();
-    public StatementController StatementController => this.uiContext.Controller<StatementController>();
+    public TopTransactionsListController TransactionsController => this.uiContext.Controller<TopTransactionsListController>();
     public ShellDialogController TransactionsDialog { get; }
     internal Point WindowSize { get; private set; }
     public string WindowTitle => "Budget Analyser";
@@ -193,7 +193,7 @@ public class ShellController : ControllerBase, IInitializableController
                 this.originalWindowTopLeft = shellState.TopLeft;
             }
 
-            StatementController.PageSize = shellState.ListPageSize;
+            TransactionsController.PageSize = shellState.ListPageSize;
         }
 
         var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
@@ -209,7 +209,7 @@ public class ShellController : ControllerBase, IInitializableController
         {
             Size = WindowSize,
             TopLeft = WindowTopLeft,
-            ListPageSize = StatementController.PageSize
+            ListPageSize = TransactionsController.PageSize
         };
         message.PersistThisModel(shellPersistentStateV1);
 

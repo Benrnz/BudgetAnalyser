@@ -46,11 +46,11 @@
         <statement:LoadFileView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type statement:StatementController}">
+    <DataTemplate DataType="{x:Type statement:TopTransactionsListController}">
         <statement:StatementUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
+    <DataTemplate DataType="{x:Type reportsCatalog:TopReportsCatalogController}">
         <reportsCatalog:ReportsCatalogUserControl />
     </DataTemplate>
 

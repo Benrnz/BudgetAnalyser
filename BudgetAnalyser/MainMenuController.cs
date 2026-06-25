@@ -120,10 +120,10 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
 
         this.uiContext.Controller<DashboardController>().Shown = DashboardToggle;
-        this.uiContext.Controller<StatementController>().Shown = TransactionsToggle;
+        this.uiContext.Controller<TopTransactionsListController>().Shown = TransactionsToggle;
         this.uiContext.Controller<TopLedgerBookController>().Shown = LedgerBookToggle;
         this.uiContext.Controller<TopBudgetController>().Shown = BudgetToggle;
-        this.uiContext.Controller<ReportsCatalogController>().Shown = ReportsToggle;
+        this.uiContext.Controller<TopReportsCatalogController>().Shown = ReportsToggle;
     }
 
     private void BeforeTabExecutedCommon()

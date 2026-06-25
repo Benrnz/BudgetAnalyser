@@ -214,11 +214,11 @@ public sealed class CompositionRoot : IDisposable
             typeof(NewRuleController),
             typeof(OverallPerformanceController),
             typeof(ReconciliationToDoListController),
-            typeof(ReportsCatalogController),
+            typeof(TopReportsCatalogController),
             typeof(RulesController),
             typeof(ShowSurplusBalancesController),
             typeof(SplitTransactionController),
-            typeof(StatementController),
+            typeof(TopTransactionsListController),
             typeof(TransferFundsController),
             typeof(UploadMobileDataController)
         ];

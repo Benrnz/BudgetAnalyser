@@ -7,7 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              DataContextChanged="OnDataContextChanged"
-             d:DataContext="{d:DesignInstance statement:StatementController}">
+             d:DataContext="{d:DesignInstance statement:TopTransactionsListController}">
 
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>

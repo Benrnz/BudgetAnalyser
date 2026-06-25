@@ -31,8 +31,8 @@
 
         <!-- Main Content Area -->
         <Grid>
-            <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding StatementController}" />
+            <Grid Visibility="{Binding TransactionsController.Shown, Converter={StaticResource Converter.BoolToVis}}">
+                <ContentPresenter Content="{Binding TransactionsController}" />
                 <shellDialog:ShellDialogView DataContext="{Binding TransactionsDialog}" />
             </Grid>
 

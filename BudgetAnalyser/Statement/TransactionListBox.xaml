@@ -45,7 +45,7 @@
     </Style>
 
     <ContextMenu x:Key="TransactionContextMenu"
-                 HasDropShadow="true" d:DataContext="{d:DesignInstance statementUI:StatementController}">
+                 HasDropShadow="true" d:DataContext="{d:DesignInstance statementUI:TopTransactionsListController}">
         <ContextMenu.Resources>
             <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
                    TargetType="{x:Type TextBlock}" />

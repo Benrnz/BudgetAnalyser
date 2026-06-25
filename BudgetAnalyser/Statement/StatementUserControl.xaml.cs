@@ -27,7 +27,7 @@ public partial class StatementUserControl
         InitializeComponent();
     }
 
-    private StatementController Controller => (StatementController)DataContext;
+    private TopTransactionsListController Controller => (TopTransactionsListController)DataContext;
 
     private static void AnimateWidth(FrameworkElement element, double from, double to)
     {
@@ -114,7 +114,7 @@ public partial class StatementUserControl
 
         if (Controller is null)
         {
-            ((StatementController)e.OldValue).ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            ((TopTransactionsListController)e.OldValue).ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
             return;
         }
 
