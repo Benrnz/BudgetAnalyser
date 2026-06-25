@@ -49,7 +49,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     /// <summary>
     ///     Gets the statement model.
     /// </summary>
-    public TransactionsListModel? Statement { get; private set; }
+    public TransactionsListModel? TransactionsModel { get; private set; }
 
     /// <summary>
     ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
@@ -89,7 +89,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
             return;
         }
 
-        Statement = input[0] as TransactionsListModel;
+        TransactionsModel = input[0] as TransactionsListModel;
         this.bucketRepository = (IBudgetBucketRepository)input[1];
 
         if (!this.bucketRepository.IsValidCode(BucketCode))
@@ -99,7 +99,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
             return;
         }
 
-        if (Statement is null)
+        if (TransactionsModel is null)
         {
             ToolTip = this.disabledToolTip;
             Enabled = false;
@@ -114,7 +114,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
 
         // Debit transactions are negative so normally the total spend will be a negative number.
         var totalSpend =
-            Statement.AllTransactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == BucketCode)
+            TransactionsModel.AllTransactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == BucketCode)
                 .Sum(t => t.Amount);
         var remainingBudget = totalBudget + totalSpend;
 

@@ -12,13 +12,13 @@ using Shouldly;
 
 namespace BudgetAnalyser.Engine.XUnit.Statement;
 
-public class CsvOnDiskStatementModelRepositoryV2Test
+public class CsvOnDiskTransactionsModelRepositoryV2Test
 {
     private readonly IFileReaderWriter mockFileReaderWriter;
     private readonly IReaderWriterSelector mockReaderWriterSelector;
     private readonly ITestOutputHelper writer;
 
-    public CsvOnDiskStatementModelRepositoryV2Test(ITestOutputHelper writer)
+    public CsvOnDiskTransactionsModelRepositoryV2Test(ITestOutputHelper writer)
     {
         this.writer = writer;
         this.mockFileReaderWriter = Substitute.For<IFileReaderWriter>();
@@ -60,7 +60,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnAStatementModel_GivenFileWithNoTransactions()
+    public async Task Load_ShouldReturnATransactionsModel_GivenFileWithNoTransactions()
     {
         var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
@@ -72,7 +72,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnStatementModelWithFilename_GivenTestData1()
+    public async Task Load_ShouldReturnTransactionsModelWithFilename_GivenTestData1()
     {
         var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
@@ -83,7 +83,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnStatementModelWithImportedDate_GivenTestData1()
+    public async Task Load_ShouldReturnTransactionsModelWithImportedDate_GivenTestData1()
     {
         var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
@@ -94,7 +94,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnStatementModelWithNoTransactions_GivenFileWithNoTransactions()
+    public async Task Load_ShouldReturnTransactionsModelWithNoTransactions_GivenFileWithNoTransactions()
     {
         var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));
@@ -105,7 +105,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnStatementModelWithOneDuration_GivenTestData1()
+    public async Task Load_ShouldReturnTransactionsModelWithOneDuration_GivenTestData1()
     {
         var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.TestData1()));
@@ -116,7 +116,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnStatementModelWithTransactions_GivenDemoFile()
+    public async Task Load_ShouldReturnTransactionsModelWithTransactions_GivenDemoFile()
     {
         var subject = ArrangeWithEmbeddedResources();
         var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
@@ -127,7 +127,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnStatementModelWithTransactions_GivenTestData1()
+    public async Task Load_ShouldReturnTransactionsModelWithTransactions_GivenTestData1()
     {
         var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.TestData1()));
@@ -138,7 +138,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     }
 
     [Fact]
-    public async Task Load_ShouldReturnStatementModelWithZeroDuration_GivenFileWithNoTransactions()
+    public async Task Load_ShouldReturnTransactionsModelWithZeroDuration_GivenFileWithNoTransactions()
     {
         var subject = ArrangeWithMocks();
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.EmptyTestData()));

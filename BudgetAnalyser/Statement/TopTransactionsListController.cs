@@ -200,17 +200,18 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
     }
 
-    public void RegisterListener<TMessage>(StatementUserControl recipient, MessageHandler<StatementUserControl, TMessage> handler) where TMessage : MessageBase
+    public void RegisterListener<TMessage>(TopTransactionsUserControl recipient, MessageHandler<TopTransactionsUserControl, TMessage> handler) where TMessage : MessageBase
     {
         Messenger.Register(recipient, handler);
     }
 
-    private async Task CheckBudgetContainsAllUsedBucketsFromStatement(BudgetCollection? budgets = null)
+    private async Task CheckBudgetContainsAllUsedBucketsFromTransactions(BudgetCollection? budgets = null)
     {
         if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
         {
             this.uiContext.UserPrompts.MessageBox.Show(
-                "WARNING! By loading a different budget with a Statement loaded, data loss may occur. There may be budget buckets used in the Statement that do not exist in the new loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
+                "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the Statement that do not exist in the new " +
+                "loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
                 "Data Loss Warning!");
         }
     }
@@ -258,7 +259,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             return;
         }
 
-        await CheckBudgetContainsAllUsedBucketsFromStatement(message.Budgets);
+        await CheckBudgetContainsAllUsedBucketsFromTransactions(message.Budgets);
         ViewModel.TriggerRefreshBucketFilterList();
     }
 

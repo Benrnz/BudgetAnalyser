@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.UnitTest.TestHarness;
 namespace BudgetAnalyser.Engine.UnitTest.Statement;
 
 [TestClass]
-public class DtoToStatementModelMapperTest
+public class DtoToTransactionsListModelMapperTest
 {
     private TransactionsListModel Result { get; set; }
     private TransactionSetDto TestData => TransactionSetDtoTestData.TestData2();

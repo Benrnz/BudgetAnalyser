@@ -35,7 +35,7 @@ public class BudgetBucketMonitorWidgetTest
         this.bucketRepo = new BucketBucketRepoAlwaysFind();
         this.criteriaTestData = new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) };
 
-        CreateStatementTestData();
+        CreateTransactionsTestData();
 
         var budgetModel = BudgetModelTestData.CreateTestData5();
         this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel), budgetModel);
@@ -77,7 +77,7 @@ public class BudgetBucketMonitorWidgetTest
             .Build();
     }
 
-    private void CreateStatementTestData()
+    private void CreateTransactionsTestData()
     {
         this.transactionsTestData = new TransactionsListModelBuilder()
             .AppendTransaction(

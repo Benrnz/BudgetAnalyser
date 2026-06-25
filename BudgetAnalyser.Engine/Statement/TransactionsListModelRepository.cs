@@ -15,15 +15,15 @@ namespace BudgetAnalyser.Engine.Statement;
 /// </summary>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC")]
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class TransactionsListModelRepository(IVersionedTransactionsModelRepository statementModelRepository, IBankStatementImporterRepository importerRepository)
+internal class TransactionsListModelRepository(IVersionedTransactionsModelRepository transactionsListModelRepository, IBankStatementImporterRepository importerRepository)
     : ITransactionsListModelRepository
 {
     private readonly IBankStatementImporterRepository importerRepository = importerRepository ?? throw new ArgumentNullException(nameof(importerRepository));
-    private readonly IVersionedTransactionsModelRepository statementModelRepository = statementModelRepository ?? throw new ArgumentNullException(nameof(statementModelRepository));
+    private readonly IVersionedTransactionsModelRepository transactionsListModelRepository = transactionsListModelRepository ?? throw new ArgumentNullException(nameof(transactionsListModelRepository));
 
     public async Task CreateNewAndSaveAsync(string storageKey)
     {
-        await this.statementModelRepository.CreateNewAndSaveAsync(storageKey);
+        await this.transactionsListModelRepository.CreateNewAndSaveAsync(storageKey);
     }
 
     public async Task<TransactionsListModel> ImportBankStatementAsync(string storageKey, Account account)
@@ -42,7 +42,7 @@ internal class TransactionsListModelRepository(IVersionedTransactionsModelReposi
     {
         return storageKey is null
             ? throw new FileNotFoundException("storageKey")
-            : await this.statementModelRepository.LoadAsync(storageKey, isEncrypted);
+            : await this.transactionsListModelRepository.LoadAsync(storageKey, isEncrypted);
     }
 
     public async Task SaveAsync(TransactionsListModel transactions, bool isEncrypted)
@@ -52,6 +52,6 @@ internal class TransactionsListModelRepository(IVersionedTransactionsModelReposi
             throw new ArgumentNullException(nameof(transactions));
         }
 
-        await this.statementModelRepository.SaveAsync(transactions, isEncrypted);
+        await this.transactionsListModelRepository.SaveAsync(transactions, isEncrypted);
     }
 }
