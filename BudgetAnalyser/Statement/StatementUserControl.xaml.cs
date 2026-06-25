@@ -118,7 +118,7 @@ public partial class StatementUserControl
             return;
         }
 
-        if (Controller.ViewModel.Statement is null)
+        if (Controller.ViewModel.TransactionsList is null)
         {
             return;
         }

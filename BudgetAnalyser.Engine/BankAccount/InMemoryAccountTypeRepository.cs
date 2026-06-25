@@ -18,7 +18,7 @@ public class InMemoryAccountTypeRepository : IAccountTypeRepository
     public InMemoryAccountTypeRepository()
     {
         // Populate the repository with the known list of account I want for now.
-        // In a more advanced implementation these would be loaded into the repository when the StatementModel is loaded using
+        // In a more advanced implementation these would be loaded into the repository when the TransactionsListModel is loaded using
         // the AccountTypes actively used by it.
         this.repository.TryAdd(AccountTypeRepositoryConstants.Cheque,
             new ChequeAccount(AccountTypeRepositoryConstants.Cheque));

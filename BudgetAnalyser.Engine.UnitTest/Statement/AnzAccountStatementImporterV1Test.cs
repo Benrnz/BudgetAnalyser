@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         {
             var subject = Arrange();
             subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData2();
-            var result = await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
+            var result = await subject.LoadAsync("foo.bar", TransactionsListModelTestData.ChequeAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
             Assert.AreEqual(7, result.AllTransactions.Count());
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         {
             var subject = Arrange();
             subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData1();
-            var result = await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
+            var result = await subject.LoadAsync("foo.bar", TransactionsListModelTestData.ChequeAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
             Assert.AreEqual(7, result.AllTransactions.Count());
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         {
             var subject = Arrange();
             subject.ReadLinesOverride = filename => AnzChequeCsvTestData.BadTestData1();
-            await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
+            await subject.LoadAsync("foo.bar", TransactionsListModelTestData.ChequeAccount);
             Assert.Fail();
         }
 
@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         {
             var subject = Arrange();
             BankImportUtilities.AbortIfFileDoesntExistOverride = s => { throw new FileNotFoundException(); };
-            await subject.LoadAsync("foo.bar", StatementModelTestData.ChequeAccount);
+            await subject.LoadAsync("foo.bar", TransactionsListModelTestData.ChequeAccount);
             Assert.Fail();
         }
 

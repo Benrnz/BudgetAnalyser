@@ -9,7 +9,7 @@
 //namespace BudgetAnalyser.Engine.UnitTest.TestData
 //{
 //    /// <summary>
-//    /// Use this class to extract statement testdata from a csv file and then generate the corresponding StatementModel in CSharp.
+//    /// Use this class to extract statement testdata from a csv file and then generate the corresponding TransactionsListModel in CSharp.
 //    /// </summary>
 //    public static class StatementModelTestDataGenerator
 //    {
@@ -22,23 +22,23 @@
 //                new TransactionSetDtoToStatementModelMapper(),
 //                new StatementModelToTransactionSetDtoMapper());
 
-//            Task<StatementModel> modelTask = importer.LoadAsync(fileName);
+//            Task<TransactionsListModel> modelTask = importer.LoadAsync(fileName);
 //            modelTask.Wait();
-//            StatementModel model = modelTask.Result;
+//            TransactionsListModel model = modelTask.Result;
 
 //            Debug.WriteLine(@"
 ///// <summary>THIS IS GENERATED CODE </summary>
 //[GeneratedCode(""StatementModelTestDataGenerator.GenerateCSharp"", ""{0}"")]
-//public static StatementModel TestDataGenerated()
+//public static TransactionsListModel TestDataGenerated()
 //{{
-//    var model = new StatementModel(new FakeLogger()) 
+//    var model = new TransactionsListModel(new FakeLogger())
 //    {{", DateTime.Now);
 //            Debug.WriteLine(@"
-//        StorageKey = @""C:\Foo\StatementModel.csv"",");
+//        StorageKey = @""C:\Foo\TransactionsListModel.csv"",");
 //            Debug.WriteLine(@"
 //        Imported = new DateTime({0}, {1}, {2}),", model.LastImport.Year, model.LastImport.Month, model.LastImport.Day);
 //            Debug.WriteLine(@"
-//    };"); // End new StatementModel Initialiser
+//    };"); // End new TransactionsListModel Initialiser
 
 //            Debug.WriteLine(@"
 //    var transactions = new List<Transaction>
@@ -46,7 +46,7 @@
 //            foreach (Transaction transaction in model.AllTransactions.Where(t => t.Date >= beginDate && t.Date <= endDate))
 //            {
 //                Debug.WriteLine(@"
-//        new Transaction 
+//        new Transaction
 //        {");
 //                Debug.WriteLine(@"
 //            Account = AccountTypeRepo.GetByKey(""{0}""),", transaction.Account.Name);

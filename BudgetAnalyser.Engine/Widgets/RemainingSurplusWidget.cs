@@ -25,7 +25,7 @@ public class RemainingSurplusWidget : RemainingBudgetBucketWidget
     protected override decimal CalculateTotalSpendInPeriod(LedgerEntryLine line)
     {
         var spend = base.CalculateTotalSpendInPeriod(line);
-        var overspentLedgers = LedgerCalculation!.CalculateOverSpentLedgers(Statement!, line, Filter!.BeginDate!.Value, Filter!.EndDate!.Value);
+        var overspentLedgers = LedgerCalculation!.CalculateOverSpentLedgers(TransactionsList!, line, Filter!.BeginDate!.Value, Filter!.EndDate!.Value);
         var overdrawnBalance = overspentLedgers.Sum(t => t.Amount);
         return spend + overdrawnBalance;
     }

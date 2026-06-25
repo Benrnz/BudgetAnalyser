@@ -28,7 +28,7 @@
             <StackPanel Margin="8,2,2,2"
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                           Text="{Binding ViewModel.StatementName}" />
+                           Text="{Binding ViewModel.TransactionListModelName}" />
                 <TextBlock Style="{StaticResource TextBlock.Heading1}"
                            Text="*"
                            Visibility="{Binding ViewModel.Dirty, Converter={StaticResource Converter.BoolToVis}}" />
@@ -191,7 +191,7 @@
             <StackPanel Grid.Row="1"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
-                <StackPanel Visibility="{Binding ViewModel.Statement, Converter={StaticResource Converter.NullToVis}}">
+                <StackPanel Visibility="{Binding ViewModel.TransactionsList, Converter={StaticResource Converter.NullToVis}}">
                     <Border HorizontalAlignment="Center"
                             Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                             VerticalAlignment="Center"
@@ -204,7 +204,7 @@
                 <Border HorizontalAlignment="Center"
                         Style="{StaticResource Badge.Border.RedOilLightStyle}"
                         VerticalAlignment="Center"
-                        Visibility="{Binding ViewModel.Statement, Converter={StaticResource Converter.NotNullToVis}}">
+                        Visibility="{Binding ViewModel.TransactionsList, Converter={StaticResource Converter.NotNullToVis}}">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="No transactions file loaded."
                                ToolTip="Load a transactions csv file." />

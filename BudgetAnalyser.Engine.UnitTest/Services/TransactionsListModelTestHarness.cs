@@ -5,12 +5,8 @@ using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.Engine.UnitTest.Services
 {
-    public class StatementModelTestHarness : StatementModel
+    public class TransactionsListModelTestHarness() : TransactionsListModel(new FakeLogger())
     {
-        public StatementModelTestHarness() : base(new FakeLogger())
-        {
-        }
-
         public int FilterByCriteriaWasCalled { get; set; }
         public int MergeWasCalled { get; set; }
         public int RemoveTransactionWasCalled { get; set; }
@@ -21,7 +17,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             FilterByCriteriaWasCalled++;
         }
 
-        internal override StatementModel Merge(StatementModel additionalModel)
+        internal override TransactionsListModel Merge(TransactionsListModel additionalModel)
         {
             MergeWasCalled++;
             return this;

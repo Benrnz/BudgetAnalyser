@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 
             LedgerBucket instance2 = new SavedUpForLedger
             {
-                BudgetBucket = StatementModelTestData.HairBucket,
+                BudgetBucket = TransactionsListModelTestData.HairBucket,
                 StoredInAccount = LedgerBookTestData.ChequeAccount
             };
 
@@ -47,12 +47,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var instance1 = new SpentPerPeriodLedger
             {
                 BudgetBucket = bucket1,
-                StoredInAccount = StatementModelTestData.SavingsAccount
+                StoredInAccount = TransactionsListModelTestData.SavingsAccount
             };
             var instance2 = new SpentPerPeriodLedger
             {
                 BudgetBucket = bucket2,
-                StoredInAccount = StatementModelTestData.SavingsAccount
+                StoredInAccount = TransactionsListModelTestData.SavingsAccount
             };
             Assert.AreEqual(instance1, instance2);
             Assert.IsTrue(instance1 == instance2);
@@ -67,12 +67,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var instance1 = new SpentPerPeriodLedger
             {
                 BudgetBucket = bucket1,
-                StoredInAccount = StatementModelTestData.ChequeAccount
+                StoredInAccount = TransactionsListModelTestData.ChequeAccount
             };
             var instance2 = new SpentPerPeriodLedger
             {
                 BudgetBucket = bucket2,
-                StoredInAccount = StatementModelTestData.SavingsAccount
+                StoredInAccount = TransactionsListModelTestData.SavingsAccount
             };
             Assert.AreNotEqual(instance1, instance2);
             Assert.IsFalse(instance1 == instance2);
@@ -87,12 +87,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var instance1 = new SpentPerPeriodLedger
             {
                 BudgetBucket = bucket1,
-                StoredInAccount = StatementModelTestData.ChequeAccount
+                StoredInAccount = TransactionsListModelTestData.ChequeAccount
             };
             var instance2 = new SpentPerPeriodLedger
             {
                 BudgetBucket = bucket2,
-                StoredInAccount = StatementModelTestData.ChequeAccount
+                StoredInAccount = TransactionsListModelTestData.ChequeAccount
             };
             Assert.AreNotEqual(instance1, instance2);
             Assert.IsFalse(instance1 == instance2);
@@ -103,13 +103,13 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             var instance1 = new SavedUpForLedger
             {
-                BudgetBucket = StatementModelTestData.CarMtcBucket,
-                StoredInAccount = StatementModelTestData.SavingsAccount
+                BudgetBucket = TransactionsListModelTestData.CarMtcBucket,
+                StoredInAccount = TransactionsListModelTestData.SavingsAccount
             };
             var instance2 = new SavedUpForLedger
             {
-                BudgetBucket = StatementModelTestData.CarMtcBucket,
-                StoredInAccount = StatementModelTestData.SavingsAccount
+                BudgetBucket = TransactionsListModelTestData.CarMtcBucket,
+                StoredInAccount = TransactionsListModelTestData.SavingsAccount
             };
             Assert.AreEqual(instance1, instance2);
             Assert.IsTrue(instance1 == instance2);
@@ -123,12 +123,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 
             var instance1 = new SavedUpForLedger
             {
-                BudgetBucket = StatementModelTestData.CarMtcBucket,
+                BudgetBucket = TransactionsListModelTestData.CarMtcBucket,
                 StoredInAccount = account1
             };
             var instance2 = new SavedUpForLedger
             {
-                BudgetBucket = StatementModelTestData.CarMtcBucket,
+                BudgetBucket = TransactionsListModelTestData.CarMtcBucket,
                 StoredInAccount = account2
             };
             Assert.AreEqual(instance1, instance2);

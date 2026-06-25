@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement;
 [TestClass]
 public class DtoToStatementModelMapperTest
 {
-    private StatementModel Result { get; set; }
+    private TransactionsListModel Result { get; set; }
     private TransactionSetDto TestData => TransactionSetDtoTestData.TestData2();
 
     [TestMethod]
@@ -46,7 +46,7 @@ public class DtoToStatementModelMapperTest
     //        [TestMethod]
     //        public void CodifyTestData2()
     //        {
-    //            var testData = StatementModelTestData.TestData2();
+    //            var testData = TransactionsListModelTestData.TestData2();
     //            var mapper = new StatementModelToTransactionSetDtoMapper(new TransactionToTransactionDtoMapper());
     //            var result = mapper.Map(testData, "skjgiuwguih2798yrg972hguoisi7fgiusgfs", @"C:\Foo\Bar.csv");
 

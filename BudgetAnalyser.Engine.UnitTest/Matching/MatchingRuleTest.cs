@@ -278,6 +278,6 @@ public class MatchingRuleTest
 
     private MatchingRule Arrange(Guid? id = null)
     {
-        return new MatchingRule(BucketRepo) { BucketCode = StatementModelTestData.PowerBucket.Code, RuleId = id ?? Guid.NewGuid() };
+        return new MatchingRule(BucketRepo) { BucketCode = TransactionsListModelTestData.PowerBucket.Code, RuleId = id ?? Guid.NewGuid() };
     }
 }

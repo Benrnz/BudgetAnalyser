@@ -14,7 +14,7 @@ public class DtoToTransactionMapperTest
 
     private TransactionDto TestData => new(
         Id: TransactionId,
-        Account: StatementModelTestData.ChequeAccount.Name,
+        Account: TransactionsListModelTestData.ChequeAccount.Name,
         Amount: 123.99M,
         BudgetBucketCode: TestDataConstants.PowerBucketCode,
         Date: new DateOnly(2014, 07, 31),

@@ -161,7 +161,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     public int TotalPages => (ViewModel.Transactions.Count + PageSize - 1) / PageSize;
 
-    public StatementViewModel ViewModel => FileOperations.ViewModel;
+    public TransactionsListViewModel ViewModel => FileOperations.ViewModel;
 
     public bool Shown
     {
@@ -303,7 +303,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             return;
         }
 
-        if (ViewModel.Statement is null)
+        if (ViewModel.TransactionsList is null)
         {
             return;
         }
@@ -311,8 +311,8 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         var bucketFilter = BucketFilter;
         BucketFilter = null;
         this.transactionService.FilterTransactions(message.Criteria);
-        ViewModel.Statement = this.transactionService.StatementModel;
-        ViewModel.Transactions = ViewModel.Statement!.Transactions.ToList();
+        ViewModel.TransactionsList = this.transactionService.TransactionsListModel;
+        ViewModel.Transactions = ViewModel.TransactionsList!.Transactions.ToList();
         CurrentPage = 1;
         ViewModel.TriggerRefreshTotalsRow();
         BucketFilter = bucketFilter;

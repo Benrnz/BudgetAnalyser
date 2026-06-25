@@ -26,7 +26,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         Dependencies =
         [
             typeof(IBudgetCurrencyContext),
-            typeof(StatementModel),
+            typeof(TransactionsListModel),
             typeof(GlobalFilterCriteria),
             typeof(IBudgetBucketRepository),
             typeof(LedgerBook),
@@ -82,7 +82,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     /// <summary>
     ///     Gets the statement model.
     /// </summary>
-    protected StatementModel? Statement { get; private set; }
+    protected TransactionsListModel? TransactionsList { get; private set; }
 
     /// <summary>
     ///     Updates the widget with new input.
@@ -101,14 +101,14 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         }
 
         Budget = (IBudgetCurrencyContext)input[0];
-        Statement = (StatementModel)input[1];
+        TransactionsList = (TransactionsListModel)input[1];
         Filter = (GlobalFilterCriteria)input[2];
         this.bucketRepository = (IBudgetBucketRepository)input[3];
         LedgerBook = (LedgerBook)input[4];
         LedgerCalculation = (LedgerCalculation)input[5];
         this.logger = input[6] as ILogger;
 
-        if (Statement is null
+        if (TransactionsList is null
             || Budget is null
             || Filter is null
             || Filter.Cleared
@@ -168,7 +168,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 
     protected virtual decimal CalculateTotalSpendInPeriod(LedgerEntryLine line)
     {
-        return LedgerCalculation!.CalculateCurrentPeriodBucketSpend(line, Filter!, Statement!, BucketCode);
+        return LedgerCalculation!.CalculateCurrentPeriodBucketSpend(line, Filter!, TransactionsList!, BucketCode);
     }
 
     /// <summary>

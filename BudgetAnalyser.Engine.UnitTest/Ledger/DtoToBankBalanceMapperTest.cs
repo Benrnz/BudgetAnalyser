@@ -10,7 +10,7 @@ public class DtoToBankBalanceMapperTest
 {
     private BankBalance Result { get; set; }
 
-    private BankBalanceDto TestData => new(StatementModelTestData.ChequeAccount.Name, 44552.44M);
+    private BankBalanceDto TestData => new(TransactionsListModelTestData.ChequeAccount.Name, 44552.44M);
 
     [TestMethod]
     public void ShouldMapAmount()
@@ -21,7 +21,7 @@ public class DtoToBankBalanceMapperTest
     [TestMethod]
     public void ShouldMapBankAccount()
     {
-        Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.Account.Name);
+        Assert.AreEqual(TransactionsListModelTestData.ChequeAccount.Name, Result.Account.Name);
     }
 
     [TestInitialize]

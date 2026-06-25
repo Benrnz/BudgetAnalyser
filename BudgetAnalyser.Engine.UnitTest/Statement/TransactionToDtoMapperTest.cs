@@ -15,15 +15,15 @@ public class TransactionToDtoMapperTest
     private Transaction TestData => new()
     {
         Id = TransactionId,
-        Account = StatementModelTestData.ChequeAccount,
+        Account = TransactionsListModelTestData.ChequeAccount,
         Amount = 123.99M,
-        BudgetBucket = StatementModelTestData.PowerBucket,
+        BudgetBucket = TransactionsListModelTestData.PowerBucket,
         Date = new DateOnly(2014, 07, 31),
         Description = "The quick brown poo",
         Reference1 = "Reference 1",
         Reference2 = "REference 23",
         Reference3 = "REference 33",
-        TransactionType = StatementModelTestData.TransactionType
+        TransactionType = TransactionsListModelTestData.TransactionType
     };
 
     [TestMethod]

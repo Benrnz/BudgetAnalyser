@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement;
 public class StatementModelToDtoMapperTest
 {
     private TransactionSetDto Result { get; set; }
-    private StatementModel TestData => StatementModelTestData.TestData2();
+    private TransactionsListModel TestData => TransactionsListModelTestData.TestData2();
 
     [TestMethod]
     public void ShouldMapAllTransactions()
@@ -53,7 +53,7 @@ public class StatementModelToDtoMapperTest
         Act(TestData);
     }
 
-    private void Act(StatementModel testData)
+    private void Act(TransactionsListModel testData)
     {
         var subject = new MapperStatementModelToDto2(
             new InMemoryAccountTypeRepository(),

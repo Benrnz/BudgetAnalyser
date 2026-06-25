@@ -360,7 +360,7 @@ public class SpentMonthlyLedgerReconciliationBehaviourTest
     {
         this.reconciliationDate = new DateOnly(2013, 9, 20);
 
-        this.subject2 = new SpentPerPeriodLedger { BudgetBucket = StatementModelTestData.PowerBucket, StoredInAccount = StatementModelTestData.ChequeAccount };
+        this.subject2 = new SpentPerPeriodLedger { BudgetBucket = TransactionsListModelTestData.PowerBucket, StoredInAccount = TransactionsListModelTestData.ChequeAccount };
         this.subject = new LedgerEntry(true) { LedgerBucket = LedgerBookTestData.PowerLedger, Balance = OpeningBalance };
     }
 }

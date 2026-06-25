@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 [TestClass]
 public class LedgerBook_ReconcileTest
 {
-    private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
+    private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 2050M) };
     private static readonly DateOnly ReconcileDate = new(2013, 09, 15);
 
     private LedgerBook subject;

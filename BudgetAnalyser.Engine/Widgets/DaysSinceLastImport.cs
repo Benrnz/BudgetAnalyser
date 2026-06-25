@@ -17,7 +17,7 @@ public class DaysSinceLastImport : Widget
     public DaysSinceLastImport()
     {
         Category = WidgetGroup.OverviewSectionName;
-        Dependencies = [typeof(StatementModel)];
+        Dependencies = [typeof(TransactionsListModel)];
         DetailedText = "Days since last import";
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
         Clickable = true;
@@ -41,7 +41,7 @@ public class DaysSinceLastImport : Widget
         }
 
         Enabled = true;
-        var statement = (StatementModel)input[0];
+        var statement = (TransactionsListModel)input[0];
         var days = Convert.ToInt32(DateTime.Today.Subtract(statement.LastImport).TotalDays);
         if (days < 0)
         {

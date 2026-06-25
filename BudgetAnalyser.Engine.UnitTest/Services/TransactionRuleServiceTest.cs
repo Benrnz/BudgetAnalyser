@@ -56,21 +56,21 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [TestMethod]
         public void Match_ShouldRemoveSingleUseRulesThatWereUsed()
         {
-            var testTransactions = StatementModelTestData.TestData1().Transactions;
+            var testTransactions = TransactionsListModelTestData.TestData1().Transactions;
             var testMatchingRules = new List<MatchingRule>
             {
                 new SingleUseMatchingRule(this.mockBucketRepo)
                 {
                     Amount = -95.15M,
                     And = true,
-                    BucketCode = StatementModelTestData.PhoneBucket.Code,
+                    BucketCode = TransactionsListModelTestData.PhoneBucket.Code,
                     Reference1 = "skjghjkh",
                     MatchCount = 1 // Artificially set to simulate a match
                 },
                 new MatchingRule(this.mockBucketRepo)
                 {
                     Amount = -11.11M,
-                    BucketCode = StatementModelTestData.CarMtcBucket.Code
+                    BucketCode = TransactionsListModelTestData.CarMtcBucket.Code
                 }
             };
 

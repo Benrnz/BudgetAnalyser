@@ -2,9 +2,9 @@
 
 namespace BudgetAnalyser.Engine.UnitTest.Helper;
 
-public static class StatementModelHelper
+public static class TransactionsListModelHelper
 {
-    public static void Output(this StatementModel instance, DateOnly startDate, IReesTestOutput outputWriter = null)
+    public static void Output(this TransactionsListModel instance, DateOnly startDate, IReesTestOutput outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         writer.WriteLine(string.Empty);

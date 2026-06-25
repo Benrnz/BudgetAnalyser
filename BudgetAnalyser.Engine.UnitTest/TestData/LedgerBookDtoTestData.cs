@@ -452,7 +452,7 @@ internal static class LedgerBookDtoTestData
                     [
                         new LedgerTransactionDto
                         (
-                            StatementModelTestData.ChequeAccount.Name,
+                            TransactionsListModelTestData.ChequeAccount.Name,
                             -100.01M,
                             Narrative: "Visa payment yet to go out",
                             Id: new Guid("22927CF0-BAA2-4828-A669-C77396888BD6"),

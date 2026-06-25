@@ -25,7 +25,7 @@ public class MonitorableDependenciesTests
     public void Constructor_ShouldInitializeDependencies()
     {
         var sut = new FakeMonitorableDependencies();
-        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(StatementModel));
+        sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(TransactionsListModel));
         sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(BudgetCollection));
         sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(IBudgetCurrencyContext));
         sut.SupportedWidgetDependencyTypes.ShouldContain(typeof(LedgerBook));
@@ -47,7 +47,7 @@ public class MonitorableDependenciesTests
     [Fact]
     public void NotifyOfDependencyChange_ShouldReturnFalse_WhenDependencyIsNull()
     {
-        var result = this.service.NotifyOfDependencyChange<StatementModel>(null);
+        var result = this.service.NotifyOfDependencyChange<TransactionsListModel>(null);
         result.ShouldBeFalse();
     }
 

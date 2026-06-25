@@ -25,8 +25,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void Comparable_HairBucketIsLessThanPower()
         {
-            var hairBucket = StatementModelTestData.HairBucket;
-            var powerBucket = StatementModelTestData.PowerBucket;
+            var hairBucket = TransactionsListModelTestData.HairBucket;
+            var powerBucket = TransactionsListModelTestData.PowerBucket;
 
             Assert.IsTrue(hairBucket.CompareTo(powerBucket) < 0);
         }
@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void Comparable_PhoneBucketIsEqualToAnotherInstance()
         {
-            var phoneBucket = StatementModelTestData.PhoneBucket;
+            var phoneBucket = TransactionsListModelTestData.PhoneBucket;
             var phooneBucket2 = Arrange(TestDataConstants.PhoneBucketCode, "Foo");
 
             Assert.IsTrue(phoneBucket.CompareTo(phooneBucket2) == 0);
@@ -43,8 +43,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void Comparable_PhoneBucketIsGreaterThanHair()
         {
-            var hairBucket = StatementModelTestData.HairBucket;
-            var phoneBucket = StatementModelTestData.PhoneBucket;
+            var hairBucket = TransactionsListModelTestData.HairBucket;
+            var phoneBucket = TransactionsListModelTestData.PhoneBucket;
 
             Assert.IsTrue(phoneBucket.CompareTo(hairBucket) > 0);
         }

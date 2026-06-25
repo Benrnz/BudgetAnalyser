@@ -18,24 +18,24 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
     private DateOnly endDate;
     private BudgetModel? latestBudget;
     private GlobalFilterCriteria? rawCriteria;
-    private StatementModel? statement;
+    private TransactionsListModel? transactions;
 
     /// <summary>
     ///     Analyses the supplied statement using the supplied budget within the criteria given to this method.
     /// </summary>
     /// <param name="budgets">The current budgets collection.</param>
     /// <param name="criteria">The criteria to limit the analysis.</param>
-    /// <param name="statementModel">The current statement model.</param>
+    /// <param name="transactions">The current statement model.</param>
     /// <exception cref="BudgetException">
     ///     Will be thrown if no budget is supplied or if no budget can be found for the dates
     ///     given in the criteria.
     /// </exception>
     /// <exception cref="ArgumentException">If statement or budget is null.</exception>
-    public OverallPerformanceBudgetResult Analyse(StatementModel statementModel,
+    public OverallPerformanceBudgetResult Analyse(TransactionsListModel transactions,
         BudgetCollection budgets,
         GlobalFilterCriteria criteria)
     {
-        this.statement = statementModel;
+        this.transactions = transactions;
         this.budgetCollection = budgets;
         this.rawCriteria = criteria;
         AnalysisPreconditions();
@@ -113,9 +113,9 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
             throw new ArgumentException("The given criteria does not contain any filtering dates.");
         }
 
-        if (this.statement is null)
+        if (this.transactions is null)
         {
-            throw new ArgumentNullException(nameof(this.statement), "The statement supplied is null, analysis cannot proceed with no statement.");
+            throw new ArgumentNullException(nameof(this.transactions), "The statement supplied is null, analysis cannot proceed with no statement.");
         }
 
         if (this.budgetCollection is null)
@@ -125,8 +125,8 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
 
         if (this.rawCriteria.Cleared)
         {
-            this.beginDate = this.statement.AllTransactions.First().Date;
-            this.endDate = this.statement.AllTransactions.Last().Date;
+            this.beginDate = this.transactions.AllTransactions.First().Date;
+            this.endDate = this.transactions.AllTransactions.Last().Date;
         }
         else
         {
@@ -167,7 +167,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
 
     private BucketPerformanceResult CalculateBucketStatistics(Func<BudgetModel, decimal> getBudgetedAmount, BudgetBucket bucket, bool multipleBudgets, int durationInPeriods)
     {
-        var query = this.statement!.Transactions.Where(t => t.BudgetBucket == bucket).ToList();
+        var query = this.transactions!.Transactions.Where(t => t.BudgetBucket == bucket).ToList();
         var totalSpent = query.Sum(t => t.Amount);
         var averageSpend = totalSpent / durationInPeriods;
         var budgetedTotal = CalculateBudgetedTotalAmount(getBudgetedAmount, multipleBudgets, durationInPeriods);
@@ -208,22 +208,22 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         switch (this.budgetCycle)
         {
             case BudgetCycle.Fortnightly:
-                result.DurationInPeriods = StatementCalculations.CalculateDurationInFortnights(this.rawCriteria, this.statement!.Transactions);
+                result.DurationInPeriods = StatementCalculations.CalculateDurationInFortnights(this.rawCriteria, this.transactions!.Transactions);
                 this.calculateNextPeriodDate = (d, iteration) => d.AddDays(14 * iteration);
                 break;
             case BudgetCycle.Monthly:
-                result.DurationInPeriods = StatementCalculations.CalculateDurationInMonths(this.rawCriteria, this.statement!.Transactions);
+                result.DurationInPeriods = StatementCalculations.CalculateDurationInMonths(this.rawCriteria, this.transactions!.Transactions);
                 this.calculateNextPeriodDate = (d, iteration) => d.AddMonths(1 * iteration);
                 break;
             default:
                 throw new NotSupportedException("The Overall Performance Budget Analyser does not support the budget cycle type: " + this.budgetCycle);
         }
 
-        var totalExpensesSpend = this.statement!.Transactions
+        var totalExpensesSpend = this.transactions!.Transactions
             .Where(t => t.BudgetBucket is ExpenseBucket)
             .Sum(t => t.Amount);
 
-        var totalSurplusSpend = this.statement!.Transactions
+        var totalSurplusSpend = this.transactions!.Transactions
             .Where(t => t.BudgetBucket is SurplusBucket)
             .Sum(t => t.Amount);
 

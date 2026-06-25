@@ -9,7 +9,7 @@ public class LedgerBookViewModel : ObservableRecipient
 {
     public bool AddNewReconciliationIsEnabled =>
         // Decided not to validate budget here, budget for dates is a more complicated decision / validation for the engine.
-        CurrentStatement is not null && LedgerBook is not null;
+        CurrentTransactionList is not null && LedgerBook is not null;
 
     /// <summary>
     ///     CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
@@ -25,7 +25,7 @@ public class LedgerBookViewModel : ObservableRecipient
         }
     }
 
-    internal StatementModel? CurrentStatement
+    internal TransactionsListModel? CurrentTransactionList
     {
         get;
 
@@ -85,5 +85,5 @@ public class LedgerBookViewModel : ObservableRecipient
     public bool NoBudgetLoaded => CurrentBudget is null;
 
     public bool NoLedgerBookLoaded => LedgerBook is null;
-    public bool NoStatementLoaded => CurrentStatement is null;
+    public bool NoStatementLoaded => CurrentTransactionList is null;
 }

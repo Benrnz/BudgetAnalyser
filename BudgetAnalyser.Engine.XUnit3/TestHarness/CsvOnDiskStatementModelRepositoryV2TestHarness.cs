@@ -8,7 +8,7 @@ internal class CsvOnDiskStatementModelRepositoryV2TestHarness : CsvOnDiskStateme
 {
     public CsvOnDiskStatementModelRepositoryV2TestHarness(
         ILogger logger,
-        IDtoMapper<TransactionSetDto, StatementModel> mapper,
+        IDtoMapper<TransactionSetDto, TransactionsListModel> mapper,
         IReaderWriterSelector readerWriterSelector)
         : base(new BankImportUtilitiesTestHarness(), logger, mapper, readerWriterSelector)
     {
@@ -29,7 +29,7 @@ internal class CsvOnDiskStatementModelRepositoryV2TestHarness : CsvOnDiskStateme
         return WriteStream;
     }
 
-    protected override TransactionSetDto MapToDto(StatementModel model)
+    protected override TransactionSetDto MapToDto(TransactionsListModel model)
     {
         if (Dto is null)
         {

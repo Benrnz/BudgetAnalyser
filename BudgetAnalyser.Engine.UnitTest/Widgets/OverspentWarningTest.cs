@@ -22,13 +22,13 @@ public class OverspentWarningTest
 
     private LedgerBook LedgerBook { get; set; }
     private LedgerCalculation LedgerCalculator { get; set; }
-    private StatementModel Statement { get; set; }
+    private TransactionsListModel TransactionsList { get; set; }
     private OverspentWarning Subject { get; set; }
 
     [TestInitialize]
     public void TestInitialise()
     {
-        Statement = StatementModelTestData.TestData2A();
+        TransactionsList = TransactionsListModelTestData.TestData2A();
 
         // Mocking out the Calculator means we don't need the LedgerBook
         LedgerBook = new LedgerBookTestHarness { StorageKey = "Test Ledger Book.xaml" };
@@ -50,19 +50,19 @@ public class OverspentWarningTest
     [TestMethod]
     public void UpdateShouldAddHairElementToOverSpentSummaryGivenOverSpentTestData()
     {
-        Assert.IsTrue(Subject.OverSpentSummary.Any(s => s.Key == StatementModelTestData.HairBucket));
+        Assert.IsTrue(Subject.OverSpentSummary.Any(s => s.Key == TransactionsListModelTestData.HairBucket));
     }
 
     [TestMethod]
     public void UpdateShouldAddPhoneElementToOverSpentSummaryGivenOverSpentTestData()
     {
-        Assert.IsTrue(Subject.OverSpentSummary.Any(s => s.Key == StatementModelTestData.PhoneBucket));
+        Assert.IsTrue(Subject.OverSpentSummary.Any(s => s.Key == TransactionsListModelTestData.PhoneBucket));
     }
 
     [TestMethod]
     public void UpdateShouldSetEnabledToFalseGivenStatementIsNull()
     {
-        Statement = null;
+        TransactionsList = null;
         Act();
         Assert.IsFalse(Subject.Enabled);
     }
@@ -105,11 +105,11 @@ public class OverspentWarningTest
     {
         var expenseListFake = new List<Expense>
         {
-            new() { Bucket = StatementModelTestData.CarMtcBucket, Amount = 90 }, // Overspent by $1
-            new() { Bucket = StatementModelTestData.HairBucket, Amount = 55 },
-            new() { Bucket = StatementModelTestData.PhoneBucket, Amount = 65 }, // Overpsent 3.29
-            new() { Bucket = StatementModelTestData.PowerBucket, Amount = 100 },
-            new() { Bucket = StatementModelTestData.RegoBucket, Amount = 20 }
+            new() { Bucket = TransactionsListModelTestData.CarMtcBucket, Amount = 90 }, // Overspent by $1
+            new() { Bucket = TransactionsListModelTestData.HairBucket, Amount = 55 },
+            new() { Bucket = TransactionsListModelTestData.PhoneBucket, Amount = 65 }, // Overpsent 3.29
+            new() { Bucket = TransactionsListModelTestData.PowerBucket, Amount = 100 },
+            new() { Bucket = TransactionsListModelTestData.RegoBucket, Amount = 20 }
         };
         var modelMock = new Mock<BudgetModel>();
         modelMock.Setup(m => m.Expenses).Returns(expenseListFake);
@@ -122,7 +122,7 @@ public class OverspentWarningTest
         ledgerCalculatorMock.Setup(m => m.CalculateCurrentPeriodLedgerBalances(
             It.IsAny<LedgerEntryLine>(),
             It.IsAny<GlobalFilterCriteria>(),
-            It.IsAny<StatementModel>())).Returns(LedgerBalancesFake);
+            It.IsAny<TransactionsListModel>())).Returns(LedgerBalancesFake);
 
         // Create a stubbed LedgerEntryLine to satisfy LocateApplicableLedgerLine.  This stub is passed into the mock calculator above.
         var ledgerReconLine = new LedgerEntryLine();
@@ -134,18 +134,18 @@ public class OverspentWarningTest
         LedgerCalculator = ledgerCalculatorMock.Object;
 
 
-        Subject.Update(Statement, BudgetCurrencyContext, Filter, LedgerBook, LedgerCalculator);
+        Subject.Update(TransactionsList, BudgetCurrencyContext, Filter, LedgerBook, LedgerCalculator);
     }
 
     private void SetLedgerBalancesFakeDataNoOverSpentBuckets()
     {
         LedgerBalancesFake = new Dictionary<BudgetBucket, decimal>
         {
-            { StatementModelTestData.CarMtcBucket, 10 },
-            { StatementModelTestData.HairBucket, -10.00M },
-            { StatementModelTestData.PowerBucket, 0 },
-            { StatementModelTestData.RegoBucket, -3 },
-            { StatementModelTestData.PhoneBucket, 10 }
+            { TransactionsListModelTestData.CarMtcBucket, 10 },
+            { TransactionsListModelTestData.HairBucket, -10.00M },
+            { TransactionsListModelTestData.PowerBucket, 0 },
+            { TransactionsListModelTestData.RegoBucket, -3 },
+            { TransactionsListModelTestData.PhoneBucket, 10 }
         };
     }
 
@@ -157,7 +157,7 @@ public class OverspentWarningTest
 
         LedgerBalancesFake = new Dictionary<BudgetBucket, decimal>
         {
-            { StatementModelTestData.CarMtcBucket, 10 }, { StatementModelTestData.HairBucket, -10.01M }, { StatementModelTestData.PowerBucket, 0 }, { StatementModelTestData.RegoBucket, -3 }
+            { TransactionsListModelTestData.CarMtcBucket, 10 }, { TransactionsListModelTestData.HairBucket, -10.01M }, { TransactionsListModelTestData.PowerBucket, 0 }, { TransactionsListModelTestData.RegoBucket, -3 }
         };
     }
 }

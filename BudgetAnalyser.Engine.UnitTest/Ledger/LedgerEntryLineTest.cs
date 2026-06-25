@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 [TestClass]
 public class LedgerEntryLineTest
 {
-    private static readonly BankBalance NextReconcileBankBalance = new(StatementModelTestData.ChequeAccount, 1850.5M);
+    private static readonly BankBalance NextReconcileBankBalance = new(TransactionsListModelTestData.ChequeAccount, 1850.5M);
     private static readonly DateOnly NextReconcileDate = new(2013, 09, 15);
 
     private LedgerEntryLine NewSubject { get; set; }

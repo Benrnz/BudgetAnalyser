@@ -6,21 +6,21 @@ using BudgetAnalyser.Engine.Statement.Data;
 namespace BudgetAnalyser.Engine.Statement;
 
 /// <summary>
-///     A repository for the <see cref="StatementModel" /> backed by Csv on local disk storage.
+///     A repository for the <see cref="TransactionsListModel" /> backed by Csv on local disk storage.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Statement.IVersionedStatementModelRepository" />
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class CsvOnDiskStatementModelRepositoryV2(
     BankImportUtilities importUtilities,
     ILogger logger,
-    IDtoMapper<TransactionSetDto, StatementModel> mapper,
+    IDtoMapper<TransactionSetDto, TransactionsListModel> mapper,
     IReaderWriterSelector readerWriterSelector)
     : IVersionedStatementModelRepository
 {
     private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
     private readonly BankImportUtilities importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
     private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IDtoMapper<TransactionSetDto, StatementModel> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+    private readonly IDtoMapper<TransactionSetDto, TransactionsListModel> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     private readonly IReaderWriterSelector readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
 
     private TransactionHeaderDto? transactionHeaderDto;
@@ -32,11 +32,11 @@ internal class CsvOnDiskStatementModelRepositoryV2(
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        var newStatement = new StatementModel(this.logger) { StorageKey = storageKey };
+        var newStatement = new TransactionsListModel(this.logger) { StorageKey = storageKey };
         await SaveAsync(newStatement, false);
     }
 
-    public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
+    public async Task<TransactionsListModel> LoadAsync(string storageKey, bool isEncrypted)
     {
         if (storageKey.IsNothing())
         {
@@ -61,27 +61,27 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         return this.mapper.ToModel(transactionSet);
     }
 
-    public async Task SaveAsync(StatementModel model, bool isEncrypted)
+    public async Task SaveAsync(TransactionsListModel transactions, bool isEncrypted)
     {
-        if (model is null)
+        if (transactions is null)
         {
-            throw new ArgumentNullException(nameof(model));
+            throw new ArgumentNullException(nameof(transactions));
         }
 
-        if (model.StorageKey.IsNothing())
+        if (transactions.StorageKey.IsNothing())
         {
-            throw new ArgumentNullException(nameof(StatementModel.StorageKey));
+            throw new ArgumentNullException(nameof(TransactionsListModel.StorageKey));
         }
 
-        var transactionSet = MapToDto(model);
-        if (model.AllTransactions.Count() != transactionSet.Transactions.Count())
+        var transactionSet = MapToDto(transactions);
+        if (transactions.AllTransactions.Count() != transactionSet.Transactions.Count())
         {
             throw new StatementModelChecksumException(
-                $"Only {transactionSet.Transactions.Count()} out of {model.AllTransactions.Count()} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.");
+                $"Only {transactionSet.Transactions.Count()} out of {transactions.AllTransactions.Count()} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.");
         }
 
         var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = CreateWritableStream(model.StorageKey, writer);
+        await using var stream = CreateWritableStream(transactions.StorageKey, writer);
         await using var streamWriter = new StreamWriter(stream);
         await WriteToStream(transactionSet, streamWriter);
     }
@@ -91,7 +91,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         return writer.CreateWritableStream(storageKey);
     }
 
-    protected virtual TransactionSetDto MapToDto(StatementModel model)
+    protected virtual TransactionSetDto MapToDto(TransactionsListModel model)
     {
         var dto = this.mapper.ToDto(model);
         return dto with

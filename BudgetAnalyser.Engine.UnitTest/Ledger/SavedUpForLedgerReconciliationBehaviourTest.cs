@@ -92,6 +92,6 @@ public class SavedUpForLedgerReconciliationBehaviourTest
     [TestInitialize]
     public void TestInitialise()
     {
-        this.subject2 = new SavedUpForLedger { BudgetBucket = StatementModelTestData.CarMtcBucket, StoredInAccount = StatementModelTestData.ChequeAccount };
+        this.subject2 = new SavedUpForLedger { BudgetBucket = TransactionsListModelTestData.CarMtcBucket, StoredInAccount = TransactionsListModelTestData.ChequeAccount };
     }
 }

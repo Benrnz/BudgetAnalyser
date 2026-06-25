@@ -16,7 +16,7 @@ public class BudgetBucketMonitorWidgetTest
     private GlobalFilterCriteria criteriaTestData;
     private LedgerBook ledgerBookTestData;
     private LedgerCalculation ledgerCalculation;
-    private StatementModel statementTestData;
+    private TransactionsListModel transactionsTestData;
     private BudgetBucketMonitorWidget subject;
 
     [TestMethod]
@@ -24,13 +24,13 @@ public class BudgetBucketMonitorWidgetTest
     {
         this.ledgerBookTestData.Output(true);
         this.budgetTestData.Output();
-        this.statementTestData.Output(DateOnly.MinValue);
+        this.transactionsTestData.Output(DateOnly.MinValue);
     }
 
     [TestInitialize]
     public void TestInitialise()
     {
-        this.subject = new BudgetBucketMonitorWidget { BucketCode = StatementModelTestData.PhoneBucket.Code };
+        this.subject = new BudgetBucketMonitorWidget { BucketCode = TransactionsListModelTestData.PhoneBucket.Code };
 
         this.bucketRepo = new BucketBucketRepoAlwaysFind();
         this.criteriaTestData = new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) };
@@ -49,7 +49,7 @@ public class BudgetBucketMonitorWidgetTest
     [Description("A transfer has taken place from InsHome in Savings, to Phone in Cheque for $100. This should be excluded from running balance of both buckets.")]
     public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
     {
-        this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
+        this.subject.Update(this.budgetTestData, this.transactionsTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
 
         // Starting Phone Balance is Budget Amount: 150.00
         // Total Phone Statement transactions are: -20.00
@@ -79,40 +79,40 @@ public class BudgetBucketMonitorWidgetTest
 
     private void CreateStatementTestData()
     {
-        this.statementTestData = new StatementModelBuilder()
+        this.transactionsTestData = new StatementModelBuilder()
             .AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.SavingsAccount,
+                    Account = TransactionsListModelTestData.SavingsAccount,
                     Amount = -100M,
-                    BudgetBucket = StatementModelTestData.InsHomeBucket,
+                    BudgetBucket = TransactionsListModelTestData.InsHomeBucket,
                     Date = new DateOnly(2015, 11, 19),
                     Reference1 = "automatchref12"
                 })
             .AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.ChequeAccount,
+                    Account = TransactionsListModelTestData.ChequeAccount,
                     Amount = 100M,
-                    BudgetBucket = StatementModelTestData.PhoneBucket,
+                    BudgetBucket = TransactionsListModelTestData.PhoneBucket,
                     Date = new DateOnly(2015, 11, 19),
                     Reference1 = "automatchref12"
                 })
             .AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.SavingsAccount,
+                    Account = TransactionsListModelTestData.SavingsAccount,
                     Amount = -10M,
-                    BudgetBucket = StatementModelTestData.InsHomeBucket,
+                    BudgetBucket = TransactionsListModelTestData.InsHomeBucket,
                     Date = new DateOnly(2015, 11, 1),
                     Reference1 = "Foo"
                 })
             .AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.ChequeAccount,
+                    Account = TransactionsListModelTestData.ChequeAccount,
                     Amount = -20M,
-                    BudgetBucket = StatementModelTestData.PhoneBucket,
+                    BudgetBucket = TransactionsListModelTestData.PhoneBucket,
                     Date = new DateOnly(2015, 11, 1),
                     Reference1 = "Foo"
                 })

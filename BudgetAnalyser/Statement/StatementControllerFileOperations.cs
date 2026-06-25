@@ -35,7 +35,7 @@ public class StatementControllerFileOperations : ControllerBase
         this.messageBox = uiContext.UserPrompts.MessageBox;
         this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
         this.transactionService = transactionManagerService ?? throw new ArgumentNullException(nameof(transactionManagerService));
-        ViewModel = new StatementViewModel(applicationDatabaseService, this.transactionService);
+        ViewModel = new TransactionsListViewModel(applicationDatabaseService, this.transactionService);
     }
 
     public bool LoadingData
@@ -53,14 +53,14 @@ public class StatementControllerFileOperations : ControllerBase
         }
     }
 
-    internal StatementViewModel ViewModel { get; }
+    internal TransactionsListViewModel ViewModel { get; }
 
     internal void Close()
     {
-        ViewModel.Statement = null;
+        ViewModel.TransactionsList = null;
         NotifyOfReset();
         ViewModel.TriggerRefreshTotalsRow();
-        Messenger.Send(new StatementReadyMessage(null));
+        Messenger.Send(new TransactionsListModelReadyMessage(null));
     }
 
     internal async Task MergeInNewTransactions()
@@ -84,7 +84,7 @@ public class StatementControllerFileOperations : ControllerBase
             OnPropertyChanged(nameof(ViewModel));
             NotifyOfEdit();
             ViewModel.TriggerRefreshTotalsRow();
-            Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
+            Messenger.Send(new TransactionsListModelReadyMessage(ViewModel.TransactionsList));
         }
         catch (NotSupportedException ex)
         {
@@ -112,8 +112,8 @@ public class StatementControllerFileOperations : ControllerBase
 
     internal async Task SyncWithServiceAsync()
     {
-        var statementModel = this.transactionService.StatementModel;
-        ViewModel.Statement = null; // Prevent events from firing while updating the model.
+        var transactionList = this.transactionService.TransactionsListModel;
+        ViewModel.TransactionsList = null; // Prevent events from firing while updating the model.
         LoadingData = true;
         await Dispatcher.CurrentDispatcher.BeginInvoke(
             DispatcherPriority.Normal,
@@ -128,13 +128,13 @@ public class StatementControllerFileOperations : ControllerBase
                 }
 
                 // Ensures initial first time load triggers load of transactions.
-                ViewModel.Statement = statementModel;
+                ViewModel.TransactionsList =  transactionList;
                 ViewModel.TriggerRefreshTotalsRow();
 
                 // Triggers all UI elements to update
                 Messenger.Send(new FilterAppliedMessage(this, requestCurrentFilterMessage.Criteria ?? new GlobalFilterCriteria()));
 
-                Messenger.Send(new StatementReadyMessage(ViewModel.Statement));
+                Messenger.Send(new TransactionsListModelReadyMessage(ViewModel.TransactionsList));
 
                 LoadingData = false;
             });
@@ -154,7 +154,7 @@ public class StatementControllerFileOperations : ControllerBase
     /// </returns>
     private async Task<string> GetFileNameFromUser()
     {
-        var statement = ViewModel.Statement ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
+        var statement = ViewModel.TransactionsList ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
         await this.loadFileController.RequestUserInputForMerging(statement);
 
         return this.loadFileController.FileName ?? string.Empty;
@@ -162,7 +162,7 @@ public class StatementControllerFileOperations : ControllerBase
 
     private void NotifyOfReset()
     {
-        if (ViewModel is { Dirty: false, Statement: null })
+        if (ViewModel is { Dirty: false, TransactionsList: null })
         {
             // No need to notify of reset if the statement is already null. This happens during first load before the statement is loaded
             return;

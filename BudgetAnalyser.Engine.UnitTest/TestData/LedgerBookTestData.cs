@@ -8,8 +8,8 @@ public static class LedgerBookTestData
 {
     static LedgerBookTestData()
     {
-        ChequeAccount = StatementModelTestData.ChequeAccount;
-        SavingsAccount = StatementModelTestData.SavingsAccount;
+        ChequeAccount = TransactionsListModelTestData.ChequeAccount;
+        SavingsAccount = TransactionsListModelTestData.SavingsAccount;
         RatesLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates "), StoredInAccount = ChequeAccount };
         PowerLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PowerBucketCode, "Power "), StoredInAccount = ChequeAccount };
         PhoneLedger = new SpentPerPeriodLedger { BudgetBucket = new SpentPerPeriodExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
@@ -23,8 +23,8 @@ public static class LedgerBookTestData
         HairLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow."), StoredInAccount = ChequeAccount };
         ClothesLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", ""), StoredInAccount = ChequeAccount };
         DocLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, ""), StoredInAccount = ChequeAccount };
-        SurplusLedger = new SurplusLedger { StoredInAccount = ChequeAccount, BudgetBucket = StatementModelTestData.SurplusBucket };
-        SavingsSurplusLedger = new SurplusLedger { StoredInAccount = SavingsAccount, BudgetBucket = StatementModelTestData.SurplusBucket };
+        SurplusLedger = new SurplusLedger { StoredInAccount = ChequeAccount, BudgetBucket = TransactionsListModelTestData.SurplusBucket };
+        SavingsSurplusLedger = new SurplusLedger { StoredInAccount = SavingsAccount, BudgetBucket = TransactionsListModelTestData.SurplusBucket };
         SavingsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.SavingsBucketCode, "Savings"), StoredInAccount = ChequeAccount };
     }
 
@@ -54,7 +54,7 @@ public static class LedgerBookTestData
     /// </summary>
     public static LedgerBook TestData1()
     {
-        var line = CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
+        var line = CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
         SetEntriesForTesting(
             line,
             new List<LedgerEntry>
@@ -84,7 +84,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List<LedgerEntry>
                 {
                     CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
@@ -108,7 +108,7 @@ public static class LedgerBookTestData
         list.Add(
             CreateLine(
                 new DateOnly(2013, 08, 15),
-                new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
+                new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 2950) },
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
                 new List<LedgerEntry>
                 {
@@ -142,7 +142,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -169,7 +169,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -193,7 +193,7 @@ public static class LedgerBookTestData
 
         var line = CreateLine(
             new DateOnly(2013, 08, 15),
-            new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
+            new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 2950) },
             "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
             new List<LedgerEntry>
             {
@@ -210,7 +210,7 @@ public static class LedgerBookTestData
                         new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones" }
                     })
             });
-        line.BalanceAdjustment(-550, "Credit card payment yet to go out.", StatementModelTestData.ChequeAccount);
+        line.BalanceAdjustment(-550, "Credit card payment yet to go out.", TransactionsListModelTestData.ChequeAccount);
         list.Add(line);
 
         var book = new LedgerBook(list) { Name = "Test Data 2 Book", Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc), StorageKey = "C:\\Folder\\book1.xml" };
@@ -227,7 +227,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateOnly(2013, 11, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 10738) }, "Opening entries").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 11, 15), new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 10738) }, "Opening entries").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -273,7 +273,7 @@ public static class LedgerBookTestData
     {
         var list = new List<LedgerEntryLine>
         {
-            CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -300,7 +300,7 @@ public static class LedgerBookTestData
         var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
         list.Add(
-            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
+            CreateLine(new DateOnly(2013, 07, 15), new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                 new List
                     <LedgerEntry>
                     {
@@ -324,7 +324,7 @@ public static class LedgerBookTestData
 
         var line = CreateLine(
             new DateOnly(2013, 08, 15),
-            new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2750), new BankBalance(StatementModelTestData.SavingsAccount, 200) },
+            new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 2750), new BankBalance(TransactionsListModelTestData.SavingsAccount, 200) },
             "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
             new List<LedgerEntry>
             {
@@ -341,7 +341,7 @@ public static class LedgerBookTestData
                         new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones" }
                     })
             });
-        line.BalanceAdjustment(-550, "Credit card payment yet to go out.", StatementModelTestData.ChequeAccount);
+        line.BalanceAdjustment(-550, "Credit card payment yet to go out.", TransactionsListModelTestData.ChequeAccount);
         list.Add(line);
 
         var book = new LedgerBook(list) { Name = "Test Data 4 Book", Modified = new DateTime(2013, 12, 16, 0, 0, 0, DateTimeKind.Utc), StorageKey = "C:\\Folder\\book1.xml" };
@@ -553,7 +553,7 @@ public static class LedgerBookTestData
 
                 if (entry.LedgerBucket.StoredInAccount is null)
                 {
-                    entry.LedgerBucket.StoredInAccount = StatementModelTestData.ChequeAccount;
+                    entry.LedgerBucket.StoredInAccount = TransactionsListModelTestData.ChequeAccount;
                 }
 
                 if (!ledgers.ContainsKey(entry.LedgerBucket.BudgetBucket))

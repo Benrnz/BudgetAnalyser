@@ -11,11 +11,11 @@ internal class OverallPerformanceChartService(OverallPerformanceBudgetAnalyser a
 {
     private readonly OverallPerformanceBudgetAnalyser analyser = analyser ?? throw new ArgumentNullException(nameof(analyser));
 
-    public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
+    public OverallPerformanceBudgetResult BuildChart(TransactionsListModel transactions, BudgetCollection budgets, GlobalFilterCriteria criteria)
     {
-        if (statementModel is null)
+        if (transactions is null)
         {
-            throw new ArgumentNullException(nameof(statementModel));
+            throw new ArgumentNullException(nameof(transactions));
         }
 
         if (budgets is null)
@@ -28,6 +28,6 @@ internal class OverallPerformanceChartService(OverallPerformanceBudgetAnalyser a
             throw new ArgumentNullException(nameof(criteria));
         }
 
-        return this.analyser.Analyse(statementModel, budgets, criteria);
+        return this.analyser.Analyse(transactions, budgets, criteria);
     }
 }

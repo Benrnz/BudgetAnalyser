@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
         /// <summary>THIS IS GENERATED CODE </summary>
         [GeneratedCode("StatementModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]
-        public static StatementModel TestDataGenerated()
+        public static TransactionsListModel TestDataGenerated()
         {
             return null;
         }
