@@ -105,7 +105,7 @@ public class DtoToStatementModelMapperTest
     [TestInitialize]
     public void TestInitialise()
     {
-        var subject = new MapperStatementModelToDto2(
+        var subject = new MapperTransactionsListModelToDto2(
             new InMemoryAccountTypeRepository(),
             new BucketBucketRepoAlwaysFind(),
             new InMemoryTransactionTypeRepository(),

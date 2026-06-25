@@ -107,7 +107,7 @@ public class TransactionsControllerFileOperations : ControllerBase
     internal void NotifyOfEdit()
     {
         ViewModel.Dirty = true;
-        Messenger.Send(new StatementHasBeenModifiedMessage());
+        Messenger.Send(new TransactionsListModelHasBeenModifiedMessage());
     }
 
     internal async Task SyncWithServiceAsync()
@@ -169,6 +169,6 @@ public class TransactionsControllerFileOperations : ControllerBase
         }
 
         ViewModel.Dirty = false;
-        Messenger.Send(new StatementHasBeenModifiedMessage());
+        Messenger.Send(new TransactionsListModelHasBeenModifiedMessage());
     }
 }

@@ -96,7 +96,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         {
             TransactionsListModel = await this.transactionsListModelRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey), applicationDatabase.IsEncrypted);
         }
-        catch (StatementModelChecksumException ex)
+        catch (TransactionsListModelChecksumException ex)
         {
             throw new DataFormatException("Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
         }

@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine.Statement;
 ///     This interface describes persistence functions for retrieving and saving <see cref="TransactionsListModel" />. It will only load and save in the proprietary Budget Analyser Transaction format.
 ///     Rather than consuming this interface in a client, prefer to use the <see cref="ITransactionManagerService" /> instead.
 /// </summary>
-public interface IVersionedStatementModelRepository
+public interface IVersionedTransactionsModelRepository
 {
     /// <summary>
     ///     Creates a new empty <see cref="TransactionsListModel" /> at the location indicated by the <paramref name="storageKey" />.
@@ -24,7 +24,7 @@ public interface IVersionedStatementModelRepository
     /// <exception cref="System.ArgumentNullException">Will be thrown if any arguments are null.</exception>
     /// <exception cref="System.Collections.Generic.KeyNotFoundException">Will be thrown if the specified storage key is not found.</exception>
     /// <exception cref="System.NotSupportedException">The CSV file is not supported by this version of the Budget Analyser.</exception>
-    /// <exception cref="StatementModelChecksumException">Will be thrown if the checksum doesn't match the data within the file.</exception>
+    /// <exception cref="TransactionsListModelChecksumException">Will be thrown if the checksum doesn't match the data within the file.</exception>
     /// <exception cref="DataFormatException">Will be thrown if the file format is invalid.</exception>
     Task<TransactionsListModel> LoadAsync(string storageKey, bool isEncrypted);
 
@@ -34,6 +34,6 @@ public interface IVersionedStatementModelRepository
     /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
     /// <param name="transactions">The transactions model to save.</param>
     /// <exception cref="System.ArgumentNullException">Will be thrown if any arguments are null.</exception>
-    /// <exception cref="BudgetAnalyser.Engine.Statement.StatementModelChecksumException">Will be thrown if serialisation resulted in data that doesn't match the checksum.</exception>
+    /// <exception cref="TransactionsListModelChecksumException">Will be thrown if serialisation resulted in data that doesn't match the checksum.</exception>
     Task SaveAsync(TransactionsListModel transactions, bool isEncrypted);
 }

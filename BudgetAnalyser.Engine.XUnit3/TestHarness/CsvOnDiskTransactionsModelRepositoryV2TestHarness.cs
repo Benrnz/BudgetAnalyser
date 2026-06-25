@@ -4,16 +4,12 @@ using BudgetAnalyser.Engine.Statement.Data;
 
 namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
-internal class CsvOnDiskStatementModelRepositoryV2TestHarness : CsvOnDiskStatementModelRepositoryV2
+internal class CsvOnDiskTransactionsModelRepositoryV2TestHarness(
+    ILogger logger,
+    IDtoMapper<TransactionSetDto, TransactionsListModel> mapper,
+    IReaderWriterSelector readerWriterSelector)
+    : CsvOnDiskTransactionsModelRepositoryV2(new BankImportUtilitiesTestHarness(), logger, mapper, readerWriterSelector)
 {
-    public CsvOnDiskStatementModelRepositoryV2TestHarness(
-        ILogger logger,
-        IDtoMapper<TransactionSetDto, TransactionsListModel> mapper,
-        IReaderWriterSelector readerWriterSelector)
-        : base(new BankImportUtilitiesTestHarness(), logger, mapper, readerWriterSelector)
-    {
-    }
-
     public MemoryStream? WriteStream { get; set; } = new();
 
     public TransactionSetDto? Dto { get; set; }

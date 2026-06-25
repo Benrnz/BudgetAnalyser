@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.Statement;
 
 /// <summary>
 ///     The Statement Repository is responsible for loading <see cref="TransactionsListModel" />s and Bank Extracts for the purpose of merging with an existing <see cref="TransactionsListModel" />.
-///     It also is responsible for saving <see cref="TransactionsListModel" />s. To function it orchestrates across the <see cref="IVersionedStatementModelRepository" /> and the
+///     It also is responsible for saving <see cref="TransactionsListModel" />s. To function it orchestrates across the <see cref="IVersionedTransactionsModelRepository" /> and the
 ///     <see cref="IBankStatementImporterRepository" />.
 /// </summary>
 public interface ITransactionsListModelRepository
@@ -30,7 +30,7 @@ public interface ITransactionsListModelRepository
     /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
     /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
     /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given <paramref name="storageKey" /></exception>
-    /// <exception cref="StatementModelChecksumException">Will be thrown if the statement model's internal checksum detects corrupt data indicating tampering.</exception>
+    /// <exception cref="TransactionsListModelChecksumException">Will be thrown if the statement model's internal checksum detects corrupt data indicating tampering.</exception>
     /// <exception cref="DataFormatException">Will be thrown if the format of the bank extract contains unexpected data indicating it is corrupt or an old file.</exception>
     Task<TransactionsListModel> LoadAsync(string storageKey, bool isEncrypted);
 

@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.UnitTest.TestHarness;
 namespace BudgetAnalyser.Engine.UnitTest.Statement;
 
 [TestClass]
-public class StatementModelToDtoMapperTest
+public class TransactionsListModelToDtoMapperTest
 {
     private TransactionSetDto Result { get; set; }
     private TransactionsListModel TestData => TransactionsListModelTestData.TestData2();
@@ -55,7 +55,7 @@ public class StatementModelToDtoMapperTest
 
     private void Act(TransactionsListModel testData)
     {
-        var subject = new MapperStatementModelToDto2(
+        var subject = new MapperTransactionsListModelToDto2(
             new InMemoryAccountTypeRepository(),
             new BucketBucketRepoAlwaysFind(),
             new InMemoryTransactionTypeRepository(),

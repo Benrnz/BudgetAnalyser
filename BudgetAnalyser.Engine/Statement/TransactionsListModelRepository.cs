@@ -8,18 +8,18 @@ namespace BudgetAnalyser.Engine.Statement;
 ///     analyser statement file or a downloaded bank statement export to merge or load. If the filename is already known
 ///     it is loaded with no prompting, otherwise the user is prompted for a filename.
 ///     It also is responsible for saving  any open statement file into a budget analyser statement file.
-///     To function it orchestrates across the  <see cref="IVersionedStatementModelRepository" /> and the
+///     To function it orchestrates across the  <see cref="IVersionedTransactionsModelRepository" /> and the
 ///     <see cref="IBankStatementImporterRepository" />.
 ///     This implementation is strictly not thread safe and should be single threaded only.  Don't allow multiple threads
 ///     to use it at the same time.
 /// </summary>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC")]
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class TransactionsListModelRepository(IVersionedStatementModelRepository statementModelRepository, IBankStatementImporterRepository importerRepository)
+internal class TransactionsListModelRepository(IVersionedTransactionsModelRepository statementModelRepository, IBankStatementImporterRepository importerRepository)
     : ITransactionsListModelRepository
 {
     private readonly IBankStatementImporterRepository importerRepository = importerRepository ?? throw new ArgumentNullException(nameof(importerRepository));
-    private readonly IVersionedStatementModelRepository statementModelRepository = statementModelRepository ?? throw new ArgumentNullException(nameof(statementModelRepository));
+    private readonly IVersionedTransactionsModelRepository statementModelRepository = statementModelRepository ?? throw new ArgumentNullException(nameof(statementModelRepository));
 
     public async Task CreateNewAndSaveAsync(string storageKey)
     {

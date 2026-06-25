@@ -8,14 +8,14 @@ namespace BudgetAnalyser.Engine.Statement;
 /// <summary>
 ///     A repository for the <see cref="TransactionsListModel" /> backed by Csv on local disk storage.
 /// </summary>
-/// <seealso cref="BudgetAnalyser.Engine.Statement.IVersionedStatementModelRepository" />
+/// <seealso cref="IVersionedTransactionsModelRepository" />
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class CsvOnDiskStatementModelRepositoryV2(
+internal class CsvOnDiskTransactionsModelRepositoryV2(
     BankImportUtilities importUtilities,
     ILogger logger,
     IDtoMapper<TransactionSetDto, TransactionsListModel> mapper,
     IReaderWriterSelector readerWriterSelector)
-    : IVersionedStatementModelRepository
+    : IVersionedTransactionsModelRepository
 {
     private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
     private readonly BankImportUtilities importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
@@ -76,7 +76,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         var transactionSet = MapToDto(transactions);
         if (transactions.AllTransactions.Count() != transactionSet.Transactions.Count())
         {
-            throw new StatementModelChecksumException(
+            throw new TransactionsListModelChecksumException(
                 $"Only {transactionSet.Transactions.Count()} out of {transactions.AllTransactions.Count()} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.");
         }
 
@@ -406,7 +406,7 @@ internal class CsvOnDiskStatementModelRepositoryV2(
         {
             this.logger.LogError(l =>
                 l.Format("BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", transactionSet.Checksum, calcTxnCheckSum));
-            throw new StatementModelChecksumException($"The statement being loaded, does not match the internal checksum. {calcTxnCheckSum} {transactionSet.Checksum}");
+            throw new TransactionsListModelChecksumException($"The statement being loaded, does not match the internal checksum. {calcTxnCheckSum} {transactionSet.Checksum}");
         }
     }
 

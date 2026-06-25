@@ -5,7 +5,7 @@ using BudgetAnalyser.Engine.Persistence;
 namespace BudgetAnalyser.Engine.Statement.Data;
 
 [AutoRegisterWithIoC]
-public class MapperStatementModelToDto2(
+public class MapperTransactionsListModelToDto2(
     IAccountTypeRepository accountRepo,
     IBudgetBucketRepository bucketRepo,
     ITransactionTypeRepository transactionTypeRepo,

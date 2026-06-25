@@ -30,7 +30,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     public void Ctor_ShouldThrow_GivenNullBankImportUtils()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new CsvOnDiskStatementModelRepositoryV2(
+            new CsvOnDiskTransactionsModelRepositoryV2(
                 null!,
                 new FakeLogger(),
                 new DtoMapperStub<TransactionSetDto, TransactionsListModel>(),
@@ -41,7 +41,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     public void Ctor_ShouldThrow_GivenNullLogger()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new CsvOnDiskStatementModelRepositoryV2(
+            new CsvOnDiskTransactionsModelRepositoryV2(
                 new BankImportUtilities(new FakeLogger()),
                 null!,
                 new DtoMapperStub<TransactionSetDto, TransactionsListModel>(),
@@ -52,7 +52,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     public void Ctor_ShouldThrow_GivenNullMapper()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new CsvOnDiskStatementModelRepositoryV2(
+            new CsvOnDiskTransactionsModelRepositoryV2(
                 new BankImportUtilities(new FakeLogger()),
                 new FakeLogger(),
                 null!,
@@ -155,7 +155,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectChecksum()));
         this.mockFileReaderWriter.CreateReadableStream(Arg.Any<string>()).Returns(stream);
 
-        await Should.ThrowAsync<StatementModelChecksumException>(() => subject.LoadAsync("foo.foo", false));
+        await Should.ThrowAsync<TransactionsListModelChecksumException>(() => subject.LoadAsync("foo.foo", false));
     }
 
     [Fact]
@@ -224,18 +224,18 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         secondLine!.Count(c => c == ',').ShouldBe(10);
     }
 
-    private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithEmbeddedResources()
+    private CsvOnDiskTransactionsModelRepositoryV2TestHarness ArrangeWithEmbeddedResources()
     {
         var logger = new XUnitLogger(this.writer);
-        var realMapper = new MapperStatementModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
+        var realMapper = new MapperTransactionsListModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
         var selector = new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]);
-        return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, selector);
+        return new CsvOnDiskTransactionsModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, selector);
     }
 
-    private CsvOnDiskStatementModelRepositoryV2TestHarness ArrangeWithMocks()
+    private CsvOnDiskTransactionsModelRepositoryV2TestHarness ArrangeWithMocks()
     {
         var logger = new XUnitLogger(this.writer);
-        var realMapper = new MapperStatementModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
-        return new CsvOnDiskStatementModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, this.mockReaderWriterSelector);
+        var realMapper = new MapperTransactionsListModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
+        return new CsvOnDiskTransactionsModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, this.mockReaderWriterSelector);
     }
 }
