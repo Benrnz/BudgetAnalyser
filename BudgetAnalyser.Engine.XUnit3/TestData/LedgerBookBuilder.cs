@@ -55,7 +55,7 @@ public class LedgerBookBuilder
 
         if (ledger.StoredInAccount is null)
         {
-            ledger.StoredInAccount = StatementModelTestData.ChequeAccount;
+            ledger.StoredInAccount = TransactionsListModelTestData.ChequeAccount;
         }
 
         this.ledgerBuckets.Add(ledger);
@@ -75,7 +75,7 @@ public class LedgerBookBuilder
             .IncludeLedger(LedgerBookTestData.PowerLedger)
             .AppendReconciliation(
                 new DateOnly(2013, 6, 15),
-                new BankBalance(StatementModelTestData.ChequeAccount, 2500))
+                new BankBalance(TransactionsListModelTestData.ChequeAccount, 2500))
             .WithReconciliationEntries(
                 entryBuilder =>
                 {
@@ -100,7 +100,7 @@ public class LedgerBookBuilder
                 })
             .AppendReconciliation(
                 new DateOnly(2013, 7, 15),
-                new BankBalance(StatementModelTestData.ChequeAccount, 3700))
+                new BankBalance(TransactionsListModelTestData.ChequeAccount, 3700))
             .WithReconciliationEntries(
                 entryBuilder =>
                 {
@@ -124,7 +124,7 @@ public class LedgerBookBuilder
                 })
             .AppendReconciliation(
                 new DateOnly(2013, 8, 15),
-                new BankBalance(StatementModelTestData.ChequeAccount, 2950))
+                new BankBalance(TransactionsListModelTestData.ChequeAccount, 2950))
             .WithReconciliationEntries(
                 entryBuilder =>
                 {

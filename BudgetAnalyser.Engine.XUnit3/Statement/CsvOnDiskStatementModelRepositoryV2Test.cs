@@ -196,7 +196,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
     {
         // Arrange
         var subject = ArrangeWithMocks();
-        var testData = StatementModelTestData.TestData2();
+        var testData = TransactionsListModelTestData.TestData2();
         subject.WriteStream = new MemoryStream();
 
         // Act
@@ -214,7 +214,7 @@ public class CsvOnDiskStatementModelRepositoryV2Test
         subject.Dto = BudgetAnalyserRawCsvTestDataV1.BadTestData_CorruptedCommaFormat();
         var writerStream = new MemoryStream();
         this.mockFileReaderWriter.CreateWritableStream(Arg.Any<string>()).Returns(writerStream);
-        await subject.SaveAsync(StatementModelTestData.TestData1(), false);
+        await subject.SaveAsync(TransactionsListModelTestData.TestData1(), false);
 
         var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(subject.SerialisedData));
         var reader = new StreamReader(memoryStream);

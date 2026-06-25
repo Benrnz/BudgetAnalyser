@@ -34,9 +34,9 @@ public class RemainingActualSurplusWidgetTest
         this.criteriaTestData = new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) };
         this.ledgerCalculation = new LedgerCalculation(new FakeLogger());
 
-        StatementModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
-        StatementModelTestDataForThisTest.BudgetBucketRepo = new BucketBucketRepoAlwaysFind();
-        this.transactionsTestData = StatementModelTestDataForThisTest.TestDataGenerated();
+        TransactionsModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
+        TransactionsModelTestDataForThisTest.BudgetBucketRepo = new BucketBucketRepoAlwaysFind();
+        this.transactionsTestData = TransactionsModelTestDataForThisTest.TestDataGenerated();
 
         this.ledgerBookTestData = new LedgerBookBuilder { StorageKey = "RemainingActualSurplusWidgetTest.xml", Modified = new DateTime(2015, 11, 23), Name = "Smith Budget 2015" }
             .IncludeLedger(LedgerBookTestData.PhoneLedger, 130M)
@@ -73,7 +73,7 @@ public class RemainingActualSurplusWidgetTest
         Assert.AreEqual(-2433.34, this.subject.Value);
     }
 
-    private static class StatementModelTestDataForThisTest
+    private static class TransactionsModelTestDataForThisTest
     {
         public static IAccountTypeRepository AccountTypeRepo { get; set; }
         public static IBudgetBucketRepository BudgetBucketRepo { get; set; }

@@ -16,7 +16,7 @@ public class MobileDataExporterTest
     private readonly ITestOutputHelper outputHelper;
     private readonly GlobalFilterCriteria testCriteria = new() { BeginDate = new DateOnly(2013, 7, 15), EndDate = new DateOnly(2013, 8, 14) };
     private readonly LedgerBook testLedger = LedgerBookTestData.TestData1();
-    private readonly TransactionsListModel testTransactionsList = StatementModelTestData.TestData1();
+    private readonly TransactionsListModel testTransactionsList = TransactionsListModelTestData.TestData1();
 
     public MobileDataExporterTest(ITestOutputHelper outputHelper)
     {

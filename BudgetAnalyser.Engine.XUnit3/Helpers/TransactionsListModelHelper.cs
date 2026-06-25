@@ -2,15 +2,15 @@
 
 namespace BudgetAnalyser.Engine.XUnit.Helpers;
 
-public static class StatementModelHelper
+public static class TransactionsListModelHelper
 {
     public static void Output(this TransactionsListModel instance, DateOnly startDate, IReesTestOutput? outputWriter = null)
     {
         var writer = NonNullableOutputWriter(outputWriter);
         writer.WriteLine(string.Empty);
-        writer.WriteLine("******************************************************** STATEMENT OUTPUT ***********************************************************");
+        writer.WriteLine("******************************************************** TRANSACTIONS LIST OUTPUT ***********************************************************");
         writer.WriteLine("Date       Description     Bucket     Reference1      Reference2          Amount Account         Id");
-        writer.WriteLine("=====================================================================================================================================");
+        writer.WriteLine("=============================================================================================================================================");
         foreach (var transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
         {
             writer.WriteLine(

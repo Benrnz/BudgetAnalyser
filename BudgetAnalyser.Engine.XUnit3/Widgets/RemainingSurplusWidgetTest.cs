@@ -28,9 +28,9 @@ public class RemainingSurplusWidgetTest : IDisposable
     public RemainingSurplusWidgetTest(ITestOutputHelper outputHelper)
     {
         this.outputWriter = new XUnitOutputWriter(outputHelper);
-        StatementModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
-        StatementModelTestDataForThisTest.BudgetBucketRepo = this.bucketRepo;
-        this.transactionsTestData = StatementModelTestDataForThisTest.TestDataGenerated();
+        TransactionsListModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
+        TransactionsListModelTestDataForThisTest.BudgetBucketRepo = this.bucketRepo;
+        this.transactionsTestData = TransactionsListModelTestDataForThisTest.TestDataGenerated();
 
         var budgetModel = BudgetModelTestData.CreateTestData1();
         this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel), budgetModel);
@@ -104,7 +104,7 @@ public class RemainingSurplusWidgetTest : IDisposable
         var removeId = Guid.Parse("c66eb722-6d03-48b2-b985-6721701a01ae");
         var myTransactions = this.transactionsTestData.AllTransactions
             .ToList()
-            .Where(t => t.Account == StatementModelTestData.ChequeAccount)
+            .Where(t => t.Account == TransactionsListModelTestData.ChequeAccount)
             .Where(t => t.Id != removeId)
             .ToList();
         var myStatement = this.transactionsTestData.LoadTransactions(myTransactions);
@@ -127,7 +127,7 @@ public class RemainingSurplusWidgetTest : IDisposable
          */
     }
 
-    private static class StatementModelTestDataForThisTest
+    private static class TransactionsListModelTestDataForThisTest
     {
         public static IAccountTypeRepository AccountTypeRepo { get; set; } = null!;
         public static IBudgetBucketRepository BudgetBucketRepo { get; set; } = null!;

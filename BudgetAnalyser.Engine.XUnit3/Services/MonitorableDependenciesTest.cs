@@ -62,7 +62,7 @@ public class MonitorableDependenciesTests
     [Fact]
     public void NotifyOfDependencyChange_ShouldTriggerEvent_WhenDependencyHasSignificantlyChanged()
     {
-        var statementModel = TestData.StatementModelTestData.TestData1();
+        var statementModel = TestData.TransactionsListModelTestData.TestData1();
         var eventTriggered = false;
         this.service.DependencyChanged += (sender, args) => eventTriggered = true;
 

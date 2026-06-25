@@ -6,7 +6,7 @@ using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.XUnit.TestData;
 
-public static class StatementModelTestData
+public static class TransactionsListModelTestData
 {
     public static readonly SavedUpForExpenseBucket CarMtcBucket = new(TestDataConstants.CarMtcBucketCode, "Car Maintenance");
     public static readonly ChequeAccount ChequeAccount = new(TestDataConstants.ChequeAccountName);
@@ -24,7 +24,7 @@ public static class StatementModelTestData
     public static readonly VisaAccount VisaAccount = new(TestDataConstants.VisaAccountName);
 
     /// <summary>
-    ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
+    ///     Transactions List Model with transactions between 15/07/2013 and 14/09/2013
     /// </summary>
     public static TransactionsListModel TestData1()
     {
