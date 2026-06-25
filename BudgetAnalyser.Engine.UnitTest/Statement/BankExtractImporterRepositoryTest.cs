@@ -5,10 +5,10 @@ using Moq;
 namespace BudgetAnalyser.Engine.UnitTest.Statement;
 
 [TestClass]
-public class BankStatementImporterRepositoryTest
+public class BankExtractImporterRepositoryTest
 {
-    private IList<Mock<IBankStatementImporter>> Importers { get; set; }
-    private BankStatementImporterRepository Subject { get; set; }
+    private IList<Mock<IBankExtractImporter>> Importers { get; set; }
+    private BankExtractImporterRepository Subject { get; set; }
 
     [TestMethod]
     public void CtorShouldConstructGivenValidListOfImporters()
@@ -21,7 +21,7 @@ public class BankStatementImporterRepositoryTest
     [ExpectedException(typeof(ArgumentException))]
     public void CtorShouldThrowGivenEmptyListOfImporters()
     {
-        new BankStatementImporterRepository(new List<IBankStatementImporter>());
+        new BankExtractImporterRepository(new List<IBankExtractImporter>());
         Assert.Fail();
     }
 
@@ -29,7 +29,7 @@ public class BankStatementImporterRepositoryTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void CtorShouldThrowGivenNullListOfImporters()
     {
-        new BankStatementImporterRepository(null);
+        new BankExtractImporterRepository(null);
         Assert.Fail();
     }
 
@@ -43,12 +43,12 @@ public class BankStatementImporterRepositoryTest
     [TestInitialize]
     public void TestInitialise()
     {
-        Importers = new[] { new Mock<IBankStatementImporter>(), new Mock<IBankStatementImporter>() };
+        Importers = new[] { new Mock<IBankExtractImporter>(), new Mock<IBankExtractImporter>() };
         Subject = CreateSubject();
     }
 
-    private BankStatementImporterRepository CreateSubject()
+    private BankExtractImporterRepository CreateSubject()
     {
-        return new BankStatementImporterRepository(Importers.Select(i => i.Object));
+        return new BankExtractImporterRepository(Importers.Select(i => i.Object));
     }
 }

@@ -12,7 +12,7 @@ using Moq;
 namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
-    public class WestpacAccountStatementImporterV1Test
+    public class WestpacAccountExtractImporterV1Test
     {
         private Mock<IReaderWriterSelector> mockReaderWriterSelector;
         private BankImportUtilitiesTestHarness BankImportUtilities { get; set; }
@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtilities()
         {
-            new WestpacAccountStatementImporterV1(null, new FakeLogger(), this.mockReaderWriterSelector.Object);
+            new WestpacAccountExtractImporterV1(null, new FakeLogger(), this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new WestpacAccountStatementImporterV1(new BankImportUtilities(new FakeLogger()), null, this.mockReaderWriterSelector.Object);
+            new WestpacAccountExtractImporterV1(new BankImportUtilities(new FakeLogger()), null, this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
@@ -159,9 +159,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             this.mockReaderWriterSelector = new Mock<IReaderWriterSelector>();
         }
 
-        private WestpacAccountStatementImporterV1TestHarness Arrange()
+        private WestpacAccountExtractImporterV1TestHarness Arrange()
         {
-            return new WestpacAccountStatementImporterV1TestHarness(BankImportUtilities, this.mockReaderWriterSelector.Object);
+            return new WestpacAccountExtractImporterV1TestHarness(BankImportUtilities, this.mockReaderWriterSelector.Object);
         }
     }
 }

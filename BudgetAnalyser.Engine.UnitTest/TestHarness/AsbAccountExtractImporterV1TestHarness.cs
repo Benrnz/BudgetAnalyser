@@ -2,9 +2,9 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    internal class AsbAccountStatementImporterV1TestHarness : AsbAccountStatementImporterV1
+    internal class AsbAccountExtractImporterV1TestHarness : AsbAccountExtractImporterV1
     {
-        public AsbAccountStatementImporterV1TestHarness(BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
+        public AsbAccountExtractImporterV1TestHarness(BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
             : base(importUtilities, new FakeLogger(), readerWriterSelector)
         {
         }

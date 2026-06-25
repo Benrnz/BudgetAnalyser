@@ -77,7 +77,7 @@ public class TransactionsControllerFileOperations : ControllerBase
         try
         {
             var account = this.loadFileController.SelectedExistingAccountName;
-            await this.transactionService.ImportAndMergeBankStatementAsync(fileName, account);
+            await this.transactionService.ImportAndMergeTransactionsExtractAsync(fileName, account);
 
             await SyncWithServiceAsync();
             Messenger.Send(new TransactionsChangedMessage());

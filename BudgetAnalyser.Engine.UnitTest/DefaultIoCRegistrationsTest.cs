@@ -20,7 +20,7 @@ public class DefaultIoCRegistrationsTest
     {
         typeof(ILogger), // Logger is instantiated with a custom registration.
         typeof(IModelValidate), // Used to indicate support for standard validation.
-        typeof(IBankStatementImporter), // The implementations of this interface are discovered by reflection.
+        typeof(IBankExtractImporter), // The implementations of this interface are discovered by reflection.
         typeof(IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.
         typeof(IUserDefinedWidget), // Used to mark a widget as being multi-instance as opposed to the ordinary single instance approach.
         typeof(IDataChangeDetection), // Used to mark a type that can report back when data has changed. Similar to INotifyPropertyChange but across the whole type.

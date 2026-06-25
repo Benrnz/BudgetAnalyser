@@ -5,7 +5,7 @@ namespace BudgetAnalyser.Engine.XUnit;
 
 public class MetaTest(ITestOutputHelper testOutputHelper)
 {
-    private const int MinimumTestCount = 228;
+    private const int MinimumTestCount = 291;
 
     [Fact]
     public void ListAllTests()

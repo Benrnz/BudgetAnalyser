@@ -9,16 +9,16 @@ namespace BudgetAnalyser.Engine.Statement;
 ///     it is loaded with no prompting, otherwise the user is prompted for a filename.
 ///     It also is responsible for saving  any open statement file into a budget analyser statement file.
 ///     To function it orchestrates across the  <see cref="IVersionedTransactionsModelRepository" /> and the
-///     <see cref="IBankStatementImporterRepository" />.
+///     <see cref="IBankExtractImporterRepository" />.
 ///     This implementation is strictly not thread safe and should be single threaded only.  Don't allow multiple threads
 ///     to use it at the same time.
 /// </summary>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC")]
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class TransactionsListModelRepository(IVersionedTransactionsModelRepository transactionsListModelRepository, IBankStatementImporterRepository importerRepository)
+internal class TransactionsListModelRepository(IVersionedTransactionsModelRepository transactionsListModelRepository, IBankExtractImporterRepository importerRepository)
     : ITransactionsListModelRepository
 {
-    private readonly IBankStatementImporterRepository importerRepository = importerRepository ?? throw new ArgumentNullException(nameof(importerRepository));
+    private readonly IBankExtractImporterRepository importerRepository = importerRepository ?? throw new ArgumentNullException(nameof(importerRepository));
     private readonly IVersionedTransactionsModelRepository transactionsListModelRepository = transactionsListModelRepository ?? throw new ArgumentNullException(nameof(transactionsListModelRepository));
 
     public async Task CreateNewAndSaveAsync(string storageKey)
@@ -26,7 +26,7 @@ internal class TransactionsListModelRepository(IVersionedTransactionsModelReposi
         await this.transactionsListModelRepository.CreateNewAndSaveAsync(storageKey);
     }
 
-    public async Task<TransactionsListModel> ImportBankStatementAsync(string storageKey, Account account)
+    public async Task<TransactionsListModel> ImportTransactionsExtractAsync(string storageKey, Account account)
     {
         if (string.IsNullOrWhiteSpace(storageKey))
         {

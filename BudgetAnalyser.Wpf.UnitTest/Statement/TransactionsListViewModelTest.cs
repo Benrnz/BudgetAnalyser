@@ -20,7 +20,7 @@ public class TransactionsListViewModelTest
     }
 
     [TestMethod]
-    public void GivenNoDataStatementNameShouldBeNoTransactionsLoaded()
+    public void GivenNoDataTransactionListModelNameShouldBeNoTransactionsLoaded()
     {
         var subject = CreateSubject();
         Assert.AreEqual("[No Transactions Loaded]", subject.TransactionListModelName);
@@ -34,7 +34,7 @@ public class TransactionsListViewModelTest
     }
 
     [TestMethod]
-    public void GivenTestData1StatementNameShouldBeFooStatement()
+    public void GivenTestData1TransactionListModelNameShouldBeFooBar()
     {
         var subject = Arrange();
         Assert.AreEqual("FooStatement", subject.TransactionListModelName);

@@ -6,7 +6,7 @@ using Moq;
 namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
-    public class AsbAccountStatementImporterV1Test
+    public class AsbAccountExtractImporterV1Test
     {
         private Mock<IReaderWriterSelector> mockReaderWriterSelector;
         private BankImportUtilitiesTestHarness BankImportUtilities { get; set; }
@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtilities()
         {
-            new AsbAccountStatementImporterV1(null, new FakeLogger(), this.mockReaderWriterSelector.Object);
+            new AsbAccountExtractImporterV1(null, new FakeLogger(), this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new AsbAccountStatementImporterV1(new BankImportUtilities(new FakeLogger()), null, this.mockReaderWriterSelector.Object);
+            new AsbAccountExtractImporterV1(new BankImportUtilities(new FakeLogger()), null, this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
@@ -143,9 +143,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             this.mockReaderWriterSelector = new Mock<IReaderWriterSelector>();
         }
 
-        private AsbAccountStatementImporterV1TestHarness Arrange()
+        private AsbAccountExtractImporterV1TestHarness Arrange()
         {
-            return new AsbAccountStatementImporterV1TestHarness(BankImportUtilities, this.mockReaderWriterSelector.Object);
+            return new AsbAccountExtractImporterV1TestHarness(BankImportUtilities, this.mockReaderWriterSelector.Object);
         }
     }
 }

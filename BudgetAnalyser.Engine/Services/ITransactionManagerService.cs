@@ -36,7 +36,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
 
     /// <summary>
     ///     Detects duplicate transactions in the current <see cref="TransactionsListModel" /> and returns a summary string for displaying in the UI.
-    ///     Each individual duplicate transactions will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" /> property.
+    ///     Each individual duplicate transaction will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" /> property.
     /// </summary>
     /// <returns>A textual summary of duplicates found. Null if none are detected or no statement is loaded.</returns>
     string DetectDuplicateTransactions();
@@ -69,13 +69,13 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     void FilterTransactions(GlobalFilterCriteria criteria);
 
     /// <summary>
-    ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement. This method should not be used without a <see cref="TransactionsListModel" /> loaded.
-    ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
+    ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser TransactionsListModel. This method should not be used without a
+    ///     <see cref="TransactionsListModel" /> loaded. It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
     /// </summary>
     /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
     /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given<paramref name="storageKey" /></exception>
     /// <exception cref="TransactionsAlreadyImportedException">Will be thrown if the supplied file has already been imported.</exception>
-    Task ImportAndMergeBankStatementAsync(string storageKey, Account account);
+    Task ImportAndMergeTransactionsExtractAsync(string storageKey, Account account);
 
     /// <summary>
     ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.
@@ -84,7 +84,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     void RemoveTransaction(Transaction transactionToRemove);
 
     /// <summary>
-    ///     Splits the provided transaction into two. The provided transactions is removed, and two new transactions are created. Both transactions must add up to the existing transaction amount.
+    ///     Splits the provided transaction into two. The provided transaction is removed, and two new transactions are created. Both transactions must add up to the original transaction amount.
     /// </summary>
     /// <param name="originalTransaction">The original transaction.</param>
     /// <param name="splinterAmount1">The splinter amount1.</param>
@@ -107,7 +107,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     /// </param>
     /// <returns>
     ///     A task that will result in true if all buckets used, are present in the budgets, otherwise false. If false, this indicates that some transactions may have their bucket allocation
-    ///     removed possibly resulting in unintended data loss.
+    ///     removed, possibly resulting in unintended data loss.
     /// </returns>
     Task<bool> ValidateWithCurrentBudgetsAsync(BudgetCollection? budgets = null);
 }

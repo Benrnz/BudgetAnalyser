@@ -6,9 +6,9 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    internal class AnzAccountStatementImporterV1TestHarness : AnzAccountStatementImporterV1
+    internal class WestpacAccountExtractImporterV1TestHarness : WestpacAccountExtractImporterV1
     {
-        public AnzAccountStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
+        public WestpacAccountExtractImporterV1TestHarness([NotNull] BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
             : base(importUtilities, new FakeLogger(), readerWriterSelector)
         {
         }
@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         protected override Task<string> ReadTextChunkAsync(string filePath)
         {
             return ReadTextChunkOverride is null
-                ? Task.FromResult("Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge\r\nAtm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,,")
+                ? Task.FromResult("Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code\r\n20/07/2020,-12.50,\"Brew On Quay\",\"EFTPOS TRANSACTION\",\"20-16:10-941\",\"************\",\"7786 30941\"")
                 : Task.FromResult(ReadTextChunkOverride(filePath));
         }
     }

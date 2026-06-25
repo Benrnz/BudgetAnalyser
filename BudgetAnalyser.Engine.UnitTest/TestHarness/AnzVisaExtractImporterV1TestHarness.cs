@@ -6,9 +6,9 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    internal class WestpacAccountStatementImporterV1TestHarness : WestpacAccountStatementImporterV1
+    internal class AnzVisaExtractImporterV1TestHarness : AnzVisaExtractImporterV1
     {
-        public WestpacAccountStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
+        public AnzVisaExtractImporterV1TestHarness([NotNull] BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
             : base(importUtilities, new FakeLogger(), readerWriterSelector)
         {
         }
@@ -19,14 +19,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return ReadLinesOverride is null
-                ? Task.FromResult((IEnumerable<string>)new string[] { })
+                ? Task.FromResult((IEnumerable<string>)new List<string>())
                 : Task.FromResult(ReadLinesOverride(fileName));
         }
 
         protected override Task<string> ReadTextChunkAsync(string filePath)
         {
             return ReadTextChunkOverride is null
-                ? Task.FromResult("Date,Amount,Other Party,Description,Reference,Particulars,Analysis Code\r\n20/07/2020,-12.50,\"Brew On Quay\",\"EFTPOS TRANSACTION\",\"20-16:10-941\",\"************\",\"7786 30941\"")
+                ? Task.FromResult("Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge\r\n4323-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,,\r\n")
                 : Task.FromResult(ReadTextChunkOverride(filePath));
         }
     }

@@ -1,22 +1,21 @@
-using System.Globalization;
+﻿using System.Globalization;
 using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Statement;
 
 /// <summary>
-///     An Importer for ASB Everyday Accounts CSV files.
+///     An Importer for ANZ Cheque and Savings Accounts bank statement exports.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class AsbAccountStatementImporterV1 : IBankStatementImporter
+internal class AnzAccountExtractImporterV1 : IBankExtractImporter
 {
-    private const int DateIndex = 0;
-    private const int UniqueIdIndex = 1;
-    private const int TransactionTypeIndex = 2;
-    private const int ChequeNumberIndex = 3;
-    private const int PayeeIndex = 4;
-    private const int MemoIndex = 5;
-    private const int AmountIndex = 6;
-    private const int MetadataLineCount = 7;
+    private const int TransactionTypeIndex = 0;
+    private const int DescriptionIndex = 1;
+    private const int Reference1Index = 2;
+    private const int Reference2Index = 3;
+    private const int Reference3Index = 4;
+    private const int AmountIndex = 5;
+    private const int DateIndex = 6;
 
     private static readonly Dictionary<string, TransactionType> TransactionTypes = new();
 
@@ -25,17 +24,17 @@ internal class AsbAccountStatementImporterV1 : IBankStatementImporter
     private readonly IReaderWriterSelector readerWriterSelector;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="AsbAccountStatementImporterV1" /> class.
+    ///     Initializes a new instance of the <see cref="AnzAccountExtractImporterV1" /> class.
     /// </summary>
     /// <exception cref="System.ArgumentNullException">
     /// </exception>
-    public AsbAccountStatementImporterV1(BankImportUtilities importUtilities, ILogger logger, IReaderWriterSelector readerWriterSelector)
+    public AnzAccountExtractImporterV1(BankImportUtilities importUtilities, ILogger logger, IReaderWriterSelector readerWriterSelector)
     {
         this.importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
         this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
-        // ASB importers are NZ specific.
+        // ANZ importers are NZ specific at this stage.
     }
 
     /// <summary>
@@ -58,20 +57,13 @@ internal class AsbAccountStatementImporterV1 : IBankStatementImporter
         }
 
         var transactions = new List<Transaction>();
-        var lineNumber = 0;
+        var firstTime = true;
         foreach (var line in await ReadLinesAsync(fileName))
         {
-            lineNumber++;
-
-            // Skip metadata lines (lines 1-7)
-            if (lineNumber <= MetadataLineCount)
+            if (firstTime)
             {
-                continue;
-            }
-
-            // Skip header line (line 8)
-            if (lineNumber == MetadataLineCount + 1)
-            {
+                // File contains column headers
+                firstTime = false;
                 continue;
             }
 
@@ -84,10 +76,10 @@ internal class AsbAccountStatementImporterV1 : IBankStatementImporter
             var transaction = new Transaction
             {
                 Account = account,
-                Description = this.importUtilities.FetchString(split, MemoIndex),
-                Reference1 = this.importUtilities.FetchString(split, PayeeIndex),
-                Reference2 = this.importUtilities.FetchString(split, ChequeNumberIndex),
-                Reference3 = this.importUtilities.FetchString(split, UniqueIdIndex),
+                Description = this.importUtilities.FetchString(split, DescriptionIndex),
+                Reference1 = this.importUtilities.FetchString(split, Reference1Index),
+                Reference2 = this.importUtilities.FetchString(split, Reference2Index),
+                Reference3 = this.importUtilities.FetchString(split, Reference3Index),
                 Amount = this.importUtilities.FetchDecimal(split, AmountIndex),
                 Date = this.importUtilities.FetchDate(split, DateIndex)
             };
@@ -108,25 +100,20 @@ internal class AsbAccountStatementImporterV1 : IBankStatementImporter
     {
         this.importUtilities.AbortIfFileDoesntExist(fileName);
 
-        var lines = await ReadFirstLinesAsync(fileName);
-        if (lines is null || lines.Length < 8 || lines[7].IsNothing())
+        var lines = await ReadFirstTwoLinesAsync(fileName);
+        if (lines is null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
         {
             return false;
         }
 
         try
         {
-            if (!VerifyMetadataLine(lines[1]))
+            if (!VerifyColumnHeaderLine(lines[0]))
             {
                 return false;
             }
 
-            if (!VerifyColumnHeaderLine(lines[6]))
-            {
-                return false;
-            }
-
-            if (!VerifyFirstDataLine(lines[7]))
+            if (!VerifyFirstDataLine(lines[1]))
             {
                 return false;
             }
@@ -155,7 +142,7 @@ internal class AsbAccountStatementImporterV1 : IBankStatementImporter
     protected virtual async Task<string> ReadTextChunkAsync(string filePath)
     {
         var reader = this.readerWriterSelector.SelectReaderWriter(false);
-        return await reader.LoadFirstLinesFromDiskAsync(filePath, 9);
+        return await reader.LoadFirstLinesFromDiskAsync(filePath, 2);
     }
 
     private TransactionType FetchTransactionType(string[] array, decimal amount)
@@ -176,57 +163,44 @@ internal class AsbAccountStatementImporterV1 : IBankStatementImporter
         return transactionType;
     }
 
-    private async Task<string[]?> ReadFirstLinesAsync(string fileName)
+    private async Task<string[]?> ReadFirstTwoLinesAsync(string fileName)
     {
         var chunk = await ReadTextChunkAsync(fileName);
-        return chunk.IsNothing() ? null : chunk.SplitLines(9);
-    }
-
-    private bool VerifyMetadataLine(string line)
-    {
-        var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
-        return compareTo.Contains("Bank") && compareTo.Contains("Account");
+        return chunk.IsNothing() ? null : chunk.SplitLines(2);
     }
 
     private static bool VerifyColumnHeaderLine(string line)
     {
         var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
-        return string.CompareOrdinal(compareTo, "Date,Unique Id,Tran Type,Cheque Number,Payee,Memo,Amount") == 0;
+        return string.CompareOrdinal(compareTo, "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge") == 0;
     }
 
     private bool VerifyFirstDataLine(string line)
     {
         var split = line.Split(',');
-        if (split.Length < 7)
+        var type = this.importUtilities.FetchString(split, 0);
+        if (string.IsNullOrWhiteSpace(type))
         {
             return false;
         }
 
-        try
-        {
-            var date = this.importUtilities.FetchDate(split, DateIndex);
-            if (date == DateOnly.MinValue)
-            {
-                return false;
-            }
-
-            var amount = this.importUtilities.FetchDecimal(split, AmountIndex);
-            if (amount == 0)
-            {
-                return false;
-            }
-
-            var payee = this.importUtilities.FetchString(split, PayeeIndex);
-            if (string.IsNullOrWhiteSpace(payee))
-            {
-                return false;
-            }
-
-            return true;
-        }
-        catch
+        if (char.IsDigit(type.ToCharArray()[0]))
         {
             return false;
         }
+
+        var amount = this.importUtilities.FetchDecimal(split, AmountIndex);
+        if (amount == 0)
+        {
+            return false;
+        }
+
+        var date = this.importUtilities.FetchDate(split, DateIndex);
+        if (date == DateOnly.MinValue)
+        {
+            return false;
+        }
+
+        return split.Length == 9;
     }
 }

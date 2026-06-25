@@ -6,9 +6,9 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    internal class AnzVisaStatementImporterV1TestHarness : AnzVisaStatementImporterV1
+    internal class AnzAccountExtractImporterV1TestHarness : AnzAccountExtractImporterV1
     {
-        public AnzVisaStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
+        public AnzAccountExtractImporterV1TestHarness([NotNull] BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
             : base(importUtilities, new FakeLogger(), readerWriterSelector)
         {
         }
@@ -19,14 +19,14 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return ReadLinesOverride is null
-                ? Task.FromResult((IEnumerable<string>)new List<string>())
+                ? Task.FromResult((IEnumerable<string>)new string[] { })
                 : Task.FromResult(ReadLinesOverride(fileName));
         }
 
         protected override Task<string> ReadTextChunkAsync(string filePath)
         {
             return ReadTextChunkOverride is null
-                ? Task.FromResult("Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge\r\n4323-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,,\r\n")
+                ? Task.FromResult("Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge\r\nAtm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,,")
                 : Task.FromResult(ReadTextChunkOverride(filePath));
         }
     }

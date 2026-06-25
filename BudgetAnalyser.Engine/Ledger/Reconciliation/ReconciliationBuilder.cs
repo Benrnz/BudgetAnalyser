@@ -153,7 +153,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
             var transactions = IncludeBudgetedAmount(salaryAccount, budget, ledgerBucket, reconciliationDate);
 
             // Append all other transactions for this bucket, if any, to the transaction list.
-            transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
+            transactions.AddRange(IncludeTransactions(newEntry, filteredStatementTransactions));
 
             AutoMatchTransactionsAlreadyInPreviousPeriod(line.Date, filteredStatementTransactions, previousLedgerEntry, transactions);
             newEntry.SetTransactionsForReconciliation(transactions);
@@ -376,14 +376,14 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
         return transactions;
     }
 
-    private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
+    private static IEnumerable<LedgerTransaction> IncludeTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredTransactions)
     {
-        if (filteredStatementTransactions.None())
+        if (filteredTransactions.None())
         {
             return new List<LedgerTransaction>();
         }
 
-        var transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
+        var transactions = filteredTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
         if (transactions.Any())
         {
             IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select(

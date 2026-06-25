@@ -12,7 +12,7 @@ using Moq;
 namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
-    public class AnzAccountStatementImporterV1Test
+    public class AnzVisaExtractImporterV1Test
     {
         private Mock<IReaderWriterSelector> mockReaderWriterSelector;
         private BankImportUtilitiesTestHarness BankImportUtilities { get; set; }
@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtilities()
         {
-            new AnzAccountStatementImporterV1(null, new FakeLogger(), this.mockReaderWriterSelector.Object);
+            new AnzVisaExtractImporterV1(null, new FakeLogger(), this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new AnzAccountStatementImporterV1(new BankImportUtilities(new FakeLogger()), null, this.mockReaderWriterSelector.Object);
+            new AnzVisaExtractImporterV1(new BankImportUtilities(new FakeLogger()), null, this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
@@ -37,31 +37,31 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task LoadShouldParseAFileWithExtraColumns()
         {
             var subject = Arrange();
-            subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData2();
-            var result = await subject.LoadAsync("foo.bar", TransactionsListModelTestData.ChequeAccount);
+            subject.ReadLinesOverride = f => AnzVisaCsvTestData.TestData2();
+            var result = await subject.LoadAsync("foo.bar", TransactionsListModelTestData.VisaAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
-            Assert.AreEqual(7, result.AllTransactions.Count());
+            Assert.AreEqual(13, result.AllTransactions.Count());
         }
 
         [TestMethod]
         public async Task LoadShouldParseAGoodFile()
         {
             var subject = Arrange();
-            subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData1();
-            var result = await subject.LoadAsync("foo.bar", TransactionsListModelTestData.ChequeAccount);
+            subject.ReadLinesOverride = f => AnzVisaCsvTestData.TestData1();
+            var result = await subject.LoadAsync("foo.bar", TransactionsListModelTestData.VisaAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
-            Assert.AreEqual(7, result.AllTransactions.Count());
+            Assert.AreEqual(13, result.AllTransactions.Count());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnexpectedIndexException))]
+        [ExpectedException(typeof(InvalidDataException))]
         public async Task LoadShouldThrowGivenBadData()
         {
             var subject = Arrange();
             subject.ReadLinesOverride = filename => AnzChequeCsvTestData.BadTestData1();
-            await subject.LoadAsync("foo.bar", TransactionsListModelTestData.ChequeAccount);
+            await subject.LoadAsync("foo.bar", TransactionsListModelTestData.VisaAccount);
             Assert.Fail();
         }
 
@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         {
             var subject = Arrange();
             BankImportUtilities.AbortIfFileDoesntExistOverride = s => { throw new FileNotFoundException(); };
-            await subject.LoadAsync("foo.bar", TransactionsListModelTestData.ChequeAccount);
+            await subject.LoadAsync("foo.bar", TransactionsListModelTestData.VisaAccount);
             Assert.Fail();
         }
 
@@ -103,10 +103,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         }
 
         [TestMethod]
-        public async Task TasteTestShouldReturnFalseGivenTheVisaFormat()
+        public async Task TasteTestShouldReturnFalseGivenTheChequeFormat()
         {
             var subject = Arrange();
-            subject.ReadTextChunkOverride = file => AnzVisaCsvTestData.FirstTwoLines1(); // Visa format given to Cheque parser
+            subject.ReadTextChunkOverride = file => AnzChequeCsvTestData.FirstTwoLines1(); // Cheque format given to Visa parser
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
@@ -115,16 +115,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task TasteTestShouldReturnFalseGivenTheWestpacFormat()
         {
             var subject = Arrange();
-            subject.ReadTextChunkOverride = file => WestpacChequeCsvTestData.FirstTwoLines1();
-            var result = await subject.TasteTestAsync(@"transumm.CSV");
-            Assert.IsFalse(result);
-        }
-
-        [TestMethod]
-        public async Task TasteTestShouldReturnFalseGivenTheAsbFormat()
-        {
-            var subject = Arrange();
-            subject.ReadTextChunkOverride = file => AsbChequeCsvTestData.FirstNineLines1();
+            subject.ReadTextChunkOverride = file => WestpacChequeCsvTestData.FirstTwoLines1(); // Cheque format given to Visa parser
             var result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
@@ -144,9 +135,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
             this.mockReaderWriterSelector = new Mock<IReaderWriterSelector>();
         }
 
-        private AnzAccountStatementImporterV1TestHarness Arrange()
+        private AnzVisaExtractImporterV1TestHarness Arrange()
         {
-            return new AnzAccountStatementImporterV1TestHarness(BankImportUtilities, this.mockReaderWriterSelector.Object);
+            return new AnzVisaExtractImporterV1TestHarness(BankImportUtilities, this.mockReaderWriterSelector.Object);
         }
     }
 }

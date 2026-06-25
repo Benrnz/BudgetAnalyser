@@ -249,7 +249,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     }
 
     /// <inheritdoc />
-    public async Task ImportAndMergeBankStatementAsync(string storageKey, Account account)
+    public async Task ImportAndMergeTransactionsExtractAsync(string storageKey, Account account)
     {
         if (storageKey.IsNothing())
         {
@@ -263,10 +263,10 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         if (TransactionsListModel is null)
         {
-            throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+            throw new InvalidOperationException("There is no TransactionsListModel loaded, you must first load an existing file or create a new one.");
         }
 
-        var additionalModel = await this.transactionsListModelRepository.ImportBankStatementAsync(storageKey, account);
+        var additionalModel = await this.transactionsListModelRepository.ImportTransactionsExtractAsync(storageKey, account);
         var combinedModel = TransactionsListModel.Merge(additionalModel);
         var minDate = additionalModel.AllTransactions.Min(t => t.Date);
         var maxDate = additionalModel.AllTransactions.Max(t => t.Date);
