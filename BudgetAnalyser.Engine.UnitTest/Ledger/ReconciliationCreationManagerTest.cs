@@ -129,7 +129,7 @@ public class ReconciliationCreationManagerTest
     }
 
     [TestMethod]
-    public void Reconcile_ShouldThrow_GivenTestData1AndNoStatementModelTransactions()
+    public void Reconcile_ShouldThrow_GivenTestData1AndNoTransactions()
     {
         this.testDataTransactions = new TransactionsListModel(new FakeLogger()) { StorageKey = "C:\\Foo.xml" };
         try
@@ -150,7 +150,7 @@ public class ReconciliationCreationManagerTest
     [TestMethod]
     public void Reconcile_ShouldThrow_GivenTestData1AndUnclassifiedTransactions()
     {
-        this.testDataTransactions = new StatementModelBuilder()
+        this.testDataTransactions = new TransactionsListModelBuilder()
             .TestData1()
             .AppendTransaction(new Transaction { Account = TransactionsListModelTestData.ChequeAccount, Amount = 12.45M, Date = TestDataReconcileDate.AddDays(-1), Description = "Foo bar" })
             .Build();
@@ -205,8 +205,8 @@ public class ReconciliationCreationManagerTest
     [Description("When there is more than one problem, the first exception should not prevent the user from seeing the other different exception.")]
     public void Reconcile_ShouldThrowValidationWarning_GivenTwoOrMoreWarningsHaveAlreadyBeenThrown()
     {
-        // First the statement has a transaction that is not classified with a bucket.
-        this.testDataTransactions = new StatementModelBuilder()
+        // First the transaction that is not classified with a bucket.
+        this.testDataTransactions = new TransactionsListModelBuilder()
             .TestData1()
             .AppendTransaction(new Transaction { Account = TransactionsListModelTestData.ChequeAccount, Amount = 12.45M, Date = TestDataReconcileDate.AddDays(-1), Description = "Foo bar" })
             .Build();
@@ -239,7 +239,7 @@ public class ReconciliationCreationManagerTest
     }
 
     [TestMethod]
-    public void Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromStatement_GivenTestData5()
+    public void Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromTransactions_GivenTestData5()
     {
         try
         {
@@ -265,7 +265,7 @@ public class ReconciliationCreationManagerTest
         this.bucketRepo = new BucketBucketRepoAlwaysFind();
         this.testDataBudgetCollection = BudgetModelTestData.CreateCollectionWith1And2();
         this.testDataBudgetModel = this.testDataBudgetCollection.ForDate(TestDataReconcileDate);
-        this.testDataTransactions = new StatementModelBuilder()
+        this.testDataTransactions = new TransactionsListModelBuilder()
             .TestData5()
             .AppendTransaction(new Transaction
             {

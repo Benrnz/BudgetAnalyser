@@ -39,7 +39,7 @@ public class LedgerCalculationTest
     public void CalculateCurrentPeriodSurplusBalance_ShouldCountPayCCTransactionsAsSurplusTransactions()
     {
         var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
-        var statement = CreateTransactionsBuilder().AppendTransaction(
+        var transactions = CreateTransactionsBuilder().AppendTransaction(
                 new Transaction
                 {
                     Account = TransactionsListModelTestData.ChequeAccount,
@@ -52,7 +52,7 @@ public class LedgerCalculationTest
         var result = Subject.CalculateCurrentPeriodSurplusBalance(
             ledgerLine,
             new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) },
-            statement);
+            transactions);
 
         Assert.AreEqual(2770M, result);
     }
@@ -61,7 +61,7 @@ public class LedgerCalculationTest
     public void CalculateCurrentPeriodSurplusBalance_ShouldNotCountPositivePayCCTransactions()
     {
         var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
-        var statement = CreateTransactionsBuilder()
+        var transactions = CreateTransactionsBuilder()
             .AppendTransaction(new Transaction
             {
                 Account = TransactionsListModelTestData.ChequeAccount,
@@ -114,7 +114,7 @@ public class LedgerCalculationTest
         var result = Subject.CalculateCurrentPeriodSurplusBalance(
             ledgerLine,
             new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) },
-            statement);
+            transactions);
 
         Assert.AreEqual(2750M, result);
     }
@@ -125,7 +125,7 @@ public class LedgerCalculationTest
         // There used to be a special bucket "SavingsCommitmentBucket" that was a special bucket type. When a debit was coded against this bucket it was thought of as debiting Surplus.
         // Now this is simply treated as a SavedUpForExpenseBucket like any other ledger. Debits will remove funds from this LedgerBucket and credit another bucket somewhere else.
         var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
-        var statement = CreateTransactionsBuilder().AppendTransaction(
+        var transactions = CreateTransactionsBuilder().AppendTransaction(
                 new Transaction
                 {
                     Account = TransactionsListModelTestData.ChequeAccount,
@@ -138,7 +138,7 @@ public class LedgerCalculationTest
         var result = Subject.CalculateCurrentPeriodSurplusBalance(
             ledgerLine,
             new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) },
-            statement);
+            transactions);
 
         Assert.AreEqual(2870M, result);
     }
@@ -146,11 +146,11 @@ public class LedgerCalculationTest
     [TestMethod]
     public void CalculateCurrentPeriodSurplusBalance_UsingFortnightlyData_ShouldReturn3777()
     {
-        var statementModel = TransactionsListModelTestData.TestData1();
+        var transactions = TransactionsListModelTestData.TestData1();
         var filter = new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 8, 15), EndDate = new DateOnly(2013, 8, 29) };
         var ledgerLine = LedgerBookTestData.TestData6().Reconciliations.OrderByDescending(l => l.Date).First();
 
-        var result = Subject.CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statementModel);
+        var result = Subject.CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, transactions);
 
         Assert.AreEqual(3777.56M, result);
     }
@@ -182,7 +182,7 @@ public class LedgerCalculationTest
     }
 
     [TestMethod]
-    public void CalculateOverSpentLedgersShouldReturnOverdrawnTransactionsGivenStatementTransactionsSpendMoreThanLedgerBalance()
+    public void CalculateOverSpentLedgersShouldReturnOverdrawnTransactionsGivenTransactionsSpendMoreThanLedgerBalance()
     {
         TestData.Output(true);
         var beginDate = new DateOnly(2013, 08, 15);
@@ -209,7 +209,7 @@ public class LedgerCalculationTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void CalculateOverSpentLedgersShouldThrowGivenNullStatement()
+    public void CalculateOverSpentLedgersShouldThrowGivenNullTransactions()
     {
         var beginDate = new DateOnly(2014, 07, 01);
         var endDate = beginDate.AddMonths(1).AddDays(-1);
@@ -266,9 +266,9 @@ public class LedgerCalculationTest
             .Build();
     }
 
-    private static StatementModelBuilder CreateTransactionsBuilder()
+    private static TransactionsListModelBuilder CreateTransactionsBuilder()
     {
-        return new StatementModelBuilder()
+        return new TransactionsListModelBuilder()
             .AppendTransaction(
                 new Transaction
                 {

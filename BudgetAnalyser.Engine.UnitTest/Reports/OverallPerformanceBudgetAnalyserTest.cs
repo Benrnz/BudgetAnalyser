@@ -265,7 +265,7 @@ public class OverallPerformanceBudgetAnalyserTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void Analyse_ShouldThrowArgumentNullException_WhenStatementModelIsNull()
+    public void Analyse_ShouldThrowArgumentNullException_WhenTransactionsModelIsNull()
     {
         this.analyser!.Analyse(null, this.budgetsTestData, this.dateCriteria);
     }

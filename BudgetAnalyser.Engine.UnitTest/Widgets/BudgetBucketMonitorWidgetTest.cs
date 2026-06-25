@@ -79,7 +79,7 @@ public class BudgetBucketMonitorWidgetTest
 
     private void CreateStatementTestData()
     {
-        this.transactionsTestData = new StatementModelBuilder()
+        this.transactionsTestData = new TransactionsListModelBuilder()
             .AppendTransaction(
                 new Transaction
                 {

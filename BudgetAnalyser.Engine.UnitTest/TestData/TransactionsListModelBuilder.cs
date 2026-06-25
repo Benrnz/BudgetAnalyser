@@ -3,12 +3,12 @@ using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestData;
 
-public class StatementModelBuilder
+public class TransactionsListModelBuilder
 {
     private readonly List<Transaction> additionalTransactions = new();
     private TransactionsListModel model = new(new FakeLogger());
 
-    public StatementModelBuilder AppendTransaction(Transaction transaction)
+    public TransactionsListModelBuilder AppendTransaction(Transaction transaction)
     {
         this.additionalTransactions.Add(transaction);
         return this;
@@ -29,25 +29,25 @@ public class StatementModelBuilder
         return this.model.Merge(additionalTransactionsModel);
     }
 
-    public StatementModelBuilder Merge(TransactionsListModel anotherTransactionsListModel)
+    public TransactionsListModelBuilder Merge(TransactionsListModel anotherTransactionsListModel)
     {
         this.model.Merge(anotherTransactionsListModel);
         return this;
     }
 
-    public StatementModelBuilder TestData1()
+    public TransactionsListModelBuilder TestData1()
     {
         this.model = TransactionsListModelTestData.TestData1();
         return this;
     }
 
-    public StatementModelBuilder TestData2()
+    public TransactionsListModelBuilder TestData2()
     {
         this.model = TransactionsListModelTestData.TestData2();
         return this;
     }
 
-    public StatementModelBuilder TestData5()
+    public TransactionsListModelBuilder TestData5()
     {
         this.model = TransactionsListModelTestData.TestData5();
         return this;

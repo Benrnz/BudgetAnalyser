@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Statement;
 ///     It also is responsible for saving <see cref="TransactionsListModel" />s. To function it orchestrates across the <see cref="IVersionedStatementModelRepository" /> and the
 ///     <see cref="IBankStatementImporterRepository" />.
 /// </summary>
-public interface IStatementRepository
+public interface ITransactionsListModelRepository
 {
     /// <summary>
     ///     Creates a new empty <see cref="TransactionsListModel" /> at the location indicated by the <paramref name="storageKey" />.

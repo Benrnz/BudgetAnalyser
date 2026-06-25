@@ -17,7 +17,7 @@ public class TransactionManagerServiceTest
     private readonly ApplicationDatabase testAppDb = new();
     private IBudgetBucketRepository budgetBucketRepo; // By default set to return mockBudgetBucketRepo.Object;
     private Mock<IBudgetBucketRepository> mockBudgetBucketRepo;
-    private Mock<IStatementRepository> mockStatementRepo;
+    private Mock<ITransactionsListModelRepository> mockStatementRepo;
     private TransactionManagerService subject;
     private TransactionsListModel testData;
 
@@ -84,7 +84,7 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public void FilterByBucket_ShouldReturn1Bucket_GivenUncatergorisedCode()
     {
-        var model2 = new StatementModelBuilder()
+        var model2 = new TransactionsListModelBuilder()
             .AppendTransaction(
                 new Transaction { Account = TransactionsListModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = null, Date = new DateOnly(2013, 9, 10) })
             .Merge(this.testData)
@@ -101,7 +101,7 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public void FilterByBucket_ShouldReturn2Buckets_GivenSurplusBucketCode()
     {
-        var model2 = new StatementModelBuilder()
+        var model2 = new TransactionsListModelBuilder()
             .AppendTransaction(
                 new Transaction { Account = TransactionsListModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = TransactionsListModelTestData.SurplusBucket, Date = new DateOnly(2013, 9, 10) })
             .AppendTransaction(
@@ -208,7 +208,7 @@ public class TransactionManagerServiceTest
     [ExpectedException(typeof(TransactionsAlreadyImportedException))]
     public async Task ImportAndMergeBankStatement_ShouldThrow_GivenAlreadyImported()
     {
-        this.testData = new StatementModelBuilder()
+        this.testData = new TransactionsListModelBuilder()
             .TestData2()
             .Build();
 
@@ -332,7 +332,7 @@ public class TransactionManagerServiceTest
         this.testData = TransactionsListModelTestData.TestData2();
 
         this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
-        this.mockStatementRepo = new Mock<IStatementRepository>();
+        this.mockStatementRepo = new Mock<ITransactionsListModelRepository>();
 
         this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>()))
             .Returns(Task.FromResult(this.testData))

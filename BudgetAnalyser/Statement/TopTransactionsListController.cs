@@ -23,7 +23,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     public TopTransactionsListController(
         IUiContext uiContext,
-        StatementControllerFileOperations fileOperations,
+        TransactionsControllerFileOperations fileOperations,
         ITransactionManagerService transactionService)
         : base(uiContext.Messenger)
     {
@@ -112,7 +112,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
     internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
-    public StatementControllerFileOperations FileOperations { get; }
+    public TransactionsControllerFileOperations FileOperations { get; }
 
     public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
 

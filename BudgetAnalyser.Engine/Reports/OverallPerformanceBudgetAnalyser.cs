@@ -208,11 +208,11 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         switch (this.budgetCycle)
         {
             case BudgetCycle.Fortnightly:
-                result.DurationInPeriods = StatementCalculations.CalculateDurationInFortnights(this.rawCriteria, this.transactions!.Transactions);
+                result.DurationInPeriods = TransactionsCalculations.CalculateDurationInFortnights(this.rawCriteria, this.transactions!.Transactions);
                 this.calculateNextPeriodDate = (d, iteration) => d.AddDays(14 * iteration);
                 break;
             case BudgetCycle.Monthly:
-                result.DurationInPeriods = StatementCalculations.CalculateDurationInMonths(this.rawCriteria, this.transactions!.Transactions);
+                result.DurationInPeriods = TransactionsCalculations.CalculateDurationInMonths(this.rawCriteria, this.transactions!.Transactions);
                 this.calculateNextPeriodDate = (d, iteration) => d.AddMonths(1 * iteration);
                 break;
             default:

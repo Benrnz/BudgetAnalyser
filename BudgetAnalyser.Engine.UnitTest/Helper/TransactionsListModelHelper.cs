@@ -8,9 +8,9 @@ public static class TransactionsListModelHelper
     {
         var writer = NonNullableOutputWriter(outputWriter);
         writer.WriteLine(string.Empty);
-        writer.WriteLine("******************************************************** STATEMENT OUTPUT ***********************************************************");
+        writer.WriteLine("******************************************************** TRANSACTIONS OUTPUT ***********************************************************");
         writer.WriteLine("Date       Description     Bucket     Reference1      Reference2          Amount Account         Id");
-        writer.WriteLine("=====================================================================================================================================");
+        writer.WriteLine("=======================================================================================================================================");
         foreach (var transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
         {
             writer.WriteLine(

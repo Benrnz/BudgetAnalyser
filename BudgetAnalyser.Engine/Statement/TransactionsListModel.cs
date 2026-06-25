@@ -171,7 +171,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
         var query = BaseFilterQuery(criteria);
 
         Transactions = query.ToList();
-        DurationInMonths = StatementCalculations.CalculateDurationInMonths(criteria, Transactions);
+        DurationInMonths = TransactionsCalculations.CalculateDurationInMonths(criteria, Transactions);
         this.duplicates = null;
         Filtered = true;
     }
@@ -401,8 +401,8 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
 
     private void UpdateDuration()
     {
-        this.fullDuration = StatementCalculations.CalculateDurationInMonths(new GlobalFilterCriteria(), AllTransactions);
-        DurationInMonths = StatementCalculations.CalculateDurationInMonths(null, Transactions);
+        this.fullDuration = TransactionsCalculations.CalculateDurationInMonths(new GlobalFilterCriteria(), AllTransactions);
+        DurationInMonths = TransactionsCalculations.CalculateDurationInMonths(null, Transactions);
     }
 
     /// <summary>

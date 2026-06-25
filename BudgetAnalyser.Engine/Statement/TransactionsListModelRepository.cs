@@ -15,8 +15,8 @@ namespace BudgetAnalyser.Engine.Statement;
 /// </summary>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC")]
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class StatementRepository(IVersionedStatementModelRepository statementModelRepository, IBankStatementImporterRepository importerRepository)
-    : IStatementRepository
+internal class TransactionsListModelRepository(IVersionedStatementModelRepository statementModelRepository, IBankStatementImporterRepository importerRepository)
+    : ITransactionsListModelRepository
 {
     private readonly IBankStatementImporterRepository importerRepository = importerRepository ?? throw new ArgumentNullException(nameof(importerRepository));
     private readonly IVersionedStatementModelRepository statementModelRepository = statementModelRepository ?? throw new ArgumentNullException(nameof(statementModelRepository));
@@ -26,9 +26,7 @@ internal class StatementRepository(IVersionedStatementModelRepository statementM
         await this.statementModelRepository.CreateNewAndSaveAsync(storageKey);
     }
 
-    public async Task<TransactionsListModel> ImportBankStatementAsync(
-        string storageKey,
-        Account account)
+    public async Task<TransactionsListModel> ImportBankStatementAsync(string storageKey, Account account)
     {
         if (string.IsNullOrWhiteSpace(storageKey))
         {

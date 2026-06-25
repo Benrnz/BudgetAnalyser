@@ -17,7 +17,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly ILogger logger;
     private readonly IMonitorableDependencies monitorableDependencies;
-    private readonly IStatementRepository statementRepository;
+    private readonly ITransactionsListModelRepository transactionsListModelRepository;
     private BudgetCollection? budgetCollection;
     private int budgetHash;
     private List<Transaction> transactions = new();
@@ -26,14 +26,14 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     ///     Initializes a new instance of the <see cref="TransactionManagerService" /> class.
     /// </summary>
     /// <param name="bucketRepository">The bucket repository.</param>
-    /// <param name="statementRepository">The statement repository.</param>
+    /// <param name="transactionsListModelRepository">The statement repository.</param>
     /// <param name="logger">The logger.</param>
     /// <param name="monitorableDependencies">The dependency monitor manager</param>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public TransactionManagerService(IBudgetBucketRepository bucketRepository, IStatementRepository statementRepository, ILogger logger, IMonitorableDependencies monitorableDependencies)
+    public TransactionManagerService(IBudgetBucketRepository bucketRepository, ITransactionsListModelRepository transactionsListModelRepository, ILogger logger, IMonitorableDependencies monitorableDependencies)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
-        this.statementRepository = statementRepository ?? throw new ArgumentNullException(nameof(statementRepository));
+        this.transactionsListModelRepository = transactionsListModelRepository ?? throw new ArgumentNullException(nameof(transactionsListModelRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
     }
@@ -79,7 +79,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new ArgumentNullException(nameof(applicationDatabase));
         }
 
-        await this.statementRepository.CreateNewAndSaveAsync(applicationDatabase.StatementModelStorageKey);
+        await this.transactionsListModelRepository.CreateNewAndSaveAsync(applicationDatabase.StatementModelStorageKey);
         await LoadAsync(applicationDatabase);
     }
 
@@ -94,7 +94,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         TransactionsListModel?.Dispose();
         try
         {
-            TransactionsListModel = await this.statementRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey), applicationDatabase.IsEncrypted);
+            TransactionsListModel = await this.transactionsListModelRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey), applicationDatabase.IsEncrypted);
         }
         catch (StatementModelChecksumException ex)
         {
@@ -122,7 +122,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         }
 
         TransactionsListModel.StorageKey = applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey);
-        await this.statementRepository.SaveAsync(TransactionsListModel, applicationDatabase.IsEncrypted);
+        await this.transactionsListModelRepository.SaveAsync(TransactionsListModel, applicationDatabase.IsEncrypted);
         this.monitorableDependencies.NotifyOfDependencyChange(TransactionsListModel);
         Saved?.Invoke(this, EventArgs.Empty);
     }
@@ -266,7 +266,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
         }
 
-        var additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
+        var additionalModel = await this.transactionsListModelRepository.ImportBankStatementAsync(storageKey, account);
         var combinedModel = TransactionsListModel.Merge(additionalModel);
         var minDate = additionalModel.AllTransactions.Min(t => t.Date);
         var maxDate = additionalModel.AllTransactions.Max(t => t.Date);

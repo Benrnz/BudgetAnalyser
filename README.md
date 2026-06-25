@@ -9,22 +9,24 @@ It's a simple, low time investment budgeting app. It helps you keep to a monthly
 
 Why?
 ----
-Some budgeting apps are complicated or time consuming and aren't very visual.  I wanted something that I can spend minutes with per month and to store data in a neutral manner (imported statement data is stored in CSV format and is Excel friendly).  This code is open source, so if it doesn't exactly suit you're budgeting style, then fork it, and change it.
+Some budgeting apps are complicated or time consuming and aren't very visual.  I wanted something that I can spend minutes with per month and to store data in a neutral manner (imported transaction
+data is stored in CSV format and is Excel friendly).  This code is open source, so if it doesn't exactly suit you're budgeting style, then fork it, and change it.
 
 Features
 --------
  - Automatically match transactions with budget categories aka "Buckets".
- - Import bank statements in CSV format and only store them locally; ie not uploaded anywhere.
- - Specify a monthly budget and monitor how you track against imported statements.
+ - Import bank transactions in CSV format and only store them locally; ie not uploaded anywhere.
+ - Specify a monthly budget and monitor how you track against imported transactions.
  - Visual graphs for tracking performance.
  - Analyse any period of time to find averages and improve your monthly budget.
  - Plan for long term goals and ad-hoc/annual bills with "saved-up-for" budget categories.
- - Figure out how much surplus you have with actual bank statement data while still ensuring you don't spend money set aside for longer term goals/bills.
+ - Figure out how much surplus you have with actual bank transaction data while still ensuring you don't spend money set aside for longer term goals/bills.
 
 
 Overview
 --------
-It's a simple 2 tier application at the moment with all business logic residing in the engine assembly. The UI is currently WPF, but the intention is to create others as well. All data is saved only locally, no data is uploaded anywhere. This project has a fundamental goal not to upload any user's personal budgeting or bank statement data online to protect privacy by removing the risk.
+It's a simple 2 tier application at the moment with all business logic residing in the engine assembly. The UI is currently WPF, but the intention is to create others as well. All data is saved
+only locally, no data is uploaded anywhere. This project has a fundamental goal not to upload any user's personal budgeting or bank transaction data online to protect privacy by removing the risk.
 No databases are currently used, data is saved in JSON format.  It is the user's responsibility to save their data in a secure location (ie: NTFS permissions or a PGP/TrueCrypt file or drive).
 
 Security
@@ -62,7 +64,7 @@ Overview Tiles
 These tiles provide ability to load and create new budget analyser files.
 * _Days Since Last Import Tile_
 
-Shows the number of days since bank statement data was loaded into the analyser.
+Shows the number of days since bank transaction data was loaded into the analyser.
 * _Overspent Tile_
 
 Shows the number of buckets that have been overspent this month.
