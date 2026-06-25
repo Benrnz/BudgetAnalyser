@@ -110,8 +110,8 @@ public class SomeController : ControllerBase
 
 The Engine is domain-logic only; it doesn't know about WPF or messaging:
 
-- **Models**: `StatementModel`, `BudgetModel`, `LedgerEntryModel`, `MatchingRule` - domain entities
-- **Services**: `IStatement​Service`, `IBudgetService`, `ILedgerService`, `IReconciliationService`, `IMatchingRuleService`
+- **Models**: `TransactionsListModel`, `BudgetModel`, `LedgerEntryModel`, `MatchingRule` - domain entities
+- **Services**: `ITransactionManagerService`, `ITransactionRuleService`, `IBudgetService`, `ILedgerService`, `IReconciliationService`, `IMatchingRuleService`
 - **Persistence**: `IApplicationDatabaseRepository` (JSON, loaded by `JsonOnDiskApplicationDatabaseRepository`)
 - **GlobalFilterCriteria**: Date range filter applied across the app (changed centrally, affects all views)
 
@@ -119,7 +119,7 @@ The Engine is domain-logic only; it doesn't know about WPF or messaging:
 
 - **Controllers** (ViewModels) translate Engine services for UI
 - **Facades**: `IApplicationDatabaseFacade` wraps `IApplicationDatabaseService` for UI use; notifies commands when data changes
-- **Messaging**: Controllers use `Messenger` to send events like `BudgetReadyMessage`, `StatementReadyMessage`
+- **Messaging**: Controllers use `Messenger` to send events like `BudgetReadyMessage`, `TransactionsListModelReadyMessage`
 - **Shell**: `ShellController` + `ShellWindow` (main window); contains `ShellDialogView` for modal dialogs
 
 ### Data Persistence
@@ -188,7 +188,7 @@ dotnet test BudgetAnalyser.Wpf.UnitTest
 | Pattern                     | File(s)                                                                                                  |
 |-----------------------------|----------------------------------------------------------------------------------------------------------|
 | IoC Registration            | `CompositionRoot.cs`, `DefaultIoCRegistrations.cs`, `AutoRegisterWithIoCAttribute.cs`                    |
-| Controller/ViewModel        | `LedgerBook/LedgerBookController.cs`, `Statement/StatementController.cs`                                 |
+| Controller/ViewModel        | `LedgerBook/LedgerBookController.cs`, `Statement/TopTransactionsListController.cs`                       |
 | Model validation            | `BudgetAnalyser.Engine/IModelValidate.cs`                                                                |
 | Messaging                   | `ConcurrentMessenger.cs` (wraps `WeakReferenceMessenger.Default`)                                        |
 | MVVM base class             | `Rees.Wpf/ControllerBase.cs`                                                                             |
