@@ -59,13 +59,13 @@ field access bypasses the change notification mechanism. **Do not use this prefi
 
 Controllers inherit from `ControllerBase` (from Rees.Wpf):
 
-- Extend `ObservableRecipient` (MVVM CommunityToolkit)
-- Named with `Controller` suffix (e.g., `BudgetController`, `LedgerBookController`)
+- Extend `ObservableRecipient` (MVVM Community Toolkit)
+- Named with `Controller` suffix (e.g., `TopBudgetController`, `LedgerBookController`)
 - Singleton instances managed by `IUiContext`
 - Access other controllers via `uiContext.Controller<T>()`
 - Use `Messenger.Register<>()` for cross-controller messaging
 - AVOID placing any logic in the code-behind of XAML views, this breaks the MVVM pattern. Confirm with the user before adding any logic.
-- DO NOT CREATE NEW IMPLEMENTATIONS OF ICommand, use CommunityToolkit.Mvvm.Input.RelayCommand instead.
+- DO NOT CREATE NEW IMPLEMENTATIONS OF ICommand, use `CommunityToolkit.Mvvm.Input.RelayCommand` instead.
 
 Example:
 
@@ -110,8 +110,8 @@ public class SomeController : ControllerBase
 
 The Engine is domain-logic only; it doesn't know about WPF or messaging:
 
-- **Models**: `TransactionsListModel`, `BudgetModel`, `LedgerEntryModel`, `MatchingRule` - domain entities
-- **Services**: `ITransactionManagerService`, `ITransactionRuleService`, `IBudgetService`, `ILedgerService`, `IReconciliationService`, `IMatchingRuleService`
+- **Models**: `TransactionsListModel`, `BudgetModel`, `LedgerEntry`, `MatchingRule` - domain entities
+- **Services**: `ITransactionManagerService`, `ITransactionRuleService`, `IBudgetMaintenanceService`, `ILedgerService`, `IReconciliationService`
 - **Persistence**: `IApplicationDatabaseRepository` (JSON, loaded by `JsonOnDiskApplicationDatabaseRepository`)
 - **GlobalFilterCriteria**: Date range filter applied across the app (changed centrally, affects all views)
 
