@@ -52,26 +52,26 @@ public class ShellController : ControllerBase, IInitializableController
         this.persistenceOperations = persistenceOperations;
         this.uiContext = uiContext;
 
-        LedgerBookDialog = new ShellDialogController(Messenger);
-        DashboardDialog = new ShellDialogController(Messenger);
-        TransactionsDialog = new ShellDialogController(Messenger);
-        BudgetDialog = new ShellDialogController(Messenger);
-        ReportsDialog = new ShellDialogController(Messenger);
+        LedgerBookTabDialog = new ShellDialogController(Messenger);
+        DashboardTabDialog = new ShellDialogController(Messenger);
+        TransactionsTabDialog = new ShellDialogController(Messenger);
+        BudgetTabDialog = new ShellDialogController(Messenger);
+        ReportsTabDialog = new ShellDialogController(Messenger);
     }
 
     public TopBudgetController BudgetController => this.uiContext.Controller<TopBudgetController>();
-    public ShellDialogController BudgetDialog { get; }
+    public ShellDialogController BudgetTabDialog { get; }
     public DashboardController DashboardController => this.uiContext.Controller<DashboardController>();
-    public ShellDialogController DashboardDialog { get; }
+    public ShellDialogController DashboardTabDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
     public TopLedgerBookController LedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
-    public ShellDialogController LedgerBookDialog { get; }
+    public ShellDialogController LedgerBookTabDialog { get; }
     public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
     public TopReportsCatalogController ReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
-    public ShellDialogController ReportsDialog { get; }
+    public ShellDialogController ReportsTabDialog { get; }
     public RulesController RulesController => this.uiContext.Controller<RulesController>();
     public TopTransactionsListController TransactionsController => this.uiContext.Controller<TopTransactionsListController>();
-    public ShellDialogController TransactionsDialog { get; }
+    public ShellDialogController TransactionsTabDialog { get; }
     internal Point WindowSize { get; private set; }
     public string WindowTitle => "Budget Analyser";
     internal Point WindowTopLeft { get; private set; }
@@ -223,23 +223,23 @@ public class ShellController : ControllerBase, IInitializableController
         switch (message.Location)
         {
             case BudgetAnalyserFeature.LedgerBook:
-                LedgerBookDialog.ShowFromShell(message);
+                LedgerBookTabDialog.ShowFromShell(message);
                 break;
 
             case BudgetAnalyserFeature.Dashboard:
-                DashboardDialog.ShowFromShell(message);
+                DashboardTabDialog.ShowFromShell(message);
                 break;
 
             case BudgetAnalyserFeature.Budget:
-                BudgetDialog.ShowFromShell(message);
+                BudgetTabDialog.ShowFromShell(message);
                 break;
 
             case BudgetAnalyserFeature.Transactions:
-                TransactionsDialog.ShowFromShell(message);
+                TransactionsTabDialog.ShowFromShell(message);
                 break;
 
             case BudgetAnalyserFeature.Reports:
-                ReportsDialog.ShowFromShell(message);
+                ReportsTabDialog.ShowFromShell(message);
                 break;
 
             default:

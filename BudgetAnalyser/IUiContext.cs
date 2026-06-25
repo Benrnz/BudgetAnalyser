@@ -14,7 +14,6 @@ public interface IUiContext
     IReadOnlySet<ControllerBase> Controllers { get; }
     ILogger Logger { get; }
     IMessenger Messenger { get; }
-    IEnumerable<IShowableController> ShowableControllers { get; }
     UserPrompts UserPrompts { get; }
     T Controller<T>() where T : ControllerBase;
     void Initialise(IDictionary<Type, Lazy<ControllerBase>> controllers);

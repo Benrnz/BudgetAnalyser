@@ -33,7 +33,7 @@ public partial class App
         this.compositionRoot = new CompositionRoot();
         this.logger = this.compositionRoot.Logger;
 
-        this.logger.LogAlways(_ => "=========== Budget Analyser Starting ===========");
+        this.logger.LogAlways(_ => "=========== Budget Analyser is Starting ===========");
         this.logger.LogAlways(_ => this.compositionRoot.ShellController.DashboardController.VersionString);
         this.shellController = this.compositionRoot.ShellController;
         this.shellController.Initialize();

@@ -114,11 +114,6 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     private void AfterTabExecutedCommon()
     {
-        foreach (var controller in this.uiContext.ShowableControllers)
-        {
-            controller.Shown = false;
-        }
-
         this.uiContext.Controller<DashboardController>().Shown = DashboardToggle;
         this.uiContext.Controller<TopTransactionsListController>().Shown = TransactionsToggle;
         this.uiContext.Controller<TopLedgerBookController>().Shown = LedgerBookToggle;
