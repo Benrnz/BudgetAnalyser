@@ -60,7 +60,7 @@ public class OverspentWarningTest
     }
 
     [TestMethod]
-    public void UpdateShouldSetEnabledToFalseGivenStatementIsNull()
+    public void UpdateShouldSetEnabledToFalseGivenTransactionsListIsNull()
     {
         TransactionsList = null;
         Act();

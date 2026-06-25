@@ -174,7 +174,7 @@ public class TransactionManagerServiceTest
     }
 
     [TestMethod]
-    public async Task ImportAndMergeBankStatement_ShouldCallTransactionsRepo_GivenStorageKeyAndAccount()
+    public async Task ImportAndMergeTransactionsExtract_ShouldCallTransactionsRepo_GivenStorageKeyAndAccount()
     {
         this.mockTransactionsRepo
             .Setup(m => m.ImportTransactionsExtractAsync(It.IsAny<string>(), It.IsAny<BankAccount.Account>()))
@@ -187,7 +187,7 @@ public class TransactionManagerServiceTest
     }
 
     [TestMethod]
-    public async Task ImportAndMergeBankStatement_ShouldMergeTheModel_GivenStorageKeyAndAccount()
+    public async Task ImportAndMergeTransactionsExtract_ShouldMergeTheModel_GivenStorageKeyAndAccount()
     {
         this.testData = new TransactionsListModelTestHarness();
         this.testData.LoadTransactions(new List<Transaction>());
@@ -206,7 +206,7 @@ public class TransactionManagerServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(TransactionsAlreadyImportedException))]
-    public async Task ImportAndMergeBankStatement_ShouldThrow_GivenAlreadyImported()
+    public async Task ImportAndMergeTransactionsExtract_ShouldThrow_GivenAlreadyImported()
     {
         this.testData = new TransactionsListModelBuilder()
             .TestData2()
@@ -226,7 +226,7 @@ public class TransactionManagerServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public async Task ImportAndMergeBankStatement_ShouldThrow_GivenNullAccount()
+    public async Task ImportAndMergeTransactionsExtract_ShouldThrow_GivenNullAccount()
     {
         await this.subject.ImportAndMergeTransactionsExtractAsync("Sticky Bag.csv", null);
         Assert.Fail();
@@ -234,21 +234,21 @@ public class TransactionManagerServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public async Task ImportAndMergeBankStatement_ShouldThrow_GivenNullStorageKey()
+    public async Task ImportAndMergeTransactionsExtract_ShouldThrow_GivenNullStorageKey()
     {
         await this.subject.ImportAndMergeTransactionsExtractAsync(null, new ChequeAccount("Foo"));
         Assert.Fail();
     }
 
     [TestMethod]
-    public async Task LoadStatementModelAsync_ShouldCallTransactionsRepo_GivenValidStorageKey()
+    public async Task LoadAsync_ShouldCallTransactionsRepo_GivenValidStorageKey()
     {
         await this.subject.LoadAsync(this.testAppDb);
         this.mockTransactionsRepo.Verify();
     }
 
     [TestMethod]
-    public async Task LoadStatementModelAsync_ShouldReturnATransactionsModel_GivenValidStorageKey()
+    public async Task LoadAsync_ShouldReturnATransactionsModel_GivenValidStorageKey()
     {
         TransactionsListModel testTransactionsList = new TransactionsListModelTestHarness();
         testTransactionsList.LoadTransactions(new List<Transaction>());
@@ -262,7 +262,7 @@ public class TransactionManagerServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public async Task LoadStatementModelAsync_ShouldThrow_GivenNullStorageKey()
+    public async Task LoadAsync_ShouldThrow_GivenNullStorageKey()
     {
         await this.subject.LoadAsync(null);
         Assert.Fail();
@@ -327,7 +327,7 @@ public class TransactionManagerServiceTest
     [TestInitialize]
     public void TestInit()
     {
-        PrivateAccessor.SetProperty(this.testAppDb, "StatementModelStorageKey", @"Foo.csv");
+        PrivateAccessor.SetProperty(this.testAppDb, "TransactionsListModelStorageKey", @"Foo.csv");
         PrivateAccessor.SetProperty(this.testAppDb, "FileName", @"C:\AppDb.bax");
         this.testData = TransactionsListModelTestData.TestData2();
 

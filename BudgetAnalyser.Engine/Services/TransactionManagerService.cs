@@ -74,12 +74,12 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <inheritdoc />
     public async Task CreateNewAsync(ApplicationDatabase applicationDatabase)
     {
-        if (applicationDatabase.StatementModelStorageKey.IsNothing())
+        if (applicationDatabase.TransactionsListModelStorageKey.IsNothing())
         {
             throw new ArgumentNullException(nameof(applicationDatabase));
         }
 
-        await this.transactionsListModelRepository.CreateNewAndSaveAsync(applicationDatabase.StatementModelStorageKey);
+        await this.transactionsListModelRepository.CreateNewAndSaveAsync(applicationDatabase.TransactionsListModelStorageKey);
         await LoadAsync(applicationDatabase);
     }
 
@@ -94,7 +94,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         TransactionsListModel?.Dispose();
         try
         {
-            TransactionsListModel = await this.transactionsListModelRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey), applicationDatabase.IsEncrypted);
+            TransactionsListModel = await this.transactionsListModelRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.TransactionsListModelStorageKey), applicationDatabase.IsEncrypted);
         }
         catch (TransactionsListModelChecksumException ex)
         {
@@ -121,7 +121,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new ValidationWarningException("Unable to save transactions at this time, some data is invalid. " + messages);
         }
 
-        TransactionsListModel.StorageKey = applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey);
+        TransactionsListModel.StorageKey = applicationDatabase.FullPath(applicationDatabase.TransactionsListModelStorageKey);
         await this.transactionsListModelRepository.SaveAsync(TransactionsListModel, applicationDatabase.IsEncrypted);
         this.monitorableDependencies.NotifyOfDependencyChange(TransactionsListModel);
         Saved?.Invoke(this, EventArgs.Empty);

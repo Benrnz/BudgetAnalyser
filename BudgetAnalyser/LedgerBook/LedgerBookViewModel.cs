@@ -38,7 +38,7 @@ public class LedgerBookViewModel : ObservableRecipient
 
             field = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(NoStatementLoaded));
+            OnPropertyChanged(nameof(NoTransactionsListModelLoaded));
             OnPropertyChanged(nameof(AddNewReconciliationIsEnabled));
         }
     }
@@ -85,5 +85,6 @@ public class LedgerBookViewModel : ObservableRecipient
     public bool NoBudgetLoaded => CurrentBudget is null;
 
     public bool NoLedgerBookLoaded => LedgerBook is null;
-    public bool NoStatementLoaded => CurrentTransactionList is null;
+
+    public bool NoTransactionsListModelLoaded => CurrentTransactionList is null;
 }

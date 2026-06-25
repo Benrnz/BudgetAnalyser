@@ -89,7 +89,7 @@
                 <Button Command="{x:Static root:PersistenceOperationCommands.SaveDatabaseCommand}"
                         Style="{StaticResource Button.Round.Save}"
                         ToolTip="Save Transactions (Ctrl+S)" />
-                <Button Command="{Binding MergeStatementCommand}"
+                <Button Command="{Binding MergeBankExtractCommand}"
                         Style="{StaticResource Button.Round.Add}"
                         ToolTip="Merge in new Transactions. This will also save any unsaved changes before merging new transactions." />
             </StackPanel>

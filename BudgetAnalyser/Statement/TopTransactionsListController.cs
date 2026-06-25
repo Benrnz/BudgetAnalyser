@@ -114,7 +114,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
     public TransactionsControllerFileOperations FileOperations { get; }
 
-    public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute);
+    public ICommand MergeBankExtractCommand => new RelayCommand(OnMergeExtractCommandExecute);
 
     public int PageSize
     {
@@ -320,7 +320,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         TextFilter = null;
     }
 
-    private async void OnMergeStatementCommandExecute()
+    private async void OnMergeExtractCommandExecute()
     {
         TextFilter = null;
         BucketFilter = null;

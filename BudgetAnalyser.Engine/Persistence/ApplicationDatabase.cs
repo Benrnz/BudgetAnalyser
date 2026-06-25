@@ -70,7 +70,7 @@ public class ApplicationDatabase
     ///     Gets the statement model storage key.
     ///     This is used to locate and load the <see cref="TransactionsListModel" />.
     /// </summary>
-    public string StatementModelStorageKey { get; internal set; } = string.Empty;
+    public string TransactionsListModelStorageKey { get; internal set; } = string.Empty;
 
     /// <summary>
     ///     Gets the storage path that identifies this budget analyser file.
@@ -93,7 +93,7 @@ public class ApplicationDatabase
         LedgerBookStorageKey = string.Empty;
         MatchingRulesCollectionStorageKey = string.Empty;
         MatchingRulesCollectionStorageKey = string.Empty;
-        StatementModelStorageKey = string.Empty;
+        TransactionsListModelStorageKey = string.Empty;
         LedgerReconciliationToDoCollection = new ToDoCollection();
     }
 
