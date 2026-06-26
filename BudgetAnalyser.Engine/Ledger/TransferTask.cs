@@ -23,13 +23,13 @@ public class TransferTask : ToDoTask
     public required Account DestinationAccount { get; init; }
 
     /// <summary>
-    ///     The auto-matching reference.  IMPORTANT: Only use this if you wish a single use matching rule to be automatically
-    ///     created to match the transaction when its imported in a bank statement.
+    ///     The auto-matching reference.  IMPORTANT: Only use this if you wish a single use matching rule to be automatically created to match the transaction when it's imported in a transactions
+    ///     model.
     /// </summary>
     public required string Reference { get; init; }
 
     /// <summary>
-    ///     Funds need to be transfered out of this account. Typically this is the Salary account.
+    ///     Funds need to be transferred out of this account. Typically this is the Salary account.
     /// </summary>
     public required Account SourceAccount { get; init; }
 }

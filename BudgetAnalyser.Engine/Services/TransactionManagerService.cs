@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Transactions;
 namespace BudgetAnalyser.Engine.Services;
 
 /// <summary>
-///     A service to manipulate and manage transactions and statements.
+///     A service to manipulate and manage transactions and <see cref="TransactionsListModel"/>.
 /// </summary>
 /// <seealso cref="ITransactionManagerService" />
 /// <seealso cref="ISupportsModelPersistence" />
@@ -26,7 +26,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     ///     Initializes a new instance of the <see cref="TransactionManagerService" /> class.
     /// </summary>
     /// <param name="bucketRepository">The bucket repository.</param>
-    /// <param name="transactionsListModelRepository">The statement repository.</param>
+    /// <param name="transactionsListModelRepository">The transactions model repository.</param>
     /// <param name="logger">The logger.</param>
     /// <param name="monitorableDependencies">The dependency monitor manager</param>
     /// <exception cref="System.ArgumentNullException"></exception>
@@ -98,7 +98,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         }
         catch (TransactionsListModelChecksumException ex)
         {
-            throw new DataFormatException("Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
+            throw new DataFormatException("The Transactions List Model data is corrupt and has been tampered with. Unable to load.", ex);
         }
 
         NewDataAvailable();
@@ -341,13 +341,13 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         if (TransactionsListModel is null || this.budgetCollection is null)
         {
-            // Can't check yet, statement hasn't been loaded yet. Everything is ok for now.
+            // Can't check yet, transactions haven't been loaded yet. Everything is ok for now.
             return true;
         }
 
         if (this.budgetCollection.GetHashCode() == this.budgetHash)
         {
-            // This budget has already been checked against this statement. No need to repeatedly check the validity below, this is an expensive operation.
+            // This budget has already been checked against this transactions model. No need to repeatedly check the validity below, this is an expensive operation.
             // Everything is ok.
             return true;
         }

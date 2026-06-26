@@ -173,7 +173,7 @@ public class LedgerCalculation
             throw new ArgumentNullException(nameof(ledgerLine));
         }
 
-        // Given the same ledger, statement and begin date this data won't change.
+        // Given the same ledger, transactions model and begin date this data won't change.
         List<ReportTransaction> GetOverSpentTransactions() //private function
         {
             var overSpendTransactions = new List<ReportTransaction>();
@@ -303,7 +303,7 @@ public class LedgerCalculation
     private decimal CalculateTransactionTotal(DateOnly inclBeginDate, DateOnly inclEndDate, TransactionsListModel transactionsList, LedgerEntryLine entryLine, string bucketCode)
     {
         var autoMatchLedgerTransactions = GetAutoMatchingTransactions(transactionsList, entryLine, inclBeginDate);
-        // This needs to query .AllTransactions, not just .Transactions, when changing the date range the statement may not have had its internal filter changed when this runs.
+        // This needs to query .AllTransactions, not just .Transactions, when changing the date range the transactions model may not have had its internal filter changed when this runs.
         var transactions = transactionsList.AllTransactions
             .Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate)
             .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
@@ -324,7 +324,7 @@ public class LedgerCalculation
         this.logger.LogInfo(_ =>
         {
             var builder = new StringBuilder();
-            builder.AppendLine($"Statement Transactions found that are '{bucketCode}' and not 'Auto-Matching-Transactions':");
+            builder.AppendLine($"Transactions found that are '{bucketCode}' and not 'Auto-Matching-Transactions':");
             foreach (var txn in transactions)
             {
                 builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Description}  {txn.Account}");

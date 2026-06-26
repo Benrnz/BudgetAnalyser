@@ -15,16 +15,16 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
     public LedgerBook? LedgerBook { get; set; }
 
     /// <summary>
-    ///     This is effectively stage 2 of the Reconciliation process. It builds the contents of the new ledger line based on budget and statement input.
+    ///     This is effectively stage 2 of the Reconciliation process. It builds the contents of the new ledger line based on budget and transactions input.
     ///     First stage is <see cref="ReconciliationCreationManager.PeriodEndReconciliation" />.
     /// </summary>
     /// <param name="reconciliationClosingDateExclusive">
     ///     The closing date for the reconciliation. This is typically pay date, and is the beginning date of the new period. It will be one day after the global filter end date. Used to select
-    ///     transactions from the statement up until this date. For example if your monthly pay date is the 20th, then on the 20th of July your global filter will be 20-June to 19-July. And closing
-    ///     off this period with a reconciliation will mean a date of 20-July will be passed into this method.
+    ///     transactions from the transactionsModel up until this date. For example if your monthly pay date is the 20th, then on the 20th of July your global filter will be 20-June to 19-July. And
+    ///     closing off this period with a reconciliation will mean a date of 20-July will be passed into this method.
     /// </param>
     /// <param name="budget">The current applicable budget</param>
-    /// <param name="transactions">The current period statement.</param>
+    /// <param name="transactions">The current period transactions.</param>
     /// <param name="bankBalances">A list of bank balances for the reconciliation, one for each account. (Excluding credit cards). </param>
     public ReconciliationResult CreateNewMonthlyReconciliation(
         DateOnly reconciliationClosingDateExclusive,
@@ -65,15 +65,15 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
             : recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
     }
 
-    public static bool IsAutoMatchingTransaction(Transaction statementTransaction, IEnumerable<LedgerTransaction> ledgerTransactions)
+    public static bool IsAutoMatchingTransaction(Transaction transaction, IEnumerable<LedgerTransaction> ledgerTransactions)
     {
         return ledgerTransactions.Any(l =>
-            l.AutoMatchingReference == statementTransaction.Reference1
-            || l.AutoMatchingReference == $"{MatchedPrefix}{statementTransaction.Reference1}");
+            l.AutoMatchingReference == transaction.Reference1
+            || l.AutoMatchingReference == $"{MatchedPrefix}{transaction.Reference1}");
     }
 
     /// <summary>
-    ///     When creating a new reconciliation a start date is required to be able to search a statement for transactions between the start date and the reconciliation date specified (today or pay
+    ///     When creating a new reconciliation a start date is required to be able to search a transactionsModel for transactions between the start date and the reconciliation date specified (today or pay
     ///     day). The start date should start from the previous ledger entry line or one month prior if no records exist.
     /// </summary>
     /// <param name="ledgerBook">The Ledger Book to find the date for</param>
@@ -123,10 +123,10 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
 
         var reconciliationDate = line.Date;
         // Date filter must include the start date, which goes back to and includes the previous ledger date up to the date of this ledger line, but excludes this ledger date.
-        // For example for a monthly budget if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
-        // 20/Jan (inclusive) and 19/Feb (inclusive) but not including anything for the 20th of Feb.
+        // For example for a monthly budget if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from transactionsModel
+        // are between 20/Jan (inclusive) and 19/Feb (inclusive) but not including anything for the 20th of Feb.
         // Why? Because the new ledger entry is intended to show the starting balances for the new period, so you can plan for the upcoming period.
-        var filteredStatementTransactions = transactionsList.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList();
+        var filteredTransactions = transactionsList.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList();
 
         var previousLedgerBalances = CompileLedgersAndBalances(LedgerBook!);
 
@@ -153,9 +153,9 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
             var transactions = IncludeBudgetedAmount(salaryAccount, budget, ledgerBucket, reconciliationDate);
 
             // Append all other transactions for this bucket, if any, to the transaction list.
-            transactions.AddRange(IncludeTransactions(newEntry, filteredStatementTransactions));
+            transactions.AddRange(IncludeTransactions(newEntry, filteredTransactions));
 
-            AutoMatchTransactionsAlreadyInPreviousPeriod(line.Date, filteredStatementTransactions, previousLedgerEntry, transactions);
+            AutoMatchTransactionsAlreadyInPreviousPeriod(line.Date, filteredTransactions, previousLedgerEntry, transactions);
             newEntry.SetTransactionsForReconciliation(transactions);
 
             entries.Add(newEntry);
@@ -165,7 +165,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
 
         foreach (var behaviour in ReconciliationBehaviourFactory.ListAllBehaviours())
         {
-            behaviour.Initialise(filteredStatementTransactions, line, this.toDoList, this.logger, transactionsList);
+            behaviour.Initialise(filteredTransactions, line, this.toDoList, this.logger, transactionsList);
             behaviour.ApplyBehaviour();
         }
 
@@ -177,7 +177,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
     }
 
     /// <summary>
-    ///     Match statement transaction with special auto-matching references to Ledger transactions. Configures hyperlinking ids and marks then as matched. Also checks to ensure they are matched
+    ///     Match transactions with special auto-matching references to Ledger transactions. Configures hyperlinking ids and marks then as matched. Also checks to ensure they are matched
     ///     for data integrity.
     /// </summary>
     private void AutoMatchTransactionsAlreadyInPreviousPeriod(DateOnly lineDate, List<Transaction> transactions, LedgerEntry? previousLedgerEntry, List<LedgerTransaction> newLedgerTransactions)
@@ -191,23 +191,23 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
                 previousLedgerEntry?.LedgerBucket.BudgetBucket.Code));
 
             var ledgerTxn = lastMonthLedgerTransaction;
-            foreach (var matchingStatementTransaction in TransactionsToAutoMatch(transactions, lastMonthLedgerTransaction.AutoMatchingReference))
+            foreach (var matchingTransaction in TransactionsToAutoMatch(transactions, lastMonthLedgerTransaction.AutoMatchingReference))
             {
-                this.logger.LogInfo(l => l.Format("Ledger Reconciliation - AutoMatching - Matched {0} ==> {1}", ledgerTxn, matchingStatementTransaction));
+                this.logger.LogInfo(l => l.Format("Ledger Reconciliation - AutoMatching - Matched {0} ==> {1}", ledgerTxn, matchingTransaction));
 
-                ledgerTxn.Id = matchingStatementTransaction.Id; // Allows user to click and link back to statement transaction.
+                ledgerTxn.Id = matchingTransaction.Id; // Allows user to click and link back to transaction.
 
                 // Don't auto-match if it has already been auto-matched
                 if (ledgerTxn.AutoMatchingReference is not null && !ledgerTxn.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal))
                 {
-                    // There will be two statement transactions but only one ledger transaction to match to.
+                    // There will be two transactions but only one ledger-transaction to match to.
                     checkMatchCount++;
                     ledgerTxn.AutoMatchingReference = $"{MatchedPrefix}{ledgerTxn.AutoMatchingReference}";
                     checkMatchedTxns.Add(ledgerTxn);
                 }
 
                 // Remove auto-matched transactions from the new recon
-                var duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
+                var duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingTransaction.Id);
                 if (duplicateTransaction is not null)
                 {
                     this.logger.LogInfo(l => l.Format("Ledger Reconciliation - Removing Duplicate Ledger transaction after auto-matching: {0}", duplicateTransaction));
@@ -221,7 +221,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
         if (ledgerAutoMatchTransactions.Any() && ledgerAutoMatchTransactions.Count() != checkMatchCount)
         {
             this.logger.LogWarning(l => l.Format(
-                "Ledger Reconciliation - WARNING {0} ledger transactions appear to be waiting to be auto-matched, but no statement transactions were found. {1}",
+                "Ledger Reconciliation - WARNING {0} ledger-transactions appear to be waiting to be auto-matched, but no bank transactions were found. {1}",
                 ledgerAutoMatchTransactions.Count(),
                 ledgerAutoMatchTransactions.First().AutoMatchingReference));
             var unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);

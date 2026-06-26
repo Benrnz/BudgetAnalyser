@@ -7,10 +7,8 @@ using BudgetAnalyser.Engine.Widgets;
 namespace BudgetAnalyser.Engine.Persistence;
 
 /// <summary>
-///     A top level class that contains reference information to all other data stores in the application.
-///     This class is not intended to contain full domain objects rather meta-data that points to the objects.
-///     Prefer to use just the domain objects required, rather than over using an object that contains references to
-///     everything.
+///     A top-level class that contains reference information to all other data stores in the application. This class is not intended to contain full domain objects rather meta-data that points to
+///     the objects. Prefer to use just the domain objects required, rather than over using an object that contains references to everything.
 /// </summary>
 public class ApplicationDatabase
 {
@@ -24,8 +22,7 @@ public class ApplicationDatabase
     }
 
     /// <summary>
-    ///     Gets the budget collection storage key.
-    ///     This is used to locate and load the <see cref="BudgetCollection" />.
+    ///     Gets the budget collection storage key. This is used to locate and load the <see cref="BudgetCollection" />.
     /// </summary>
     public string BudgetCollectionStorageKey { get; internal set; } = string.Empty;
 
@@ -48,27 +45,22 @@ public class ApplicationDatabase
     public bool IsEncrypted { get; internal set; }
 
     /// <summary>
-    ///     Gets the ledger book storage key.
-    ///     This is used to locate and load the <see cref="LedgerBook" />.
+    ///     Gets the ledger book storage key. This is used to locate and load the <see cref="LedgerBook" />.
     /// </summary>
     public string LedgerBookStorageKey { get; internal set; } = string.Empty;
 
     /// <summary>
-    ///     Gets the ledger reconciliation to do collection.
-    ///     This contains persistent tasks that the user has created.
-    ///     System generated tasks are not persisted.
+    ///     Gets the ledger reconciliation to-do collection. This contains persistent tasks that the user has created. System generated tasks are not persisted.
     /// </summary>
     public ToDoCollection LedgerReconciliationToDoCollection { get; internal set; }
 
     /// <summary>
-    ///     Gets the matching rules collection storage key.
-    ///     This is used to locate and load a list of <see cref="MatchingRule" />s.
+    ///     Gets the matching rules collection storage key. This is used to locate and load a list of <see cref="MatchingRule" />s.
     /// </summary>
     public string MatchingRulesCollectionStorageKey { get; internal set; } = string.Empty;
 
     /// <summary>
-    ///     Gets the statement model storage key.
-    ///     This is used to locate and load the <see cref="TransactionsListModel" />.
+    ///     Gets the Transactions List Model storage key. This is used to locate and load the <see cref="TransactionsListModel" />.
     /// </summary>
     public string TransactionsListModelStorageKey { get; internal set; } = string.Empty;
 

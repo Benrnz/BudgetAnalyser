@@ -151,28 +151,28 @@ public class TransactionsListModelTest
     [TestMethod]
     public void ValidateShouldFailWhenDuplicates1()
     {
-        var statement = new TransactionsListModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3, Duplicate1 });
-        Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
+        var transactionsModel = new TransactionsListModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3, Duplicate1 });
+        Assert.IsTrue(transactionsModel.ValidateAgainstDuplicates().Any());
     }
 
     [TestMethod]
     public void ValidateShouldFailWhenDuplicates2()
     {
-        var statement = new TransactionsListModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Duplicate2, Transaction3 });
-        Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
+        var transactionsModel = new TransactionsListModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Duplicate2, Transaction3 });
+        Assert.IsTrue(transactionsModel.ValidateAgainstDuplicates().Any());
     }
 
     [TestMethod]
     public void ValidateShouldFailWhenDuplicates3()
     {
-        var statement = new TransactionsListModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Duplicate3, Transaction1, Transaction2, Transaction3 });
-        Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
+        var transactionsModel = new TransactionsListModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Duplicate3, Transaction1, Transaction2, Transaction3 });
+        Assert.IsTrue(transactionsModel.ValidateAgainstDuplicates().Any());
     }
 
     [TestMethod]
     public void ValidateShouldPassWhenNoDuplicates()
     {
-        var statement = new TransactionsListModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3 });
-        Assert.IsFalse(statement.ValidateAgainstDuplicates().Any());
+        var transactionsModel = new TransactionsListModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3 });
+        Assert.IsFalse(transactionsModel.ValidateAgainstDuplicates().Any());
     }
 }

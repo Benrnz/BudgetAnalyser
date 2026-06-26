@@ -41,7 +41,7 @@ public class BudgetAnalyserStorageRoot2
     public required string MatchingRulesCollectionRootDto { get; init; }
 
     /// <summary>
-    ///     Gets or sets the statement model root dto.
+    ///     Gets or sets the Transactions Model root dto.
     /// </summary>
     public required string StatementModelRootDto { get; init; }
 

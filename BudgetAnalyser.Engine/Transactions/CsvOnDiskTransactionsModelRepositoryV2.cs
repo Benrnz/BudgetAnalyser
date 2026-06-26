@@ -32,8 +32,8 @@ internal class CsvOnDiskTransactionsModelRepositoryV2(
             throw new ArgumentNullException(nameof(storageKey));
         }
 
-        var newStatement = new TransactionsListModel(this.logger) { StorageKey = storageKey };
-        await SaveAsync(newStatement, false);
+        var newModel = new TransactionsListModel(this.logger) { StorageKey = storageKey };
+        await SaveAsync(newModel, false);
     }
 
     public async Task<TransactionsListModel> LoadAsync(string storageKey, bool isEncrypted)
@@ -401,12 +401,12 @@ internal class CsvOnDiskTransactionsModelRepositoryV2(
     private void ValidateChecksumIntegrity(TransactionSetDto transactionSet)
     {
         var calcTxnCheckSum = CalculateTransactionCheckSum(transactionSet);
-        // Ignore a checksum of 1, this is used as a special case to bypass transaction checksum test. Useful for manual manipulation of the statement csv.
+        // Ignore a checksum of 1, this is used as a special case to bypass transaction checksum test. Useful for manual manipulation of the transactions model csv.
         if (transactionSet.Checksum > 1 && transactionSet.Checksum != calcTxnCheckSum)
         {
             this.logger.LogError(l =>
-                l.Format("BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", transactionSet.Checksum, calcTxnCheckSum));
-            throw new TransactionsListModelChecksumException($"The statement being loaded, does not match the internal checksum. {calcTxnCheckSum} {transactionSet.Checksum}");
+                l.Format("BudgetAnalyser transactions model file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", transactionSet.Checksum, calcTxnCheckSum));
+            throw new TransactionsListModelChecksumException($"The transactions model being loaded, does not match the internal checksum. {calcTxnCheckSum} {transactionSet.Checksum}");
         }
     }
 

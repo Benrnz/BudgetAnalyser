@@ -50,7 +50,7 @@ public abstract class LedgerTransaction
     /// <summary>
     ///     Gets or sets the Transaction ID. This is the same ID as the <see cref="TransactionsListModel" />'s
     ///     <see cref="Transaction" />.
-    ///     This can be used to link back to the statement and show more transaction specific data.
+    ///     This can be used to link back to the transactions model and show more transaction specific data.
     /// </summary>
     public Guid Id { get; internal set; }
 

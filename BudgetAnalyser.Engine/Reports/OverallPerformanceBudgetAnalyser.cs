@@ -21,21 +21,18 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
     private TransactionsListModel? transactions;
 
     /// <summary>
-    ///     Analyses the supplied statement using the supplied budget within the criteria given to this method.
+    ///     Analyses the supplied transaction model using the supplied budget within the criteria given to this method.
     /// </summary>
     /// <param name="budgets">The current budgets collection.</param>
     /// <param name="criteria">The criteria to limit the analysis.</param>
-    /// <param name="transactions">The current statement model.</param>
+    /// <param name="transactionsModel">The current transactions model.</param>
     /// <exception cref="BudgetException">
-    ///     Will be thrown if no budget is supplied or if no budget can be found for the dates
-    ///     given in the criteria.
+    ///     Will be thrown if no budget is supplied or if no budget can be found for the dates given in the criteria.
     /// </exception>
-    /// <exception cref="ArgumentException">If statement or budget is null.</exception>
-    public OverallPerformanceBudgetResult Analyse(TransactionsListModel transactions,
-        BudgetCollection budgets,
-        GlobalFilterCriteria criteria)
+    /// <exception cref="ArgumentException">If transactions model or budget is null.</exception>
+    public OverallPerformanceBudgetResult Analyse(TransactionsListModel transactionsModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
     {
-        this.transactions = transactions;
+        this.transactions = transactionsModel;
         this.budgetCollection = budgets;
         this.rawCriteria = criteria;
         AnalysisPreconditions();
@@ -115,7 +112,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
 
         if (this.transactions is null)
         {
-            throw new ArgumentNullException(nameof(this.transactions), "The statement supplied is null, analysis cannot proceed with no statement.");
+            throw new ArgumentNullException(nameof(this.transactions), "The transactions model supplied is null, analysis cannot proceed with no transactions.");
         }
 
         if (this.budgetCollection is null)

@@ -38,7 +38,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     ///     Detects duplicate transactions in the current <see cref="TransactionsListModel" /> and returns a summary string for displaying in the UI.
     ///     Each individual duplicate transaction will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" /> property.
     /// </summary>
-    /// <returns>A textual summary of duplicates found. Null if none are detected or no statement is loaded.</returns>
+    /// <returns>A textual summary of duplicates found. Null if none are detected or no transactions are loaded.</returns>
     string DetectDuplicateTransactions();
 
     /// <summary>
@@ -78,7 +78,7 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     Task ImportAndMergeTransactionsExtractAsync(string storageKey, Account account);
 
     /// <summary>
-    ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.
+    ///     Removes the provided transaction from the currently loaded Budget Analyser transactions model.
     /// </summary>
     /// <param name="transactionToRemove">The transaction to remove.</param>
     void RemoveTransaction(Transaction transactionToRemove);
@@ -100,10 +100,10 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
 
     /// <summary>
     ///     Validates the currently loaded <see cref="TransactionsListModel" /> against the provided budgets and ensures all buckets used by the transactions exist in the budgets.
-    ///     This is performed asynchronously. This method can be called when a budget is loaded or changed or when a new Budget Analyser Statement is loaded.
+    ///     This is performed asynchronously. This method can be called when a budget is loaded or changed or when a new Budget Analyser transactions model is loaded.
     /// </summary>
     /// <param name="budgets">
-    ///     The current budgets. This must be provided at least once. It can be omitted when calling this method after the statement model has changed if the budget was previously provided.
+    ///     The current budgets. This must be provided at least once. It can be omitted when calling this method after the transactions model has changed if the budget was previously provided.
     /// </param>
     /// <returns>
     ///     A task that will result in true if all buckets used, are present in the budgets, otherwise false. If false, this indicates that some transactions may have their bucket allocation

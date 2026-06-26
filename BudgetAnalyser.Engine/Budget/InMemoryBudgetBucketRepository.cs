@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine.Budget;
 /// <summary>
 ///     A thread-safe in memory implementation of <see cref="IBudgetBucketRepository" />.
 ///     This repository does not need to be persisted, because it uses the <see cref="BudgetCollection" /> as the source of
-///     truth. Thread safety is built in to allow multiple threads to load data from statements asynchronously.
+///     truth. Thread safety is built in to allow multiple threads to load data asynchronously.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class InMemoryBudgetBucketRepository : IBudgetBucketRepository

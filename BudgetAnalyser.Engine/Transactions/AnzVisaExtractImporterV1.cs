@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.BankAccount;
 namespace BudgetAnalyser.Engine.Transactions;
 
 /// <summary>
-///     An importer for ANZ Visa bank statement export.
+///     An importer for ANZ Visa bank extracts.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class AnzVisaExtractImporterV1 : IBankExtractImporter
@@ -40,9 +40,8 @@ internal class AnzVisaExtractImporterV1 : IBankExtractImporter
     /// </summary>
     /// <param name="fileName">The file to load.</param>
     /// <param name="account">
-    ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
-    ///     merging a cheque account
-    ///     export with visa account export, each can be classified using an account.
+    ///     The account to classify these transactions. This is useful when merging one extract with another. For example,
+    ///     merging a cheque account export with visa account export, each can be classified using an account.
     /// </param>
     public async Task<TransactionsListModel> LoadAsync(string fileName, Account account)
     {

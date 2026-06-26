@@ -84,7 +84,7 @@ public static class BudgetModelTestData
     /// <summary>
     ///     A budget model that is effective from 01/1/13.
     ///     Includes InsHome, and PhoneInternet, CarMtc, HairCut, Power
-    ///     Designed for use with LedgerBookTestData5 and StatementModelTestData5
+    ///     Designed for use with LedgerBookTestData5 and TransactionsListModelTestData5
     /// </summary>
     public static BudgetModel CreateTestData5()
     {

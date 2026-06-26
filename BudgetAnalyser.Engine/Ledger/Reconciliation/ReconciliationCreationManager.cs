@@ -141,11 +141,8 @@ internal class ReconciliationCreationManager(
     }
 
     /// <summary>
-    ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to
-    ///     transactions imported in the current month.
-    ///     If any transactions are found, the statement is then examined to see if the transactions appear, if they do not a
-    ///     new <see cref="ValidationWarningException" />
-    ///     is thrown; otherwise the method returns.
+    ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to transactions imported in the current month. If any transactions are found, the
+    ///     transactionsModel is then examined to see if the transactions appear, if they do not a new <see cref="ValidationWarningException" /> is thrown; otherwise the method returns.
     /// </summary>
     public void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, TransactionsListModel transactions)
     {
@@ -179,21 +176,18 @@ internal class ReconciliationCreationManager(
             return;
         }
 
-        var statementSubSet = transactions.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+        var transactionsSubSet = transactions.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
         foreach (var ledgerTransaction in unmatchedTxns)
         {
-            var statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference!);
-            if (statementTxns.None())
+            var bankTransactions = ReconciliationBuilder.TransactionsToAutoMatch(transactionsSubSet, ledgerTransaction.AutoMatchingReference!);
+            if (bankTransactions.None())
             {
                 this.logger.LogWarning(
-                    l =>
-                        l.Format(
-                            "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found. {0}",
-                            ledgerTransaction));
+                    _ => $"There appears to be some transactions from last month that should be auto-matched, but no matching bank transactions were found. {ledgerTransaction}");
                 throw new ValidationWarningException(
                         string.Format(
                             CultureInfo.CurrentCulture,
-                            "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
+                            "There appears to be some transactions from last month that should be auto-matched to a bank transaction, but no matching bank transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
                             ledgerTransaction.Id,
                             ledgerTransaction.AutoMatchingReference,
                             ledgerTransaction.Amount))
@@ -324,7 +318,7 @@ internal class ReconciliationCreationManager(
         var difference = reconciliationDate.Subtract(lastTransactionDate);
         if (difference >= 2)
         {
-            throw new ValidationWarningException("There are no statement transactions in the last day or two, are you sure you have imported all this month's transactions?") { Source = "2" };
+            throw new ValidationWarningException("There are no bank transactions in the last day or two, are you sure you have imported all this month's transactions?") { Source = "2" };
         }
     }
 
@@ -345,7 +339,7 @@ internal class ReconciliationCreationManager(
             var count = 0;
             this.logger.LogWarning(
                 _ =>
-                    "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
+                    "LedgerBook.PreReconciliationValidation: There appears to be transactions in the bank statement that are not categorised into a budget bucket.");
             foreach (var transaction in uncategorised)
             {
                 count++;
@@ -361,7 +355,7 @@ internal class ReconciliationCreationManager(
                 }
             }
 
-            throw new ValidationWarningException("There appears to be transactions in the statement that are not categorised into a budget bucket.") { Source = "3" };
+            throw new ValidationWarningException("There appears to be transactions in the bank statement that are not categorised into a budget bucket.") { Source = "3" };
         }
     }
 
@@ -407,7 +401,7 @@ internal class ReconciliationCreationManager(
 
         if (!transactions.AllTransactions.Any(t => t.Date >= startDate))
         {
-            throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + reconciliationDate.ToString("d")) { Source = "5" };
+            throw new ValidationWarningException("There doesn't appear to be any transactions in the transactions model for the month up to " + reconciliationDate.ToString("d")) { Source = "5" };
         }
     }
 }

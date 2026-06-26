@@ -1,13 +1,13 @@
 <UserControl x:Class="BudgetAnalyser.Transactions.TopTransactionsUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:statement="clr-namespace:BudgetAnalyser.Transactions"
+             xmlns:transactions="clr-namespace:BudgetAnalyser.Transactions"
              xmlns:root="clr-namespace:BudgetAnalyser"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              DataContextChanged="OnDataContextChanged"
-             d:DataContext="{d:DesignInstance statement:TopTransactionsListController}">
+             d:DataContext="{d:DesignInstance transactions:TopTransactionsListController}">
 
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
@@ -158,7 +158,7 @@
                 </Border>
                 <Border Background="{StaticResource Brush.ImportantHighlightLight}"
                         Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                        ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows."
+                        ToolTip="Potentially corrupt data exists in the transactions. Some transactions appear as exact duplicates of others. Look for pink highlighted rows."
                         Visibility="{Binding ViewModel.DuplicateSummary, Converter={StaticResource Converter.NullToVis}}">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="{Binding ViewModel.DuplicateSummary}" />
@@ -198,7 +198,7 @@
                             Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource Converter.NotBoolToVis}}">
                         <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                    Text="No Transactions, with current filter."
-                                   ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded statement file." />
+                                   ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded transactions extract file." />
                     </Border>
                 </StackPanel>
                 <Border HorizontalAlignment="Center"

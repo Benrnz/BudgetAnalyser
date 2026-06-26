@@ -107,13 +107,13 @@ public class RemainingSurplusWidgetTest : IDisposable
             .Where(t => t.Account == TransactionsListModelTestData.ChequeAccount)
             .Where(t => t.Id != removeId)
             .ToList();
-        var myStatement = this.transactionsTestData.LoadTransactions(myTransactions);
+        var myTransactionsModel = this.transactionsTestData.LoadTransactions(myTransactions);
 
         this.ledgerBookTestData.Output(true, this.outputWriter);
         this.budgetTestData.Output(this.outputWriter);
-        myStatement.Output(DateOnly.MinValue, this.outputWriter);
+        myTransactionsModel.Output(DateOnly.MinValue, this.outputWriter);
 
-        this.subject.Update(this.budgetTestData, myStatement, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
+        this.subject.Update(this.budgetTestData, myTransactionsModel, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
 
         this.subject.Value.ShouldBe(607.73);
         /*
@@ -133,7 +133,7 @@ public class RemainingSurplusWidgetTest : IDisposable
         public static IBudgetBucketRepository BudgetBucketRepo { get; set; } = null!;
 
         /// <summary>THIS IS GENERATED CODE </summary>
-        [GeneratedCode("StatementModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]
+        [GeneratedCode("TransactionsModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]
         public static TransactionsListModel TestDataGenerated()
         {
             var model = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\Foo\TransactionsListModel.csv", LastImport = new DateTime(2015, 11, 21) };

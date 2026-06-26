@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Transactions;
 namespace BudgetAnalyser.Engine.Services;
 
 /// <summary>
-///     A service to control the reconciliation process from the UI. A reconciliation is a process of closing off a period of time and importing statement transactions into the ledger book.
+///     A service to control the reconciliation process from the UI. A Reconciliation is a process of closing off a period of time and importing bank transactions into the ledger book.
 ///     This service primarily manages the creation of <see cref="LedgerEntryLine" /> and adding it to a <see cref="LedgerBook" />.
 /// </summary>
 public interface IReconciliationService
@@ -46,7 +46,9 @@ public interface IReconciliationService
     ///     transactions from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting reconciliation which is the end date for the period.
     /// </param>
     /// <param name="budgetCollection">The collection of budgets. The Reconciliation engine classes will make a decision which budget to choose.</param>
-    /// <param name="transactions">The currently loaded statement. Global filter will not be used to select transactions from the statement. Selection is made based on<paramref name="reconciliationDate" />.</param>
+    /// <param name="transactions">The currently loaded bank transactions. Global filter will not be used to select transactions from the model. Selection is made based on
+    ///     <paramref name="reconciliationDate" />.
+    /// </param>
     /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
     /// <param name="balances">The bank balances as at the <paramref name="reconciliationDate" /> to include in this new single line of the ledger book.</param>
     /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>

@@ -28,94 +28,94 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData1()
     {
-        var statement = new TransactionsListModel(new FakeLogger())
+        var transactionsModel = new TransactionsListModel(new FakeLogger())
         {
-            StorageKey = @"C:\TestData1\FooStatement.csv",
+            StorageKey = @"C:\TestData1\FooTransactions.csv",
             LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
         };
 
         var transactions = CreateTransactions1();
-        statement.LoadTransactions(transactions);
-        return statement;
+        transactionsModel.LoadTransactions(transactions);
+        return transactionsModel;
     }
 
     /// <summary>
-    ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
+    ///     Transactions Model with transactions between 15/07/2013 and 14/09/2013
     ///     Includes income transactions.
     /// </summary>
     public static TransactionsListModel TestData2()
     {
-        var statement = new TransactionsListModel(new FakeLogger())
+        var transactionsModel = new TransactionsListModel(new FakeLogger())
         {
-            StorageKey = @"C:\TestData2\Foo2Statement.csv",
+            StorageKey = @"C:\TestData2\Foo2Transactions.csv",
             LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
         };
 
         var transactions = CreateTransactions2();
-        statement.LoadTransactions(transactions);
-        return statement;
+        transactionsModel.LoadTransactions(transactions);
+        return transactionsModel;
     }
 
     /// <summary>
-    ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
+    ///     Transactions Model with transactions between 15/07/2013 and 14/09/2013
     ///     Includes income transactions.
     ///     Same as TestData2 but with another transaction for PhNet in August.
     /// </summary>
     public static TransactionsListModel TestData2A()
     {
-        var statement = new TransactionsListModel(new FakeLogger())
+        var transactionsModel = new TransactionsListModel(new FakeLogger())
         {
-            StorageKey = @"C:\TestData2\Foo2Statement.csv",
+            StorageKey = @"C:\TestData2\Foo2Transactions.csv",
             LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
         };
 
         IList<Transaction> transactions = CreateTransactions2().ToList();
         var modTransaction = transactions.Single(t => t.Date == new DateOnly(2013, 07, 16) && t.BudgetBucket == PhoneBucket);
         modTransaction.Date = new DateOnly(2013, 08, 16);
-        statement.LoadTransactions(transactions);
-        return statement;
+        transactionsModel.LoadTransactions(transactions);
+        return transactionsModel;
     }
 
     /// <summary>
-    ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
+    ///     Transactions Model with transactions between 15/07/2013 and 14/09/2013
     ///     Includes income transactions.
     ///     Adjusted for use with LedgerCalculator - No ledgers will be overdrawn when using LedgerBook TestData 1.
     /// </summary>
     public static TransactionsListModel TestData3()
     {
-        var statement = new TransactionsListModel(new FakeLogger())
+        var transactionsModel = new TransactionsListModel(new FakeLogger())
         {
-            StorageKey = @"C:\TestData3\Foo2Statement.csv",
+            StorageKey = @"C:\TestData3\Foo2Transactions.csv",
             LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
         };
 
         var transactions = CreateTransactions3();
-        statement.LoadTransactions(transactions);
-        return statement;
+        transactionsModel.LoadTransactions(transactions);
+        return transactionsModel;
     }
 
     /// <summary>
-    ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
+    ///     Transactions Model with transactions between 15/07/2013 and 14/09/2013
     ///     Includes income transactions.
     ///     Adjusted for use with LedgerCalculator - No ledgers will be overdrawn when using LedgerBook TestData 1.
     ///     Includes some duplicate transactions
     /// </summary>
     public static TransactionsListModel TestData4()
     {
-        var statement = new TransactionsListModel(new FakeLogger())
+        var transactionsModel = new TransactionsListModel(new FakeLogger())
         {
-            StorageKey = @"C:\TestData4\Foo2Statement.csv",
+            StorageKey = @"C:\TestData4\Foo2Transactions.csv",
             LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
         };
 
         var transactions = CreateTransactions3().ToList();
         transactions.AddRange(CreateTransactions1());
-        statement.LoadTransactions(transactions);
-        return statement;
+        transactionsModel.LoadTransactions(transactions);
+        return transactionsModel;
     }
 
     /// <summary>
-    ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
+    ///     Transactions Model with transactions between 15/07/2013 and 14/09/2013
     ///     Includes income transactions.
     ///     Adjusted for use with LedgerCalculator - No ledgers will be overdrawn when using LedgerBook TestData 1.
     ///     InsHome transfer transaction move funds into Savings, this transactions should be automatched when used with
@@ -123,33 +123,33 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData5()
     {
-        var statement = new TransactionsListModel(new FakeLogger())
+        var transactionsModel = new TransactionsListModel(new FakeLogger())
         {
-            StorageKey = @"C:\TestData5\Foo5Statement.csv",
+            StorageKey = @"C:\TestData5\Foo5Transactions.csv",
             LastImport = new DateTime(new DateOnly(2013, 8, 14), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
         };
 
         var transactions = CreateTransactions5();
-        statement.LoadTransactions(transactions);
-        return statement;
+        transactionsModel.LoadTransactions(transactions);
+        return transactionsModel;
     }
 
     /// <summary>
-    ///     Statement Model with transactions between 01/01/2013 and 31/12/2013
+    ///     Transactions Model with transactions between 01/01/2013 and 31/12/2013
     ///     Includes income transactions.
     ///     This is generated data, and is the same every time. There are six transactions per month for 12 months.
     /// </summary>
     public static TransactionsListModel TestData6()
     {
-        var statement = new TransactionsListModel(new FakeLogger())
+        var transactionsModel = new TransactionsListModel(new FakeLogger())
         {
-            StorageKey = @"C:\TestData6\Foo6Statement.csv",
+            StorageKey = @"C:\TestData6\Foo6Transactions.csv",
             LastImport = new DateTime(new DateOnly(2013, 12, 30), new TimeOnly(12, 0, 0), DateTimeKind.Utc)
         };
 
         var transactions = CreateTransactions12Months();
-        statement.LoadTransactions(transactions);
-        return statement;
+        transactionsModel.LoadTransactions(transactions);
+        return transactionsModel;
     }
 
     public static TransactionsListModel WithNullBudgetBuckets(this TransactionsListModel instance)

@@ -52,7 +52,7 @@ public class BudgetBucketMonitorWidgetTest
         this.subject.Update(this.budgetTestData, this.transactionsTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
 
         // Starting Phone Balance is Budget Amount: 150.00
-        // Total Phone Statement transactions are: -20.00
+        // Total Phone transactions are: -20.00
         // Resulting Balance = 130.00
         Assert.AreEqual(130.00, this.subject.Value);
     }

@@ -95,7 +95,7 @@ public class LedgerEntryLine
 
     /// <summary>
     ///     This is the "as-at" date. It is the date of the fixed snapshot in time when this reconciliation line was created.
-    ///     It is not editable as it is used to match transactions from the statement.  Changing this date would mean all
+    ///     It is not editable as it is used to match transactions from the transactions model.  Changing this date would mean all
     ///     transactions
     ///     now falling outside the date range would need to be removed, thus affected balances.
     /// </summary>
