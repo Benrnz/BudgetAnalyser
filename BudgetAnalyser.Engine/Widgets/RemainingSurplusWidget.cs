@@ -17,7 +17,7 @@ public class RemainingSurplusWidget : RemainingBudgetBucketWidget
     {
         DetailedText = "Budgeted Surplus";
         Name = "Surplus B";
-        DependencyMissingToolTip = "A Statement, Budget, or a Filter are not present, surplus cannot be calculated.";
+        DependencyMissingToolTip = "The Transactions, Budget, or a Filter are not present, surplus cannot be calculated.";
         RemainingBudgetToolTip = "Remaining Surplus for period is {0:C} {1:P0}";
         BucketCode = SurplusBucket.SurplusCode;
     }

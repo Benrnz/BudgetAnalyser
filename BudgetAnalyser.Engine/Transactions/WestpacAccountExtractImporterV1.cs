@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.BankAccount;
 namespace BudgetAnalyser.Engine.Transactions;
 
 /// <summary>
-///     An Importer for Westpac Cheque and Savings Accounts bank statement exports.
+///     An Importer for Westpac Cheque and Savings Accounts bank extracts.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class WestpacAccountExtractImporterV1 : IBankExtractImporter
@@ -42,8 +42,8 @@ internal class WestpacAccountExtractImporterV1 : IBankExtractImporter
     /// </summary>
     /// <param name="fileName">The file to load.</param>
     /// <param name="account">
-    ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
-    ///     merging a cheque account export with visa account export, each can be classified using an account.
+    ///     The account to classify these transactions. This is useful when merging one extract to another. For example, merging a cheque account export with visa account export, each can be
+    ///     classified using an account.
     /// </param>
     public async Task<TransactionsListModel> LoadAsync(string fileName, Account account)
     {
@@ -87,9 +87,7 @@ internal class WestpacAccountExtractImporterV1 : IBankExtractImporter
             transactions.Add(transaction);
         }
 
-        var statement = new TransactionsListModel(this.logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
-
-        return statement;
+        return new TransactionsListModel(this.logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
     }
 
     /// <summary>

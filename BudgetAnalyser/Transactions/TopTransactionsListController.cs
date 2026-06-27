@@ -210,8 +210,8 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
         {
             this.uiContext.UserPrompts.MessageBox.Show(
-                "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the Statement that do not exist in the new " +
-                "loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
+                "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in " +
+                "the new loaded Budget. This will result in those transactions being declassified. \nCheck for unclassified transactions.",
                 "Data Loss Warning!");
         }
     }
@@ -252,7 +252,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     private async void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
     {
-        // Budget ready message will always arrive before statement is loaded from application state.
+        // Budget ready message will always arrive before transactions are loaded from application state.
         if (!message.ActiveBudget.BudgetActive)
         {
             // Not the current budget for today so ignore this one.

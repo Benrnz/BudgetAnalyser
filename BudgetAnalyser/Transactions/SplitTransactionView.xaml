@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:statement="clr-namespace:BudgetAnalyser.Transactions"
+             xmlns:transactions="clr-namespace:BudgetAnalyser.Transactions"
              FocusManager.FocusedElement="{Binding ElementName=SplinterAmount1}"
              Background="{StaticResource Brush.DialogBackground}"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance statement:SplitTransactionController}">
+             d:DataContext="{d:DesignInstance transactions:SplitTransactionController}">
 
     <Grid>
         <Grid.RowDefinitions>

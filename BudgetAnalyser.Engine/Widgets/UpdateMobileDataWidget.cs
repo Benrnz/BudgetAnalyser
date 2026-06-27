@@ -46,7 +46,7 @@ public sealed class UpdateMobileDataWidget : Widget
     public LedgerBook? LedgerBook { get; private set; }
 
     /// <summary>
-    ///     The current Statement Model held by this widget
+    ///     The current Transactions Model held by this widget
     /// </summary>
     public TransactionsListModel? TransactionsList { get; private set; }
 

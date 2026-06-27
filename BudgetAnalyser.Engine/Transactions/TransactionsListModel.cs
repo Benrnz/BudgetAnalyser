@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Transactions;
 
 /// <summary>
-///     A collection of bank statement transactions that have been imported.
+///     A collection of bank transactions that have been imported.
 /// </summary>
 /// <seealso cref="INotifyPropertyChanged" />
 /// <seealso cref="IDataChangeDetection" />
@@ -18,8 +18,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
     private readonly ILogger logger;
 
     /// <summary>
-    ///     A hash to show when critical state of the statement model has changed. Includes child objects ie Transactions.
-    ///     The hash does not persist between Application Loads.
+    ///     A hash to show when critical state of the transactions list model has changed. Includes child objects ie Transactions. The hash does not persist between Application Loads.
     /// </summary>
     private Guid changeHash;
 
@@ -87,7 +86,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
     public DateTime LastImport { get; internal init; }
 
     /// <summary>
-    ///     Gets or sets the storage key.  This could be the filename for the statement's persistence, or a database unique id.
+    ///     Gets or sets the storage key.  This could be the filename for the transactions list model's persistence, or a database unique id.
     /// </summary>
     public string StorageKey { get; set; } = string.Empty;
 
@@ -177,7 +176,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
     }
 
     /// <summary>
-    ///     Used internally by the importers to load transactions into the statement model. This includes data loaded by persistence.
+    ///     Used internally by the importers to load transactions into the transactions list model. This includes data loaded by persistence.
     /// </summary>
     /// <param name="transactions">The transactions to load.</param>
     /// <returns>Returns this instance, to allow chaining.</returns>
@@ -307,7 +306,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
         if (this.duplicates is not null)
         {
             return this.duplicates;
-            // Reset by Merging Transactions, Load Transactions, or by reloading the statement model.
+            // Reset by Merging Transactions, Load Transactions, or by reloading the transactions list model.
         }
 
         minDate ??= DateOnly.MinValue;

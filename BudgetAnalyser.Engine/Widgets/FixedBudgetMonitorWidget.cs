@@ -26,7 +26,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
         this.standardStyle = "WidgetStandardStyle1";
 
-        this.disabledToolTip = "No Statement file is loaded, or bucket doesn't exist.";
+        this.disabledToolTip = "No Transactions are loaded, or bucket doesn't exist.";
         this.remainingBudgetToolTip = "{0} Remaining budget for this project: {1:C}. Total Spend {2:C}";
         Enabled = false;
         BucketCode = NotSet;
@@ -47,7 +47,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     } = NotSet;
 
     /// <summary>
-    ///     Gets the statement model.
+    ///     Gets the transactions model.
     /// </summary>
     public TransactionsListModel? TransactionsModel { get; private set; }
 

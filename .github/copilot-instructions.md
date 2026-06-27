@@ -118,8 +118,8 @@ public class SomeController : ControllerBase
 
 The Engine is domain-logic only; it doesn't know about WPF or messaging:
 
-- **Models**: `StatementModel`, `BudgetModel`, `LedgerEntryModel`, `MatchingRule` - domain entities
-- **Services**: `IStatementService`, `IBudgetService`, `ILedgerService`, `IReconciliationService`, `IMatchingRuleService`
+- **Models**: `TransactionsListViewModel`, `BudgetModel`, `LedgerEntryModel`, `MatchingRule` - domain entities
+- **Services**: `ITransactionManagerService`, `IBudgetService`, `ILedgerService`, `IReconciliationService`, `IMatchingRuleService`
 - **Persistence**: `IApplicationDatabaseRepository` (JSON, loaded by `JsonOnDiskApplicationDatabaseRepository`)
 - **GlobalFilterCriteria**: Date range filter applied across the app (changed centrally, affects all views)
 
@@ -127,7 +127,7 @@ The Engine is domain-logic only; it doesn't know about WPF or messaging:
 
 - **Controllers** (ViewModels) translate Engine services for UI
 - **Facades**: `IApplicationDatabaseFacade` wraps `IApplicationDatabaseService` for UI use; notifies commands when data changes
-- **Messaging**: Controllers use `Messenger` to send events like `BudgetReadyMessage`, `StatementReadyMessage`
+- **Messaging**: Controllers use `Messenger` to send events like `BudgetReadyMessage`, `TransactionsListModelReadyMessage`
 - **Shell**: `ShellController` + `ShellWindow` (main window); contains `ShellDialogView` for modal dialogs
 
 ### Data Persistence

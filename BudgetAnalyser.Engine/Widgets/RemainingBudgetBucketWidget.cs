@@ -80,7 +80,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     protected string RemainingBudgetToolTip { get; init; }
 
     /// <summary>
-    ///     Gets the statement model.
+    ///     Gets the transactions model.
     /// </summary>
     protected TransactionsListModel? TransactionsList { get; private set; }
 

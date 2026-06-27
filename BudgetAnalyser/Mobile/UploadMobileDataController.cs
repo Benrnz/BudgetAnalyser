@@ -173,7 +173,7 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
             }
 
             var budget = this.widget.BudgetCollection?.CurrentActiveBudget ?? throw new InvalidOperationException("Budget cannot be null when attempting to Upload mobile data.");
-            var statement = this.widget.TransactionsList ?? throw new InvalidOperationException("TransactionsListModel cannot be null when attempting to Upload mobile data.");
+            var transactions = this.widget.TransactionsList ?? throw new InvalidOperationException("TransactionsListModel cannot be null when attempting to Upload mobile data.");
             var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
             var filter = this.widget.Filter ?? throw new InvalidOperationException("Filter cannot be null when attempting to Upload mobile data.");
             var mobileSettings = this.widget.LedgerBook.MobileSettings ??
@@ -189,7 +189,7 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
                 this.appDbService.NotifyOfChange(ApplicationDataType.Ledger);
             }
 
-            await AttemptUploadAsync(budget, statement, ledgerBook, filter);
+            await AttemptUploadAsync(budget, transactions, ledgerBook, filter);
         }
         finally
         {

@@ -139,7 +139,8 @@
                             Template="{StaticResource WarningImage}" />
             <CheckBox IsChecked="{Binding BankTransferConfirmed}"
                       VerticalAlignment="Center"
-                      ToolTip="A bank transfer is required where funds are moved between different accounts. The bank balances of the accounts is affected. Copy the above Auto-Matching Reference and use it as a reference for the transfer. This will automatically match the transaction when the statement is imported.">
+                      ToolTip="A bank transfer is required where funds are moved between different accounts. The bank balances of the accounts is affected. Copy the above Auto-Matching Reference
+                      and use it as a reference for the transfer. This will automatically match the transaction when bank extracts are imported.">
                 <TextBlock Text="Bank Transfer is required. Tick here to confirm." />
             </CheckBox>
         </StackPanel>

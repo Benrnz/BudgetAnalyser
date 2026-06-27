@@ -7,7 +7,7 @@
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
              mc:Ignorable="d"
              Background="{StaticResource Brush.MainBackground}"
-             DataContextChanged="OnDataContextChanged" 
+             DataContextChanged="OnDataContextChanged"
              d:DataContext="{d:DesignInstance ledgerBook:TopLedgerBookController}">
 
     <UserControl.Resources>
@@ -96,7 +96,7 @@
                     IsEnabled="{Binding ViewModel.LedgerBook, Converter={StaticResource Converter.NotNullIsTrue}}"
                     ToolTip="Add new ledger"
                     Click="OnAddLedgerClicked" />
-            <Button 
+            <Button
                     Click="OnUnlockCurrentLedgerLineClicked"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Unlock}"
@@ -115,9 +115,9 @@
                        MouseUp="OnLedgerBookNameClick" />
             <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                     Visibility="{Binding ViewModel.NoTransactionsListModelLoaded, Converter={StaticResource Converter.BoolToVis}}">
-                <TextBlock Text="No Statement"
+                <TextBlock Text="No Transactions"
                            Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                           ToolTip="Warning! No statement is loaded, therefore adding a reconciliation will not auto-match transactions." />
+                           ToolTip="Warning! No transactions are loaded, therefore adding a reconciliation will not auto-match transactions." />
             </Border>
             <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                     Visibility="{Binding ViewModel.NoBudgetLoaded, Converter={StaticResource Converter.BoolToVis}}">

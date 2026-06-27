@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Transactions;
 
 /// <summary>
-///     A bank statement transaction.
+///     A bank transaction.
 /// </summary>
 /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
 /// <seealso cref="System.IComparable" />

@@ -37,7 +37,7 @@ public class TransactionsListViewModelTest
     public void GivenTestData1TransactionListModelNameShouldBeFooBar()
     {
         var subject = Arrange();
-        Assert.AreEqual("FooStatement", subject.TransactionListModelName);
+        Assert.AreEqual("FooTransactions", subject.TransactionListModelName);
     }
 
     [TestMethod]

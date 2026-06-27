@@ -1,7 +1,7 @@
 ﻿namespace BudgetAnalyser.Engine.Transactions;
 
 /// <summary>
-///     An exception to represent an index out of range exception when parsing a Bank Statement CSV file.
+///     An exception to represent an index out of range exception when parsing a Bank Extract CSV file.
 /// </summary>
 /// <seealso cref="System.Exception" />
 public class UnexpectedIndexException : Exception

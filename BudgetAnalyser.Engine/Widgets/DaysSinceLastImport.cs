@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Widgets;
 
 /// <summary>
-///     Monitors the number of days since bank statement data was last imported.
+///     Monitors the number of days since bank transactions were imported.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
 [UsedImplicitly] // Instantiated by Widget Service/Repo
@@ -41,8 +41,8 @@ public class DaysSinceLastImport : Widget
         }
 
         Enabled = true;
-        var statement = (TransactionsListModel)input[0];
-        var days = Convert.ToInt32(DateTime.Today.Subtract(statement.LastImport).TotalDays);
+        var transactions = (TransactionsListModel)input[0];
+        var days = Convert.ToInt32(DateTime.Today.Subtract(transactions.LastImport).TotalDays);
         if (days < 0)
         {
             days = 0;

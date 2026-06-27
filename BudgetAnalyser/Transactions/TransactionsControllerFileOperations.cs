@@ -146,7 +146,7 @@ public class TransactionsControllerFileOperations : ControllerBase
     }
 
     /// <summary>
-    ///     Prompts the user for a filename and other required parameters to be able to merge the statement file.
+    ///     Prompts the user for a filename and other required parameters to be able to merge the transactions extract.
     /// </summary>
     /// <returns>
     ///     The user selected filename. All other required parameters are accessible from the
@@ -154,8 +154,8 @@ public class TransactionsControllerFileOperations : ControllerBase
     /// </returns>
     private async Task<string> GetFileNameFromUser()
     {
-        var statement = ViewModel.TransactionsList ?? throw new InvalidOperationException("Statement Model is null, uninitialised or not loaded.");
-        await this.loadFileController.RequestUserInputForMerging(statement);
+        var transactions = ViewModel.TransactionsList ?? throw new InvalidOperationException("Transactions Model is null, uninitialised or not loaded.");
+        await this.loadFileController.RequestUserInputForMerging(transactions);
 
         return this.loadFileController.FileName ?? string.Empty;
     }
@@ -164,7 +164,7 @@ public class TransactionsControllerFileOperations : ControllerBase
     {
         if (ViewModel is { Dirty: false, TransactionsList: null })
         {
-            // No need to notify of reset if the statement is already null. This happens during first load before the statement is loaded
+            // No need to notify of reset if the transactions list is already null. This happens during first load before the transactions list is loaded
             return;
         }
 

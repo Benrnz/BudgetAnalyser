@@ -28,7 +28,7 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData1()
     {
-        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData1\FooStatement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData1\TransactionsListView.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions1();
         transactionsModel.LoadTransactions(transactions);
@@ -41,7 +41,7 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData2()
     {
-        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2TransactionsListView.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions2();
         transactionsModel.LoadTransactions(transactions);
@@ -55,7 +55,7 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData2A()
     {
-        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData2\Foo2TransactionsListView.csv", LastImport = new DateTime(2013, 08, 15) };
 
         IList<Transaction> transactions = CreateTransactions2().ToList();
         var modTransaction = transactions.Single(t => t.Date == new DateOnly(2013, 07, 16) && t.BudgetBucket == PhoneBucket);
@@ -71,7 +71,7 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData3()
     {
-        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData3\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData3\Foo2TransactionsListView.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions3();
         transactionsModel.LoadTransactions(transactions);
@@ -86,7 +86,7 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData4()
     {
-        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData4\Foo2Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData4\Foo2TransactionsListView.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions3().ToList();
         transactions.AddRange(CreateTransactions1());
@@ -103,7 +103,7 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData5()
     {
-        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData5\Foo5Statement.csv", LastImport = new DateTime(2013, 08, 15) };
+        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData5\Foo5TransactionsListView.csv", LastImport = new DateTime(2013, 08, 15) };
 
         var transactions = CreateTransactions5();
         transactionsModel.LoadTransactions(transactions);
@@ -117,7 +117,7 @@ public static class TransactionsListModelTestData
     /// </summary>
     public static TransactionsListModel TestData6()
     {
-        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData6\Foo6Statement.csv", LastImport = new DateTime(2013, 12, 31) };
+        var transactionsModel = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\TestData6\Foo6TransactionsListView.csv", LastImport = new DateTime(2013, 12, 31) };
 
         var transactions = CreateTransactions12Months();
         transactionsModel.LoadTransactions(transactions);

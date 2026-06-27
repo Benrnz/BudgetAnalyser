@@ -79,9 +79,9 @@ public class OverspentWarning : Widget
             || filter.BeginDate is null
             || filter.EndDate is null)
         {
-            this.logger.LogInfo(_ => "Statement, budget, ledger book, or ledger calculator are null. Or date filter is invalid.");
+            this.logger.LogInfo(_ => "Transactions, budget, ledger book, or ledger calculator are null. Or date filter is invalid.");
             Enabled = false;
-            ToolTip = "LedgerBook, Statement, or Filter are not set/loaded.";
+            ToolTip = "LedgerBook, Transactions, or Filter are not set/loaded.";
             return;
         }
 
@@ -151,7 +151,7 @@ public class OverspentWarning : Widget
     {
         var warnings = 0;
         var transactions = transactionsList.Transactions.Where(t => t.Date >= inclBeginDate && t.Date <= inclEndDate).ToList();
-        this.logger.LogInfo(l => l.Format("SearchForOtherNonLedgerBookOverSpentBuckets: {0} statement transactions found.", transactions.Count()));
+        this.logger.LogInfo(l => l.Format("SearchForOtherNonLedgerBookOverSpentBuckets: {0} transactions found.", transactions.Count()));
         foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is ExpenseBucket))
         {
             if (currentLedgerBalances.ContainsKey(expense.Bucket!))

@@ -339,7 +339,7 @@ internal class ReconciliationCreationManager(
             var count = 0;
             this.logger.LogWarning(
                 _ =>
-                    "LedgerBook.PreReconciliationValidation: There appears to be transactions in the bank statement that are not categorised into a budget bucket.");
+                    "LedgerBook.PreReconciliationValidation: There appears to be transactions in the transactions list that are not categorised into a budget bucket.");
             foreach (var transaction in uncategorised)
             {
                 count++;
@@ -355,7 +355,7 @@ internal class ReconciliationCreationManager(
                 }
             }
 
-            throw new ValidationWarningException("There appears to be transactions in the bank statement that are not categorised into a budget bucket.") { Source = "3" };
+            throw new ValidationWarningException("There appears to be transactions in the transactions list that are not categorised into a budget bucket.") { Source = "3" };
         }
     }
 

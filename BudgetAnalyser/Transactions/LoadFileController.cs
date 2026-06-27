@@ -38,7 +38,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
     }
 
     [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
-    public string AccountNameHelp => "When importing a new bank statement file, you must select the account the statement comes from.\nThis allows merging of multiple accounts into one file.";
+    public string AccountNameHelp => "When importing a new bank extract file, you must select the account the transactions come from.\nThis allows merging of multiple accounts into one file.";
 
     public ICommand BrowseForFileCommand => new RelayCommand(OnBrowseForFileCommandExecute);
     public IEnumerable<Account> ExistingAccountNames { get; private set; } = Array.Empty<Account>();
@@ -172,8 +172,8 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
         MergeMode = true;
         SuggestedDateRange = string.Empty;
-        Title = "Merge Statement";
-        ActionButtonToolTip = "Merge transactions from the selected file into the current statement file.";
+        Title = "Import Bank Extract";
+        ActionButtonToolTip = "Merge transactions from the selected file into the current transactions list.";
         CalculateSuggestedDateRange(currentTransactionsList);
 
         return RequestUserInputCommomPreparation();

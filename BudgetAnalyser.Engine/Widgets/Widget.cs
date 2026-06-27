@@ -43,7 +43,6 @@ public abstract class Widget : INotifyPropertyChanged
 
     protected const string NotSet = "<NOT SET>";
     private bool clickableWhenEnabled;
-    private bool doNotUseEnabled;
 
     /// <summary>
     ///     Constructs a new instance of the <see cref="Widget" /> class.
@@ -131,17 +130,17 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     public virtual bool Enabled
     {
-        get => this.doNotUseEnabled;
+        get;
         protected set
         {
-            this.doNotUseEnabled = value;
+            field = value;
             OnPropertyChanged();
-            if (!this.doNotUseEnabled && Clickable)
+            if (!field && Clickable)
             {
                 this.clickableWhenEnabled = true;
                 Clickable = false;
             }
-            else if (this.doNotUseEnabled && !Clickable && this.clickableWhenEnabled)
+            else if (field && !Clickable && this.clickableWhenEnabled)
             {
                 Clickable = true;
             }

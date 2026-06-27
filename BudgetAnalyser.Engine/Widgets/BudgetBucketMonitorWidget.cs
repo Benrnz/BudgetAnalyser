@@ -15,7 +15,8 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     public BudgetBucketMonitorWidget()
     {
         this.disabledToolTip =
-            "Either a Statement or Budget are not present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget cannot be calculated.";
+            "Either there are no Transactions or Budget present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget " +
+            "cannot be calculated.";
     }
 
     /// <summary>

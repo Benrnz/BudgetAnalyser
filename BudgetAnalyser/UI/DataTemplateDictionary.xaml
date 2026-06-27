@@ -4,7 +4,7 @@
                     xmlns:budget1="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
                     xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
                     xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
-                    xmlns:statement="clr-namespace:BudgetAnalyser.Transactions"
+                    xmlns:transactions="clr-namespace:BudgetAnalyser.Transactions"
                     xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
                     xmlns:matching="clr-namespace:BudgetAnalyser.Matching"
                     xmlns:filtering="clr-namespace:BudgetAnalyser.Filtering"
@@ -42,12 +42,12 @@
         <ledgerBook:LedgerBookUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type statement:LoadFileController}">
-        <statement:LoadFileView />
+    <DataTemplate DataType="{x:Type transactions:LoadFileController}">
+        <transactions:LoadFileView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type statement:TopTransactionsListController}">
-        <statement:TopTransactionsUserControl />
+    <DataTemplate DataType="{x:Type transactions:TopTransactionsListController}">
+        <transactions:TopTransactionsUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type reportsCatalog:TopReportsCatalogController}">
@@ -102,8 +102,8 @@
         <filtering:GlobalDateFilterView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type statement:SplitTransactionController}">
-        <statement:SplitTransactionView />
+    <DataTemplate DataType="{x:Type transactions:SplitTransactionController}">
+        <transactions:SplitTransactionView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type budget1:BudgetBucket}">
@@ -115,7 +115,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type account:Account}">
-        <statement:AccountUserControl />
+        <transactions:AccountUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type ledgerBook:TransferFundsController}">

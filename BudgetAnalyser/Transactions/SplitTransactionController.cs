@@ -208,7 +208,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
             return;
         }
 
-        // StatementController processes the request to add the two new transactions.
+        // TransactionsListModelController processes the request to add the two new transactions. This controller only needs to clear its form.
         this.dialogCorrelationId = Guid.Empty;
         OriginalTransaction = null;
     }
