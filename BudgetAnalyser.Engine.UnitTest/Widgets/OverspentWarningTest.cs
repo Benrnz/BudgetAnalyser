@@ -22,8 +22,8 @@ public class OverspentWarningTest
 
     private LedgerBook LedgerBook { get; set; }
     private LedgerCalculation LedgerCalculator { get; set; }
-    private TransactionsListModel TransactionsList { get; set; }
     private OverspentWarning Subject { get; set; }
+    private TransactionsListModel TransactionsList { get; set; }
 
     [TestInitialize]
     public void TestInitialise()
@@ -36,7 +36,7 @@ public class OverspentWarningTest
 
         Subject = new OverspentWarning(new FakeLogger())
         {
-            Tolerance = 10,
+            Tolerance = 10
         };
         Act();
     }
@@ -157,7 +157,8 @@ public class OverspentWarningTest
 
         LedgerBalancesFake = new Dictionary<BudgetBucket, decimal>
         {
-            { TransactionsListModelTestData.CarMtcBucket, 10 }, { TransactionsListModelTestData.HairBucket, -10.01M }, { TransactionsListModelTestData.PowerBucket, 0 }, { TransactionsListModelTestData.RegoBucket, -3 }
+            { TransactionsListModelTestData.CarMtcBucket, 10 }, { TransactionsListModelTestData.HairBucket, -10.01M }, { TransactionsListModelTestData.PowerBucket, 0 },
+            { TransactionsListModelTestData.RegoBucket, -3 }
         };
     }
 }

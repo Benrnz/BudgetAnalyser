@@ -2,7 +2,6 @@
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Services;
 
 public class DirtyDataServiceTest

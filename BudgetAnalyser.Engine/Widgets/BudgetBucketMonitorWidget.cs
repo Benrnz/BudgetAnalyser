@@ -20,6 +20,11 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
     }
 
     /// <summary>
+    ///     Gets the type of the widget. In this case same as GetType().Name
+    /// </summary>
+    public Type WidgetType => GetType();
+
+    /// <summary>
     ///     Gets or sets a unique identifier for this widget. This is the Bucket Code in this case.
     /// </summary>
     public string Id
@@ -31,11 +36,6 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
             OnPropertyChanged();
         }
     }
-
-    /// <summary>
-    ///     Gets the type of the widget. In this case same as GetType().Name
-    /// </summary>
-    public Type WidgetType => GetType();
 
     /// <summary>
     ///     Updates the widget values with updated input.

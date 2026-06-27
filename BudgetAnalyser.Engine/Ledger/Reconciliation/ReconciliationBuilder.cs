@@ -386,8 +386,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
         var transactions = filteredTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
         if (transactions.Any())
         {
-            IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select(
-                t => new CreditLedgerTransaction(t.Id) { Amount = t.Amount, Narrative = ExtractNarrative(t), Date = t.Date });
+            IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select(t => new CreditLedgerTransaction(t.Id) { Amount = t.Amount, Narrative = ExtractNarrative(t), Date = t.Date });
 
             return newLedgerTransactions.ToList();
         }

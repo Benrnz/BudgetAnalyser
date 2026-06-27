@@ -164,11 +164,10 @@ internal class ReconciliationCreationManager(
 
         var unmatchedTxns = lastLine.Entries
             .SelectMany(e => e.Transactions)
-            .Where(
-                t =>
-                    !string.IsNullOrWhiteSpace(t.AutoMatchingReference) &&
-                    !t.AutoMatchingReference.StartsWith(ReconciliationBuilder.MatchedPrefix,
-                        StringComparison.Ordinal))
+            .Where(t =>
+                !string.IsNullOrWhiteSpace(t.AutoMatchingReference) &&
+                !t.AutoMatchingReference.StartsWith(ReconciliationBuilder.MatchedPrefix,
+                    StringComparison.Ordinal))
             .ToList();
 
         if (unmatchedTxns.None())
@@ -182,8 +181,7 @@ internal class ReconciliationCreationManager(
             var bankTransactions = ReconciliationBuilder.TransactionsToAutoMatch(transactionsSubSet, ledgerTransaction.AutoMatchingReference!);
             if (bankTransactions.None())
             {
-                this.logger.LogWarning(
-                    _ => $"There appears to be some transactions from last month that should be auto-matched, but no matching bank transactions were found. {ledgerTransaction}");
+                this.logger.LogWarning(_ => $"There appears to be some transactions from last month that should be auto-matched, but no matching bank transactions were found. {ledgerTransaction}");
                 throw new ValidationWarningException(
                         string.Format(
                             CultureInfo.CurrentCulture,
@@ -191,7 +189,7 @@ internal class ReconciliationCreationManager(
                             ledgerTransaction.Id,
                             ledgerTransaction.AutoMatchingReference,
                             ledgerTransaction.Amount))
-                { Source = "1" };
+                    { Source = "1" };
             }
         }
     }
@@ -326,32 +324,27 @@ internal class ReconciliationCreationManager(
     {
         if (transactions.AllTransactions
             .Where(t => t.Date >= startDate && t.Date < reconciliationDate)
-            .Any(
-                t =>
-                    t.BudgetBucket is null ||
-                    (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
+            .Any(t =>
+                t.BudgetBucket is null ||
+                (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
         {
             var uncategorised =
-                transactions.AllTransactions.Where(
-                    t =>
-                        t.BudgetBucket is null ||
-                        (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
+                transactions.AllTransactions.Where(t =>
+                    t.BudgetBucket is null ||
+                    (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
             var count = 0;
-            this.logger.LogWarning(
-                _ =>
-                    "LedgerBook.PreReconciliationValidation: There appears to be transactions in the transactions list that are not categorised into a budget bucket.");
+            this.logger.LogWarning(_ =>
+                "LedgerBook.PreReconciliationValidation: There appears to be transactions in the transactions list that are not categorised into a budget bucket.");
             foreach (var transaction in uncategorised)
             {
                 count++;
                 var transactionCopy = transaction;
-                this.logger.LogWarning(
-                    _ =>
-                        "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id +
-                        transactionCopy.BudgetBucket);
+                this.logger.LogWarning(_ =>
+                    "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id +
+                    transactionCopy.BudgetBucket);
                 if (count > 5)
                 {
-                    this.logger.LogWarning(
-                        _ => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
+                    this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
                 }
             }
 

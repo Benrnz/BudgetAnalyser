@@ -1,5 +1,4 @@
-﻿
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 // Method naming matches date rules, ie 1st not 1St as recommended.
 
 namespace BudgetAnalyser.Engine.UnitTest;

@@ -2,31 +2,30 @@
 using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
 
-namespace Rees.Wpf
+namespace Rees.Wpf;
+
+// Used on sub-controls of an expander to bubble the mouse wheel scroll event up 
+public sealed class BubbleScrollEventBehaviour : Behavior<UIElement>
 {
-    // Used on sub-controls of an expander to bubble the mouse wheel scroll event up 
-    public sealed class BubbleScrollEventBehaviour : Behavior<UIElement>
+    protected override void OnAttached()
     {
-        protected override void OnAttached()
-        {
-            base.OnAttached();
-            AssociatedObject.PreviewMouseWheel += AssociatedObject_PreviewMouseWheel;
-        }
+        base.OnAttached();
+        AssociatedObject.PreviewMouseWheel += AssociatedObject_PreviewMouseWheel;
+    }
 
-        protected override void OnDetaching()
-        {
-            AssociatedObject.PreviewMouseWheel -= AssociatedObject_PreviewMouseWheel;
-            base.OnDetaching();
-        }
+    protected override void OnDetaching()
+    {
+        AssociatedObject.PreviewMouseWheel -= AssociatedObject_PreviewMouseWheel;
+        base.OnDetaching();
+    }
 
-        private void AssociatedObject_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    private void AssociatedObject_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        e.Handled = true;
+        var e2 = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
         {
-            e.Handled = true;
-            var e2 = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
-            {
-                RoutedEvent = UIElement.MouseWheelEvent
-            };
-            AssociatedObject.RaiseEvent(e2);
-        }
+            RoutedEvent = UIElement.MouseWheelEvent
+        };
+        AssociatedObject.RaiseEvent(e2);
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
+﻿namespace BudgetAnalyser.LedgerBook;
 
-namespace BudgetAnalyser.LedgerBook
+public class LedgerTransactionEventArgs : EventArgs
 {
-    public class LedgerTransactionEventArgs : EventArgs
+    public LedgerTransactionEventArgs(bool wasChanged)
     {
-        public LedgerTransactionEventArgs(bool wasChanged)
-        {
-            WasModified = wasChanged;
-        }
-
-        public bool WasModified { get; private set; }
+        WasModified = wasChanged;
     }
+
+    public bool WasModified { get; private set; }
 }

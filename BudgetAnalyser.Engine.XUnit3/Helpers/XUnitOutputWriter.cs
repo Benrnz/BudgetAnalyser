@@ -1,6 +1,5 @@
 using System.Text;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Helpers;
 
 public class XUnitOutputWriter(ITestOutputHelper xunitOutput) : IReesTestOutput, IDisposable

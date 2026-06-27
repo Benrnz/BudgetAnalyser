@@ -16,8 +16,8 @@ public class BudgetBucketMonitorWidgetTest
     private GlobalFilterCriteria criteriaTestData;
     private LedgerBook ledgerBookTestData;
     private LedgerCalculation ledgerCalculation;
-    private TransactionsListModel transactionsTestData;
     private BudgetBucketMonitorWidget subject;
+    private TransactionsListModel transactionsTestData;
 
     [TestMethod]
     public void OutputTestData()
@@ -66,14 +66,13 @@ public class BudgetBucketMonitorWidgetTest
                 new DateOnly(2015, 10, 20),
                 new BankBalance(LedgerBookTestData.ChequeAccount, 2000M),
                 new BankBalance(LedgerBookTestData.SavingsAccount, 1000M))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Foo", new DateOnly(2015, 10, 20), "automatchref12"); });
-                    entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateOnly(2015, 10, 20), "automatchref12"); });
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Foo", new DateOnly(2015, 10, 20), "automatchref12"); });
+                entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateOnly(2015, 10, 20), "automatchref12"); });
+            })
             .Build();
     }
 

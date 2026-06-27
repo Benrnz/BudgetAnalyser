@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Transactions;
 namespace BudgetAnalyser.Engine.Services;
 
 /// <summary>
-///     A service to manipulate and manage transactions and <see cref="TransactionsListModel"/>.
+///     A service to manipulate and manage transactions and <see cref="TransactionsListModel" />.
 /// </summary>
 /// <seealso cref="ITransactionManagerService" />
 /// <seealso cref="ISupportsModelPersistence" />
@@ -30,7 +30,10 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <param name="logger">The logger.</param>
     /// <param name="monitorableDependencies">The dependency monitor manager</param>
     /// <exception cref="System.ArgumentNullException"></exception>
-    public TransactionManagerService(IBudgetBucketRepository bucketRepository, ITransactionsListModelRepository transactionsListModelRepository, ILogger logger, IMonitorableDependencies monitorableDependencies)
+    public TransactionManagerService(IBudgetBucketRepository bucketRepository,
+        ITransactionsListModelRepository transactionsListModelRepository,
+        ILogger logger,
+        IMonitorableDependencies monitorableDependencies)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.transactionsListModelRepository = transactionsListModelRepository ?? throw new ArgumentNullException(nameof(transactionsListModelRepository));
@@ -94,7 +97,8 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         TransactionsListModel?.Dispose();
         try
         {
-            TransactionsListModel = await this.transactionsListModelRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.TransactionsListModelStorageKey), applicationDatabase.IsEncrypted);
+            TransactionsListModel =
+                await this.transactionsListModelRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.TransactionsListModelStorageKey), applicationDatabase.IsEncrypted);
         }
         catch (TransactionsListModelChecksumException ex)
         {
@@ -353,25 +357,23 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         }
 
         var allBuckets = new List<BudgetBucket>(this.bucketRepository.Buckets.OrderBy(b => b.Code));
-        var allTransactionHaveABucket = await Task.Run(
-            () =>
-            {
-                return TransactionsListModel.AllTransactions
-                    .Where(t => t.BudgetBucket is not null)
-                    .AsParallel()
-                    .All(
-                        t =>
-                        {
-                            var bucketExists = allBuckets.Contains(t.BudgetBucket!);
-                            if (!bucketExists)
-                            {
-                                t.BudgetBucket = null;
-                                this.logger.LogWarning(l => l.Format("Transaction {0} has a bucket ({1}) that doesn't exist!", t.Date, t.BudgetBucket));
-                            }
+        var allTransactionHaveABucket = await Task.Run(() =>
+        {
+            return TransactionsListModel.AllTransactions
+                .Where(t => t.BudgetBucket is not null)
+                .AsParallel()
+                .All(t =>
+                {
+                    var bucketExists = allBuckets.Contains(t.BudgetBucket!);
+                    if (!bucketExists)
+                    {
+                        t.BudgetBucket = null;
+                        this.logger.LogWarning(l => l.Format("Transaction {0} has a bucket ({1}) that doesn't exist!", t.Date, t.BudgetBucket));
+                    }
 
-                            return bucketExists;
-                        });
-            });
+                    return bucketExists;
+                });
+        });
 
         this.budgetHash = this.budgetCollection.GetHashCode();
         return allTransactionHaveABucket;

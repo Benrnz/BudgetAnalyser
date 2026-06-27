@@ -352,30 +352,28 @@ public class LedgerCalculation
         var key = BuildCacheKey("GetAutoMatchingTransactions", transactionsList, entryLine, inclBeginDate);
         var autoMatchLedgerTransactions = (List<LedgerTransaction>)GetOrAddFromCache(key, () => ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList());
 
-        this.logger.LogInfo(
-            _ =>
+        this.logger.LogInfo(_ =>
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Ledger Transactions found that are 'Auto-Matching-Transactions':");
+            foreach (var txn in autoMatchLedgerTransactions)
             {
-                var builder = new StringBuilder();
-                builder.AppendLine("Ledger Transactions found that are 'Auto-Matching-Transactions':");
-                foreach (var txn in autoMatchLedgerTransactions)
-                {
-                    builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Narrative}  {txn.AutoMatchingReference}");
-                }
+                builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Narrative}  {txn.AutoMatchingReference}");
+            }
 
-                return builder.ToString();
-            });
+            return builder.ToString();
+        });
         return autoMatchLedgerTransactions;
     }
 
     private static object GetOrAddFromCache(string cacheKey, Func<object> factory)
     {
         CheckCacheForCleanUp();
-        var wrappedFactory = new Func<object>(
-            () =>
-            {
-                CacheLastUpdated = DateTime.Now;
-                return factory();
-            });
+        var wrappedFactory = new Func<object>(() =>
+        {
+            CacheLastUpdated = DateTime.Now;
+            return factory();
+        });
         return CalculationsCache.GetOrAdd(cacheKey, _ => wrappedFactory());
     }
 

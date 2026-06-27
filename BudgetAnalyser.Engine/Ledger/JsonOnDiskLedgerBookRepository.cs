@@ -144,11 +144,10 @@ internal class JsonOnDiskLedgerBookRepository(
     private double CalculateChecksum(LedgerBook dataEntity)
     {
         // ReSharper disable once EnumerableSumInExplicitUncheckedContext - Used to calculate a checksum and revolving (overflowing) integers are ok here.
-        return dataEntity.Reconciliations.Sum(
-            l =>
-                (double)l.LedgerBalance
-                + l.BankBalanceAdjustments.Sum(b => (double)b.Amount)
-                + l.Entries.Sum(e => (double)e.Balance));
+        return dataEntity.Reconciliations.Sum(l =>
+            (double)l.LedgerBalance
+            + l.BankBalanceAdjustments.Sum(b => (double)b.Amount)
+            + l.Entries.Sum(e => (double)e.Balance));
     }
 
     private async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity, bool isEncrypted)

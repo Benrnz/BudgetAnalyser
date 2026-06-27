@@ -33,7 +33,7 @@ internal class MonitorableDependencies : IMonitorableDependencies
             [typeof(ApplicationDatabase)] = null,
             [typeof(ITransactionRuleService)] = null,
             [typeof(ILogger)] = logger,
-            [typeof(IDirtyDataService)] = null,
+            [typeof(IDirtyDataService)] = null
         };
     }
 

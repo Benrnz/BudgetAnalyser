@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace BudgetAnalyser.LedgerBook
+namespace BudgetAnalyser.LedgerBook;
+
+/// <summary>
+///     Interaction logic for BankBalanceUserControl.xaml
+/// </summary>
+public partial class BankBalanceUserControl : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for BankBalanceUserControl.xaml
-    /// </summary>
-    public partial class BankBalanceUserControl : UserControl
+    public BankBalanceUserControl()
     {
-        public BankBalanceUserControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

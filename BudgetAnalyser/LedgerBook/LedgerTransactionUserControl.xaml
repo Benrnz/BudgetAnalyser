@@ -36,7 +36,7 @@
         </StackPanel>
 
         <transactions:AccountUserControl Grid.Column="1"
-                                      DataContext="{Binding BankAccount}" />
+                                         DataContext="{Binding BankAccount}" />
 
         <TextBlock x:Name="CreditAmount"
                    Grid.Column="2"

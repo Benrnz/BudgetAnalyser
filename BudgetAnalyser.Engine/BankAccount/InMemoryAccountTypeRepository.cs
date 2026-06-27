@@ -33,6 +33,30 @@ public class InMemoryAccountTypeRepository : IAccountTypeRepository
     }
 
     /// <summary>
+    ///     Retrieve the <see cref="Account" /> for the given key or null if it doesn't exist in the repository.
+    /// </summary>
+    /// <param name="key">The unique key.</param>
+    /// <returns>The found account or null.</returns>
+    public Account? GetByKey(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            return null;
+        }
+
+        return this.repository.GetValueOrDefault(key.ToUpperInvariant());
+    }
+
+    /// <summary>
+    ///     Return a list of all <see cref="Account" />s in the repository. These are the ones actively being used in the
+    ///     current data loaded.
+    /// </summary>
+    public IEnumerable<Account> ListCurrentlyUsedAccountTypes()
+    {
+        return this.repository.Values.ToList();
+    }
+
+    /// <summary>
     ///     Add a new <see cref="Account" /> with the given key. Will not throw if the key already exists in the
     ///     repository.
     /// </summary>
@@ -67,29 +91,5 @@ public class InMemoryAccountTypeRepository : IAccountTypeRepository
     {
         var copy = this.repository.ToArray();
         return copy.FirstOrDefault(x => criteria(x.Value)).Value;
-    }
-
-    /// <summary>
-    ///     Retrieve the <see cref="Account" /> for the given key or null if it doesn't exist in the repository.
-    /// </summary>
-    /// <param name="key">The unique key.</param>
-    /// <returns>The found account or null.</returns>
-    public Account? GetByKey(string key)
-    {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            return null;
-        }
-
-        return this.repository.GetValueOrDefault(key.ToUpperInvariant());
-    }
-
-    /// <summary>
-    ///     Return a list of all <see cref="Account" />s in the repository. These are the ones actively being used in the
-    ///     current data loaded.
-    /// </summary>
-    public IEnumerable<Account> ListCurrentlyUsedAccountTypes()
-    {
-        return this.repository.Values.ToList();
     }
 }

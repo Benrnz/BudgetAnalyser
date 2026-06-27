@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.BankAccount;
 namespace BudgetAnalyser.Engine.Transactions;
 
 /// <summary>
-///     The <see cref="TransactionsListModelRepository"/> is responsible for loading any kind of bank extract file, whether it be an existing budget analyser transactions list model file or a
+///     The <see cref="TransactionsListModelRepository" /> is responsible for loading any kind of bank extract file, whether it be an existing budget analyser transactions list model file or a
 ///     downloaded bank extract to merge and load. If the filename is already known it is loaded with no prompting, otherwise the user is prompted for a filename. To function it orchestrates across
 ///     the  <see cref="IVersionedTransactionsModelRepository" /> and the <see cref="IBankExtractImporterRepository" />. This implementation is strictly not thread safe and should be single threaded
 ///     only.  Don't allow multiple threads to use it at the same time.
@@ -15,7 +15,9 @@ internal class TransactionsListModelRepository(IVersionedTransactionsModelReposi
     : ITransactionsListModelRepository
 {
     private readonly IBankExtractImporterRepository importerRepository = importerRepository ?? throw new ArgumentNullException(nameof(importerRepository));
-    private readonly IVersionedTransactionsModelRepository transactionsListModelRepository = transactionsListModelRepository ?? throw new ArgumentNullException(nameof(transactionsListModelRepository));
+
+    private readonly IVersionedTransactionsModelRepository
+        transactionsListModelRepository = transactionsListModelRepository ?? throw new ArgumentNullException(nameof(transactionsListModelRepository));
 
     public async Task CreateNewAndSaveAsync(string storageKey)
     {

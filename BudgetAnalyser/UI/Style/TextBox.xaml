@@ -41,7 +41,7 @@
                         <!-- Placeholder for the TextBox itself -->
                         <AdornedElementPlaceholder x:Name="textBox" />
                         <TextBlock Text="*"
-                                   Style="{StaticResource TextBlock.ValidationError}"/>
+                                   Style="{StaticResource TextBlock.ValidationError}" />
                         <TextBlock Text="{Binding [0].ErrorContent}"
                                    Style="{StaticResource TextBlock.ValidationError}"
                                    ToolTip="{Binding [0].ErrorContent}" />

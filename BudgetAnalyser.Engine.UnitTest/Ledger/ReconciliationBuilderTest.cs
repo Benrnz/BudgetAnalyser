@@ -56,7 +56,8 @@ public class ReconciliationBuilderTest
 
         ActPeriodEndReconciliationOnTestData5(this.testDataTransactionsList);
         var previousMonthLine =
-            this.subject.LedgerBook.Reconciliations.Single(line => line.Date == new DateOnly(2013, 08, 15)).Entries.Single(e => e.LedgerBucket.BudgetBucket == TransactionsListModelTestData.InsHomeBucket);
+            this.subject.LedgerBook.Reconciliations.Single(line => line.Date == new DateOnly(2013, 08, 15)).Entries
+                .Single(e => e.LedgerBucket.BudgetBucket == TransactionsListModelTestData.InsHomeBucket);
         var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
 
         // Assert last month's ledger transaction has been linked to the credit 16/8/13
@@ -269,7 +270,8 @@ public class ReconciliationBuilderTest
         this.testDataBudgetContext = new BudgetCurrencyContext(budgetCollection, budgetCollection.CurrentActiveBudget);
         this.testDataTransactionsList = transactionsListModelTestData ?? TransactionsListModelTestData.TestData5();
 
-        var result = ActPeriodEndReconciliation(bankBalances: new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 1850.5M), new BankBalance(TransactionsListModelTestData.SavingsAccount, 1200M) },
+        var result = ActPeriodEndReconciliation(
+            bankBalances: new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 1850.5M), new BankBalance(TransactionsListModelTestData.SavingsAccount, 1200M) },
             ignoreWarnings: ignoreWarnings);
 
         return result;

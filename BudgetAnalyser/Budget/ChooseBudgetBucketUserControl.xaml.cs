@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace BudgetAnalyser.Budget
+namespace BudgetAnalyser.Budget;
+
+/// <summary>
+///     Interaction logic for ChooseBudgetBucketView.xaml
+/// </summary>
+public partial class ChooseBudgetBucketUserControl : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for ChooseBudgetBucketView.xaml
-    /// </summary>
-    public partial class ChooseBudgetBucketUserControl : UserControl
+    public ChooseBudgetBucketUserControl()
     {
-        public ChooseBudgetBucketUserControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

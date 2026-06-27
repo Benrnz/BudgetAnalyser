@@ -1,13 +1,10 @@
-﻿#nullable enable
-
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using Shouldly;
-
 
 namespace BudgetAnalyser.Engine.XUnit.Services;
 

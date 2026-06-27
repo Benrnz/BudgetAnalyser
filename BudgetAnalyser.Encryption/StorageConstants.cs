@@ -1,8 +1,7 @@
-﻿namespace BudgetAnalyser.Encryption
+﻿namespace BudgetAnalyser.Encryption;
+
+public static class StorageConstants
 {
-    public static class StorageConstants
-    {
-        public const string UnprotectedInstanceName = "Unprotected";
-        public const string EncryptedInstanceName = "Encrypted";
-    }
+    public const string UnprotectedInstanceName = "Unprotected";
+    public const string EncryptedInstanceName = "Encrypted";
 }

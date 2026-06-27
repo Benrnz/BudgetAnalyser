@@ -223,7 +223,7 @@
         </Grid.RowDefinitions>
         <!-- Title Row -->
         <views:BudgetModelNameUserControl DataContext="{Binding CurrentBudget}"
-                                           Grid.ColumnSpan="2" />
+                                          Grid.ColumnSpan="2" />
         <StackPanel Grid.ColumnSpan="2"
                     Grid.Column="0"
                     Grid.Row="0"

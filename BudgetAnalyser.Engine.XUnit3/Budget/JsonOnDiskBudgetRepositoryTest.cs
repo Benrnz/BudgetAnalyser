@@ -12,7 +12,6 @@ using NSubstitute.ExceptionExtensions;
 using Rees.UnitTestUtilities;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Budget;
 
 public class JsonOnDiskBudgetRepositoryTest : IDisposable

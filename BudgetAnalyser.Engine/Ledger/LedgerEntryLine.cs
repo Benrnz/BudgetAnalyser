@@ -138,16 +138,14 @@ public class LedgerEntryLine
         get
         {
             var adjustedBalances =
-                BankBalances.Select(
-                    b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
+                BankBalances.Select(b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
             var results = Entries.GroupBy(
                 e => e.LedgerBucket.StoredInAccount,
                 (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
             return
-                adjustedBalances.Select(
-                    a =>
-                        new BankBalance(a.Account,
-                            a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
+                adjustedBalances.Select(a =>
+                    new BankBalance(a.Account,
+                        a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
         }
     }
 

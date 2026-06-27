@@ -195,14 +195,12 @@ internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsMo
 
     private static IEnumerable<Expense> CloneBudgetExpenses(BudgetModel source)
     {
-        return source.Expenses.Select(
-            sourceExpense => new Expense { Amount = sourceExpense.Amount, Bucket = sourceExpense.Bucket }).ToList();
+        return source.Expenses.Select(sourceExpense => new Expense { Amount = sourceExpense.Amount, Bucket = sourceExpense.Bucket }).ToList();
     }
 
     private static IEnumerable<Income> CloneBudgetIncomes(BudgetModel source)
     {
-        return source.Incomes.Select(
-            sourceExpense => new Income { Amount = sourceExpense.Amount, Bucket = sourceExpense.Bucket }).ToList();
+        return source.Incomes.Select(sourceExpense => new Income { Amount = sourceExpense.Amount, Bucket = sourceExpense.Bucket }).ToList();
     }
 
     private void EnsureAllBucketsUsedAreInBucketRepo()

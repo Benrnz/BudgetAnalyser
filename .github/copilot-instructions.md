@@ -149,7 +149,7 @@ dotnet build -t:Metrics              # Update metrics XML files (complexity, mai
 
 ### Testing
 
-- **Framework**: MSTest (NOT XUnit; ignore XUnit3 project)
+- **Framework**: MSTest or XUnit
 - **Mocking**: NSubstitute (mandatory; do NOT use Moq)
 - **Assertions**: Shouldly (preferred over plain Assert statements)
 - **Test Projects**:

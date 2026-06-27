@@ -8,9 +8,9 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IReconciliationBehaviour
 {
     public LedgerEntryLine? NewReconLine { get; private set; }
+    public IList<ToDoTask>? TodoTasks { get; private set; }
 
     public TransactionsListModel? Transactions { get; private set; }
-    public IList<ToDoTask>? TodoTasks { get; private set; }
 
     public void Initialise(params object[] anyParameters)
     {

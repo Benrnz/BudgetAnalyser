@@ -1,10 +1,9 @@
-﻿namespace BudgetAnalyser.ShellDialog
+﻿namespace BudgetAnalyser.ShellDialog;
+
+public enum ShellDialogButton
 {
-    public enum ShellDialogButton
-    {
-        Ok,
-        Cancel,
-        Save,
-        Help
-    }
+    Ok,
+    Cancel,
+    Save,
+    Help
 }

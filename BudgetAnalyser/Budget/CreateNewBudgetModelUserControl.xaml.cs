@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace BudgetAnalyser.Budget
+namespace BudgetAnalyser.Budget;
+
+/// <summary>
+///     Interaction logic for CreateNewFixedBudgetProjectUserControl.xaml
+/// </summary>
+public partial class CreateNewBudgetModelUserControl : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for CreateNewFixedBudgetProjectUserControl.xaml
-    /// </summary>
-    public partial class CreateNewBudgetModelUserControl : UserControl
+    public CreateNewBudgetModelUserControl()
     {
-        public CreateNewBudgetModelUserControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

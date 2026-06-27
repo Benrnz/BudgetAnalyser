@@ -14,11 +14,11 @@ namespace BudgetAnalyser.Engine.XUnit.Matching;
 
 public class JsonOnDiskMatchingRuleRepositoryTest
 {
+    private readonly IBudgetBucketRepository bucketRepo = new BudgetBucketRepoAlwaysFind();
+    private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter = new();
     private readonly IFileReaderWriter mockReaderWriter = Substitute.For<IFileReaderWriter>();
     private readonly IReaderWriterSelector mockSelector = Substitute.For<IReaderWriterSelector>();
-    private readonly IBudgetBucketRepository bucketRepo = new BudgetBucketRepoAlwaysFind();
     private readonly ITestOutputHelper output;
-    private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter = new();
 
     public JsonOnDiskMatchingRuleRepositoryTest(ITestOutputHelper output)
     {
@@ -77,6 +77,20 @@ public class JsonOnDiskMatchingRuleRepositoryTest
     }
 
     [Fact]
+    public async Task LoadAndSave_ShouldProduceSameJson()
+    {
+        var subject = ArrangeUsingEmbeddedResources();
+        var rules = await subject.LoadAsync(TestDataConstants.DemoRulesFileName, false);
+
+        await subject.SaveAsync(rules, "foo.bar", false);
+        var serialisedData = JsonHelper.MinifyJson(subject.SerialisedData);
+        var expectedData = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoRulesFileName);
+        expectedData = JsonHelper.MinifyJson(expectedData);
+
+        serialisedData.ShouldBe(expectedData);
+    }
+
+    [Fact]
     public async Task Save_ShouldSerialiseAndWrite_GivenValidRules()
     {
         var subject = ArrangeUsingEmbeddedResources();
@@ -95,20 +109,6 @@ public class JsonOnDiskMatchingRuleRepositoryTest
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(null!, "rules.json", false));
-    }
-
-    [Fact]
-    public async Task LoadAndSave_ShouldProduceSameJson()
-    {
-        var subject = ArrangeUsingEmbeddedResources();
-        var rules = await subject.LoadAsync(TestDataConstants.DemoRulesFileName, false);
-
-        await subject.SaveAsync(rules, "foo.bar", false);
-        var serialisedData = JsonHelper.MinifyJson(subject.SerialisedData);
-        var expectedData = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.DemoRulesFileName);
-        expectedData = JsonHelper.MinifyJson(expectedData);
-
-        serialisedData.ShouldBe(expectedData);
     }
 
     private JsonOnDiskMatchingRuleRepositoryTestHarness ArrangeUsingEmbeddedResources()

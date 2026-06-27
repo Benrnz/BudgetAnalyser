@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace BudgetAnalyser.Transactions
+namespace BudgetAnalyser.Transactions;
+
+/// <summary>
+///     Interaction logic for SplitTransactionView.xaml
+/// </summary>
+public partial class SplitTransactionView : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for SplitTransactionView.xaml
-    /// </summary>
-    public partial class SplitTransactionView : UserControl
+    public SplitTransactionView()
     {
-        public SplitTransactionView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

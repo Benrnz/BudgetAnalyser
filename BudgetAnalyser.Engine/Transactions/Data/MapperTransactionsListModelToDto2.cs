@@ -21,8 +21,7 @@ public class MapperTransactionsListModelToDto2(
         (
             model.LastImport.ToUniversalTime(),
             model.StorageKey,
-            model.AllTransactions.Select(this.transactionMapper.ToDto).ToArray(),
-            0
+            model.AllTransactions.Select(this.transactionMapper.ToDto).ToArray()
         );
         // Checksum and VersionHash are set during persistence
         this.logger.LogInfo(_ => $"Mapping of TransactionsListModel '{model.StorageKey}' finished. {dto.Transactions.Count()} of {model.AllTransactions.Count()} exported.");

@@ -1,26 +1,25 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace BudgetAnalyser.Converters
+namespace BudgetAnalyser.Converters;
+
+/// <summary>
+///     Only used in conjunction with Matching Rules and converting a true/false boolean value into And for true and Or for false.
+/// </summary>
+public class BoolToAndConverter : IValueConverter
 {
-    /// <summary>
-    /// Only used in conjunction with Matching Rules and converting a true/false boolean value into And for true and Or for false.
-    /// </summary>
-    public class BoolToAndConverter : IValueConverter
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        if (value is bool b)
         {
-            if (value is bool b)
-            {
-                return b ? "And" : "Or";
-            }
-
-            return null;
+            return b ? "And" : "Or";
         }
 
-        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
+        return null;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
     }
 }

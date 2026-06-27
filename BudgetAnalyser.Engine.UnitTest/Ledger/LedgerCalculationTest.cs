@@ -253,16 +253,15 @@ public class LedgerCalculationTest
                 new DateOnly(2015, 10, 20),
                 new BankBalance(LedgerBookTestData.ChequeAccount, 2000M),
                 new BankBalance(LedgerBookTestData.SavingsAccount, 1000M))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Soo", new DateOnly(2015, 10, 20), "automatchref12"); })
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-60, "Soo1", new DateOnly(2015, 10, 20)); });
-                    entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateOnly(2015, 10, 20), "automatchref12"); })
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-70, "Foo1", new DateOnly(2015, 10, 20)); });
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Soo", new DateOnly(2015, 10, 20), "automatchref12"); })
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-60, "Soo1", new DateOnly(2015, 10, 20)); });
+                entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateOnly(2015, 10, 20), "automatchref12"); })
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-70, "Foo1", new DateOnly(2015, 10, 20)); });
+            })
             .Build();
     }
 

@@ -35,7 +35,7 @@ public static class LedgerBookHelper
 
         foreach (var line in book.Reconciliations)
         {
-            Output(line, ledgerOrder, outputTransactions, outputWriter: writer);
+            line.Output(ledgerOrder, outputTransactions, outputWriter: writer);
         }
     }
 

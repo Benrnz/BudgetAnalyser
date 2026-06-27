@@ -154,12 +154,11 @@ internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBeha
         // Now check to ensure the detected transactions themselves are not one side of a journal style transfer.
         foreach (var suspectedPaymentTransaction in wrongAccountPayments.ToList())
         {
-            var matchingTransferTransaction = debitAccountTransactionsOnly.FirstOrDefault(
-                t => t.Amount == -suspectedPaymentTransaction.Amount
-                     && t.Date == suspectedPaymentTransaction.Date
-                     && t.BudgetBucket == suspectedPaymentTransaction.BudgetBucket
-                     && t.Account != suspectedPaymentTransaction.Account
-                     && t.Reference1 == suspectedPaymentTransaction.Reference1);
+            var matchingTransferTransaction = debitAccountTransactionsOnly.FirstOrDefault(t => t.Amount == -suspectedPaymentTransaction.Amount
+                                                                                               && t.Date == suspectedPaymentTransaction.Date
+                                                                                               && t.BudgetBucket == suspectedPaymentTransaction.BudgetBucket
+                                                                                               && t.Account != suspectedPaymentTransaction.Account
+                                                                                               && t.Reference1 == suspectedPaymentTransaction.Reference1);
             if (matchingTransferTransaction is null)
             {
                 // No matching transaction exists - therefore the transaction is not a journal, it's a payment from the wrong account.

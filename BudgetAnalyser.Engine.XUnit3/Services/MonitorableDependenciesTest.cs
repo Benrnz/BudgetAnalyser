@@ -3,10 +3,10 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using Shouldly;
-
 
 namespace BudgetAnalyser.Engine.XUnit.Services;
 
@@ -39,12 +39,6 @@ public class MonitorableDependenciesTests
     }
 
     [Fact]
-    public void NotifyOfDependencyChange_ShouldThrow_WhenDependencyIsInvalid()
-    {
-        Should.Throw<KeyNotFoundException>(() => this.service.NotifyOfDependencyChange(this));
-    }
-
-    [Fact]
     public void NotifyOfDependencyChange_ShouldReturnFalse_WhenDependencyIsNull()
     {
         var result = this.service.NotifyOfDependencyChange<TransactionsListModel>(null);
@@ -60,9 +54,15 @@ public class MonitorableDependenciesTests
     }
 
     [Fact]
+    public void NotifyOfDependencyChange_ShouldThrow_WhenDependencyIsInvalid()
+    {
+        Should.Throw<KeyNotFoundException>(() => this.service.NotifyOfDependencyChange(this));
+    }
+
+    [Fact]
     public void NotifyOfDependencyChange_ShouldTriggerEvent_WhenDependencyHasSignificantlyChanged()
     {
-        var transactionsModel = TestData.TransactionsListModelTestData.TestData1();
+        var transactionsModel = TransactionsListModelTestData.TestData1();
         var eventTriggered = false;
         this.service.DependencyChanged += (sender, args) => eventTriggered = true;
 

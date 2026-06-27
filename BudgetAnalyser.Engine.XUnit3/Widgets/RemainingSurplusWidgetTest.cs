@@ -9,7 +9,6 @@ using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Shouldly;
 
-
 #pragma warning disable CS8601 // Possible null reference assignment. // GENERATED CODE
 
 namespace BudgetAnalyser.Engine.XUnit.Widgets;
@@ -22,8 +21,8 @@ public class RemainingSurplusWidgetTest : IDisposable
     private readonly LedgerBook ledgerBookTestData;
     private readonly LedgerCalculation ledgerCalculation;
     private readonly XUnitOutputWriter outputWriter;
-    private readonly TransactionsListModel transactionsTestData;
     private readonly RemainingSurplusWidget subject = new();
+    private readonly TransactionsListModel transactionsTestData;
 
     public RemainingSurplusWidgetTest(ITestOutputHelper outputHelper)
     {
@@ -42,14 +41,13 @@ public class RemainingSurplusWidgetTest : IDisposable
             .AppendReconciliation(
                 new DateOnly(2015, 10, 20),
                 new BankBalance(LedgerBookTestData.ChequeAccount, 4502.75M))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
-                    entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
-                    entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateOnly(2015, 10, 20), "automatchref12"); });
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
+                entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
+                entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateOnly(2015, 10, 20), "automatchref12"); });
+            })
             .Build();
 
         this.ledgerCalculation = new LedgerCalculation(new FakeLogger());

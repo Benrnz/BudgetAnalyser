@@ -171,7 +171,7 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0"  Grid.Row="0"  Margin="4"
+            <TextBlock Grid.Column="0" Grid.Row="0" Margin="4"
                        HorizontalAlignment="Right"
                        TextAlignment="Right"
                        Text="Avg Expense Spend per period:" />

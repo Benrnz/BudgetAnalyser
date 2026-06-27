@@ -34,17 +34,17 @@ public class TransactionsListViewModelTest
     }
 
     [TestMethod]
-    public void GivenTestData1TransactionListModelNameShouldBeFooBar()
-    {
-        var subject = Arrange();
-        Assert.AreEqual("FooTransactions", subject.TransactionListModelName);
-    }
-
-    [TestMethod]
     public void GivenTestData1TotalCreditsShouldBe0()
     {
         var subject = Arrange();
         Assert.AreEqual(0, subject.TotalCredits);
+    }
+
+    [TestMethod]
+    public void GivenTestData1TransactionListModelNameShouldBeFooBar()
+    {
+        var subject = Arrange();
+        Assert.AreEqual("FooTransactions", subject.TransactionListModelName);
     }
 
     [TestInitialize]

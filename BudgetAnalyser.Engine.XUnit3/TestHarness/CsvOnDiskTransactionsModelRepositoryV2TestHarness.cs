@@ -10,10 +10,9 @@ internal class CsvOnDiskTransactionsModelRepositoryV2TestHarness(
     IReaderWriterSelector readerWriterSelector)
     : CsvOnDiskTransactionsModelRepositoryV2(new BankImportUtilitiesTestHarness(), logger, mapper, readerWriterSelector)
 {
-    public MemoryStream? WriteStream { get; set; } = new();
-
     public TransactionSetDto? Dto { get; set; }
     public string SerialisedData { get; set; } = string.Empty;
+    public MemoryStream? WriteStream { get; set; } = new();
 
     protected override Stream CreateWritableStream(string storageKey, IFileReaderWriter writer)
     {

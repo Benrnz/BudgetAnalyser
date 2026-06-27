@@ -76,76 +76,64 @@ public class LedgerBookBuilder
             .AppendReconciliation(
                 new DateOnly(2013, 6, 15),
                 new BankBalance(TransactionsListModelTestData.ChequeAccount, 2500))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.HairLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(55M)
-                                    .WithCredit(-45M, "Hair cut"));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(95M)
-                                    .WithCredit(-86.43M, "Pay phones"));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(140M)
-                                    .WithCredit(-123.56M, "Power bill"));
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.HairLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(55M)
+                            .WithCredit(-45M, "Hair cut"));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(95M)
+                            .WithCredit(-86.43M, "Pay phones"));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(140M)
+                            .WithCredit(-123.56M, "Power bill"));
+            })
             .AppendReconciliation(
                 new DateOnly(2013, 7, 15),
                 new BankBalance(TransactionsListModelTestData.ChequeAccount, 3700))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.HairLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(55M));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(95M)
-                                    .WithCredit(-66.43M, "Pay phones"));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(140M)
-                                    .WithCredit(-145.56M, "Power bill"));
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.HairLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(55M));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(95M)
+                            .WithCredit(-66.43M, "Pay phones"));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(140M)
+                            .WithCredit(-145.56M, "Power bill"));
+            })
             .AppendReconciliation(
                 new DateOnly(2013, 8, 15),
                 new BankBalance(TransactionsListModelTestData.ChequeAccount, 2950))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.HairLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(55M));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(95M)
-                                    .WithCredit(-67.43M, "Pay phones"));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(140M)
-                                    .WithCredit(-98.56M, "Power bill"));
-                });
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.HairLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(55M));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(95M)
+                            .WithCredit(-67.43M, "Pay phones"));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(140M)
+                            .WithCredit(-98.56M, "Power bill"));
+            });
 
         return this;
     }

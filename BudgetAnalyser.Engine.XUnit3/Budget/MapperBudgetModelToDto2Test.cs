@@ -68,15 +68,15 @@ public class MapperBudgetModelToDto2Test
     {
         // Arrange
         var budgetModelDto = new BudgetModelDto
-        (
-            Name: "Test Budget",
-            BudgetCycle: BudgetCycle.Monthly,
-            EffectiveFrom: DateOnlyExt.Today(),
-            LastModified: DateTime.Now,
-            Expenses: [new ExpenseDto(200M, TestDataConstants.PowerBucketCode)],
-            Incomes: [new IncomeDto(2000M, TestDataConstants.IncomeBucketCode)]
-        )
-        { LastModifiedComment = "Test Comment" };
+            (
+                Name: "Test Budget",
+                BudgetCycle: BudgetCycle.Monthly,
+                EffectiveFrom: DateOnlyExt.Today(),
+                LastModified: DateTime.Now,
+                Expenses: [new ExpenseDto(200M, TestDataConstants.PowerBucketCode)],
+                Incomes: [new IncomeDto(2000M, TestDataConstants.IncomeBucketCode)]
+            )
+            { LastModifiedComment = "Test Comment" };
 
         // Act
         var model = this.mapper.ToModel(budgetModelDto);

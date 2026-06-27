@@ -5,7 +5,6 @@ using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit.Persistence;
 
 public class JsonOnDiskApplicationDatabaseRepositoryTest : IDisposable

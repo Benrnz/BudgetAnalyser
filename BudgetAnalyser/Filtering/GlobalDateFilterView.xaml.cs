@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace BudgetAnalyser.Filtering
+namespace BudgetAnalyser.Filtering;
+
+/// <summary>
+///     Interaction logic for GlobalDateFilterView.xaml
+/// </summary>
+public partial class GlobalDateFilterView : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for GlobalDateFilterView.xaml
-    /// </summary>
-    public partial class GlobalDateFilterView : UserControl
+    public GlobalDateFilterView()
     {
-        public GlobalDateFilterView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -29,8 +29,8 @@ public class ReconciliationCreationManagerTest
     private BudgetModel testDataBudgetModel;
     private LedgerBook testDataLedgerBook;
     private ReconciliationResult testDataReconResult;
-    private TransactionsListModel testDataTransactions;
     private IList<ToDoTask> testDataToDoList;
+    private TransactionsListModel testDataTransactions;
 
     [TestMethod]
     public void OutputTestData1()
@@ -317,7 +317,8 @@ public class ReconciliationCreationManagerTest
         this.testDataTransactions.Output(TestDataReconcileDate.AddMonths(-1));
         this.testDataLedgerBook.Output(true);
 
-        var result = ActPeriodEndReconciliation(bankBalances: new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 1850.5M), new BankBalance(TransactionsListModelTestData.SavingsAccount, 1200M) },
+        var result = ActPeriodEndReconciliation(
+            bankBalances: new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 1850.5M), new BankBalance(TransactionsListModelTestData.SavingsAccount, 1200M) },
             ignoreWarnings: ignoreWarnings);
 
         Console.WriteLine();

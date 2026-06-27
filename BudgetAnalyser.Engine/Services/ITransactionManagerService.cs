@@ -10,11 +10,6 @@ namespace BudgetAnalyser.Engine.Services;
 public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFoundation
 {
     /// <summary>
-    ///     Gets the Transaction List Model.
-    /// </summary>
-    TransactionsListModel? TransactionsListModel { get; }
-
-    /// <summary>
     ///     Gets the calculated total count.
     /// </summary>
     decimal TotalCount { get; }
@@ -28,6 +23,11 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     ///     Gets calculated the total debits.
     /// </summary>
     decimal TotalDebits { get; }
+
+    /// <summary>
+    ///     Gets the Transaction List Model.
+    /// </summary>
+    TransactionsListModel? TransactionsListModel { get; }
 
     /// <summary>
     ///     Clears the bucket and text filters.

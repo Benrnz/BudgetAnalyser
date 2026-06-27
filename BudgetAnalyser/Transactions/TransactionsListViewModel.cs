@@ -68,6 +68,24 @@ public class TransactionsListViewModel(IApplicationDatabaseFacade applicationDat
         }
     }
 
+    public decimal TotalCount => this.transactionService.TotalCount;
+    public decimal TotalCredits => this.transactionService.TotalCredits;
+    public decimal TotalDebits => this.transactionService.TotalDebits;
+    public decimal TotalDifference => TotalCredits + TotalDebits;
+
+    public string TransactionListModelName => TransactionsList is not null ? Path.GetFileNameWithoutExtension(TransactionsList.StorageKey) : "[No Transactions Loaded]";
+
+    // TODO Does this need to be an ObservableCollection?
+    public List<Transaction> Transactions
+    {
+        get;
+        internal set
+        {
+            field = value;
+            OnPropertyChanged();
+        }
+    } = new();
+
     public TransactionsListModel? TransactionsList
     {
         get;
@@ -80,24 +98,6 @@ public class TransactionsListViewModel(IApplicationDatabaseFacade applicationDat
             Transactions = this.transactionService.ClearBucketAndTextFilters();
         }
     }
-
-    public string TransactionListModelName => TransactionsList is not null ? Path.GetFileNameWithoutExtension(TransactionsList.StorageKey) : "[No Transactions Loaded]";
-
-    public decimal TotalCount => this.transactionService.TotalCount;
-    public decimal TotalCredits => this.transactionService.TotalCredits;
-    public decimal TotalDebits => this.transactionService.TotalDebits;
-    public decimal TotalDifference => TotalCredits + TotalDebits;
-
-    // TODO Does this need to be an ObservableCollection?
-    public List<Transaction> Transactions
-    {
-        get;
-        internal set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    } = new();
 
     public bool HasSelectedRow()
     {

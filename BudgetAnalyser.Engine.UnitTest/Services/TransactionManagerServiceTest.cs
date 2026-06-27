@@ -103,9 +103,15 @@ public class TransactionManagerServiceTest
     {
         var model2 = new TransactionsListModelBuilder()
             .AppendTransaction(
-                new Transaction { Account = TransactionsListModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = TransactionsListModelTestData.SurplusBucket, Date = new DateOnly(2013, 9, 10) })
+                new Transaction
+                {
+                    Account = TransactionsListModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = TransactionsListModelTestData.SurplusBucket, Date = new DateOnly(2013, 9, 10)
+                })
             .AppendTransaction(
-                new Transaction { Account = TransactionsListModelTestData.ChequeAccount, Amount = -1000M, BudgetBucket = new FixedBudgetProjectBucket("FOO", "Bar", 2000M), Date = new DateOnly(2013, 9, 9) })
+                new Transaction
+                {
+                    Account = TransactionsListModelTestData.ChequeAccount, Amount = -1000M, BudgetBucket = new FixedBudgetProjectBucket("FOO", "Bar", 2000M), Date = new DateOnly(2013, 9, 9)
+                })
             .Merge(this.testData)
             .Build();
         this.testData = model2;

@@ -1,36 +1,34 @@
-﻿using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
-namespace BudgetAnalyser.Engine.UnitTest.Services
+namespace BudgetAnalyser.Engine.UnitTest.Services;
+
+public class TransactionsListModelTestHarness() : TransactionsListModel(new FakeLogger())
 {
-    public class TransactionsListModelTestHarness() : TransactionsListModel(new FakeLogger())
+    public int FilterByCriteriaWasCalled { get; set; }
+    public int MergeWasCalled { get; set; }
+    public int RemoveTransactionWasCalled { get; set; }
+    public int SplitTransactionWasCalled { get; set; }
+
+    internal override void Filter(GlobalFilterCriteria criteria)
     {
-        public int FilterByCriteriaWasCalled { get; set; }
-        public int MergeWasCalled { get; set; }
-        public int RemoveTransactionWasCalled { get; set; }
-        public int SplitTransactionWasCalled { get; set; }
+        FilterByCriteriaWasCalled++;
+    }
 
-        internal override void Filter(GlobalFilterCriteria criteria)
-        {
-            FilterByCriteriaWasCalled++;
-        }
+    internal override TransactionsListModel Merge(TransactionsListModel additionalModel)
+    {
+        MergeWasCalled++;
+        return this;
+    }
 
-        internal override TransactionsListModel Merge(TransactionsListModel additionalModel)
-        {
-            MergeWasCalled++;
-            return this;
-        }
+    internal override void RemoveTransaction(Transaction transaction)
+    {
+        RemoveTransactionWasCalled++;
+    }
 
-        internal override void RemoveTransaction(Transaction transaction)
-        {
-            RemoveTransactionWasCalled++;
-        }
-
-        internal override void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
-        {
-            SplitTransactionWasCalled++;
-        }
+    internal override void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
+    {
+        SplitTransactionWasCalled++;
     }
 }

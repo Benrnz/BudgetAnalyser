@@ -90,11 +90,6 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         this.logger.LogInfo(_ => $"{nameof(JsonOnDiskMatchingRuleRepository)} Saved Matching Rules to: {storageKey}");
     }
 
-    protected virtual IEnumerable<MatchingRuleDto> MapToDto(IEnumerable<MatchingRule> model)
-    {
-        return model.Select(r => this.mapper.ToDto(r));
-    }
-
     [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
     protected virtual async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName, bool isEncrypted)
     {
@@ -103,6 +98,11 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         var dto = await JsonSerializer.DeserializeAsync<List<MatchingRuleDto>>(stream, new JsonSerializerOptions());
 
         return dto ?? throw new DataFormatException("Unable to deserialise Matching Rules into the correct type. File is corrupt.");
+    }
+
+    protected virtual IEnumerable<MatchingRuleDto> MapToDto(IEnumerable<MatchingRule> model)
+    {
+        return model.Select(r => this.mapper.ToDto(r));
     }
 
     protected virtual async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities, bool isEncrypted)

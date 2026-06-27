@@ -56,26 +56,24 @@ public static class LedgerBookTestData
     public static LedgerBook TestData1()
     {
         var line = CreateLine(new DateOnly(2013, 06, 15), new[] { new BankBalance(TransactionsListModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
-        SetEntriesForTesting(
-            line,
-            new List<LedgerEntry>
-            {
-                CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
-                    new List<LedgerTransaction>
-                    {
-                        new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
-                    }),
-                CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
-                    new List<LedgerTransaction>
-                    {
-                        new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
-                    }),
-                CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
-                    new List<LedgerTransaction>
-                    {
-                        new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones" }
-                    })
-            });
+        line.SetEntriesForTesting(new List<LedgerEntry>
+        {
+            CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
+                new List<LedgerTransaction>
+                {
+                    new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
+                }),
+            CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
+                new List<LedgerTransaction>
+                {
+                    new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
+                }),
+            CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
+                new List<LedgerTransaction>
+                {
+                    new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" }, new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones" }
+                })
+        });
 
 
         var list = new List<LedgerEntryLine> { line };

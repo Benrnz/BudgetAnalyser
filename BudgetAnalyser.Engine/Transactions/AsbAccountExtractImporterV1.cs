@@ -180,12 +180,6 @@ internal class AsbAccountExtractImporterV1 : IBankExtractImporter
         return chunk.IsNothing() ? null : chunk.SplitLines(9);
     }
 
-    private bool VerifyMetadataLine(string line)
-    {
-        var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
-        return compareTo.Contains("Bank") && compareTo.Contains("Account");
-    }
-
     private static bool VerifyColumnHeaderLine(string line)
     {
         var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
@@ -226,5 +220,11 @@ internal class AsbAccountExtractImporterV1 : IBankExtractImporter
         {
             return false;
         }
+    }
+
+    private bool VerifyMetadataLine(string line)
+    {
+        var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
+        return compareTo.Contains("Bank") && compareTo.Contains("Account");
     }
 }

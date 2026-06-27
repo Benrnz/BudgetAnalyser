@@ -60,14 +60,14 @@ public class ApplicationDatabase
     public string MatchingRulesCollectionStorageKey { get; internal set; } = string.Empty;
 
     /// <summary>
-    ///     Gets the Transactions List Model storage key. This is used to locate and load the <see cref="TransactionsListModel" />.
-    /// </summary>
-    public string TransactionsListModelStorageKey { get; internal set; } = string.Empty;
-
-    /// <summary>
     ///     Gets the storage path that identifies this budget analyser file.
     /// </summary>
     private string StoragePath => Path.GetDirectoryName(FileName) ?? ".\\";
+
+    /// <summary>
+    ///     Gets the Transactions List Model storage key. This is used to locate and load the <see cref="TransactionsListModel" />.
+    /// </summary>
+    public string TransactionsListModelStorageKey { get; internal set; } = string.Empty;
 
     /// <summary>
     ///     Gets the widgets collection storage key. This is used to locate and load the collection of <see cref="Widget" />.

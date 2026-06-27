@@ -40,7 +40,7 @@
                    Style="{StaticResource TextBlock.Paragraph}"
                    Text="Enter a password that will be used to encrypt the data files, the longer the better. Minimum of five characters. "
                    Visibility="{Binding EncryptFileMode, Converter={StaticResource Converter.BoolToVis}}" />
-        
+
         <StackPanel Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Grid.Row="2"
@@ -48,11 +48,11 @@
                     Visibility="{Binding EnterPasswordMode, Converter={StaticResource Converter.BoolToVis}}">
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding EnterPasswordText}"
-                       Visibility="{Binding EnterPasswordMode, Converter={StaticResource Converter.BoolToVis}}"/>
+                       Visibility="{Binding EnterPasswordMode, Converter={StaticResource Converter.BoolToVis}}" />
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding FileName}" />
         </StackPanel>
-        
+
         <TextBlock Grid.Column="0"
                    Grid.Row="3"
                    Style="{StaticResource TextBlock.LabelStyle}"
@@ -66,7 +66,7 @@
         <TextBlock Grid.Column="1"
                    Grid.Row="4"
                    Style="{StaticResource TextBlock.ValidationError}"
-                   Text="{Binding ValidationMessage}"/>
+                   Text="{Binding ValidationMessage}" />
         <TextBlock Grid.Column="0"
                    Grid.Row="5"
                    Style="{StaticResource TextBlock.LabelStyle}"

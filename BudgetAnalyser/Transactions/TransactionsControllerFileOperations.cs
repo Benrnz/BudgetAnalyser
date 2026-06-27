@@ -128,7 +128,7 @@ public class TransactionsControllerFileOperations : ControllerBase
                 }
 
                 // Ensures initial first time load triggers load of transactions.
-                ViewModel.TransactionsList =  transactionList;
+                ViewModel.TransactionsList = transactionList;
                 ViewModel.TriggerRefreshTotalsRow();
 
                 // Triggers all UI elements to update

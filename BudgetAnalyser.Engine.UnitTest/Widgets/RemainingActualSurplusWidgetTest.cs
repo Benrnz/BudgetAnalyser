@@ -17,8 +17,8 @@ public class RemainingActualSurplusWidgetTest
     private GlobalFilterCriteria criteriaTestData;
     private LedgerBook ledgerBookTestData;
     private LedgerCalculation ledgerCalculation;
-    private TransactionsListModel transactionsTestData;
     private RemainingActualSurplusWidget subject;
+    private TransactionsListModel transactionsTestData;
 
     [TestMethod]
     public void OutputTestData()
@@ -45,14 +45,13 @@ public class RemainingActualSurplusWidgetTest
             .AppendReconciliation(
                 new DateOnly(2015, 10, 20),
                 new BankBalance(LedgerBookTestData.ChequeAccount, 4502.75M))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
-                    entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
-                    entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateOnly(2015, 10, 20), "automatchref12"); });
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
+                entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
+                entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateOnly(2015, 10, 20), "automatchref12"); });
+            })
             .Build();
 
         var budgets = BudgetModelTestData.CreateCollectionWith1And2();

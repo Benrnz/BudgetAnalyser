@@ -1,28 +1,26 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Engine.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness;
+
+public class BudgetModelFake : BudgetModel
 {
-    public class BudgetModelFake : BudgetModel
+    public Action InitialiseOverride { get; set; }
+    public Func<StringBuilder, bool> ValidateOverride { get; set; }
+
+    protected override void Initialise()
     {
-        public Action InitialiseOverride { get; set; }
-        public Func<StringBuilder, bool> ValidateOverride { get; set; }
-
-        internal override bool Validate(StringBuilder validationMessages)
+        if (InitialiseOverride is not null)
         {
-            return ValidateOverride is not null ? ValidateOverride(validationMessages) : base.Validate(validationMessages);
+            InitialiseOverride();
+            return;
         }
 
-        protected override void Initialise()
-        {
-            if (InitialiseOverride is not null)
-            {
-                InitialiseOverride();
-                return;
-            }
+        base.Initialise();
+    }
 
-            base.Initialise();
-        }
+    internal override bool Validate(StringBuilder validationMessages)
+    {
+        return ValidateOverride is not null ? ValidateOverride(validationMessages) : base.Validate(validationMessages);
     }
 }
