@@ -79,7 +79,7 @@ public sealed class CompositionRoot : IDisposable
     }
 
     /// <summary>
-    ///   The newly instantiated global logger ready for use.  Prior to executing the composition root the logger will not been available.
+    ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger will not been available.
     /// </summary>
     public ILogger Logger { get; }
 
@@ -127,7 +127,7 @@ public sealed class CompositionRoot : IDisposable
             foreach (var requirement in requiredPropertyInjections)
             {
                 // Some reasonably awkward Autofac usage here to allow testability.  (Extension methods aren't easy to test)
-                var typedService = new TypedService(requirement.DependencyRequired);
+                var typedService = new TypedService(requirement.Type);
                 var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out var registration);
                 if (success)
                 {
@@ -152,18 +152,18 @@ public sealed class CompositionRoot : IDisposable
             if (dependency.IsSingleInstance)
             {
                 // Singleton
-                registration = builder.RegisterType(dependency.DependencyRequired).SingleInstance();
+                registration = builder.RegisterType(dependency.Type).SingleInstance();
             }
             else
             {
                 // Transient
-                registration = builder.RegisterType(dependency.DependencyRequired).InstancePerDependency();
+                registration = builder.RegisterType(dependency.Type).InstancePerDependency();
             }
 
             if (dependency.NamedInstanceName is not null)
             {
                 // Named Dependency
-                registration = registration.Named(dependency.NamedInstanceName, dependency.DependencyRequired);
+                registration = registration.Named(dependency.NamedInstanceName, dependency.Type);
             }
 
             registration.AsImplementedInterfaces().AsSelf();

@@ -9,6 +9,7 @@ using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Transactions;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class TransactionsControllerFileOperations : ControllerBase
 {
     private readonly LoadFileController loadFileController;

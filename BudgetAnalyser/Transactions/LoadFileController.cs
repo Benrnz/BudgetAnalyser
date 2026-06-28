@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Input;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.ShellDialog;
@@ -12,6 +13,7 @@ using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Transactions;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class LoadFileController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips, IDisposable
 {
     private readonly IAccountTypeRepository accountTypeRepository;
