@@ -38,12 +38,9 @@ public partial class App
         this.shellController = this.compositionRoot.ShellController;
         this.shellController.Initialize();
 
-        //var topLevelWindow = new ShellWindow { DataContext = this.shellController };
+        var topLevelWindow = new ShellWindow { DataContext = this.shellController };
         this.logger.LogInfo(_ => "Initialisation finished.");
-        //topLevelWindow.Show();
-
-        this.compositionRoot.ShellWindow.DataContext = this.compositionRoot.ShellController;
-        this.compositionRoot.ShellWindow.Show();
+        topLevelWindow.Show();
     }
 
     [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",

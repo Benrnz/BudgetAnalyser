@@ -73,7 +73,6 @@ public sealed class CompositionRoot : IDisposable
 
         BuildApplicationObjectGraph(container, engineAssembly, thisAssembly, storageAssembly);
         ShellController = container.Resolve<ShellController>();
-        ShellWindow = new ShellWindow { DataContext = ShellController };
         stopwatch.Stop();
         var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
         Logger.LogAlways(_ => $"Enumerating all types and registering types took: {timeTakenToRegister}ms. Building the object graph took: {timeTakenToBuildObjectGraph}ms.");
@@ -88,11 +87,6 @@ public sealed class CompositionRoot : IDisposable
     ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first object to be called following execution of this Composition Root.
     /// </summary>
     public ShellController ShellController { get; }
-
-    /// <summary>
-    ///     The top level Window that binds to the <see cref="ShellController" />.
-    /// </summary>
-    public Window ShellWindow { get; }
 
     /// <summary>
     ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
