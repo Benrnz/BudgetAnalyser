@@ -92,7 +92,7 @@ public class DefaultIoCRegistrationsTest
     public void ProcessPropertyInjection_ShouldFindStaticClassWithILoggerProperty()
     {
         var result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
-        Assert.AreEqual(typeof(ILogger), result.First().DependencyRequired);
+        Assert.AreEqual(typeof(ILogger), result.First().Type);
     }
 
     [TestMethod]
@@ -109,7 +109,7 @@ public class DefaultIoCRegistrationsTest
     {
         var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
         var loggerRegistration = result.Last();
-        Assert.AreEqual(typeof(FakeLogger), loggerRegistration.DependencyRequired);
+        Assert.AreEqual(typeof(FakeLogger), loggerRegistration.Type);
         Assert.IsTrue(loggerRegistration.IsSingleInstance);
         Assert.AreEqual("Named Logger", loggerRegistration.NamedInstanceName);
     }
@@ -140,12 +140,12 @@ public class DefaultIoCRegistrationsTest
 
     private bool IsSelfRegistered(Type interfaceType, DependencyRegistrationRequirement d)
     {
-        if (interfaceType == d.DependencyRequired)
+        if (interfaceType == d.Type)
         {
             return true;
         }
 
-        var implementedInterfaces = d.DependencyRequired.GetInterfaces();
+        var implementedInterfaces = d.Type.GetInterfaces();
         return implementedInterfaces.Contains(interfaceType);
     }
 }

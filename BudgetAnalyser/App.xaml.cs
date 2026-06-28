@@ -14,8 +14,8 @@ namespace BudgetAnalyser;
 [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This is the root object in the App")]
 public partial class App
 {
-    private CompositionRoot? compositionRoot;
-    private ILogger? logger;
+    private CompositionRoot compositionRoot = null!;
+    private ILogger logger = null!;
     private ShellController? shellController;
 
     protected override void OnStartup(StartupEventArgs e)
@@ -32,15 +32,14 @@ public partial class App
 
         this.compositionRoot = new CompositionRoot();
         this.logger = this.compositionRoot.Logger;
-
         this.logger.LogAlways(_ => "=========== Budget Analyser is Starting ===========");
         this.logger.LogAlways(_ => this.compositionRoot.ShellController.TopDashboardController.VersionString);
         this.shellController = this.compositionRoot.ShellController;
         this.shellController.Initialize();
 
-        this.compositionRoot.ShellWindow.DataContext = this.compositionRoot.ShellController;
+        var topLevelWindow = new ShellWindow { DataContext = this.shellController };
         this.logger.LogInfo(_ => "Initialisation finished.");
-        this.compositionRoot.ShellWindow.Show();
+        topLevelWindow.Show();
     }
 
     [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",

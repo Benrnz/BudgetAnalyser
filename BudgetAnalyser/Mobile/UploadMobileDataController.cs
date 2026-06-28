@@ -12,6 +12,7 @@ using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Mobile;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class UploadMobileDataController : ControllerBase, IShellDialogInteractivity
 {
     private readonly string[] amazonRegions =
