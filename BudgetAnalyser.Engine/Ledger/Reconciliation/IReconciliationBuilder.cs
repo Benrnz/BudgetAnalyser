@@ -1,5 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 
@@ -22,6 +22,6 @@ internal interface IReconciliationBuilder
     ReconciliationResult CreateNewMonthlyReconciliation(
         DateOnly reconciliationClosingDateExclusive,
         BudgetModel budget,
-        StatementModel statement,
+        TransactionsListModel transactions,
         params BankBalance[] bankBalances);
 }

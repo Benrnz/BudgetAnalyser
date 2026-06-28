@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services;
@@ -19,9 +19,9 @@ internal class ReconciliationService(IReconciliationCreationManager reconciliati
     public ToDoCollection ReconciliationToDoList { get; private set; } = new();
 
     /// <inheritdoc />
-    public void BeforeReconciliationValidation(LedgerBook book, StatementModel model)
+    public void BeforeReconciliationValidation(LedgerBook book, TransactionsListModel transactions)
     {
-        this.reconciliationManager.ValidateAgainstOrphanedAutoMatchingTransactions(book, model);
+        this.reconciliationManager.ValidateAgainstOrphanedAutoMatchingTransactions(book, transactions);
     }
 
     /// <inheritdoc />
@@ -92,11 +92,11 @@ internal class ReconciliationService(IReconciliationCreationManager reconciliati
     public LedgerEntryLine PeriodEndReconciliation(LedgerBook ledgerBook,
         DateOnly reconciliationDate,
         BudgetCollection budgetCollection,
-        StatementModel statement,
+        TransactionsListModel transactions,
         bool ignoreWarnings,
         params BankBalance[] balances)
     {
-        var reconResult = this.reconciliationManager.PeriodEndReconciliation(ledgerBook, reconciliationDate, budgetCollection, statement, ignoreWarnings, balances);
+        var reconResult = this.reconciliationManager.PeriodEndReconciliation(ledgerBook, reconciliationDate, budgetCollection, transactions, ignoreWarnings, balances);
         ReconciliationToDoList.Clear();
         reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);
         return reconResult.Reconciliation;

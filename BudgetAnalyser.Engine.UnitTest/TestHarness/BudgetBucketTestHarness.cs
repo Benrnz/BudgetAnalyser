@@ -1,15 +1,14 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Engine.UnitTest.TestHarness
-{
-    public class BudgetBucketTestHarness : BudgetBucket
-    {
-        public BudgetBucketTestHarness()
-        {
-        }
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness;
 
-        public BudgetBucketTestHarness(string code, string name) : base(code, name)
-        {
-        }
+public class BudgetBucketTestHarness : BudgetBucket
+{
+    public BudgetBucketTestHarness()
+    {
+    }
+
+    public BudgetBucketTestHarness(string code, string name) : base(code, name)
+    {
     }
 }

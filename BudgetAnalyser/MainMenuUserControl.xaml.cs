@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace BudgetAnalyser
+namespace BudgetAnalyser;
+
+/// <summary>
+///     Interaction logic for MainMenuUserControl.xaml
+/// </summary>
+public partial class MainMenuUserControl : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for MainMenuUserControl.xaml
-    /// </summary>
-    public partial class MainMenuUserControl : UserControl
+    public MainMenuUserControl()
     {
-        public MainMenuUserControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

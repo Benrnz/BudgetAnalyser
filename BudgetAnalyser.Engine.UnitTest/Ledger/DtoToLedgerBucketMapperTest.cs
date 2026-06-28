@@ -16,7 +16,7 @@ public class DtoToLedgerBucketMapperTest
     [TestMethod]
     public void ShouldMapBankAccount()
     {
-        Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.StoredInAccount.Name);
+        Assert.AreEqual(TransactionsListModelTestData.ChequeAccount.Name, Result.StoredInAccount.Name);
     }
 
     [TestMethod]

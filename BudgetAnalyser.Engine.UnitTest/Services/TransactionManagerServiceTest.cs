@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
@@ -17,15 +17,15 @@ public class TransactionManagerServiceTest
     private readonly ApplicationDatabase testAppDb = new();
     private IBudgetBucketRepository budgetBucketRepo; // By default set to return mockBudgetBucketRepo.Object;
     private Mock<IBudgetBucketRepository> mockBudgetBucketRepo;
-    private Mock<IStatementRepository> mockStatementRepo;
+    private Mock<ITransactionsListModelRepository> mockTransactionsRepo;
     private TransactionManagerService subject;
-    private StatementModel testData;
+    private TransactionsListModel testData;
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void Ctor_ShouldThrow_GivenNullBucketRepo()
     {
-        new TransactionManagerService(null, this.mockStatementRepo.Object, new FakeLogger(), new FakeMonitorableDependencies());
+        new TransactionManagerService(null, this.mockTransactionsRepo.Object, new FakeLogger(), new FakeMonitorableDependencies());
         Assert.Fail();
     }
 
@@ -33,20 +33,20 @@ public class TransactionManagerServiceTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void Ctor_ShouldThrow_GivenNullLogger()
     {
-        new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, null, new FakeMonitorableDependencies());
+        new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockTransactionsRepo.Object, null, new FakeMonitorableDependencies());
         Assert.Fail();
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void Ctor_ShouldThrow_GivenNullStatementRepo()
+    public void Ctor_ShouldThrow_GivenNullTransactionsRepo()
     {
         new TransactionManagerService(this.mockBudgetBucketRepo.Object, null, new FakeLogger(), new FakeMonitorableDependencies());
         Assert.Fail();
     }
 
     [TestMethod]
-    public void DetectDuplicateTransactions_ShouldReturnEmpty_GivenNullStatementModel()
+    public void DetectDuplicateTransactions_ShouldReturnEmpty_GivenNullTransactionsModel()
     {
         this.subject = CreateSubject();
         Assert.AreEqual(string.Empty, this.subject.DetectDuplicateTransactions());
@@ -61,7 +61,7 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public void DetectDuplicateTransactions_ShouldSummaryText_GivenTestData4()
     {
-        this.testData = StatementModelTestData.TestData4();
+        this.testData = TransactionsListModelTestData.TestData4();
         Arrange();
 
         var result = this.subject.DetectDuplicateTransactions();
@@ -84,9 +84,9 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public void FilterByBucket_ShouldReturn1Bucket_GivenUncatergorisedCode()
     {
-        var model2 = new StatementModelBuilder()
+        var model2 = new TransactionsListModelBuilder()
             .AppendTransaction(
-                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = null, Date = new DateOnly(2013, 9, 10) })
+                new Transaction { Account = TransactionsListModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = null, Date = new DateOnly(2013, 9, 10) })
             .Merge(this.testData)
             .Build();
         this.testData = model2;
@@ -101,11 +101,17 @@ public class TransactionManagerServiceTest
     [TestMethod]
     public void FilterByBucket_ShouldReturn2Buckets_GivenSurplusBucketCode()
     {
-        var model2 = new StatementModelBuilder()
+        var model2 = new TransactionsListModelBuilder()
             .AppendTransaction(
-                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = StatementModelTestData.SurplusBucket, Date = new DateOnly(2013, 9, 10) })
+                new Transaction
+                {
+                    Account = TransactionsListModelTestData.ChequeAccount, Amount = -255.65M, BudgetBucket = TransactionsListModelTestData.SurplusBucket, Date = new DateOnly(2013, 9, 10)
+                })
             .AppendTransaction(
-                new Transaction { Account = StatementModelTestData.ChequeAccount, Amount = -1000M, BudgetBucket = new FixedBudgetProjectBucket("FOO", "Bar", 2000M), Date = new DateOnly(2013, 9, 9) })
+                new Transaction
+                {
+                    Account = TransactionsListModelTestData.ChequeAccount, Amount = -1000M, BudgetBucket = new FixedBudgetProjectBucket("FOO", "Bar", 2000M), Date = new DateOnly(2013, 9, 9)
+                })
             .Merge(this.testData)
             .Build();
         this.testData = model2;
@@ -124,7 +130,7 @@ public class TransactionManagerServiceTest
         this.budgetBucketRepo = new BucketBucketRepoAlwaysFind();
         Arrange();
 
-        var result = this.subject.FilterByBucket(StatementModelTestData.IncomeBucket.Code);
+        var result = this.subject.FilterByBucket(TransactionsListModelTestData.IncomeBucket.Code);
 
         Assert.AreEqual(3, result.Count());
     }
@@ -152,9 +158,9 @@ public class TransactionManagerServiceTest
     }
 
     [TestMethod]
-    public void FilterTransactions_ShouldCallStatementModel_GivenFilterObject()
+    public void FilterTransactions_ShouldCallTransactionsListModel_GivenFilterObject()
     {
-        this.testData = new StatementModelTestHarness();
+        this.testData = new TransactionsListModelTestHarness();
         this.testData.LoadTransactions(new List<Transaction>());
         var criteria = new GlobalFilterCriteria { BeginDate = new DateOnly(2014, 07, 01), EndDate = new DateOnly(2014, 08, 01) };
 
@@ -162,7 +168,7 @@ public class TransactionManagerServiceTest
 
         this.subject.FilterTransactions(criteria);
 
-        Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).FilterByCriteriaWasCalled);
+        Assert.AreEqual(1, ((TransactionsListModelTestHarness)this.testData).FilterByCriteriaWasCalled);
     }
 
     [TestMethod]
@@ -174,111 +180,111 @@ public class TransactionManagerServiceTest
     }
 
     [TestMethod]
-    public async Task ImportAndMergeBankStatement_ShouldCallStatementRepo_GivenStorageKeyAndAccount()
+    public async Task ImportAndMergeTransactionsExtract_ShouldCallTransactionsRepo_GivenStorageKeyAndAccount()
     {
-        this.mockStatementRepo
-            .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<BankAccount.Account>()))
-            .Returns(Task.FromResult(StatementModelTestData.TestData3()))
+        this.mockTransactionsRepo
+            .Setup(m => m.ImportTransactionsExtractAsync(It.IsAny<string>(), It.IsAny<BankAccount.Account>()))
+            .Returns(Task.FromResult(TransactionsListModelTestData.TestData3()))
             .Verifiable();
 
-        await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
+        await this.subject.ImportAndMergeTransactionsExtractAsync("Sticky Bag.csv", TransactionsListModelTestData.ChequeAccount);
 
-        this.mockStatementRepo.Verify();
+        this.mockTransactionsRepo.Verify();
     }
 
     [TestMethod]
-    public async Task ImportAndMergeBankStatement_ShouldMergeTheModel_GivenStorageKeyAndAccount()
+    public async Task ImportAndMergeTransactionsExtract_ShouldMergeTheModel_GivenStorageKeyAndAccount()
     {
-        this.testData = new StatementModelTestHarness();
+        this.testData = new TransactionsListModelTestHarness();
         this.testData.LoadTransactions(new List<Transaction>());
 
         Arrange();
 
-        this.mockStatementRepo
-            .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<BankAccount.Account>()))
-            .Returns(Task.FromResult(StatementModelTestData.TestData2()))
+        this.mockTransactionsRepo
+            .Setup(m => m.ImportTransactionsExtractAsync(It.IsAny<string>(), It.IsAny<BankAccount.Account>()))
+            .Returns(Task.FromResult(TransactionsListModelTestData.TestData2()))
             .Verifiable();
 
-        await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
+        await this.subject.ImportAndMergeTransactionsExtractAsync("Sticky Bag.csv", TransactionsListModelTestData.ChequeAccount);
 
-        Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).MergeWasCalled);
+        Assert.AreEqual(1, ((TransactionsListModelTestHarness)this.testData).MergeWasCalled);
     }
 
     [TestMethod]
     [ExpectedException(typeof(TransactionsAlreadyImportedException))]
-    public async Task ImportAndMergeBankStatement_ShouldThrow_GivenAlreadyImported()
+    public async Task ImportAndMergeTransactionsExtract_ShouldThrow_GivenAlreadyImported()
     {
-        this.testData = new StatementModelBuilder()
+        this.testData = new TransactionsListModelBuilder()
             .TestData2()
             .Build();
 
         Arrange();
 
-        this.mockStatementRepo
-            .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<BankAccount.Account>()))
-            .Returns(Task.FromResult(StatementModelTestData.TestData2()))
+        this.mockTransactionsRepo
+            .Setup(m => m.ImportTransactionsExtractAsync(It.IsAny<string>(), It.IsAny<BankAccount.Account>()))
+            .Returns(Task.FromResult(TransactionsListModelTestData.TestData2()))
             .Verifiable();
 
-        await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
+        await this.subject.ImportAndMergeTransactionsExtractAsync("Sticky Bag.csv", TransactionsListModelTestData.ChequeAccount);
 
         Assert.Fail();
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public async Task ImportAndMergeBankStatement_ShouldThrow_GivenNullAccount()
+    public async Task ImportAndMergeTransactionsExtract_ShouldThrow_GivenNullAccount()
     {
-        await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", null);
+        await this.subject.ImportAndMergeTransactionsExtractAsync("Sticky Bag.csv", null);
         Assert.Fail();
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public async Task ImportAndMergeBankStatement_ShouldThrow_GivenNullStorageKey()
+    public async Task ImportAndMergeTransactionsExtract_ShouldThrow_GivenNullStorageKey()
     {
-        await this.subject.ImportAndMergeBankStatementAsync(null, new ChequeAccount("Foo"));
+        await this.subject.ImportAndMergeTransactionsExtractAsync(null, new ChequeAccount("Foo"));
         Assert.Fail();
     }
 
     [TestMethod]
-    public async Task LoadStatementModelAsync_ShouldCallStatementRepo_GivenValidStorageKey()
+    public async Task LoadAsync_ShouldCallTransactionsRepo_GivenValidStorageKey()
     {
         await this.subject.LoadAsync(this.testAppDb);
-        this.mockStatementRepo.Verify();
+        this.mockTransactionsRepo.Verify();
     }
 
     [TestMethod]
-    public async Task LoadStatementModelAsync_ShouldReturnAStatementModel_GivenValidStorageKey()
+    public async Task LoadAsync_ShouldReturnATransactionsModel_GivenValidStorageKey()
     {
-        StatementModel testStatement = new StatementModelTestHarness();
-        testStatement.LoadTransactions(new List<Transaction>());
+        TransactionsListModel testTransactionsList = new TransactionsListModelTestHarness();
+        testTransactionsList.LoadTransactions(new List<Transaction>());
 
-        this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.FromResult(testStatement));
+        this.mockTransactionsRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.FromResult(testTransactionsList));
 
         await this.subject.LoadAsync(this.testAppDb);
 
-        Assert.IsNotNull(this.subject.StatementModel);
+        Assert.IsNotNull(this.subject.TransactionsListModel);
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public async Task LoadStatementModelAsync_ShouldThrow_GivenNullStorageKey()
+    public async Task LoadAsync_ShouldThrow_GivenNullStorageKey()
     {
         await this.subject.LoadAsync(null);
         Assert.Fail();
     }
 
     [TestMethod]
-    public void RemoveTransaction_ShouldCallStatementModelRemove_GivenATransaction()
+    public void RemoveTransaction_ShouldCallTransactionsModelRemove_GivenATransaction()
     {
-        this.testData = new StatementModelTestHarness();
-        this.testData.LoadTransactions(StatementModelTestData.TestData2().Transactions);
+        this.testData = new TransactionsListModelTestHarness();
+        this.testData.LoadTransactions(TransactionsListModelTestData.TestData2().Transactions);
         Arrange();
         var transaction = this.testData.Transactions.Skip(1).First();
 
         this.subject.RemoveTransaction(transaction);
 
-        Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).RemoveTransactionWasCalled);
+        Assert.AreEqual(1, ((TransactionsListModelTestHarness)this.testData).RemoveTransactionWasCalled);
     }
 
     [TestMethod]
@@ -291,50 +297,50 @@ public class TransactionManagerServiceTest
     }
 
     [TestMethod]
-    public async Task Save_ShouldCallStatementRepo_GivenStatementModel()
+    public async Task Save_ShouldCallTransactionsRepo_GivenTransactionsModel()
     {
         var mockAppDb = new Mock<ApplicationDatabase>();
         mockAppDb.Setup(m => m.FullPath(It.IsAny<string>())).Returns("Foo");
         await this.subject.SaveAsync(mockAppDb.Object);
 
-        this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>(), It.IsAny<bool>()), Times.Once);
+        this.mockTransactionsRepo.Verify(m => m.SaveAsync(It.IsAny<TransactionsListModel>(), It.IsAny<bool>()), Times.Once);
     }
 
     [TestMethod]
-    public async Task Save_ShouldNotCallStatementRepo_GivenNullStatementModel()
+    public async Task Save_ShouldNotCallTransactionsRepo_GivenNullTransactionsModel()
     {
         this.subject = CreateSubject();
         await this.subject.SaveAsync(It.IsAny<ApplicationDatabase>());
 
-        this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>(), It.IsAny<bool>()), Times.Never);
+        this.mockTransactionsRepo.Verify(m => m.SaveAsync(It.IsAny<TransactionsListModel>(), It.IsAny<bool>()), Times.Never);
     }
 
     [TestMethod]
-    public void SplitTransaction_ShouldCallStatementModel_GivenValidParams()
+    public void SplitTransaction_ShouldCallTransactionsModel_GivenValidParams()
     {
-        this.testData = new StatementModelTestHarness();
+        this.testData = new TransactionsListModelTestHarness();
         this.testData.LoadTransactions(new List<Transaction>());
 
-        var transaction = new Transaction { Account = StatementModelTestData.VisaAccount };
+        var transaction = new Transaction { Account = TransactionsListModelTestData.VisaAccount };
 
         Arrange();
 
-        this.subject.SplitTransaction(transaction, 100, 200, StatementModelTestData.CarMtcBucket, StatementModelTestData.HairBucket);
+        this.subject.SplitTransaction(transaction, 100, 200, TransactionsListModelTestData.CarMtcBucket, TransactionsListModelTestData.HairBucket);
 
-        Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).SplitTransactionWasCalled);
+        Assert.AreEqual(1, ((TransactionsListModelTestHarness)this.testData).SplitTransactionWasCalled);
     }
 
     [TestInitialize]
     public void TestInit()
     {
-        PrivateAccessor.SetProperty(this.testAppDb, "StatementModelStorageKey", @"Foo.csv");
+        PrivateAccessor.SetProperty(this.testAppDb, "TransactionsListModelStorageKey", @"Foo.csv");
         PrivateAccessor.SetProperty(this.testAppDb, "FileName", @"C:\AppDb.bax");
-        this.testData = StatementModelTestData.TestData2();
+        this.testData = TransactionsListModelTestData.TestData2();
 
         this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
-        this.mockStatementRepo = new Mock<IStatementRepository>();
+        this.mockTransactionsRepo = new Mock<ITransactionsListModelRepository>();
 
-        this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>()))
+        this.mockTransactionsRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>()))
             .Returns(Task.FromResult(this.testData))
             .Verifiable();
 
@@ -372,7 +378,7 @@ public class TransactionManagerServiceTest
 
     private void Arrange()
     {
-        this.mockStatementRepo
+        this.mockTransactionsRepo
             .Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>()))
             .Returns(Task.FromResult(this.testData));
         this.subject = CreateSubject();
@@ -381,6 +387,6 @@ public class TransactionManagerServiceTest
 
     private TransactionManagerService CreateSubject()
     {
-        return new TransactionManagerService(this.budgetBucketRepo, this.mockStatementRepo.Object, new FakeLogger(), new FakeMonitorableDependencies());
+        return new TransactionManagerService(this.budgetBucketRepo, this.mockTransactionsRepo.Object, new FakeLogger(), new FakeMonitorableDependencies());
     }
 }

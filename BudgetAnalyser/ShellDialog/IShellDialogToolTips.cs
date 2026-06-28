@@ -1,8 +1,7 @@
-﻿namespace BudgetAnalyser.ShellDialog
+﻿namespace BudgetAnalyser.ShellDialog;
+
+public interface IShellDialogToolTips
 {
-    public interface IShellDialogToolTips
-    {
-        string ActionButtonToolTip { get; }
-        string CloseButtonToolTip { get; }
-    }
+    string ActionButtonToolTip { get; }
+    string CloseButtonToolTip { get; }
 }

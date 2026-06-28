@@ -12,14 +12,14 @@ public class MapperBudgetModelToDto2(IDtoMapper<ExpenseDto, Expense> mapperExpen
     public BudgetModelDto ToDto(BudgetModel model)
     {
         return new BudgetModelDto
-        (
-            Expenses: model.Expenses.Select(this.mapperExpense.ToDto).ToArray(),
-            Incomes: model.Incomes.Select(this.mapperIncome.ToDto).ToArray(),
-            Name: model.Name,
-            BudgetCycle: model.BudgetCycle,
-            EffectiveFrom: model.EffectiveFrom,
-            LastModified: model.LastModified.ToUniversalTime()
-        )
+            (
+                Expenses: model.Expenses.Select(this.mapperExpense.ToDto).ToArray(),
+                Incomes: model.Incomes.Select(this.mapperIncome.ToDto).ToArray(),
+                Name: model.Name,
+                BudgetCycle: model.BudgetCycle,
+                EffectiveFrom: model.EffectiveFrom,
+                LastModified: model.LastModified.ToUniversalTime()
+            )
         { LastModifiedComment = model.LastModifiedComment };
     }
 

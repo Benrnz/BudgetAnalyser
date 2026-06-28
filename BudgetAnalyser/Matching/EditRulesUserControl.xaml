@@ -26,11 +26,11 @@
                         </Border>
                     </Grid>
                 </Expander.Header>
-                    <ListBox ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
-                             SelectionChanged="OnGroupListBoxRuleSelectionChanged"
-                             Loaded="OnGroupListBoxLoaded"
-                             ItemsSource="{Binding Rules}"
-                             MaxHeight="300"/>
+                <ListBox ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
+                         SelectionChanged="OnGroupListBoxRuleSelectionChanged"
+                         Loaded="OnGroupListBoxLoaded"
+                         ItemsSource="{Binding Rules}"
+                         MaxHeight="300" />
             </Expander>
         </DataTemplate>
 
@@ -51,7 +51,7 @@
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
-            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -59,7 +59,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <StackPanel Grid.ColumnSpan="3"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
@@ -99,7 +99,7 @@
                 </MenuItem>
             </Menu>
         </StackPanel>
-        
+
         <TextBlock Grid.Row="1"
                    Margin="5"
                    Style="{StaticResource TextBlock.Heading1}"

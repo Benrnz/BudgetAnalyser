@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Services;
 
@@ -9,11 +9,6 @@ namespace BudgetAnalyser.Engine.Services;
 /// </summary>
 public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFoundation
 {
-    /// <summary>
-    ///     Gets the statement model.
-    /// </summary>
-    StatementModel? StatementModel { get; }
-
     /// <summary>
     ///     Gets the calculated total count.
     /// </summary>
@@ -30,15 +25,20 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     decimal TotalDebits { get; }
 
     /// <summary>
+    ///     Gets the Transaction List Model.
+    /// </summary>
+    TransactionsListModel? TransactionsListModel { get; }
+
+    /// <summary>
     ///     Clears the bucket and text filters.
     /// </summary>
     List<Transaction> ClearBucketAndTextFilters();
 
     /// <summary>
-    ///     Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for displaying in the UI.
-    ///     Each individual duplicate transactions will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" /> property.
+    ///     Detects duplicate transactions in the current <see cref="TransactionsListModel" /> and returns a summary string for displaying in the UI.
+    ///     Each individual duplicate transaction will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" /> property.
     /// </summary>
-    /// <returns>A textual summary of duplicates found. Null if none are detected or no statement is loaded.</returns>
+    /// <returns>A textual summary of duplicates found. Null if none are detected or no transactions are loaded.</returns>
     string DetectDuplicateTransactions();
 
     /// <summary>
@@ -69,22 +69,22 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     void FilterTransactions(GlobalFilterCriteria criteria);
 
     /// <summary>
-    ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement. This method should not be used without a <see cref="StatementModel" /> loaded.
-    ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
+    ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser TransactionsListModel. This method should not be used without a
+    ///     <see cref="TransactionsListModel" /> loaded. It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
     /// </summary>
     /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
     /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given<paramref name="storageKey" /></exception>
     /// <exception cref="TransactionsAlreadyImportedException">Will be thrown if the supplied file has already been imported.</exception>
-    Task ImportAndMergeBankStatementAsync(string storageKey, Account account);
+    Task ImportAndMergeTransactionsExtractAsync(string storageKey, Account account);
 
     /// <summary>
-    ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.
+    ///     Removes the provided transaction from the currently loaded Budget Analyser transactions model.
     /// </summary>
     /// <param name="transactionToRemove">The transaction to remove.</param>
     void RemoveTransaction(Transaction transactionToRemove);
 
     /// <summary>
-    ///     Splits the provided transaction into two. The provided transactions is removed, and two new transactions are created. Both transactions must add up to the existing transaction amount.
+    ///     Splits the provided transaction into two. The provided transaction is removed, and two new transactions are created. Both transactions must add up to the original transaction amount.
     /// </summary>
     /// <param name="originalTransaction">The original transaction.</param>
     /// <param name="splinterAmount1">The splinter amount1.</param>
@@ -99,15 +99,15 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
         BudgetBucket splinterBucket2);
 
     /// <summary>
-    ///     Validates the currently loaded <see cref="StatementModel" /> against the provided budgets and ensures all buckets used by the transactions exist in the budgets.
-    ///     This is performed asynchronously. This method can be called when a budget is loaded or changed or when a new Budget Analyser Statement is loaded.
+    ///     Validates the currently loaded <see cref="TransactionsListModel" /> against the provided budgets and ensures all buckets used by the transactions exist in the budgets.
+    ///     This is performed asynchronously. This method can be called when a budget is loaded or changed or when a new Budget Analyser transactions model is loaded.
     /// </summary>
     /// <param name="budgets">
-    ///     The current budgets. This must be provided at least once. It can be omitted when calling this method after the statement model has changed if the budget was previously provided.
+    ///     The current budgets. This must be provided at least once. It can be omitted when calling this method after the transactions model has changed if the budget was previously provided.
     /// </param>
     /// <returns>
     ///     A task that will result in true if all buckets used, are present in the budgets, otherwise false. If false, this indicates that some transactions may have their bucket allocation
-    ///     removed possibly resulting in unintended data loss.
+    ///     removed, possibly resulting in unintended data loss.
     /// </returns>
     Task<bool> ValidateWithCurrentBudgetsAsync(BudgetCollection? budgets = null);
 }

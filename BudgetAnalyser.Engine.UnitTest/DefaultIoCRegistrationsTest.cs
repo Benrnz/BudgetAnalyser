@@ -3,7 +3,7 @@ using System.Reflection;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
 
@@ -20,7 +20,7 @@ public class DefaultIoCRegistrationsTest
     {
         typeof(ILogger), // Logger is instantiated with a custom registration.
         typeof(IModelValidate), // Used to indicate support for standard validation.
-        typeof(IBankStatementImporter), // The implementations of this interface are discovered by reflection.
+        typeof(IBankExtractImporter), // The implementations of this interface are discovered by reflection.
         typeof(IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.
         typeof(IUserDefinedWidget), // Used to mark a widget as being multi-instance as opposed to the ordinary single instance approach.
         typeof(IDataChangeDetection), // Used to mark a type that can report back when data has changed. Similar to INotifyPropertyChange but across the whole type.
@@ -38,10 +38,10 @@ public class DefaultIoCRegistrationsTest
     {
         try
         {
-            var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(StatementModel).Assembly).ToList();
+            var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(TransactionsListModel).Assembly).ToList();
             dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(SecureStringCredentialStore).Assembly));
 
-            var interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
+            var interfaces = typeof(TransactionsListModel).Assembly.GetTypes().Where(t => t.IsInterface);
 
             var exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();
             foreach (var interfaceType in interfaces.Except(ExemptionList))

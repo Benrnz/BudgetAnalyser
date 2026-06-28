@@ -31,7 +31,7 @@ public class DtoToLedgerEntryMapperTest
             [
                 new LedgerTransactionDto
                 (
-                    StatementModelTestData.ChequeAccount.Name,
+                    TransactionsListModelTestData.ChequeAccount.Name,
                     140M,
                     Id: Guid.NewGuid(),
                     Narrative: "Foo...",
@@ -41,7 +41,7 @@ public class DtoToLedgerEntryMapperTest
                 ),
                 new LedgerTransactionDto
                 (
-                    StatementModelTestData.ChequeAccount.Name,
+                    TransactionsListModelTestData.ChequeAccount.Name,
                     -98.56M,
                     Id: Guid.NewGuid(),
                     Narrative: "Bar...",

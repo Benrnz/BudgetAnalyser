@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets;
@@ -22,7 +22,7 @@ public class TimedUpdateCounterWidget : Widget
         Category = WidgetGroup.OverviewSectionName;
         Dependencies =
         [
-            typeof(StatementModel),
+            typeof(TransactionsListModel),
             typeof(BudgetCollection),
             typeof(IBudgetCurrencyContext),
             typeof(LedgerBook),

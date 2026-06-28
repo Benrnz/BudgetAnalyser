@@ -13,20 +13,17 @@ public class OverallPerformanceBudgetResult
     internal IList<BucketPerformanceResult> AnalysesList { get; set; } = new List<BucketPerformanceResult>();
 
     /// <summary>
-    ///     Gets the average spend per month based on statement transaction data over a period of time.
-    ///     This excludes Surplus transactions, these are budgeted expenses only.
-    ///     Expected to be negative.
+    ///     Gets the average spend per month based on bank transaction data over a period of time. This excludes Surplus transactions, these are budgeted expenses only. Expected to be negative.
     /// </summary>
     public decimal AverageSpend { get; internal set; }
 
     /// <summary>
-    ///     Gets the average surplus spending per month based on statement transaction data over a period of time.
+    ///     Gets the average surplus spending per month based on bank transaction data over a period of time.
     /// </summary>
     public decimal AverageSurplus { get; internal set; }
 
     /// <summary>
-    ///     A string that describes what kind of period this analysis is based on.
-    ///     This refers to the <see cref="BudgetAnalyser.Engine.Budget.BudgetModel.BudgetCycle" />.
+    ///     A string that describes what kind of period this analysis is based on. This refers to the <see cref="BudgetAnalyser.Engine.Budget.BudgetModel.BudgetCycle" />.
     /// </summary>
     public string BudgetCycle { get; internal set; } = string.Empty;
 
@@ -46,8 +43,7 @@ public class OverallPerformanceBudgetResult
     public bool HasValidationMessage => ValidationMessage != string.Empty || UsesMultipleBudgets;
 
     /// <summary>
-    ///     Gets the calculated overall performance rating.
-    ///     This tracks the ability to stick to the budget over the specified period. If more is spent than budgeted, this is negative.
+    ///     Gets the calculated overall performance rating. This tracks the ability to stick to the budget over the specified period. If more is spent than budgeted, this is negative.
     ///     Surplus transactions are excluded from this.
     /// </summary>
     public decimal OverallPerformance { get; internal set; }
@@ -63,8 +59,7 @@ public class OverallPerformanceBudgetResult
     public bool UsesMultipleBudgets { get; internal set; }
 
     /// <summary>
-    ///     Validation messages based on inputs that may not produce the expected results.
-    ///     For example, if it covers multiple budgets during the period specified.
+    ///     Validation messages based on inputs that may not produce the expected results. For example, if it covers multiple budgets during the period specified.
     ///     Or, if, it's multiple budgets and they have different periods, fortnightly and monthly.
     /// </summary>
     public string ValidationMessage { get; internal set; } = string.Empty;

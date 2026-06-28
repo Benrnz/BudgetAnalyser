@@ -1,13 +1,10 @@
-﻿#nullable enable
-
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using NSubstitute;
 using Shouldly;
-
 
 namespace BudgetAnalyser.Engine.XUnit.Services;
 
@@ -58,7 +55,7 @@ public class WidgetServiceTest
     [Fact]
     public void CreateNewSurprisePaymentWidget_ShouldReturnWidget()
     {
-        this.mockBucketRepository.GetByCode(Arg.Any<string>()).Returns(StatementModelTestData.HairBucket);
+        this.mockBucketRepository.GetByCode(Arg.Any<string>()).Returns(TransactionsListModelTestData.HairBucket);
         var widget = this.service.CreateNewSurprisePaymentWidget("Bucket1", DateOnlyExt.Today(), WeeklyOrFortnightly.Weekly);
         widget.ShouldNotBeNull();
     }
@@ -66,7 +63,7 @@ public class WidgetServiceTest
     [Fact]
     public void CreateUserDefinedWidget_ShouldReturnWidget()
     {
-        this.mockBucketRepository.GetByCode(TestDataConstants.PhoneBucketCode).Returns(StatementModelTestData.PhoneBucket);
+        this.mockBucketRepository.GetByCode(TestDataConstants.PhoneBucketCode).Returns(TransactionsListModelTestData.PhoneBucket);
         var widget = this.service.CreateUserDefinedWidget(typeof(BudgetBucketMonitorWidget).FullName!, TestDataConstants.PhoneBucketCode);
         widget.ShouldNotBeNull();
     }

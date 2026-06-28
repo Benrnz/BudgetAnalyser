@@ -10,6 +10,11 @@ namespace Rees.Wpf.UserInteraction;
 public class WindowsSaveFileDialog : IUserPromptSaveFile
 {
     /// <summary>
+    ///     Gets or sets the index of the filter currently selected in a file dialog.
+    /// </summary>
+    public int? FilterIndex { get; set; }
+
+    /// <summary>
     ///     The optional extension to include as an alternative file extension to filter to.
     /// </summary>
     public bool? AddExtension { get; set; }
@@ -33,11 +38,6 @@ public class WindowsSaveFileDialog : IUserPromptSaveFile
     ///     Gets or sets the filter string that determines what types of files are displayed.
     /// </summary>
     public string Filter { get; set; } = string.Empty;
-
-    /// <summary>
-    ///     Gets or sets the index of the filter currently selected in a file dialog.
-    /// </summary>
-    public int? FilterIndex { get; set; }
 
     /// <summary>
     ///     The title for the dialog.

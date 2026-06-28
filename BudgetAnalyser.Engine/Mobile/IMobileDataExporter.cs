@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Mobile;
 
@@ -13,7 +13,7 @@ public interface IMobileDataExporter
     ///     Create the export object
     /// </summary>
     /// <returns>An object containing the summarised data.</returns>
-    SummarisedLedgerMobileData CreateExportObject(StatementModel transactions, BudgetModel currentBudget, LedgerBook ledgerBook, GlobalFilterCriteria filter);
+    SummarisedLedgerMobileData CreateExportObject(TransactionsListModel transactions, BudgetModel currentBudget, LedgerBook ledgerBook, GlobalFilterCriteria filter);
 
     /// <summary>
     ///     Save a copy of the data export file locally.

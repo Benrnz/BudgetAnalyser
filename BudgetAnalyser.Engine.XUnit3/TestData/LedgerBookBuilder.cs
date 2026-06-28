@@ -55,7 +55,7 @@ public class LedgerBookBuilder
 
         if (ledger.StoredInAccount is null)
         {
-            ledger.StoredInAccount = StatementModelTestData.ChequeAccount;
+            ledger.StoredInAccount = TransactionsListModelTestData.ChequeAccount;
         }
 
         this.ledgerBuckets.Add(ledger);
@@ -75,77 +75,65 @@ public class LedgerBookBuilder
             .IncludeLedger(LedgerBookTestData.PowerLedger)
             .AppendReconciliation(
                 new DateOnly(2013, 6, 15),
-                new BankBalance(StatementModelTestData.ChequeAccount, 2500))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.HairLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(55M)
-                                    .WithCredit(-45M, "Hair cut"));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(95M)
-                                    .WithCredit(-86.43M, "Pay phones"));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(140M)
-                                    .WithCredit(-123.56M, "Power bill"));
-                })
+                new BankBalance(TransactionsListModelTestData.ChequeAccount, 2500))
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.HairLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(55M)
+                            .WithCredit(-45M, "Hair cut"));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(95M)
+                            .WithCredit(-86.43M, "Pay phones"));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(140M)
+                            .WithCredit(-123.56M, "Power bill"));
+            })
             .AppendReconciliation(
                 new DateOnly(2013, 7, 15),
-                new BankBalance(StatementModelTestData.ChequeAccount, 3700))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.HairLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(55M));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(95M)
-                                    .WithCredit(-66.43M, "Pay phones"));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(140M)
-                                    .WithCredit(-145.56M, "Power bill"));
-                })
+                new BankBalance(TransactionsListModelTestData.ChequeAccount, 3700))
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.HairLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(55M));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(95M)
+                            .WithCredit(-66.43M, "Pay phones"));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(140M)
+                            .WithCredit(-145.56M, "Power bill"));
+            })
             .AppendReconciliation(
                 new DateOnly(2013, 8, 15),
-                new BankBalance(StatementModelTestData.ChequeAccount, 2950))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.HairLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(55M));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(95M)
-                                    .WithCredit(-67.43M, "Pay phones"));
-                    entryBuilder
-                        .WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(
-                            txnBuilder =>
-                                txnBuilder.WithBudgetCredit(140M)
-                                    .WithCredit(-98.56M, "Power bill"));
-                });
+                new BankBalance(TransactionsListModelTestData.ChequeAccount, 2950))
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.HairLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(55M));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(95M)
+                            .WithCredit(-67.43M, "Pay phones"));
+                entryBuilder
+                    .WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder =>
+                        txnBuilder.WithBudgetCredit(140M)
+                            .WithCredit(-98.56M, "Power bill"));
+            });
 
         return this;
     }

@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
@@ -278,6 +278,6 @@ public class MatchingRuleTest
 
     private MatchingRule Arrange(Guid? id = null)
     {
-        return new MatchingRule(BucketRepo) { BucketCode = StatementModelTestData.PowerBucket.Code, RuleId = id ?? Guid.NewGuid() };
+        return new MatchingRule(BucketRepo) { BucketCode = TransactionsListModelTestData.PowerBucket.Code, RuleId = id ?? Guid.NewGuid() };
     }
 }

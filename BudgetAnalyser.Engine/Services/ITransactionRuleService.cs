@@ -1,5 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Matching;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Services;
 

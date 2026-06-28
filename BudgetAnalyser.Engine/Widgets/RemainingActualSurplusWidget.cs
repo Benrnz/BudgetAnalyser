@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Widgets;
 
@@ -10,14 +10,13 @@ namespace BudgetAnalyser.Engine.Widgets;
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.ProgressBarWidget" />
 public class RemainingActualSurplusWidget : ProgressBarWidget
 {
-    private readonly ILogger nullLogger = new NullLogger();
     private readonly string standardStyle;
     private IBudgetCurrencyContext? budget;
     private GlobalFilterCriteria? filter;
     private LedgerBook? ledgerBook;
     private LedgerCalculation? ledgerCalculator;
     private ILogger? logger;
-    private StatementModel? statement;
+    private TransactionsListModel? transactions;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RemainingActualSurplusWidget" /> class.
@@ -27,11 +26,14 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         Category = WidgetGroup.PeriodicTrackingSectionName;
         DetailedText = "Bank Surplus";
         Name = "Surplus A";
-        Dependencies = [typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation), typeof(IBudgetCurrencyContext), typeof(ILogger)];
+        Dependencies = [typeof(TransactionsListModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation), typeof(IBudgetCurrencyContext), typeof(ILogger)];
         this.standardStyle = "WidgetStandardStyle3";
     }
 
-    private ILogger Logger => this.logger ?? this.nullLogger;
+    private ILogger Logger
+    {
+        get => this.logger ?? field;
+    } = new NullLogger();
 
     /// <summary>
     ///     Updates the widget with new input.
@@ -49,7 +51,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
             return;
         }
 
-        this.statement = input[0] as StatementModel;
+        this.transactions = input[0] as TransactionsListModel;
         this.filter = input[1] as GlobalFilterCriteria;
         this.ledgerBook = input[2] as LedgerBook;
         this.ledgerCalculator = input[3] as LedgerCalculation;
@@ -58,7 +60,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
 
         if (this.ledgerBook is null
             || this.budget is null
-            || this.statement is null
+            || this.transactions is null
             || this.ledgerCalculator is null
             || this.filter is null
             || this.filter.Cleared
@@ -92,7 +94,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
 
         Logger.LogInfo(_ => $"LedgerLine: {ledgerLine.Date:d} TotalBankBalance {ledgerLine.TotalBankBalance:C}");
 
-        var remainingBalance = this.ledgerCalculator.CalculateCurrentPeriodSurplusBalance(ledgerLine, this.filter, this.statement);
+        var remainingBalance = this.ledgerCalculator.CalculateCurrentPeriodSurplusBalance(ledgerLine, this.filter, this.transactions);
         Logger.LogInfo(_ => $"Remaining period surplus balance is: {remainingBalance:C}");
 
         Maximum = Convert.ToDouble(openingBalance);

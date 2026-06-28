@@ -305,15 +305,15 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
         var matchingRuleStorageKey = this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey;
         this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey += backupSuffix;
 
-        var statementStorageKey = this.budgetAnalyserDatabase.StatementModelStorageKey;
-        this.budgetAnalyserDatabase.StatementModelStorageKey += backupSuffix;
+        var transactionsListModelStorageKey = this.budgetAnalyserDatabase.TransactionsListModelStorageKey;
+        this.budgetAnalyserDatabase.TransactionsListModelStorageKey += backupSuffix;
 
         await SaveAsync();
 
         this.budgetAnalyserDatabase.BudgetCollectionStorageKey = budgetStorageKey;
         this.budgetAnalyserDatabase.LedgerBookStorageKey = ledgerStorageKey;
         this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey = matchingRuleStorageKey;
-        this.budgetAnalyserDatabase.StatementModelStorageKey = statementStorageKey;
+        this.budgetAnalyserDatabase.TransactionsListModelStorageKey = transactionsListModelStorageKey;
     }
 
     private void OnGlobalFilterOnPropertyChanged(object? sender, PropertyChangedEventArgs e)

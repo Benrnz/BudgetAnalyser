@@ -1,11 +1,11 @@
 ﻿using System.Globalization;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets;
 
 /// <summary>
-///     Monitors the number of days since bank statement data was last imported.
+///     Monitors the number of days since bank transactions were imported.
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
 [UsedImplicitly] // Instantiated by Widget Service/Repo
@@ -17,7 +17,7 @@ public class DaysSinceLastImport : Widget
     public DaysSinceLastImport()
     {
         Category = WidgetGroup.OverviewSectionName;
-        Dependencies = [typeof(StatementModel)];
+        Dependencies = [typeof(TransactionsListModel)];
         DetailedText = "Days since last import";
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
         Clickable = true;
@@ -41,8 +41,8 @@ public class DaysSinceLastImport : Widget
         }
 
         Enabled = true;
-        var statement = (StatementModel)input[0];
-        var days = Convert.ToInt32(DateTime.Today.Subtract(statement.LastImport).TotalDays);
+        var transactions = (TransactionsListModel)input[0];
+        var days = Convert.ToInt32(DateTime.Today.Subtract(transactions.LastImport).TotalDays);
         if (days < 0)
         {
             days = 0;

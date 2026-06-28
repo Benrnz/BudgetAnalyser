@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 
@@ -28,7 +28,7 @@ internal class ReconciliationCreationManager(
     public ReconciliationResult PeriodEndReconciliation(LedgerBook ledgerBook,
         DateOnly closingDateExclusive,
         BudgetCollection budgetCollection,
-        StatementModel statement,
+        TransactionsListModel transactions,
         bool ignoreWarnings,
         params BankBalance[] currentBankBalances)
     {
@@ -47,9 +47,9 @@ internal class ReconciliationCreationManager(
             throw new ArgumentNullException(nameof(budgetCollection));
         }
 
-        if (statement is null)
+        if (transactions is null)
         {
-            throw new ArgumentNullException(nameof(statement));
+            throw new ArgumentNullException(nameof(transactions));
         }
 
         var stopWatch = Stopwatch.StartNew();
@@ -66,7 +66,7 @@ internal class ReconciliationCreationManager(
 
         try
         {
-            PreReconciliationValidation(ledgerBook, closingDateExclusive, statement, budgetToUse);
+            PreReconciliationValidation(ledgerBook, closingDateExclusive, transactions, budgetToUse);
         }
         catch (ValidationWarningException ex)
         {
@@ -82,7 +82,7 @@ internal class ReconciliationCreationManager(
             using (this.reconciliationConsistency.EnsureConsistency(ledgerBook))
             {
                 this.builder.LedgerBook = ledgerBook;
-                recon = this.builder.CreateNewMonthlyReconciliation(closingDateExclusive, budgetToUse, statement, currentBankBalances);
+                recon = this.builder.CreateNewMonthlyReconciliation(closingDateExclusive, budgetToUse, transactions, currentBankBalances);
                 ledgerBook.Reconcile(recon);
             }
 
@@ -141,22 +141,19 @@ internal class ReconciliationCreationManager(
     }
 
     /// <summary>
-    ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to
-    ///     transactions imported in the current month.
-    ///     If any transactions are found, the statement is then examined to see if the transactions appear, if they do not a
-    ///     new <see cref="ValidationWarningException" />
-    ///     is thrown; otherwise the method returns.
+    ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to transactions imported in the current month. If any transactions are found, the
+    ///     transactionsModel is then examined to see if the transactions appear, if they do not a new <see cref="ValidationWarningException" /> is thrown; otherwise the method returns.
     /// </summary>
-    public void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, StatementModel statement)
+    public void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, TransactionsListModel transactions)
     {
         if (ledgerBook is null)
         {
             throw new ArgumentNullException(nameof(ledgerBook));
         }
 
-        if (statement is null)
+        if (transactions is null)
         {
-            throw new ArgumentNullException(nameof(statement));
+            throw new ArgumentNullException(nameof(transactions));
         }
 
         var lastLine = ledgerBook.Reconciliations.FirstOrDefault();
@@ -167,11 +164,10 @@ internal class ReconciliationCreationManager(
 
         var unmatchedTxns = lastLine.Entries
             .SelectMany(e => e.Transactions)
-            .Where(
-                t =>
-                    !string.IsNullOrWhiteSpace(t.AutoMatchingReference) &&
-                    !t.AutoMatchingReference.StartsWith(ReconciliationBuilder.MatchedPrefix,
-                        StringComparison.Ordinal))
+            .Where(t =>
+                !string.IsNullOrWhiteSpace(t.AutoMatchingReference) &&
+                !t.AutoMatchingReference.StartsWith(ReconciliationBuilder.MatchedPrefix,
+                    StringComparison.Ordinal))
             .ToList();
 
         if (unmatchedTxns.None())
@@ -179,21 +175,17 @@ internal class ReconciliationCreationManager(
             return;
         }
 
-        var statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+        var transactionsSubSet = transactions.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
         foreach (var ledgerTransaction in unmatchedTxns)
         {
-            var statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference!);
-            if (statementTxns.None())
+            var bankTransactions = ReconciliationBuilder.TransactionsToAutoMatch(transactionsSubSet, ledgerTransaction.AutoMatchingReference!);
+            if (bankTransactions.None())
             {
-                this.logger.LogWarning(
-                    l =>
-                        l.Format(
-                            "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found. {0}",
-                            ledgerTransaction));
+                this.logger.LogWarning(_ => $"There appears to be some transactions from last month that should be auto-matched, but no matching bank transactions were found. {ledgerTransaction}");
                 throw new ValidationWarningException(
                         string.Format(
                             CultureInfo.CurrentCulture,
-                            "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
+                            "There appears to be some transactions from last month that should be auto-matched to a bank transaction, but no matching bank transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
                             ledgerTransaction.Id,
                             ledgerTransaction.AutoMatchingReference,
                             ledgerTransaction.Amount))
@@ -268,7 +260,7 @@ internal class ReconciliationCreationManager(
         }
     }
 
-    private void PreReconciliationValidation(LedgerBook ledgerBook, DateOnly reconciliationDate, StatementModel statement, BudgetModel budget)
+    private void PreReconciliationValidation(LedgerBook ledgerBook, DateOnly reconciliationDate, TransactionsListModel transactions, BudgetModel budget)
     {
         var messages = new StringBuilder();
         if (!ledgerBook.Validate(messages))
@@ -288,13 +280,13 @@ internal class ReconciliationCreationManager(
 
         var startDate = ReconciliationBuilder.CalculateBeginDateForReconciliationPeriod(ledgerBook, reconciliationDate, budget.BudgetCycle);
 
-        ValidateDates(ledgerBook, startDate, reconciliationDate, statement, budget.BudgetCycle);
+        ValidateDates(ledgerBook, startDate, reconciliationDate, transactions, budget.BudgetCycle);
 
-        ValidateAgainstUncategorisedTransactions(startDate, reconciliationDate, statement);
+        ValidateAgainstUncategorisedTransactions(startDate, reconciliationDate, transactions);
 
-        ValidateAgainstOrphanedAutoMatchingTransactions(ledgerBook, statement);
+        ValidateAgainstOrphanedAutoMatchingTransactions(ledgerBook, transactions);
 
-        ValidateAgainstMissingTransactions(reconciliationDate, statement);
+        ValidateAgainstMissingTransactions(reconciliationDate, transactions);
     }
 
     private bool ShouldValidationExceptionBeRethrown(bool ignoreWarnings, ValidationWarningException ex)
@@ -318,55 +310,50 @@ internal class ReconciliationCreationManager(
         return true;
     }
 
-    private static void ValidateAgainstMissingTransactions(DateOnly reconciliationDate, StatementModel statement)
+    private static void ValidateAgainstMissingTransactions(DateOnly reconciliationDate, TransactionsListModel transactions)
     {
-        var lastTransactionDate = statement.Transactions.Where(t => t.Date < reconciliationDate).Max(t => t.Date);
+        var lastTransactionDate = transactions.Transactions.Where(t => t.Date < reconciliationDate).Max(t => t.Date);
         var difference = reconciliationDate.Subtract(lastTransactionDate);
         if (difference >= 2)
         {
-            throw new ValidationWarningException("There are no statement transactions in the last day or two, are you sure you have imported all this month's transactions?") { Source = "2" };
+            throw new ValidationWarningException("There are no bank transactions in the last day or two, are you sure you have imported all this month's transactions?") { Source = "2" };
         }
     }
 
-    private void ValidateAgainstUncategorisedTransactions(DateOnly startDate, DateOnly reconciliationDate, StatementModel statement)
+    private void ValidateAgainstUncategorisedTransactions(DateOnly startDate, DateOnly reconciliationDate, TransactionsListModel transactions)
     {
-        if (statement.AllTransactions
+        if (transactions.AllTransactions
             .Where(t => t.Date >= startDate && t.Date < reconciliationDate)
-            .Any(
-                t =>
-                    t.BudgetBucket is null ||
-                    (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
+            .Any(t =>
+                t.BudgetBucket is null ||
+                (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
         {
             var uncategorised =
-                statement.AllTransactions.Where(
-                    t =>
-                        t.BudgetBucket is null ||
-                        (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
+                transactions.AllTransactions.Where(t =>
+                    t.BudgetBucket is null ||
+                    (t.BudgetBucket is not null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
             var count = 0;
-            this.logger.LogWarning(
-                _ =>
-                    "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
+            this.logger.LogWarning(_ =>
+                "LedgerBook.PreReconciliationValidation: There appears to be transactions in the transactions list that are not categorised into a budget bucket.");
             foreach (var transaction in uncategorised)
             {
                 count++;
                 var transactionCopy = transaction;
-                this.logger.LogWarning(
-                    _ =>
-                        "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id +
-                        transactionCopy.BudgetBucket);
+                this.logger.LogWarning(_ =>
+                    "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id +
+                    transactionCopy.BudgetBucket);
                 if (count > 5)
                 {
-                    this.logger.LogWarning(
-                        _ => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
+                    this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
                 }
             }
 
-            throw new ValidationWarningException("There appears to be transactions in the statement that are not categorised into a budget bucket.") { Source = "3" };
+            throw new ValidationWarningException("There appears to be transactions in the transactions list that are not categorised into a budget bucket.") { Source = "3" };
         }
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-    private static void ValidateDates(LedgerBook ledgerBook, DateOnly startDate, DateOnly reconciliationDate, StatementModel statement, BudgetCycle periodType)
+    private static void ValidateDates(LedgerBook ledgerBook, DateOnly startDate, DateOnly reconciliationDate, TransactionsListModel transactions, BudgetCycle periodType)
     {
         var previousEntry = ledgerBook.Reconciliations.FirstOrDefault();
         if (previousEntry is not null)
@@ -405,9 +392,9 @@ internal class ReconciliationCreationManager(
             }
         }
 
-        if (!statement.AllTransactions.Any(t => t.Date >= startDate))
+        if (!transactions.AllTransactions.Any(t => t.Date >= startDate))
         {
-            throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + reconciliationDate.ToString("d")) { Source = "5" };
+            throw new ValidationWarningException("There doesn't appear to be any transactions in the transactions model for the month up to " + reconciliationDate.ToString("d")) { Source = "5" };
         }
     }
 }

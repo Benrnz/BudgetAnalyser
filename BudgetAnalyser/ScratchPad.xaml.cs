@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace BudgetAnalyser
+namespace BudgetAnalyser;
+
+/// <summary>
+///     Interaction logic for Scratchpad.xaml
+/// </summary>
+public partial class Scratchpad : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for Scratchpad.xaml
-    /// </summary>
-    public partial class Scratchpad : UserControl
+    public Scratchpad()
     {
-        public Scratchpad()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

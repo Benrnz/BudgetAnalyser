@@ -14,12 +14,12 @@ namespace BudgetAnalyser.Engine.XUnit.Widgets;
 
 public class JsonOnDiskWidgetRepositoryTest
 {
+    private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter = new();
     private readonly IFileReaderWriter mockReaderWriter = Substitute.For<IFileReaderWriter>();
     private readonly IReaderWriterSelector mockSelector = Substitute.For<IReaderWriterSelector>();
     private readonly IStandardWidgetCatalog mockWidgetCatalog = Substitute.For<IStandardWidgetCatalog>();
 
     private readonly ITestOutputHelper output;
-    private readonly EmbeddedResourceFileReaderWriterEncrypted encryptedReaderWriter = new();
 
     public JsonOnDiskWidgetRepositoryTest(ITestOutputHelper output)
     {
@@ -117,6 +117,20 @@ public class JsonOnDiskWidgetRepositoryTest
     }
 
     [Fact]
+    public async Task LoadAndSave_ShouldProduceSameJson()
+    {
+        var subject = ArrangeUsingEmbeddedResources();
+        var widgets = await subject.LoadAsync(TestDataConstants.TestDataWidgetsFileName, false);
+
+        await subject.SaveAsync(widgets, "foo.bar", false);
+        var serialisedData = JsonHelper.MinifyJson(subject.SerialisedData);
+        var expectedData = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.TestDataWidgetsFileName);
+        expectedData = JsonHelper.MinifyJson(expectedData);
+
+        serialisedData.ShouldBe(expectedData);
+    }
+
+    [Fact]
     public async Task Save_ShouldSerialiseAndWrite_GivenValidModel()
     {
         var subject = ArrangeUsingEmbeddedResources();
@@ -138,20 +152,6 @@ public class JsonOnDiskWidgetRepositoryTest
     {
         var subject = ArrangeUsingEmbeddedResources();
         await Should.ThrowAsync<ArgumentNullException>(async () => await subject.SaveAsync(null!, "Foo.bar", false));
-    }
-
-    [Fact]
-    public async Task LoadAndSave_ShouldProduceSameJson()
-    {
-        var subject = ArrangeUsingEmbeddedResources();
-        var widgets = await subject.LoadAsync(TestDataConstants.TestDataWidgetsFileName, false);
-
-        await subject.SaveAsync(widgets, "foo.bar", false);
-        var serialisedData = JsonHelper.MinifyJson(subject.SerialisedData);
-        var expectedData = GetType().Assembly.ExtractEmbeddedResourceAsText(TestDataConstants.TestDataWidgetsFileName);
-        expectedData = JsonHelper.MinifyJson(expectedData);
-
-        serialisedData.ShouldBe(expectedData);
     }
 
     private JsonOnDiskWidgetRepositoryTestHarness ArrangeUsingEmbeddedResources()

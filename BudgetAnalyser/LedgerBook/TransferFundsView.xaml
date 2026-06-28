@@ -19,7 +19,7 @@
                 <StackPanel Orientation="Horizontal">
                     <ContentPresenter Content="{Binding StoredInAccount}"
                                       Width="80"
-                                      Margin="2,2,10,2"/>
+                                      Margin="2,2,10,2" />
                     <TextBlock Text="{Binding BudgetBucket.Code}" />
                 </StackPanel>
             </Border>
@@ -45,11 +45,11 @@
         <TextBlock Grid.Column="1"
                    Grid.Row="0"
                    Style="{StaticResource TextBlock.LabelStyle}"
-                   Text="Ledger Bucket:"/>
+                   Text="Ledger Bucket:" />
         <TextBlock Grid.Column="2"
                    Grid.Row="0"
                    Style="{StaticResource TextBlock.LabelStyle}"
-                   Text="Current Balance:"/>
+                   Text="Current Balance:" />
         <TextBlock Grid.Column="0"
                    Grid.Row="1"
                    Style="{StaticResource TextBlock.LabelRightAlignedStyle}"
@@ -139,7 +139,8 @@
                             Template="{StaticResource WarningImage}" />
             <CheckBox IsChecked="{Binding BankTransferConfirmed}"
                       VerticalAlignment="Center"
-                      ToolTip="A bank transfer is required where funds are moved between different accounts. The bank balances of the accounts is affected. Copy the above Auto-Matching Reference and use it as a reference for the transfer. This will automatically match the transaction when the statement is imported.">
+                      ToolTip="A bank transfer is required where funds are moved between different accounts. The bank balances of the accounts is affected. Copy the above Auto-Matching Reference
+                      and use it as a reference for the transfer. This will automatically match the transaction when bank extracts are imported.">
                 <TextBlock Text="Bank Transfer is required. Tick here to confirm." />
             </CheckBox>
         </StackPanel>

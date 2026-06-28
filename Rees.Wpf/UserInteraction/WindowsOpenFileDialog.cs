@@ -10,6 +10,16 @@ namespace Rees.Wpf.UserInteraction;
 public class WindowsOpenFileDialog : IUserPromptOpenFile
 {
     /// <summary>
+    ///     Indicates if an optional check that can be performed to check if the user selected folder exists.
+    /// </summary>
+    public bool? CheckPathExists { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the index of the filter currently selected in a file dialog.
+    /// </summary>
+    public int? FilterIndex { get; set; }
+
+    /// <summary>
     ///     The optional extension to include as an alternative file extension to filter to.
     /// </summary>
     public bool? AddExtension { get; set; }
@@ -18,11 +28,6 @@ public class WindowsOpenFileDialog : IUserPromptOpenFile
     ///     Indicates if an optional check that can be performed to check if the user selected file exists.
     /// </summary>
     public bool? CheckFileExists { get; set; }
-
-    /// <summary>
-    ///     Indicates if an optional check that can be performed to check if the user selected folder exists.
-    /// </summary>
-    public bool? CheckPathExists { get; set; }
 
     /// <summary>
     ///     The optional extension to include to filter file selection to.
@@ -38,11 +43,6 @@ public class WindowsOpenFileDialog : IUserPromptOpenFile
     ///     Gets or sets the filter string that determines what types of files are displayed.
     /// </summary>
     public string Filter { get; set; } = string.Empty;
-
-    /// <summary>
-    ///     Gets or sets the index of the filter currently selected in a file dialog.
-    /// </summary>
-    public int? FilterIndex { get; set; }
 
     /// <summary>
     ///     The title for the dialog.

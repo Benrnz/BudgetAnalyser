@@ -193,7 +193,7 @@ public class PersistenceOperations
         openDialog.Filter = "Budget Analyser files (*.bax)|*.bax|Xml files (*.xml, *.xaml)|*.xml;*.xaml";
         openDialog.Title = "Select Budget Analyser file to open";
         var response = openDialog.ShowDialog();
-        return response is null || response.Value == false ? null : openDialog.FileName;
+        return response is null || !response.Value ? null : openDialog.FileName;
     }
 
     private async Task<bool> SaveDatabase(string title)

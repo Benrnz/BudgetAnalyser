@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using Shouldly;
 
-
 namespace BudgetAnalyser.Engine.XUnit;
 
 public class DateOnlyExtensionTest(ITestOutputHelper output)

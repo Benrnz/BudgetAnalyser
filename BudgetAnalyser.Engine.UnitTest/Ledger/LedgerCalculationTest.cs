@@ -1,5 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 
@@ -18,7 +18,7 @@ public class LedgerCalculationTest
         var result = Subject.CalculateCurrentPeriodLedgerBalances(
             ledgerLine,
             new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 11, 01), EndDate = new DateOnly(2015, 11, 15) },
-            CreateStatementTestData());
+            CreateTransactionsTestData());
 
         Assert.AreEqual(120M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
     }
@@ -30,7 +30,7 @@ public class LedgerCalculationTest
         var result = Subject.CalculateCurrentPeriodLedgerBalances(
             ledgerLine,
             new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) },
-            CreateStatementTestData());
+            CreateTransactionsTestData());
 
         Assert.AreEqual(20M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
     }
@@ -39,12 +39,12 @@ public class LedgerCalculationTest
     public void CalculateCurrentPeriodSurplusBalance_ShouldCountPayCCTransactionsAsSurplusTransactions()
     {
         var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
-        var statement = CreateStatementBuilder().AppendTransaction(
+        var transactions = CreateTransactionsBuilder().AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.ChequeAccount,
+                    Account = TransactionsListModelTestData.ChequeAccount,
                     Amount = -100M,
-                    BudgetBucket = StatementModelTestData.PayCreditCard,
+                    BudgetBucket = TransactionsListModelTestData.PayCreditCard,
                     Date = new DateOnly(2015, 11, 2),
                     Reference1 = "Pay credit card debit from surplus"
                 })
@@ -52,7 +52,7 @@ public class LedgerCalculationTest
         var result = Subject.CalculateCurrentPeriodSurplusBalance(
             ledgerLine,
             new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) },
-            statement);
+            transactions);
 
         Assert.AreEqual(2770M, result);
     }
@@ -61,52 +61,52 @@ public class LedgerCalculationTest
     public void CalculateCurrentPeriodSurplusBalance_ShouldNotCountPositivePayCCTransactions()
     {
         var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
-        var statement = CreateStatementBuilder()
+        var transactions = CreateTransactionsBuilder()
             .AppendTransaction(new Transaction
             {
-                Account = StatementModelTestData.ChequeAccount,
+                Account = TransactionsListModelTestData.ChequeAccount,
                 Amount = -100M,
-                BudgetBucket = StatementModelTestData.PayCreditCard,
+                BudgetBucket = TransactionsListModelTestData.PayCreditCard,
                 Date = new DateOnly(2015, 11, 2),
                 Reference1 = "Pay credit card debit from surplus"
             })
             .AppendTransaction(new Transaction
             {
-                Account = StatementModelTestData.VisaAccount,
+                Account = TransactionsListModelTestData.VisaAccount,
                 Amount = 100M,
-                BudgetBucket = StatementModelTestData.PayCreditCard,
+                BudgetBucket = TransactionsListModelTestData.PayCreditCard,
                 Date = new DateOnly(2015, 11, 2),
                 Reference1 = "Credit Visa account with payment"
             })
             .AppendTransaction(new Transaction
             {
-                Account = StatementModelTestData.ChequeAccount,
+                Account = TransactionsListModelTestData.ChequeAccount,
                 Amount = -50M,
-                BudgetBucket = StatementModelTestData.SurplusBucket,
+                BudgetBucket = TransactionsListModelTestData.SurplusBucket,
                 Date = new DateOnly(2015, 11, 3),
                 Reference1 = "Buy something cool with spare funds"
             })
             .AppendTransaction(new Transaction
             {
-                Account = StatementModelTestData.ChequeAccount,
+                Account = TransactionsListModelTestData.ChequeAccount,
                 Amount = 30M,
-                BudgetBucket = StatementModelTestData.SurplusBucket,
+                BudgetBucket = TransactionsListModelTestData.SurplusBucket,
                 Date = new DateOnly(2015, 11, 3),
                 Reference1 = "Refund"
             })
             .AppendTransaction(new Transaction
             {
-                Account = StatementModelTestData.ChequeAccount,
+                Account = TransactionsListModelTestData.ChequeAccount,
                 Amount = -20M,
-                BudgetBucket = StatementModelTestData.SavingsBucket,
+                BudgetBucket = TransactionsListModelTestData.SavingsBucket,
                 Date = new DateOnly(2015, 11, 4),
                 Reference1 = "Save for a rainy day"
             })
             .AppendTransaction(new Transaction
             {
-                Account = StatementModelTestData.ChequeAccount,
+                Account = TransactionsListModelTestData.ChequeAccount,
                 Amount = 20M,
-                BudgetBucket = StatementModelTestData.SavingsBucket,
+                BudgetBucket = TransactionsListModelTestData.SavingsBucket,
                 Date = new DateOnly(2015, 11, 4),
                 Reference1 = "Credits to savings shouldn't affect surplus balance"
             })
@@ -114,7 +114,7 @@ public class LedgerCalculationTest
         var result = Subject.CalculateCurrentPeriodSurplusBalance(
             ledgerLine,
             new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) },
-            statement);
+            transactions);
 
         Assert.AreEqual(2750M, result);
     }
@@ -125,12 +125,12 @@ public class LedgerCalculationTest
         // There used to be a special bucket "SavingsCommitmentBucket" that was a special bucket type. When a debit was coded against this bucket it was thought of as debiting Surplus.
         // Now this is simply treated as a SavedUpForExpenseBucket like any other ledger. Debits will remove funds from this LedgerBucket and credit another bucket somewhere else.
         var ledgerLine = CreateLedgerBookTestData().Reconciliations.First();
-        var statement = CreateStatementBuilder().AppendTransaction(
+        var transactions = CreateTransactionsBuilder().AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.ChequeAccount,
+                    Account = TransactionsListModelTestData.ChequeAccount,
                     Amount = -100M,
-                    BudgetBucket = StatementModelTestData.SavingsBucket,
+                    BudgetBucket = TransactionsListModelTestData.SavingsBucket,
                     Date = new DateOnly(2015, 11, 2),
                     Reference1 = "Yee har"
                 })
@@ -138,7 +138,7 @@ public class LedgerCalculationTest
         var result = Subject.CalculateCurrentPeriodSurplusBalance(
             ledgerLine,
             new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) },
-            statement);
+            transactions);
 
         Assert.AreEqual(2870M, result);
     }
@@ -146,11 +146,11 @@ public class LedgerCalculationTest
     [TestMethod]
     public void CalculateCurrentPeriodSurplusBalance_UsingFortnightlyData_ShouldReturn3777()
     {
-        var statementModel = StatementModelTestData.TestData1();
+        var transactions = TransactionsListModelTestData.TestData1();
         var filter = new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 8, 15), EndDate = new DateOnly(2013, 8, 29) };
         var ledgerLine = LedgerBookTestData.TestData6().Reconciliations.OrderByDescending(l => l.Date).First();
 
-        var result = Subject.CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, statementModel);
+        var result = Subject.CalculateCurrentPeriodSurplusBalance(ledgerLine, filter, transactions);
 
         Assert.AreEqual(3777.56M, result);
     }
@@ -161,7 +161,7 @@ public class LedgerCalculationTest
         var beginDate = new DateOnly(2014, 07, 01);
         var endDate = beginDate.AddMonths(1).AddDays(-1);
         var ledgerLine = TestData.Reconciliations.First();
-        var result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData1(), ledgerLine, beginDate, endDate);
+        var result = Subject.CalculateOverSpentLedgers(TransactionsListModelTestData.TestData1(), ledgerLine, beginDate, endDate);
         Assert.IsFalse(result.Any());
     }
 
@@ -172,7 +172,7 @@ public class LedgerCalculationTest
         var beginDate = new DateOnly(2013, 08, 15);
         var endDate = beginDate.AddMonths(1).AddDays(-1);
         var ledgerLine = TestData.Reconciliations.First();
-        var result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData3(), ledgerLine, beginDate, endDate);
+        var result = Subject.CalculateOverSpentLedgers(TransactionsListModelTestData.TestData3(), ledgerLine, beginDate, endDate);
         foreach (var txn in result)
         {
             Console.WriteLine("{0} {1} {2}", txn.Date, txn.Narrative, txn.Amount);
@@ -182,13 +182,13 @@ public class LedgerCalculationTest
     }
 
     [TestMethod]
-    public void CalculateOverSpentLedgersShouldReturnOverdrawnTransactionsGivenStatementTransactionsSpendMoreThanLedgerBalance()
+    public void CalculateOverSpentLedgersShouldReturnOverdrawnTransactionsGivenTransactionsSpendMoreThanLedgerBalance()
     {
         TestData.Output(true);
         var beginDate = new DateOnly(2013, 08, 15);
         var endDate = beginDate.AddMonths(1).AddDays(-1);
         var ledgerLine = TestData.Reconciliations.First();
-        var result = Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData2(), ledgerLine, beginDate, endDate);
+        var result = Subject.CalculateOverSpentLedgers(TransactionsListModelTestData.TestData2(), ledgerLine, beginDate, endDate);
         foreach (var txn in result)
         {
             Console.WriteLine("{0} {1} {2}", txn.Date, txn.Narrative, txn.Amount);
@@ -203,13 +203,13 @@ public class LedgerCalculationTest
     {
         var beginDate = new DateOnly(2014, 07, 01);
         var endDate = beginDate.AddMonths(1).AddDays(-1);
-        Subject.CalculateOverSpentLedgers(StatementModelTestData.TestData1(), null, beginDate, endDate);
+        Subject.CalculateOverSpentLedgers(TransactionsListModelTestData.TestData1(), null, beginDate, endDate);
         Assert.Fail();
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void CalculateOverSpentLedgersShouldThrowGivenNullStatement()
+    public void CalculateOverSpentLedgersShouldThrowGivenNullTransactions()
     {
         var beginDate = new DateOnly(2014, 07, 01);
         var endDate = beginDate.AddMonths(1).AddDays(-1);
@@ -230,7 +230,7 @@ public class LedgerCalculationTest
     public void UsingTestData1_LocateApplicableLedgerBalance_ShouldReturn64()
     {
         var filter = new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 04, 15), EndDate = new DateOnly(2013, 05, 15) };
-        var result = Subject.LocateApplicableLedgerBalance(TestData, filter, StatementModelTestData.PhoneBucket.Code);
+        var result = Subject.LocateApplicableLedgerBalance(TestData, filter, TransactionsListModelTestData.PhoneBucket.Code);
         Assert.AreEqual(0M, result);
     }
 
@@ -239,7 +239,7 @@ public class LedgerCalculationTest
     {
         var filter = new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 07, 15), EndDate = new DateOnly(2013, 08, 15) };
 
-        var result = Subject.LocateApplicableLedgerBalance(TestData, filter, StatementModelTestData.PhoneBucket.Code);
+        var result = Subject.LocateApplicableLedgerBalance(TestData, filter, TransactionsListModelTestData.PhoneBucket.Code);
         TestData.Output();
         Assert.AreEqual(64.71M, result);
     }
@@ -253,62 +253,61 @@ public class LedgerCalculationTest
                 new DateOnly(2015, 10, 20),
                 new BankBalance(LedgerBookTestData.ChequeAccount, 2000M),
                 new BankBalance(LedgerBookTestData.SavingsAccount, 1000M))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Soo", new DateOnly(2015, 10, 20), "automatchref12"); })
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-60, "Soo1", new DateOnly(2015, 10, 20)); });
-                    entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateOnly(2015, 10, 20), "automatchref12"); })
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-70, "Foo1", new DateOnly(2015, 10, 20)); });
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Soo", new DateOnly(2015, 10, 20), "automatchref12"); })
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-60, "Soo1", new DateOnly(2015, 10, 20)); });
+                entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateOnly(2015, 10, 20), "automatchref12"); })
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-70, "Foo1", new DateOnly(2015, 10, 20)); });
+            })
             .Build();
     }
 
-    private static StatementModelBuilder CreateStatementBuilder()
+    private static TransactionsListModelBuilder CreateTransactionsBuilder()
     {
-        return new StatementModelBuilder()
+        return new TransactionsListModelBuilder()
             .AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.SavingsAccount,
+                    Account = TransactionsListModelTestData.SavingsAccount,
                     Amount = -100M,
-                    BudgetBucket = StatementModelTestData.InsHomeBucket,
+                    BudgetBucket = TransactionsListModelTestData.InsHomeBucket,
                     Date = new DateOnly(2015, 11, 19),
                     Reference1 = "automatchref12"
                 })
             .AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.ChequeAccount,
+                    Account = TransactionsListModelTestData.ChequeAccount,
                     Amount = 100M,
-                    BudgetBucket = StatementModelTestData.PhoneBucket,
+                    BudgetBucket = TransactionsListModelTestData.PhoneBucket,
                     Date = new DateOnly(2015, 11, 19),
                     Reference1 = "automatchref12"
                 })
             .AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.SavingsAccount,
+                    Account = TransactionsListModelTestData.SavingsAccount,
                     Amount = -10M,
-                    BudgetBucket = StatementModelTestData.InsHomeBucket,
+                    BudgetBucket = TransactionsListModelTestData.InsHomeBucket,
                     Date = new DateOnly(2015, 11, 1),
                     Reference1 = "Foo"
                 })
             .AppendTransaction(
                 new Transaction
                 {
-                    Account = StatementModelTestData.ChequeAccount,
+                    Account = TransactionsListModelTestData.ChequeAccount,
                     Amount = -20M,
-                    BudgetBucket = StatementModelTestData.PhoneBucket,
+                    BudgetBucket = TransactionsListModelTestData.PhoneBucket,
                     Date = new DateOnly(2015, 11, 1),
                     Reference1 = "Foo"
                 });
     }
 
-    private static StatementModel CreateStatementTestData()
+    private static TransactionsListModel CreateTransactionsTestData()
     {
-        return CreateStatementBuilder().Build();
+        return CreateTransactionsBuilder().Build();
     }
 }

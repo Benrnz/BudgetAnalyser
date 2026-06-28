@@ -35,13 +35,8 @@ public static class LedgerBookHelper
 
         foreach (var line in book.Reconciliations)
         {
-            Output(line, ledgerOrder, outputTransactions, outputWriter: writer);
+            line.Output(ledgerOrder, outputTransactions, outputWriter: writer);
         }
-    }
-
-    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput outputWriter)
-    {
-        return outputWriter ?? new DebugTestOutput();
     }
 
     public static void Output(this LedgerEntryLine line, IDictionary<BudgetBucket, int> ledgerOrder, bool outputTransactions = false, bool outputHeader = false, IReesTestOutput outputWriter = null)
@@ -158,6 +153,11 @@ public static class LedgerBookHelper
 
         writer.WriteLine("----------------------------------------------------------------------------------------");
         writer.WriteLine($"{instance.Transactions.Count()} transactions. NetAmount: {instance.NetAmount:F2} ClosingBalance: {instance.Balance:F2}");
+    }
+
+    private static IReesTestOutput NonNullableOutputWriter(IReesTestOutput outputWriter)
+    {
+        return outputWriter ?? new DebugTestOutput();
     }
 
     private static void OutputReconciliationHeader(IReesTestOutput writer)

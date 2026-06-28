@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace BudgetAnalyser.LedgerBook;
 
-namespace BudgetAnalyser.LedgerBook
+public class EditBankBalancesEventArgs : EventArgs
 {
-    public class EditBankBalancesEventArgs : EventArgs
-    {
-        public bool Canceled { get; set; }
-    }
+    public bool Canceled { get; set; }
 }

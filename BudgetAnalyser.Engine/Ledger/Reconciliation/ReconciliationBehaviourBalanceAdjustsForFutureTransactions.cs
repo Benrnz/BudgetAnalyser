@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 
@@ -8,17 +8,17 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation;
 internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IReconciliationBehaviour
 {
     public LedgerEntryLine? NewReconLine { get; private set; }
-
-    public StatementModel? Statement { get; private set; }
     public IList<ToDoTask>? TodoTasks { get; private set; }
+
+    public TransactionsListModel? Transactions { get; private set; }
 
     public void Initialise(params object[] anyParameters)
     {
         foreach (var argument in anyParameters)
         {
-            TodoTasks = TodoTasks ?? argument as IList<ToDoTask>;
-            NewReconLine = NewReconLine ?? argument as LedgerEntryLine;
-            Statement = Statement ?? argument as StatementModel;
+            TodoTasks ??= argument as IList<ToDoTask>;
+            NewReconLine ??= argument as LedgerEntryLine;
+            Transactions ??= argument as TransactionsListModel;
         }
 
         if (TodoTasks is null)
@@ -31,24 +31,24 @@ internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IRec
             throw new ArgumentNullException(nameof(NewReconLine));
         }
 
-        if (Statement is null)
+        if (Transactions is null)
         {
-            throw new ArgumentNullException(nameof(Statement));
+            throw new ArgumentNullException(nameof(Transactions));
         }
     }
 
     public void ApplyBehaviour()
     {
-        if (Statement is not null)
+        if (Transactions is not null)
         {
-            AddBalanceAdjustmentsForFutureTransactions(Statement, NewReconLine!, TodoTasks!);
+            AddBalanceAdjustmentsForFutureTransactions(Transactions, NewReconLine!, TodoTasks!);
         }
     }
 
-    private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, LedgerEntryLine reconciliation, IList<ToDoTask> tasks)
+    private void AddBalanceAdjustmentsForFutureTransactions(TransactionsListModel transactionsList, LedgerEntryLine reconciliation, IList<ToDoTask> tasks)
     {
         var adjustmentsMade = false;
-        foreach (var futureTransaction in statement.AllTransactions
+        foreach (var futureTransaction in transactionsList.AllTransactions
                      .Where(t => t.Account.AccountType != AccountType.CreditCard
                                  && t.Date >= reconciliation.Date
                                  && !(t.BudgetBucket is PayCreditCardBucket)))

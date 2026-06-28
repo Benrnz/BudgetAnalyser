@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.Statement;
+using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
@@ -114,16 +114,11 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     private void AfterTabExecutedCommon()
     {
-        foreach (var controller in this.uiContext.ShowableControllers)
-        {
-            controller.Shown = false;
-        }
-
         this.uiContext.Controller<DashboardController>().Shown = DashboardToggle;
-        this.uiContext.Controller<StatementController>().Shown = TransactionsToggle;
-        this.uiContext.Controller<LedgerBookController>().Shown = LedgerBookToggle;
-        this.uiContext.Controller<BudgetController>().Shown = BudgetToggle;
-        this.uiContext.Controller<ReportsCatalogController>().Shown = ReportsToggle;
+        this.uiContext.Controller<TopTransactionsListController>().Shown = TransactionsToggle;
+        this.uiContext.Controller<TopLedgerBookController>().Shown = LedgerBookToggle;
+        this.uiContext.Controller<TopBudgetController>().Shown = BudgetToggle;
+        this.uiContext.Controller<TopReportsCatalogController>().Shown = ReportsToggle;
     }
 
     private void BeforeTabExecutedCommon()

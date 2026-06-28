@@ -8,6 +8,11 @@ public class PersistBaxAppStateAsJsonTestHarness([NotNull] IUserMessageBox userM
 {
     public string SerialisedData { get; set; } = string.Empty;
 
+    protected override bool CheckFileNameExists()
+    {
+        return true;
+    }
+
     protected override Stream CreateWritableStream()
     {
         return new MemoryStream();
@@ -21,11 +26,6 @@ public class PersistBaxAppStateAsJsonTestHarness([NotNull] IUserMessageBox userM
     protected override string ReadAppStateFileAsText()
     {
         return SerialisedData;
-    }
-
-    protected override bool CheckFileNameExists()
-    {
-        return true;
     }
 
     protected override void WriteToStream(Stream stream, BaxApplicationStateDto data)

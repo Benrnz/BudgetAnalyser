@@ -37,9 +37,9 @@ public class ReconciliationManagerTest_TransferFunds
         this.testDataEntryLine = this.testDataLedgerBook.Reconciliations.First();
         this.testDataEntryLine.Unlock();
 
-        this.surplusChqLedger = new SurplusLedger { StoredInAccount = StatementModelTestData.ChequeAccount, BudgetBucket = StatementModelTestData.SurplusBucket };
-        this.insHomeSavLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.InsHomeBucket);
-        this.phNetChqLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.PhoneBucket);
+        this.surplusChqLedger = new SurplusLedger { StoredInAccount = TransactionsListModelTestData.ChequeAccount, BudgetBucket = TransactionsListModelTestData.SurplusBucket };
+        this.insHomeSavLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == TransactionsListModelTestData.InsHomeBucket);
+        this.phNetChqLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == TransactionsListModelTestData.PhoneBucket);
     }
 
     [TestMethod]
@@ -70,14 +70,14 @@ public class ReconciliationManagerTest_TransferFunds
     {
         var transferDetails = new TransferFundsCommand { FromLedger = this.surplusChqLedger, ToLedger = this.insHomeSavLedger, TransferAmount = 22.00M, Narrative = "Testing 123" };
 
-        var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+        var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == TransactionsListModelTestData.ChequeAccount).Balance
                             + this.testDataEntryLine.BankBalanceAdjustments
-                                .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
+                                .Where(a => a.BankAccount == TransactionsListModelTestData.ChequeAccount)
                                 .Sum(a => a.Amount);
         this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-        var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+        var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == TransactionsListModelTestData.ChequeAccount).Balance
                            + this.testDataEntryLine.BankBalanceAdjustments
-                               .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
+                               .Where(a => a.BankAccount == TransactionsListModelTestData.ChequeAccount)
                                .Sum(a => a.Amount);
 
         Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
@@ -88,9 +88,9 @@ public class ReconciliationManagerTest_TransferFunds
     {
         var transferDetails = new TransferFundsCommand { FromLedger = this.surplusChqLedger, ToLedger = this.phNetChqLedger, TransferAmount = 22.00M, Narrative = "Testing 123" };
 
-        var beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+        var beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == TransactionsListModelTestData.ChequeAccount).Balance;
         this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-        var afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+        var afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == TransactionsListModelTestData.ChequeAccount).Balance;
 
         Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
     }
@@ -100,9 +100,9 @@ public class ReconciliationManagerTest_TransferFunds
     {
         var transferDetails = new TransferFundsCommand { FromLedger = this.surplusChqLedger, ToLedger = this.insHomeSavLedger, TransferAmount = 22.00M, Narrative = "Testing 123" };
 
-        var beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+        var beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == TransactionsListModelTestData.ChequeAccount).Balance;
         this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-        var afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+        var afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == TransactionsListModelTestData.ChequeAccount).Balance;
 
         Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
     }
@@ -124,14 +124,14 @@ public class ReconciliationManagerTest_TransferFunds
     {
         var transferDetails = new TransferFundsCommand { FromLedger = this.surplusChqLedger, ToLedger = this.insHomeSavLedger, TransferAmount = 22.00M, Narrative = "Testing 123" };
 
-        var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+        var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == TransactionsListModelTestData.SavingsAccount).Balance
                             + this.testDataEntryLine.BankBalanceAdjustments
-                                .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
+                                .Where(a => a.BankAccount == TransactionsListModelTestData.SavingsAccount)
                                 .Sum(a => a.Amount);
         this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-        var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+        var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == TransactionsListModelTestData.SavingsAccount).Balance
                            + this.testDataEntryLine.BankBalanceAdjustments
-                               .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
+                               .Where(a => a.BankAccount == TransactionsListModelTestData.SavingsAccount)
                                .Sum(a => a.Amount);
 
         Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
@@ -178,14 +178,14 @@ public class ReconciliationManagerTest_TransferFunds
     {
         var transferDetails = new TransferFundsCommand { FromLedger = this.surplusChqLedger, ToLedger = this.phNetChqLedger, TransferAmount = 22.00M, Narrative = "Testing 123" };
 
-        var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+        var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == TransactionsListModelTestData.ChequeAccount).Balance
                             + this.testDataEntryLine.BankBalanceAdjustments
-                                .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
+                                .Where(a => a.BankAccount == TransactionsListModelTestData.ChequeAccount)
                                 .Sum(a => a.Amount);
         this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-        var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+        var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == TransactionsListModelTestData.ChequeAccount).Balance
                            + this.testDataEntryLine.BankBalanceAdjustments
-                               .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
+                               .Where(a => a.BankAccount == TransactionsListModelTestData.ChequeAccount)
                                .Sum(a => a.Amount);
 
         Assert.AreEqual(beforeBalance, afterBalance);
@@ -196,14 +196,14 @@ public class ReconciliationManagerTest_TransferFunds
     {
         var transferDetails = new TransferFundsCommand { FromLedger = this.surplusChqLedger, ToLedger = this.phNetChqLedger, TransferAmount = 22.00M, Narrative = "Testing 123" };
 
-        var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+        var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == TransactionsListModelTestData.SavingsAccount).Balance
                             + this.testDataEntryLine.BankBalanceAdjustments
-                                .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
+                                .Where(a => a.BankAccount == TransactionsListModelTestData.SavingsAccount)
                                 .Sum(a => a.Amount);
         this.subject.TransferFunds(this.testDataLedgerBook, transferDetails, this.testDataEntryLine);
-        var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+        var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == TransactionsListModelTestData.SavingsAccount).Balance
                            + this.testDataEntryLine.BankBalanceAdjustments
-                               .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
+                               .Where(a => a.BankAccount == TransactionsListModelTestData.SavingsAccount)
                                .Sum(a => a.Amount);
 
         Assert.AreEqual(beforeBalance, afterBalance);

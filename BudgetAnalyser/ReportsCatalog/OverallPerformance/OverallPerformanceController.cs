@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
@@ -83,9 +83,9 @@ public class OverallPerformanceController(IMessenger messenger, IOverallPerforma
         }
     } = string.Empty;
 
-    public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
+    public void Load(TransactionsListModel transactions, BudgetCollection budgets, GlobalFilterCriteria criteria)
     {
-        Analysis = this.chartService.BuildChart(statementModel, budgets, criteria);
+        Analysis = this.chartService.BuildChart(transactions, budgets, criteria);
         OverallPerformance = (double)Analysis.OverallPerformance;
         ExpenseFilter = true;
         IncomeFilter = false;

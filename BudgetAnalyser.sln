@@ -21,7 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		AGENTS.md = AGENTS.md
 		README.md = README.md
 		BudgetAnalyser.sln.DotSettings = BudgetAnalyser.sln.DotSettings
 	EndProjectSection

@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Ledger;
 
@@ -48,9 +48,9 @@ public abstract class LedgerTransaction
     public DateOnly? Date { get; internal set; }
 
     /// <summary>
-    ///     Gets or sets the Transaction ID. This is the same ID as the <see cref="StatementModel" />'s
+    ///     Gets or sets the Transaction ID. This is the same ID as the <see cref="TransactionsListModel" />'s
     ///     <see cref="Transaction" />.
-    ///     This can be used to link back to the statement and show more transaction specific data.
+    ///     This can be used to link back to the transactions model and show more transaction specific data.
     /// </summary>
     public Guid Id { get; internal set; }
 

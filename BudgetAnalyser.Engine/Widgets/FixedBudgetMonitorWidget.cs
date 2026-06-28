@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Widgets;
 
@@ -22,11 +22,11 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     public FixedBudgetMonitorWidget()
     {
         Category = WidgetGroup.ProjectsSectionName;
-        Dependencies = [typeof(StatementModel), typeof(IBudgetBucketRepository)];
+        Dependencies = [typeof(TransactionsListModel), typeof(IBudgetBucketRepository)];
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
         this.standardStyle = "WidgetStandardStyle1";
 
-        this.disabledToolTip = "No Statement file is loaded, or bucket doesn't exist.";
+        this.disabledToolTip = "No Transactions are loaded, or bucket doesn't exist.";
         this.remainingBudgetToolTip = "{0} Remaining budget for this project: {1:C}. Total Spend {2:C}";
         Enabled = false;
         BucketCode = NotSet;
@@ -47,9 +47,9 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     } = NotSet;
 
     /// <summary>
-    ///     Gets the statement model.
+    ///     Gets the transactions model.
     /// </summary>
-    public StatementModel? Statement { get; private set; }
+    public TransactionsListModel? TransactionsModel { get; private set; }
 
     /// <summary>
     ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
@@ -89,7 +89,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
             return;
         }
 
-        Statement = input[0] as StatementModel;
+        TransactionsModel = input[0] as TransactionsListModel;
         this.bucketRepository = (IBudgetBucketRepository)input[1];
 
         if (!this.bucketRepository.IsValidCode(BucketCode))
@@ -99,7 +99,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
             return;
         }
 
-        if (Statement is null)
+        if (TransactionsModel is null)
         {
             ToolTip = this.disabledToolTip;
             Enabled = false;
@@ -114,7 +114,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
 
         // Debit transactions are negative so normally the total spend will be a negative number.
         var totalSpend =
-            Statement.AllTransactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == BucketCode)
+            TransactionsModel.AllTransactions.Where(t => t.BudgetBucket is not null && t.BudgetBucket.Code == BucketCode)
                 .Sum(t => t.Amount);
         var remainingBudget = totalBudget + totalSpend;
 

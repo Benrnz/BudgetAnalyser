@@ -4,7 +4,7 @@
                     xmlns:budget1="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
                     xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
                     xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
-                    xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
+                    xmlns:transactions="clr-namespace:BudgetAnalyser.Transactions"
                     xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
                     xmlns:matching="clr-namespace:BudgetAnalyser.Matching"
                     xmlns:filtering="clr-namespace:BudgetAnalyser.Filtering"
@@ -18,7 +18,7 @@
         <overallPerformance:OverallPerformanceView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type budget:BudgetController}">
+    <DataTemplate DataType="{x:Type budget:TopBudgetController}">
         <budget:BudgetMaintenance />
     </DataTemplate>
 
@@ -38,19 +38,19 @@
         <dashboard:DashboardUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
+    <DataTemplate DataType="{x:Type ledgerBook:TopLedgerBookController}">
         <ledgerBook:LedgerBookUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type statement:LoadFileController}">
-        <statement:LoadFileView />
+    <DataTemplate DataType="{x:Type transactions:LoadFileController}">
+        <transactions:LoadFileView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type statement:StatementController}">
-        <statement:StatementUserControl />
+    <DataTemplate DataType="{x:Type transactions:TopTransactionsListController}">
+        <transactions:TopTransactionsUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
+    <DataTemplate DataType="{x:Type reportsCatalog:TopReportsCatalogController}">
         <reportsCatalog:ReportsCatalogUserControl />
     </DataTemplate>
 
@@ -102,8 +102,8 @@
         <filtering:GlobalDateFilterView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type statement:SplitTransactionController}">
-        <statement:SplitTransactionView />
+    <DataTemplate DataType="{x:Type transactions:SplitTransactionController}">
+        <transactions:SplitTransactionView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type budget1:BudgetBucket}">
@@ -115,7 +115,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type account:Account}">
-        <statement:AccountUserControl />
+        <transactions:AccountUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type ledgerBook:TransferFundsController}">

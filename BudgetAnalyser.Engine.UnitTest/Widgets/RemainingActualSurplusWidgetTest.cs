@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
@@ -17,14 +17,14 @@ public class RemainingActualSurplusWidgetTest
     private GlobalFilterCriteria criteriaTestData;
     private LedgerBook ledgerBookTestData;
     private LedgerCalculation ledgerCalculation;
-    private StatementModel statementTestData;
     private RemainingActualSurplusWidget subject;
+    private TransactionsListModel transactionsTestData;
 
     [TestMethod]
     public void OutputTestData()
     {
         this.ledgerBookTestData.Output(true);
-        this.statementTestData.Output(DateOnly.MinValue);
+        this.transactionsTestData.Output(DateOnly.MinValue);
     }
 
     [TestInitialize]
@@ -34,9 +34,9 @@ public class RemainingActualSurplusWidgetTest
         this.criteriaTestData = new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) };
         this.ledgerCalculation = new LedgerCalculation(new FakeLogger());
 
-        StatementModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
-        StatementModelTestDataForThisTest.BudgetBucketRepo = new BucketBucketRepoAlwaysFind();
-        this.statementTestData = StatementModelTestDataForThisTest.TestDataGenerated();
+        TransactionsModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
+        TransactionsModelTestDataForThisTest.BudgetBucketRepo = new BucketBucketRepoAlwaysFind();
+        this.transactionsTestData = TransactionsModelTestDataForThisTest.TestDataGenerated();
 
         this.ledgerBookTestData = new LedgerBookBuilder { StorageKey = "RemainingActualSurplusWidgetTest.xml", Modified = new DateTime(2015, 11, 23), Name = "Smith Budget 2015" }
             .IncludeLedger(LedgerBookTestData.PhoneLedger, 130M)
@@ -45,14 +45,13 @@ public class RemainingActualSurplusWidgetTest
             .AppendReconciliation(
                 new DateOnly(2015, 10, 20),
                 new BankBalance(LedgerBookTestData.ChequeAccount, 4502.75M))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
-                    entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
-                    entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateOnly(2015, 10, 20), "automatchref12"); });
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
+                entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
+                entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateOnly(2015, 10, 20), "automatchref12"); });
+            })
             .Build();
 
         var budgets = BudgetModelTestData.CreateCollectionWith1And2();
@@ -64,25 +63,25 @@ public class RemainingActualSurplusWidgetTest
     public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
     {
         Console.WriteLine($"StartDate: {this.criteriaTestData.BeginDate}; EndDate: {this.criteriaTestData.EndDate}");
-        this.statementTestData.Output(this.criteriaTestData.BeginDate.Value);
+        this.transactionsTestData.Output(this.criteriaTestData.BeginDate.Value);
         this.ledgerBookTestData.Output(true);
         this.budgetCurrencyContextTestData.Model.Output();
 
-        this.subject.Update(this.statementTestData, this.criteriaTestData, this.ledgerBookTestData, this.ledgerCalculation, this.budgetCurrencyContextTestData, new DebugLogger());
+        this.subject.Update(this.transactionsTestData, this.criteriaTestData, this.ledgerBookTestData, this.ledgerCalculation, this.budgetCurrencyContextTestData, new DebugLogger());
 
         Assert.AreEqual(-2433.34, this.subject.Value);
     }
 
-    private static class StatementModelTestDataForThisTest
+    private static class TransactionsModelTestDataForThisTest
     {
         public static IAccountTypeRepository AccountTypeRepo { get; set; }
         public static IBudgetBucketRepository BudgetBucketRepo { get; set; }
 
         /// <summary>THIS IS GENERATED CODE </summary>
         [GeneratedCode("StatementModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]
-        public static StatementModel TestDataGenerated()
+        public static TransactionsListModel TestDataGenerated()
         {
-            var model = new StatementModel(new FakeLogger()) { StorageKey = @"C:\Foo\StatementModel.csv", LastImport = new DateTime(2015, 11, 21) };
+            var model = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\Foo\TransactionsListModel.csv", LastImport = new DateTime(2015, 11, 21) };
 
             var transactions = new List<Transaction>
             {

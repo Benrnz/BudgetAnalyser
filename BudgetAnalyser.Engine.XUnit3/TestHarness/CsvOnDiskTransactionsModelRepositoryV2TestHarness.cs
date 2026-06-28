@@ -1,0 +1,45 @@
+﻿using BudgetAnalyser.Engine.Persistence;
+using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.Engine.Transactions.Data;
+
+namespace BudgetAnalyser.Engine.XUnit.TestHarness;
+
+internal class CsvOnDiskTransactionsModelRepositoryV2TestHarness(
+    ILogger logger,
+    IDtoMapper<TransactionSetDto, TransactionsListModel> mapper,
+    IReaderWriterSelector readerWriterSelector)
+    : CsvOnDiskTransactionsModelRepositoryV2(new BankImportUtilitiesTestHarness(), logger, mapper, readerWriterSelector)
+{
+    public TransactionSetDto? Dto { get; set; }
+    public string SerialisedData { get; set; } = string.Empty;
+    public MemoryStream? WriteStream { get; set; } = new();
+
+    protected override Stream CreateWritableStream(string storageKey, IFileReaderWriter writer)
+    {
+        if (WriteStream is null)
+        {
+            return base.CreateWritableStream(storageKey, writer);
+        }
+
+        return WriteStream;
+    }
+
+    protected override TransactionSetDto MapToDto(TransactionsListModel model)
+    {
+        if (Dto is null)
+        {
+            Dto = base.MapToDto(model);
+            return Dto;
+        }
+
+        return Dto;
+    }
+
+    protected override async Task WriteToStream(TransactionSetDto transactionSet, StreamWriter streamWriter)
+    {
+        await base.WriteToStream(transactionSet, streamWriter);
+        streamWriter.BaseStream.Position = 0;
+        using var reader = new StreamReader(streamWriter.BaseStream);
+        SerialisedData = await reader.ReadToEndAsync();
+    }
+}

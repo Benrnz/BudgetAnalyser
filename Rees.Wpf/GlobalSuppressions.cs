@@ -12,22 +12,22 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
-                    Target = "Rees.Wpf.RecentFiles")]
+        Target = "Rees.Wpf.RecentFiles")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
-                    Target = "Rees.Wpf.Converters")]
+        Target = "Rees.Wpf.Converters")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
-                    Target = "Rees.Wpf.ApplicationState")]
+        Target = "Rees.Wpf.ApplicationState")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Scope = "member",
-                    Target = "Rees.Wpf.IRecentFileManager.#AddFile(System.String)")]
+        Target = "Rees.Wpf.IRecentFileManager.#AddFile(System.String)")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Scope = "member",
-                    Target = "Rees.Wpf.IRecentFileManager.#Files()")]
+        Target = "Rees.Wpf.IRecentFileManager.#Files()")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Scope = "member",
-                    Target = "Rees.Wpf.IRecentFileManager.#Remove(System.String)")]
+        Target = "Rees.Wpf.IRecentFileManager.#Remove(System.String)")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Scope = "member",
-                    Target = "Rees.Wpf.IRecentFileManager.#UpdateFile(System.String)")]
+        Target = "Rees.Wpf.IRecentFileManager.#UpdateFile(System.String)")]

@@ -89,6 +89,11 @@ public class AccountTypeRepositoryTest
         Assert.AreSame(result1, result2);
     }
 
+    private InMemoryAccountTypeRepository CreateSubject()
+    {
+        return new InMemoryAccountTypeRepository();
+    }
+
     private static AmexAccount CreateTestData()
     {
         return new AmexAccount(AccountTypeRepositoryConstants.Amex);
@@ -97,10 +102,5 @@ public class AccountTypeRepositoryTest
     private static ChequeAccount CreateTestData2()
     {
         return new ChequeAccount(AccountTypeRepositoryConstants.Cheque);
-    }
-
-    private InMemoryAccountTypeRepository CreateSubject()
-    {
-        return new InMemoryAccountTypeRepository();
     }
 }

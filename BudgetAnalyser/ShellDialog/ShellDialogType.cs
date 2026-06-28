@@ -1,9 +1,8 @@
-﻿namespace BudgetAnalyser.ShellDialog
+﻿namespace BudgetAnalyser.ShellDialog;
+
+public enum ShellDialogType
 {
-    public enum ShellDialogType
-    {
-        Ok,
-        OkCancel,
-        SaveCancel
-    }
+    Ok,
+    OkCancel,
+    SaveCancel
 }

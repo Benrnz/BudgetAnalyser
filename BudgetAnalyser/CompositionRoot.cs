@@ -11,14 +11,14 @@ using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
-using BudgetAnalyser.Statement;
+using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
@@ -43,7 +43,7 @@ public sealed class CompositionRoot : IDisposable
     {
         Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
         var builder = new ContainerBuilder();
-        var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
+        var engineAssembly = typeof(TransactionsListModel).GetTypeInfo().Assembly;
         var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
         var thisAssembly = GetType().GetTypeInfo().Assembly;
 
@@ -196,7 +196,7 @@ public sealed class CompositionRoot : IDisposable
         [
             typeof(AddLedgerReconciliationController),
             typeof(AppliedRulesController),
-            typeof(BudgetController),
+            typeof(TopBudgetController),
             typeof(ChooseBudgetBucketController),
             typeof(CreateNewFixedBudgetController),
             typeof(CreateNewSurprisePaymentMonitorController),
@@ -205,7 +205,7 @@ public sealed class CompositionRoot : IDisposable
             typeof(EditingTransactionController),
             typeof(EncryptFileController),
             typeof(GlobalFilterController),
-            typeof(LedgerBookController),
+            typeof(TopLedgerBookController),
             typeof(LedgerBucketViewController),
             typeof(LedgerRemarksController),
             typeof(LedgerTransactionsController),
@@ -214,11 +214,11 @@ public sealed class CompositionRoot : IDisposable
             typeof(NewRuleController),
             typeof(OverallPerformanceController),
             typeof(ReconciliationToDoListController),
-            typeof(ReportsCatalogController),
+            typeof(TopReportsCatalogController),
             typeof(RulesController),
             typeof(ShowSurplusBalancesController),
             typeof(SplitTransactionController),
-            typeof(StatementController),
+            typeof(TopTransactionsListController),
             typeof(TransferFundsController),
             typeof(UploadMobileDataController)
         ];

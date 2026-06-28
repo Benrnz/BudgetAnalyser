@@ -18,7 +18,7 @@ public class InMemoryAccountTypeRepository : IAccountTypeRepository
     public InMemoryAccountTypeRepository()
     {
         // Populate the repository with the known list of account I want for now.
-        // In a more advanced implementation these would be loaded into the repository when the StatementModel is loaded using
+        // In a more advanced implementation these would be loaded into the repository when the TransactionsListModel is loaded using
         // the AccountTypes actively used by it.
         this.repository.TryAdd(AccountTypeRepositoryConstants.Cheque,
             new ChequeAccount(AccountTypeRepositoryConstants.Cheque));
@@ -30,6 +30,30 @@ public class InMemoryAccountTypeRepository : IAccountTypeRepository
             new MastercardAccount(AccountTypeRepositoryConstants.Mastercard));
         this.repository.TryAdd(AccountTypeRepositoryConstants.Amex,
             new AmexAccount(AccountTypeRepositoryConstants.Amex));
+    }
+
+    /// <summary>
+    ///     Retrieve the <see cref="Account" /> for the given key or null if it doesn't exist in the repository.
+    /// </summary>
+    /// <param name="key">The unique key.</param>
+    /// <returns>The found account or null.</returns>
+    public Account? GetByKey(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            return null;
+        }
+
+        return this.repository.GetValueOrDefault(key.ToUpperInvariant());
+    }
+
+    /// <summary>
+    ///     Return a list of all <see cref="Account" />s in the repository. These are the ones actively being used in the
+    ///     current data loaded.
+    /// </summary>
+    public IEnumerable<Account> ListCurrentlyUsedAccountTypes()
+    {
+        return this.repository.Values.ToList();
     }
 
     /// <summary>
@@ -67,29 +91,5 @@ public class InMemoryAccountTypeRepository : IAccountTypeRepository
     {
         var copy = this.repository.ToArray();
         return copy.FirstOrDefault(x => criteria(x.Value)).Value;
-    }
-
-    /// <summary>
-    ///     Retrieve the <see cref="Account" /> for the given key or null if it doesn't exist in the repository.
-    /// </summary>
-    /// <param name="key">The unique key.</param>
-    /// <returns>The found account or null.</returns>
-    public Account? GetByKey(string key)
-    {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            return null;
-        }
-
-        return this.repository.GetValueOrDefault(key.ToUpperInvariant());
-    }
-
-    /// <summary>
-    ///     Return a list of all <see cref="Account" />s in the repository. These are the ones actively being used in the
-    ///     current data loaded.
-    /// </summary>
-    public IEnumerable<Account> ListCurrentlyUsedAccountTypes()
-    {
-        return this.repository.Values.ToList();
     }
 }

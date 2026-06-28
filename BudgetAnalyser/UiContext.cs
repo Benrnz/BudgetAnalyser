@@ -13,8 +13,6 @@ public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger lo
 {
     private readonly Dictionary<Type, Lazy<ControllerBase>> controllerDic = new();
 
-    public IEnumerable<IShowableController> ShowableControllers => Controllers.OfType<IShowableController>();
-
     public IReadOnlySet<ControllerBase> Controllers
     {
         get

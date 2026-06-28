@@ -6,7 +6,6 @@ namespace BudgetAnalyser.Engine.XUnit.TestHarness;
 
 internal class FakeMonitorableDependencies : MonitorableDependencies
 {
-#nullable enable
     /// <summary>
     ///     Initializes a new instance of the <see cref="MonitorableDependencies" /> class.
     /// </summary>

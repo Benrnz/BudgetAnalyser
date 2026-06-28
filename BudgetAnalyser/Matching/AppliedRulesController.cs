@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Statement;
+using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Input;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
@@ -14,7 +14,7 @@ public class AppliedRulesController : ControllerBase
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionRuleService ruleService;
-    private readonly StatementController statementController;
+    private readonly TopTransactionsListController transactionsController;
 
     public AppliedRulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
         : base(uiContext.Messenger)
@@ -27,7 +27,7 @@ public class AppliedRulesController : ControllerBase
         RulesController = uiContext.Controller<RulesController>();
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
-        this.statementController = uiContext.Controller<StatementController>();
+        this.transactionsController = uiContext.Controller<TopTransactionsListController>();
         this.messageBox = uiContext.UserPrompts.MessageBox;
         this.ruleService.Saved += OnSavedNotificationReceived;
     }
@@ -66,13 +66,13 @@ public class AppliedRulesController : ControllerBase
 
     private bool CanExecuteCreateRuleCommand()
     {
-        return this.statementController.ViewModel.SelectedRow is not null;
+        return this.transactionsController.ViewModel.SelectedRow is not null;
     }
 
     private void OnApplyRulesCommandExecute()
     {
-        var statement = this.statementController.ViewModel.Statement ?? throw new InvalidOperationException("The statement model is null, not initialised or not loaded.");
-        if (this.ruleService.Match(statement.Transactions))
+        var transactions = this.transactionsController.ViewModel.TransactionsList ?? throw new InvalidOperationException("The transactions model is null, not initialised or not loaded.");
+        if (this.ruleService.Match(transactions.Transactions))
         {
             Dirty = true;
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Transactions);
@@ -81,13 +81,13 @@ public class AppliedRulesController : ControllerBase
 
     private void OnCreateRuleCommandExecute()
     {
-        if (this.statementController.ViewModel.SelectedRow is null)
+        if (this.transactionsController.ViewModel.SelectedRow is null)
         {
             this.messageBox.Show("No row selected.");
             return;
         }
 
-        RulesController.CreateNewRuleFromTransaction(this.statementController.ViewModel.SelectedRow);
+        RulesController.CreateNewRuleFromTransaction(this.transactionsController.ViewModel.SelectedRow);
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)

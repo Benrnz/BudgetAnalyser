@@ -1,5 +1,5 @@
 ﻿using BudgetAnalyser.Engine.Ledger.Reconciliation;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using Rees.UnitTestUtilities;
 
@@ -149,7 +149,7 @@ public class ReconciliationBuilderNarrativeTest
             BudgetBucket = BudgetBucketTestData.BudgetModelTestData1Buckets.First(),
             Date = new DateOnly(2024, 12, 9),
             Id = Guid.NewGuid(),
-            TransactionType = StatementModelTestData.TransactionType /* Bill Payment */
+            TransactionType = TransactionsListModelTestData.TransactionType /* Bill Payment */
         };
     }
 

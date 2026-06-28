@@ -41,15 +41,15 @@
                        Text="Future" />
         </Border>
         <Grid>
-            <TextBlock x:Name="budgetNameTextBlock" 
+            <TextBlock x:Name="budgetNameTextBlock"
                        Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding Model.Name}" />
-            <TextBox x:Name="budgetNameTextBox" 
+            <TextBox x:Name="budgetNameTextBox"
                      Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}"
                      HorizontalAlignment="Stretch"
                      KeyUp="OnKeyUp"
                      TextWrapping="NoWrap"
-                     Visibility="Hidden"/>
+                     Visibility="Hidden" />
         </Grid>
     </StackPanel>
 </UserControl>

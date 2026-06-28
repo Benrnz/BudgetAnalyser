@@ -190,7 +190,7 @@ public class InMemoryBudgetBucketRepositoryTest
     public void IsValidCodeShouldReturnFalseWhenRepositoryIsEmpty()
     {
         var subject = CreateSubject();
-        Assert.IsFalse(subject.IsValidCode(StatementModelTestData.PhoneBucket.Code));
+        Assert.IsFalse(subject.IsValidCode(TransactionsListModelTestData.PhoneBucket.Code));
     }
 
     [TestMethod]

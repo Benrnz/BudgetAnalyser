@@ -205,7 +205,7 @@
                        TextWrapping="Wrap"
                        Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}">
                 <Run>
-                    You can use this to manually add a new transaction that has not yet appeared on the statement. But only newly added Ledger Entries can
+                    You can use this to manually add a new transaction that has not yet appeared in the transactions list. But only newly added Ledger Entries can
                     be modified, after saving the Ledger Book it becomes readonly.
                 </Run>
             </TextBlock>

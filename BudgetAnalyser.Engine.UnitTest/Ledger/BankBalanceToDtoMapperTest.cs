@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger;
 public class BankBalanceToDtoMapperTest
 {
     private BankBalanceDto Result { get; set; }
-    private BankBalance TestData => new(StatementModelTestData.ChequeAccount, 44552.21M);
+    private BankBalance TestData => new(TransactionsListModelTestData.ChequeAccount, 44552.21M);
 
     [TestMethod]
     public void ShouldMapAmount()
@@ -20,7 +20,7 @@ public class BankBalanceToDtoMapperTest
     [TestMethod]
     public void ShouldMapBankAccount()
     {
-        Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.Account);
+        Assert.AreEqual(TransactionsListModelTestData.ChequeAccount.Name, Result.Account);
     }
 
     [TestInitialize]

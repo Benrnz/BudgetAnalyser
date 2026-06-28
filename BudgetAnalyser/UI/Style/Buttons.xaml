@@ -775,41 +775,43 @@
     </Style>
 
     <Style x:Key="Button.Round.TransferFunds"
-        	BasedOn="{StaticResource Button.Round.Base}"
-        	TargetType="{x:Type Button}">
+           BasedOn="{StaticResource Button.Round.Base}"
+           TargetType="{x:Type Button}">
         <Setter Property="ToolTip"
-        		Value="Transfer Funds" />
+                Value="Transfer Funds" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid>
                         <Ellipse Fill="{TemplateBinding Background}"
-        						Height="40"
-        						HorizontalAlignment="Center"
-        						Stroke="{StaticResource Brush.Button.Stroke}"
-        						StrokeThickness="4"
-        						VerticalAlignment="Center"
-        						Width="40" />
-                        <Path Data="M0.00,288.00c0.00,76.462, 33.524,145.092, 86.675,192.00l 42.333-48.00C 89.145,396.818, 64.00,345.348, 64.00,288.00c0.00-106.038, 85.965-192.00, 192.00-192.00 c 53.021,0.00, 101.019,21.493, 135.765,56.239L 320.00,224.00l 192.00,0.00 L 512.00,32.00 l-74.985,74.989C 390.688,60.66, 326.693,32.00, 256.00,32.00 C 114.615,32.00,0.00,146.615,0.00,288.00z"
-        						Fill="{StaticResource Brush.Button.Glyph}"
-        						Height="15"
-        						HorizontalAlignment="Left"
-        						Margin="8,12,0,0"
-        						Stretch="Uniform"
-        						Stroke="{StaticResource Brush.Button.Glyph}"
-        						StrokeThickness="1"
-        						VerticalAlignment="Top"
-        						Width="15" />
-                        <Path Data="M 240.00,32.00C 107.452,32.00,0.00,139.452,0.00,272.00c0.00,132.549, 107.452,240.00, 240.00,240.00c 132.549,0.00, 240.00-107.451, 240.00-240.00 C 480.00,139.452, 372.549,32.00, 240.00,32.00z M 240.00,464.00c-106.039,0.00-192.00-85.961-192.00-192.00c0.00-106.039, 85.961-192.00, 192.00-192.00 c 106.039,0.00, 192.00,85.961, 192.00,192.00C 432.00,378.039, 346.039,464.00, 240.00,464.00zM 256.00,256.00l0.00-64.00 l 64.00,0.00 l0.00-32.00 l-64.00,0.00 l0.00-32.00 l-32.00,0.00 l0.00,32.00 l-64.00,0.00 l0.00,128.00 l 64.00,0.00 l0.00,64.00 l-64.00,0.00 l0.00,32.00 l 64.00,0.00 l0.00,32.00 l 32.00,0.00 l0.00-32.00 l 64.00,0.00 l 0.001,0.00 L 320.00,256.00L 256.00,256.00 z M 224.00,256.00l-32.00,0.00 l0.00-64.00 l 32.00,0.00 L 224.00,256.00 z M 288.001,352.00L 256.00,352.00 l0.00-64.00 l 32.001,0.00 L 288.001,352.00 z"
-        						Fill="{StaticResource Brush.Button.Glyph}"
-        						Height="10"
-        						HorizontalAlignment="Left"
-        						Margin="22,18,0,0"
-        						Stretch="Uniform"
-        						Stroke="{StaticResource Brush.Button.Glyph}"
-        						StrokeThickness="0.5"
-        						VerticalAlignment="Top"
-        						Width="15" />
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Path
+                            Data="M0.00,288.00c0.00,76.462, 33.524,145.092, 86.675,192.00l 42.333-48.00C 89.145,396.818, 64.00,345.348, 64.00,288.00c0.00-106.038, 85.965-192.00, 192.00-192.00 c 53.021,0.00, 101.019,21.493, 135.765,56.239L 320.00,224.00l 192.00,0.00 L 512.00,32.00 l-74.985,74.989C 390.688,60.66, 326.693,32.00, 256.00,32.00 C 114.615,32.00,0.00,146.615,0.00,288.00z"
+                            Fill="{StaticResource Brush.Button.Glyph}"
+                            Height="15"
+                            HorizontalAlignment="Left"
+                            Margin="8,12,0,0"
+                            Stretch="Uniform"
+                            Stroke="{StaticResource Brush.Button.Glyph}"
+                            StrokeThickness="1"
+                            VerticalAlignment="Top"
+                            Width="15" />
+                        <Path
+                            Data="M 240.00,32.00C 107.452,32.00,0.00,139.452,0.00,272.00c0.00,132.549, 107.452,240.00, 240.00,240.00c 132.549,0.00, 240.00-107.451, 240.00-240.00 C 480.00,139.452, 372.549,32.00, 240.00,32.00z M 240.00,464.00c-106.039,0.00-192.00-85.961-192.00-192.00c0.00-106.039, 85.961-192.00, 192.00-192.00 c 106.039,0.00, 192.00,85.961, 192.00,192.00C 432.00,378.039, 346.039,464.00, 240.00,464.00zM 256.00,256.00l0.00-64.00 l 64.00,0.00 l0.00-32.00 l-64.00,0.00 l0.00-32.00 l-32.00,0.00 l0.00,32.00 l-64.00,0.00 l0.00,128.00 l 64.00,0.00 l0.00,64.00 l-64.00,0.00 l0.00,32.00 l 64.00,0.00 l0.00,32.00 l 32.00,0.00 l0.00-32.00 l 64.00,0.00 l 0.001,0.00 L 320.00,256.00L 256.00,256.00 z M 224.00,256.00l-32.00,0.00 l0.00-64.00 l 32.00,0.00 L 224.00,256.00 z M 288.001,352.00L 256.00,352.00 l0.00-64.00 l 32.001,0.00 L 288.001,352.00 z"
+                            Fill="{StaticResource Brush.Button.Glyph}"
+                            Height="10"
+                            HorizontalAlignment="Left"
+                            Margin="22,18,0,0"
+                            Stretch="Uniform"
+                            Stroke="{StaticResource Brush.Button.Glyph}"
+                            StrokeThickness="0.5"
+                            VerticalAlignment="Top"
+                            Width="15" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

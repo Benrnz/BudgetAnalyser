@@ -3,7 +3,7 @@
 public interface IMonitorableDependencies
 {
     /// <summary>
-    /// An event that is raised when a dependency that is monitored by this class has been updated. Consumers can then call <see cref="RetrieveDependency"/> to fetch the updated dependency.
+    ///     An event that is raised when a dependency that is monitored by this class has been updated. Consumers can then call <see cref="RetrieveDependency" /> to fetch the updated dependency.
     /// </summary>
     event EventHandler<DependencyChangedEventArgs>? DependencyChanged;
 

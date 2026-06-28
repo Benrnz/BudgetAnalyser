@@ -2,13 +2,12 @@
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.XUnit.Helpers;
 using BudgetAnalyser.Engine.XUnit.TestData;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Shouldly;
-
 
 #pragma warning disable CS8601 // Possible null reference assignment. // GENERATED CODE
 
@@ -22,15 +21,15 @@ public class RemainingSurplusWidgetTest : IDisposable
     private readonly LedgerBook ledgerBookTestData;
     private readonly LedgerCalculation ledgerCalculation;
     private readonly XUnitOutputWriter outputWriter;
-    private readonly StatementModel statementTestData;
     private readonly RemainingSurplusWidget subject = new();
+    private readonly TransactionsListModel transactionsTestData;
 
     public RemainingSurplusWidgetTest(ITestOutputHelper outputHelper)
     {
         this.outputWriter = new XUnitOutputWriter(outputHelper);
-        StatementModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
-        StatementModelTestDataForThisTest.BudgetBucketRepo = this.bucketRepo;
-        this.statementTestData = StatementModelTestDataForThisTest.TestDataGenerated();
+        TransactionsListModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
+        TransactionsListModelTestDataForThisTest.BudgetBucketRepo = this.bucketRepo;
+        this.transactionsTestData = TransactionsListModelTestDataForThisTest.TestDataGenerated();
 
         var budgetModel = BudgetModelTestData.CreateTestData1();
         this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel), budgetModel);
@@ -42,14 +41,13 @@ public class RemainingSurplusWidgetTest : IDisposable
             .AppendReconciliation(
                 new DateOnly(2015, 10, 20),
                 new BankBalance(LedgerBookTestData.ChequeAccount, 4502.75M))
-            .WithReconciliationEntries(
-                entryBuilder =>
-                {
-                    entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
-                    entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
-                    entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
-                        .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateOnly(2015, 10, 20), "automatchref12"); });
-                })
+            .WithReconciliationEntries(entryBuilder =>
+            {
+                entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
+                entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
+                entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
+                    .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateOnly(2015, 10, 20), "automatchref12"); });
+            })
             .Build();
 
         this.ledgerCalculation = new LedgerCalculation(new FakeLogger());
@@ -58,7 +56,7 @@ public class RemainingSurplusWidgetTest : IDisposable
     public void Dispose()
     {
         this.outputWriter.Dispose();
-        this.statementTestData.Dispose();
+        this.transactionsTestData.Dispose();
     }
 
     [Fact]
@@ -66,14 +64,14 @@ public class RemainingSurplusWidgetTest : IDisposable
     {
         this.ledgerBookTestData.Output(true, this.outputWriter);
         this.budgetTestData.Output(this.outputWriter);
-        this.statementTestData.Output(DateOnly.MinValue, this.outputWriter);
+        this.transactionsTestData.Output(DateOnly.MinValue, this.outputWriter);
     }
 
     [Fact]
     public void Update_ShouldBeZero_WhenSurplusIsOverdrawnAndExcludeAutoMatchedTransactionsInCalculation()
     {
         this.budgetTestData.Model.Incomes.First().Amount = 2500;
-        this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
+        this.subject.Update(this.budgetTestData, this.transactionsTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
         // Begin Date 20/10/2015 EndDate 19/11/2015
         // Starting Surplus is: 2175.00
         // Total Surplus transactions are: -835.69
@@ -85,7 +83,7 @@ public class RemainingSurplusWidgetTest : IDisposable
     [Fact]
     public void Update_ShouldCalculate_ExcludeAutoMatchedTransactionsInCalculation()
     {
-        this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
+        this.subject.Update(this.budgetTestData, this.transactionsTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
         // Begin Date 20/10/2015 EndDate 19/11/2015
         // Starting Surplus is: 1175.00
         // Total Surplus transactions are: -835.69
@@ -102,18 +100,18 @@ public class RemainingSurplusWidgetTest : IDisposable
         // Also remove all other accounts, filtering to CHEQUE only
         // This will create a more realistic data set.
         var removeId = Guid.Parse("c66eb722-6d03-48b2-b985-6721701a01ae");
-        var myTransactions = this.statementTestData.AllTransactions
+        var myTransactions = this.transactionsTestData.AllTransactions
             .ToList()
-            .Where(t => t.Account == StatementModelTestData.ChequeAccount)
+            .Where(t => t.Account == TransactionsListModelTestData.ChequeAccount)
             .Where(t => t.Id != removeId)
             .ToList();
-        var myStatement = this.statementTestData.LoadTransactions(myTransactions);
+        var myTransactionsModel = this.transactionsTestData.LoadTransactions(myTransactions);
 
         this.ledgerBookTestData.Output(true, this.outputWriter);
         this.budgetTestData.Output(this.outputWriter);
-        myStatement.Output(DateOnly.MinValue, this.outputWriter);
+        myTransactionsModel.Output(DateOnly.MinValue, this.outputWriter);
 
-        this.subject.Update(this.budgetTestData, myStatement, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
+        this.subject.Update(this.budgetTestData, myTransactionsModel, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
 
         this.subject.Value.ShouldBe(607.73);
         /*
@@ -127,16 +125,16 @@ public class RemainingSurplusWidgetTest : IDisposable
          */
     }
 
-    private static class StatementModelTestDataForThisTest
+    private static class TransactionsListModelTestDataForThisTest
     {
         public static IAccountTypeRepository AccountTypeRepo { get; set; } = null!;
         public static IBudgetBucketRepository BudgetBucketRepo { get; set; } = null!;
 
         /// <summary>THIS IS GENERATED CODE </summary>
-        [GeneratedCode("StatementModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]
-        public static StatementModel TestDataGenerated()
+        [GeneratedCode("TransactionsModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]
+        public static TransactionsListModel TestDataGenerated()
         {
-            var model = new StatementModel(new FakeLogger()) { StorageKey = @"C:\Foo\StatementModel.csv", LastImport = new DateTime(2015, 11, 21) };
+            var model = new TransactionsListModel(new FakeLogger()) { StorageKey = @"C:\Foo\TransactionsListModel.csv", LastImport = new DateTime(2015, 11, 21) };
 
             var transactions = new List<Transaction>
             {

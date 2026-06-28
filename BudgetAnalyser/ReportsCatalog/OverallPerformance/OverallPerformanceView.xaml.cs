@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
+namespace BudgetAnalyser.ReportsCatalog.OverallPerformance;
+
+/// <summary>
+///     Interaction logic for OverallPerformanceView.xaml
+/// </summary>
+public partial class OverallPerformanceView : UserControl
 {
-    /// <summary>
-    ///     Interaction logic for OverallPerformanceView.xaml
-    /// </summary>
-    public partial class OverallPerformanceView : UserControl
+    public OverallPerformanceView()
     {
-        public OverallPerformanceView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

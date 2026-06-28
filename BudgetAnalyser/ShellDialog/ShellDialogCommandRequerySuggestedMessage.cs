@@ -1,8 +1,7 @@
 ﻿using Rees.Wpf;
 
-namespace BudgetAnalyser.ShellDialog
+namespace BudgetAnalyser.ShellDialog;
+
+public class ShellDialogCommandRequerySuggestedMessage : MessageBase
 {
-    public class ShellDialogCommandRequerySuggestedMessage : MessageBase
-    {
-    }
 }

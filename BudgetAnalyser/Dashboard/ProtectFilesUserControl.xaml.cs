@@ -37,7 +37,7 @@ public partial class ProtectFilesUserControl
             this.controller = (EncryptFileController)DataContext;
         }
 
-        if ((bool)e.NewValue == false && (bool)e.OldValue)
+        if (!(bool)e.NewValue && (bool)e.OldValue)
         {
             this.passwordBox.Clear();
             this.confirmBox.Clear();

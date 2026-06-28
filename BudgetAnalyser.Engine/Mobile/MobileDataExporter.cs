@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Transactions;
 
 namespace BudgetAnalyser.Engine.Mobile;
 
@@ -31,7 +31,7 @@ internal class MobileDataExporter : IMobileDataExporter
     /// </summary>
     /// <returns>An object containing the summarised data.</returns>
     public SummarisedLedgerMobileData CreateExportObject(
-        StatementModel transactions,
+        TransactionsListModel transactions,
         BudgetModel currentBudget,
         LedgerBook ledgerBook,
         GlobalFilterCriteria filter)
