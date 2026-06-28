@@ -39,7 +39,7 @@ public class MyService : IMyService { }
 
 ### 2. Private Field Naming Convention: `doNotUse` Prefix
 
-Use `doNotUse` prefix for private backing fields **ONLY in classes that implement**:
+Use `doNotUse` prefix for private backing fields **ONLY in classes that implement or derive from**:
 - `ControllerBase`
 - `ObservableRecipient`
 - `INotifyPropertyChanged`
@@ -59,6 +59,9 @@ public string Description
 ```
 
 This convention signals "don't access directly; use the property." It's essential for MVVM-aware classes where direct field access bypasses change notification. **Do NOT use this prefix in regular service or utility classes** — use standard naming conventions instead (e.g., `_description`).
+
+Use pascal casing for any other type of private field.
+Do NOT prefix private fields with _ (underscore).
 
 ### 3. MVVM Structure: Controllers = ViewModels
 
@@ -268,7 +271,8 @@ Optional; if encrypted files are needed:
 ❌ Accessing Engine services directly from Views (bypass Controller abstraction)
 ❌ Using Service Locator outside CompositionRoot (use constructor injection)
 ❌ Threading exceptions silently (use `ILogger`)
-❌ Public mutable fields (use private `doNotUse` + property)
+❌ Public mutable fields (use private `doNotUse` + property when the containing class derives from `ObservableRecipient` and `INotifyPropertyChanged`, or use private fields with camelcasing for any
+other type)
 ❌ Storing references to Controllers outside `IUiContext` (breaks singleton pattern)
 ❌ Using Moq for mocking (use NSubstitute)
 ❌ Using plain Assert statements (use Shouldly)
