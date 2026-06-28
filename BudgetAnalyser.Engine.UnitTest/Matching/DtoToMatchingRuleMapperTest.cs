@@ -24,7 +24,7 @@ public class DtoToMatchingRuleMapperTest
             TransactionType: "dog.",
             And: true
         )
-        { RuleId = Id };
+    { RuleId = Id };
 
     [TestMethod]
     public void ShouldMapAmount()

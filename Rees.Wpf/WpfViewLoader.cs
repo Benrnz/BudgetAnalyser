@@ -57,7 +57,7 @@ public class WpfViewLoader<T> : IViewLoader where T : Window, new()
             }
             // ReSharper disable EmptyGeneralCatchClause
             catch
-                // ReSharper restore EmptyGeneralCatchClause
+            // ReSharper restore EmptyGeneralCatchClause
             {
                 // Swallow any exception trying to close the orphaned window.
             }

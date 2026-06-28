@@ -33,9 +33,9 @@ public class MetaTest
     {
         var assembly = GetType().Assembly;
         var count = (from type in assembly.ExportedTypes
-            let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
-            where testClassAttrib is not null
-            select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() is not null)).Sum();
+                     let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
+                     where testClassAttrib is not null
+                     select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() is not null)).Sum();
         Console.WriteLine(count);
         Assert.IsTrue(count >= MinimumTestCount);
     }

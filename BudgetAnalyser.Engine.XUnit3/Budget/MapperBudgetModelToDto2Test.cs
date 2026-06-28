@@ -76,7 +76,7 @@ public class MapperBudgetModelToDto2Test
                 Expenses: [new ExpenseDto(200M, TestDataConstants.PowerBucketCode)],
                 Incomes: [new IncomeDto(2000M, TestDataConstants.IncomeBucketCode)]
             )
-            { LastModifiedComment = "Test Comment" };
+        { LastModifiedComment = "Test Comment" };
 
         // Act
         var model = this.mapper.ToModel(budgetModelDto);

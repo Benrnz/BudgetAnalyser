@@ -35,7 +35,7 @@ internal class ReconciliationBehaviourBudgetAmountBalanceAdjustments : IReconcil
     {
         var transferTasks = todoTasks.OfType<TransferTask>().ToList();
         foreach (var grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
-            // Rather than create a task, just do it
+        // Rather than create a task, just do it
         {
             reconciliation.BalanceAdjustment(
                 -grouping.Sum(t => t.Amount),
@@ -44,7 +44,7 @@ internal class ReconciliationBehaviourBudgetAmountBalanceAdjustments : IReconcil
         }
 
         foreach (var grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
-            // Rather than create a task, just do it
+        // Rather than create a task, just do it
         {
             reconciliation.BalanceAdjustment(
                 grouping.Sum(t => t.Amount),

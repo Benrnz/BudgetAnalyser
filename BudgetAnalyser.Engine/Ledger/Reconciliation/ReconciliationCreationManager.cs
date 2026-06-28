@@ -189,7 +189,7 @@ internal class ReconciliationCreationManager(
                             ledgerTransaction.Id,
                             ledgerTransaction.AutoMatchingReference,
                             ledgerTransaction.Amount))
-                    { Source = "1" };
+                { Source = "1" };
             }
         }
     }

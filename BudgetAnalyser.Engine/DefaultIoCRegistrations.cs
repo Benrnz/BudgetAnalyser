@@ -89,7 +89,7 @@ public static class DefaultIoCRegistrations
             .ToArray();
 
         return from type in allTypes
-            let autoRegisterAttribute = type.GetTypeInfo().GetCustomAttribute<AutoRegisterWithIoCAttribute>()
-            select new DependencyRegistrationRequirement { DependencyRequired = type, IsSingleInstance = autoRegisterAttribute.SingleInstance, NamedInstanceName = autoRegisterAttribute.Named };
+               let autoRegisterAttribute = type.GetTypeInfo().GetCustomAttribute<AutoRegisterWithIoCAttribute>()
+               select new DependencyRegistrationRequirement { DependencyRequired = type, IsSingleInstance = autoRegisterAttribute.SingleInstance, NamedInstanceName = autoRegisterAttribute.Named };
     }
 }

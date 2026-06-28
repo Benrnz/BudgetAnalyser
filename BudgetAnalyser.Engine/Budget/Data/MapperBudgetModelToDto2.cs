@@ -20,7 +20,7 @@ public class MapperBudgetModelToDto2(IDtoMapper<ExpenseDto, Expense> mapperExpen
                 EffectiveFrom: model.EffectiveFrom,
                 LastModified: model.LastModified.ToUniversalTime()
             )
-            { LastModifiedComment = model.LastModifiedComment };
+        { LastModifiedComment = model.LastModifiedComment };
     }
 
     public BudgetModel ToModel(BudgetModelDto dto)
