@@ -6,7 +6,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-             DataContextChanged="OnDataContextChanged" d:DataContext="{d:DesignInstance matchingUI:RulesController}">
+             DataContextChanged="OnDataContextChanged" d:DataContext="{d:DesignInstance matchingUI:TopRulesController}">
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type matching:RulesGroupedByBucket}">
@@ -79,19 +79,19 @@
                                    Text="Sort..." />
                     </MenuItem.Header>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matchingUI:RulesController.BucketSortKey}">
+                              CommandParameter="{x:Static matchingUI:TopRulesController.BucketSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Bucket" />
                         </MenuItem.Header>
                     </MenuItem>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matchingUI:RulesController.DescriptionSortKey}">
+                              CommandParameter="{x:Static matchingUI:TopRulesController.DescriptionSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Description" />
                         </MenuItem.Header>
                     </MenuItem>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matchingUI:RulesController.MatchesSortKey}">
+                              CommandParameter="{x:Static matchingUI:TopRulesController.MatchesSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Number of Matches" />
                         </MenuItem.Header>
@@ -120,7 +120,7 @@
                  Visibility="{Binding FlatListBoxVisibility, Converter={StaticResource Converter.BoolToVis}}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <matchingUI:MatchingRuleUserControl />
+                    <matchingUI:TopMatchingRuleUserControl />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

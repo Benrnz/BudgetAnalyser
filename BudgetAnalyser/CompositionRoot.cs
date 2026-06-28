@@ -130,7 +130,7 @@ public sealed class CompositionRoot : IDisposable
     private void BuildApplicationObjectGraph(IContainer container, params Assembly[] assemblies)
     {
         // Instantiate and store all controllers...
-        // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
+        // These must be executed in the order of dependency.  For example the TopRulesController requires a NewRuleController so the NewRuleController must be instantiated first.
 
         foreach (var assembly in assemblies)
         {
@@ -200,7 +200,7 @@ public sealed class CompositionRoot : IDisposable
             typeof(ChooseBudgetBucketController),
             typeof(CreateNewFixedBudgetController),
             typeof(CreateNewSurprisePaymentMonitorController),
-            typeof(DashboardController),
+            typeof(TopDashboardController),
             typeof(DisusedRulesController),
             typeof(EditingTransactionController),
             typeof(EncryptFileController),
@@ -215,7 +215,7 @@ public sealed class CompositionRoot : IDisposable
             typeof(OverallPerformanceController),
             typeof(ReconciliationToDoListController),
             typeof(TopReportsCatalogController),
-            typeof(RulesController),
+            typeof(TopRulesController),
             typeof(ShowSurplusBalancesController),
             typeof(SplitTransactionController),
             typeof(TopTransactionsListController),

@@ -24,7 +24,7 @@ public class AppliedRulesController : ControllerBase
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        RulesController = uiContext.Controller<RulesController>();
+        TopRulesController = uiContext.Controller<TopRulesController>();
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.transactionsController = uiContext.Controller<TopTransactionsListController>();
@@ -54,14 +54,14 @@ public class AppliedRulesController : ControllerBase
         }
     }
 
-    public RulesController RulesController { get; }
+    public TopRulesController TopRulesController { get; }
 
     [UsedImplicitly]
     public ICommand ShowRulesCommand => new RelayCommand(OnShowRulesCommandExecute);
 
     private bool CanExecuteApplyRulesCommand()
     {
-        return RulesController.RulesGroupedByBucket.Any();
+        return TopRulesController.RulesGroupedByBucket.Any();
     }
 
     private bool CanExecuteCreateRuleCommand()
@@ -87,7 +87,7 @@ public class AppliedRulesController : ControllerBase
             return;
         }
 
-        RulesController.CreateNewRuleFromTransaction(this.transactionsController.ViewModel.SelectedRow);
+        TopRulesController.CreateNewRuleFromTransaction(this.transactionsController.ViewModel.SelectedRow);
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
@@ -97,6 +97,6 @@ public class AppliedRulesController : ControllerBase
 
     private void OnShowRulesCommandExecute()
     {
-        RulesController.Shown = true;
+        TopRulesController.Shown = true;
     }
 }

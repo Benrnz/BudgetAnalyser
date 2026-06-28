@@ -59,18 +59,18 @@ public class ShellController : ControllerBase, IInitializableController
         ReportsTabDialog = new ShellDialogController(Messenger);
     }
 
-    public TopBudgetController BudgetController => this.uiContext.Controller<TopBudgetController>();
+    public TopBudgetController TopBudgetController => this.uiContext.Controller<TopBudgetController>();
     public ShellDialogController BudgetTabDialog { get; }
-    public DashboardController DashboardController => this.uiContext.Controller<DashboardController>();
+    public TopDashboardController TopDashboardController => this.uiContext.Controller<TopDashboardController>();
     public ShellDialogController DashboardTabDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
-    public TopLedgerBookController LedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
+    public TopLedgerBookController TopLedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
     public ShellDialogController LedgerBookTabDialog { get; }
     public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
-    public TopReportsCatalogController ReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
+    public TopReportsCatalogController TopReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
     public ShellDialogController ReportsTabDialog { get; }
-    public RulesController RulesController => this.uiContext.Controller<RulesController>();
-    public TopTransactionsListController TransactionsController => this.uiContext.Controller<TopTransactionsListController>();
+    public TopRulesController TopRulesController => this.uiContext.Controller<TopRulesController>();
+    public TopTransactionsListController TopTransactionsController => this.uiContext.Controller<TopTransactionsListController>();
     public ShellDialogController TransactionsTabDialog { get; }
     internal Point WindowSize { get; private set; }
     public string WindowTitle => "Budget Analyser";
@@ -193,7 +193,7 @@ public class ShellController : ControllerBase, IInitializableController
                 this.originalWindowTopLeft = shellState.TopLeft;
             }
 
-            TransactionsController.PageSize = shellState.ListPageSize;
+            TopTransactionsController.PageSize = shellState.ListPageSize;
         }
 
         var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
@@ -209,7 +209,7 @@ public class ShellController : ControllerBase, IInitializableController
         {
             Size = WindowSize,
             TopLeft = WindowTopLeft,
-            ListPageSize = TransactionsController.PageSize
+            ListPageSize = TopTransactionsController.PageSize
         };
         message.PersistThisModel(shellPersistentStateV1);
 

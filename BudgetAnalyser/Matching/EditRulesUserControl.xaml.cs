@@ -21,7 +21,7 @@ public partial class EditRulesUserControl
         InitializeComponent();
     }
 
-    private RulesController Controller => (RulesController)DataContext;
+    private TopRulesController Controller => (TopRulesController)DataContext;
 
     private void OnCheckedAndSelectedRule(object? sender, RoutedEventArgs e)
     {
@@ -42,7 +42,7 @@ public partial class EditRulesUserControl
     {
         if (e.OldValue is not null)
         {
-            var oldController = (RulesController)e.OldValue;
+            var oldController = (TopRulesController)e.OldValue;
             oldController.SortChanged -= OnSortChanged;
             oldController.RuleRemoved -= OnRuleRemoved;
             oldController.RuleAdded -= OnRuleAdded;
@@ -156,14 +156,14 @@ public partial class EditRulesUserControl
             {
                 switch (this.currentSort)
                 {
-                    case RulesController.DescriptionSortKey:
+                    case TopRulesController.DescriptionSortKey:
                         var view1 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
                         view1.SortDescriptions.Clear();
                         view1.SortDescriptions.Add(new SortDescription("Description", ListSortDirection.Ascending));
                         view1.Refresh();
                         break;
 
-                    case RulesController.MatchesSortKey:
+                    case TopRulesController.MatchesSortKey:
                         var view2 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
                         view2.SortDescriptions.Clear();
                         view2.SortDescriptions.Add(new SortDescription("MatchCount", ListSortDirection.Descending));

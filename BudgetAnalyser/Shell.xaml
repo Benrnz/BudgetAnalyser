@@ -31,37 +31,37 @@
 
         <!-- Main Content Area -->
         <Grid>
-            <Grid Visibility="{Binding TransactionsController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding TransactionsController}" />
+            <Grid Visibility="{Binding TopTransactionsController.Shown, Converter={StaticResource Converter.BoolToVis}}">
+                <ContentPresenter Content="{Binding TopTransactionsController}" />
                 <shellDialog:ShellDialogView DataContext="{Binding TransactionsTabDialog}" />
             </Grid>
 
-            <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding BudgetController}"
+            <Grid Visibility="{Binding TopBudgetController.Shown, Converter={StaticResource Converter.BoolToVis}}">
+                <ContentPresenter Content="{Binding TopBudgetController}"
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding BudgetTabDialog}" />
             </Grid>
 
-            <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding LedgerBookController}"
+            <Grid Visibility="{Binding TopLedgerBookController.Shown, Converter={StaticResource Converter.BoolToVis}}">
+                <ContentPresenter Content="{Binding TopLedgerBookController}"
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding LedgerBookTabDialog}" />
             </Grid>
 
-            <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding DashboardController}"
+            <Grid Visibility="{Binding TopDashboardController.Shown, Converter={StaticResource Converter.BoolToVis}}">
+                <ContentPresenter Content="{Binding TopDashboardController}"
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding DashboardTabDialog}" />
             </Grid>
 
-            <Grid Visibility="{Binding ReportsCatalogController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding ReportsCatalogController}"
+            <Grid Visibility="{Binding TopReportsCatalogController.Shown, Converter={StaticResource Converter.BoolToVis}}">
+                <ContentPresenter Content="{Binding TopReportsCatalogController}"
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding ReportsTabDialog}" />
             </Grid>
 
-            <Grid Visibility="{Binding RulesController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding RulesController}"
+            <Grid Visibility="{Binding TopRulesController.Shown, Converter={StaticResource Converter.BoolToVis}}">
+                <ContentPresenter Content="{Binding TopRulesController}"
                                   VerticalAlignment="Stretch" />
             </Grid>
         </Grid>
