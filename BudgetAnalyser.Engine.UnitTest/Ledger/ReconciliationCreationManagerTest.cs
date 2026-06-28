@@ -102,7 +102,7 @@ public class ReconciliationCreationManagerTest
         this.mockReconciliationBuilder.Setup(m => m.CreateNewMonthlyReconciliation(TestDataReconcileDate, this.testDataBudgetModel, this.testDataTransactions, It.IsAny<BankBalance[]>()))
             .Returns(this.testDataReconResult);
         var aTransaction = this.testDataTransactions.AllTransactions.First();
-        PrivateAccessor.SetField(aTransaction, "budgetBucket", null!);
+        PrivateAccessor.SetField(aTransaction, "<BudgetBucket>k__BackingField", null!);
 
         ActPeriodEndReconciliation(TestDataReconcileDate);
     }

@@ -18,7 +18,6 @@ namespace BudgetAnalyser.Engine.Transactions;
 public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Transaction>
 {
     // ReSharper disable once ReplaceWithFieldKeyword - Required field for unit testing private accessor
-    private BudgetBucket? budgetBucket;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="Transaction" /> class.
@@ -66,23 +65,21 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     ///     Setting a budget bucket to null when it already has a non-null value is
     ///     not allowed.
     /// </exception>
-#pragma warning disable IDE0032
     public BudgetBucket? BudgetBucket
     {
-        get => this.budgetBucket;
+        get;
 
         set
         {
-            if (value is null && this.budgetBucket is not null)
+            if (value is null && field is not null)
             {
                 throw new ArgumentNullException(nameof(value), "Setting a budget bucket to null when it already has a non-null value is not allowed.");
             }
 
-            this.budgetBucket = value;
+            field = value;
             OnPropertyChanged();
         }
     }
-#pragma warning restore IDE0032
 
     /// <summary>
     ///     Gets or sets the transaction date.

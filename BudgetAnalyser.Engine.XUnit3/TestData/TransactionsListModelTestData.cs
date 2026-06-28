@@ -156,7 +156,7 @@ public static class TransactionsListModelTestData
     {
         foreach (var txn in instance.AllTransactions)
         {
-            PrivateAccessor.SetField(txn, "budgetBucket", null!);
+            PrivateAccessor.SetField(txn, "<BudgetBucket>k__BackingField", null!);
         }
 
         return instance;
