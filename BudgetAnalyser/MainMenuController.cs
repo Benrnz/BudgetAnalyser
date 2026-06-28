@@ -18,33 +18,14 @@ public class MainMenuController : ControllerBase, IInitializableController
 {
     private readonly IUiContext uiContext;
 
-    public MainMenuController(
-        IUiContext uiContext,
-        IDashboardService dashboardService,
-        DemoFileHelper demoFileHelper)
-        : base(uiContext.Messenger)
+    public MainMenuController(IUiContext uiContext) : base(uiContext.Messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        if (dashboardService is null)
-        {
-            throw new ArgumentNullException(nameof(dashboardService));
-        }
-
-        if (demoFileHelper is null)
-        {
-            throw new ArgumentNullException(nameof(demoFileHelper));
-        }
-
-        this.uiContext = uiContext;
+        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
 
     [UsedImplicitly]
-    public ICommand BudgetCommand => new RelayCommand(OnBudgetExecuted);
+    public ICommand ShowBudgetCommand => new RelayCommand(OnBudgetExecuted);
 
     public bool BudgetToggle
     {
@@ -56,7 +37,7 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    public ICommand DashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
+    public ICommand ShowDashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
 
     public bool DashboardToggle
     {
@@ -69,7 +50,7 @@ public class MainMenuController : ControllerBase, IInitializableController
     }
 
     [UsedImplicitly]
-    public ICommand LedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
+    public ICommand ShowLedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
 
     public bool LedgerBookToggle
     {
@@ -82,7 +63,7 @@ public class MainMenuController : ControllerBase, IInitializableController
     }
 
     [UsedImplicitly]
-    public ICommand ReportsCommand => new RelayCommand(OnReportsExecuted);
+    public ICommand ShowReportsCommand => new RelayCommand(OnReportsExecuted);
 
     public bool ReportsToggle
     {
@@ -95,7 +76,7 @@ public class MainMenuController : ControllerBase, IInitializableController
     }
 
     [UsedImplicitly]
-    public ICommand TransactionsCommand => new RelayCommand(OnTransactionExecuted);
+    public ICommand ShowTransactionsCommand => new RelayCommand(OnTransactionExecuted);
 
     public bool TransactionsToggle
     {
@@ -109,12 +90,12 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     public void Initialize()
     {
-        DashboardCommand.Execute(null);
+        ShowDashboardCommand.Execute(null);
     }
 
     private void AfterTabExecutedCommon()
     {
-        this.uiContext.Controller<DashboardController>().Shown = DashboardToggle;
+        this.uiContext.Controller<TopDashboardController>().Shown = DashboardToggle;
         this.uiContext.Controller<TopTransactionsListController>().Shown = TransactionsToggle;
         this.uiContext.Controller<TopLedgerBookController>().Shown = LedgerBookToggle;
         this.uiContext.Controller<TopBudgetController>().Shown = BudgetToggle;

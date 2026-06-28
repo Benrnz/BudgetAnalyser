@@ -19,7 +19,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type budget:TopBudgetController}">
-        <budget:BudgetMaintenance />
+        <budget:TopBudgetMaintenance />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type budget1:BudgetCurrencyContext}">
@@ -34,8 +34,8 @@
         <budget:BudgetSelectionView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type dashboard:DashboardController}">
-        <dashboard:DashboardUserControl />
+    <DataTemplate DataType="{x:Type dashboard:TopDashboardController}">
+        <dashboard:TopDashboardUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type ledgerBook:TopLedgerBookController}">
@@ -51,10 +51,10 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type reportsCatalog:TopReportsCatalogController}">
-        <reportsCatalog:ReportsCatalogUserControl />
+        <reportsCatalog:TopReportsCatalogUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type matching:RulesController}">
+    <DataTemplate DataType="{x:Type matching:TopRulesController}">
         <matching:EditRulesUserControl />
     </DataTemplate>
 
@@ -123,7 +123,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type matching1:MatchingRule}">
-        <matching:MatchingRuleUserControl />
+        <matching:TopMatchingRuleUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type matching:DisusedRulesController}">

@@ -30,7 +30,7 @@ namespace BudgetAnalyser;
 /// <summary>
 ///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all required objects, the whole graph for use for
 ///     the process lifetime of the application. This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used anywhere else in the application to prevent
-///     the Service Locator anti pattern from appearing.
+///     the Service Locator anti-pattern from appearing.
 /// </summary>
 [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
 public sealed class CompositionRoot : IDisposable
@@ -47,6 +47,7 @@ public sealed class CompositionRoot : IDisposable
         var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
         var thisAssembly = GetType().GetTypeInfo().Assembly;
 
+        var stopwatch = Stopwatch.StartNew();
         builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
 
         ComposeTypesWithDefaultImplementations(storageAssembly, builder);
@@ -62,7 +63,9 @@ public sealed class CompositionRoot : IDisposable
         RegistrationsForReesWpf(builder);
 
         AllLocalNonAutomaticRegistrations(builder);
+        var timeTakenToRegister = stopwatch.ElapsedMilliseconds;
 
+        stopwatch = Stopwatch.StartNew();
         var container = builder.Build();
 
         Logger = container.Resolve<ILogger>();
@@ -70,59 +73,45 @@ public sealed class CompositionRoot : IDisposable
 
         BuildApplicationObjectGraph(container, engineAssembly, thisAssembly, storageAssembly);
         ShellController = container.Resolve<ShellController>();
-        ShellWindow = new ShellWindow { DataContext = ShellController };
+        stopwatch.Stop();
+        var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
+        Logger.LogAlways(_ => $"Enumerating all types and registering types took: {timeTakenToRegister}ms. Building the object graph took: {timeTakenToBuildObjectGraph}ms.");
     }
 
     /// <summary>
-    ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger has not
-    ///     been available.
-    ///     (An alternative would be to pass the logger into the Composition Root).
+    ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger will not been available.
     /// </summary>
     public ILogger Logger { get; }
 
     /// <summary>
-    ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first
-    ///     object to be called following execution of this Composition Root.
+    ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first object to be called following execution of this Composition Root.
     /// </summary>
     public ShellController ShellController { get; }
-
-    /// <summary>
-    ///     The top level Window that binds to the <see cref="ShellController" />.
-    /// </summary>
-    public Window ShellWindow { get; }
 
     /// <summary>
     ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     public void Dispose()
     {
-        // Check to see if Dispose has already been called.
+        // This method is only called by the Main Thread, and does not need to be thread safe.
         if (!this.disposed)
         {
-            // Release unmanaged resources. If disposing is false,
-            // only the following code is executed.
+            // Release unmanaged resources. If disposing is false, only the following code is executed.
             this.disposables.ForEach(x => x.Dispose());
-            // Note that this is not thread safe.
-            // Another thread could start disposing the object
-            // after the managed resources are disposed,
-            // but before the disposed flag is set to true.
-            // If thread safety is necessary, it must be
-            // implemented by the client.
         }
 
         this.disposed = true;
 
-        // Take yourself off the Finalization queue
-        // to prevent finalization code for this object
-        // from executing a second time.
+        // Take this object off the Finalization queue to prevent finalization code for this object from executing a second time.
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    ///     Register any special mappings that have not been registered with automatic mappings. Explicit object creation below is necessary to correctly register with IoC container.
+    /// </summary>
     [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "builder", Justification = "Good template code and likely use in the future")]
     private static void AllLocalNonAutomaticRegistrations(ContainerBuilder builder)
     {
-        // Register any special mappings that have not been registered with automatic mappings.
-        // Explicit object creation below is necessary to correctly register with IoC container.
         builder.RegisterType<DebugLogger>().As<ILogger>();
         builder.RegisterType<UiContext>().As<IUiContext>().SingleInstance();
     }
@@ -130,7 +119,7 @@ public sealed class CompositionRoot : IDisposable
     private void BuildApplicationObjectGraph(IContainer container, params Assembly[] assemblies)
     {
         // Instantiate and store all controllers...
-        // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
+        // These must be executed in the order of dependency.  For example the TopRulesController requires a NewRuleController so the NewRuleController must be instantiated first.
 
         foreach (var assembly in assemblies)
         {
@@ -138,12 +127,11 @@ public sealed class CompositionRoot : IDisposable
             foreach (var requirement in requiredPropertyInjections)
             {
                 // Some reasonably awkward Autofac usage here to allow testability.  (Extension methods aren't easy to test)
-                var typedService = new TypedService(requirement.DependencyRequired);
+                var typedService = new TypedService(requirement.Type);
                 var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out var registration);
                 if (success)
                 {
                     var requestToResolve = new ResolveRequest(typedService, registration, []);
-                    //object dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
                     var dependency = container.ResolveComponent(requestToResolve);
                     requirement.PropertyInjectionAssignment(dependency);
                 }
@@ -164,18 +152,18 @@ public sealed class CompositionRoot : IDisposable
             if (dependency.IsSingleInstance)
             {
                 // Singleton
-                registration = builder.RegisterType(dependency.DependencyRequired).SingleInstance();
+                registration = builder.RegisterType(dependency.Type).SingleInstance();
             }
             else
             {
                 // Transient
-                registration = builder.RegisterType(dependency.DependencyRequired).InstancePerDependency();
+                registration = builder.RegisterType(dependency.Type).InstancePerDependency();
             }
 
             if (dependency.NamedInstanceName is not null)
             {
                 // Named Dependency
-                registration = registration.Named(dependency.NamedInstanceName, dependency.DependencyRequired);
+                registration = registration.Named(dependency.NamedInstanceName, dependency.Type);
             }
 
             registration.AsImplementedInterfaces().AsSelf();
@@ -200,7 +188,7 @@ public sealed class CompositionRoot : IDisposable
             typeof(ChooseBudgetBucketController),
             typeof(CreateNewFixedBudgetController),
             typeof(CreateNewSurprisePaymentMonitorController),
-            typeof(DashboardController),
+            typeof(TopDashboardController),
             typeof(DisusedRulesController),
             typeof(EditingTransactionController),
             typeof(EncryptFileController),
@@ -215,7 +203,7 @@ public sealed class CompositionRoot : IDisposable
             typeof(OverallPerformanceController),
             typeof(ReconciliationToDoListController),
             typeof(TopReportsCatalogController),
-            typeof(RulesController),
+            typeof(TopRulesController),
             typeof(ShowSurplusBalancesController),
             typeof(SplitTransactionController),
             typeof(TopTransactionsListController),

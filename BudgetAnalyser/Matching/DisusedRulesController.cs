@@ -12,6 +12,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Matching;
 
+[AutoRegisterWithIoC(SingleInstance = true)]
 public class DisusedRulesController : ControllerBase
 {
     private readonly IApplicationDatabaseFacade dbService;
