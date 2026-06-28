@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CodeMetricsReport Version="1.0">
-    <Targets>
-        <Target Name="BudgetAnalyser.Engine.UnitTest.csproj">
-            <Assembly Name="BudgetAnalyser.Engine.UnitTest, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-                <Metrics>
-                    <Metric Name="MaintainabilityIndex" Value="100"/>
-                    <Metric Name="CyclomaticComplexity" Value="0"/>
-                    <Metric Name="ClassCoupling" Value="0"/>
-                    <Metric Name="DepthOfInheritance" Value="0"/>
-                    <Metric Name="SourceLines" Value="0"/>
-                    <Metric Name="ExecutableLines" Value="0"/>
-                </Metrics>
-            </Assembly>
-        </Target>
-    </Targets>
+  <Targets>
+    <Target Name="BudgetAnalyser.Engine.UnitTest.csproj">
+      <Assembly Name="BudgetAnalyser.Engine.UnitTest, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <Metrics>
+          <Metric Name="MaintainabilityIndex" Value="100" />
+          <Metric Name="CyclomaticComplexity" Value="0" />
+          <Metric Name="ClassCoupling" Value="0" />
+          <Metric Name="DepthOfInheritance" Value="0" />
+          <Metric Name="SourceLines" Value="0" />
+          <Metric Name="ExecutableLines" Value="0" />
+        </Metrics>
+      </Assembly>
+    </Target>
+  </Targets>
 </CodeMetricsReport>
