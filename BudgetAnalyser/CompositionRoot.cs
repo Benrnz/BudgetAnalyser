@@ -30,7 +30,7 @@ namespace BudgetAnalyser;
 /// <summary>
 ///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all required objects, the whole graph for use for
 ///     the process lifetime of the application. This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used anywhere else in the application to prevent
-///     the Service Locator anti pattern from appearing.
+///     the Service Locator anti-pattern from appearing.
 /// </summary>
 [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
 public sealed class CompositionRoot : IDisposable
@@ -47,6 +47,7 @@ public sealed class CompositionRoot : IDisposable
         var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
         var thisAssembly = GetType().GetTypeInfo().Assembly;
 
+        var stopwatch = Stopwatch.StartNew();
         builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
 
         ComposeTypesWithDefaultImplementations(storageAssembly, builder);
@@ -62,7 +63,9 @@ public sealed class CompositionRoot : IDisposable
         RegistrationsForReesWpf(builder);
 
         AllLocalNonAutomaticRegistrations(builder);
+        var timeTakenToRegister = stopwatch.ElapsedMilliseconds;
 
+        stopwatch = Stopwatch.StartNew();
         var container = builder.Build();
 
         Logger = container.Resolve<ILogger>();
@@ -71,6 +74,9 @@ public sealed class CompositionRoot : IDisposable
         BuildApplicationObjectGraph(container, engineAssembly, thisAssembly, storageAssembly);
         ShellController = container.Resolve<ShellController>();
         ShellWindow = new ShellWindow { DataContext = ShellController };
+        stopwatch.Stop();
+        var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
+        Logger.LogAlways(_ => $"Enumerating all types and registering types took: {timeTakenToRegister}ms. Building the object graph took: {timeTakenToBuildObjectGraph}ms.");
     }
 
     /// <summary>
