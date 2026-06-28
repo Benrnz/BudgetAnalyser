@@ -37,7 +37,7 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
             LedgerBookRootDto = $"{path}.LedgerBook.json",
             LedgerReconciliationToDoCollection = new List<ToDoTaskDto>(),
             MatchingRulesCollectionRootDto = $"{path}.MatchingRules.json",
-            StatementModelRootDto = $"{path}.Transactions.csv",
+            TransactionsCollectionRootDto = $"{path}.Transactions.csv",
             WidgetCollectionRootDto = $"{path}.Widgets.json",
             IsEncrypted = false,
             Filter = new GlobalFilterDto()

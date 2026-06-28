@@ -52,6 +52,6 @@ public class ApplicationDatabaseToDtoMapperTest
     [Fact]
     public void ShouldMapTransactionsModelRootDto()
     {
-        this.result.StatementModelRootDto.ShouldBe("Transactions.xml");
+        this.result.TransactionsCollectionRootDto.ShouldBe("Transactions.xml");
     }
 }

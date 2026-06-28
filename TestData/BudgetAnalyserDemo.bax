@@ -19,6 +19,6 @@
     }
   ],
   "MatchingRulesCollectionRootDto": "DemoMatchingRules.json",
-  "StatementModelRootDto": "DemoTransactions.csv",
+  "TransactionsCollectionRootDto": "DemoTransactions.csv",
   "WidgetCollectionRootDto": "Widgets.json"
 }

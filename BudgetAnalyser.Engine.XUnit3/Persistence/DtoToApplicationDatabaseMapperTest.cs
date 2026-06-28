@@ -16,7 +16,7 @@ public class DtoToApplicationDatabaseMapperTest
             BudgetCollectionRootDto = "Budget.xml",
             LedgerBookRootDto = "Ledger.xml",
             MatchingRulesCollectionRootDto = "Rules.xml",
-            StatementModelRootDto = "Transactions.xml",
+            TransactionsCollectionRootDto = "Transactions.xml",
             WidgetCollectionRootDto = "Widgets.xml",
             Filter = new GlobalFilterDto(),
             LedgerReconciliationToDoCollection = [new ToDoTaskDto(true, "Foo1", false), new ToDoTaskDto(false, "Foo2", true)]
@@ -51,7 +51,7 @@ public class DtoToApplicationDatabaseMapperTest
     }
 
     [Fact]
-    public void ShouldMapStatementModelRootDto()
+    public void ShouldMapTransactionsCollectionRootDtoS()
     {
         this.result.TransactionsListModelStorageKey.ShouldBe("Transactions.xml");
     }

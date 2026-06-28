@@ -5,7 +5,8 @@ namespace BudgetAnalyser.Engine.Persistence;
 /// <summary>
 ///     A Dto object to store the top level Budget Analyser database file.
 /// </summary>
-public class BudgetAnalyserStorageRoot2
+public class
+     BudgetAnalyserStorageRoot2
 {
     /// <summary>
     ///     Gets or sets the budget collection root dto.
@@ -43,7 +44,7 @@ public class BudgetAnalyserStorageRoot2
     /// <summary>
     ///     Gets or sets the Transactions Model root dto.
     /// </summary>
-    public required string StatementModelRootDto { get; init; }
+    public required string TransactionsCollectionRootDto { get; init; }
 
     /// <summary>
     ///     Gets or sets the Widget Collection root dto.
