@@ -8,12 +8,12 @@
 - **Engine Assembly**: Contains all business logic, domain models, and services (knows nothing about WPF)
 - **WPF UI Layer**: Controllers (ViewModels) translate Engine services for UI; uses MVVM CommunityToolkit
 - **Data Persistence**: JSON files stored locally; optional encryption via `IFileEncryptor`
-- **IoC Container**: Autofac with MVVM CommunityToolkit
+- **IoC Container**: Microsoft.Extensions.DependencyInjection with MVVM CommunityToolkit
 
 ### Key Architecture Files
-- `CompositionRoot.cs` - IoC setup (Autofac + MVVM CommunityToolkit)
+- `CompositionRoot.cs` - IoC setup (Microsoft DI + MVVM CommunityToolkit)
 - `IUiContext.cs` / `UiContext.cs` - Ambient context for controllers + services
-- `ApplicationDatabaseFacade.cs` - UI layer access to Engine services
+- `ApplicationDatabaseFacade.cs` - Defines `IApplicationDatabaseFacade` and `WpfApplicationDatabaseFacade` for UI-layer access to Engine services
 - `ShellController.cs` - Top-level ViewModel/Controller
 
 ---
@@ -121,8 +121,8 @@ public class SomeController : ControllerBase
 
 The Engine is domain-logic only; it doesn't know about WPF or messaging:
 
-- **Models**: `TransactionsListViewModel`, `BudgetModel`, `LedgerEntryModel`, `MatchingRule` - domain entities
-- **Services**: `ITransactionManagerService`, `IBudgetService`, `ILedgerService`, `IReconciliationService`, `IMatchingRuleService`
+- **Models**: `TransactionsListModel`, `BudgetModel`, `LedgerEntry`, `MatchingRule` - domain entities
+- **Services**: `ITransactionManagerService`, `IBudgetMaintenanceService`, `ILedgerService`, `IReconciliationService`, `ITransactionRuleService`
 - **Persistence**: `IApplicationDatabaseRepository` (JSON, loaded by `JsonOnDiskApplicationDatabaseRepository`)
 - **GlobalFilterCriteria**: Date range filter applied across the app (changed centrally, affects all views)
 
@@ -223,7 +223,7 @@ Implement `IDataChangeDetection` to track dirty state for save operations.
 
 Optional; if encrypted files are needed:
 
-1. Users set credential via `ApplicationDatabaseFacade.SetCredential()`
+1. Users set credential via `IApplicationDatabaseFacade.SetCredential()`
 2. `IFileEncryptor` handles read/write
 3. `LocalDiskReaderWriterSelector` chooses encrypted or unencrypted reader
 

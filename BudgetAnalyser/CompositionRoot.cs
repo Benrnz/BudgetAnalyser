@@ -2,15 +2,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
-using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
@@ -20,6 +16,7 @@ using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 using Rees.Wpf.UserInteraction;
@@ -29,7 +26,7 @@ namespace BudgetAnalyser;
 
 /// <summary>
 ///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all required objects, the whole graph for use for
-///     the process lifetime of the application. This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used anywhere else in the application to prevent
+///     the process lifetime of the application. This class also contains all usage of IoC to this class.  It should not be used anywhere else in the application to prevent
 ///     the Service Locator anti-pattern from appearing.
 /// </summary>
 [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
@@ -42,40 +39,39 @@ public sealed class CompositionRoot : IDisposable
     public CompositionRoot()
     {
         Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
-        var builder = new ContainerBuilder();
+        var services = new ServiceCollection();
         var engineAssembly = typeof(TransactionsListModel).GetTypeInfo().Assembly;
         var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
         var thisAssembly = GetType().GetTypeInfo().Assembly;
 
         var stopwatch = Stopwatch.StartNew();
-        builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
 
-        ComposeTypesWithDefaultImplementations(storageAssembly, builder);
-        ComposeTypesWithDefaultImplementations(engineAssembly, builder);
-        ComposeTypesWithDefaultImplementations(thisAssembly, builder);
+        // Auto-register all attributed types from each assembly.
+        services.AddEngineRegistrations();
+        services.AddAutoRegistrations(storageAssembly);
+        services.AddAutoRegistrations(thisAssembly);
 
-        // Register Messenger Singleton from MVVM CommunityToolkit
-        // NOTE This should be the only place we refer to WeakReferenceMessenger.Default
-        // Choosing to customise this could result in two messengers being used in the application. Controllers currently rely on the default messenger set in the base class, not this one.
-        builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", WeakReferenceMessenger.Default);
+        // Registrations from Rees.Wpf - there are no automatic registrations in this assembly.
+        RegisterReesWpf(services);
 
-        // Registrations from Rees.Wpf - There are no automatic registrations in this assembly.
-        RegistrationsForReesWpf(builder);
+        // Override / supplement with explicit non-automatic registrations.
+        RegisterNonAutomaticServices(services);
 
-        AllLocalNonAutomaticRegistrations(builder);
         var timeTakenToRegister = stopwatch.ElapsedMilliseconds;
 
         stopwatch = Stopwatch.StartNew();
-        var container = builder.Build();
+        var provider = services.BuildServiceProvider();
 
-        Logger = container.Resolve<ILogger>();
+        Logger = provider.GetRequiredService<ILogger>();
         Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
 
-        BuildApplicationObjectGraph(container, engineAssembly, thisAssembly, storageAssembly);
-        ShellController = container.Resolve<ShellController>();
+        BuildApplicationObjectGraph(provider, engineAssembly, thisAssembly, storageAssembly);
+        ShellController = provider.GetRequiredService<ShellController>();
         stopwatch.Stop();
         var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
         Logger.LogAlways(_ => $"Enumerating all types and registering types took: {timeTakenToRegister}ms. Building the object graph took: {timeTakenToBuildObjectGraph}ms.");
+
+        this.disposables.AddIfSomething(provider);
     }
 
     /// <summary>
@@ -96,7 +92,6 @@ public sealed class CompositionRoot : IDisposable
         // This method is only called by the Main Thread, and does not need to be thread safe.
         if (!this.disposed)
         {
-            // Release unmanaged resources. If disposing is false, only the following code is executed.
             this.disposables.ForEach(x => x.Dispose());
         }
 
@@ -106,68 +101,25 @@ public sealed class CompositionRoot : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    ///     Register any special mappings that have not been registered with automatic mappings. Explicit object creation below is necessary to correctly register with IoC container.
-    /// </summary>
-    [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "builder", Justification = "Good template code and likely use in the future")]
-    private static void AllLocalNonAutomaticRegistrations(ContainerBuilder builder)
+    private void BuildApplicationObjectGraph(IServiceProvider provider, params Assembly[] assemblies)
     {
-        builder.RegisterType<DebugLogger>().As<ILogger>();
-        builder.RegisterType<UiContext>().As<IUiContext>().SingleInstance();
-    }
-
-    private void BuildApplicationObjectGraph(IContainer container, params Assembly[] assemblies)
-    {
-        // Instantiate and store all controllers...
-        // These must be executed in the order of dependency.  For example the TopRulesController requires a NewRuleController so the NewRuleController must be instantiated first.
-
+        // Perform property injection for static classes that need it.
+        // Property injection is a last resort, used only where data binding to static properties requires it.
         foreach (var assembly in assemblies)
         {
             var requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);
             foreach (var requirement in requiredPropertyInjections)
             {
-                // Some reasonably awkward Autofac usage here to allow testability.  (Extension methods aren't easy to test)
-                var typedService = new TypedService(requirement.Type);
-                var success = container.ComponentRegistry.TryGetServiceRegistration(typedService, out var registration);
-                if (success)
+                var dependency = provider.GetService(requirement.Type);
+                if (dependency is not null)
                 {
-                    var requestToResolve = new ResolveRequest(typedService, registration, []);
-                    var dependency = container.ResolveComponent(requestToResolve);
                     requirement.PropertyInjectionAssignment(dependency);
                 }
             }
         }
 
         // Kick it off
-        ConstructUiContext(container);
-        this.disposables.AddIfSomething(container.Resolve<ICredentialStore>() as IDisposable);
-    }
-
-    private static void ComposeTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)
-    {
-        var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(assembly);
-        foreach (var dependency in dependencies)
-        {
-            IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> registration;
-            if (dependency.IsSingleInstance)
-            {
-                // Singleton
-                registration = builder.RegisterType(dependency.Type).SingleInstance();
-            }
-            else
-            {
-                // Transient
-                registration = builder.RegisterType(dependency.Type).InstancePerDependency();
-            }
-
-            if (dependency.NamedInstanceName is not null)
-            {
-                // Named Dependency
-                registration = registration.Named(dependency.NamedInstanceName, dependency.Type);
-            }
-
-            registration.AsImplementedInterfaces().AsSelf();
-        }
+        ConstructUiContext(provider);
     }
 
     /// <summary>
@@ -175,25 +127,22 @@ public sealed class CompositionRoot : IDisposable
     ///     It contains references to commonly used UI components that most controllers require as well as references to all
     ///     other controllers.  All controllers are single instances.
     /// </summary>
-    /// <param name="container">The newly created (and short lived) IoC container used to instantiate objects.</param>
+    /// <param name="provider">The built service provider used to resolve controller instances.</param>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Composition Root Pattern - pull all abstract wiring into one place")]
-    private void ConstructUiContext(IContainer container)
+    private void ConstructUiContext(IServiceProvider provider)
     {
-        var uiContext = container.Resolve<IUiContext>();
+        var uiContext = provider.GetRequiredService<IUiContext>();
         Type[] controllerTypes =
         [
             typeof(AddLedgerReconciliationController),
             typeof(AppliedRulesController),
-            typeof(TopBudgetController),
             typeof(ChooseBudgetBucketController),
             typeof(CreateNewFixedBudgetController),
             typeof(CreateNewSurprisePaymentMonitorController),
-            typeof(TopDashboardController),
             typeof(DisusedRulesController),
             typeof(EditingTransactionController),
             typeof(EncryptFileController),
             typeof(GlobalFilterController),
-            typeof(TopLedgerBookController),
             typeof(LedgerBucketViewController),
             typeof(LedgerRemarksController),
             typeof(LedgerTransactionsController),
@@ -202,10 +151,13 @@ public sealed class CompositionRoot : IDisposable
             typeof(NewRuleController),
             typeof(OverallPerformanceController),
             typeof(ReconciliationToDoListController),
-            typeof(TopReportsCatalogController),
-            typeof(TopRulesController),
             typeof(ShowSurplusBalancesController),
             typeof(SplitTransactionController),
+            typeof(TopBudgetController),
+            typeof(TopDashboardController),
+            typeof(TopLedgerBookController),
+            typeof(TopReportsCatalogController),
+            typeof(TopRulesController),
             typeof(TopTransactionsListController),
             typeof(TransferFundsController),
             typeof(UploadMobileDataController)
@@ -214,7 +166,7 @@ public sealed class CompositionRoot : IDisposable
         var controllers = new Dictionary<Type, Lazy<ControllerBase>>();
         foreach (var controllerType in controllerTypes)
         {
-            var lazy = new Lazy<ControllerBase>(() => (ControllerBase)container.Resolve(controllerType));
+            var lazy = new Lazy<ControllerBase>(() => (ControllerBase)provider.GetRequiredService(controllerType));
             controllers.Add(controllerType, lazy);
         }
 
@@ -226,22 +178,43 @@ public sealed class CompositionRoot : IDisposable
         return Application.Current.Dispatcher.CheckAccess();
     }
 
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Required here, Composition Root pattern")]
-    private static void RegistrationsForReesWpf(ContainerBuilder builder)
+    /// <summary>
+    ///     Register any special mappings that have not been registered with automatic mappings.
+    ///     Explicit registrations here override any auto-registered counterparts for the same service type.
+    /// </summary>
+    private static void RegisterNonAutomaticServices(IServiceCollection services)
     {
-        // Wait Cursor Builder
-        builder.RegisterInstance<Func<IWaitCursor>>(() => new WpfWaitCursor());
+        // ILogger: explicit transient so the log level can be configured after resolution.
+        services.AddTransient<ILogger, DebugLogger>();
 
-        builder.RegisterType<PersistBaxAppStateAsJson>().As<IPersistApplicationState>().SingleInstance();
-        // Input Box / Message Box / Question Box / User Prompts etc
-        builder.RegisterType<WpfViewLoader<InputBox>>().Named<IViewLoader>(InputBoxView);
-        builder.Register(c => new WindowsInputBox(c.ResolveNamed<IViewLoader>(InputBoxView))).As<IUserInputBox>();
-        builder.RegisterType<WindowsMessageBox>().As<IUserMessageBox>().SingleInstance();
-        builder.RegisterType<WindowsQuestionBoxYesNo>().As<IUserQuestionBoxYesNo>().SingleInstance();
-        builder.Register(_ => new Func<IUserPromptOpenFile>(() => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true }))
-            .SingleInstance();
-        builder.Register(_ => new Func<IUserPromptSaveFile>(() => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true }))
-            .SingleInstance();
+        // IUiContext: singleton ambient context used by all controllers.
+        services.AddSingleton<IUiContext, UiContext>();
+
+        // IMessenger: supply WeakReferenceMessenger.Default as the inner messenger so that
+        // controllers which rely on the default messenger in their base class share the same bus.
+        // NOTE: this must be the only place WeakReferenceMessenger.Default is referenced.
+        // A factory is used here rather than auto-registration to avoid a circular dependency
+        // (ConcurrentMessenger itself takes IMessenger in its constructor).
+        services.AddSingleton<IMessenger>(sp => new ConcurrentMessenger(WeakReferenceMessenger.Default, sp.GetRequiredService<ILogger>()));
+    }
+
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Required here, Composition Root pattern")]
+    private static void RegisterReesWpf(IServiceCollection services)
+    {
+        // Wait cursor factory.
+        services.AddSingleton<Func<IWaitCursor>>(() => new WpfWaitCursor());
+
+        services.AddSingleton<IPersistApplicationState, PersistBaxAppStateAsJson>();
+
+        // Input box: resolved by concrete type so that WindowsInputBox can receive the right IViewLoader.
+        services.AddTransient<WpfViewLoader<InputBox>>();
+        services.AddTransient<IUserInputBox>(sp => new WindowsInputBox(sp.GetRequiredService<WpfViewLoader<InputBox>>()));
+
+        services.AddSingleton<IUserMessageBox, WindowsMessageBox>();
+        services.AddSingleton<IUserQuestionBoxYesNo, WindowsQuestionBoxYesNo>();
+
+        services.AddSingleton<Func<IUserPromptOpenFile>>(_ => () => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true });
+        services.AddSingleton<Func<IUserPromptSaveFile>>(_ => () => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true });
     }
 
     /// <summary>

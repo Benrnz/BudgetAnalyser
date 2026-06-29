@@ -57,8 +57,8 @@ public partial class App
             this.logger.LogError(_ => builder.ToString());
         }
 
-        // If you get a NullReference Exception with no inner exception here its most likely because a class takes an interface in its constructor that Autofac doesn't have a registration for.
-        // Most likely you forgot to annotate an implementation of an interface with [AutoRegisterWithIoc]
+        // If you get a NullReference Exception with no inner exception here its most likely because a class takes an interface in its constructor that the DI container doesn't have a registration for.
+        // Most likely you forgot to annotate an implementation of an interface with [AutoRegisterWithIoC]
         try
         {
             Current.Shutdown();
