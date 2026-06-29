@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BudgetAnalyser.Engine;
 
@@ -7,6 +8,66 @@ namespace BudgetAnalyser.Engine;
 /// </summary>
 public static class DefaultIoCRegistrations
 {
+    /// <summary>
+    ///     Registers all types decorated with <see cref="AutoRegisterWithIoCAttribute" /> found in the given assembly into
+    ///     the service collection. Each type is registered as itself and as each of its directly implemented interfaces.
+    ///     <see cref="AutoRegisterWithIoCAttribute.SingleInstance" /> maps to singleton lifetime; the default is transient.
+    ///     Named registrations (via <see cref="AutoRegisterWithIoCAttribute.Named" />) are also registered against the
+    ///     implemented interfaces so they are included when <see cref="IEnumerable{T}" /> is injected; the correct instance
+    ///     is then selected at runtime via <see cref="GetNamedInstance{T}" />.
+    /// </summary>
+    /// <param name="services">The service collection to register types into.</param>
+    /// <param name="assembly">The assembly to scan for <see cref="AutoRegisterWithIoCAttribute" /> decorated types.</param>
+    /// <returns>The same <see cref="IServiceCollection" /> to enable method chaining.</returns>
+    public static IServiceCollection AddAutoRegistrations(this IServiceCollection services, Assembly assembly)
+    {
+        if (services is null)
+        {
+            throw new ArgumentNullException(nameof(services));
+        }
+
+        var dependencies = RegisterAutoMappingsFromAssembly(assembly);
+        foreach (var dependency in dependencies)
+        {
+            var type = dependency.Type;
+            var interfaces = type.GetInterfaces();
+
+            if (dependency.IsSingleInstance)
+            {
+                // Register as self so it can be resolved directly by concrete type.
+                services.AddSingleton(type);
+
+                // Register each implemented interface pointing to the self-registration factory so all
+                // interface resolutions share the same singleton instance.
+                foreach (var iface in interfaces)
+                {
+                    services.AddSingleton(iface, sp => sp.GetRequiredService(type));
+                }
+            }
+            else
+            {
+                services.AddTransient(type);
+                foreach (var iface in interfaces)
+                {
+                    services.AddTransient(iface, sp => sp.GetRequiredService(type));
+                }
+            }
+        }
+
+        return services;
+    }
+
+    /// <summary>
+    ///     Registers all types decorated with <see cref="AutoRegisterWithIoCAttribute" /> in the Engine assembly with the
+    ///     given service collection. Follows the Microsoft DI extension method pattern.
+    /// </summary>
+    /// <param name="services">The service collection to register engine types into.</param>
+    /// <returns>The same <see cref="IServiceCollection" /> to enable method chaining.</returns>
+    public static IServiceCollection AddEngineRegistrations(this IServiceCollection services)
+    {
+        return services.AddAutoRegistrations(typeof(DefaultIoCRegistrations).Assembly);
+    }
+
     /// <summary>
     ///     Gets a named instance from all the given instances. This is used to find an instance of an interface with a specific name.
     /// </summary>
