@@ -60,7 +60,13 @@ public sealed class CompositionRoot : IDisposable
         var timeTakenToRegister = stopwatch.ElapsedMilliseconds;
 
         stopwatch = Stopwatch.StartNew();
-        var provider = services.BuildServiceProvider();
+        var provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+#if DEBUG
+            ValidateOnBuild = true,
+            ValidateScopes = true
+#endif
+        });
 
         Logger = provider.GetRequiredService<ILogger>();
         Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
