@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
 using BudgetAnalyser.Engine;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace BudgetAnalyser;
 
@@ -14,7 +16,7 @@ namespace BudgetAnalyser;
 [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This is the root object in the App")]
 public partial class App
 {
-    private CompositionRoot compositionRoot = null!;
+    private IHost host = null!;
     private ILogger logger = null!;
     private ShellController? shellController;
 
@@ -30,14 +32,31 @@ public partial class App
 
         Current.Exit += OnApplicationExit;
 
-        this.compositionRoot = new CompositionRoot();
-        this.logger = this.compositionRoot.Logger;
+        this.host = Host.CreateDefaultBuilder()
+            .UseDefaultServiceProvider((_, options) =>
+            {
+#if DEBUG
+                options.ValidateOnBuild = true;
+                options.ValidateScopes = true;
+#endif
+            })
+            .ConfigureServices((_, services) => CompositionRoot.ConfigureServices(services))
+            .Build();
+
+        this.host.StartAsync().GetAwaiter().GetResult();
+
+        this.logger = this.host.Services.GetRequiredService<ILogger>();
+        this.logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
+
+        CompositionRoot.BuildApplicationObjectGraph(this.host.Services);
+        this.shellController = this.host.Services.GetRequiredService<ShellController>();
+
         this.logger.LogAlways(_ => "=========== Budget Analyser is Starting ===========");
-        this.logger.LogAlways(_ => this.compositionRoot.ShellController.TopDashboardController.VersionString);
-        this.shellController = this.compositionRoot.ShellController;
+        this.logger.LogAlways(_ => this.shellController.TopDashboardController.VersionString);
         this.shellController.Initialize();
 
-        var topLevelWindow = new ShellWindow { DataContext = this.shellController };
+        var topLevelWindow = this.host.Services.GetRequiredService<ShellWindow>();
+        topLevelWindow.DataContext = this.shellController;
         this.logger.LogInfo(_ => "Initialisation finished.");
         topLevelWindow.Show();
     }
@@ -72,8 +91,12 @@ public partial class App
     private void OnApplicationExit(object? sender, ExitEventArgs e)
     {
         Current.Exit -= OnApplicationExit;
-        this.compositionRoot?.Dispose();
         this.logger?.LogAlways(_ => "=========== Application Exiting ===========");
+        if (this.host is not null)
+        {
+            this.host.StopAsync().GetAwaiter().GetResult();
+            this.host.Dispose();
+        }
     }
 
     private void OnCurrentDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)

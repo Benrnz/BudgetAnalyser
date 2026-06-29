@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
@@ -25,26 +25,22 @@ using IPersistApplicationState = BudgetAnalyser.ApplicationState.IPersistApplica
 namespace BudgetAnalyser;
 
 /// <summary>
-///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/. It constructs any and all required objects, the whole graph for use for
-///     the process lifetime of the application. This class also contains all usage of IoC to this class.  It should not be used anywhere else in the application to prevent
-///     the Service Locator anti-pattern from appearing.
+///     Composition root helper methods for service registration and object graph bootstrapping.
 /// </summary>
-[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
-public sealed class CompositionRoot : IDisposable
+public static class CompositionRoot
 {
-    private const string InputBoxView = "InputBoxView";
-    private readonly List<IDisposable> disposables = new();
-    private bool disposed;
-
-    public CompositionRoot()
+    /// <summary>
+    ///     Register all application services with the given service collection.
+    /// </summary>
+    public static void ConfigureServices(IServiceCollection services)
     {
-        Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
-        var services = new ServiceCollection();
-        var engineAssembly = typeof(TransactionsListModel).GetTypeInfo().Assembly;
-        var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
-        var thisAssembly = GetType().GetTypeInfo().Assembly;
+        if (services is null)
+        {
+            throw new ArgumentNullException(nameof(services));
+        }
 
-        var stopwatch = Stopwatch.StartNew();
+        var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
+        var thisAssembly = typeof(CompositionRoot).GetTypeInfo().Assembly;
 
         // Auto-register all attributed types from each assembly.
         services.AddEngineRegistrations();
@@ -57,61 +53,29 @@ public sealed class CompositionRoot : IDisposable
         // Override / supplement with explicit non-automatic registrations.
         RegisterNonAutomaticServices(services);
 
-        var timeTakenToRegister = stopwatch.ElapsedMilliseconds;
-
-        stopwatch = Stopwatch.StartNew();
-        var provider = services.BuildServiceProvider(new ServiceProviderOptions
-        {
-#if DEBUG
-            ValidateOnBuild = true,
-            ValidateScopes = true
-#endif
-        });
-
-        Logger = provider.GetRequiredService<ILogger>();
-        Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
-
-        BuildApplicationObjectGraph(provider, engineAssembly, thisAssembly, encryptionAssembly);
-        ShellController = provider.GetRequiredService<ShellController>();
-        stopwatch.Stop();
-        var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
-        Logger.LogAlways(_ => $"Enumerating all types and registering types took: {timeTakenToRegister}ms. Building the object graph took: {timeTakenToBuildObjectGraph}ms.");
-
-        this.disposables.AddIfSomething(provider);
+        // Root window is resolved from DI once startup is complete.
+        services.AddSingleton<ShellWindow>();
     }
 
     /// <summary>
-    ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger will not been available.
+    ///     Build and initialise late-bound parts of the object graph that require a built provider.
     /// </summary>
-    public ILogger Logger { get; }
-
-    /// <summary>
-    ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first object to be called following execution of this Composition Root.
-    /// </summary>
-    public ShellController ShellController { get; }
-
-    /// <summary>
-    ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public void Dispose()
+    public static void BuildApplicationObjectGraph(IServiceProvider provider)
     {
-        // This method is only called by the Main Thread, and does not need to be thread safe.
-        if (!this.disposed)
+        if (provider is null)
         {
-            this.disposables.ForEach(x => x.Dispose());
+            throw new ArgumentNullException(nameof(provider));
         }
 
-        this.disposed = true;
+        Debug.Assert(IsMainThread(), "CompositionRoot.BuildApplicationObjectGraph must be called on the main UI thread.");
 
-        // Take this object off the Finalization queue to prevent finalization code for this object from executing a second time.
-        GC.SuppressFinalize(this);
-    }
+        var engineAssembly = typeof(TransactionsListModel).GetTypeInfo().Assembly;
+        var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
+        var thisAssembly = typeof(CompositionRoot).GetTypeInfo().Assembly;
 
-    private void BuildApplicationObjectGraph(IServiceProvider provider, params Assembly[] assemblies)
-    {
         // Perform property injection for static classes that need it.
         // Property injection is a last resort, used only where data binding to static properties requires it.
-        foreach (var assembly in assemblies)
+        foreach (var assembly in new[] { engineAssembly, thisAssembly, encryptionAssembly })
         {
             var requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);
             foreach (var requirement in requiredPropertyInjections)
@@ -124,7 +88,6 @@ public sealed class CompositionRoot : IDisposable
             }
         }
 
-        // Kick it off
         ConstructUiContext(provider);
     }
 
@@ -135,7 +98,7 @@ public sealed class CompositionRoot : IDisposable
     /// </summary>
     /// <param name="provider">The built service provider used to resolve controller instances.</param>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Composition Root Pattern - pull all abstract wiring into one place")]
-    private void ConstructUiContext(IServiceProvider provider)
+    private static void ConstructUiContext(IServiceProvider provider)
     {
         var uiContext = provider.GetRequiredService<IUiContext>();
         Type[] controllerTypes =
@@ -179,7 +142,7 @@ public sealed class CompositionRoot : IDisposable
         uiContext.Initialise(controllers);
     }
 
-    private bool IsMainThread()
+    private static bool IsMainThread()
     {
         return Application.Current.Dispatcher.CheckAccess();
     }
@@ -190,7 +153,7 @@ public sealed class CompositionRoot : IDisposable
     /// </summary>
     private static void RegisterNonAutomaticServices(IServiceCollection services)
     {
-        // ILogger: explicit transient so the log level can be configured after resolution.
+        // ILogger: explicit singleton so log level can be configured once at startup.
         services.AddSingleton<ILogger, DebugLogger>();
 
         // IUiContext: singleton ambient context used by all controllers.
@@ -221,21 +184,5 @@ public sealed class CompositionRoot : IDisposable
 
         services.AddSingleton<Func<IUserPromptOpenFile>>(_ => () => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true });
         services.AddSingleton<Func<IUserPromptSaveFile>>(_ => () => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true });
-    }
-
-    /// <summary>
-    ///     Finalizes an instance of the <see cref="CompositionRoot" /> class.
-    ///     Use C# destructor syntax for finalization code.
-    ///     This destructor will run only if the Dispose method
-    ///     does not get called.
-    ///     It gives your base class the opportunity to finalize.
-    ///     Do not provide destructors in types derived from this class.
-    /// </summary>
-    ~CompositionRoot()
-    {
-        // Do not re-create Dispose clean-up code here.
-        // Calling Dispose(false) is optimal in terms of
-        // readability and maintainability.
-        Dispose();
     }
 }
