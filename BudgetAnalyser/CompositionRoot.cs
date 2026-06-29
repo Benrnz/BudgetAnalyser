@@ -191,7 +191,7 @@ public sealed class CompositionRoot : IDisposable
     private static void RegisterNonAutomaticServices(IServiceCollection services)
     {
         // ILogger: explicit transient so the log level can be configured after resolution.
-        services.AddTransient<ILogger, DebugLogger>();
+        services.AddSingleton<ILogger, DebugLogger>();
 
         // IUiContext: singleton ambient context used by all controllers.
         services.AddSingleton<IUiContext, UiContext>();
