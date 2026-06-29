@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BudgetAnalyser.Engine.UnitTest;
 
@@ -120,6 +121,34 @@ public class DefaultIoCRegistrationsTest
         var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
         Assert.AreEqual(3, result.Count());
         // EmbeddedResourceReaderWriter, EmbeddedResourceReaderWriterEncrypted, FakeLogger
+    }
+
+    [TestMethod]
+    public void AddAutoRegistrations_ShouldResolveNamedInstancesByKey()
+    {
+        var services = new ServiceCollection();
+        services.AddAutoRegistrations(GetType().Assembly);
+        var provider = services.BuildServiceProvider();
+
+        var encrypted = provider.GetRequiredKeyedService<IFileReaderWriter>(StorageConstants.EncryptedInstanceName);
+        var unprotected = provider.GetRequiredKeyedService<IFileReaderWriter>(StorageConstants.UnprotectedInstanceName);
+
+        Assert.IsInstanceOfType(encrypted, typeof(EmbeddedResourceFileReaderWriterEncrypted));
+        Assert.IsInstanceOfType(unprotected, typeof(EmbeddedResourceFileReaderWriter));
+    }
+
+    [TestMethod]
+    public void AddAutoRegistrations_ShouldAlsoResolveNamedInstancesUnkeyed()
+    {
+        var services = new ServiceCollection();
+        services.AddAutoRegistrations(GetType().Assembly);
+        var provider = services.BuildServiceProvider();
+
+        var allReaderWriters = provider.GetServices<IFileReaderWriter>().ToList();
+
+        Assert.AreEqual(2, allReaderWriters.Count);
+        Assert.IsTrue(allReaderWriters.Any(x => x is EmbeddedResourceFileReaderWriterEncrypted));
+        Assert.IsTrue(allReaderWriters.Any(x => x is EmbeddedResourceFileReaderWriter));
     }
 
     [TestMethod]

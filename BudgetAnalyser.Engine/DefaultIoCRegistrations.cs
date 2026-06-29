@@ -31,25 +31,44 @@ public static class DefaultIoCRegistrations
         {
             var type = dependency.Type;
             var interfaces = type.GetInterfaces();
+            var hasNamedRegistration = !string.IsNullOrWhiteSpace(dependency.NamedInstanceName);
+            var namedRegistration = dependency.NamedInstanceName;
 
             if (dependency.IsSingleInstance)
             {
                 // Register as self so it can be resolved directly by concrete type.
                 services.AddSingleton(type);
+                if (hasNamedRegistration)
+                {
+                    services.AddKeyedSingleton(type, namedRegistration, (sp, _) => sp.GetRequiredService(type));
+                }
 
                 // Register each implemented interface pointing to the self-registration factory so all
                 // interface resolutions share the same singleton instance.
                 foreach (var iface in interfaces)
                 {
                     services.AddSingleton(iface, sp => sp.GetRequiredService(type));
+                    if (hasNamedRegistration)
+                    {
+                        services.AddKeyedSingleton(iface, namedRegistration, (sp, _) => sp.GetRequiredService(type));
+                    }
                 }
             }
             else
             {
                 services.AddTransient(type);
+                if (hasNamedRegistration)
+                {
+                    services.AddKeyedTransient(type, namedRegistration, (sp, _) => sp.GetRequiredService(type));
+                }
+
                 foreach (var iface in interfaces)
                 {
                     services.AddTransient(iface, sp => sp.GetRequiredService(type));
+                    if (hasNamedRegistration)
+                    {
+                        services.AddKeyedTransient(iface, namedRegistration, (sp, _) => sp.GetRequiredService(type));
+                    }
                 }
             }
         }

@@ -156,7 +156,7 @@ public class JsonOnDiskWidgetRepositoryTest
 
     private JsonOnDiskWidgetRepositoryTestHarness ArrangeUsingEmbeddedResources()
     {
-        return new JsonOnDiskWidgetRepositoryTestHarness(new XUnitLogger(this.output), new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), this.encryptedReaderWriter]));
+        return new JsonOnDiskWidgetRepositoryTestHarness(new XUnitLogger(this.output), new LocalDiskReaderWriterSelector(this.encryptedReaderWriter, new EmbeddedResourceFileReaderWriter()));
     }
 
     private JsonOnDiskWidgetRepositoryTestHarness ArrangeUsingMocks()

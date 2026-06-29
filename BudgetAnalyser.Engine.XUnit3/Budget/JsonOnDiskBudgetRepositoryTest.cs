@@ -343,7 +343,7 @@ public class JsonOnDiskBudgetRepositoryTest : IDisposable
             return new JsonOnDiskBudgetRepositoryTestHarness(
                 bucketRepo,
                 this.mapper,
-                new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), this.encryptedReaderWriter]));
+                new LocalDiskReaderWriterSelector(this.encryptedReaderWriter, new EmbeddedResourceFileReaderWriter()));
         }
 
         // Use fake and mock objects where possible to better isolate testing.

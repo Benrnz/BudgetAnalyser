@@ -115,7 +115,7 @@ public class JsonOnDiskMatchingRuleRepositoryTest
     {
         return new JsonOnDiskMatchingRuleRepositoryTestHarness(
             new XUnitLogger(this.output),
-            new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), this.encryptedReaderWriter]),
+            new LocalDiskReaderWriterSelector(this.encryptedReaderWriter, new EmbeddedResourceFileReaderWriter()),
             this.bucketRepo);
     }
 

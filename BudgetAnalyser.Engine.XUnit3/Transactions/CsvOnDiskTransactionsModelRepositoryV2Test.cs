@@ -228,7 +228,7 @@ public class CsvOnDiskTransactionsModelRepositoryV2Test
     {
         var logger = new XUnitLogger(this.writer);
         var realMapper = new MapperTransactionsListModelToDto2(new InMemoryAccountTypeRepository(), new BudgetBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository(), logger);
-        var selector = new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), new EmbeddedResourceFileReaderWriterEncrypted()]);
+        var selector = new LocalDiskReaderWriterSelector(new EmbeddedResourceFileReaderWriterEncrypted(), new EmbeddedResourceFileReaderWriter());
         return new CsvOnDiskTransactionsModelRepositoryV2TestHarness(new XUnitLogger(this.writer), realMapper, selector);
     }
 
