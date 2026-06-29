@@ -319,7 +319,7 @@ public class JsonOnDiskLedgerBookRepositoryTest : IDisposable
             return new JsonOnDiskLedgerBookRepositoryTestHarness(
                 this.mapper,
                 importUtilities,
-                new LocalDiskReaderWriterSelector([new EmbeddedResourceFileReaderWriter(), this.encryptedReaderWriter]), this.logger);
+                new LocalDiskReaderWriterSelector(this.encryptedReaderWriter, new EmbeddedResourceFileReaderWriter()), this.logger);
         }
 
         // Use fake and mock objects where possible to better isolate testing.

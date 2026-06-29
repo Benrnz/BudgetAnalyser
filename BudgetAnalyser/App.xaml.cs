@@ -1,10 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace BudgetAnalyser;
 
@@ -14,9 +19,10 @@ namespace BudgetAnalyser;
 [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This is the root object in the App")]
 public partial class App
 {
-    private CompositionRoot compositionRoot = null!;
+    private IHost host = null!;
     private ILogger logger = null!;
     private ShellController? shellController;
+    private Stopwatch stopwatch = Stopwatch.StartNew();
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -30,16 +36,49 @@ public partial class App
 
         Current.Exit += OnApplicationExit;
 
-        this.compositionRoot = new CompositionRoot();
-        this.logger = this.compositionRoot.Logger;
+        var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
+        var thisAssembly = typeof(CompositionRoot).GetTypeInfo().Assembly;
+
+        this.host = Host.CreateDefaultBuilder()
+            .UseDefaultServiceProvider((_, options) =>
+            {
+#if DEBUG
+                options.ValidateOnBuild = true;
+                options.ValidateScopes = true;
+#endif
+            })
+            .ConfigureServices((_, services) =>
+            {
+                services.AddEngineRegistrations();
+                services.AddAutoRegistrations(encryptionAssembly);
+                services.AddAutoRegistrations(thisAssembly);
+                services.AddReesWpfRegistrations();
+                services.AddBudgetAnalyserRegistrations();
+            })
+            .Build();
+
+        this.host.StartAsync().GetAwaiter().GetResult();
+
+        this.stopwatch.Stop();
+        var registrationTime = this.stopwatch.ElapsedMilliseconds;
+        this.stopwatch = Stopwatch.StartNew();
+
+        this.logger = this.host.Services.GetRequiredService<ILogger>();
+        this.logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
         this.logger.LogAlways(_ => "=========== Budget Analyser is Starting ===========");
-        this.logger.LogAlways(_ => this.compositionRoot.ShellController.TopDashboardController.VersionString);
-        this.shellController = this.compositionRoot.ShellController;
+
+        CompositionRoot.BuildApplicationObjectGraph(this.host.Services);
+        this.shellController = this.host.Services.GetRequiredService<ShellController>();
+        this.logger.LogAlways(_ => this.shellController.TopDashboardController.VersionString);
         this.shellController.Initialize();
 
         var topLevelWindow = new ShellWindow { DataContext = this.shellController };
         this.logger.LogInfo(_ => "Initialisation finished.");
         topLevelWindow.Show();
+
+        this.stopwatch.Stop();
+        var initialisationTime = this.stopwatch.ElapsedMilliseconds;
+        this.logger.LogAlways(_ => $"Registration took {registrationTime:N0}ms. Initialisation took {initialisationTime:N0}ms.");
     }
 
     [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
@@ -72,8 +111,12 @@ public partial class App
     private void OnApplicationExit(object? sender, ExitEventArgs e)
     {
         Current.Exit -= OnApplicationExit;
-        this.compositionRoot?.Dispose();
         this.logger?.LogAlways(_ => "=========== Application Exiting ===========");
+        if (this.host is not null)
+        {
+            this.host.StopAsync().GetAwaiter().GetResult();
+            this.host.Dispose();
+        }
     }
 
     private void OnCurrentDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)

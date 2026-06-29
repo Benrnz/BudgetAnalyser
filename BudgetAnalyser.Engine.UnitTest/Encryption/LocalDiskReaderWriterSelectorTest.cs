@@ -15,7 +15,8 @@ public class LocalDiskReaderWriterSelectorTest
         var mockCredentials = new Mock<ICredentialStore>().Object;
         var mockFileEncryptor = new Mock<IFileEncryptor>().Object;
         this.subject = new LocalDiskReaderWriterSelector(
-            new List<IFileReaderWriter> { new EncryptedLocalDiskReaderWriter(mockFileEncryptor, mockCredentials), new LocalDiskReaderWriter() });
+            new EncryptedLocalDiskReaderWriter(mockFileEncryptor, mockCredentials),
+            new LocalDiskReaderWriter());
 
         var result = this.subject.SelectReaderWriter(true);
 
@@ -28,7 +29,8 @@ public class LocalDiskReaderWriterSelectorTest
         var mockCredentials = new Mock<ICredentialStore>().Object;
         var mockFileEncryptor = new Mock<IFileEncryptor>().Object;
         this.subject = new LocalDiskReaderWriterSelector(
-            new List<IFileReaderWriter> { new EncryptedLocalDiskReaderWriter(mockFileEncryptor, mockCredentials), new LocalDiskReaderWriter() });
+            new EncryptedLocalDiskReaderWriter(mockFileEncryptor, mockCredentials),
+            new LocalDiskReaderWriter());
 
         var result = this.subject.SelectReaderWriter(false);
 
@@ -36,32 +38,21 @@ public class LocalDiskReaderWriterSelectorTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NotSupportedException))]
-    public void SelectReaderWriter_ShouldThrow_GivenNoReaderWriters()
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Constructor_ShouldThrow_GivenNullEncrypted()
     {
-        this.subject = new LocalDiskReaderWriterSelector(new List<IFileReaderWriter>());
-        this.subject.SelectReaderWriter(true);
+        this.subject = new LocalDiskReaderWriterSelector(null, new LocalDiskReaderWriter());
+        this.subject.SelectReaderWriter(false);
         Assert.Fail();
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NotSupportedException))]
-    public void SelectReaderWriter_ShouldThrow_GivenOnlyEncryptedRegisteredAndFalse()
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void Constructor_ShouldThrow_GivenNullUnprotected()
     {
         var mockCredentials = new Mock<ICredentialStore>().Object;
         var mockFileEncryptor = new Mock<IFileEncryptor>().Object;
-        this.subject = new LocalDiskReaderWriterSelector(new List<IFileReaderWriter> { new EncryptedLocalDiskReaderWriter(mockFileEncryptor, mockCredentials) });
-
-        this.subject.SelectReaderWriter(false);
-
-        Assert.Fail();
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(NotSupportedException))]
-    public void SelectReaderWriter_ShouldThrow_GivenOnlyUnprotectedRegisteredAndTrue()
-    {
-        this.subject = new LocalDiskReaderWriterSelector(new List<IFileReaderWriter> { new LocalDiskReaderWriter() });
+        this.subject = new LocalDiskReaderWriterSelector(new EncryptedLocalDiskReaderWriter(mockFileEncryptor, mockCredentials), null);
         this.subject.SelectReaderWriter(true);
         Assert.Fail();
     }

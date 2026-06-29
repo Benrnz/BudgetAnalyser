@@ -11,6 +11,7 @@ namespace BudgetAnalyser;
 /// </summary>
 public interface IUiContext
 {
+    // TODO Ideally would like to remove controllers from the ambient context.
     IReadOnlySet<ControllerBase> Controllers { get; }
     ILogger Logger { get; }
     IMessenger Messenger { get; }
