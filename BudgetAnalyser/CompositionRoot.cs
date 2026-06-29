@@ -30,34 +30,6 @@ namespace BudgetAnalyser;
 public static class CompositionRoot
 {
     /// <summary>
-    ///     Register all application services with the given service collection.
-    /// </summary>
-    public static void ConfigureServices(IServiceCollection services)
-    {
-        if (services is null)
-        {
-            throw new ArgumentNullException(nameof(services));
-        }
-
-        var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
-        var thisAssembly = typeof(CompositionRoot).GetTypeInfo().Assembly;
-
-        // Auto-register all attributed types from each assembly.
-        services.AddEngineRegistrations();
-        services.AddAutoRegistrations(encryptionAssembly);
-        services.AddAutoRegistrations(thisAssembly);
-
-        // Registrations from Rees.Wpf - there are no automatic registrations in this assembly.
-        RegisterReesWpf(services);
-
-        // Override / supplement with explicit non-automatic registrations.
-        RegisterNonAutomaticServices(services);
-
-        // Root window is resolved from DI once startup is complete.
-        services.AddSingleton<ShellWindow>();
-    }
-
-    /// <summary>
     ///     Build and initialise late-bound parts of the object graph that require a built provider.
     /// </summary>
     public static void BuildApplicationObjectGraph(IServiceProvider provider)
@@ -67,7 +39,8 @@ public static class CompositionRoot
             throw new ArgumentNullException(nameof(provider));
         }
 
-        Debug.Assert(IsMainThread(), "CompositionRoot.BuildApplicationObjectGraph must be called on the main UI thread.");
+        var isMainThread = Application.Current.Dispatcher.CheckAccess();
+        Debug.Assert(isMainThread, "CompositionRoot.BuildApplicationObjectGraph must be called on the main UI thread.");
 
         var engineAssembly = typeof(TransactionsListModel).GetTypeInfo().Assembly;
         var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
@@ -77,7 +50,7 @@ public static class CompositionRoot
         // Property injection is a last resort, used only where data binding to static properties requires it.
         foreach (var assembly in new[] { engineAssembly, thisAssembly, encryptionAssembly })
         {
-            var requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);
+            var requiredPropertyInjections = EngineIocRegistrations.ProcessPropertyInjection(assembly);
             foreach (var requirement in requiredPropertyInjections)
             {
                 var dependency = provider.GetService(requirement.Type);
@@ -140,49 +113,5 @@ public static class CompositionRoot
         }
 
         uiContext.Initialise(controllers);
-    }
-
-    private static bool IsMainThread()
-    {
-        return Application.Current.Dispatcher.CheckAccess();
-    }
-
-    /// <summary>
-    ///     Register any special mappings that have not been registered with automatic mappings.
-    ///     Explicit registrations here override any auto-registered counterparts for the same service type.
-    /// </summary>
-    private static void RegisterNonAutomaticServices(IServiceCollection services)
-    {
-        // ILogger: explicit singleton so log level can be configured once at startup.
-        services.AddSingleton<ILogger, DebugLogger>();
-
-        // IUiContext: singleton ambient context used by all controllers.
-        services.AddSingleton<IUiContext, UiContext>();
-
-        // IMessenger: supply WeakReferenceMessenger.Default as the inner messenger so that
-        // controllers which rely on the default messenger in their base class share the same bus.
-        // NOTE: this must be the only place WeakReferenceMessenger.Default is referenced.
-        // A factory is used here rather than auto-registration to avoid a circular dependency
-        // (ConcurrentMessenger itself takes IMessenger in its constructor).
-        services.AddSingleton<IMessenger>(sp => new ConcurrentMessenger(WeakReferenceMessenger.Default, sp.GetRequiredService<ILogger>()));
-    }
-
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Required here, Composition Root pattern")]
-    private static void RegisterReesWpf(IServiceCollection services)
-    {
-        // Wait cursor factory.
-        services.AddSingleton<Func<IWaitCursor>>(() => new WpfWaitCursor());
-
-        services.AddSingleton<IPersistApplicationState, PersistBaxAppStateAsJson>();
-
-        // Input box: resolved by concrete type so that WindowsInputBox can receive the right IViewLoader.
-        services.AddTransient<WpfViewLoader<InputBox>>();
-        services.AddTransient<IUserInputBox>(sp => new WindowsInputBox(sp.GetRequiredService<WpfViewLoader<InputBox>>()));
-
-        services.AddSingleton<IUserMessageBox, WindowsMessageBox>();
-        services.AddSingleton<IUserQuestionBoxYesNo, WindowsQuestionBoxYesNo>();
-
-        services.AddSingleton<Func<IUserPromptOpenFile>>(_ => () => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true });
-        services.AddSingleton<Func<IUserPromptSaveFile>>(_ => () => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true });
     }
 }

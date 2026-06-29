@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace BudgetAnalyser.Engine.UnitTest;
 
 [TestClass]
-public class DefaultIoCRegistrationsTest
+public class EngineIocRegistrationsTest
 {
     /// <summary>
     ///     The interface exclude list.
@@ -39,8 +39,8 @@ public class DefaultIoCRegistrationsTest
     {
         try
         {
-            var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(TransactionsListModel).Assembly).ToList();
-            dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(SecureStringCredentialStore).Assembly));
+            var dependencies = EngineIocRegistrations.RegisterAutoMappingsFromAssembly(typeof(TransactionsListModel).Assembly).ToList();
+            dependencies.AddRange(EngineIocRegistrations.RegisterAutoMappingsFromAssembly(typeof(SecureStringCredentialStore).Assembly));
 
             var interfaces = typeof(TransactionsListModel).Assembly.GetTypes().Where(t => t.IsInterface);
 
@@ -76,7 +76,7 @@ public class DefaultIoCRegistrationsTest
     public void ProcessPropertyInjection_ShouldBeAbleToAssignLoggerToProperty()
     {
         var logger = new FakeLogger();
-        var result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
+        var result = EngineIocRegistrations.ProcessPropertyInjection(GetType().Assembly);
         result.First().PropertyInjectionAssignment(logger);
 
         Assert.AreSame(logger, AutoRegisterWithIoCProcessorPropertyInjectionTestSource.Logger);
@@ -85,14 +85,14 @@ public class DefaultIoCRegistrationsTest
     [TestMethod]
     public void ProcessPropertyInjection_ShouldFindOnePropertyInjectionDependency()
     {
-        var result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
+        var result = EngineIocRegistrations.ProcessPropertyInjection(GetType().Assembly);
         Assert.AreEqual(1, result.Count());
     }
 
     [TestMethod]
     public void ProcessPropertyInjection_ShouldFindStaticClassWithILoggerProperty()
     {
-        var result = DefaultIoCRegistrations.ProcessPropertyInjection(GetType().Assembly);
+        var result = EngineIocRegistrations.ProcessPropertyInjection(GetType().Assembly);
         Assert.AreEqual(typeof(ILogger), result.First().Type);
     }
 
@@ -100,7 +100,7 @@ public class DefaultIoCRegistrationsTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void ProcessPropertyInjectionShouldThrowGivenNullAssembly()
     {
-        var result = DefaultIoCRegistrations.ProcessPropertyInjection(null);
+        var result = EngineIocRegistrations.ProcessPropertyInjection(null);
         result.Any();
         Assert.Fail();
     }
@@ -108,7 +108,7 @@ public class DefaultIoCRegistrationsTest
     [TestMethod]
     public void RegisterAutoMappings_ShouldReturnFakeLoggerRegistration()
     {
-        var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
+        var result = EngineIocRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
         var loggerRegistration = result.Last();
         Assert.AreEqual(typeof(FakeLogger), loggerRegistration.Type);
         Assert.IsTrue(loggerRegistration.IsSingleInstance);
@@ -118,7 +118,7 @@ public class DefaultIoCRegistrationsTest
     [TestMethod]
     public void RegisterAutoMappings_ShouldReturnTwoGivenThisAssembly()
     {
-        var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
+        var result = EngineIocRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
         Assert.AreEqual(3, result.Count());
         // EmbeddedResourceReaderWriter, EmbeddedResourceReaderWriterEncrypted, FakeLogger
     }
@@ -155,7 +155,7 @@ public class DefaultIoCRegistrationsTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void RegisterAutoMappings_ShouldThrowGivenNullAssembly()
     {
-        var result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(null);
+        var result = EngineIocRegistrations.RegisterAutoMappingsFromAssembly(null);
 
         result.ToList();
 

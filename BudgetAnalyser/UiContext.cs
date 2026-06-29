@@ -39,6 +39,7 @@ public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger lo
 
     public void Initialise(IDictionary<Type, Lazy<ControllerBase>> controllers)
     {
+        // Don't call initialise on each controller here, that is the job of the Shell Controller when it is ready to.
         foreach (var kvp in controllers)
         {
             this.controllerDic.Add(kvp.Key, kvp.Value);
