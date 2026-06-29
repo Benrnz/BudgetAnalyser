@@ -13,6 +13,7 @@ public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger lo
 {
     private readonly Dictionary<Type, Lazy<ControllerBase>> controllerDic = new();
 
+    // TODO Ideally would like to remove controllers from the ambient context.
     public IReadOnlySet<ControllerBase> Controllers
     {
         get
