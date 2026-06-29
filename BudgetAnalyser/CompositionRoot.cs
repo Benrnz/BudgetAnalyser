@@ -41,14 +41,14 @@ public sealed class CompositionRoot : IDisposable
         Debug.Assert(IsMainThread(), "CompositionRoot.Compose must be called with the Main UI Thread.");
         var services = new ServiceCollection();
         var engineAssembly = typeof(TransactionsListModel).GetTypeInfo().Assembly;
-        var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
+        var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
         var thisAssembly = GetType().GetTypeInfo().Assembly;
 
         var stopwatch = Stopwatch.StartNew();
 
         // Auto-register all attributed types from each assembly.
         services.AddEngineRegistrations();
-        services.AddAutoRegistrations(storageAssembly);
+        services.AddAutoRegistrations(encryptionAssembly);
         services.AddAutoRegistrations(thisAssembly);
 
         // Registrations from Rees.Wpf - there are no automatic registrations in this assembly.
@@ -65,7 +65,7 @@ public sealed class CompositionRoot : IDisposable
         Logger = provider.GetRequiredService<ILogger>();
         Logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
 
-        BuildApplicationObjectGraph(provider, engineAssembly, thisAssembly, storageAssembly);
+        BuildApplicationObjectGraph(provider, engineAssembly, thisAssembly, encryptionAssembly);
         ShellController = provider.GetRequiredService<ShellController>();
         stopwatch.Stop();
         var timeTakenToBuildObjectGraph = stopwatch.ElapsedMilliseconds;
