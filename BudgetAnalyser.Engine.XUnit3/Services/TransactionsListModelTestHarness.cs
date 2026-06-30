@@ -1,17 +1,22 @@
-﻿using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Transactions;
-using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
 
-namespace BudgetAnalyser.Engine.UnitTest.Services;
+namespace BudgetAnalyser.Engine.XUnit.Services;
 
-public class TransactionsListModelTestHarness() : TransactionsListModel(new FakeLogger())
+public class TransactionsListModelTestHarness : TransactionsListModel
 {
+    public TransactionsListModelTestHarness()
+        : base(new FakeLogger())
+    {
+    }
+
     public int FilterByCriteriaWasCalled { get; set; }
     public int MergeWasCalled { get; set; }
     public int RemoveTransactionWasCalled { get; set; }
     public int SplitTransactionWasCalled { get; set; }
 
-    internal override void Filter(GlobalFilterCriteria criteria)
+    internal override void Filter(GlobalFilterCriteria? criteria)
     {
         FilterByCriteriaWasCalled++;
     }
