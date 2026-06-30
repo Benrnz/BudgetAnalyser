@@ -1,0 +1,12 @@
+﻿namespace BudgetAnalyser.Engine.XUnit;
+
+public static class TypeExtensions
+{
+    public static int CountProperties(this Type instance)
+    {
+        var properties = instance.GetProperties();
+        properties.ToList().ForEach(p => Console.WriteLine(p.Name));
+        return properties.Length;
+    }
+}
+
