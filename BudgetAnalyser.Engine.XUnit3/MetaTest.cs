@@ -17,7 +17,10 @@ public class MetaTest(ITestOutputHelper testOutputHelper)
     [Fact]
     public void NoDecreaseInTests()
     {
-        DiscoverTestCount().ShouldBeGreaterThanOrEqualTo(MinimumTestCount);
+        testOutputHelper.WriteLine($"Minimum test count: {MinimumTestCount}");
+        var testCount = DiscoverTestCount();
+        testOutputHelper.WriteLine($"There are {testCount} tests.");
+        testCount.ShouldBeGreaterThanOrEqualTo(MinimumTestCount);
     }
 
     private int DiscoverTestCount()
