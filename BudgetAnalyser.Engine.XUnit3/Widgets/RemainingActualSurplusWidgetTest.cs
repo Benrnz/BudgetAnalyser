@@ -3,39 +3,34 @@ using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Transactions;
-using BudgetAnalyser.Engine.UnitTest.Helper;
-using BudgetAnalyser.Engine.UnitTest.TestData;
-using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
+using BudgetAnalyser.Engine.XUnit.Helpers;
+using BudgetAnalyser.Engine.XUnit.TestData;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest.Widgets;
+#pragma warning disable CS8601 // Possible null reference assignment. // GENERATED CODE
 
-[TestClass]
+namespace BudgetAnalyser.Engine.XUnit.Widgets;
+
 public class RemainingActualSurplusWidgetTest
 {
-    private BudgetCurrencyContext budgetCurrencyContextTestData;
-    private GlobalFilterCriteria criteriaTestData;
-    private LedgerBook ledgerBookTestData;
-    private LedgerCalculation ledgerCalculation;
-    private RemainingActualSurplusWidget subject;
-    private TransactionsListModel transactionsTestData;
+    private readonly BudgetCurrencyContext budgetCurrencyContextTestData;
+    private readonly GlobalFilterCriteria criteriaTestData;
+    private readonly LedgerBook ledgerBookTestData;
+    private readonly LedgerCalculation ledgerCalculation;
+    private readonly RemainingActualSurplusWidget subject;
+    private readonly TransactionsListModel transactionsTestData;
 
-    [TestMethod]
-    public void OutputTestData()
-    {
-        this.ledgerBookTestData.Output(true);
-        this.transactionsTestData.Output(DateOnly.MinValue);
-    }
 
-    [TestInitialize]
-    public void TestInitialise()
+    public RemainingActualSurplusWidgetTest()
     {
         this.subject = new RemainingActualSurplusWidget();
         this.criteriaTestData = new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) };
         this.ledgerCalculation = new LedgerCalculation(new FakeLogger());
 
         TransactionsModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
-        TransactionsModelTestDataForThisTest.BudgetBucketRepo = new BucketBucketRepoAlwaysFind();
+        TransactionsModelTestDataForThisTest.BudgetBucketRepo = new BudgetBucketRepoAlwaysFind();
         this.transactionsTestData = TransactionsModelTestDataForThisTest.TestDataGenerated();
 
         this.ledgerBookTestData = new LedgerBookBuilder { StorageKey = "RemainingActualSurplusWidgetTest.xml", Modified = new DateTime(2015, 11, 23), Name = "Smith Budget 2015" }
@@ -56,26 +51,33 @@ public class RemainingActualSurplusWidgetTest
 
         var budgets = BudgetModelTestData.CreateCollectionWith1And2();
         var budget = budgets.ForDate(this.criteriaTestData.BeginDate.Value);
-        this.budgetCurrencyContextTestData = new BudgetCurrencyContext(budgets, budget);
+        this.budgetCurrencyContextTestData = new BudgetCurrencyContext(budgets, budget!);
     }
 
-    [TestMethod]
+    [Fact]
+    public void OutputTestData()
+    {
+        this.ledgerBookTestData.Output(true);
+        this.transactionsTestData.Output(DateOnly.MinValue);
+    }
+
+    [Fact]
     public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
     {
         Console.WriteLine($"StartDate: {this.criteriaTestData.BeginDate}; EndDate: {this.criteriaTestData.EndDate}");
-        this.transactionsTestData.Output(this.criteriaTestData.BeginDate.Value);
+        this.transactionsTestData.Output(this.criteriaTestData.BeginDate!.Value);
         this.ledgerBookTestData.Output(true);
         this.budgetCurrencyContextTestData.Model.Output();
 
         this.subject.Update(this.transactionsTestData, this.criteriaTestData, this.ledgerBookTestData, this.ledgerCalculation, this.budgetCurrencyContextTestData, new DebugLogger());
 
-        Assert.AreEqual(-2433.34, this.subject.Value);
+        this.subject.Value.ShouldBe(-2433.34);
     }
 
     private static class TransactionsModelTestDataForThisTest
     {
-        public static IAccountTypeRepository AccountTypeRepo { get; set; }
-        public static IBudgetBucketRepository BudgetBucketRepo { get; set; }
+        public static IAccountTypeRepository AccountTypeRepo { get; set; } = null!;
+        public static IBudgetBucketRepository BudgetBucketRepo { get; set; } = null!;
 
         /// <summary>THIS IS GENERATED CODE </summary>
         [GeneratedCode("StatementModelTestDataGenerator.GenerateCSharp", "11/23/2015 13:04:40")]

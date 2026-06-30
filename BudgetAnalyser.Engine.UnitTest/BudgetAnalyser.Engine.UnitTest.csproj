@@ -59,7 +59,9 @@
       <Folder Include="Encryption\" />
       <Folder Include="Ledger\" />
       <Folder Include="Matching\" />
+      <Folder Include="Reports\" />
       <Folder Include="Services\" />
+      <Folder Include="Widgets\" />
     </ItemGroup>
 
 </Project>

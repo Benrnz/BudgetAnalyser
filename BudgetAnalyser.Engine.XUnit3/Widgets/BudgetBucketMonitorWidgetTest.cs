@@ -1,25 +1,38 @@
-﻿using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Transactions;
-using BudgetAnalyser.Engine.UnitTest.Helper;
-using BudgetAnalyser.Engine.UnitTest.TestData;
-using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
+using BudgetAnalyser.Engine.XUnit.Helpers;
+using BudgetAnalyser.Engine.XUnit.TestData;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest.Widgets;
+namespace BudgetAnalyser.Engine.XUnit.Widgets;
 
-[TestClass]
 public class BudgetBucketMonitorWidgetTest
 {
-    private BucketBucketRepoAlwaysFind bucketRepo;
-    private IBudgetCurrencyContext budgetTestData;
-    private GlobalFilterCriteria criteriaTestData;
-    private LedgerBook ledgerBookTestData;
-    private LedgerCalculation ledgerCalculation;
-    private BudgetBucketMonitorWidget subject;
-    private TransactionsListModel transactionsTestData;
+    private readonly BudgetBucketRepoAlwaysFind bucketRepo;
+    private readonly IBudgetCurrencyContext budgetTestData;
+    private readonly GlobalFilterCriteria criteriaTestData;
+    private readonly LedgerBook ledgerBookTestData;
+    private readonly LedgerCalculation ledgerCalculation;
+    private readonly BudgetBucketMonitorWidget subject;
+    private readonly TransactionsListModel transactionsTestData;
 
-    [TestMethod]
+    public BudgetBucketMonitorWidgetTest()
+    {
+        this.subject = new BudgetBucketMonitorWidget { BucketCode = TransactionsListModelTestData.PhoneBucket.Code };
+        this.bucketRepo = new BudgetBucketRepoAlwaysFind();
+        this.criteriaTestData = new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) };
+        this.transactionsTestData = CreateTransactionsTestData();
+
+        var budgetModel = BudgetModelTestData.CreateTestData5();
+        this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel), budgetModel);
+        this.ledgerBookTestData = CreateLedgerBookTestData();
+        this.ledgerCalculation = new LedgerCalculation(new FakeLogger());
+    }
+
+    [Fact]
     public void OutputTestData()
     {
         this.ledgerBookTestData.Output(true);
@@ -27,39 +40,16 @@ public class BudgetBucketMonitorWidgetTest
         this.transactionsTestData.Output(DateOnly.MinValue);
     }
 
-    [TestInitialize]
-    public void TestInitialise()
-    {
-        this.subject = new BudgetBucketMonitorWidget { BucketCode = TransactionsListModelTestData.PhoneBucket.Code };
-
-        this.bucketRepo = new BucketBucketRepoAlwaysFind();
-        this.criteriaTestData = new GlobalFilterCriteria { BeginDate = new DateOnly(2015, 10, 20), EndDate = new DateOnly(2015, 11, 19) };
-
-        CreateTransactionsTestData();
-
-        var budgetModel = BudgetModelTestData.CreateTestData5();
-        this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel), budgetModel);
-
-        CreateLedgerBookTestData();
-
-        this.ledgerCalculation = new LedgerCalculation(new FakeLogger());
-    }
-
-    [TestMethod]
-    [Description("A transfer has taken place from InsHome in Savings, to Phone in Cheque for $100. This should be excluded from running balance of both buckets.")]
+    [Fact]
     public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
     {
         this.subject.Update(this.budgetTestData, this.transactionsTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation, new FakeLogger());
-
-        // Starting Phone Balance is Budget Amount: 150.00
-        // Total Phone transactions are: -20.00
-        // Resulting Balance = 130.00
-        Assert.AreEqual(130.00, this.subject.Value);
+        this.subject.Value.ShouldBe(130.00);
     }
 
-    private void CreateLedgerBookTestData()
+    private static LedgerBook CreateLedgerBookTestData()
     {
-        this.ledgerBookTestData = new LedgerBookBuilder { StorageKey = "BudgetBucketMonitorWidgetTest.xml", Modified = new DateTime(2015, 11, 23), Name = "Smith Budget 2015" }
+        return new LedgerBookBuilder { StorageKey = "BudgetBucketMonitorWidgetTest.xml", Modified = new DateTime(2015, 11, 23), Name = "Smith Budget 2015" }
             .IncludeLedger(LedgerBookTestData.PhoneLedger, 50M)
             .IncludeLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount, 100M)
             .AppendReconciliation(
@@ -76,9 +66,9 @@ public class BudgetBucketMonitorWidgetTest
             .Build();
     }
 
-    private void CreateTransactionsTestData()
+    private static TransactionsListModel CreateTransactionsTestData()
     {
-        this.transactionsTestData = new TransactionsListModelBuilder()
+        return new TransactionsListModelBuilder()
             .AppendTransaction(
                 new Transaction
                 {
