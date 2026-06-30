@@ -57,9 +57,22 @@ jobs:
         path: D:\a\BudgetAnalyser\BudgetAnalyser\BudgetAnalyser.Engine.XUnit3\bin\Debug\net9.0\TestResults\BudgetAnalyser.Engine.XUnit3_net9.0_x64.log
       continue-on-error: true
 
+    - name: Upload WPF test log file
+      if: always() # Ensures the step runs even if previous steps fail
+      uses: actions/upload-artifact@v4
+      with:
+        name: WpfTestResultsLog
+        path: D:\a\BudgetAnalyser\BudgetAnalyser\BudgetAnalyser.Wpf.XUnit3\bin\Debug\net10.0-windows\TestResults\BudgetAnalyser.Wpf.XUnit3_net10.0-windows_x64.log
+      continue-on-error: true
+
     - name: Output test log file
       if: always() # Ensures the step runs even if previous steps fail
       run: type "D:\a\BudgetAnalyser\BudgetAnalyser\BudgetAnalyser.Engine.XUnit3\bin\Debug\net9.0\TestResults\BudgetAnalyser.Engine.XUnit3_net9.0_x64.log"
+      continue-on-error: true
+
+    - name: Output WPF test log file
+      if: always() # Ensures the step runs even if previous steps fail
+      run: type "D:\a\BudgetAnalyser\BudgetAnalyser\BudgetAnalyser.Wpf.XUnit3\bin\Debug\net10.0-windows\TestResults\BudgetAnalyser.Wpf.XUnit3_net10.0-windows_x64.log"
       continue-on-error: true
 
     - name: Validate code style

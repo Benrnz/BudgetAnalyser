@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Wpf.XUnit3.Transactions;
 public class TransactionsListViewModelTest
 {
     private readonly ITransactionManagerService mockTransactionService;
-    private IUiContext mockUiContext;
+    private readonly IUiContext mockUiContext;
 
     public TransactionsListViewModelTest()
     {
