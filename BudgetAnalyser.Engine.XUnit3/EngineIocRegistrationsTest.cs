@@ -1,12 +1,12 @@
-using System.Diagnostics;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Transactions;
-using BudgetAnalyser.Engine.XUnit.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
