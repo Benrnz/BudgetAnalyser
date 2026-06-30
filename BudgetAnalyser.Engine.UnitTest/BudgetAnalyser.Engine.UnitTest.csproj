@@ -57,6 +57,7 @@
       <Folder Include="Account\" />
       <Folder Include="Budget\" />
       <Folder Include="Encryption\" />
+      <Folder Include="Ledger\" />
       <Folder Include="Services\" />
     </ItemGroup>
 

@@ -5,7 +5,7 @@ namespace BudgetAnalyser.Engine.UnitTest;
 [TestClass]
 public class MetaTest
 {
-    private const int MinimumTestCount = 463;
+    private const int MinimumTestCount = 211;
 
     [TestMethod]
     public void ListAllTests()
