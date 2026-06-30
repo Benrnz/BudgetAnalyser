@@ -1,17 +1,17 @@
-﻿using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Transactions;
-using BudgetAnalyser.Engine.UnitTest.TestData;
-using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.XUnit.TestData;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest.Matching;
+namespace BudgetAnalyser.Engine.XUnit.Matching;
 
-[TestClass]
 public class MatchingRuleTest
 {
-    private IBudgetBucketRepository BucketRepo { get; set; }
+    private readonly IBudgetBucketRepository bucketRepo = new BudgetBucketRepoAlwaysFind();
 
-    [TestMethod]
+    [Fact]
     public void AndMatchShouldFailWhenBucketIsInactive()
     {
         var subject = Arrange();
@@ -19,10 +19,10 @@ public class MatchingRuleTest
         subject.Bucket.Active = false;
 
         var success = subject.Match(new Transaction { Description = "Testing Description" });
-        Assert.IsFalse(success);
+        success.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void AndMatchShouldMatchOnAmountAndDescription()
     {
         var subject = Arrange();
@@ -30,20 +30,20 @@ public class MatchingRuleTest
         subject.Amount = 11.01M;
 
         var success = subject.Match(new Transaction { Description = "Testing Description", Amount = 11.01M });
-        Assert.IsTrue(success);
+        success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void AndMatchShouldMatchOnDescription()
     {
         var subject = Arrange();
         subject.Description = "Testing Description";
 
         var success = subject.Match(new Transaction { Description = "Testing Description" });
-        Assert.IsTrue(success);
+        success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void AndMatchShouldMatchOnReferences()
     {
         var subject = Arrange();
@@ -52,10 +52,10 @@ public class MatchingRuleTest
         subject.Reference3 = "Testing 3";
 
         var success = subject.Match(new Transaction { Reference1 = "Testing 1", Reference2 = "Testing 2", Reference3 = "Testing 3" });
-        Assert.IsTrue(success);
+        success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void AndMatchShouldMatchOnTransacionType()
     {
         var subject = Arrange();
@@ -63,30 +63,30 @@ public class MatchingRuleTest
         subject.TransactionType = "Foo";
 
         var success = subject.Match(new Transaction { Description = "Testing Description", TransactionType = new NamedTransaction("Foo") });
-        Assert.IsTrue(success);
+        success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void AndMatchShouldNotMatchOnDescription1()
     {
         var subject = Arrange();
         subject.Description = "Testing Description";
 
         var success = subject.Match(new Transaction { Description = "xxxTesting Description" });
-        Assert.IsFalse(success);
+        success.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void AndMatchShouldNotMatchOnDescription2()
     {
         var subject = Arrange();
         subject.Description = "Testing Description";
 
         var success = subject.Match(new Transaction { Description = "Testing Descriptionxxx" });
-        Assert.IsFalse(success);
+        success.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void AndMatchShouldNotMatchOnDescription3()
     {
         var subject = Arrange();
@@ -94,69 +94,65 @@ public class MatchingRuleTest
         subject.Reference1 = "Ref1";
 
         var success = subject.Match(new Transaction { Description = "Testing Description" });
-        Assert.IsFalse(success);
+        success.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void AnObjectIsNotEqualWithNull()
     {
         var subject = Arrange();
-        Assert.IsFalse(subject.Equals(null));
-        Assert.IsTrue(subject is not null);
+        subject.Equals(null).ShouldBeFalse();
+        subject.ShouldNotBeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public void CtorShouldInitialiseCreated()
     {
         var subject = Arrange();
-        Assert.AreNotEqual(DateTime.MinValue, subject.Created);
+        subject.Created.ShouldNotBe(DateTime.MinValue);
     }
 
-    [TestMethod]
+    [Fact]
     public void CtorShouldInitialiseId()
     {
         var subject = Arrange();
-        Assert.AreNotEqual(Guid.Empty, subject.RuleId);
+        subject.RuleId.ShouldNotBe(Guid.Empty);
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
+    [Fact]
     public void CtorShouldThrowIfNullBucketRepo()
     {
-        new MatchingRule(null);
-        Assert.Fail();
+        Should.Throw<ArgumentNullException>(() => new MatchingRule(null!));
     }
 
-    [TestMethod]
+    [Fact]
     public void MatchShouldSetLastMatchWhenMatchIsMade()
     {
         var subject = Arrange();
         subject.Description = "Testing Description";
         subject.LastMatch = DateTime.MinValue;
         subject.Match(new Transaction { Description = "Testing Description" });
-        Assert.IsTrue(subject.LastMatch > DateTime.MinValue);
+        (subject.LastMatch > DateTime.MinValue).ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void MatchShouldSetMatchCountWhenMatchIsMade()
     {
         var subject = Arrange();
         subject.Description = "Testing Description";
         subject.MatchCount = 1;
         subject.Match(new Transaction { Description = "Testing Description" });
-        Assert.AreEqual(2, subject.MatchCount);
+        subject.MatchCount.ShouldBe(2);
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
+    [Fact]
     public void MatchShouldThrowWhenTransactionIsNull()
     {
         var subject = Arrange();
-        subject.Match(null);
-        Assert.Fail();
+        Should.Throw<ArgumentNullException>(() => subject.Match(null!));
     }
 
-    [TestMethod]
+    [Fact]
     public void OrMatchShouldMatchOnAmountAndDescription()
     {
         var subject = Arrange();
@@ -165,10 +161,10 @@ public class MatchingRuleTest
         subject.Amount = 11.01M;
 
         var success = subject.Match(new Transaction { Description = "Testing xxxx", Amount = 11.01M });
-        Assert.IsTrue(success);
+        success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void OrMatchShouldMatchOnDescription3()
     {
         var subject = Arrange();
@@ -177,10 +173,10 @@ public class MatchingRuleTest
         subject.Reference1 = "Ref1";
 
         var success = subject.Match(new Transaction { Description = "Testing Description" });
-        Assert.IsTrue(success);
+        success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void OrMatchShouldMatchOnReferences()
     {
         var subject = Arrange();
@@ -190,10 +186,10 @@ public class MatchingRuleTest
         subject.Reference3 = "Testing 3";
 
         var success = subject.Match(new Transaction { Reference1 = "Testing 1", Reference3 = "Testing xxx" });
-        Assert.IsTrue(success);
+        success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void OrMatchShouldMatchOnTransacionType()
     {
         var subject = Arrange();
@@ -202,10 +198,10 @@ public class MatchingRuleTest
         subject.TransactionType = "Foo";
 
         var success = subject.Match(new Transaction { Description = "Testing Description", TransactionType = new NamedTransaction("Foo") });
-        Assert.IsTrue(success);
+        success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void OrMatchShouldNotMatchOnDescription1()
     {
         var subject = Arrange();
@@ -213,10 +209,10 @@ public class MatchingRuleTest
         subject.Description = "Testing Description";
 
         var success = subject.Match(new Transaction { Description = "xxxTesting Description" });
-        Assert.IsFalse(success);
+        success.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void OrMatchShouldNotMatchOnDescription2()
     {
         var subject = Arrange();
@@ -224,60 +220,54 @@ public class MatchingRuleTest
         subject.Description = "Testing Description";
 
         var success = subject.Match(new Transaction { Description = "Testing Descriptionxxx" });
-        Assert.IsFalse(success);
+        success.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void RulesWithDifferentIdAreConsideredNotEqual()
     {
         var subject = Arrange();
         var subject2 = Arrange();
 
-        Assert.IsFalse(subject.Equals(subject2));
-        Assert.IsTrue(subject != subject2);
-        Assert.IsTrue(subject.GetHashCode() != subject2.GetHashCode());
+        subject.Equals(subject2).ShouldBeFalse();
+        (subject != subject2).ShouldBeTrue();
+        (subject.GetHashCode() != subject2.GetHashCode()).ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void RulesWithSameIdAreConsideredEqual()
     {
         var subject = Arrange();
         var subject2 = Arrange(subject.RuleId);
-        Assert.IsTrue(subject.Equals(subject2));
-        Assert.IsTrue(subject == subject2);
-        Assert.IsTrue(subject.GetHashCode() == subject2.GetHashCode());
+        subject.Equals(subject2).ShouldBeTrue();
+        (subject == subject2).ShouldBeTrue();
+        subject.GetHashCode().ShouldBe(subject2.GetHashCode());
     }
 
-    [TestInitialize]
-    public void TestInitialise()
-    {
-        BucketRepo = new BucketBucketRepoAlwaysFind();
-    }
-
-    [TestMethod]
+    [Fact]
     public void TwoObjectsReferringToSameAreEqual()
     {
         var subject = Arrange();
         var subject2 = subject;
-        Assert.IsTrue(subject.Equals(subject2));
-        Assert.IsTrue(subject == subject2);
-        Assert.IsTrue(subject.GetHashCode() == subject2.GetHashCode());
+        subject.Equals(subject2).ShouldBeTrue();
+        (subject == subject2).ShouldBeTrue();
+        subject.GetHashCode().ShouldBe(subject2.GetHashCode());
     }
 
-    [TestMethod]
+    [Fact]
     public void TwoObjectsReferringToSameAreEqual2()
     {
         var subject = Arrange();
         object subject2 = subject;
-        Assert.IsTrue(subject.Equals(subject2));
+        subject.Equals(subject2).ShouldBeTrue();
 #pragma warning disable 252,253
-        Assert.IsTrue(subject == subject2);
+        (subject == subject2).ShouldBeTrue();
 #pragma warning restore 252,253
-        Assert.IsTrue(subject.GetHashCode() == subject2.GetHashCode());
+        subject.GetHashCode().ShouldBe(subject2.GetHashCode());
     }
 
     private MatchingRule Arrange(Guid? id = null)
     {
-        return new MatchingRule(BucketRepo) { BucketCode = TransactionsListModelTestData.PowerBucket.Code, RuleId = id ?? Guid.NewGuid() };
+        return new MatchingRule(this.bucketRepo) { BucketCode = TransactionsListModelTestData.PowerBucket.Code, RuleId = id ?? Guid.NewGuid() };
     }
 }
