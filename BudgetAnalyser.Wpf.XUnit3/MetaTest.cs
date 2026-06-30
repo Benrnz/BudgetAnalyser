@@ -1,11 +1,12 @@
-﻿using System.Reflection;
+using System.Linq;
+using System.Reflection;
 using Shouldly;
 
-namespace BudgetAnalyser.Engine.XUnit;
+namespace BudgetAnalyser.Wpf.XUnit3;
 
 public class MetaTest(ITestOutputHelper testOutputHelper)
 {
-    private const int MinimumTestCount = 291;
+    private const int MinimumTestCount = 21;
 
     [Fact]
     public void ListAllTests()
@@ -26,9 +27,8 @@ public class MetaTest(ITestOutputHelper testOutputHelper)
     private int DiscoverTestCount()
     {
         var assembly = GetType().Assembly;
-        var count = assembly.ExportedTypes
+        return assembly.ExportedTypes
             .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.Public))
             .Count(m => m.GetCustomAttribute<FactAttribute>() is not null);
-        return count;
     }
 }

@@ -62,6 +62,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="BudgetAnalyser.Wpf.UnitTest"/> <!-- Same as [assembly: InternalsVisibleTo("CustomTest1")] -->
+        <InternalsVisibleTo Include="BudgetAnalyser.Wpf.XUnit3"/> <!-- Same as [assembly: InternalsVisibleTo("CustomTest1")] -->
     </ItemGroup>
 </Project>
