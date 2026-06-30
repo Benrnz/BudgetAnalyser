@@ -1,35 +1,36 @@
-﻿namespace BudgetAnalyser.Engine.UnitTest;
+using Shouldly;
 
-[TestClass]
+namespace BudgetAnalyser.Engine.XUnit;
+
 public class DebugLoggerTest
 {
     private readonly ILogger debugLogger = new DebugLogger(true);
 
-    [TestMethod]
+    [Fact]
     public void FormatShouldReturnEmptyWhenDebuggerNotAttached()
     {
         var myLogger = new DebugLogger(false);
         var result = myLogger.Format("Testing Format var1: {0}; var2: {1};", 1, 2);
-        Assert.AreEqual(string.Empty, result);
+        result.ShouldBe(string.Empty);
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatShouldReturnFormattedStringWhenDebuggerIsAttached()
     {
         var result = this.debugLogger.Format("Testing Format var1: {0}; var2: {1};", 1, 2);
-        Assert.AreEqual("Testing Format var1: 1; var2: 2;", result);
+        result.ShouldBe("Testing Format var1: 1; var2: 2;");
     }
 
-    [TestMethod]
+    [Fact]
     public void LoggingShouldNotEvalStringInterolationWhenNotLogging()
     {
         var didLog = false;
-        this.debugLogger.LogLevelFilter = LogLevel.Error; // Log errors only
+        this.debugLogger.LogLevelFilter = LogLevel.Error;
         this.debugLogger.LogInfo(_ => $"My string {(didLog = true).ToString()}");
-        Assert.AreEqual(false, didLog);
+        didLog.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void NoLoggingShouldOccurWhenDebuggerNotAttached()
     {
         var logger = new DebugLogger(false);
@@ -38,84 +39,84 @@ public class DebugLoggerTest
         logger.LogWarning(l => (didLog = true).ToString());
         logger.LogInfo(l => (didLog = true).ToString());
         logger.LogAlways(l => (didLog = true).ToString());
-        Assert.IsFalse(didLog);
+        didLog.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void ShouldInitialiseToAlwaysLog()
     {
-        Assert.AreEqual(LogLevel.Always, this.debugLogger.LogLevelFilter);
+        this.debugLogger.LogLevelFilter.ShouldBe(LogLevel.Always);
     }
 
-    [TestMethod]
-    [DataRow(LogLevel.Error, true)]
-    [DataRow(LogLevel.Warn, true)]
-    [DataRow(LogLevel.Info, true)]
-    [DataRow(LogLevel.Always, true)]
+    [Theory]
+    [InlineData(LogLevel.Error, true)]
+    [InlineData(LogLevel.Warn, true)]
+    [InlineData(LogLevel.Info, true)]
+    [InlineData(LogLevel.Always, true)]
     public void ShouldLogAlways(LogLevel filter, bool expected)
     {
         var didLog = false;
         this.debugLogger.LogLevelFilter = filter;
         this.debugLogger.LogAlways(l => (didLog = true).ToString());
-        Assert.AreEqual(expected, didLog);
+        didLog.ShouldBe(expected);
     }
 
-    [TestMethod]
-    [DataRow(LogLevel.Error, true)]
-    [DataRow(LogLevel.Warn, true)]
-    [DataRow(LogLevel.Info, true)]
-    [DataRow(LogLevel.Always, true)]
+    [Theory]
+    [InlineData(LogLevel.Error, true)]
+    [InlineData(LogLevel.Warn, true)]
+    [InlineData(LogLevel.Info, true)]
+    [InlineData(LogLevel.Always, true)]
     public void ShouldLogError(LogLevel filter, bool expected)
     {
         var didLog = false;
         this.debugLogger.LogLevelFilter = filter;
         this.debugLogger.LogError(l => (didLog = true).ToString());
-        Assert.AreEqual(expected, didLog);
+        didLog.ShouldBe(expected);
     }
 
-    [TestMethod]
-    [DataRow(LogLevel.Error, true)]
-    [DataRow(LogLevel.Warn, true)]
-    [DataRow(LogLevel.Info, true)]
-    [DataRow(LogLevel.Always, true)]
+    [Theory]
+    [InlineData(LogLevel.Error, true)]
+    [InlineData(LogLevel.Warn, true)]
+    [InlineData(LogLevel.Info, true)]
+    [InlineData(LogLevel.Always, true)]
     public void ShouldLogExceptionWhenFilteredToError(LogLevel filter, bool expected)
     {
         var didLog = false;
         this.debugLogger.LogLevelFilter = filter;
         this.debugLogger.LogError(new Exception("Test Exception"), l => (didLog = true).ToString());
-        Assert.AreEqual(expected, didLog);
+        didLog.ShouldBe(expected);
     }
 
-    [TestMethod]
-    [DataRow(LogLevel.Error, false)]
-    [DataRow(LogLevel.Warn, false)]
-    [DataRow(LogLevel.Info, true)]
-    [DataRow(LogLevel.Always, true)]
+    [Theory]
+    [InlineData(LogLevel.Error, false)]
+    [InlineData(LogLevel.Warn, false)]
+    [InlineData(LogLevel.Info, true)]
+    [InlineData(LogLevel.Always, true)]
     public void ShouldLogInfo(LogLevel filter, bool expected)
     {
         var didLog = false;
         this.debugLogger.LogLevelFilter = filter;
         this.debugLogger.LogInfo(l => (didLog = true).ToString());
-        Assert.AreEqual(expected, didLog);
+        didLog.ShouldBe(expected);
     }
 
-    [TestMethod]
-    [DataRow(LogLevel.Error, false)]
-    [DataRow(LogLevel.Warn, true)]
-    [DataRow(LogLevel.Info, true)]
-    [DataRow(LogLevel.Always, true)]
+    [Theory]
+    [InlineData(LogLevel.Error, false)]
+    [InlineData(LogLevel.Warn, true)]
+    [InlineData(LogLevel.Info, true)]
+    [InlineData(LogLevel.Always, true)]
     public void ShouldLogWarning(LogLevel filter, bool expected)
     {
         var didLog = false;
         this.debugLogger.LogLevelFilter = filter;
         this.debugLogger.LogWarning(l => (didLog = true).ToString());
-        Assert.AreEqual(expected, didLog);
+        didLog.ShouldBe(expected);
     }
 
-    [TestMethod]
+    [Fact]
     public void ShouldRememberLogFilterChanges()
     {
         this.debugLogger.LogLevelFilter = LogLevel.Error;
-        Assert.AreEqual(LogLevel.Error, this.debugLogger.LogLevelFilter);
+        this.debugLogger.LogLevelFilter.ShouldBe(LogLevel.Error);
     }
 }

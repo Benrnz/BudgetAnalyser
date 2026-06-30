@@ -5,7 +5,7 @@ namespace BudgetAnalyser.Engine.UnitTest;
 [TestClass]
 public class MetaTest
 {
-    private const int MinimumTestCount = 773;
+    private const int MinimumTestCount = 675;
 
     [TestMethod]
     public void ListAllTests()
@@ -36,7 +36,8 @@ public class MetaTest
                      let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
                      where testClassAttrib is not null
                      select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() is not null)).Sum();
-        Console.WriteLine(count);
+        Console.WriteLine($"Tests in library: " + count);
+        Console.WriteLine($"Minimum tests required: " + MinimumTestCount);
         Assert.IsTrue(count >= MinimumTestCount);
     }
 }

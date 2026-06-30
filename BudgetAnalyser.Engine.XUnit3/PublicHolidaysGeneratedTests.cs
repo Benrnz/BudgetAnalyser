@@ -1,16 +1,11 @@
-// Generated code do not directly modify
-// 9/01/2025 1:25:25 am
-
 using System.CodeDom.Compiler;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest;
+namespace BudgetAnalyser.Engine.XUnit;
 
 [GeneratedCode("PublicHolidaysGenerator", "9/01/2025 1:25:25 am")]
-[TestClass]
 public class PublicHolidays2014Test
 {
-    private const int Year = 2014;
-
     private readonly List<DateOnly> expectedHolidays =
     [
         new(2014, 1, 1),
@@ -26,32 +21,24 @@ public class PublicHolidays2014Test
         new(2014, 12, 26)
     ];
 
-    private NewZealandPublicHolidaysTestHarness subject;
+    private readonly NewZealandPublicHolidaysTestHarness subject = new(2014);
 
-    [TestMethod]
+    [Fact]
     public void CorrectNumberOfHolidays()
     {
-        Assert.AreEqual(this.expectedHolidays.Count(), this.subject.Results.Count());
+        this.expectedHolidays.Count.ShouldBe(this.subject.Results.Count());
     }
 
-    [TestInitialize]
-    public void Initialise()
-    {
-        this.subject = new NewZealandPublicHolidaysTestHarness(2014);
-    }
-
-    [TestMethod]
+    [Fact]
     public void VerifyHolidays()
     {
         this.subject.VerifyHolidays(this.expectedHolidays);
     }
-} // End Test class for 2014
+}
 
-[TestClass]
+[GeneratedCode("PublicHolidaysGenerator", "9/01/2025 1:25:25 am")]
 public class PublicHolidays2015Test
 {
-    private const int Year = 2015;
-
     private readonly List<DateOnly> expectedHolidays =
     [
         new(2015, 1, 1),
@@ -67,32 +54,24 @@ public class PublicHolidays2015Test
         new(2015, 12, 28)
     ];
 
-    private NewZealandPublicHolidaysTestHarness subject;
+    private readonly NewZealandPublicHolidaysTestHarness subject = new(2015);
 
-    [TestMethod]
+    [Fact]
     public void CorrectNumberOfHolidays()
     {
-        Assert.AreEqual(this.expectedHolidays.Count(), this.subject.Results.Count());
+        this.expectedHolidays.Count.ShouldBe(this.subject.Results.Count());
     }
 
-    [TestInitialize]
-    public void Initialise()
-    {
-        this.subject = new NewZealandPublicHolidaysTestHarness(2015);
-    }
-
-    [TestMethod]
+    [Fact]
     public void VerifyHolidays()
     {
         this.subject.VerifyHolidays(this.expectedHolidays);
     }
-} // End Test class for 2015
+}
 
-[TestClass]
+[GeneratedCode("PublicHolidaysGenerator", "9/01/2025 1:25:25 am")]
 public class PublicHolidays2016Test
 {
-    private const int Year = 2016;
-
     private readonly List<DateOnly> expectedHolidays =
     [
         new(2016, 1, 1),
@@ -108,32 +87,24 @@ public class PublicHolidays2016Test
         new(2016, 12, 27)
     ];
 
-    private NewZealandPublicHolidaysTestHarness subject;
+    private readonly NewZealandPublicHolidaysTestHarness subject = new(2016);
 
-    [TestMethod]
+    [Fact]
     public void CorrectNumberOfHolidays()
     {
-        Assert.AreEqual(this.expectedHolidays.Count(), this.subject.Results.Count());
+        this.expectedHolidays.Count.ShouldBe(this.subject.Results.Count());
     }
 
-    [TestInitialize]
-    public void Initialise()
-    {
-        this.subject = new NewZealandPublicHolidaysTestHarness(2016);
-    }
-
-    [TestMethod]
+    [Fact]
     public void VerifyHolidays()
     {
         this.subject.VerifyHolidays(this.expectedHolidays);
     }
-} // End Test class for 2016
+}
 
-[TestClass]
+[GeneratedCode("PublicHolidaysGenerator", "9/01/2025 1:25:25 am")]
 public class PublicHolidays2017Test
 {
-    private const int Year = 2017;
-
     private readonly List<DateOnly> expectedHolidays =
     [
         new(2017, 1, 2),
@@ -149,32 +120,24 @@ public class PublicHolidays2017Test
         new(2017, 12, 26)
     ];
 
-    private NewZealandPublicHolidaysTestHarness subject;
+    private readonly NewZealandPublicHolidaysTestHarness subject = new(2017);
 
-    [TestMethod]
+    [Fact]
     public void CorrectNumberOfHolidays()
     {
-        Assert.AreEqual(this.expectedHolidays.Count(), this.subject.Results.Count());
+        this.expectedHolidays.Count.ShouldBe(this.subject.Results.Count());
     }
 
-    [TestInitialize]
-    public void Initialise()
-    {
-        this.subject = new NewZealandPublicHolidaysTestHarness(2017);
-    }
-
-    [TestMethod]
+    [Fact]
     public void VerifyHolidays()
     {
         this.subject.VerifyHolidays(this.expectedHolidays);
     }
-} // End Test class for 2017
+}
 
-[TestClass]
+[GeneratedCode("PublicHolidaysGenerator", "9/01/2025 1:25:25 am")]
 public class PublicHolidays2018Test
 {
-    private const int Year = 2018;
-
     private readonly List<DateOnly> expectedHolidays =
     [
         new(2018, 1, 1),
@@ -190,24 +153,17 @@ public class PublicHolidays2018Test
         new(2018, 12, 26)
     ];
 
-    private NewZealandPublicHolidaysTestHarness subject;
+    private readonly NewZealandPublicHolidaysTestHarness subject = new(2018);
 
-    [TestMethod]
+    [Fact]
     public void CorrectNumberOfHolidays()
     {
-        Assert.AreEqual(this.expectedHolidays.Count(), this.subject.Results.Count());
+        this.expectedHolidays.Count.ShouldBe(this.subject.Results.Count());
     }
 
-    [TestInitialize]
-    public void Initialise()
-    {
-        this.subject = new NewZealandPublicHolidaysTestHarness(2018);
-    }
-
-    [TestMethod]
+    [Fact]
     public void VerifyHolidays()
     {
         this.subject.VerifyHolidays(this.expectedHolidays);
     }
-} // End Test class for 2018
-// End namespace
+}

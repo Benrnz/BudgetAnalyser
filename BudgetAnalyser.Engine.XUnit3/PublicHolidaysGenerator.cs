@@ -1,9 +1,8 @@
-namespace BudgetAnalyser.Engine.UnitTest;
+namespace BudgetAnalyser.Engine.XUnit;
 
-[TestClass]
 public class PublicHolidaysGenerator
 {
-    [TestMethod]
+    [Fact]
     public void GeneratePublicHolidaysTests()
     {
         Console.WriteLine(PublicHolidaysGeneratorEngine.Generate());

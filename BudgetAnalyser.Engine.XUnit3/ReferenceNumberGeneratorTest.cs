@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest;
+namespace BudgetAnalyser.Engine.XUnit;
 
-[TestClass]
 public class ReferenceNumberGeneratorTest
 {
-    [TestMethod]
+    [Fact]
     public void DuplicateReferenceNumberTest()
     {
         var timer = Stopwatch.StartNew();
@@ -14,8 +14,7 @@ public class ReferenceNumberGeneratorTest
         for (var i = 0; i < 1000; i++)
         {
             var result = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
-            //Debug.WriteLine($"{i} {result}");
-            Assert.IsNotNull(result);
+            result.ShouldNotBeNull();
             duplicateCheck.Add(result, result);
         }
 

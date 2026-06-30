@@ -1,16 +1,17 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using System.ComponentModel;
 using System.Reflection;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Transactions;
-using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
 using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest;
+namespace BudgetAnalyser.Engine.XUnit;
 
-[TestClass]
 public class EngineIocRegistrationsTest
 {
     /// <summary>
@@ -19,22 +20,21 @@ public class EngineIocRegistrationsTest
     /// </summary>
     private List<Type> ExemptionList => new()
     {
-        typeof(ILogger), // Logger is instantiated with a custom registration.
-        typeof(IModelValidate), // Used to indicate support for standard validation.
-        typeof(IBankExtractImporter), // The implementations of this interface are discovered by reflection.
-        typeof(IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.
-        typeof(IUserDefinedWidget), // Used to mark a widget as being multi-instance as opposed to the ordinary single instance approach.
-        typeof(IDataChangeDetection), // Used to mark a type that can report back when data has changed. Similar to INotifyPropertyChange but across the whole type.
-        typeof(IBudgetCurrencyContext), // Used to wrap a Budget Model and how it relates to time - is it the most current, an old one, or a future one.
-        typeof(ICloneable<>), // Used to consistently implement cloning across multiple types.
-        typeof(IDtoMapper<,>), // Used to consistently implement mappers, mappers are internal and do not need to be registered in an IoC container.
-        typeof(IEnvironmentFolders), // Must be implemented in the UI project as it is platform dependent.
-        typeof(IPersistentApplicationStateObject) // Used to consistently implement a grain or persistent application data. This does not need to be registered with an IoC container.
+        typeof(ILogger),
+        typeof(IModelValidate),
+        typeof(IBankExtractImporter),
+        typeof(IWidgetWithAdditionalImage),
+        typeof(IUserDefinedWidget),
+        typeof(IDataChangeDetection),
+        typeof(IBudgetCurrencyContext),
+        typeof(ICloneable<>),
+        typeof(IDtoMapper<,>),
+        typeof(IEnvironmentFolders),
+        typeof(IPersistentApplicationStateObject)
     };
 
-    [TestMethod]
-    [Description("This test is not a functional test, but is designed to detect new interfaces that have not been assigned to a concrete type with the AutoRegisterWithIoCAttribute or added to" +
-                 " the exclude list. This prevents runtime errors where the IoC container cannot resolve a concrete type for the new interface.")]
+    [Fact]
+    [Description("This test is not a functional test, but is designed to detect new interfaces that have not been assigned to a concrete type with the AutoRegisterWithIoCAttribute or added to the exclude list. This prevents runtime errors where the IoC container cannot resolve a concrete type for the new interface.")]
     public void EnsureAllInterfacesAreRegisteredWithIoC()
     {
         try
@@ -48,14 +48,14 @@ public class EngineIocRegistrationsTest
             foreach (var interfaceType in interfaces.Except(ExemptionList))
             {
                 Console.Write("Interface: {0}", interfaceType.Name);
-                if (exemptionListNames.Contains(interfaceType.FullName))
+                if (exemptionListNames.Contains(interfaceType.FullName!))
                 {
                     continue;
                 }
 
                 if (!dependencies.Any(d => IsSelfRegistered(interfaceType, d)))
                 {
-                    Assert.Fail($"Interface: {interfaceType.FullName} is not registered.");
+                    throw new Xunit.Sdk.XunitException($"Interface: {interfaceType.FullName} is not registered.");
                 }
 
                 Console.WriteLine(" registered.");
@@ -68,62 +68,59 @@ public class EngineIocRegistrationsTest
                 Debug.WriteLine(exception);
             }
 
-            Assert.Fail();
+            throw;
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void ProcessPropertyInjection_ShouldBeAbleToAssignLoggerToProperty()
     {
         var logger = new FakeLogger();
         var result = EngineIocRegistrations.ProcessPropertyInjection(GetType().Assembly);
         result.First().PropertyInjectionAssignment(logger);
 
-        Assert.AreSame(logger, AutoRegisterWithIoCProcessorPropertyInjectionTestSource.Logger);
+        AutoRegisterWithIoCProcessorPropertyInjectionTestSource.Logger.ShouldBeSameAs(logger);
     }
 
-    [TestMethod]
+    [Fact]
     public void ProcessPropertyInjection_ShouldFindOnePropertyInjectionDependency()
     {
         var result = EngineIocRegistrations.ProcessPropertyInjection(GetType().Assembly);
-        Assert.AreEqual(1, result.Count());
+        result.Count().ShouldBe(1);
     }
 
-    [TestMethod]
+    [Fact]
     public void ProcessPropertyInjection_ShouldFindStaticClassWithILoggerProperty()
     {
         var result = EngineIocRegistrations.ProcessPropertyInjection(GetType().Assembly);
-        Assert.AreEqual(typeof(ILogger), result.First().Type);
+        result.First().Type.ShouldBe(typeof(ILogger));
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
+    [Fact]
     public void ProcessPropertyInjectionShouldThrowGivenNullAssembly()
     {
-        var result = EngineIocRegistrations.ProcessPropertyInjection(null);
-        result.Any();
-        Assert.Fail();
+        Should.Throw<ArgumentNullException>(() =>
+            EngineIocRegistrations.ProcessPropertyInjection(null!).Any());
     }
 
-    [TestMethod]
+    [Fact]
     public void RegisterAutoMappings_ShouldReturnFakeLoggerRegistration()
     {
         var result = EngineIocRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
         var loggerRegistration = result.Last();
-        Assert.AreEqual(typeof(FakeLogger), loggerRegistration.Type);
-        Assert.IsTrue(loggerRegistration.IsSingleInstance);
-        Assert.AreEqual("Named Logger", loggerRegistration.NamedInstanceName);
+        loggerRegistration.Type.ShouldBe(typeof(FakeLogger));
+        loggerRegistration.IsSingleInstance.ShouldBeTrue();
+        loggerRegistration.NamedInstanceName.ShouldBe("Named Logger");
     }
 
-    [TestMethod]
+    [Fact]
     public void RegisterAutoMappings_ShouldReturnTwoGivenThisAssembly()
     {
         var result = EngineIocRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
-        Assert.AreEqual(3, result.Count());
-        // EmbeddedResourceReaderWriter, EmbeddedResourceReaderWriterEncrypted, FakeLogger
+        result.Count().ShouldBe(3);
     }
 
-    [TestMethod]
+    [Fact]
     public void AddAutoRegistrations_ShouldResolveNamedInstancesByKey()
     {
         var services = new ServiceCollection();
@@ -133,11 +130,11 @@ public class EngineIocRegistrationsTest
         var encrypted = provider.GetRequiredKeyedService<IFileReaderWriter>(StorageConstants.EncryptedInstanceName);
         var unprotected = provider.GetRequiredKeyedService<IFileReaderWriter>(StorageConstants.UnprotectedInstanceName);
 
-        Assert.IsInstanceOfType(encrypted, typeof(EmbeddedResourceFileReaderWriterEncrypted));
-        Assert.IsInstanceOfType(unprotected, typeof(EmbeddedResourceFileReaderWriter));
+        encrypted.ShouldBeOfType<EmbeddedResourceFileReaderWriterEncrypted>();
+        unprotected.ShouldBeOfType<EmbeddedResourceFileReaderWriter>();
     }
 
-    [TestMethod]
+    [Fact]
     public void AddAutoRegistrations_ShouldAlsoResolveNamedInstancesUnkeyed()
     {
         var services = new ServiceCollection();
@@ -146,25 +143,16 @@ public class EngineIocRegistrationsTest
 
         var allReaderWriters = provider.GetServices<IFileReaderWriter>().ToList();
 
-        Assert.AreEqual(2, allReaderWriters.Count);
-        Assert.IsTrue(allReaderWriters.Any(x => x is EmbeddedResourceFileReaderWriterEncrypted));
-        Assert.IsTrue(allReaderWriters.Any(x => x is EmbeddedResourceFileReaderWriter));
+        allReaderWriters.Count.ShouldBe(2);
+        allReaderWriters.ShouldContain(x => x is EmbeddedResourceFileReaderWriterEncrypted);
+        allReaderWriters.ShouldContain(x => x is EmbeddedResourceFileReaderWriter);
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
+    [Fact]
     public void RegisterAutoMappings_ShouldThrowGivenNullAssembly()
     {
-        var result = EngineIocRegistrations.RegisterAutoMappingsFromAssembly(null);
-
-        result.ToList();
-
-        Assert.Fail();
-    }
-
-    [TestInitialize]
-    public void TestInitialise()
-    {
+        Should.Throw<ArgumentNullException>(() =>
+            EngineIocRegistrations.RegisterAutoMappingsFromAssembly(null!).ToList());
     }
 
     private bool IsSelfRegistered(Type interfaceType, DependencyRegistrationRequirement d)

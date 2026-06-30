@@ -1,4 +1,6 @@
-﻿namespace BudgetAnalyser.Engine.UnitTest;
+using Shouldly;
+
+namespace BudgetAnalyser.Engine.XUnit;
 
 public class NewZealandPublicHolidaysTestHarness
 {
@@ -8,8 +10,9 @@ public class NewZealandPublicHolidaysTestHarness
         CalculateHolidays();
     }
 
-    public IEnumerable<DateOnly> Results { get; set; }
-    public int Year { get; set; }
+    public IEnumerable<DateOnly> Results { get; private set; } = [];
+
+    public int Year { get; }
 
     public void VerifyHolidays(IEnumerable<DateOnly> expectedResults)
     {
@@ -18,7 +21,7 @@ public class NewZealandPublicHolidaysTestHarness
         foreach (var holiday in expectedResults)
         {
             Console.WriteLine("{0}", holiday.ToString("d-MMM-yy dddd"));
-            Assert.IsTrue(Results.Contains(holiday));
+            Results.ShouldContain(holiday);
         }
     }
 

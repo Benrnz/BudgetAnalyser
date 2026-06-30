@@ -1,11 +1,11 @@
-﻿namespace BudgetAnalyser.Engine.UnitTest;
+namespace BudgetAnalyser.Engine.XUnit;
 
 public static class PublicHolidaysTestData
 {
-    public static IDictionary<int, IEnumerable<DateTime>> ExpectedHolidays { get; } = new Dictionary<int, IEnumerable<DateTime>>
+    public static IDictionary<int, IEnumerable<DateOnly>> ExpectedHolidays { get; } = new Dictionary<int, IEnumerable<DateOnly>>
     {
         [2014] =
-            new List<DateTime>
+            new List<DateOnly>
             {
                 new(2014, 1, 1),
                 new(2014, 1, 2),
@@ -20,7 +20,7 @@ public static class PublicHolidaysTestData
                 new(2014, 12, 26)
             },
         [2015] =
-            new List<DateTime>
+            new List<DateOnly>
             {
                 new(2015, 1, 1),
                 new(2015, 1, 2),
@@ -35,7 +35,7 @@ public static class PublicHolidaysTestData
                 new(2015, 12, 28)
             },
         [2016] =
-            new List<DateTime>
+            new List<DateOnly>
             {
                 new(2016, 1, 1),
                 new(2016, 1, 4),
@@ -50,7 +50,7 @@ public static class PublicHolidaysTestData
                 new(2016, 12, 27)
             },
         [2017] =
-            new List<DateTime>
+            new List<DateOnly>
             {
                 new(2017, 1, 2),
                 new(2017, 1, 3),
@@ -65,7 +65,7 @@ public static class PublicHolidaysTestData
                 new(2017, 12, 26)
             },
         [2018] =
-            new List<DateTime>
+            new List<DateOnly>
             {
                 new(2018, 1, 1),
                 new(2018, 1, 2),
