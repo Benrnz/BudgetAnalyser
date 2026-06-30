@@ -1,73 +1,67 @@
-﻿using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.XUnit.TestData;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest.Budget;
+namespace BudgetAnalyser.Engine.XUnit.Budget;
 
-[TestClass]
 public class BudgetCurrencyContextTest
 {
-    [TestMethod]
+    [Fact]
     public void Budget1ShouldBeArchivedAfterConstruction()
     {
         var subject = CreateSubject1();
 
-        Assert.IsFalse(subject.BudgetActive);
-        Assert.IsTrue(subject.BudgetArchived);
-        Assert.IsFalse(subject.BudgetInFuture);
+        subject.BudgetActive.ShouldBeFalse();
+        subject.BudgetArchived.ShouldBeTrue();
+        subject.BudgetInFuture.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void Budget1ShouldBeEffectiveUntilBudget2EffectiveDate()
     {
         var subject = CreateSubject1();
 
-        Assert.IsTrue(subject.BudgetArchived);
-        Assert.AreEqual(new DateOnly(2014, 01, 20), subject.EffectiveUntil);
+        subject.BudgetArchived.ShouldBeTrue();
+        subject.EffectiveUntil.ShouldBe(new DateOnly(2014, 01, 20));
     }
 
-    [TestMethod]
+    [Fact]
     public void Budget2ShouldBeCurrentAfterConstruction()
     {
         var subject = CreateSubject2();
 
-        Assert.IsTrue(subject.BudgetActive);
-        Assert.IsFalse(subject.BudgetArchived);
-        Assert.IsFalse(subject.BudgetInFuture);
+        subject.BudgetActive.ShouldBeTrue();
+        subject.BudgetArchived.ShouldBeFalse();
+        subject.BudgetInFuture.ShouldBeFalse();
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
+    [Fact]
     public void CtorShouldThrowIfCollectionIsNull()
     {
-        new BudgetCurrencyContext(null, BudgetModelTestData.CreateTestData1());
-        Assert.Fail();
+        Should.Throw<ArgumentNullException>(() => new BudgetCurrencyContext(null!, BudgetModelTestData.CreateTestData1()));
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(KeyNotFoundException))]
+    [Fact]
     public void CtorShouldThrowIfCurrentBudgetIsNotInCollection()
     {
-        new BudgetCurrencyContext(BudgetModelTestData.CreateCollectionWith1And2(), new BudgetModel());
-        Assert.Fail();
+        Should.Throw<KeyNotFoundException>(() => new BudgetCurrencyContext(BudgetModelTestData.CreateCollectionWith1And2(), new BudgetModel()));
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
+    [Fact]
     public void CtorShouldThrowIfModelIsNull()
     {
-        new BudgetCurrencyContext(BudgetModelTestData.CreateCollectionWith1And2(), null);
-        Assert.Fail();
+        Should.Throw<ArgumentNullException>(() => new BudgetCurrencyContext(BudgetModelTestData.CreateCollectionWith1And2(), null!));
     }
 
-    [TestMethod]
+    [Fact]
     public void ModelShouldNotBeNullAfterConstruction()
     {
         var subject = CreateSubject1();
 
-        Assert.IsNotNull(subject.Model);
+        subject.Model.ShouldNotBeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public void ShouldIndicateFutureBudgetWhenOneIsGiven()
     {
         var budget3 = new BudgetModel { EffectiveFrom = new DateOnly(DateTime.Today.AddMonths(1).Year, DateTime.Today.AddMonths(1).Month, 28) };
@@ -76,9 +70,9 @@ public class BudgetCurrencyContextTest
             budget3
         );
 
-        Assert.IsFalse(subject.BudgetActive);
-        Assert.IsFalse(subject.BudgetArchived);
-        Assert.IsTrue(subject.BudgetInFuture);
+        subject.BudgetActive.ShouldBeFalse();
+        subject.BudgetArchived.ShouldBeFalse();
+        subject.BudgetInFuture.ShouldBeTrue();
     }
 
     private static BudgetCurrencyContext CreateSubject1()

@@ -1,39 +1,39 @@
-﻿using System.Text;
+using System.Text;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.XUnit.TestData;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest.Budget;
+namespace BudgetAnalyser.Engine.XUnit.Budget;
 
-[TestClass]
 public class IncomeTest
 {
-    public StringBuilder Logs { get; private set; }
+    private StringBuilder Logs { get; } = new();
 
-    [TestMethod]
+    [Fact]
     public void BucketMustHaveADescription()
     {
         var subject = CreateSubject();
-        subject.Bucket.Description = null;
+        subject.Bucket!.Description = null!;
 
         var result = subject.Validate(Logs);
 
-        Assert.IsFalse(result);
-        Assert.IsTrue(Logs.Length > 0);
+        result.ShouldBeFalse();
+        Logs.Length.ShouldBeGreaterThan(0);
     }
 
-    [TestMethod]
-    public void MaxDeciamlIsValidIncome()
+    [Fact]
+    public void MaxDecimalIsValidIncome()
     {
         var subject = CreateSubject();
         subject.Amount = decimal.MaxValue;
 
         var result = subject.Validate(Logs);
 
-        Assert.IsTrue(result);
-        Assert.IsTrue(Logs.Length == 0);
+        result.ShouldBeTrue();
+        Logs.Length.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void MustBeAnIncomeBucket()
     {
         var subject = CreateSubject();
@@ -41,11 +41,11 @@ public class IncomeTest
 
         var result = subject.Validate(Logs);
 
-        Assert.IsFalse(result);
-        Assert.IsTrue(Logs.Length > 0);
+        result.ShouldBeFalse();
+        Logs.Length.ShouldBeGreaterThan(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void NegativeAmountIsNotValid()
     {
         var subject = CreateSubject();
@@ -53,41 +53,35 @@ public class IncomeTest
 
         var result = subject.Validate(Logs);
 
-        Assert.IsFalse(result);
-        Assert.IsTrue(Logs.Length > 0);
+        result.ShouldBeFalse();
+        Logs.Length.ShouldBeGreaterThan(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void NegativeAmountIsNotValidEvenWhenInActive()
     {
         var subject = CreateSubject();
         subject.Amount = -5;
-        subject.Bucket.Active = false;
+        subject.Bucket!.Active = false;
 
         var result = subject.Validate(Logs);
 
-        Assert.IsFalse(result);
-        Assert.IsTrue(Logs.Length > 0);
+        result.ShouldBeFalse();
+        Logs.Length.ShouldBeGreaterThan(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void OneCentIsValidIncome()
     {
         var subject = CreateSubject();
 
         var result = subject.Validate(Logs);
 
-        Assert.IsTrue(result);
-        Assert.IsTrue(Logs.Length == 0);
+        result.ShouldBeTrue();
+        Logs.Length.ShouldBe(0);
     }
 
-    [TestInitialize]
-    public void TestInitialize()
-    {
-        Logs = new StringBuilder();
-    }
-
-    [TestMethod]
+    [Fact]
     public void ZeroAmountIsValid()
     {
         var subject = CreateSubject();
@@ -95,10 +89,10 @@ public class IncomeTest
 
         var result = subject.Validate(Logs);
 
-        Assert.IsTrue(result);
+        result.ShouldBeTrue();
     }
 
-    private Income CreateSubject()
+    private static Income CreateSubject()
     {
         return new Income { Amount = 0.01M, Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Foo Bar") };
     }

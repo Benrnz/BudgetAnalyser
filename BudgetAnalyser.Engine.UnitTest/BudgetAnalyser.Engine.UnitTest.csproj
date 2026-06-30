@@ -53,4 +53,9 @@
         <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Account\" />
+      <Folder Include="Budget\" />
+    </ItemGroup>
+
 </Project>

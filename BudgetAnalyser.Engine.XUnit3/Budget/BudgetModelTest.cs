@@ -1,31 +1,31 @@
-﻿using System.Text;
+using System.Text;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.XUnit.TestData;
+using Shouldly;
 
-namespace BudgetAnalyser.Engine.UnitTest.Budget;
+namespace BudgetAnalyser.Engine.XUnit.Budget;
 
-[TestClass]
 public class BudgetModelTest
 {
-    public StringBuilder Logs { get; private set; }
+    private StringBuilder Logs { get; } = new();
 
-    [TestMethod]
+    [Fact]
     public void AfterConstructionEffectiveDateIsValidDate()
     {
         var subject = new BudgetModel();
 
-        Assert.AreNotEqual(DateOnly.MinValue, subject.EffectiveFrom);
+        subject.EffectiveFrom.ShouldNotBe(DateOnly.MinValue);
     }
 
-    [TestMethod]
+    [Fact]
     public void AfterConstructionLastModifiedDateIsValidDate()
     {
         var subject = new BudgetModel();
 
-        Assert.AreNotEqual(DateTime.MinValue, subject.LastModified);
+        subject.LastModified.ShouldNotBe(DateTime.MinValue);
     }
 
-    [TestMethod]
+    [Fact]
     public void AfterInitialiseExpensesShouldBeInDescendingOrder()
     {
         var subject = BudgetModelTestData.CreateTestData1();
@@ -33,7 +33,7 @@ public class BudgetModelTest
         EnsureDescendingOrder(subject.Expenses);
     }
 
-    [TestMethod]
+    [Fact]
     public void AfterInitialiseIncomesShouldBeInDescendingOrder()
     {
         var subject = BudgetModelTestData.CreateTestData1();
@@ -41,29 +41,31 @@ public class BudgetModelTest
         EnsureDescendingOrder(subject.Incomes);
     }
 
-    [TestMethod]
+    [Fact]
     public void AfterUpdateExpensesAreReplaced()
     {
         var subject = BudgetModelTestData.CreateTestData1();
 
         var expenses = new List<Expense>
         {
-            new() { Amount = 4444, Bucket = new SpentPerPeriodExpenseBucket("Horse", "Shit") }, new() { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") }
+            new() { Amount = 4444, Bucket = new SpentPerPeriodExpenseBucket("Horse", "Shit") },
+            new() { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") }
         };
 
         subject.Update(subject.Incomes, expenses);
 
-        Assert.AreEqual(4444M + 9999M, subject.Expenses.Sum(e => e.Amount));
+        subject.Expenses.Sum(e => e.Amount).ShouldBe(4444M + 9999M);
     }
 
-    [TestMethod]
+    [Fact]
     public void AfterUpdateExpensesAreStillInDescendingOrder()
     {
         var subject = BudgetModelTestData.CreateTestData1();
 
         var expenses = new List<Expense>
         {
-            new() { Amount = 4444, Bucket = new SpentPerPeriodExpenseBucket("Horse", "Shit") }, new() { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") }
+            new() { Amount = 4444, Bucket = new SpentPerPeriodExpenseBucket("Horse", "Shit") },
+            new() { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") }
         };
 
         subject.Update(subject.Incomes, expenses);
@@ -71,31 +73,39 @@ public class BudgetModelTest
         EnsureDescendingOrder(subject.Expenses);
     }
 
-    [TestMethod]
+    [Fact]
     public void AfterUpdateIncomesAreReplaced()
     {
         var subject = BudgetModelTestData.CreateTestData1();
 
-        var incomes = new List<Income> { new() { Amount = 9999, Bucket = new IncomeBudgetBucket("Foo", "Bar") }, new() { Amount = 4444, Bucket = new IncomeBudgetBucket("Horse", "Shit") } };
+        var incomes = new List<Income>
+        {
+            new() { Amount = 9999, Bucket = new IncomeBudgetBucket("Foo", "Bar") },
+            new() { Amount = 4444, Bucket = new IncomeBudgetBucket("Horse", "Shit") }
+        };
 
         subject.Update(incomes, subject.Expenses);
 
-        Assert.AreEqual(9999M + 4444M, subject.Incomes.Sum(i => i.Amount));
+        subject.Incomes.Sum(i => i.Amount).ShouldBe(9999M + 4444M);
     }
 
-    [TestMethod]
+    [Fact]
     public void AfterUpdateIncomesAreStillInDescendingOrder()
     {
         var subject = BudgetModelTestData.CreateTestData1();
 
-        var incomes = new List<Income> { new() { Amount = 4444, Bucket = new IncomeBudgetBucket("Horse", "Shit") }, new() { Amount = 9999, Bucket = new IncomeBudgetBucket("Foo", "Bar") } };
+        var incomes = new List<Income>
+        {
+            new() { Amount = 4444, Bucket = new IncomeBudgetBucket("Horse", "Shit") },
+            new() { Amount = 9999, Bucket = new IncomeBudgetBucket("Foo", "Bar") }
+        };
 
         subject.Update(incomes, subject.Expenses);
 
         EnsureDescendingOrder(subject.Incomes);
     }
 
-    [TestMethod]
+    [Fact]
     public void AfterUpdateLastModifiedIsUpdated()
     {
         var subject = BudgetModelTestData.CreateTestData1();
@@ -105,28 +115,27 @@ public class BudgetModelTest
         Thread.Sleep(10);
         subject.Update(subject.Incomes, subject.Expenses);
 
-        Assert.AreNotEqual(lastUpdated, subject.LastModified);
+        subject.LastModified.ShouldNotBe(lastUpdated);
     }
 
-    [TestMethod]
+    [Fact]
     public void CalculatedSurplusShouldBeExpectedValue()
     {
         var subject = BudgetModelTestData.CreateTestData1();
 
-        Assert.AreEqual(1175M, subject.Surplus);
+        subject.Surplus.ShouldBe(1175M);
     }
 
-    [TestMethod]
+    [Fact]
     public void ListsAreInitialised()
     {
         var subject = new BudgetModel();
 
-        Assert.IsNotNull(subject.Incomes);
-        Assert.IsNotNull(subject.Expenses);
+        subject.Incomes.ShouldNotBeNull();
+        subject.Expenses.ShouldNotBeNull();
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ValidationWarningException))]
+    [Fact]
     public void SurplusCannotBeUsedInTheExpenseList()
     {
         var subject = BudgetModelTestData.CreateTestData1();
@@ -135,15 +144,7 @@ public class BudgetModelTest
         myExpenses.Add(new Expense { Amount = 445M, Bucket = new SurplusBucket() });
         var myIncomes = subject.Incomes.ToList();
 
-        subject.Update(myIncomes, myExpenses);
-
-        Assert.Fail();
-    }
-
-    [TestInitialize]
-    public void TestInitialize()
-    {
-        Logs = new StringBuilder();
+        Should.Throw<ValidationWarningException>(() => subject.Update(myIncomes, myExpenses));
     }
 
     private static void EnsureDescendingOrder(IEnumerable<BudgetItem> items)
@@ -152,11 +153,7 @@ public class BudgetModelTest
         foreach (var item in items)
         {
             var current = item.Amount;
-            if (current > previousAmount)
-            {
-                Assert.Fail("Expenses are not in descending order.");
-            }
-
+            current.ShouldBeLessThanOrEqualTo(previousAmount, "Expenses are not in descending order.");
             previousAmount = current;
         }
     }
