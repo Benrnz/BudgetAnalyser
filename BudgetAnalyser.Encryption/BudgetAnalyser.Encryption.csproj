@@ -19,7 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="BudgetAnalyser.Engine.UnitTest"/>
         <InternalsVisibleTo Include="BudgetAnalyser.Engine.XUnit3"/>
     </ItemGroup>
 

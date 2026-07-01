@@ -53,4 +53,16 @@
         <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Account\" />
+      <Folder Include="Budget\" />
+      <Folder Include="Encryption\" />
+      <Folder Include="Ledger\" />
+      <Folder Include="Matching\" />
+      <Folder Include="Reports\" />
+      <Folder Include="Services\" />
+      <Folder Include="Transactions\" />
+      <Folder Include="Widgets\" />
+    </ItemGroup>
+
 </Project>

@@ -32,7 +32,7 @@ public static class LedgerBookTestData
     public static LedgerBucket CarInsLedger { get; }
     public static LedgerBucket CarMtcLedger { get; }
 
-    public static Account ChequeAccount { get; }
+    public static BankAccount.Account ChequeAccount { get; }
     public static LedgerBucket ClothesLedger { get; }
     public static LedgerBucket DocLedger { get; }
     public static LedgerBucket HairLedger { get; }
@@ -44,7 +44,7 @@ public static class LedgerBookTestData
     public static LedgerBucket PowerLedger { get; }
     public static LedgerBucket RatesLedger { get; }
     public static LedgerBucket RegoLedger { get; }
-    public static Account SavingsAccount { get; }
+    public static BankAccount.Account SavingsAccount { get; }
     public static LedgerBucket SavingsLedger { get; }
     public static LedgerBucket SavingsSurplusLedger { get; }
     public static LedgerBucket SurplusLedger { get; }

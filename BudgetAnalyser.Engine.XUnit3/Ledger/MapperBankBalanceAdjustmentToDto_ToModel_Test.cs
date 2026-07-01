@@ -10,7 +10,7 @@ public class MapperBankBalanceAdjustmentToDto_ToModel_Test
 {
     private const string AccountName = "CHEQUE";
     private static readonly Guid TransactionId = new("7F921750-4467-4EA4-81E6-3EFD466341A6");
-    private readonly Account account;
+    private readonly BankAccount.Account account;
     private readonly MapperBankBalanceAdjustmentToDto2 subject;
     private readonly LedgerTransactionDto testData;
     private BankBalanceAdjustmentTransaction? result;

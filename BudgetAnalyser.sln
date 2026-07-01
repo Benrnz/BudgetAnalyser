@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rees.Wpf", "Rees.Wpf\Rees.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetAnalyser.Engine", "BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj", "{8348F53B-8C40-4A4F-AA0C-FEFBAB47D561}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetAnalyser.Engine.UnitTest", "BudgetAnalyser.Engine.UnitTest\BudgetAnalyser.Engine.UnitTest.csproj", "{A2652183-2C07-445F-860D-2965531CD276}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetAnalyser.Encryption", "BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj", "{B3B2A921-B04E-46FF-AD7C-631331B70054}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Engine.XUnit3", "BudgetAnalyser.Engine.XUnit3\BudgetAnalyser.Engine.XUnit3.csproj", "{1B76E3B5-4CDF-47AD-9578-DD32B1955CD2}"
@@ -71,18 +69,6 @@ Global
 		{8348F53B-8C40-4A4F-AA0C-FEFBAB47D561}.Release|x64.Build.0 = Release|Any CPU
 		{8348F53B-8C40-4A4F-AA0C-FEFBAB47D561}.Release|x86.ActiveCfg = Release|Any CPU
 		{8348F53B-8C40-4A4F-AA0C-FEFBAB47D561}.Release|x86.Build.0 = Release|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Debug|x64.Build.0 = Debug|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Debug|x86.Build.0 = Debug|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Release|x64.ActiveCfg = Release|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Release|x64.Build.0 = Release|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Release|x86.ActiveCfg = Release|Any CPU
-		{A2652183-2C07-445F-860D-2965531CD276}.Release|x86.Build.0 = Release|Any CPU
 		{B3B2A921-B04E-46FF-AD7C-631331B70054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3B2A921-B04E-46FF-AD7C-631331B70054}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3B2A921-B04E-46FF-AD7C-631331B70054}.Debug|x64.ActiveCfg = Debug|Any CPU
