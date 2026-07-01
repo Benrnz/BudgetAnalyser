@@ -21,8 +21,6 @@ public class ShellController : ControllerBase
     private readonly IPersistApplicationState statePersistence;
     private readonly IUiContext uiContext;
     private readonly IUserQuestionBoxYesNo yesNoMessageBox;
-    private Point originalWindowSize;
-    private Point originalWindowTopLeft;
 
     public ShellController(
         IMessenger messenger,
@@ -62,40 +60,25 @@ public class ShellController : ControllerBase
     public TopRulesController TopRulesController => this.uiContext.Controller<TopRulesController>();
     public TopTransactionsListController TopTransactionsController => this.uiContext.Controller<TopTransactionsListController>();
     public ShellDialogController TransactionsTabDialog { get; }
-    internal Point WindowSize { get; private set; }
+    internal Point WindowSize { get; set; }
     public string WindowTitle => "Budget Analyser";
-    internal Point WindowTopLeft { get; private set; }
+    internal Point WindowTopLeft { get; set; }
 
-    public void NotifyOfWindowLocationChange(Point location)
+    internal void NotifyOfWindowLocationChange(Point location)
     {
         WindowTopLeft = location;
     }
 
-    public void NotifyOfWindowSizeChange(Point size)
+    internal void NotifyOfWindowSizeChange(Point size)
     {
         WindowSize = size;
-    }
-
-    public void OnViewReady()
-    {
-        // Re-run the initializers. This allows any controller who couldn't initialise until the views are loaded to now reattempt to initialise.
-        this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
-        if (this.originalWindowTopLeft != new Point())
-        {
-            WindowTopLeft = this.originalWindowTopLeft;
-        }
-
-        if (this.originalWindowSize != new Point())
-        {
-            WindowSize = this.originalWindowSize;
-        }
     }
 
     /// <summary>
     ///     This method will persist the application state. Application State is user preference settings for the application, window, and last loaded file.
     ///     Any data that is used for Budgets, reconciliation, reporting belongs in the Application Database.
     /// </summary>
-    public void SaveApplicationState()
+    internal void SaveApplicationState()
     {
         var gatherDataMessage = new ApplicationStateRequestedMessage();
         Messenger.Send(gatherDataMessage);
@@ -105,7 +88,7 @@ public class ShellController : ControllerBase
     /// <summary>
     ///     Notify the ShellController the Shell is closing.
     /// </summary>
-    public async Task<bool> ShellClosing()
+    internal async Task<bool> ShellClosing()
     {
         if (this.persistenceOperations.HasUnsavedChanges)
         {
@@ -133,13 +116,13 @@ public class ShellController : ControllerBase
         var shellState = message.ElementOfType<ShellPersistentState>();
         if (shellState is not null)
         {
-            // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
-            this.originalWindowSize = shellState.Size.X > 0 || shellState.Size.Y > 0 ? shellState.Size : new Point(1250, 600);
+            // Setting Window Size at this point has no effect, must happen after window is loaded. Handled by the view.
+            WindowSize = shellState.Size.X > 0 || shellState.Size.Y > 0 ? shellState.Size : new Point(1250, 600);
 
             if (shellState.TopLeft.X > 0 || shellState.TopLeft.Y > 0)
             {
-                // Setting Window Top & Left at this point has no effect, must happen after window is loaded. See OnViewReady()
-                this.originalWindowTopLeft = shellState.TopLeft;
+                // Setting Window Top & Left at this point has no effect, must happen after window is loaded.  Handled by the view.
+                WindowTopLeft = shellState.TopLeft;
             }
 
             TopTransactionsController.PageSize = shellState.ListPageSize;

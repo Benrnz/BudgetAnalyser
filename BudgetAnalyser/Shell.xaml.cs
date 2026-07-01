@@ -19,9 +19,13 @@ public partial class ShellWindow
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        Controller.OnViewReady();
+        // Data binding these properties doesn't seem to work so well. Desired values are overwritten with other values multiple times.
+        if (Controller.WindowSize.X == 0 || Controller.WindowSize.Y == 0)
+        {
+            Controller.WindowSize = new Point(Width, Height);
+            Controller.WindowTopLeft = new Point(Left, Top);
+        }
 
-        // Data binding these properties doesnt seem to work so well. Desired values are overwritten with other values multiple times.
         Width = Controller.WindowSize.X;
         Height = Controller.WindowSize.Y;
         Left = Controller.WindowTopLeft.X;
