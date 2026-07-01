@@ -18,7 +18,6 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
-    private readonly IUiContext uiContext;
     private readonly IUserMessageBox userMessageBox;
 
     public TopDashboardController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IDashboardService dashboardService) : base(messenger)
@@ -33,7 +32,6 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.createNewSurprisePaymentMonitorController = uiContext.Controller<CreateNewSurprisePaymentMonitorController>();
         GlobalFilterController = uiContext.Controller<GlobalFilterController>();
 
-        this.uiContext = uiContext;
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
         this.userMessageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.dashboardService.NewDataSourceAvailable += OnNewDataSourceAvailable;

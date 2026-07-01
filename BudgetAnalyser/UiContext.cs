@@ -13,19 +13,6 @@ public class UiContext : IUiContext
     private readonly Dictionary<Type, Lazy<ControllerBase>> controllerDic = new();
 
     // TODO Ideally would like to remove controllers from the ambient context.
-    public IReadOnlySet<ControllerBase> Controllers
-    {
-        get
-        {
-            if (field.Any())
-            {
-                return field;
-            }
-
-            return field = this.controllerDic.Values.Select(c => c.Value).ToHashSet();
-        }
-    } = new HashSet<ControllerBase>();
-
     public T Controller<T>() where T : ControllerBase
     {
         if (this.controllerDic.TryGetValue(typeof(T), out var lazy))

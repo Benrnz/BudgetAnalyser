@@ -8,8 +8,6 @@ namespace BudgetAnalyser;
 public interface IUiContext
 {
     // TODO Ideally would like to remove controllers from the ambient context.
-    IReadOnlySet<ControllerBase> Controllers { get; }
-
     T Controller<T>() where T : ControllerBase;
     void Initialise(IDictionary<Type, Lazy<ControllerBase>> controllers);
 }
