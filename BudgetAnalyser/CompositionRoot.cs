@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
-using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Encryption;
@@ -15,12 +14,8 @@ using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Transactions;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Rees.Wpf;
-using Rees.Wpf.Contracts;
-using Rees.Wpf.UserInteraction;
-using IPersistApplicationState = BudgetAnalyser.ApplicationState.IPersistApplicationState;
 
 namespace BudgetAnalyser;
 
