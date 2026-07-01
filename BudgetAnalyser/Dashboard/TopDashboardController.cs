@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
+using BudgetAnalyser.Matching;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
@@ -18,6 +19,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
+    private readonly DisusedRulesController disusedRulesController;
     private readonly IUserMessageBox userMessageBox;
 
     public TopDashboardController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IDashboardService dashboardService) : base(messenger)
@@ -30,6 +32,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.chooseBudgetBucketController = uiContext.Controller<ChooseBudgetBucketController>();
         this.createNewFixedBudgetController = uiContext.Controller<CreateNewFixedBudgetController>();
         this.createNewSurprisePaymentMonitorController = uiContext.Controller<CreateNewSurprisePaymentMonitorController>();
+        this.disusedRulesController = uiContext.Controller<DisusedRulesController>();
         GlobalFilterController = uiContext.Controller<GlobalFilterController>();
 
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
@@ -42,6 +45,8 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         CorrelationId = Guid.NewGuid();
         WidgetGroups = new ObservableCollection<WidgetGroup>();
+
+        Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
 
     public Guid CorrelationId
@@ -159,5 +164,15 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         WidgetGroups = this.dashboardService.WidgetsToDisplay();
         OnPropertyChanged(nameof(WidgetGroups));
         WidgetCommands.ListenForWidgetChanges(WidgetGroups);
+    }
+
+    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
+    {
+        if (message.Handled || !(message.Widget is DisusedMatchingRuleWidget))
+        {
+            return;
+        }
+
+        this.disusedRulesController.ShowDialog();
     }
 }

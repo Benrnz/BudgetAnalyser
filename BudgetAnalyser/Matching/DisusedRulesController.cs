@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
@@ -40,12 +39,23 @@ public class DisusedRulesController : ControllerBase
         }
 
         Messenger.Register<DisusedRulesController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
-        Messenger.Register<DisusedRulesController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
 
     public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; } = new();
 
     public ICommand RemoveRuleCommand => new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r is not null);
+
+    public void ShowDialog()
+    {
+        var rules = DisusedMatchingRuleWidget.QueryRules(this.ruleService.MatchingRules);
+        DisusedRules = new ObservableCollection<DisusedRuleViewModel>(rules.Select(r => new DisusedRuleViewModel { MatchingRule = r, RemoveCommand = RemoveRuleCommand }));
+        this.removedRules = new List<MatchingRule>();
+        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.Ok)
+        {
+            CorrelationId = this.dialogCorrelationId,
+            Title = "Disused Matching Rules"
+        });
+    }
 
     private void OnRemoveRuleExecuted(DisusedRuleViewModel? rule)
     {
@@ -76,23 +86,6 @@ public class DisusedRulesController : ControllerBase
         }
 
         Reset();
-    }
-
-    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
-    {
-        if (message.Handled || !(message.Widget is DisusedMatchingRuleWidget))
-        {
-            return;
-        }
-
-        var rules = DisusedMatchingRuleWidget.QueryRules(this.ruleService.MatchingRules);
-        DisusedRules = new ObservableCollection<DisusedRuleViewModel>(rules.Select(r => new DisusedRuleViewModel { MatchingRule = r, RemoveCommand = RemoveRuleCommand }));
-        this.removedRules = new List<MatchingRule>();
-        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.Ok)
-        {
-            CorrelationId = this.dialogCorrelationId,
-            Title = "Disused Matching Rules"
-        });
     }
 
     private void Reset()
