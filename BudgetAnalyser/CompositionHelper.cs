@@ -32,7 +32,7 @@ public static class CompositionHelper
     /// <summary>
     ///     Build and initialise late-bound parts of the object graph that require a built provider.
     /// </summary>
-    public static IUiContext BuildApplicationObjectGraph(IServiceProvider provider)
+    public static void BuildApplicationObjectGraph(IServiceProvider provider)
     {
         if (provider is null)
         {
@@ -61,13 +61,14 @@ public static class CompositionHelper
             }
         }
 
-        return ConstructUiContext(provider);
+        ConstructUiContext(provider);
     }
 
     /// <summary>
-    ///     Perform one-time controller initialisation and application state rehydration.
+    ///     Perform one-time controller initialisation and application state rehydration.  Any Controller that implements <see cref="IInitializableController" /> will have its
+    ///     <see cref="IInitializableController.Initialize" /> method called.
     /// </summary>
-    public static void InitialiseControllers(IUiContext uiContext, ILogger logger, IPersistApplicationState statePersistence, IMessenger messenger)
+    public static void InitialiseControllers(ILogger logger, IPersistApplicationState statePersistence, IMessenger messenger, IEnumerable<IInitializableController> initializableControllers)
     {
         if (ControllersInitialised)
         {
@@ -87,8 +88,12 @@ public static class CompositionHelper
         // Create a distinct list of sequences.
         var sequences = rehydratedState.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
 
-        logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
-        uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
+        logger.LogInfo(_ => $"Calling Initialise on each Controller. {DateTime.Now}");
+        initializableControllers.ToList().ForEach(i =>
+        {
+            i.Initialize();
+            logger.LogInfo(_ => $"Initialise called on Controller: {i.GetType().Name}");
+        });
 
         // Send state load messages in order.
         foreach (var sequence in sequences)
@@ -110,7 +115,7 @@ public static class CompositionHelper
     /// </summary>
     /// <param name="provider">The built service provider used to resolve controller instances.</param>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Composition Root Pattern - pull all abstract wiring into one place")]
-    private static IUiContext ConstructUiContext(IServiceProvider provider)
+    private static void ConstructUiContext(IServiceProvider provider)
     {
         var uiContext = provider.GetRequiredService<IUiContext>();
         Type[] controllerTypes =
@@ -152,7 +157,6 @@ public static class CompositionHelper
         }
 
         uiContext.Initialise(controllers);
-        return uiContext;
     }
 
     private static IList<IPersistentApplicationStateObject> CreateNewDefaultApplicationState()

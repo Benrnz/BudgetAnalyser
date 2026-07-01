@@ -12,6 +12,7 @@ using BudgetAnalyser.Engine;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Rees.Wpf;
 
 namespace BudgetAnalyser;
 
@@ -69,15 +70,15 @@ public partial class App
         this.logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
         this.logger.LogAlways(_ => "=========== Budget Analyser is Starting ===========");
 
-        var uiContext = CompositionHelper.BuildApplicationObjectGraph(this.host.Services);
+        CompositionHelper.BuildApplicationObjectGraph(this.host.Services);
         this.shellController = this.host.Services.GetRequiredService<ShellController>();
         this.logger.LogAlways(_ => this.shellController.TopDashboardController.VersionString);
 
         CompositionHelper.InitialiseControllers(
-            uiContext,
             this.logger,
             this.host.Services.GetRequiredService<IPersistApplicationState>(),
-            this.host.Services.GetRequiredService<IMessenger>());
+            this.host.Services.GetRequiredService<IMessenger>(),
+            this.host.Services.GetServices<IInitializableController>());
 
         var topLevelWindow = new ShellWindow { DataContext = this.shellController };
         this.logger.LogInfo(_ => "Initialisation finished.");
