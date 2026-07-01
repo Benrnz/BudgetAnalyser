@@ -4,7 +4,6 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.LedgerBook;
-using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Transactions;
@@ -57,7 +56,6 @@ public class ShellController : ControllerBase
     public TopDashboardController TopDashboardController => this.uiContext.Controller<TopDashboardController>();
     public TopLedgerBookController TopLedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
     public TopReportsCatalogController TopReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
-    public TopRulesController TopRulesController => this.uiContext.Controller<TopRulesController>();
     public TopTransactionsListController TopTransactionsController => this.uiContext.Controller<TopTransactionsListController>();
     public ShellDialogController TransactionsTabDialog { get; }
     internal Point WindowSize { get; set; }

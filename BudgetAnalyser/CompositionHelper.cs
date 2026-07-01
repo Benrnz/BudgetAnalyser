@@ -143,7 +143,7 @@ public static class CompositionHelper
             typeof(TopDashboardController),
             typeof(TopLedgerBookController),
             typeof(TopReportsCatalogController),
-            typeof(TopRulesController),
+            typeof(EditRulesController),
             typeof(TopTransactionsListController),
             typeof(TransferFundsController),
             typeof(UploadMobileDataController)

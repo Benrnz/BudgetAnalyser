@@ -61,11 +61,6 @@
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding ReportsTabDialog}" />
             </Grid>
-
-            <Grid Visibility="{Binding TopRulesController.Shown, Converter={StaticResource Converter.BoolToVis}}">
-                <ContentPresenter Content="{Binding TopRulesController}"
-                                  VerticalAlignment="Stretch" />
-            </Grid>
         </Grid>
     </DockPanel>
 

@@ -6,7 +6,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-             DataContextChanged="OnDataContextChanged" d:DataContext="{d:DesignInstance matchingUI:TopRulesController}">
+             DataContextChanged="OnDataContextChanged" d:DataContext="{d:DesignInstance matchingUI:EditRulesController}">
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type matching:RulesGroupedByBucket}">
@@ -63,9 +63,6 @@
         <StackPanel Grid.ColumnSpan="3"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
-            <Button Command="{Binding CloseCommand}"
-                    Style="{StaticResource Button.Round.Left}"
-                    ToolTip="Back to transactions view" />
             <Menu Style="{StaticResource RoundMenuButton}">
                 <Menu.Resources>
 
@@ -79,19 +76,19 @@
                                    Text="Sort..." />
                     </MenuItem.Header>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matchingUI:TopRulesController.BucketSortKey}">
+                              CommandParameter="{x:Static matchingUI:EditRulesController.BucketSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Bucket" />
                         </MenuItem.Header>
                     </MenuItem>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matchingUI:TopRulesController.DescriptionSortKey}">
+                              CommandParameter="{x:Static matchingUI:EditRulesController.DescriptionSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Description" />
                         </MenuItem.Header>
                     </MenuItem>
                     <MenuItem Command="{Binding SortCommand}"
-                              CommandParameter="{x:Static matchingUI:TopRulesController.MatchesSortKey}">
+                              CommandParameter="{x:Static matchingUI:EditRulesController.MatchesSortKey}">
                         <MenuItem.Header>
                             <TextBlock Text="Number of Matches" />
                         </MenuItem.Header>

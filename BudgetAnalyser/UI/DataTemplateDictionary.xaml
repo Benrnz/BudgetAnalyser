@@ -54,7 +54,7 @@
         <reportsCatalog:TopReportsCatalogUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type matching:TopRulesController}">
+    <DataTemplate DataType="{x:Type matching:EditRulesController}">
         <matching:EditRulesUserControl />
     </DataTemplate>
 

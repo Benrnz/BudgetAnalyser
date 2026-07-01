@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
@@ -16,16 +17,17 @@ namespace BudgetAnalyser.Matching;
 ///     The Controller for <see cref="EditRulesUserControl" /> .
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class TopRulesController : ControllerBase, IShowableController
+public class EditRulesController : ControllerBase
 {
     public const string BucketSortKey = "Bucket";
     public const string DescriptionSortKey = "Description";
     public const string MatchesSortKey = "Matches";
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
+    private readonly Guid dialogCorrelationId = Guid.NewGuid();
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly ITransactionRuleService ruleService;
 
-    public TopRulesController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
+    public EditRulesController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
         if (uiContext is null)
@@ -60,9 +62,6 @@ public class TopRulesController : ControllerBase, IShowableController
     public event EventHandler? SortChanged;
 
     public string? AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
-
-    [UsedImplicitly]
-    public ICommand CloseCommand => new RelayCommand(() => Shown = false);
 
     [UsedImplicitly]
     public ICommand DeleteRuleCommand => new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
@@ -160,21 +159,6 @@ public class TopRulesController : ControllerBase, IShowableController
     [UsedImplicitly]
     public ICommand SortCommand => new RelayCommand<string>(OnSortCommandExecute);
 
-    public bool Shown
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
-
     public void CreateNewRuleFromTransaction(Transaction transaction)
     {
         if (transaction is null)
@@ -200,6 +184,15 @@ public class TopRulesController : ControllerBase, IShowableController
         NewRuleController.ShowDialog(Rules);
 
         NewRuleController.RuleCreated += OnNewRuleCreated;
+    }
+
+    public void ShowDialog()
+    {
+        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.Ok)
+        {
+            CorrelationId = this.dialogCorrelationId,
+            Title = "Edit Matching Rules"
+        });
     }
 
     private void AddToList(MatchingRule rule)

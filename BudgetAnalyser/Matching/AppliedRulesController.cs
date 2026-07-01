@@ -17,7 +17,12 @@ public class AppliedRulesController : ControllerBase
     private readonly ITransactionRuleService ruleService;
     private readonly TopTransactionsListController transactionsController;
 
-    public AppliedRulesController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
+    public AppliedRulesController(
+        IMessenger messenger,
+        UserPrompts userPrompts,
+        IUiContext uiContext,
+        ITransactionRuleService ruleService,
+        IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
         if (uiContext is null)
@@ -25,7 +30,7 @@ public class AppliedRulesController : ControllerBase
             throw new ArgumentNullException(nameof(uiContext));
         }
 
-        TopRulesController = uiContext.Controller<TopRulesController>();
+        EditRulesController = uiContext.Controller<EditRulesController>();
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.transactionsController = uiContext.Controller<TopTransactionsListController>();
@@ -55,14 +60,14 @@ public class AppliedRulesController : ControllerBase
         }
     }
 
+    public EditRulesController EditRulesController { get; }
+
     [UsedImplicitly]
     public ICommand ShowRulesCommand => new RelayCommand(OnShowRulesCommandExecute);
 
-    public TopRulesController TopRulesController { get; }
-
     private bool CanExecuteApplyRulesCommand()
     {
-        return TopRulesController.RulesGroupedByBucket.Any();
+        return EditRulesController.RulesGroupedByBucket.Any();
     }
 
     private bool CanExecuteCreateRuleCommand()
@@ -88,7 +93,7 @@ public class AppliedRulesController : ControllerBase
             return;
         }
 
-        TopRulesController.CreateNewRuleFromTransaction(this.transactionsController.ViewModel.SelectedRow);
+        EditRulesController.CreateNewRuleFromTransaction(this.transactionsController.ViewModel.SelectedRow);
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
@@ -98,6 +103,6 @@ public class AppliedRulesController : ControllerBase
 
     private void OnShowRulesCommandExecute()
     {
-        TopRulesController.Shown = true;
+        EditRulesController.ShowDialog();
     }
 }
