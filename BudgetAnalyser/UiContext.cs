@@ -38,7 +38,7 @@ public class UiContext : IUiContext
 
     public void Initialise(IDictionary<Type, Lazy<ControllerBase>> controllers)
     {
-        // Don't call initialise on each controller here, that is the job of the Shell Controller when it is ready to.
+        // Don't call initialise on each controller here, that is handled during composition root startup initialisation.
         foreach (var kvp in controllers)
         {
             this.controllerDic.Add(kvp.Key, kvp.Value);

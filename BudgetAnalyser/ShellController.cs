@@ -3,7 +3,6 @@ using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
@@ -16,27 +15,23 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class ShellController : ControllerBase, IInitializableController
+public class ShellController : ControllerBase
 {
-    private readonly ILogger logger;
     private readonly PersistenceOperations persistenceOperations;
     private readonly IPersistApplicationState statePersistence;
     private readonly IUiContext uiContext;
     private readonly IUserQuestionBoxYesNo yesNoMessageBox;
-    private bool initialised;
     private Point originalWindowSize;
     private Point originalWindowTopLeft;
 
     public ShellController(
         IMessenger messenger,
-        ILogger logger,
         UserPrompts userPrompts,
         IUiContext uiContext,
         IPersistApplicationState statePersistence,
         PersistenceOperations persistenceOperations)
         : base(messenger)
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.statePersistence = statePersistence ?? throw new ArgumentNullException(nameof(statePersistence));
         this.persistenceOperations = persistenceOperations ?? throw new ArgumentNullException(nameof(persistenceOperations));
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
@@ -70,41 +65,6 @@ public class ShellController : ControllerBase, IInitializableController
     internal Point WindowSize { get; private set; }
     public string WindowTitle => "Budget Analyser";
     internal Point WindowTopLeft { get; private set; }
-
-    public void Initialize()
-    {
-        if (this.initialised)
-        {
-            return;
-        }
-
-        this.logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
-        this.initialised = true;
-        IList<IPersistentApplicationStateObject> rehydratedState = this.statePersistence.Load().ToList();
-
-        if (rehydratedState.None())
-        {
-            rehydratedState = CreateNewDefaultApplicationState();
-        }
-
-        // Create a distinct list of sequences.
-        var sequences = rehydratedState.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
-
-        this.logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
-        this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
-
-        // Send state load messages in order.
-        foreach (var sequence in sequences)
-        {
-            var sequenceCopy = sequence;
-            var models = rehydratedState.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
-            this.logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
-            Messenger.Send(new ApplicationStateLoadedMessage(models));
-        }
-
-        this.logger.LogInfo(_ => $"ShellController Initialise completing. Sending ApplicationStateLoadFinishedMessage. {DateTime.Now}");
-        Messenger.Send(new ApplicationStateLoadFinishedMessage());
-    }
 
     public void NotifyOfWindowLocationChange(Point location)
     {
@@ -161,12 +121,6 @@ public class ShellController : ControllerBase, IInitializableController
         }
 
         return false;
-    }
-
-    private static IList<IPersistentApplicationStateObject> CreateNewDefaultApplicationState()
-    {
-        var appState = new List<IPersistentApplicationStateObject>();
-        return appState;
     }
 
     private async void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
