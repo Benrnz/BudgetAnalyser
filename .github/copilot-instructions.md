@@ -152,22 +152,21 @@ dotnet build -t:Metrics              # Update metrics XML files (complexity, mai
 
 ### Testing
 
-- **Framework**: MSTest or XUnit
+- **Framework**: xUnit v3
 - **Mocking**: NSubstitute (mandatory; do NOT use Moq)
 - **Assertions**: Shouldly (preferred over plain Assert statements)
 - **Test Projects**:
-    - `BudgetAnalyser.Engine.UnitTest` - Engine logic (uses embedded CSV test data)
-    - `BudgetAnalyser.Wpf.UnitTest` - UI layer (uses NSubstitute for engine services)
+    - `BudgetAnalyser.Engine.XUnit3` - Engine logic (uses embedded CSV test data)
+    - `BudgetAnalyser.Wpf.XUnit3` - UI layer (uses NSubstitute for engine services)
 - **Test Data**: Either embedded as `EmbeddedResource` or in `../TestData/` shared folder
 - **Key Test Utility**: `Rees.UnitTestUtilities` package
 
 Example test usage:
 
 ```csharp
-[TestClass]
 public class MyServiceTest
 {
-    [TestMethod]
+    [Fact]
     public void MethodName_ConditionDescription_ShouldThrowWhenNullInput()
     {
         var mockService = Substitute.For<IService>();
@@ -188,8 +187,8 @@ public class MyServiceTest
 ### Running Tests from Terminal
 
 ```powershell
-dotnet test BudgetAnalyser.Engine.UnitTest
-dotnet test BudgetAnalyser.Wpf.UnitTest
+dotnet test BudgetAnalyser.Engine.XUnit3
+dotnet test BudgetAnalyser.Wpf.XUnit3
 ```
 
 ---
@@ -262,7 +261,7 @@ Optional; if encrypted files are needed:
 3. **Add XAML View** → Place in UI folder, bind to Controller via `DataContext`
 4. **If global filter impacts view** → Subscribe to `GlobalFilterController` messages
 5. **Save/load data** → Use `IApplicationDatabaseFacade.NotifyOfChange()` to mark unsaved changes
-6. **Add tests** → Create parallel test project, use MSTest + NSubstitute + Shouldly, embed test data as `EmbeddedResource`
+6. **Add tests** → Create parallel test project, use xUnit + NSubstitute + Shouldly, embed test data as `EmbeddedResource`
 
 ---
 
@@ -283,7 +282,7 @@ other type)
 ## Dependencies
 
 - **NuGet**: `Rees.UserInteraction.Contracts`, `Rees.Wpf`, `Rees.UnitTestUtilities`
-- **Testing**: MSTest, NSubstitute, Shouldly
+- **Testing**: xUnit, NSubstitute, Shouldly
 - **Framework**: .NET 10.0 SDK or runtime
 - **Platform**: Windows OS (due to WPF dependency)
 
