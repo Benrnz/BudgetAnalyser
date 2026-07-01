@@ -1,3 +1,9 @@
 ﻿
 [*.cs]
+end_of_line = crlf
+insert_final_newline = true
 resharper_inconsistent_naming_highlighting=hint
+
+[*.csproj]
+end_of_line = crlf
+insert_final_newline = true
