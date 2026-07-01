@@ -80,15 +80,15 @@ public class ShellController : ControllerBase, IInitializableController
 
         this.logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
         this.initialised = true;
-        IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load().ToList();
+        IList<IPersistentApplicationStateObject> rehydratedState = this.statePersistence.Load().ToList();
 
-        if (rehydratedModels.None())
+        if (rehydratedState.None())
         {
-            rehydratedModels = CreateNewDefaultApplicationState();
+            rehydratedState = CreateNewDefaultApplicationState();
         }
 
         // Create a distinct list of sequences.
-        var sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
+        var sequences = rehydratedState.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
 
         this.logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
         this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
@@ -97,7 +97,7 @@ public class ShellController : ControllerBase, IInitializableController
         foreach (var sequence in sequences)
         {
             var sequenceCopy = sequence;
-            var models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
+            var models = rehydratedState.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
             this.logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
             Messenger.Send(new ApplicationStateLoadedMessage(models));
         }
