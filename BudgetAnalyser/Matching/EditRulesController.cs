@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO.Packaging;
 using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
@@ -161,6 +162,7 @@ public class EditRulesController : ControllerBase
 
     public void CreateNewRuleFromTransaction(Transaction transaction)
     {
+        // TODO move to Applied Rules Controller.
         if (transaction is null)
         {
             throw new ArgumentNullException(nameof(transaction));
@@ -188,6 +190,11 @@ public class EditRulesController : ControllerBase
 
     public void ShowDialog()
     {
+        if (Rules.Count == 0)
+        {
+            Reset();
+        }
+
         Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.Ok)
         {
             CorrelationId = this.dialogCorrelationId,
@@ -249,6 +256,11 @@ public class EditRulesController : ControllerBase
     }
 
     private void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)
+    {
+        Reset();
+    }
+
+    private void Reset()
     {
         SortBy = BucketSortKey; // Defaults to Bucket sort order.
         Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);

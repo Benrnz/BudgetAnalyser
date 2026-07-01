@@ -99,8 +99,8 @@
 
         <TextBlock Grid.Row="1"
                    Margin="5"
-                   Style="{StaticResource TextBlock.Heading1}"
-                   Text="All Matching Rules" />
+                   Style="{StaticResource TextBlock.Paragraph}"
+                   Text="All Rules:" />
         <ListBox x:Name="GroupedByListBox"
                  ContextMenu="{StaticResource RuleContextMenu}"
                  Grid.Row="2"
