@@ -61,6 +61,7 @@
       <Folder Include="Matching\" />
       <Folder Include="Reports\" />
       <Folder Include="Services\" />
+      <Folder Include="Transactions\" />
       <Folder Include="Widgets\" />
     </ItemGroup>
 
