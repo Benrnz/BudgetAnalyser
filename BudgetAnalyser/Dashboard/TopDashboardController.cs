@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard;
 
@@ -18,8 +19,9 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
     private readonly IUiContext uiContext;
+    private readonly IUserMessageBox userMessageBox;
 
-    public TopDashboardController(IMessenger messenger, IUiContext uiContext, IDashboardService dashboardService) : base(messenger)
+    public TopDashboardController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IDashboardService dashboardService) : base(messenger)
     {
         if (uiContext is null)
         {
@@ -33,6 +35,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         this.uiContext = uiContext;
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
+        this.userMessageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.dashboardService.NewDataSourceAvailable += OnNewDataSourceAvailable;
 
         this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
@@ -104,7 +107,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         var widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
         if (widget is null)
         {
-            this.uiContext.UserPrompts.MessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
+            this.userMessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
         }
     }
 
@@ -122,7 +125,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
             this.createNewFixedBudgetController.Amount);
         if (widget is null)
         {
-            this.uiContext.UserPrompts.MessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {this.createNewFixedBudgetController.Code} already exists.");
+            this.userMessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {this.createNewFixedBudgetController.Code} already exists.");
         }
     }
 
@@ -148,7 +151,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
         catch (ArgumentException ex)
         {
-            this.uiContext.UserPrompts.MessageBox.Show(ex.Message, "Unable to create new surprise payment monitor widget.");
+            this.userMessageBox.Show(ex.Message, "Unable to create new surprise payment monitor widget.");
         }
     }
 

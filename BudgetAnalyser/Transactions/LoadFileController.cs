@@ -25,15 +25,10 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
     private bool showingDialog;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public LoadFileController(IMessenger messenger, IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(messenger)
+    public LoadFileController(IMessenger messenger, UserPrompts userPrompts, IAccountTypeRepository accountTypeRepository) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        this.messageBox = uiContext.UserPrompts.MessageBox;
-        this.userPromptOpenFileFactory = uiContext.UserPrompts.OpenFileFactory;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.userPromptOpenFileFactory = userPrompts.OpenFileFactory ?? throw new ArgumentNullException(nameof(userPrompts.OpenFileFactory));
         this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
 
         Messenger.Register<LoadFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));

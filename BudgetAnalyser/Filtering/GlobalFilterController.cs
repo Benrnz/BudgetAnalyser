@@ -27,7 +27,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private Guid dialogCorrelationId;
     private GlobalFilterCriteria doNotUseCriteria;
 
-    public GlobalFilterController(IMessenger messenger, IUiContext uiContext, IApplicationDatabaseService appDbService) : base(messenger)
+    public GlobalFilterController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IApplicationDatabaseService appDbService) : base(messenger)
     {
         if (uiContext is null)
         {
@@ -36,7 +36,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 
         this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
         this.appDbService.NewDataSourceAvailable += OnNewFilter;
-        this.userMessageBox = uiContext.UserPrompts.MessageBox;
+        this.userMessageBox = userPrompts.MessageBox;
         this.doNotUseCriteria = new GlobalFilterCriteria();
         this.currentBudget = uiContext.Controller<TopBudgetController>().CurrentBudget?.Model; //Likely always an empty budget before the bax file is loaded.
 

@@ -36,6 +36,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     public TopLedgerBookController(
         IMessenger messenger,
         IUiContext uiContext,
+        UserPrompts userPrompts,
         LedgerBookControllerFileOperations fileOperations,
         LedgerBookGridBuilderFactory uiBuilder,
         ILedgerService ledgerService,
@@ -50,9 +51,9 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         this.newWindowViewLoader = newWindowViewLoader ?? throw new ArgumentNullException(nameof(newWindowViewLoader));
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
 
-        this.messageBox = uiContext.UserPrompts.MessageBox;
-        this.questionBox = uiContext.UserPrompts.YesNoBox;
-        this.inputBox = uiContext.UserPrompts.InputBox;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+        this.inputBox = userPrompts.InputBox ?? throw new ArgumentNullException(nameof(userPrompts.InputBox));
         FileOperations.LedgerService = this.ledgerService;
         this.doNotUseNumberOfPeriodsToShow = 6;
         this.addLedgerReconciliationController = uiContext.Controller<AddLedgerReconciliationController>();
@@ -272,7 +273,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
 
         this.ledgerService.TrackNewBudgetBucket(expenseBucket, e.StoreInThisAccount);
-        this.uiContext.UserPrompts.MessageBox.Show(
+        this.messageBox.Show(
             "Ledger Bucket added successfully to the LedgerBook. It will be tracked and shown only when there are new transactions added for that Bucket.",
             "LedgerBook");
         FileOperations.Dirty = true;

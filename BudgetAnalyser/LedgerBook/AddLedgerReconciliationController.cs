@@ -20,7 +20,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private Guid dialogCorrelationId;
     private Engine.Ledger.LedgerBook? parentBook;
 
-    public AddLedgerReconciliationController(IMessenger messenger, IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(messenger)
+    public AddLedgerReconciliationController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(messenger)
     {
         this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
         if (uiContext is null)
@@ -34,7 +34,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         }
 
         Messenger.Register<AddLedgerReconciliationController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
-        this.messageBox = uiContext.UserPrompts.MessageBox;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
     }
 
     // TODO Change this event to a message:

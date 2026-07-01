@@ -18,6 +18,7 @@ public class TransactionsControllerFileOperations : ControllerBase
 
     public TransactionsControllerFileOperations(
         IMessenger messenger,
+        UserPrompts userPrompts,
         IUiContext uiContext,
         LoadFileController loadFileController,
         IApplicationDatabaseFacade applicationDatabaseService,
@@ -34,7 +35,7 @@ public class TransactionsControllerFileOperations : ControllerBase
             throw new ArgumentNullException(nameof(applicationDatabaseService));
         }
 
-        this.messageBox = uiContext.UserPrompts.MessageBox;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
         this.transactionService = transactionManagerService ?? throw new ArgumentNullException(nameof(transactionManagerService));
         ViewModel = new TransactionsListViewModel(applicationDatabaseService, this.transactionService);

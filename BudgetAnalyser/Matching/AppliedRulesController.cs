@@ -17,7 +17,7 @@ public class AppliedRulesController : ControllerBase
     private readonly ITransactionRuleService ruleService;
     private readonly TopTransactionsListController transactionsController;
 
-    public AppliedRulesController(IMessenger messenger, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
+    public AppliedRulesController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
         if (uiContext is null)
@@ -29,7 +29,7 @@ public class AppliedRulesController : ControllerBase
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.transactionsController = uiContext.Controller<TopTransactionsListController>();
-        this.messageBox = uiContext.UserPrompts.MessageBox;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.ruleService.Saved += OnSavedNotificationReceived;
     }
 

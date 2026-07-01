@@ -29,6 +29,7 @@ public class TopBudgetController : ControllerBase, IShowableController
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public TopBudgetController(
         IMessenger messenger,
+        UserPrompts userPrompts,
         IUiContext uiContext,
         IBudgetMaintenanceService maintenanceService,
         IApplicationDatabaseFacade applicationDatabaseService)
@@ -41,8 +42,8 @@ public class TopBudgetController : ControllerBase, IShowableController
 
         this.maintenanceService = maintenanceService ?? throw new ArgumentNullException(nameof(maintenanceService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
-        this.questionBox = uiContext.UserPrompts.YesNoBox;
-        this.messageBox = uiContext.UserPrompts.MessageBox;
+        this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         NewBudgetController = uiContext.Controller<NewBudgetModelController>();
         NewBudgetController.Ready += OnAddNewBudgetReady;
         Shown = false;

@@ -22,7 +22,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     private bool doNotUseEnterPasswordMode;
     private SecureString? password;
 
-    public EncryptFileController(IMessenger messenger, IUiContext uiContext, IApplicationDatabaseFacade appDbService) : base(messenger)
+    public EncryptFileController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IApplicationDatabaseFacade appDbService) : base(messenger)
     {
         this.appDbService = appDbService;
         if (uiContext is null)
@@ -35,8 +35,8 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
             throw new ArgumentNullException(nameof(appDbService));
         }
 
-        this.questionService = uiContext.UserPrompts.YesNoBox;
-        this.messageService = uiContext.UserPrompts.MessageBox;
+        this.questionService = userPrompts.YesNoBox;
+        this.messageService = userPrompts.MessageBox;
 
         Messenger.Register<EncryptFileController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
         Messenger.Register<EncryptFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDiaglogResponseMessageReceived(m));

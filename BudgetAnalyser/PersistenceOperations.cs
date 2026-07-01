@@ -4,6 +4,7 @@ using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using CommunityToolkit.Mvvm.Messaging;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser;
 
@@ -15,12 +16,17 @@ public class PersistenceOperations
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly DemoFileHelper demoFileHelper;
     private readonly ILogger logger;
+    private readonly IUserMessageBox messageBox;
+    private readonly Func<IUserPromptOpenFile> openFileFactory;
+    private readonly IUserQuestionBoxYesNo questionBox;
+    private readonly Func<IUserPromptSaveFile> saveFileFactory;
     private readonly IUiContext uiContext;
     private DateTime lastSave = DateTime.Now;
 
     public PersistenceOperations(
         IMessenger messenger,
         ILogger logger,
+        UserPrompts userPrompts,
         IApplicationDatabaseFacade applicationDatabaseService,
         DemoFileHelper demoFileHelper,
         IUiContext uiContext)
@@ -29,7 +35,10 @@ public class PersistenceOperations
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.demoFileHelper = demoFileHelper ?? throw new ArgumentNullException(nameof(demoFileHelper));
-
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+        this.saveFileFactory = userPrompts.SaveFileFactory ?? throw new ArgumentNullException(nameof(userPrompts.SaveFileFactory));
+        this.openFileFactory = userPrompts.OpenFileFactory ?? throw new ArgumentNullException(nameof(userPrompts.OpenFileFactory));
         messenger.Register<PersistenceOperations, PasswordSetMessage>(this, static (r, m) => r.OnPasswordSetMessageReceived(m));
     }
 
@@ -48,7 +57,7 @@ public class PersistenceOperations
             return;
         }
 
-        var fileDialog = this.uiContext.UserPrompts.SaveFileFactory();
+        var fileDialog = this.saveFileFactory();
         fileDialog.CheckPathExists = true;
         fileDialog.DefaultExt = "*.bax";
         fileDialog.AddExtension = true;
@@ -153,7 +162,7 @@ public class PersistenceOperations
         }
         catch (KeyNotFoundException)
         {
-            this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", fileName);
+            this.messageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", fileName);
             this.logger.LogWarning(_ => $"The previously loaded Budget Analyser file ({fileName}) no longer exists.");
         }
         catch (EncryptionKeyNotProvidedException)
@@ -175,7 +184,7 @@ public class PersistenceOperations
         if (this.applicationDatabaseService.HasUnsavedChanges)
         {
             const string messageBoxHeading = "Open Budget Analyser File";
-            var response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", messageBoxHeading);
+            var response = this.questionBox.Show("Save changes before loading a different file?", messageBoxHeading);
             if (response is not null && response.Value)
             {
                 return await SaveDatabase(messageBoxHeading);
@@ -190,7 +199,7 @@ public class PersistenceOperations
 
     private string? PromptUserForFileName()
     {
-        var openDialog = this.uiContext.UserPrompts.OpenFileFactory();
+        var openDialog = this.openFileFactory();
         openDialog.CheckFileExists = true;
         openDialog.AddExtension = true;
         openDialog.DefaultExt = "*.bax";
@@ -219,7 +228,7 @@ public class PersistenceOperations
             return true;
         }
 
-        this.uiContext.UserPrompts.MessageBox.Show("Can't continue, some data is invalid, see messages below:\n" + messages, title);
+        this.messageBox.Show("Can't continue, some data is invalid, see messages below:\n" + messages, title);
         return false;
     }
 }

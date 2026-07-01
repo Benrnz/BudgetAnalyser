@@ -11,18 +11,22 @@ using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class TopTransactionsListController : ControllerBase, IShowableController
 {
+    private readonly IUserMessageBox messageBox;
     private readonly ITransactionManagerService transactionService;
     private readonly IUiContext uiContext;
+    private readonly IUserQuestionBoxYesNo yesNoBox;
     private Guid shellDialogCorrelationId;
 
     public TopTransactionsListController(
         IMessenger messenger,
+        UserPrompts userPrompts,
         IUiContext uiContext,
         TransactionsControllerFileOperations fileOperations,
         ITransactionManagerService transactionService)
@@ -31,6 +35,8 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.yesNoBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
 
         Messenger.Register<TopTransactionsListController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
         Messenger.Register<TopTransactionsListController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
@@ -210,7 +216,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     {
         if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
         {
-            this.uiContext.UserPrompts.MessageBox.Show(
+            this.messageBox.Show(
                 "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in " +
                 "the new loaded Budget. This will result in those transactions being declassified. \nCheck for unclassified transactions.",
                 "Data Loss Warning!");
@@ -235,7 +241,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         {
             if (SplitTransactionController.SplinterBucket1 is null || SplitTransactionController.SplinterBucket2 is null)
             {
-                this.uiContext.UserPrompts.MessageBox.Show("Splinter buckets cannot be empty.", "Split Transaction Validation Error");
+                this.messageBox.Show("Splinter buckets cannot be empty.", "Split Transaction Validation Error");
                 return;
             }
 
@@ -276,7 +282,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             return;
         }
 
-        var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
+        var confirm = this.yesNoBox.Show(
             "Are you sure you want to delete this transaction?",
             "Delete Transaction");
         if (confirm is not null && confirm.Value)

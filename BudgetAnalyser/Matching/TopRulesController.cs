@@ -25,7 +25,7 @@ public class TopRulesController : ControllerBase, IShowableController
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly ITransactionRuleService ruleService;
 
-    public TopRulesController(IMessenger messenger, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
+    public TopRulesController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
         if (uiContext is null)
@@ -36,7 +36,7 @@ public class TopRulesController : ControllerBase, IShowableController
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
-        this.questionBox = uiContext.UserPrompts.YesNoBox;
+        this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         NewRuleController = uiContext.Controller<NewRuleController>();
 
         this.ruleService.Closed += OnClosedNotificationReceived;

@@ -10,9 +10,6 @@ public interface IUiContext
     // TODO Ideally would like to remove controllers from the ambient context.
     IReadOnlySet<ControllerBase> Controllers { get; }
 
-    // ILogger Logger { get; }
-
-    UserPrompts UserPrompts { get; }
     T Controller<T>() where T : ControllerBase;
     void Initialise(IDictionary<Type, Lazy<ControllerBase>> controllers);
 }

@@ -20,7 +20,7 @@ public class LedgerBucketViewController : ControllerBase
     private Guid correlationId = Guid.NewGuid();
     private LedgerBucket? ledger;
 
-    public LedgerBucketViewController(IMessenger messenger, IAccountTypeRepository accountRepo, IUiContext uiContext, ILedgerService ledgerService) : base(messenger)
+    public LedgerBucketViewController(IMessenger messenger, UserPrompts userPrompts, IAccountTypeRepository accountRepo, IUiContext uiContext, ILedgerService ledgerService) : base(messenger)
     {
         if (uiContext is null)
         {
@@ -29,8 +29,7 @@ public class LedgerBucketViewController : ControllerBase
 
         this.accountRepo = accountRepo ?? throw new ArgumentNullException(nameof(accountRepo));
         this.ledgerService = ledgerService ?? throw new ArgumentNullException(nameof(ledgerService));
-
-        this.messageBox = uiContext.UserPrompts.MessageBox;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         Messenger.Register<LedgerBucketViewController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 

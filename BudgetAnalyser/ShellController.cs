@@ -11,6 +11,7 @@ using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser;
 
@@ -21,6 +22,7 @@ public class ShellController : ControllerBase, IInitializableController
     private readonly PersistenceOperations persistenceOperations;
     private readonly IPersistApplicationState statePersistence;
     private readonly IUiContext uiContext;
+    private readonly IUserQuestionBoxYesNo yesNoMessageBox;
     private bool initialised;
     private Point originalWindowSize;
     private Point originalWindowTopLeft;
@@ -28,6 +30,7 @@ public class ShellController : ControllerBase, IInitializableController
     public ShellController(
         IMessenger messenger,
         ILogger logger,
+        UserPrompts userPrompts,
         IUiContext uiContext,
         IPersistApplicationState statePersistence,
         PersistenceOperations persistenceOperations)
@@ -37,6 +40,7 @@ public class ShellController : ControllerBase, IInitializableController
         this.statePersistence = statePersistence ?? throw new ArgumentNullException(nameof(statePersistence));
         this.persistenceOperations = persistenceOperations ?? throw new ArgumentNullException(nameof(persistenceOperations));
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+        this.yesNoMessageBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
 
         Messenger.Register<ShellController, ShellDialogRequestMessage>(this, static (r, m) => r.OnDialogRequested(m));
         Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
@@ -145,7 +149,7 @@ public class ShellController : ControllerBase, IInitializableController
     {
         if (this.persistenceOperations.HasUnsavedChanges)
         {
-            var result = this.uiContext.UserPrompts.YesNoBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
+            var result = this.yesNoMessageBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
             if (result is not null && result.Value)
             {
                 // Save must be run carefully because the application is exiting.  If run using the task factory with defaults the task will stall, as background tasks are waiting to be marshalled back to main context
