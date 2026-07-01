@@ -41,6 +41,7 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
 
     public UploadMobileDataController(
         IMessenger messenger,
+        ILogger logger,
         IUiContext uiContext,
         IMobileDataExporter dataExporter,
         IMobileDataUploader uploader,
@@ -56,7 +57,7 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         this.uploader = uploader ?? throw new ArgumentNullException(nameof(uploader));
         this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
         this.messageBoxService = uiContext.UserPrompts.MessageBox;
-        this.logger = uiContext.Logger;
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         Messenger.Register<UploadMobileDataController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
         Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogMessageReceived(m));

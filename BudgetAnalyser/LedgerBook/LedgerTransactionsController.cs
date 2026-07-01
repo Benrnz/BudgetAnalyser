@@ -28,7 +28,7 @@ public class LedgerTransactionsController : ControllerBase
     private bool wasChanged;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public LedgerTransactionsController(IMessenger messenger, IUiContext uiContext, ILedgerService ledgerService, IReconciliationService reconService) : base(messenger)
+    public LedgerTransactionsController(IMessenger messenger, ILogger logger, IUiContext uiContext, ILedgerService ledgerService, IReconciliationService reconService) : base(messenger)
     {
         if (uiContext is null)
         {
@@ -37,7 +37,7 @@ public class LedgerTransactionsController : ControllerBase
 
         this.ledgerService = ledgerService ?? throw new ArgumentNullException(nameof(ledgerService));
         this.reconService = reconService ?? throw new ArgumentNullException(nameof(reconService));
-        this.logger = uiContext.Logger;
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         Messenger.Register<LedgerTransactionsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         Reset();
     }

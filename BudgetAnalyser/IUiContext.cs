@@ -1,5 +1,4 @@
-﻿using BudgetAnalyser.Engine;
-using Rees.Wpf;
+﻿using Rees.Wpf;
 
 namespace BudgetAnalyser;
 
@@ -11,7 +10,7 @@ public interface IUiContext
     // TODO Ideally would like to remove controllers from the ambient context.
     IReadOnlySet<ControllerBase> Controllers { get; }
 
-    ILogger Logger { get; }
+    // ILogger Logger { get; }
 
     UserPrompts UserPrompts { get; }
     T Controller<T>() where T : ControllerBase;

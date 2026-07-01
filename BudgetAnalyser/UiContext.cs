@@ -8,7 +8,7 @@ namespace BudgetAnalyser;
 ///     This follows an Ambient Context pattern. Not using Thread Local Storage for ease of testing.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class UiContext(UserPrompts userPrompts, ILogger logger) : IUiContext
+public class UiContext(UserPrompts userPrompts) : IUiContext
 {
     private readonly Dictionary<Type, Lazy<ControllerBase>> controllerDic = new();
 
@@ -44,8 +44,6 @@ public class UiContext(UserPrompts userPrompts, ILogger logger) : IUiContext
             this.controllerDic.Add(kvp.Key, kvp.Value);
         }
     }
-
-    public ILogger Logger { get; } = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public UserPrompts UserPrompts { get; } = userPrompts ?? throw new ArgumentNullException(nameof(userPrompts));
 }

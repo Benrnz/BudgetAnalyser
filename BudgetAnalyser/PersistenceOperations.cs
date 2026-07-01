@@ -14,15 +14,18 @@ public class PersistenceOperations
 
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly DemoFileHelper demoFileHelper;
+    private readonly ILogger logger;
     private readonly IUiContext uiContext;
     private DateTime lastSave = DateTime.Now;
 
     public PersistenceOperations(
         IMessenger messenger,
+        ILogger logger,
         IApplicationDatabaseFacade applicationDatabaseService,
         DemoFileHelper demoFileHelper,
         IUiContext uiContext)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.demoFileHelper = demoFileHelper ?? throw new ArgumentNullException(nameof(demoFileHelper));
@@ -145,18 +148,18 @@ public class PersistenceOperations
         catch (EncryptionKeyIncorrectException)
         {
             // Recover by prompting user for the password.
-            this.uiContext.Logger.LogWarning(_ => $"Attempt to open an encrypted file {fileName} with an incorrect password.");
+            this.logger.LogWarning(_ => $"Attempt to open an encrypted file {fileName} with an incorrect password.");
             this.uiContext.Controller<EncryptFileController>().ShowEnterPasswordDialog(fileName, "Incorrect password");
         }
         catch (KeyNotFoundException)
         {
             this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", fileName);
-            this.uiContext.Logger.LogWarning(_ => $"The previously loaded Budget Analyser file ({fileName}) no longer exists.");
+            this.logger.LogWarning(_ => $"The previously loaded Budget Analyser file ({fileName}) no longer exists.");
         }
         catch (EncryptionKeyNotProvidedException)
         {
             // Recover by prompting user for the password.
-            this.uiContext.Logger.LogWarning(_ => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
+            this.logger.LogWarning(_ => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
             this.uiContext.Controller<EncryptFileController>().ShowEnterPasswordDialog(fileName);
         }
     }

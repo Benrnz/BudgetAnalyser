@@ -17,6 +17,7 @@ namespace BudgetAnalyser;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class ShellController : ControllerBase, IInitializableController
 {
+    private readonly ILogger logger;
     private readonly PersistenceOperations persistenceOperations;
     private readonly IPersistApplicationState statePersistence;
     private readonly IUiContext uiContext;
@@ -26,33 +27,20 @@ public class ShellController : ControllerBase, IInitializableController
 
     public ShellController(
         IMessenger messenger,
+        ILogger logger,
         IUiContext uiContext,
         IPersistApplicationState statePersistence,
         PersistenceOperations persistenceOperations)
         : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        if (statePersistence is null)
-        {
-            throw new ArgumentNullException(nameof(statePersistence));
-        }
-
-        if (persistenceOperations is null)
-        {
-            throw new ArgumentNullException(nameof(persistenceOperations));
-        }
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.statePersistence = statePersistence ?? throw new ArgumentNullException(nameof(statePersistence));
+        this.persistenceOperations = persistenceOperations ?? throw new ArgumentNullException(nameof(persistenceOperations));
+        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
 
         Messenger.Register<ShellController, ShellDialogRequestMessage>(this, static (r, m) => r.OnDialogRequested(m));
         Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
         Messenger.Register<ShellController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
-
-        this.statePersistence = statePersistence;
-        this.persistenceOperations = persistenceOperations;
-        this.uiContext = uiContext;
 
         LedgerBookTabDialog = new ShellDialogController(Messenger);
         DashboardTabDialog = new ShellDialogController(Messenger);
@@ -86,7 +74,7 @@ public class ShellController : ControllerBase, IInitializableController
             return;
         }
 
-        this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
+        this.logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
         this.initialised = true;
         IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load().ToList();
 
@@ -98,7 +86,7 @@ public class ShellController : ControllerBase, IInitializableController
         // Create a distinct list of sequences.
         var sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
 
-        this.uiContext.Logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
+        this.logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
         this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
 
         // Send state load messages in order.
@@ -106,11 +94,11 @@ public class ShellController : ControllerBase, IInitializableController
         {
             var sequenceCopy = sequence;
             var models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
-            this.uiContext.Logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
+            this.logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
             Messenger.Send(new ApplicationStateLoadedMessage(models));
         }
 
-        this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise completing. Sending ApplicationStateLoadFinishedMessage. {DateTime.Now}");
+        this.logger.LogInfo(_ => $"ShellController Initialise completing. Sending ApplicationStateLoadFinishedMessage. {DateTime.Now}");
         Messenger.Send(new ApplicationStateLoadFinishedMessage());
     }
 
