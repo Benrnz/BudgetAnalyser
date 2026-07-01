@@ -40,11 +40,12 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
     private UpdateMobileDataWidget? widget;
 
     public UploadMobileDataController(
+        IMessenger messenger,
         IUiContext uiContext,
         IMobileDataExporter dataExporter,
         IMobileDataUploader uploader,
         IApplicationDatabaseFacade appDbService)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
         if (uiContext is null)
         {

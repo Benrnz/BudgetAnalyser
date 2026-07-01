@@ -22,7 +22,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     private bool doNotUseEnterPasswordMode;
     private SecureString? password;
 
-    public EncryptFileController(IUiContext uiContext, IApplicationDatabaseFacade appDbService) : base(uiContext.Messenger)
+    public EncryptFileController(IMessenger messenger, IUiContext uiContext, IApplicationDatabaseFacade appDbService) : base(messenger)
     {
         this.appDbService = appDbService;
         if (uiContext is null)

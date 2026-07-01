@@ -28,10 +28,11 @@ public class TopBudgetController : ControllerBase, IShowableController
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public TopBudgetController(
+        IMessenger messenger,
         IUiContext uiContext,
         IBudgetMaintenanceService maintenanceService,
         IApplicationDatabaseFacade applicationDatabaseService)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
         if (uiContext is null)
         {

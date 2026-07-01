@@ -27,7 +27,7 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private Guid dialogCorrelationId;
     private GlobalFilterCriteria doNotUseCriteria;
 
-    public GlobalFilterController(IUiContext uiContext, IApplicationDatabaseService appDbService) : base(uiContext.Messenger)
+    public GlobalFilterController(IMessenger messenger, IUiContext uiContext, IApplicationDatabaseService appDbService) : base(messenger)
     {
         if (uiContext is null)
         {

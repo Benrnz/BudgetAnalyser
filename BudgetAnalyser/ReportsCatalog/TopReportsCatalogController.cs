@@ -17,7 +17,7 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
     private BudgetCollection? budgets;
     private TransactionsListModel? currentTransactionsListModel;
 
-    public TopReportsCatalogController(IUiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(uiContext.Messenger)
+    public TopReportsCatalogController(IMessenger messenger, IUiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(messenger)
     {
         if (uiContext is null)
         {

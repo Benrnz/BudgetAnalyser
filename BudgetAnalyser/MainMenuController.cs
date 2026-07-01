@@ -2,7 +2,6 @@
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
@@ -18,14 +17,11 @@ public class MainMenuController : ControllerBase, IInitializableController
 {
     private readonly IUiContext uiContext;
 
-    public MainMenuController(IUiContext uiContext) : base(uiContext.Messenger)
+    public MainMenuController(IUiContext uiContext, IMessenger messenger) : base(messenger)
     {
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
-
-    [UsedImplicitly]
-    public ICommand ShowBudgetCommand => new RelayCommand(OnBudgetExecuted);
 
     public bool BudgetToggle
     {
@@ -37,8 +33,6 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    public ICommand ShowDashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
-
     public bool DashboardToggle
     {
         get;
@@ -48,9 +42,6 @@ public class MainMenuController : ControllerBase, IInitializableController
             OnPropertyChanged();
         }
     }
-
-    [UsedImplicitly]
-    public ICommand ShowLedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
 
     public bool LedgerBookToggle
     {
@@ -62,9 +53,6 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    [UsedImplicitly]
-    public ICommand ShowReportsCommand => new RelayCommand(OnReportsExecuted);
-
     public bool ReportsToggle
     {
         get;
@@ -74,6 +62,17 @@ public class MainMenuController : ControllerBase, IInitializableController
             OnPropertyChanged();
         }
     }
+
+    [UsedImplicitly]
+    public ICommand ShowBudgetCommand => new RelayCommand(OnBudgetExecuted);
+
+    public ICommand ShowDashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
+
+    [UsedImplicitly]
+    public ICommand ShowLedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
+
+    [UsedImplicitly]
+    public ICommand ShowReportsCommand => new RelayCommand(OnReportsExecuted);
 
     [UsedImplicitly]
     public ICommand ShowTransactionsCommand => new RelayCommand(OnTransactionExecuted);

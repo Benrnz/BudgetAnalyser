@@ -22,7 +22,7 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
     private bool doNotUseOrChecked;
     private Guid shellDialogCorrelationId;
 
-    public NewRuleController(IUiContext uiContext, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
+    public NewRuleController(IMessenger messenger, IUiContext uiContext, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) : base(messenger)
     {
         if (uiContext is null)
         {

@@ -3,6 +3,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -16,8 +17,8 @@ public class AppliedRulesController : ControllerBase
     private readonly ITransactionRuleService ruleService;
     private readonly TopTransactionsListController transactionsController;
 
-    public AppliedRulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
-        : base(uiContext.Messenger)
+    public AppliedRulesController(IMessenger messenger, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
+        : base(messenger)
     {
         if (uiContext is null)
         {
@@ -54,10 +55,10 @@ public class AppliedRulesController : ControllerBase
         }
     }
 
-    public TopRulesController TopRulesController { get; }
-
     [UsedImplicitly]
     public ICommand ShowRulesCommand => new RelayCommand(OnShowRulesCommandExecute);
+
+    public TopRulesController TopRulesController { get; }
 
     private bool CanExecuteApplyRulesCommand()
     {

@@ -28,7 +28,7 @@ public class LedgerTransactionsController : ControllerBase
     private bool wasChanged;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public LedgerTransactionsController(IUiContext uiContext, ILedgerService ledgerService, IReconciliationService reconService) : base(uiContext.Messenger)
+    public LedgerTransactionsController(IMessenger messenger, IUiContext uiContext, ILedgerService ledgerService, IReconciliationService reconService) : base(messenger)
     {
         if (uiContext is null)
         {

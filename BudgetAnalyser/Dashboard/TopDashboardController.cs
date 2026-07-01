@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Dashboard;
@@ -18,7 +19,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly IDashboardService dashboardService;
     private readonly IUiContext uiContext;
 
-    public TopDashboardController(IUiContext uiContext, IDashboardService dashboardService) : base(uiContext.Messenger)
+    public TopDashboardController(IMessenger messenger, IUiContext uiContext, IDashboardService dashboardService) : base(messenger)
     {
         if (uiContext is null)
         {

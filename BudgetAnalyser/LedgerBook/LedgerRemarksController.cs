@@ -13,7 +13,7 @@ public class LedgerRemarksController : ControllerBase
     private readonly IReconciliationService reconciliationService;
     private Guid dialogCorrelationId;
 
-    public LedgerRemarksController(IUiContext uiContext, IReconciliationService reconciliationService) : base(uiContext.Messenger)
+    public LedgerRemarksController(IMessenger messenger, IUiContext uiContext, IReconciliationService reconciliationService) : base(messenger)
     {
         if (uiContext is null)
         {

@@ -1,5 +1,4 @@
 ﻿using BudgetAnalyser.Engine;
-using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser;
@@ -9,7 +8,7 @@ namespace BudgetAnalyser;
 ///     This follows an Ambient Context pattern. Not using Thread Local Storage for ease of testing.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger logger) : IUiContext
+public class UiContext(UserPrompts userPrompts, ILogger logger) : IUiContext
 {
     private readonly Dictionary<Type, Lazy<ControllerBase>> controllerDic = new();
 
@@ -47,6 +46,6 @@ public class UiContext(UserPrompts userPrompts, IMessenger messenger, ILogger lo
     }
 
     public ILogger Logger { get; } = logger ?? throw new ArgumentNullException(nameof(logger));
-    public IMessenger Messenger { get; } = messenger ?? throw new ArgumentNullException(nameof(messenger));
+
     public UserPrompts UserPrompts { get; } = userPrompts ?? throw new ArgumentNullException(nameof(userPrompts));
 }

@@ -22,10 +22,11 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     private Guid shellDialogCorrelationId;
 
     public TopTransactionsListController(
+        IMessenger messenger,
         IUiContext uiContext,
         TransactionsControllerFileOperations fileOperations,
         ITransactionManagerService transactionService)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));

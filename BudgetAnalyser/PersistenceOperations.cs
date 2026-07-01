@@ -18,6 +18,7 @@ public class PersistenceOperations
     private DateTime lastSave = DateTime.Now;
 
     public PersistenceOperations(
+        IMessenger messenger,
         IApplicationDatabaseFacade applicationDatabaseService,
         DemoFileHelper demoFileHelper,
         IUiContext uiContext)
@@ -26,7 +27,7 @@ public class PersistenceOperations
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.demoFileHelper = demoFileHelper ?? throw new ArgumentNullException(nameof(demoFileHelper));
 
-        this.uiContext.Messenger.Register<PersistenceOperations, PasswordSetMessage>(this, static (r, m) => r.OnPasswordSetMessageReceived(m));
+        messenger.Register<PersistenceOperations, PasswordSetMessage>(this, static (r, m) => r.OnPasswordSetMessageReceived(m));
     }
 
     public bool HasUnsavedChanges => this.applicationDatabaseService.HasUnsavedChanges;

@@ -18,7 +18,7 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
     private Guid dialogCorrelationId;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public CreateNewSurprisePaymentMonitorController(IUiContext uiContext, IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
+    public CreateNewSurprisePaymentMonitorController(IMessenger messenger, IUiContext uiContext, IBudgetBucketRepository bucketRepository) : base(messenger)
     {
         if (uiContext is null)
         {

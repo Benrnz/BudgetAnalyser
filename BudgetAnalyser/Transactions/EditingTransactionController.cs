@@ -13,7 +13,7 @@ public class EditingTransactionController : ControllerBase
     private readonly IBudgetBucketRepository bucketRepo;
     private BudgetBucket? originalBucket;
 
-    public EditingTransactionController(IUiContext uiContext, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
+    public EditingTransactionController(IMessenger messenger, IUiContext uiContext, IBudgetBucketRepository bucketRepo) : base(messenger)
     {
         if (uiContext is null)
         {

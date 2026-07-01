@@ -34,13 +34,14 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     private int doNotUseNumberOfPeriodsToShow;
 
     public TopLedgerBookController(
+        IMessenger messenger,
         IUiContext uiContext,
         LedgerBookControllerFileOperations fileOperations,
         LedgerBookGridBuilderFactory uiBuilder,
         ILedgerService ledgerService,
         IReconciliationService reconService,
         NewWindowViewLoader newWindowViewLoader)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
         this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.uiBuilder = uiBuilder ?? throw new ArgumentNullException(nameof(uiBuilder));

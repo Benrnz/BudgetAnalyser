@@ -21,7 +21,6 @@ public class SplitTransactionControllerTest
     {
         this.mockMessenger = Substitute.For<IMessenger>();
         this.mockUiContext = Substitute.For<IUiContext>();
-        this.mockUiContext.Messenger.Returns(this.mockMessenger);
 
         this.mockBucketRepo = Substitute.For<IBudgetBucketRepository>();
         this.mockBucketRepo.Buckets.Returns(Array.Empty<BudgetBucket>());
@@ -167,8 +166,7 @@ public class SplitTransactionControllerTest
 
     private SplitTransactionController CreateSubject()
     {
-        this.mockUiContext.Messenger.Returns(this.mockMessenger);
-        return new SplitTransactionController(this.mockUiContext, this.mockBucketRepo);
+        return new SplitTransactionController(this.mockMessenger, this.mockUiContext, this.mockBucketRepo);
     }
 
     private static void SetOriginalTransaction(SplitTransactionController subject, Transaction tx)

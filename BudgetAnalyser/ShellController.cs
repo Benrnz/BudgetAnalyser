@@ -25,10 +25,11 @@ public class ShellController : ControllerBase, IInitializableController
     private Point originalWindowTopLeft;
 
     public ShellController(
+        IMessenger messenger,
         IUiContext uiContext,
         IPersistApplicationState statePersistence,
         PersistenceOperations persistenceOperations)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
         if (uiContext is null)
         {
@@ -60,16 +61,17 @@ public class ShellController : ControllerBase, IInitializableController
         ReportsTabDialog = new ShellDialogController(Messenger);
     }
 
-    public TopBudgetController TopBudgetController => this.uiContext.Controller<TopBudgetController>();
     public ShellDialogController BudgetTabDialog { get; }
-    public TopDashboardController TopDashboardController => this.uiContext.Controller<TopDashboardController>();
     public ShellDialogController DashboardTabDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
-    public TopLedgerBookController TopLedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
     public ShellDialogController LedgerBookTabDialog { get; }
     public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
-    public TopReportsCatalogController TopReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
     public ShellDialogController ReportsTabDialog { get; }
+
+    public TopBudgetController TopBudgetController => this.uiContext.Controller<TopBudgetController>();
+    public TopDashboardController TopDashboardController => this.uiContext.Controller<TopDashboardController>();
+    public TopLedgerBookController TopLedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
+    public TopReportsCatalogController TopReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
     public TopRulesController TopRulesController => this.uiContext.Controller<TopRulesController>();
     public TopTransactionsListController TopTransactionsController => this.uiContext.Controller<TopTransactionsListController>();
     public ShellDialogController TransactionsTabDialog { get; }

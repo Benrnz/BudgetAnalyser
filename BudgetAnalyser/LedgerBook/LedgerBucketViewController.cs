@@ -20,7 +20,7 @@ public class LedgerBucketViewController : ControllerBase
     private Guid correlationId = Guid.NewGuid();
     private LedgerBucket? ledger;
 
-    public LedgerBucketViewController(IAccountTypeRepository accountRepo, IUiContext uiContext, ILedgerService ledgerService) : base(uiContext.Messenger)
+    public LedgerBucketViewController(IMessenger messenger, IAccountTypeRepository accountRepo, IUiContext uiContext, ILedgerService ledgerService) : base(messenger)
     {
         if (uiContext is null)
         {

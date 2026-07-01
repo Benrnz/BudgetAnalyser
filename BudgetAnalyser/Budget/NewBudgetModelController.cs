@@ -14,7 +14,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
 
-    public NewBudgetModelController(IUiContext uiContext) : base(uiContext.Messenger)
+    public NewBudgetModelController(IMessenger messenger, IUiContext uiContext) : base(messenger)
     {
         if (uiContext is null)
         {

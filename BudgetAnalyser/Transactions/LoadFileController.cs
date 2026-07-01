@@ -25,7 +25,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
     private bool showingDialog;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public LoadFileController(IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(uiContext.Messenger)
+    public LoadFileController(IMessenger messenger, IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(messenger)
     {
         if (uiContext is null)
         {

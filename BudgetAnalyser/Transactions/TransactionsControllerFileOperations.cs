@@ -17,11 +17,12 @@ public class TransactionsControllerFileOperations : ControllerBase
     private readonly ITransactionManagerService transactionService;
 
     public TransactionsControllerFileOperations(
+        IMessenger messenger,
         IUiContext uiContext,
         LoadFileController loadFileController,
         IApplicationDatabaseFacade applicationDatabaseService,
         ITransactionManagerService transactionManagerService)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
         if (uiContext is null)
         {
