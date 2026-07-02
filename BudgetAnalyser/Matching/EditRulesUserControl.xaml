@@ -117,7 +117,7 @@
                  Visibility="{Binding FlatListBoxVisibility, Converter={StaticResource Converter.BoolToVis}}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <matchingUI:TopMatchingRuleUserControl />
+                    <matchingUI:MatchingRuleUserControl />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

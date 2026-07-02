@@ -123,7 +123,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type matching1:MatchingRule}">
-        <matching:TopMatchingRuleUserControl />
+        <matching:MatchingRuleUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type matching:DisusedRulesController}">

@@ -18,7 +18,9 @@
 
         <Border HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Margin="40,24"
+                Margin="40"
+                MinWidth="1000"
+                MinHeight="200"
                 MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 MaxHeight="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 Background="{StaticResource Brush.DialogBackground}"
@@ -28,7 +30,7 @@
                 <DropShadowEffect ShadowDepth="10" />
             </Border.Effect>
 
-            <DockPanel LastChildFill="True">
+            <DockPanel LastChildFill="True" >
                 <TextBlock DockPanel.Dock="Top"
                            Style="{StaticResource TextBlock.Heading1}"
                            Text="{Binding Title, FallbackValue=Dialog Title}"

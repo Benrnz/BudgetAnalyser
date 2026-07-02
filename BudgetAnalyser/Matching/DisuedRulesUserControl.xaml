@@ -10,7 +10,7 @@
                 <Button Command="{Binding RemoveCommand}"
                         CommandParameter="{Binding .}"
                         Style="{StaticResource Button.Round.SmallCross}" />
-                <matching:TopMatchingRuleUserControl DataContext="{Binding MatchingRule}" />
+                <matching:MatchingRuleUserControl DataContext="{Binding MatchingRule}" />
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>

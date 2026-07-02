@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BudgetAnalyser.Matching.TopMatchingRuleUserControl"
+﻿<UserControl x:Class="BudgetAnalyser.Matching.MatchingRuleUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,7 +10,7 @@
                BasedOn="{StaticResource {x:Type TextBlock}}"
                TargetType="TextBlock">
             <Setter Property="FontSize"
-                    Value="10" />
+                    Value="18" />
             <Setter Property="HorizontalAlignment"
                     Value="Left" />
         </Style>

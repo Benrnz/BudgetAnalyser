@@ -10,6 +10,9 @@ using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard;
 
+/// <summary>
+/// Enter Password dialog, ie logging in, and used to encrypt files.
+/// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 {
