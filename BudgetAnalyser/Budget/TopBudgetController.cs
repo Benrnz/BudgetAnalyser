@@ -30,21 +30,16 @@ public class TopBudgetController : ControllerBase, IShowableController
     public TopBudgetController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        IUiContext uiContext,
+        NewBudgetModelController newBudgetController,
         IBudgetMaintenanceService maintenanceService,
         IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.maintenanceService = maintenanceService ?? throw new ArgumentNullException(nameof(maintenanceService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
-        NewBudgetController = uiContext.Controller<NewBudgetModelController>();
+        NewBudgetController = newBudgetController ?? throw new ArgumentNullException(nameof(newBudgetController));
         NewBudgetController.Ready += OnAddNewBudgetReady;
         Shown = false;
 
