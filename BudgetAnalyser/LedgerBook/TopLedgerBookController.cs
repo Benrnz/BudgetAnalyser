@@ -30,37 +30,46 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     private readonly ShowSurplusBalancesController showSurplusBalancesController;
     private readonly TransferFundsController transferFundsController;
     private readonly LedgerBookGridBuilderFactory uiBuilder;
-    private readonly IUiContext uiContext;
+    private BudgetCollection? budgetCollection;
     private int doNotUseNumberOfPeriodsToShow;
 
     public TopLedgerBookController(
-        IUiContext uiContext,
+        IMessenger messenger,
+        AddLedgerReconciliationController addLedgerReconciliationController,
+        ChooseBudgetBucketController chooseBudgetBucketController,
+        LedgerBucketViewController ledgerBucketViewController,
+        LedgerRemarksController ledgerRemarksController,
+        LedgerTransactionsController ledgerTransactionsController,
+        ShowSurplusBalancesController showSurplusBalancesController,
+        TransferFundsController transferFundsController,
+        ReconciliationToDoListController reconciliationToDoListController,
+        UserPrompts userPrompts,
         LedgerBookControllerFileOperations fileOperations,
         LedgerBookGridBuilderFactory uiBuilder,
         ILedgerService ledgerService,
         IReconciliationService reconService,
         NewWindowViewLoader newWindowViewLoader)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.uiBuilder = uiBuilder ?? throw new ArgumentNullException(nameof(uiBuilder));
         this.ledgerService = ledgerService ?? throw new ArgumentNullException(nameof(ledgerService));
         this.reconService = reconService ?? throw new ArgumentNullException(nameof(reconService));
         this.newWindowViewLoader = newWindowViewLoader ?? throw new ArgumentNullException(nameof(newWindowViewLoader));
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
 
-        this.messageBox = uiContext.UserPrompts.MessageBox;
-        this.questionBox = uiContext.UserPrompts.YesNoBox;
-        this.inputBox = uiContext.UserPrompts.InputBox;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+        this.inputBox = userPrompts.InputBox ?? throw new ArgumentNullException(nameof(userPrompts.InputBox));
         FileOperations.LedgerService = this.ledgerService;
         this.doNotUseNumberOfPeriodsToShow = 6;
-        this.addLedgerReconciliationController = uiContext.Controller<AddLedgerReconciliationController>();
-        this.chooseBudgetBucketController = uiContext.Controller<ChooseBudgetBucketController>();
-        this.ledgerBucketViewController = uiContext.Controller<LedgerBucketViewController>();
-        this.ledgerRemarksController = uiContext.Controller<LedgerRemarksController>();
-        this.ledgerTransactionsController = uiContext.Controller<LedgerTransactionsController>();
-        this.showSurplusBalancesController = uiContext.Controller<ShowSurplusBalancesController>();
-        this.transferFundsController = uiContext.Controller<TransferFundsController>();
+        this.addLedgerReconciliationController = addLedgerReconciliationController ?? throw new ArgumentNullException(nameof(addLedgerReconciliationController));
+        this.chooseBudgetBucketController = chooseBudgetBucketController ?? throw new ArgumentNullException(nameof(chooseBudgetBucketController));
+        this.ledgerBucketViewController = ledgerBucketViewController ?? throw new ArgumentNullException(nameof(ledgerBucketViewController));
+        this.ledgerRemarksController = ledgerRemarksController ?? throw new ArgumentNullException(nameof(ledgerRemarksController));
+        this.ledgerTransactionsController = ledgerTransactionsController ?? throw new ArgumentNullException(nameof(ledgerTransactionsController));
+        this.showSurplusBalancesController = showSurplusBalancesController ?? throw new ArgumentNullException(nameof(showSurplusBalancesController));
+        this.transferFundsController = transferFundsController ?? throw new ArgumentNullException(nameof(transferFundsController));
+        ToDoListController = reconciliationToDoListController ?? throw new ArgumentNullException(nameof(reconciliationToDoListController));
 
         Messenger.Register<TopLedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<TopLedgerBookController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
@@ -98,7 +107,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     public RelayCommand<LedgerEntryLine> ShowRemarksCommand => new(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
     public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param is not null);
     public ICommand ShowTransactionsCommand => new RelayCommand<object>(OnShowTransactionsCommandExecuted);
-    public ReconciliationToDoListController ToDoListController => this.uiContext.Controller<ReconciliationToDoListController>();
+    public ReconciliationToDoListController ToDoListController { get; }
 
     public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
@@ -216,10 +225,10 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         try
         {
             var reconciliationDate = this.addLedgerReconciliationController.Date;
-            var budgetCollection = this.uiContext.Controller<TopBudgetController>().Budgets ?? throw new InvalidOperationException("Budget collection is null.");
+            var allBudget = this.budgetCollection ?? throw new InvalidOperationException("Budget collection is null.");
             ViewModel.NewLedgerLine = this.reconService.PeriodEndReconciliation(ViewModel.LedgerBook!,
                 reconciliationDate,
-                budgetCollection,
+                allBudget,
                 ViewModel.CurrentTransactionList!,
                 ignoreWarnings,
                 this.addLedgerReconciliationController.BankBalances.Cast<BankBalance>().ToArray());
@@ -271,7 +280,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
 
         this.ledgerService.TrackNewBudgetBucket(expenseBucket, e.StoreInThisAccount);
-        this.uiContext.UserPrompts.MessageBox.Show(
+        this.messageBox.Show(
             "Ledger Bucket added successfully to the LedgerBook. It will be tracked and shown only when there are new transactions added for that Bucket.",
             "LedgerBook");
         FileOperations.Dirty = true;
@@ -291,12 +300,14 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
     private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
     {
-        // CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
+        // Warning: CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
         // CurrentBudget should only be used for UI purposes such as an indication of current budgeted amount for something etc.
         if (message.ActiveBudget.BudgetActive)
         {
             ViewModel.CurrentBudget = message.ActiveBudget;
         }
+
+        this.budgetCollection = message.Budgets;
     }
 
     private void OnClosedNotificationReceived(object? sender, EventArgs? eventArgs)

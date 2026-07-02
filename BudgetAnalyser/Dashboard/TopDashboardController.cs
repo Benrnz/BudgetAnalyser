@@ -4,7 +4,11 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
+using BudgetAnalyser.Matching;
+using BudgetAnalyser.Mobile;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Dashboard;
 
@@ -16,22 +20,30 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
-    private readonly IUiContext uiContext;
+    private readonly DisusedRulesController disusedRulesController;
+    private readonly UploadMobileDataController uploadMobileDataController;
+    private readonly IUserMessageBox userMessageBox;
 
-    public TopDashboardController(IUiContext uiContext, IDashboardService dashboardService) : base(uiContext.Messenger)
+    public TopDashboardController(
+        IMessenger messenger,
+        UserPrompts userPrompts,
+        ChooseBudgetBucketController chooseBudgetBucketController,
+        CreateNewFixedBudgetController createNewFixedBudgetController,
+        CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
+        DisusedRulesController disusedRulesController,
+        GlobalFilterController globalFilterController,
+        UploadMobileDataController uploadMobileDataController,
+        IDashboardService dashboardService) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
+        this.chooseBudgetBucketController = chooseBudgetBucketController ?? throw new ArgumentNullException(nameof(chooseBudgetBucketController));
+        this.createNewFixedBudgetController = createNewFixedBudgetController ?? throw new ArgumentNullException(nameof(createNewFixedBudgetController));
+        this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController ?? throw new ArgumentNullException(nameof(createNewSurprisePaymentMonitorController));
+        this.disusedRulesController = disusedRulesController ?? throw new ArgumentNullException(nameof(disusedRulesController));
+        this.uploadMobileDataController = uploadMobileDataController ?? throw new ArgumentNullException(nameof(uploadMobileDataController));
+        GlobalFilterController = globalFilterController ?? throw new ArgumentNullException(nameof(globalFilterController));
 
-        this.chooseBudgetBucketController = uiContext.Controller<ChooseBudgetBucketController>();
-        this.createNewFixedBudgetController = uiContext.Controller<CreateNewFixedBudgetController>();
-        this.createNewSurprisePaymentMonitorController = uiContext.Controller<CreateNewSurprisePaymentMonitorController>();
-        GlobalFilterController = uiContext.Controller<GlobalFilterController>();
-
-        this.uiContext = uiContext;
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
+        this.userMessageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.dashboardService.NewDataSourceAvailable += OnNewDataSourceAvailable;
 
         this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
@@ -40,6 +52,8 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         CorrelationId = Guid.NewGuid();
         WidgetGroups = new ObservableCollection<WidgetGroup>();
+
+        Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
 
     public Guid CorrelationId
@@ -103,7 +117,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         var widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
         if (widget is null)
         {
-            this.uiContext.UserPrompts.MessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
+            this.userMessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
         }
     }
 
@@ -121,7 +135,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
             this.createNewFixedBudgetController.Amount);
         if (widget is null)
         {
-            this.uiContext.UserPrompts.MessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {this.createNewFixedBudgetController.Code} already exists.");
+            this.userMessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {this.createNewFixedBudgetController.Code} already exists.");
         }
     }
 
@@ -147,7 +161,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
         catch (ArgumentException ex)
         {
-            this.uiContext.UserPrompts.MessageBox.Show(ex.Message, "Unable to create new surprise payment monitor widget.");
+            this.userMessageBox.Show(ex.Message, "Unable to create new surprise payment monitor widget.");
         }
     }
 
@@ -157,5 +171,24 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         WidgetGroups = this.dashboardService.WidgetsToDisplay();
         OnPropertyChanged(nameof(WidgetGroups));
         WidgetCommands.ListenForWidgetChanges(WidgetGroups);
+    }
+
+    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
+    {
+        if (message.Handled)
+        {
+            return;
+        }
+
+        if (message.Widget is DisusedMatchingRuleWidget)
+        {
+            this.disusedRulesController.ShowDialog();
+            return;
+        }
+
+        if (message.Widget is UpdateMobileDataWidget mobileWidget)
+        {
+            this.uploadMobileDataController.ShowDialog(mobileWidget);
+        }
     }
 }

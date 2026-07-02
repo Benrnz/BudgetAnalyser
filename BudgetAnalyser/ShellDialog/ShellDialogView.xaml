@@ -16,42 +16,29 @@
         <!-- Greyed out area behind the dialog -->
         <Rectangle Fill="#80000000" />
 
-        <!-- Positioning Grid -->
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*" />
-                <RowDefinition Height="Auto" /> <!-- Dialog goes here -->
-                <RowDefinition Height="8*" />
-            </Grid.RowDefinitions>
+        <Border HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="40"
+                MinWidth="1000"
+                MinHeight="200"
+                MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                MaxHeight="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Background="{StaticResource Brush.DialogBackground}"
+                BorderBrush="{StaticResource Brush.DialogBorder}"
+                BorderThickness="2">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="10" />
+            </Border.Effect>
 
-            <!-- The dialog border and content -->
-            <Grid Grid.Row="1"
-                  Margin="40,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" /> <!-- Title -->
-                    <RowDefinition Height="Auto" /> <!-- Content -->
-                    <RowDefinition Height="Auto" /> <!-- Button Bar -->
-                </Grid.RowDefinitions>
+            <DockPanel LastChildFill="True" >
+                <TextBlock DockPanel.Dock="Top"
+                           Style="{StaticResource TextBlock.Heading1}"
+                           Text="{Binding Title, FallbackValue=Dialog Title}"
+                           Margin="10,10,10,0" />
 
-                <Border Grid.RowSpan="3"
-                        Background="{StaticResource Brush.DialogBackground}"
-                        BorderBrush="{StaticResource Brush.DialogBorder}"
-                        BorderThickness="2">
-                    <Border.Effect>
-                        <DropShadowEffect ShadowDepth="10" />
-                    </Border.Effect>
-                </Border>
-                <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                           Text="{Binding Title, FallbackValue=Dialog Title}" />
-                <ContentPresenter Grid.Row="1"
-                                  Content="{Binding Content}"
-                                  VerticalAlignment="Top"
-                                  Margin="10" />
-
-                <!-- Button Bar -->
-                <StackPanel Grid.Row="2"
+                <StackPanel DockPanel.Dock="Bottom"
                             HorizontalAlignment="Right"
-                            Margin="10"
+                            Margin="10,0,10,10"
                             Orientation="Horizontal">
                     <Button Command="{Binding DialogCommand}"
                             ToolTip="Help"
@@ -88,7 +75,14 @@
                         </Button.CommandParameter>
                     </Button>
                 </StackPanel>
-            </Grid>
-        </Grid>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Margin="10,0,10,10">
+                    <ContentPresenter Content="{Binding Content}"
+                                      VerticalAlignment="Top" />
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
     </Grid>
 </UserControl>

@@ -6,8 +6,10 @@ using System.Text;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -37,7 +39,7 @@ public partial class App
         Current.Exit += OnApplicationExit;
 
         var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
-        var thisAssembly = typeof(CompositionRoot).GetTypeInfo().Assembly;
+        var thisAssembly = typeof(CompositionHelper).GetTypeInfo().Assembly;
 
         this.host = Host.CreateDefaultBuilder()
             .UseDefaultServiceProvider((_, options) =>
@@ -67,10 +69,14 @@ public partial class App
         this.logger.LogLevelFilter = LogLevel.Info; // hardcoded default log level.
         this.logger.LogAlways(_ => "=========== Budget Analyser is Starting ===========");
 
-        CompositionRoot.BuildApplicationObjectGraph(this.host.Services);
+        CompositionHelper.BuildApplicationObjectGraph(this.host.Services);
         this.shellController = this.host.Services.GetRequiredService<ShellController>();
         this.logger.LogAlways(_ => this.shellController.TopDashboardController.VersionString);
-        this.shellController.Initialize();
+
+        CompositionHelper.LoadApplicationStateIntoControllers(
+            this.logger,
+            this.host.Services.GetRequiredService<IPersistApplicationState>(),
+            this.host.Services.GetRequiredService<IMessenger>());
 
         var topLevelWindow = new ShellWindow { DataContext = this.shellController };
         this.logger.LogInfo(_ => "Initialisation finished.");
@@ -85,16 +91,13 @@ public partial class App
         Justification = "All exceptions are already logged, any further exceptions attempting to gracefully shutdown can be ignored.")]
     private void LogUnhandledException(string origin, object ex)
     {
-        if (this.logger is not null)
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(string.Empty);
-            builder.AppendLine("=====================================================================================");
-            builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
-            builder.AppendLine("Unhandled exception was thrown from orgin: " + origin);
-            builder.AppendLine(ex.ToString());
-            this.logger.LogError(_ => builder.ToString());
-        }
+        var builder = new StringBuilder();
+        builder.AppendLine(string.Empty);
+        builder.AppendLine("=====================================================================================");
+        builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
+        builder.AppendLine("Unhandled exception was thrown from orgin: " + origin);
+        builder.AppendLine(ex.ToString());
+        this.logger?.LogError(_ => builder.ToString());
 
         // If you get a NullReference Exception with no inner exception here its most likely because a class takes an interface in its constructor that the DI container doesn't have a registration for.
         // Most likely you forgot to annotate an implementation of an interface with [AutoRegisterWithIoC]
@@ -112,11 +115,8 @@ public partial class App
     {
         Current.Exit -= OnApplicationExit;
         this.logger?.LogAlways(_ => "=========== Application Exiting ===========");
-        if (this.host is not null)
-        {
-            this.host.StopAsync().GetAwaiter().GetResult();
-            this.host.Dispose();
-        }
+        this.host?.StopAsync().GetAwaiter().GetResult();
+        this.host?.Dispose();
     }
 
     private void OnCurrentDomainUnhandledException(object? sender, UnhandledExceptionEventArgs e)

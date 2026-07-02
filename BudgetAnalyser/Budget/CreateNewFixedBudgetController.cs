@@ -16,16 +16,11 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
     private Guid dialogCorrelationId;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public CreateNewFixedBudgetController(IUiContext uiContext, IBudgetBucketRepository bucketRepository) : base(uiContext.Messenger)
+    public CreateNewFixedBudgetController(IMessenger messenger, UserPrompts userPrompts, IBudgetBucketRepository bucketRepository) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         Messenger.Register<CreateNewFixedBudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
-        this.messageBox = uiContext.UserPrompts.MessageBox;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
     }
 
     public event EventHandler<DialogResponseEventArgs>? Complete;

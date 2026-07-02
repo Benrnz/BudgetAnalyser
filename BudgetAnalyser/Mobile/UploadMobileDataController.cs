@@ -40,24 +40,20 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
     private UpdateMobileDataWidget? widget;
 
     public UploadMobileDataController(
-        IUiContext uiContext,
+        IMessenger messenger,
+        ILogger logger,
+        UserPrompts userPrompts,
         IMobileDataExporter dataExporter,
         IMobileDataUploader uploader,
         IApplicationDatabaseFacade appDbService)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.dataExporter = dataExporter ?? throw new ArgumentNullException(nameof(dataExporter));
         this.uploader = uploader ?? throw new ArgumentNullException(nameof(uploader));
         this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
-        this.messageBoxService = uiContext.UserPrompts.MessageBox;
-        this.logger = uiContext.Logger;
+        this.messageBoxService = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        Messenger.Register<UploadMobileDataController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
         Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogMessageReceived(m));
     }
 
@@ -198,22 +194,19 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         }
     }
 
-    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
+    public void ShowDialog(UpdateMobileDataWidget mobileWidget)
     {
-        this.widget = message.Widget as UpdateMobileDataWidget;
-        if (this.widget is not null && this.widget.Enabled)
+        this.widget = mobileWidget;
+        var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
+        var mobileSettings = ledgerBook.MobileSettings ??
+                             throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
+        AccessKeyId = mobileSettings.AccessKeyId;
+        AccessKeySecret = mobileSettings.AccessKeySecret;
+        AmazonRegion = mobileSettings.AmazonS3Region;
+        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
         {
-            var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
-            var mobileSettings = ledgerBook.MobileSettings ??
-                                 throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
-            AccessKeyId = mobileSettings.AccessKeyId;
-            AccessKeySecret = mobileSettings.AccessKeySecret;
-            AmazonRegion = mobileSettings.AmazonS3Region;
-            Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
-            {
-                CorrelationId = this.correlationId,
-                Title = "Upload Mobile Summary Data"
-            });
-        }
+            CorrelationId = this.correlationId,
+            Title = "Upload Mobile Summary Data"
+        });
     }
 }

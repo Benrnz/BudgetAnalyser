@@ -197,10 +197,11 @@ public class ShellDialogController : ControllerBase
                         case ShellDialogButton.Save:
                             if (!OkButtonVisible && commandType == ShellDialogButton.Ok)
                             {
-                                commandType = ShellDialogButton.Save;
+                                // If both Ok and Save are not visible, then assume Cancel behaviour
+                                commandType = SaveButtonVisible ? ShellDialogButton.Save : ShellDialogButton.Cancel;
                             }
 
-                            // Ok will be the default response if Enter is pressed, even when the Ok button is invisible.
+                            // Use the visible action as the default response when Enter is pressed.
                             Messenger.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
                             break;
 
