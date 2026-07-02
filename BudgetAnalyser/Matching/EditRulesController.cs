@@ -23,6 +23,8 @@ public class EditRulesController : ControllerBase
     public const string BucketSortKey = "Bucket";
     public const string DescriptionSortKey = "Description";
     public const string MatchesSortKey = "Matches";
+    private readonly RelayCommand deleteRuleCommand;
+    private readonly RelayCommand editRuleCommand;
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly Guid dialogCorrelationId = Guid.NewGuid();
     private readonly IUserQuestionBoxYesNo questionBox;
@@ -41,6 +43,8 @@ public class EditRulesController : ControllerBase
 
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         NewRuleController = uiContext.Controller<NewRuleController>();
+        this.deleteRuleCommand = new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
+        this.editRuleCommand = new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
 
         this.ruleService.Closed += OnClosedNotificationReceived;
         this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -65,7 +69,7 @@ public class EditRulesController : ControllerBase
     public string? AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
 
     [UsedImplicitly]
-    public ICommand DeleteRuleCommand => new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
+    public ICommand DeleteRuleCommand => this.deleteRuleCommand;
 
     public bool EditingRule
     {
@@ -79,7 +83,7 @@ public class EditRulesController : ControllerBase
     }
 
     [UsedImplicitly]
-    public ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
+    public ICommand EditRuleCommand => this.editRuleCommand;
 
     public bool FlatListBoxVisibility
     {
@@ -114,6 +118,8 @@ public class EditRulesController : ControllerBase
             OnPropertyChanged();
             OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
             OnPropertyChanged(nameof(AndOrText));
+            this.deleteRuleCommand.NotifyCanExecuteChanged();
+            this.editRuleCommand.NotifyCanExecuteChanged();
         }
     }
 
