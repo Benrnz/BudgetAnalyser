@@ -4,5 +4,6 @@ public enum ShellDialogType
 {
     Ok,
     OkCancel,
-    SaveCancel
+    SaveCancel,
+    Close
 }

@@ -201,7 +201,7 @@ public class EditRulesController : ControllerBase
             Reset();
         }
 
-        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.Ok)
+        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.Close)
         {
             CorrelationId = this.dialogCorrelationId,
             Title = "Edit Matching Rules"
