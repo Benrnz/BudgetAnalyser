@@ -22,14 +22,9 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
     private bool doNotUseOrChecked;
     private Guid shellDialogCorrelationId;
 
-    public NewRuleController(IMessenger messenger, ILogger logger, UserPrompts userPrompts, IUiContext uiContext, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) :
+    public NewRuleController(IMessenger messenger, ILogger logger, UserPrompts userPrompts, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) :
         base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.rulesService = rulesService ?? throw new ArgumentNullException(nameof(rulesService));
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
         this.messageBoxService = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));

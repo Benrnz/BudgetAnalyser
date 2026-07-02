@@ -43,17 +43,11 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         IMessenger messenger,
         ILogger logger,
         UserPrompts userPrompts,
-        IUiContext uiContext,
         IMobileDataExporter dataExporter,
         IMobileDataUploader uploader,
         IApplicationDatabaseFacade appDbService)
         : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.dataExporter = dataExporter ?? throw new ArgumentNullException(nameof(dataExporter));
         this.uploader = uploader ?? throw new ArgumentNullException(nameof(uploader));
         this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));

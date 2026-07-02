@@ -18,13 +18,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
     private decimal doNotUseSplinterAmount1;
     private decimal doNotUseSplinterAmount2;
 
-    public SplitTransactionController(IMessenger messenger, IUiContext uiContext, IBudgetBucketRepository bucketRepo) : base(messenger)
+    public SplitTransactionController(IMessenger messenger, IBudgetBucketRepository bucketRepo) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
         Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         CalculateSplinter1Command = new RelayCommand(CalculateSplinter2);

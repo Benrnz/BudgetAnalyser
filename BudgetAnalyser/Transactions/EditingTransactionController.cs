@@ -8,20 +8,10 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class EditingTransactionController : ControllerBase
+public class EditingTransactionController(IMessenger messenger, IBudgetBucketRepository bucketRepo) : ControllerBase(messenger)
 {
-    private readonly IBudgetBucketRepository bucketRepo;
+    private readonly IBudgetBucketRepository bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
     private BudgetBucket? originalBucket;
-
-    public EditingTransactionController(IMessenger messenger, IUiContext uiContext, IBudgetBucketRepository bucketRepo) : base(messenger)
-    {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-    }
 
     public IEnumerable<BudgetBucket> Buckets
     {

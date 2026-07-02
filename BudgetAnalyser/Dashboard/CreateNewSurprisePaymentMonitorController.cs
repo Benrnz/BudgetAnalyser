@@ -18,13 +18,8 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
     private Guid dialogCorrelationId;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public CreateNewSurprisePaymentMonitorController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IBudgetBucketRepository bucketRepository) : base(messenger)
+    public CreateNewSurprisePaymentMonitorController(IMessenger messenger, UserPrompts userPrompts, IBudgetBucketRepository bucketRepository) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         Messenger.Register<CreateNewSurprisePaymentMonitorController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         PaymentStartDate = DateOnlyExt.Today();

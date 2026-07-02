@@ -11,7 +11,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Dashboard;
 
 /// <summary>
-/// Enter Password dialog, ie logging in, and used to encrypt files.
+///     Enter Password dialog, ie logging in, and used to encrypt files.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class EncryptFileController : ControllerBase, IShellDialogInteractivity
@@ -25,14 +25,9 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     private bool doNotUseEnterPasswordMode;
     private SecureString? password;
 
-    public EncryptFileController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IApplicationDatabaseFacade appDbService) : base(messenger)
+    public EncryptFileController(IMessenger messenger, UserPrompts userPrompts, IApplicationDatabaseFacade appDbService) : base(messenger)
     {
         this.appDbService = appDbService;
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         if (appDbService is null)
         {
             throw new ArgumentNullException(nameof(appDbService));

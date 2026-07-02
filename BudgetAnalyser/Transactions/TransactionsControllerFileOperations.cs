@@ -19,17 +19,11 @@ public class TransactionsControllerFileOperations : ControllerBase
     public TransactionsControllerFileOperations(
         IMessenger messenger,
         UserPrompts userPrompts,
-        IUiContext uiContext,
         LoadFileController loadFileController,
         IApplicationDatabaseFacade applicationDatabaseService,
         ITransactionManagerService transactionManagerService)
         : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         if (applicationDatabaseService is null)
         {
             throw new ArgumentNullException(nameof(applicationDatabaseService));

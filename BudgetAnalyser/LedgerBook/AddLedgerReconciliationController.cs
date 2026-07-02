@@ -20,14 +20,9 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     private Guid dialogCorrelationId;
     private Engine.Ledger.LedgerBook? parentBook;
 
-    public AddLedgerReconciliationController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IAccountTypeRepository accountTypeRepository) : base(messenger)
+    public AddLedgerReconciliationController(IMessenger messenger, UserPrompts userPrompts, IAccountTypeRepository accountTypeRepository) : base(messenger)
     {
         this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         if (accountTypeRepository is null)
         {
             throw new ArgumentNullException(nameof(accountTypeRepository));

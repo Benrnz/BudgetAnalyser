@@ -27,13 +27,8 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     private Guid dialogCorrelationId;
     private GlobalFilterCriteria doNotUseCriteria;
 
-    public GlobalFilterController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IApplicationDatabaseService appDbService) : base(messenger)
+    public GlobalFilterController(IMessenger messenger, UserPrompts userPrompts, IApplicationDatabaseService appDbService) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
         this.appDbService.NewDataSourceAvailable += OnNewFilter;
         this.userMessageBox = userPrompts.MessageBox;

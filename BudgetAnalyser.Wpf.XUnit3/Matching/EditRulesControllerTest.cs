@@ -19,7 +19,6 @@ public class EditRulesControllerTest
     private readonly NewRuleController newRuleController;
     private readonly ITransactionRuleService ruleService;
     private readonly EditRulesController subject;
-    private readonly IUiContext uiContext;
     private readonly IUserQuestionBoxYesNo yesNoBox;
 
     public EditRulesControllerTest()
@@ -30,7 +29,6 @@ public class EditRulesControllerTest
         this.inputBox = Substitute.For<IUserInputBox>();
         this.ruleService = Substitute.For<ITransactionRuleService>();
         this.applicationDatabaseFacade = Substitute.For<IApplicationDatabaseFacade>();
-        this.uiContext = Substitute.For<IUiContext>();
 
         var userPrompts = new UserPrompts(
             this.messageBox,
@@ -41,7 +39,7 @@ public class EditRulesControllerTest
 
         var logger = Substitute.For<ILogger>();
         var bucketRepo = Substitute.For<IBudgetBucketRepository>();
-        this.newRuleController = new NewRuleController(this.messenger, logger, userPrompts, this.uiContext, this.ruleService, bucketRepo);
+        this.newRuleController = new NewRuleController(this.messenger, logger, userPrompts, this.ruleService, bucketRepo);
 
         this.subject = new EditRulesController(this.messenger, userPrompts, this.newRuleController, this.ruleService, this.applicationDatabaseFacade);
     }

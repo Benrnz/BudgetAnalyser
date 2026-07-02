@@ -14,13 +14,8 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
 
-    public NewBudgetModelController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext) : base(messenger)
+    public NewBudgetModelController(IMessenger messenger, UserPrompts userPrompts) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         Messenger.Register<NewBudgetModelController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         BudgetCycle = BudgetCycle.Monthly;
