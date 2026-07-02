@@ -11,25 +11,35 @@ using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class TopTransactionsListController : ControllerBase, IShowableController
 {
+    private readonly IUserMessageBox messageBox;
     private readonly ITransactionManagerService transactionService;
-    private readonly IUiContext uiContext;
+    private readonly IUserQuestionBoxYesNo yesNoBox;
     private Guid shellDialogCorrelationId;
 
     public TopTransactionsListController(
-        IUiContext uiContext,
+        IMessenger messenger,
+        UserPrompts userPrompts,
+        AppliedRulesController appliedRulesController,
+        EditingTransactionController editingTransactionController,
+        SplitTransactionController splitTransactionController,
         TransactionsControllerFileOperations fileOperations,
         ITransactionManagerService transactionService)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+        AppliedRulesController = appliedRulesController ?? throw new ArgumentNullException(nameof(appliedRulesController));
+        EditingTransactionController = editingTransactionController ?? throw new ArgumentNullException(nameof(editingTransactionController));
+        SplitTransactionController = splitTransactionController ?? throw new ArgumentNullException(nameof(splitTransactionController));
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.yesNoBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
 
         Messenger.Register<TopTransactionsListController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
         Messenger.Register<TopTransactionsListController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
@@ -40,7 +50,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         this.transactionService.Saved += OnSavedNotificationReceived;
     }
 
-    public AppliedRulesController AppliedRulesController => this.uiContext.Controller<AppliedRulesController>();
+    public AppliedRulesController AppliedRulesController { get; }
 
     /// <summary>
     ///     Gets or sets the bucket filter.
@@ -110,10 +120,11 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     } = 1;
 
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
-    internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
+    internal EditingTransactionController EditingTransactionController { get; }
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
     public TransactionsControllerFileOperations FileOperations { get; }
 
+    // TODO Change all Commands to cache values in a field!  This is why CanExecute seldom works!
     public ICommand MergeBankExtractCommand => new RelayCommand(OnMergeExtractCommandExecute);
 
     public int PageSize
@@ -139,7 +150,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
-    internal SplitTransactionController SplitTransactionController => this.uiContext.Controller<SplitTransactionController>();
+    internal SplitTransactionController SplitTransactionController { get; }
 
     public string? TextFilter
     {
@@ -209,7 +220,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     {
         if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
         {
-            this.uiContext.UserPrompts.MessageBox.Show(
+            this.messageBox.Show(
                 "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in " +
                 "the new loaded Budget. This will result in those transactions being declassified. \nCheck for unclassified transactions.",
                 "Data Loss Warning!");
@@ -234,7 +245,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         {
             if (SplitTransactionController.SplinterBucket1 is null || SplitTransactionController.SplinterBucket2 is null)
             {
-                this.uiContext.UserPrompts.MessageBox.Show("Splinter buckets cannot be empty.", "Split Transaction Validation Error");
+                this.messageBox.Show("Splinter buckets cannot be empty.", "Split Transaction Validation Error");
                 return;
             }
 
@@ -275,7 +286,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             return;
         }
 
-        var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
+        var confirm = this.yesNoBox.Show(
             "Are you sure you want to delete this transaction?",
             "Delete Transaction");
         if (confirm is not null && confirm.Value)

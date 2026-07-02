@@ -2,7 +2,6 @@
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
@@ -14,18 +13,32 @@ using Rees.Wpf;
 namespace BudgetAnalyser;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class MainMenuController : ControllerBase, IInitializableController
+public class MainMenuController : ControllerBase
 {
-    private readonly IUiContext uiContext;
+    private readonly TopBudgetController budgetController;
+    private readonly TopDashboardController dashboardController;
+    private readonly TopLedgerBookController ledgerBookController;
+    private readonly TopReportsCatalogController reportsCatalogController;
+    private readonly TopTransactionsListController transactionsController;
 
-    public MainMenuController(IUiContext uiContext) : base(uiContext.Messenger)
+    public MainMenuController(
+        TopDashboardController dashboardController,
+        TopTransactionsListController transactionsController,
+        TopLedgerBookController ledgerBookController,
+        TopBudgetController budgetController,
+        TopReportsCatalogController reportsCatalogController,
+        IMessenger messenger) : base(messenger)
     {
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+        this.dashboardController = dashboardController ?? throw new ArgumentNullException(nameof(dashboardController));
+        this.transactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
+        this.ledgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
+        this.budgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
+        this.reportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
-    }
 
-    [UsedImplicitly]
-    public ICommand ShowBudgetCommand => new RelayCommand(OnBudgetExecuted);
+        // Default visible tab is the Dashboard tab
+        OnDashboardExecuted();
+    }
 
     public bool BudgetToggle
     {
@@ -37,8 +50,6 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    public ICommand ShowDashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
-
     public bool DashboardToggle
     {
         get;
@@ -48,9 +59,6 @@ public class MainMenuController : ControllerBase, IInitializableController
             OnPropertyChanged();
         }
     }
-
-    [UsedImplicitly]
-    public ICommand ShowLedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
 
     public bool LedgerBookToggle
     {
@@ -62,9 +70,6 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    [UsedImplicitly]
-    public ICommand ShowReportsCommand => new RelayCommand(OnReportsExecuted);
-
     public bool ReportsToggle
     {
         get;
@@ -74,6 +79,17 @@ public class MainMenuController : ControllerBase, IInitializableController
             OnPropertyChanged();
         }
     }
+
+    [UsedImplicitly]
+    public ICommand ShowBudgetCommand => new RelayCommand(OnBudgetExecuted);
+
+    public ICommand ShowDashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
+
+    [UsedImplicitly]
+    public ICommand ShowLedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
+
+    [UsedImplicitly]
+    public ICommand ShowReportsCommand => new RelayCommand(OnReportsExecuted);
 
     [UsedImplicitly]
     public ICommand ShowTransactionsCommand => new RelayCommand(OnTransactionExecuted);
@@ -88,18 +104,13 @@ public class MainMenuController : ControllerBase, IInitializableController
         }
     }
 
-    public void Initialize()
-    {
-        ShowDashboardCommand.Execute(null);
-    }
-
     private void AfterTabExecutedCommon()
     {
-        this.uiContext.Controller<TopDashboardController>().Shown = DashboardToggle;
-        this.uiContext.Controller<TopTransactionsListController>().Shown = TransactionsToggle;
-        this.uiContext.Controller<TopLedgerBookController>().Shown = LedgerBookToggle;
-        this.uiContext.Controller<TopBudgetController>().Shown = BudgetToggle;
-        this.uiContext.Controller<TopReportsCatalogController>().Shown = ReportsToggle;
+        this.dashboardController.Shown = DashboardToggle;
+        this.transactionsController.Shown = TransactionsToggle;
+        this.ledgerBookController.Shown = LedgerBookToggle;
+        this.budgetController.Shown = BudgetToggle;
+        this.reportsCatalogController.Shown = ReportsToggle;
     }
 
     private void BeforeTabExecutedCommon()

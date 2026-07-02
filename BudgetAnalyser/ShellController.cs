@@ -3,55 +3,49 @@ using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.LedgerBook;
-using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class ShellController : ControllerBase, IInitializableController
+public class ShellController : ControllerBase
 {
     private readonly PersistenceOperations persistenceOperations;
     private readonly IPersistApplicationState statePersistence;
-    private readonly IUiContext uiContext;
-    private bool initialised;
-    private Point originalWindowSize;
-    private Point originalWindowTopLeft;
+    private readonly IUserQuestionBoxYesNo yesNoMessageBox;
 
     public ShellController(
-        IUiContext uiContext,
+        IMessenger messenger,
+        UserPrompts userPrompts,
+        MainMenuController mainMenuController,
+        TopBudgetController budgetController,
+        TopDashboardController dashboardController,
+        TopLedgerBookController ledgerBookController,
+        TopReportsCatalogController reportsCatalogController,
+        TopTransactionsListController transactionsController,
         IPersistApplicationState statePersistence,
         PersistenceOperations persistenceOperations)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        if (statePersistence is null)
-        {
-            throw new ArgumentNullException(nameof(statePersistence));
-        }
-
-        if (persistenceOperations is null)
-        {
-            throw new ArgumentNullException(nameof(persistenceOperations));
-        }
+        this.statePersistence = statePersistence ?? throw new ArgumentNullException(nameof(statePersistence));
+        this.persistenceOperations = persistenceOperations ?? throw new ArgumentNullException(nameof(persistenceOperations));
+        this.yesNoMessageBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+        MainMenuController = mainMenuController ?? throw new ArgumentNullException(nameof(mainMenuController));
+        TopBudgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
+        TopDashboardController = dashboardController ?? throw new ArgumentNullException(nameof(dashboardController));
+        TopLedgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
+        TopReportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
+        TopTransactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
 
         Messenger.Register<ShellController, ShellDialogRequestMessage>(this, static (r, m) => r.OnDialogRequested(m));
         Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
         Messenger.Register<ShellController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
-
-        this.statePersistence = statePersistence;
-        this.persistenceOperations = persistenceOperations;
-        this.uiContext = uiContext;
 
         LedgerBookTabDialog = new ShellDialogController(Messenger);
         DashboardTabDialog = new ShellDialogController(Messenger);
@@ -60,88 +54,37 @@ public class ShellController : ControllerBase, IInitializableController
         ReportsTabDialog = new ShellDialogController(Messenger);
     }
 
-    public TopBudgetController TopBudgetController => this.uiContext.Controller<TopBudgetController>();
     public ShellDialogController BudgetTabDialog { get; }
-    public TopDashboardController TopDashboardController => this.uiContext.Controller<TopDashboardController>();
     public ShellDialogController DashboardTabDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
-    public TopLedgerBookController TopLedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
     public ShellDialogController LedgerBookTabDialog { get; }
-    public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
-    public TopReportsCatalogController TopReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
+    public MainMenuController MainMenuController { get; }
     public ShellDialogController ReportsTabDialog { get; }
-    public TopRulesController TopRulesController => this.uiContext.Controller<TopRulesController>();
-    public TopTransactionsListController TopTransactionsController => this.uiContext.Controller<TopTransactionsListController>();
+    public TopBudgetController TopBudgetController { get; }
+    public TopDashboardController TopDashboardController { get; }
+    public TopLedgerBookController TopLedgerBookController { get; }
+    public TopReportsCatalogController TopReportsCatalogController { get; }
+    public TopTransactionsListController TopTransactionsController { get; }
     public ShellDialogController TransactionsTabDialog { get; }
-    internal Point WindowSize { get; private set; }
+    internal Point WindowSize { get; set; }
     public string WindowTitle => "Budget Analyser";
-    internal Point WindowTopLeft { get; private set; }
+    internal Point WindowTopLeft { get; set; }
 
-    public void Initialize()
-    {
-        if (this.initialised)
-        {
-            return;
-        }
-
-        this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
-        this.initialised = true;
-        IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load().ToList();
-
-        if (rehydratedModels.None())
-        {
-            rehydratedModels = CreateNewDefaultApplicationState();
-        }
-
-        // Create a distinct list of sequences.
-        var sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
-
-        this.uiContext.Logger.LogInfo(_ => $"ShellController call Initialise on each Controller. {DateTime.Now}");
-        this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
-
-        // Send state load messages in order.
-        foreach (var sequence in sequences)
-        {
-            var sequenceCopy = sequence;
-            var models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
-            this.uiContext.Logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
-            Messenger.Send(new ApplicationStateLoadedMessage(models));
-        }
-
-        this.uiContext.Logger.LogInfo(_ => $"ShellController Initialise completing. Sending ApplicationStateLoadFinishedMessage. {DateTime.Now}");
-        Messenger.Send(new ApplicationStateLoadFinishedMessage());
-    }
-
-    public void NotifyOfWindowLocationChange(Point location)
+    internal void NotifyOfWindowLocationChange(Point location)
     {
         WindowTopLeft = location;
     }
 
-    public void NotifyOfWindowSizeChange(Point size)
+    internal void NotifyOfWindowSizeChange(Point size)
     {
         WindowSize = size;
-    }
-
-    public void OnViewReady()
-    {
-        // Re-run the initializers. This allows any controller who couldn't initialise until the views are loaded to now reattempt to initialise.
-        this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
-        if (this.originalWindowTopLeft != new Point())
-        {
-            WindowTopLeft = this.originalWindowTopLeft;
-        }
-
-        if (this.originalWindowSize != new Point())
-        {
-            WindowSize = this.originalWindowSize;
-        }
     }
 
     /// <summary>
     ///     This method will persist the application state. Application State is user preference settings for the application, window, and last loaded file.
     ///     Any data that is used for Budgets, reconciliation, reporting belongs in the Application Database.
     /// </summary>
-    public void SaveApplicationState()
+    internal void SaveApplicationState()
     {
         var gatherDataMessage = new ApplicationStateRequestedMessage();
         Messenger.Send(gatherDataMessage);
@@ -151,11 +94,11 @@ public class ShellController : ControllerBase, IInitializableController
     /// <summary>
     ///     Notify the ShellController the Shell is closing.
     /// </summary>
-    public async Task<bool> ShellClosing()
+    internal async Task<bool> ShellClosing()
     {
         if (this.persistenceOperations.HasUnsavedChanges)
         {
-            var result = this.uiContext.UserPrompts.YesNoBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
+            var result = this.yesNoMessageBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
             if (result is not null && result.Value)
             {
                 // Save must be run carefully because the application is exiting.  If run using the task factory with defaults the task will stall, as background tasks are waiting to be marshalled back to main context
@@ -169,12 +112,6 @@ public class ShellController : ControllerBase, IInitializableController
         return false;
     }
 
-    private static IList<IPersistentApplicationStateObject> CreateNewDefaultApplicationState()
-    {
-        var appState = new List<IPersistentApplicationStateObject>();
-        return appState;
-    }
-
     private async void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
     {
         if (message is null)
@@ -185,18 +122,19 @@ public class ShellController : ControllerBase, IInitializableController
         var shellState = message.ElementOfType<ShellPersistentState>();
         if (shellState is not null)
         {
-            // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
-            this.originalWindowSize = shellState.Size.X > 0 || shellState.Size.Y > 0 ? shellState.Size : new Point(1250, 600);
+            // Setting Window Size at this point has no effect, must happen after window is loaded. Handled by the view.
+            WindowSize = shellState.Size.X > 0 || shellState.Size.Y > 0 ? shellState.Size : new Point(1250, 600);
 
             if (shellState.TopLeft.X > 0 || shellState.TopLeft.Y > 0)
             {
-                // Setting Window Top & Left at this point has no effect, must happen after window is loaded. See OnViewReady()
-                this.originalWindowTopLeft = shellState.TopLeft;
+                // Setting Window Top & Left at this point has no effect, must happen after window is loaded.  Handled by the view.
+                WindowTopLeft = shellState.TopLeft;
             }
 
             TopTransactionsController.PageSize = shellState.ListPageSize;
         }
 
+        // Todo this should move to DashboardController
         var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
         if (storedMainAppState is not null)
         {
@@ -214,6 +152,7 @@ public class ShellController : ControllerBase, IInitializableController
         };
         message.PersistThisModel(shellPersistentStateV1);
 
+        // Todo this should move to DashboardController
         var dataFileState = this.persistenceOperations.PreparePersistentStateData();
         message.PersistThisModel(dataFileState);
     }

@@ -5,7 +5,9 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
 
@@ -15,28 +17,33 @@ namespace BudgetAnalyser.Matching;
 ///     The Controller for <see cref="EditRulesUserControl" /> .
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class TopRulesController : ControllerBase, IShowableController
+public class EditRulesController : ControllerBase
 {
     public const string BucketSortKey = "Bucket";
     public const string DescriptionSortKey = "Description";
     public const string MatchesSortKey = "Matches";
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
+    private readonly RelayCommand deleteRuleCommand;
+    private readonly Guid dialogCorrelationId = Guid.NewGuid();
+    private readonly RelayCommand editRuleCommand;
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly ITransactionRuleService ruleService;
 
-    public TopRulesController(IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
-        : base(uiContext.Messenger)
+    public EditRulesController(
+        IMessenger messenger,
+        UserPrompts userPrompts,
+        NewRuleController newRuleController,
+        ITransactionRuleService ruleService,
+        IApplicationDatabaseFacade applicationDatabaseService)
+        : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
-        this.questionBox = uiContext.UserPrompts.YesNoBox;
-        NewRuleController = uiContext.Controller<NewRuleController>();
+        this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+        NewRuleController = newRuleController ?? throw new ArgumentNullException(nameof(newRuleController));
+        this.deleteRuleCommand = new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
+        this.editRuleCommand = new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
 
         this.ruleService.Closed += OnClosedNotificationReceived;
         this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -61,10 +68,7 @@ public class TopRulesController : ControllerBase, IShowableController
     public string? AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
 
     [UsedImplicitly]
-    public ICommand CloseCommand => new RelayCommand(() => Shown = false);
-
-    [UsedImplicitly]
-    public ICommand DeleteRuleCommand => new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
+    public ICommand DeleteRuleCommand => this.deleteRuleCommand;
 
     public bool EditingRule
     {
@@ -78,7 +82,7 @@ public class TopRulesController : ControllerBase, IShowableController
     }
 
     [UsedImplicitly]
-    public ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
+    public ICommand EditRuleCommand => this.editRuleCommand;
 
     public bool FlatListBoxVisibility
     {
@@ -113,6 +117,8 @@ public class TopRulesController : ControllerBase, IShowableController
             OnPropertyChanged();
             OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
             OnPropertyChanged(nameof(AndOrText));
+            this.deleteRuleCommand.NotifyCanExecuteChanged();
+            this.editRuleCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -159,23 +165,9 @@ public class TopRulesController : ControllerBase, IShowableController
     [UsedImplicitly]
     public ICommand SortCommand => new RelayCommand<string>(OnSortCommandExecute);
 
-    public bool Shown
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
-
     public void CreateNewRuleFromTransaction(Transaction transaction)
     {
+        // TODO move to Applied Rules Controller if possible, the AppliedRules controller is the parent controller of EditRules and NewRule Controllers.
         if (transaction is null)
         {
             throw new ArgumentNullException(nameof(transaction));
@@ -199,6 +191,20 @@ public class TopRulesController : ControllerBase, IShowableController
         NewRuleController.ShowDialog(Rules);
 
         NewRuleController.RuleCreated += OnNewRuleCreated;
+    }
+
+    public void ShowDialog()
+    {
+        if (Rules.Count == 0)
+        {
+            Reset();
+        }
+
+        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.Close)
+        {
+            CorrelationId = this.dialogCorrelationId,
+            Title = "Edit Matching Rules"
+        });
     }
 
     private void AddToList(MatchingRule rule)
@@ -256,12 +262,7 @@ public class TopRulesController : ControllerBase, IShowableController
 
     private void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)
     {
-        SortBy = BucketSortKey; // Defaults to Bucket sort order.
-        Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);
-        RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(this.ruleService.MatchingRulesGroupedByBucket);
-        SelectedRule = null;
-        OnPropertyChanged(nameof(Rules));
-        OnPropertyChanged(nameof(RulesGroupedByBucket));
+        Reset();
     }
 
     private void OnNewRuleCreated(object? sender, EventArgs eventArgs)
@@ -303,5 +304,15 @@ public class TopRulesController : ControllerBase, IShowableController
         handler?.Invoke(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
 
         SelectedRule = null;
+    }
+
+    private void Reset()
+    {
+        SortBy = BucketSortKey; // Defaults to Bucket sort order.
+        Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);
+        RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(this.ruleService.MatchingRulesGroupedByBucket);
+        SelectedRule = null;
+        OnPropertyChanged(nameof(Rules));
+        OnPropertyChanged(nameof(RulesGroupedByBucket));
     }
 }

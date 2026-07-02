@@ -9,11 +9,9 @@ namespace BudgetAnalyser.Wpf.XUnit3.Transactions;
 public class TransactionsListViewModelTest
 {
     private readonly ITransactionManagerService mockTransactionService;
-    private readonly IUiContext mockUiContext;
 
     public TransactionsListViewModelTest()
     {
-        this.mockUiContext = Substitute.For<IUiContext>();
         this.mockTransactionService = Substitute.For<ITransactionManagerService>();
         this.mockTransactionService.DetectDuplicateTransactions().Returns(string.Empty);
     }

@@ -29,9 +29,10 @@ No databases are currently used, data is saved in JSON format. It is the user's 
 
 Security
 --------
-This application does not upload any information provided to the Internet. All provided data is saved locally to disk. The user is responsible for securing the saved file data, if necessary. This
-application is intentionally written as a client-side only Windows application for maximum security. Because no information is shared, no information can be leaked. Optionally the user can use a
-companion mobile app and to support this summarised data must be uploaded to an S3 bucket.
+This application does not upload any information provided to the Internet. All provided data is saved locally to disk. The user is responsible for securing the locally saved file data, if necessary.
+This application is intentionally written as a client-side only Windows application for maximum security. Because no information is shared, no information can be leaked. Optionally the user can use a
+companion mobile app, and to support this summarised data must be uploaded to an S3 bucket. This summarised data does not contain any personal, income or transactional information. Using the mobile app
+is optional, and if not used, no data is uploaded to the cloud.
 
 Getting Started
 ---------------

@@ -18,14 +18,9 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
     private bool filtered;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public ChooseBudgetBucketController(IUiContext uiContext, IBudgetBucketRepository bucketRepository, IAccountTypeRepository accountRepo)
-        : base(uiContext.Messenger)
+    public ChooseBudgetBucketController(IMessenger messenger, IBudgetBucketRepository bucketRepository, IAccountTypeRepository accountRepo)
+        : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.accountRepo = accountRepo ?? throw new ArgumentNullException(nameof(accountRepo));
         this.doNotUseBudgetBuckets = bucketRepository.Buckets.ToList();

@@ -12,7 +12,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Matching;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class NewRuleController : ControllerBase, IInitializableController, IShellDialogInteractivity, IShellDialogToolTips
+public class NewRuleController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private readonly ILogger logger;
@@ -22,17 +22,13 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
     private bool doNotUseOrChecked;
     private Guid shellDialogCorrelationId;
 
-    public NewRuleController(IUiContext uiContext, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) : base(uiContext.Messenger)
+    public NewRuleController(IMessenger messenger, ILogger logger, UserPrompts userPrompts, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) :
+        base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.rulesService = rulesService ?? throw new ArgumentNullException(nameof(rulesService));
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-        this.messageBoxService = uiContext.UserPrompts.MessageBox;
-        this.logger = uiContext.Logger;
+        this.messageBoxService = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         Messenger.Register<NewRuleController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
@@ -186,6 +182,12 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         }
     } = new();
 
+    public bool CanExecuteCancelButton => true;
+    public bool CanExecuteOkButton => false;
+    public bool CanExecuteSaveButton => Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable;
+    public string ActionButtonToolTip => "Save the new rule.";
+    public string CloseButtonToolTip => "Cancel";
+
     public void Initialize()
     {
         SimilarRules = null;
@@ -211,12 +213,6 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         TransactionType = new StringCriteria();
         TransactionType.PropertyChanged += OnCriteriaValuePropertyChanged;
     }
-
-    public bool CanExecuteCancelButton => true;
-    public bool CanExecuteOkButton => false;
-    public bool CanExecuteSaveButton => Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable;
-    public string ActionButtonToolTip => "Save the new rule.";
-    public string CloseButtonToolTip => "Cancel";
 
     public void ShowDialog(IEnumerable<MatchingRule> allRules)
     {

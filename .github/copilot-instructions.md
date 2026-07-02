@@ -11,8 +11,8 @@
 - **IoC Container**: Microsoft.Extensions.DependencyInjection with MVVM CommunityToolkit
 
 ### Key Architecture Files
-- `CompositionRoot.cs` - IoC setup (Microsoft DI + MVVM CommunityToolkit)
-- `IUiContext.cs` / `UiContext.cs` - Ambient context for controllers + services
+- `App.xaml.cs` - Main entry point and IoC setup (Microsoft DI + MVVM CommunityToolkit)
+- `CompositionHelper.cs` Controller instantiation - Defines constructor-injected controller wiring and hierarchy
 - `ApplicationDatabaseFacade.cs` - Defines `IApplicationDatabaseFacade` and `WpfApplicationDatabaseFacade` for UI-layer access to Engine services
 - `ShellController.cs` - Top-level ViewModel/Controller
 
@@ -35,7 +35,7 @@ public class MyService : IMyService { }
 - Classes are registered as both themselves and their interfaces
 - The Composition Root scans `BudgetAnalyser.Engine`, `BudgetAnalyser.Encryption`, and `BudgetAnalyser.Wpf` assemblies
 
-**Important**: Any new service must have this attribute or be manually registered in `CompositionRoot`.
+**Important**: Any new service must have this attribute or be manually registered in `CompositionHelper`.
 
 ### 2. Private Field Naming Convention: `doNotUse` Prefix
 
@@ -69,8 +69,8 @@ Controllers inherit from `ControllerBase` (from Rees.Wpf):
 
 - Extend `ObservableRecipient` (MVVM CommunityToolkit)
 - Named with `Controller` suffix (e.g., `BudgetController`, `LedgerBookController`)
-- Singleton instances managed by `IUiContext`
-- Access other controllers via `uiContext.Controller<T>()`
+- Receive required subordinate controllers and services via constructor injection
+- Keep the controller dependency graph aligned to the view tree and logical UI hierarchy
 - Use `Messenger.Register<>()` for cross-controller messaging
 
 **Critical MVVM Rules:**
@@ -84,31 +84,30 @@ Example:
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class MyController : ControllerBase, IShowableController
 {
-    private readonly IUiContext uiContext;
+    private readonly AnotherController anotherController;
 
-    public MyController(IUiContext uiContext, IMessenger messenger)
+    public MyController(AnotherController anotherController, IMessenger messenger)
         : base(messenger)
     {
-        this.uiContext = uiContext;
+        this.anotherController = anotherController;
     }
-
-    // Access other controllers when needed
-    var batchController = this.uiContext.Controller<AnotherController>();
 }
 ```
 
-### 4. Ambient Context Pattern (IUiContext)
+### 4. Constructor Injection Pattern
 
-Common services are injected via `IUiContext` instead of individual constructor parameters:
+Inject dependencies explicitly through constructors. Avoid service locator patterns and ensure parent controllers receive subordinate controllers directly:
 
 ```csharp
 public class SomeController : ControllerBase
 {
-    public SomeController(IUiContext uiContext, IMessenger messenger) : base(messenger)
+    public SomeController(
+        ILogger logger,
+        IUserPrompts userPrompts,
+        OtherController otherController,
+        IMessenger messenger) : base(messenger)
     {
-        var logger = uiContext.Logger; // Not in ctor!
-        var prompts = uiContext.UserPrompts;
-        var otherController = uiContext.Controller<OtherController>();
+        // Use constructor-injected dependencies directly.
     }
 }
 ```
@@ -257,7 +256,7 @@ Optional; if encrypted files are needed:
 ## New Feature Checklist
 
 1. **Add Engine service** → Create in `Engine/` folder + `[AutoRegisterWithIoC]` attribute
-2. **Add Controller** → Extend `ControllerBase`, add `[AutoRegisterWithIoC(SingleInstance = true)]`, register in `CompositionRoot.ConstructUiContext()` type array
+2. **Add Controller** → Extend `ControllerBase`, add `[AutoRegisterWithIoC(SingleInstance = true)]`, and wire required subordinate controllers/services through constructor injection in CompositionHelper registrations
 3. **Add XAML View** → Place in UI folder, bind to Controller via `DataContext`
 4. **If global filter impacts view** → Subscribe to `GlobalFilterController` messages
 5. **Save/load data** → Use `IApplicationDatabaseFacade.NotifyOfChange()` to mark unsaved changes
@@ -268,11 +267,11 @@ Optional; if encrypted files are needed:
 ## Anti-Patterns to Avoid
 
 ❌ Accessing Engine services directly from Views (bypass Controller abstraction)
-❌ Using Service Locator outside CompositionRoot (use constructor injection)
+❌ Using Service Locator outside CompositionHelper (use constructor injection)
 ❌ Threading exceptions silently (use `ILogger`)
 ❌ Public mutable fields (use private `doNotUse` + property when the containing class derives from `ObservableRecipient` and `INotifyPropertyChanged`, or use private fields with camelcasing for any
 other type)
-❌ Storing references to Controllers outside `IUiContext` (breaks singleton pattern)
+❌ Resolving controllers via service locator patterns (inject required controllers explicitly instead)
 ❌ Using Moq for mocking (use NSubstitute)
 ❌ Using plain Assert statements (use Shouldly)
 ❌ Using custom ICommand implementations (use RelayCommand)

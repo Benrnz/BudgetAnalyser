@@ -15,7 +15,7 @@ public class RemainingSurplusWidget : RemainingBudgetBucketWidget
     /// </summary>
     public RemainingSurplusWidget()
     {
-        DetailedText = "Budgeted Surplus";
+        DetailedText = "Budget Surplus";
         Name = "Surplus B";
         DependencyMissingToolTip = "The Transactions, Budget, or a Filter are not present, surplus cannot be calculated.";
         RemainingBudgetToolTip = "Remaining Surplus for period is {0:C} {1:P0}";

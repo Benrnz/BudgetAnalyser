@@ -17,23 +17,19 @@ public class TransactionsControllerFileOperations : ControllerBase
     private readonly ITransactionManagerService transactionService;
 
     public TransactionsControllerFileOperations(
-        IUiContext uiContext,
+        IMessenger messenger,
+        UserPrompts userPrompts,
         LoadFileController loadFileController,
         IApplicationDatabaseFacade applicationDatabaseService,
         ITransactionManagerService transactionManagerService)
-        : base(uiContext.Messenger)
+        : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         if (applicationDatabaseService is null)
         {
             throw new ArgumentNullException(nameof(applicationDatabaseService));
         }
 
-        this.messageBox = uiContext.UserPrompts.MessageBox;
+        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
         this.transactionService = transactionManagerService ?? throw new ArgumentNullException(nameof(transactionManagerService));
         ViewModel = new TransactionsListViewModel(applicationDatabaseService, this.transactionService);
