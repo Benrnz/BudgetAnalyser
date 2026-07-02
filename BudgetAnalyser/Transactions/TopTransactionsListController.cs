@@ -20,20 +20,23 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 {
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionManagerService transactionService;
-    private readonly IUiContext uiContext;
     private readonly IUserQuestionBoxYesNo yesNoBox;
     private Guid shellDialogCorrelationId;
 
     public TopTransactionsListController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        IUiContext uiContext,
+        AppliedRulesController appliedRulesController,
+        EditingTransactionController editingTransactionController,
+        SplitTransactionController splitTransactionController,
         TransactionsControllerFileOperations fileOperations,
         ITransactionManagerService transactionService)
         : base(messenger)
     {
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+        AppliedRulesController = appliedRulesController ?? throw new ArgumentNullException(nameof(appliedRulesController));
+        EditingTransactionController = editingTransactionController ?? throw new ArgumentNullException(nameof(editingTransactionController));
+        SplitTransactionController = splitTransactionController ?? throw new ArgumentNullException(nameof(splitTransactionController));
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.yesNoBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
@@ -47,7 +50,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         this.transactionService.Saved += OnSavedNotificationReceived;
     }
 
-    public AppliedRulesController AppliedRulesController => this.uiContext.Controller<AppliedRulesController>();
+    public AppliedRulesController AppliedRulesController { get; }
 
     /// <summary>
     ///     Gets or sets the bucket filter.
@@ -117,10 +120,11 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     } = 1;
 
     public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
-    internal EditingTransactionController EditingTransactionController => this.uiContext.Controller<EditingTransactionController>();
+    internal EditingTransactionController EditingTransactionController { get; }
     public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
     public TransactionsControllerFileOperations FileOperations { get; }
 
+    // TODO Change all Commands to cache values in a field!  This is why CanExecute seldom works!
     public ICommand MergeBankExtractCommand => new RelayCommand(OnMergeExtractCommandExecute);
 
     public int PageSize
@@ -146,7 +150,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
-    internal SplitTransactionController SplitTransactionController => this.uiContext.Controller<SplitTransactionController>();
+    internal SplitTransactionController SplitTransactionController { get; }
 
     public string? TextFilter
     {

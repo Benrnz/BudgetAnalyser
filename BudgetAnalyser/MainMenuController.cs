@@ -15,11 +15,25 @@ namespace BudgetAnalyser;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class MainMenuController : ControllerBase, IInitializableController
 {
-    private readonly IUiContext uiContext;
+    private readonly TopBudgetController budgetController;
+    private readonly TopDashboardController dashboardController;
+    private readonly TopLedgerBookController ledgerBookController;
+    private readonly TopReportsCatalogController reportsCatalogController;
+    private readonly TopTransactionsListController transactionsController;
 
-    public MainMenuController(IUiContext uiContext, IMessenger messenger) : base(messenger)
+    public MainMenuController(
+        TopDashboardController dashboardController,
+        TopTransactionsListController transactionsController,
+        TopLedgerBookController ledgerBookController,
+        TopBudgetController budgetController,
+        TopReportsCatalogController reportsCatalogController,
+        IMessenger messenger) : base(messenger)
     {
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
+        this.dashboardController = dashboardController ?? throw new ArgumentNullException(nameof(dashboardController));
+        this.transactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
+        this.ledgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
+        this.budgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
+        this.reportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
     }
 
@@ -94,11 +108,11 @@ public class MainMenuController : ControllerBase, IInitializableController
 
     private void AfterTabExecutedCommon()
     {
-        this.uiContext.Controller<TopDashboardController>().Shown = DashboardToggle;
-        this.uiContext.Controller<TopTransactionsListController>().Shown = TransactionsToggle;
-        this.uiContext.Controller<TopLedgerBookController>().Shown = LedgerBookToggle;
-        this.uiContext.Controller<TopBudgetController>().Shown = BudgetToggle;
-        this.uiContext.Controller<TopReportsCatalogController>().Shown = ReportsToggle;
+        this.dashboardController.Shown = DashboardToggle;
+        this.transactionsController.Shown = TransactionsToggle;
+        this.ledgerBookController.Shown = LedgerBookToggle;
+        this.budgetController.Shown = BudgetToggle;
+        this.reportsCatalogController.Shown = ReportsToggle;
     }
 
     private void BeforeTabExecutedCommon()
