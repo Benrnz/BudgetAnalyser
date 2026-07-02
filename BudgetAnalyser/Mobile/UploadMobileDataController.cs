@@ -54,7 +54,6 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         this.messageBoxService = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        Messenger.Register<UploadMobileDataController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
         Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogMessageReceived(m));
     }
 
@@ -209,13 +208,5 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
             CorrelationId = this.correlationId,
             Title = "Upload Mobile Summary Data"
         });
-    }
-
-    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
-    {
-        this.widget = message.Widget as UpdateMobileDataWidget;
-        if (this.widget is not null && this.widget.Enabled)
-        {
-        }
     }
 }
