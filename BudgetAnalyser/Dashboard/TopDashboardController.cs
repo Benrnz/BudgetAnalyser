@@ -22,18 +22,21 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly DisusedRulesController disusedRulesController;
     private readonly IUserMessageBox userMessageBox;
 
-    public TopDashboardController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, IDashboardService dashboardService) : base(messenger)
+    public TopDashboardController(
+        IMessenger messenger,
+        UserPrompts userPrompts,
+        ChooseBudgetBucketController chooseBudgetBucketController,
+        CreateNewFixedBudgetController createNewFixedBudgetController,
+        CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
+        DisusedRulesController disusedRulesController,
+        GlobalFilterController globalFilterController,
+        IDashboardService dashboardService) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        this.chooseBudgetBucketController = uiContext.Controller<ChooseBudgetBucketController>();
-        this.createNewFixedBudgetController = uiContext.Controller<CreateNewFixedBudgetController>();
-        this.createNewSurprisePaymentMonitorController = uiContext.Controller<CreateNewSurprisePaymentMonitorController>();
-        this.disusedRulesController = uiContext.Controller<DisusedRulesController>();
-        GlobalFilterController = uiContext.Controller<GlobalFilterController>();
+        this.chooseBudgetBucketController = chooseBudgetBucketController ?? throw new ArgumentNullException(nameof(chooseBudgetBucketController));
+        this.createNewFixedBudgetController = createNewFixedBudgetController ?? throw new ArgumentNullException(nameof(createNewFixedBudgetController));
+        this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController ?? throw new ArgumentNullException(nameof(createNewSurprisePaymentMonitorController));
+        this.disusedRulesController = disusedRulesController ?? throw new ArgumentNullException(nameof(disusedRulesController));
+        GlobalFilterController = globalFilterController ?? throw new ArgumentNullException(nameof(globalFilterController));
 
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
         this.userMessageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
