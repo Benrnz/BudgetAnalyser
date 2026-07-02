@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO.Packaging;
 using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
@@ -23,26 +22,26 @@ public class EditRulesController : ControllerBase
     public const string BucketSortKey = "Bucket";
     public const string DescriptionSortKey = "Description";
     public const string MatchesSortKey = "Matches";
-    private readonly RelayCommand deleteRuleCommand;
-    private readonly RelayCommand editRuleCommand;
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
+    private readonly RelayCommand deleteRuleCommand;
     private readonly Guid dialogCorrelationId = Guid.NewGuid();
+    private readonly RelayCommand editRuleCommand;
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly ITransactionRuleService ruleService;
 
-    public EditRulesController(IMessenger messenger, UserPrompts userPrompts, IUiContext uiContext, ITransactionRuleService ruleService, IApplicationDatabaseFacade applicationDatabaseService)
+    public EditRulesController(
+        IMessenger messenger,
+        UserPrompts userPrompts,
+        NewRuleController newRuleController,
+        ITransactionRuleService ruleService,
+        IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
-        NewRuleController = uiContext.Controller<NewRuleController>();
+        NewRuleController = newRuleController ?? throw new ArgumentNullException(nameof(newRuleController));
         this.deleteRuleCommand = new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
         this.editRuleCommand = new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
 
@@ -266,16 +265,6 @@ public class EditRulesController : ControllerBase
         Reset();
     }
 
-    private void Reset()
-    {
-        SortBy = BucketSortKey; // Defaults to Bucket sort order.
-        Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);
-        RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(this.ruleService.MatchingRulesGroupedByBucket);
-        SelectedRule = null;
-        OnPropertyChanged(nameof(Rules));
-        OnPropertyChanged(nameof(RulesGroupedByBucket));
-    }
-
     private void OnNewRuleCreated(object? sender, EventArgs eventArgs)
     {
         NewRuleController.RuleCreated -= OnNewRuleCreated;
@@ -315,5 +304,15 @@ public class EditRulesController : ControllerBase
         handler?.Invoke(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
 
         SelectedRule = null;
+    }
+
+    private void Reset()
+    {
+        SortBy = BucketSortKey; // Defaults to Bucket sort order.
+        Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);
+        RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(this.ruleService.MatchingRulesGroupedByBucket);
+        SelectedRule = null;
+        OnPropertyChanged(nameof(Rules));
+        OnPropertyChanged(nameof(RulesGroupedByBucket));
     }
 }

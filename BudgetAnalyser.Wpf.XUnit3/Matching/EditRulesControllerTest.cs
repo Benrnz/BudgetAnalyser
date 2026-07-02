@@ -1,5 +1,5 @@
-using System.Windows.Input;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Matching;
@@ -12,15 +12,15 @@ namespace BudgetAnalyser.Wpf.XUnit3.Matching;
 
 public class EditRulesControllerTest
 {
-    private readonly IUserMessageBox messageBox;
-    private readonly IUserInputBox inputBox;
-    private readonly IUserQuestionBoxYesNo yesNoBox;
-    private readonly IMessenger messenger;
-    private readonly ITransactionRuleService ruleService;
     private readonly IApplicationDatabaseFacade applicationDatabaseFacade;
-    private readonly IUiContext uiContext;
+    private readonly IUserInputBox inputBox;
+    private readonly IUserMessageBox messageBox;
+    private readonly IMessenger messenger;
     private readonly NewRuleController newRuleController;
+    private readonly ITransactionRuleService ruleService;
     private readonly EditRulesController subject;
+    private readonly IUiContext uiContext;
+    private readonly IUserQuestionBoxYesNo yesNoBox;
 
     public EditRulesControllerTest()
     {
@@ -40,11 +40,20 @@ public class EditRulesControllerTest
             this.inputBox);
 
         var logger = Substitute.For<ILogger>();
-        var bucketRepo = Substitute.For<BudgetAnalyser.Engine.Budget.IBudgetBucketRepository>();
+        var bucketRepo = Substitute.For<IBudgetBucketRepository>();
         this.newRuleController = new NewRuleController(this.messenger, logger, userPrompts, this.uiContext, this.ruleService, bucketRepo);
-        this.uiContext.Controller<NewRuleController>().Returns(this.newRuleController);
 
-        this.subject = new EditRulesController(this.messenger, userPrompts, this.uiContext, this.ruleService, this.applicationDatabaseFacade);
+        this.subject = new EditRulesController(this.messenger, userPrompts, this.newRuleController, this.ruleService, this.applicationDatabaseFacade);
+    }
+
+    [Fact]
+    public void DeleteRuleCommand_ShouldBecomeExecutableWhenRuleSelected()
+    {
+        var rule = CreateRule();
+
+        this.subject.DeleteRuleCommand.CanExecute(null).ShouldBeFalse();
+        this.subject.SelectedRule = rule;
+        this.subject.DeleteRuleCommand.CanExecute(null).ShouldBeTrue();
     }
 
     [Fact]
@@ -65,18 +74,8 @@ public class EditRulesControllerTest
         first.ShouldBeSameAs(second);
     }
 
-    [Fact]
-    public void DeleteRuleCommand_ShouldBecomeExecutableWhenRuleSelected()
-    {
-        var rule = CreateRule();
-
-        this.subject.DeleteRuleCommand.CanExecute(null).ShouldBeFalse();
-        this.subject.SelectedRule = rule;
-        this.subject.DeleteRuleCommand.CanExecute(null).ShouldBeTrue();
-    }
-
     private static MatchingRule CreateRule()
     {
-        return new MatchingRule(Substitute.For<BudgetAnalyser.Engine.Budget.IBudgetBucketRepository>());
+        return new MatchingRule(Substitute.For<IBudgetBucketRepository>());
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Transactions;
+using BudgetAnalyser.Engine.Transactions;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
@@ -15,34 +15,30 @@ public class AppliedRulesController : ControllerBase
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionRuleService ruleService;
-    private readonly TopTransactionsListController transactionsController;
 
     public AppliedRulesController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        IUiContext uiContext,
+        EditRulesController editRulesController,
         ITransactionRuleService ruleService,
         IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
-        EditRulesController = uiContext.Controller<EditRulesController>();
+        EditRulesController = editRulesController ?? throw new ArgumentNullException(nameof(editRulesController));
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
-        this.transactionsController = uiContext.Controller<TopTransactionsListController>();
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.ruleService.Saved += OnSavedNotificationReceived;
+        ApplyRulesCommand = new RelayCommand<TransactionsListModel?>(OnApplyRulesCommandExecute);
+        CreateRuleCommand = new RelayCommand<Transaction?>(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
+        ShowRulesCommand = new RelayCommand(OnShowRulesCommandExecute);
     }
 
     [UsedImplicitly]
-    public ICommand ApplyRulesCommand => new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand);
+    public IRelayCommand<TransactionsListModel?> ApplyRulesCommand { get; }
 
     [UsedImplicitly]
-    public ICommand CreateRuleCommand => new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
+    public ICommand CreateRuleCommand { get; }
 
     public bool Dirty
     {
@@ -63,37 +59,32 @@ public class AppliedRulesController : ControllerBase
     public EditRulesController EditRulesController { get; }
 
     [UsedImplicitly]
-    public ICommand ShowRulesCommand => new RelayCommand(OnShowRulesCommandExecute);
+    public ICommand ShowRulesCommand { get; }
 
-    private bool CanExecuteApplyRulesCommand()
+    private bool CanExecuteCreateRuleCommand(Transaction? transaction)
     {
-        return EditRulesController.RulesGroupedByBucket.Any();
+        return transaction is not null;
     }
 
-    private bool CanExecuteCreateRuleCommand()
+    private void OnApplyRulesCommandExecute(TransactionsListModel? transactions = null)
     {
-        return this.transactionsController.ViewModel.SelectedRow is not null;
-    }
-
-    private void OnApplyRulesCommandExecute()
-    {
-        var transactions = this.transactionsController.ViewModel.TransactionsList ?? throw new InvalidOperationException("The transactions model is null, not initialised or not loaded.");
-        if (this.ruleService.Match(transactions.Transactions))
+        var t = transactions ?? throw new ArgumentNullException(nameof(transactions));
+        if (this.ruleService.Match(t.Transactions))
         {
             Dirty = true;
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Transactions);
         }
     }
 
-    private void OnCreateRuleCommandExecute()
+    private void OnCreateRuleCommandExecute(Transaction? transaction)
     {
-        if (this.transactionsController.ViewModel.SelectedRow is null)
+        if (transaction is null)
         {
             this.messageBox.Show("No row selected.");
             return;
         }
 
-        EditRulesController.CreateNewRuleFromTransaction(this.transactionsController.ViewModel.SelectedRow);
+        EditRulesController.CreateNewRuleFromTransaction(transaction);
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)

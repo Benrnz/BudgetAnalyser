@@ -18,21 +18,30 @@ public class ShellController : ControllerBase
 {
     private readonly PersistenceOperations persistenceOperations;
     private readonly IPersistApplicationState statePersistence;
-    private readonly IUiContext uiContext;
     private readonly IUserQuestionBoxYesNo yesNoMessageBox;
 
     public ShellController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        IUiContext uiContext,
+        MainMenuController mainMenuController,
+        TopBudgetController budgetController,
+        TopDashboardController dashboardController,
+        TopLedgerBookController ledgerBookController,
+        TopReportsCatalogController reportsCatalogController,
+        TopTransactionsListController transactionsController,
         IPersistApplicationState statePersistence,
         PersistenceOperations persistenceOperations)
         : base(messenger)
     {
         this.statePersistence = statePersistence ?? throw new ArgumentNullException(nameof(statePersistence));
         this.persistenceOperations = persistenceOperations ?? throw new ArgumentNullException(nameof(persistenceOperations));
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.yesNoMessageBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+        MainMenuController = mainMenuController ?? throw new ArgumentNullException(nameof(mainMenuController));
+        TopBudgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
+        TopDashboardController = dashboardController ?? throw new ArgumentNullException(nameof(dashboardController));
+        TopLedgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
+        TopReportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
+        TopTransactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
 
         Messenger.Register<ShellController, ShellDialogRequestMessage>(this, static (r, m) => r.OnDialogRequested(m));
         Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
@@ -49,14 +58,13 @@ public class ShellController : ControllerBase
     public ShellDialogController DashboardTabDialog { get; }
     public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
     public ShellDialogController LedgerBookTabDialog { get; }
-    public MainMenuController MainMenuController => this.uiContext.Controller<MainMenuController>();
+    public MainMenuController MainMenuController { get; }
     public ShellDialogController ReportsTabDialog { get; }
-
-    public TopBudgetController TopBudgetController => this.uiContext.Controller<TopBudgetController>();
-    public TopDashboardController TopDashboardController => this.uiContext.Controller<TopDashboardController>();
-    public TopLedgerBookController TopLedgerBookController => this.uiContext.Controller<TopLedgerBookController>();
-    public TopReportsCatalogController TopReportsCatalogController => this.uiContext.Controller<TopReportsCatalogController>();
-    public TopTransactionsListController TopTransactionsController => this.uiContext.Controller<TopTransactionsListController>();
+    public TopBudgetController TopBudgetController { get; }
+    public TopDashboardController TopDashboardController { get; }
+    public TopLedgerBookController TopLedgerBookController { get; }
+    public TopReportsCatalogController TopReportsCatalogController { get; }
+    public TopTransactionsListController TopTransactionsController { get; }
     public ShellDialogController TransactionsTabDialog { get; }
     internal Point WindowSize { get; set; }
     public string WindowTitle => "Budget Analyser";
@@ -126,6 +134,7 @@ public class ShellController : ControllerBase
             TopTransactionsController.PageSize = shellState.ListPageSize;
         }
 
+        // Todo this should move to DashboardController
         var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
         if (storedMainAppState is not null)
         {
@@ -143,6 +152,7 @@ public class ShellController : ControllerBase
         };
         message.PersistThisModel(shellPersistentStateV1);
 
+        // Todo this should move to DashboardController
         var dataFileState = this.persistenceOperations.PreparePersistentStateData();
         message.PersistThisModel(dataFileState);
     }

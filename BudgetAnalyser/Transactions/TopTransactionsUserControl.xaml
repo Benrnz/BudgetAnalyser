@@ -232,12 +232,14 @@
                             <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
                                    TargetType="{x:Type TextBlock}" />
                         </ContextMenu.Resources>
-                        <MenuItem Command="{Binding AppliedRulesController.ApplyRulesCommand}">
+                        <MenuItem Command="{Binding AppliedRulesController.ApplyRulesCommand}"
+                                  CommandParameter="{Binding ViewModel.TransactionsList}">
                             <MenuItem.Header>
                                 <TextBlock Text="Apply Matching Rules" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding AppliedRulesController.CreateRuleCommand}">
+                        <MenuItem Command="{Binding AppliedRulesController.CreateRuleCommand}"
+                                  CommandParameter="{Binding ViewModel.SelectedRow}">
                             <MenuItem.Header>
                                 <TextBlock Text="Create Rule" />
                             </MenuItem.Header>

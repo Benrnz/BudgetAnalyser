@@ -50,7 +50,7 @@ public class DisusedRulesController : ControllerBase
         var rules = DisusedMatchingRuleWidget.QueryRules(this.ruleService.MatchingRules);
         DisusedRules = new ObservableCollection<DisusedRuleViewModel>(rules.Select(r => new DisusedRuleViewModel { MatchingRule = r, RemoveCommand = RemoveRuleCommand }));
         this.removedRules = new List<MatchingRule>();
-        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.Ok)
+        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.Close)
         {
             CorrelationId = this.dialogCorrelationId,
             Title = "Disused Matching Rules"
