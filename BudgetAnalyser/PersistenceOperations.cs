@@ -20,7 +20,7 @@ public class PersistenceOperations
     private readonly Func<IUserPromptOpenFile> openFileFactory;
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly Func<IUserPromptSaveFile> saveFileFactory;
-    private readonly IUiContext uiContext;
+    private readonly EncryptFileController encryptFileController;
     private DateTime lastSave = DateTime.Now;
 
     public PersistenceOperations(
@@ -29,12 +29,12 @@ public class PersistenceOperations
         UserPrompts userPrompts,
         IApplicationDatabaseFacade applicationDatabaseService,
         DemoFileHelper demoFileHelper,
-        IUiContext uiContext)
+        EncryptFileController encryptFileController)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.uiContext = uiContext ?? throw new ArgumentNullException(nameof(uiContext));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.demoFileHelper = demoFileHelper ?? throw new ArgumentNullException(nameof(demoFileHelper));
+        this.encryptFileController = encryptFileController ?? throw new ArgumentNullException(nameof(encryptFileController));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         this.saveFileFactory = userPrompts.SaveFileFactory ?? throw new ArgumentNullException(nameof(userPrompts.SaveFileFactory));
@@ -158,7 +158,7 @@ public class PersistenceOperations
         {
             // Recover by prompting user for the password.
             this.logger.LogWarning(_ => $"Attempt to open an encrypted file {fileName} with an incorrect password.");
-            this.uiContext.Controller<EncryptFileController>().ShowEnterPasswordDialog(fileName, "Incorrect password");
+            this.encryptFileController.ShowEnterPasswordDialog(fileName, "Incorrect password");
         }
         catch (KeyNotFoundException)
         {
@@ -169,7 +169,7 @@ public class PersistenceOperations
         {
             // Recover by prompting user for the password.
             this.logger.LogWarning(_ => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
-            this.uiContext.Controller<EncryptFileController>().ShowEnterPasswordDialog(fileName);
+            this.encryptFileController.ShowEnterPasswordDialog(fileName);
         }
     }
 

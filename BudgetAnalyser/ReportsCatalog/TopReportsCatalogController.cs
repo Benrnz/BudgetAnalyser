@@ -17,15 +17,10 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
     private BudgetCollection? budgets;
     private TransactionsListModel? currentTransactionsListModel;
 
-    public TopReportsCatalogController(IMessenger messenger, IUiContext uiContext, NewWindowViewLoader newWindowViewLoader) : base(messenger)
+    public TopReportsCatalogController(IMessenger messenger, OverallPerformanceController overallPerformanceController, NewWindowViewLoader newWindowViewLoader) : base(messenger)
     {
-        if (uiContext is null)
-        {
-            throw new ArgumentNullException(nameof(uiContext));
-        }
-
         this.newWindowViewLoader = newWindowViewLoader ?? throw new ArgumentNullException(nameof(newWindowViewLoader));
-        OverallPerformanceController = uiContext.Controller<OverallPerformanceController>();
+        OverallPerformanceController = overallPerformanceController ?? throw new ArgumentNullException(nameof(overallPerformanceController));
 
         Messenger.Register<TopReportsCatalogController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
         Messenger.Register<TopReportsCatalogController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
