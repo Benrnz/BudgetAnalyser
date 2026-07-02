@@ -167,7 +167,7 @@ public class EditRulesController : ControllerBase
 
     public void CreateNewRuleFromTransaction(Transaction transaction)
     {
-        // TODO move to Applied Rules Controller.
+        // TODO move to Applied Rules Controller if possible, the AppliedRules controller is the parent controller of EditRules and NewRule Controllers.
         if (transaction is null)
         {
             throw new ArgumentNullException(nameof(transaction));

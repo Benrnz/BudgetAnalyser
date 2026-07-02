@@ -12,9 +12,10 @@ public class ShellDialogControllerTest
     [Fact]
     public void DialogType_Close_ShouldOnlyShowCancelButton()
     {
-        var subject = new ShellDialogController(this.messenger);
-
-        subject.DialogType = ShellDialogType.Close;
+        var subject = new ShellDialogController(this.messenger)
+        {
+            DialogType = ShellDialogType.Close
+        };
 
         subject.OkButtonVisible.ShouldBeFalse();
         subject.SaveButtonVisible.ShouldBeFalse();

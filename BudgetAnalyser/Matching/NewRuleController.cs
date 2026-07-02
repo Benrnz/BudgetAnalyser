@@ -12,7 +12,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Matching;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class NewRuleController : ControllerBase, IInitializableController, IShellDialogInteractivity, IShellDialogToolTips
+public class NewRuleController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private readonly ILogger logger;
@@ -182,6 +182,12 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         }
     } = new();
 
+    public bool CanExecuteCancelButton => true;
+    public bool CanExecuteOkButton => false;
+    public bool CanExecuteSaveButton => Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable;
+    public string ActionButtonToolTip => "Save the new rule.";
+    public string CloseButtonToolTip => "Cancel";
+
     public void Initialize()
     {
         SimilarRules = null;
@@ -207,12 +213,6 @@ public class NewRuleController : ControllerBase, IInitializableController, IShel
         TransactionType = new StringCriteria();
         TransactionType.PropertyChanged += OnCriteriaValuePropertyChanged;
     }
-
-    public bool CanExecuteCancelButton => true;
-    public bool CanExecuteOkButton => false;
-    public bool CanExecuteSaveButton => Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable;
-    public string ActionButtonToolTip => "Save the new rule.";
-    public string CloseButtonToolTip => "Cancel";
 
     public void ShowDialog(IEnumerable<MatchingRule> allRules)
     {

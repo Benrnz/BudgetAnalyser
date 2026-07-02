@@ -12,7 +12,6 @@ using BudgetAnalyser.Engine;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Rees.Wpf;
 
 namespace BudgetAnalyser;
 
@@ -74,11 +73,10 @@ public partial class App
         this.shellController = this.host.Services.GetRequiredService<ShellController>();
         this.logger.LogAlways(_ => this.shellController.TopDashboardController.VersionString);
 
-        CompositionHelper.InitialiseControllers(
+        CompositionHelper.LoadApplicationStateIntoControllers(
             this.logger,
             this.host.Services.GetRequiredService<IPersistApplicationState>(),
-            this.host.Services.GetRequiredService<IMessenger>(),
-            this.host.Services.GetServices<IInitializableController>());
+            this.host.Services.GetRequiredService<IMessenger>());
 
         var topLevelWindow = new ShellWindow { DataContext = this.shellController };
         this.logger.LogInfo(_ => "Initialisation finished.");

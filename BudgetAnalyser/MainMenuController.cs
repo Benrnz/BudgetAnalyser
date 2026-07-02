@@ -13,7 +13,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class MainMenuController : ControllerBase, IInitializableController
+public class MainMenuController : ControllerBase
 {
     private readonly TopBudgetController budgetController;
     private readonly TopDashboardController dashboardController;
@@ -35,6 +35,9 @@ public class MainMenuController : ControllerBase, IInitializableController
         this.budgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
         this.reportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+
+        // Default visible tab is the Dashboard tab
+        OnDashboardExecuted();
     }
 
     public bool BudgetToggle
@@ -99,11 +102,6 @@ public class MainMenuController : ControllerBase, IInitializableController
             field = value;
             OnPropertyChanged();
         }
-    }
-
-    public void Initialize()
-    {
-        ShowDashboardCommand.Execute(null);
     }
 
     private void AfterTabExecutedCommon()

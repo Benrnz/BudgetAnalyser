@@ -7,7 +7,6 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
-using Rees.Wpf;
 
 namespace BudgetAnalyser;
 
@@ -52,10 +51,9 @@ public static class CompositionHelper
     }
 
     /// <summary>
-    ///     Perform one-time controller initialisation and application state rehydration.  Any Controller that implements <see cref="IInitializableController" /> will have its
-    ///     <see cref="IInitializableController.Initialize" /> method called.
+    ///     Load application state into controllers.
     /// </summary>
-    public static void InitialiseControllers(ILogger logger, IPersistApplicationState statePersistence, IMessenger messenger, IEnumerable<IInitializableController> initializableControllers)
+    public static void LoadApplicationStateIntoControllers(ILogger logger, IPersistApplicationState statePersistence, IMessenger messenger)
     {
         if (ControllersInitialised)
         {
@@ -63,7 +61,6 @@ public static class CompositionHelper
         }
 
         logger.LogInfo(_ => $"ShellController Initialise started. {DateTime.Now}");
-
         ControllersInitialised = true;
 
         IList<IPersistentApplicationStateObject> rehydratedState = statePersistence.Load().ToList();
@@ -74,13 +71,6 @@ public static class CompositionHelper
 
         // Create a distinct list of sequences.
         var sequences = rehydratedState.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
-
-        logger.LogInfo(_ => $"Calling Initialise on each Controller. {DateTime.Now}");
-        initializableControllers.ToList().ForEach(i =>
-        {
-            i.Initialize();
-            logger.LogInfo(_ => $"Initialise called on Controller: {i.GetType().Name}");
-        });
 
         // Send state load messages in order.
         foreach (var sequence in sequences)
