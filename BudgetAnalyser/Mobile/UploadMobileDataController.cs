@@ -195,22 +195,27 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         }
     }
 
+    public void ShowDialog(UpdateMobileDataWidget mobileWidget)
+    {
+        this.widget = mobileWidget;
+        var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
+        var mobileSettings = ledgerBook.MobileSettings ??
+                             throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
+        AccessKeyId = mobileSettings.AccessKeyId;
+        AccessKeySecret = mobileSettings.AccessKeySecret;
+        AmazonRegion = mobileSettings.AmazonS3Region;
+        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+        {
+            CorrelationId = this.correlationId,
+            Title = "Upload Mobile Summary Data"
+        });
+    }
+
     private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
     {
         this.widget = message.Widget as UpdateMobileDataWidget;
         if (this.widget is not null && this.widget.Enabled)
         {
-            var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
-            var mobileSettings = ledgerBook.MobileSettings ??
-                                 throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
-            AccessKeyId = mobileSettings.AccessKeyId;
-            AccessKeySecret = mobileSettings.AccessKeySecret;
-            AmazonRegion = mobileSettings.AmazonS3Region;
-            Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
-            {
-                CorrelationId = this.correlationId,
-                Title = "Upload Mobile Summary Data"
-            });
         }
     }
 }

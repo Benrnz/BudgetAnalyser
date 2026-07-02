@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
+using BudgetAnalyser.Mobile;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
@@ -20,6 +21,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
     private readonly DisusedRulesController disusedRulesController;
+    private readonly UploadMobileDataController uploadMobileDataController;
     private readonly IUserMessageBox userMessageBox;
 
     public TopDashboardController(
@@ -30,12 +32,14 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
         DisusedRulesController disusedRulesController,
         GlobalFilterController globalFilterController,
+        UploadMobileDataController uploadMobileDataController,
         IDashboardService dashboardService) : base(messenger)
     {
         this.chooseBudgetBucketController = chooseBudgetBucketController ?? throw new ArgumentNullException(nameof(chooseBudgetBucketController));
         this.createNewFixedBudgetController = createNewFixedBudgetController ?? throw new ArgumentNullException(nameof(createNewFixedBudgetController));
         this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController ?? throw new ArgumentNullException(nameof(createNewSurprisePaymentMonitorController));
         this.disusedRulesController = disusedRulesController ?? throw new ArgumentNullException(nameof(disusedRulesController));
+        this.uploadMobileDataController = uploadMobileDataController ?? throw new ArgumentNullException(nameof(uploadMobileDataController));
         GlobalFilterController = globalFilterController ?? throw new ArgumentNullException(nameof(globalFilterController));
 
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
@@ -171,11 +175,20 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
     private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
     {
-        if (message.Handled || !(message.Widget is DisusedMatchingRuleWidget))
+        if (message.Handled)
         {
             return;
         }
 
-        this.disusedRulesController.ShowDialog();
+        if (message.Widget is DisusedMatchingRuleWidget)
+        {
+            this.disusedRulesController.ShowDialog();
+            return;
+        }
+
+        if (message.Widget is UpdateMobileDataWidget mobileWidget)
+        {
+            this.uploadMobileDataController.ShowDialog(mobileWidget);
+        }
     }
 }
