@@ -80,18 +80,14 @@ public class MainMenuController : ControllerBase
         }
     }
 
-    [UsedImplicitly]
     public ICommand ShowBudgetCommand => new RelayCommand(OnBudgetExecuted);
 
     public ICommand ShowDashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
 
-    [UsedImplicitly]
     public ICommand ShowLedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
 
-    [UsedImplicitly]
     public ICommand ShowReportsCommand => new RelayCommand(OnReportsExecuted);
 
-    [UsedImplicitly]
     public ICommand ShowTransactionsCommand => new RelayCommand(OnTransactionExecuted);
 
     public bool TransactionsToggle
