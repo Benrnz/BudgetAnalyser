@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Windows.Input;
+using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
 using CommunityToolkit.Mvvm.Input;
@@ -9,9 +8,19 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC]
-public class ReconciliationToDoListController(IMessenger messenger, IApplicationDatabaseFacade applicationDatabaseService) : ControllerBase(messenger)
+public class ReconciliationToDoListController : ControllerBase
 {
-    private readonly IApplicationDatabaseFacade applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
+    private readonly IApplicationDatabaseFacade applicationDatabaseService;
+
+    public ReconciliationToDoListController(IMessenger messenger, IApplicationDatabaseFacade applicationDatabaseService)
+        : base(messenger)
+    {
+        this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
+        AddReminderCommand = new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription));
+        BeginAddingReminderCommand = new RelayCommand(() => AddingNewTask = true);
+        RemoveReminderCommand = new RelayCommand<ToDoTask?>(OnRemoveReminderCommandExecuted, t => t is not null);
+        RemoveTaskCommand = new RelayCommand<ToDoTask?>(OnRemoveTaskCommandExecuted, t => t is not null);
+    }
 
     public bool AddingNewTask
     {
@@ -24,9 +33,9 @@ public class ReconciliationToDoListController(IMessenger messenger, IApplication
         }
     }
 
-    public ICommand AddReminderCommand => new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription));
+    public IRelayCommand AddReminderCommand { get; }
 
-    public ICommand BeginAddingReminderCommand => new RelayCommand(() => AddingNewTask = true);
+    public IRelayCommand BeginAddingReminderCommand { get; }
 
     public string NewTaskDescription
     {
@@ -36,12 +45,13 @@ public class ReconciliationToDoListController(IMessenger messenger, IApplication
         {
             field = value;
             OnPropertyChanged();
+            AddReminderCommand.NotifyCanExecuteChanged();
         }
     } = string.Empty;
 
-    public ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t is not null);
+    public IRelayCommand<ToDoTask?> RemoveReminderCommand { get; }
 
-    public ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t is not null);
+    public IRelayCommand<ToDoTask?> RemoveTaskCommand { get; }
 
     public ToDoTask? SelectedTask
     {
