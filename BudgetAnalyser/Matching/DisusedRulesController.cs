@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
@@ -38,12 +37,13 @@ public class DisusedRulesController : ControllerBase
             throw new ArgumentNullException(nameof(dbService));
         }
 
+        RemoveRuleCommand = new RelayCommand<DisusedRuleViewModel?>(OnRemoveRuleExecuted, r => r is not null);
         Messenger.Register<DisusedRulesController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
     public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; } = new();
 
-    public ICommand RemoveRuleCommand => new RelayCommand<DisusedRuleViewModel>(OnRemoveRuleExecuted, r => r is not null);
+    public IRelayCommand<DisusedRuleViewModel?> RemoveRuleCommand { get; }
 
     public void ShowDialog()
     {
