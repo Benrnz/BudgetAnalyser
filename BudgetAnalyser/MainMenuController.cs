@@ -1,4 +1,3 @@
-﻿using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
@@ -34,6 +33,11 @@ public class MainMenuController : ControllerBase
         this.ledgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
         this.budgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
         this.reportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
+        ShowBudgetCommand = new RelayCommand(OnBudgetExecuted);
+        ShowDashboardCommand = new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
+        ShowLedgerBookCommand = new RelayCommand(OnLedgerBookExecuted);
+        ShowReportsCommand = new RelayCommand(OnReportsExecuted);
+        ShowTransactionsCommand = new RelayCommand(OnTransactionExecuted);
         Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
 
         // Default visible tab is the Dashboard tab
@@ -80,15 +84,15 @@ public class MainMenuController : ControllerBase
         }
     }
 
-    public ICommand ShowBudgetCommand => new RelayCommand(OnBudgetExecuted);
+    public IRelayCommand ShowBudgetCommand { get; }
 
-    public ICommand ShowDashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
+    public IRelayCommand ShowDashboardCommand { get; }
 
-    public ICommand ShowLedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
+    public IRelayCommand ShowLedgerBookCommand { get; }
 
-    public ICommand ShowReportsCommand => new RelayCommand(OnReportsExecuted);
+    public IRelayCommand ShowReportsCommand { get; }
 
-    public ICommand ShowTransactionsCommand => new RelayCommand(OnTransactionExecuted);
+    public IRelayCommand ShowTransactionsCommand { get; }
 
     public bool TransactionsToggle
     {
