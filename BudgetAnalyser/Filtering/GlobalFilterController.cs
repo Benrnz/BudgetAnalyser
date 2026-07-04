@@ -22,6 +22,9 @@ namespace BudgetAnalyser.Filtering;
 public class GlobalFilterController : ControllerBase, IShellDialogToolTips
 {
     private readonly IApplicationDatabaseService appDbService;
+    private readonly ICommand doNotUseAddPeriodCommand;
+    private readonly ICommand doNotUseBackPeriodCommand;
+    private readonly ICommand doNotUseClearCommand;
     private readonly IUserMessageBox userMessageBox;
     private BudgetModel? currentBudget;
     private Guid dialogCorrelationId;
@@ -34,6 +37,9 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         this.userMessageBox = userPrompts.MessageBox;
         this.doNotUseCriteria = new GlobalFilterCriteria();
         this.currentBudget = null;
+        this.doNotUseAddPeriodCommand = new RelayCommand<DateOnly>(OnAddPeriodCommandExecute, d => d != DateOnly.MinValue);
+        this.doNotUseBackPeriodCommand = new RelayCommand<DateOnly>(OnBackPeriodCommandExecute, d => d != DateOnly.MinValue);
+        this.doNotUseClearCommand = new RelayCommand(OnClearCommandExecute);
 
         Messenger.Register<GlobalFilterController, RequestFilterMessage>(this, static (r, m) => r.OnGlobalFilterRequested(m));
         Messenger.Register<GlobalFilterController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
@@ -54,13 +60,13 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     } = string.Empty;
 
     [UsedImplicitly]
-    public ICommand AddPeriodCommand => new RelayCommand<DateOnly>(OnAddPeriodCommandExecute, d => d != DateOnly.MinValue);
+    public ICommand AddPeriodCommand => this.doNotUseAddPeriodCommand;
 
     [UsedImplicitly]
-    public ICommand BackPeriodCommand => new RelayCommand<DateOnly>(OnBackPeriodCommandExecute, d => d != DateOnly.MinValue);
+    public ICommand BackPeriodCommand => this.doNotUseBackPeriodCommand;
 
     [UsedImplicitly]
-    public ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
+    public ICommand ClearCommand => this.doNotUseClearCommand;
 
     public GlobalFilterCriteria Criteria
     {
