@@ -182,7 +182,8 @@
                             ToolTip="Calculate amount so that the net change for this ledger will be zero." />
                 </StackPanel>
 
-                <Button Command="{Binding AddTransactionCommand}"
+                <!-- TODO This looks like Unused functionality -->
+                <Button Command="{Binding AddBalanceAdjustmentCommand}"
                         Grid.Column="6"
                         HorizontalAlignment="Right"
                         Margin="5,1,5,1"

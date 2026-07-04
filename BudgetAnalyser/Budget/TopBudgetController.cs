@@ -1,7 +1,6 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
@@ -41,6 +40,12 @@ public class TopBudgetController : ControllerBase, IShowableController
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         NewBudgetController = newBudgetController ?? throw new ArgumentNullException(nameof(newBudgetController));
         NewBudgetController.Ready += OnAddNewBudgetReady;
+        AddNewExpenseCommand = new RelayCommand<ExpenseBucket?>(OnAddNewExpenseExecute);
+        AddNewIncomeCommand = new RelayCommand(OnAddNewIncomeExecute);
+        DeleteBudgetItemCommand = new RelayCommand<object?>(OnDeleteBudgetItemCommandExecute);
+        DetailsCommand = new RelayCommand(OnDetailsCommandExecute);
+        NewBudgetCommand = new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget is not null);
+        ShowAllCommand = new RelayCommand(OnShowAllCommandExecuted);
         Shown = false;
 
         Messenger.Register<TopBudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnPopUpResponseReceived(m));
@@ -53,9 +58,9 @@ public class TopBudgetController : ControllerBase, IShowableController
         CurrentBudget = new BudgetCurrencyContext(this.maintenanceService.Budgets ?? new BudgetCollection(), this.maintenanceService.Budgets?.CurrentActiveBudget ?? new BudgetModel());
     }
 
-    public ICommand AddNewExpenseCommand => new RelayCommand<ExpenseBucket>(OnAddNewExpenseExecute);
+    public IRelayCommand<ExpenseBucket?> AddNewExpenseCommand { get; }
 
-    public ICommand AddNewIncomeCommand => new RelayCommand(OnAddNewIncomeExecute);
+    public IRelayCommand AddNewIncomeCommand { get; }
 
     public string BudgetMenuItemName
     {
@@ -103,6 +108,7 @@ public class TopBudgetController : ControllerBase, IShowableController
                 OnExpenseAmountPropertyChanged(null, EventArgs.Empty);
                 OnIncomeAmountPropertyChanged(null, EventArgs.Empty);
                 OnPropertyChanged();
+                NewBudgetCommand.NotifyCanExecuteChanged();
             }
             finally
             {
@@ -111,9 +117,9 @@ public class TopBudgetController : ControllerBase, IShowableController
         }
     }
 
-    public ICommand DeleteBudgetItemCommand => new RelayCommand<object>(OnDeleteBudgetItemCommandExecute);
+    public IRelayCommand<object?> DeleteBudgetItemCommand { get; }
 
-    public ICommand DetailsCommand => new RelayCommand(OnDetailsCommandExecute);
+    public IRelayCommand DetailsCommand { get; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public bool Dirty
@@ -174,12 +180,12 @@ public class TopBudgetController : ControllerBase, IShowableController
         }
     }
 
-    public ICommand NewBudgetCommand => new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget is not null);
+    public IRelayCommand NewBudgetCommand { get; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public NewBudgetModelController NewBudgetController { get; }
 
-    public ICommand ShowAllCommand => new RelayCommand(OnShowAllCommandExecuted);
+    public IRelayCommand ShowAllCommand { get; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal Surplus

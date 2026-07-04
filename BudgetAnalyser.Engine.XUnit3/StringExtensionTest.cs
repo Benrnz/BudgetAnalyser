@@ -156,16 +156,16 @@ I do not like green eggs and ham.";
     }
 
     [Fact]
+    public void SplitLines_ShouldThrow_GivenLineCountMinus1()
+    {
+        Should.Throw<ArgumentOutOfRangeException>(() => "Do you like Green eggs and ham?".SplitLines(-1));
+    }
+
+    [Fact]
     public void SplitLines_ShouldThrow_GivenNullString()
     {
         string? data = null;
         Should.Throw<ArgumentNullException>(() => data!.SplitLines(3));
-    }
-
-    [Fact]
-    public void SplitLines_ShouldThrow_GivenLineCountMinus1()
-    {
-        Should.Throw<ArgumentOutOfRangeException>(() => "Do you like Green eggs and ham?".SplitLines(-1));
     }
 
     [Fact]

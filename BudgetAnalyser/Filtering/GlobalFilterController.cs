@@ -34,6 +34,9 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         this.userMessageBox = userPrompts.MessageBox;
         this.doNotUseCriteria = new GlobalFilterCriteria();
         this.currentBudget = null;
+        AddPeriodCommand = new RelayCommand<DateOnly>(OnAddPeriodCommandExecute, d => d != DateOnly.MinValue);
+        BackPeriodCommand = new RelayCommand<DateOnly>(OnBackPeriodCommandExecute, d => d != DateOnly.MinValue);
+        ClearCommand = new RelayCommand(OnClearCommandExecute);
 
         Messenger.Register<GlobalFilterController, RequestFilterMessage>(this, static (r, m) => r.OnGlobalFilterRequested(m));
         Messenger.Register<GlobalFilterController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
@@ -53,14 +56,11 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         }
     } = string.Empty;
 
-    [UsedImplicitly]
-    public ICommand AddPeriodCommand => new RelayCommand<DateOnly>(OnAddPeriodCommandExecute, d => d != DateOnly.MinValue);
+    public ICommand AddPeriodCommand { get; }
 
-    [UsedImplicitly]
-    public ICommand BackPeriodCommand => new RelayCommand<DateOnly>(OnBackPeriodCommandExecute, d => d != DateOnly.MinValue);
+    public ICommand BackPeriodCommand { get; }
 
-    [UsedImplicitly]
-    public ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
+    public ICommand ClearCommand { get; }
 
     public GlobalFilterCriteria Criteria
     {

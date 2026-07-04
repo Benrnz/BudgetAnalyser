@@ -82,13 +82,13 @@ public class TransactionRuleServiceTest
                 And = true,
                 BucketCode = TransactionsListModelTestData.PhoneBucket.Code,
                 Reference1 = "skjghjkh",
-                MatchCount = 1,
+                MatchCount = 1
             },
             new(this.mockBucketRepo)
             {
                 Amount = -11.11M,
-                BucketCode = TransactionsListModelTestData.CarMtcBucket.Code,
-            },
+                BucketCode = TransactionsListModelTestData.CarMtcBucket.Code
+            }
         };
 
         this.mockMatchMaker.Match(Arg.Any<IEnumerable<Transaction>>(), Arg.Any<IEnumerable<MatchingRule>>()).Returns(true);

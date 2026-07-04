@@ -1,4 +1,3 @@
-﻿using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -70,6 +69,17 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         this.showSurplusBalancesController = showSurplusBalancesController ?? throw new ArgumentNullException(nameof(showSurplusBalancesController));
         this.transferFundsController = transferFundsController ?? throw new ArgumentNullException(nameof(transferFundsController));
         ToDoListController = reconciliationToDoListController ?? throw new ArgumentNullException(nameof(reconciliationToDoListController));
+        AddLedgerCommand = new RelayCommand(OnAddNewLedgerCommandExecuted);
+        AddNewReconciliationCommand = new RelayCommand(OnAddNewReconciliationCommandExecuted);
+        EditLedgerBookNameCommand = new RelayCommand(EditLedgerBookName);
+        ShowBankBalancesCommand = new RelayCommand<LedgerEntryLine?>(OnShowBankBalancesCommandExecuted, param => param is not null);
+        ShowHidePeriodsCommand = new RelayCommand<int>(OnShowHidePeriodsCommandExecuted);
+        ShowLedgerBucketDetailsCommand = new RelayCommand<LedgerBucket?>(OnShowLedgerBucketDetailsCommand, param => param is not null);
+        ShowRemarksCommand = new RelayCommand<LedgerEntryLine?>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
+        ShowSurplusBalancesCommand = new RelayCommand<LedgerEntryLine?>(OnShowSurplusBalancesCommandExecuted, param => param is not null);
+        ShowTransactionsCommand = new RelayCommand<object?>(OnShowTransactionsCommandExecuted);
+        UnlockCurrentLedgerLineCommand = new RelayCommand(OnUnlockLedgerLineCommandExecuted);
+        TransferFundsCommand = new RelayCommand(OnTransferFundsInitiated);
 
         Messenger.Register<TopLedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<TopLedgerBookController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
@@ -82,6 +92,15 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     }
 
     public event EventHandler? LedgerBookUpdated;
+
+    [UsedImplicitly]
+    public IRelayCommand AddLedgerCommand { get; }
+
+    [UsedImplicitly]
+    public IRelayCommand AddNewReconciliationCommand { get; }
+
+    [UsedImplicitly]
+    public IRelayCommand EditLedgerBookNameCommand { get; }
 
     public LedgerBookControllerFileOperations FileOperations { get; }
 
@@ -100,14 +119,20 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    public ICommand ShowBankBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param is not null);
-    public ICommand ShowHidePeriodsCommand => new RelayCommand<int>(OnShowHidePeriodsCommandExecuted);
-    public ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param is not null);
+    public IRelayCommand<LedgerEntryLine?> ShowBankBalancesCommand { get; }
+    public IRelayCommand<int> ShowHidePeriodsCommand { get; }
+    public IRelayCommand<LedgerBucket?> ShowLedgerBucketDetailsCommand { get; }
 
-    public RelayCommand<LedgerEntryLine> ShowRemarksCommand => new(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
-    public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param is not null);
-    public ICommand ShowTransactionsCommand => new RelayCommand<object>(OnShowTransactionsCommandExecuted);
+    public IRelayCommand<LedgerEntryLine?> ShowRemarksCommand { get; }
+    public IRelayCommand<LedgerEntryLine?> ShowSurplusBalancesCommand { get; }
+    public IRelayCommand<object?> ShowTransactionsCommand { get; }
     public ReconciliationToDoListController ToDoListController { get; }
+
+    [UsedImplicitly]
+    public IRelayCommand TransferFundsCommand { get; }
+
+    [UsedImplicitly]
+    public IRelayCommand UnlockCurrentLedgerLineCommand { get; }
 
     public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
@@ -127,7 +152,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    public void DeregisterListener(LedgerBookUserControl recipient)
+    public void DeregisterListener(object recipient)
     {
         Messenger.Unregister<LedgerBookReadyMessage>(recipient);
     }
@@ -205,7 +230,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         FileOperations.Dirty = true;
     }
 
-    public void RegisterListener(LedgerBookUserControl recipient, MessageHandler<LedgerBookUserControl, LedgerBookReadyMessage> handler)
+    public void RegisterListener(object recipient, MessageHandler<object, LedgerBookReadyMessage> handler)
     {
         Messenger.Register(recipient, handler);
     }

@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using BudgetAnalyser.Converters;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -30,6 +31,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
     private const string SurplusBackground = "Brush.TileBackgroundAlternate";
     private const string SurplusTextBrush = "Brush.CreditBackground1";
+    private readonly ILogger logger;
     private readonly ICommand showBankBalancesCommand;
     private readonly ICommand showHidePeriodsCommand;
     private readonly ICommand showLedgerBucketDetailsCommand;
@@ -41,7 +43,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private ResourceDictionary localResources = new();
     private List<LedgerBucket> sortedLedgers = new();
 
-    public LedgerBookGridBuilderV2(
+    public LedgerBookGridBuilderV2(ILogger logger,
         ICommand showTransactionsCommand,
         ICommand showBankBalancesCommand,
         ICommand showRemarksCommand,
@@ -49,6 +51,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         ICommand showSurplusBalancesCommand,
         ICommand showLedgerBucketDetailsCommand)
     {
+        this.logger = logger;
         this.showTransactionsCommand = showTransactionsCommand;
         this.showBankBalancesCommand = showBankBalancesCommand;
         this.showRemarksCommand = showRemarksCommand;
@@ -66,10 +69,12 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         ContentPresenter contentPanel,
         int numberOfPeriodsToShow)
     {
+        this.logger.LogInfo(_ => "Beginning to build dynamic LedgerBook grid.");
         this.ledgerBook = currentLedgerBook;
         this.localResources = viewResources ?? throw new ArgumentNullException(nameof(viewResources));
         this.contentPresenter = contentPanel ?? throw new ArgumentNullException(nameof(contentPanel));
         DynamicallyCreateLedgerBookGrid(numberOfPeriodsToShow);
+        this.logger.LogInfo(_ => "Finished building dynamic LedgerBook grid.");
     }
 
     private Border AddBorderToGridCell(Panel parent, bool hasBackground, bool hasBorder, int gridRow, int gridColumn)

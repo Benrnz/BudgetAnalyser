@@ -23,9 +23,7 @@ public class EditRulesController : ControllerBase
     public const string DescriptionSortKey = "Description";
     public const string MatchesSortKey = "Matches";
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
-    private readonly RelayCommand deleteRuleCommand;
     private readonly Guid dialogCorrelationId = Guid.NewGuid();
-    private readonly RelayCommand editRuleCommand;
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly ITransactionRuleService ruleService;
 
@@ -42,8 +40,9 @@ public class EditRulesController : ControllerBase
 
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         NewRuleController = newRuleController ?? throw new ArgumentNullException(nameof(newRuleController));
-        this.deleteRuleCommand = new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
-        this.editRuleCommand = new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
+        DeleteRuleCommand = new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
+        EditRuleCommand = new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
+        SortCommand = new RelayCommand<string?>(OnSortCommandExecute);
 
         this.ruleService.Closed += OnClosedNotificationReceived;
         this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -67,8 +66,7 @@ public class EditRulesController : ControllerBase
 
     public string? AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
 
-    [UsedImplicitly]
-    public ICommand DeleteRuleCommand => this.deleteRuleCommand;
+    public IRelayCommand DeleteRuleCommand { get; }
 
     public bool EditingRule
     {
@@ -81,8 +79,7 @@ public class EditRulesController : ControllerBase
         }
     }
 
-    [UsedImplicitly]
-    public ICommand EditRuleCommand => this.editRuleCommand;
+    public IRelayCommand EditRuleCommand { get; }
 
     public bool FlatListBoxVisibility
     {
@@ -117,8 +114,8 @@ public class EditRulesController : ControllerBase
             OnPropertyChanged();
             OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
             OnPropertyChanged(nameof(AndOrText));
-            this.deleteRuleCommand.NotifyCanExecuteChanged();
-            this.editRuleCommand.NotifyCanExecuteChanged();
+            DeleteRuleCommand.NotifyCanExecuteChanged();
+            EditRuleCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -163,7 +160,7 @@ public class EditRulesController : ControllerBase
     }
 
     [UsedImplicitly]
-    public ICommand SortCommand => new RelayCommand<string>(OnSortCommandExecute);
+    public ICommand SortCommand { get; }
 
     public void CreateNewRuleFromTransaction(Transaction transaction)
     {

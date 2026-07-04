@@ -9,4 +9,3 @@ public static class TypeExtensions
         return properties.Length;
     }
 }
-

@@ -21,16 +21,16 @@ public class ReconciliationCreationManagerTest
     private static readonly DateOnly TestDataReconcileDate = new(2013, 09, 15);
 
     private readonly IBudgetBucketRepository bucketRepo;
-    private IEnumerable<BankBalance> currentBankBalances;
     private readonly IReconciliationBuilder mockReconciliationBuilder;
     private readonly IReconciliationConsistency mockReconciliationConsistency;
     private readonly ITransactionRuleService mockRuleService;
     private readonly ReconciliationCreationManager subject;
+    private readonly LedgerBook testDataLedgerBook;
+    private readonly IList<ToDoTask> testDataToDoList;
+    private IEnumerable<BankBalance> currentBankBalances;
     private BudgetCollection testDataBudgetCollection;
     private BudgetModel testDataBudgetModel;
-    private readonly LedgerBook testDataLedgerBook;
     private ReconciliationResult testDataReconResult;
-    private readonly IList<ToDoTask> testDataToDoList;
     private TransactionsListModel testDataTransactions;
 
     public ReconciliationCreationManagerTest()

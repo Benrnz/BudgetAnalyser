@@ -7,8 +7,10 @@ namespace BudgetAnalyser.Encryption;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class LocalDiskReaderWriterSelector(
-    [FromKeyedServices(StorageConstants.EncryptedInstanceName)] IFileReaderWriter encrypted,
-    [FromKeyedServices(StorageConstants.UnprotectedInstanceName)] IFileReaderWriter unprotected)
+    [FromKeyedServices(StorageConstants.EncryptedInstanceName)]
+    IFileReaderWriter encrypted,
+    [FromKeyedServices(StorageConstants.UnprotectedInstanceName)]
+    IFileReaderWriter unprotected)
     : IReaderWriterSelector
 {
     private readonly IFileReaderWriter encryptedReaderWriter = encrypted ?? throw new ArgumentNullException(nameof(encrypted));

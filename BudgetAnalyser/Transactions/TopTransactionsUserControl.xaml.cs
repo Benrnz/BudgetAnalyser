@@ -54,24 +54,18 @@ public partial class TopTransactionsUserControl
         }
         else
         {
-            defaultView.Filter = Controller.BucketFilter == TransactionConstants.UncategorisedFilter
-                ? t =>
-                {
-                    var txn = (Transaction)t;
-                    return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
-                }
+            defaultView.Filter = Controller.BucketFilter == TransactionConstants.UncategorisedFilter ?
+            t =>
+            {
+                var txn = (Transaction)t;
+                return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
+            }
             : t =>
             {
                 var txn = (Transaction)t;
                 return txn.BudgetBucket is not null && txn.BudgetBucket.Code == Controller.BucketFilter;
             };
         }
-    }
-
-    private void ClearSearchButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        Controller.ClearSearch();
-        this.ClearSearchButton.IsEnabled = false;
     }
 
     private ListBoxItem GetSelectedListBoxItem()
@@ -124,16 +118,6 @@ public partial class TopTransactionsUserControl
         }
 
         ApplyBucketFilter();
-    }
-
-    private void OnNavigateNextClick(object sender, RoutedEventArgs e)
-    {
-        Controller.NavigateNextPage();
-    }
-
-    private void OnNavigatePreviousClick(object sender, RoutedEventArgs e)
-    {
-        Controller.NavigatePreviousPage();
     }
 
     private void OnSearchTextBoxGotFocus(object? sender, RoutedEventArgs e)
@@ -200,10 +184,5 @@ public partial class TopTransactionsUserControl
 
         this.TransactionListBox.UpdateLayout();
         this.TransactionListBox.ScrollIntoView(Controller.ViewModel.SelectedRow);
-    }
-
-    private void SearchTextBox_OnKeyUp(object? sender, KeyEventArgs e)
-    {
-        this.ClearSearchButton.IsEnabled = this.SearchTextBox.Text.Length > 0;
     }
 }

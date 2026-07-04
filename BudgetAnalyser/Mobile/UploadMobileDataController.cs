@@ -1,5 +1,4 @@
 ﻿using System.Security;
-using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Mobile;
@@ -121,6 +120,22 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
     /// </summary>
     public bool CanExecuteSaveButton => false;
 
+    public void ShowDialog(UpdateMobileDataWidget mobileWidget)
+    {
+        this.widget = mobileWidget;
+        var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
+        var mobileSettings = ledgerBook.MobileSettings ??
+                             throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
+        AccessKeyId = mobileSettings.AccessKeyId;
+        AccessKeySecret = mobileSettings.AccessKeySecret;
+        AmazonRegion = mobileSettings.AmazonS3Region;
+        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+        {
+            CorrelationId = this.correlationId,
+            Title = "Upload Mobile Summary Data"
+        });
+    }
+
     private async Task AttemptUploadAsync(BudgetModel budget, TransactionsListModel transactions, Engine.Ledger.LedgerBook ledgerBook, GlobalFilterCriteria filter)
     {
         if (this.widget is null)
@@ -192,21 +207,5 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         {
             this.widget = null;
         }
-    }
-
-    public void ShowDialog(UpdateMobileDataWidget mobileWidget)
-    {
-        this.widget = mobileWidget;
-        var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
-        var mobileSettings = ledgerBook.MobileSettings ??
-                             throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
-        AccessKeyId = mobileSettings.AccessKeyId;
-        AccessKeySecret = mobileSettings.AccessKeySecret;
-        AmazonRegion = mobileSettings.AmazonS3Region;
-        Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
-        {
-            CorrelationId = this.correlationId,
-            Title = "Upload Mobile Summary Data"
-        });
     }
 }

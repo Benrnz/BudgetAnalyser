@@ -15,11 +15,9 @@ namespace BudgetAnalyser.Dashboard;
 [AutoRegisterWithIoC]
 public static class WidgetCommands
 {
-    private static readonly RelayCommand<Widget> WidgetClickedRelayCommand = new(OnWidgetCommandExecuted, WidgetCommandCanExecute);
-
-    public static ICommand AddNewBucketMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewBucketMonitorWidgetCommandExecute);
-    public static ICommand AddNewFixedBudgetMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
-    public static ICommand AddNewSurprisePaymentMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute);
+    public static ICommand AddNewBucketMonitorWidgetCommand { get; } = new RelayCommand<Guid>(OnAddNewBucketMonitorWidgetCommandExecute);
+    public static ICommand AddNewFixedBudgetMonitorWidgetCommand { get; } = new RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
+    public static ICommand AddNewSurprisePaymentMonitorWidgetCommand { get; } = new RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute);
 
     [PropertyInjection]
     public static ChooseBudgetBucketController? ChooseBudgetBucketController
@@ -53,7 +51,7 @@ public static class WidgetCommands
         set;
     }
 
-    public static ICommand HideWidgetCommand => new RelayCommand<Widget>(w =>
+    public static ICommand HideWidgetCommand { get; } = new RelayCommand<Widget>(w =>
         {
             if (w is null)
             {
@@ -80,10 +78,10 @@ public static class WidgetCommands
         set;
     }
 
-    public static ICommand RemoveWidgetCommand => new RelayCommand<Widget>(OnRemoveWidgetCommandExecute, w => w is IUserDefinedWidget);
-    public static ICommand UnhideAllWidgetsCommand => new RelayCommand(OnUnhideAllWidgetsCommandExecute);
+    public static ICommand RemoveWidgetCommand { get; } = new RelayCommand<Widget>(OnRemoveWidgetCommandExecute, w => w is IUserDefinedWidget);
+    public static ICommand UnhideAllWidgetsCommand { get; } = new RelayCommand(OnUnhideAllWidgetsCommandExecute);
 
-    public static ICommand WidgetClickedCommand => WidgetClickedRelayCommand;
+    public static IRelayCommand WidgetClickedCommand { get; } = new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
 
     public static void DeregisterForWidgetChanges(IEnumerable<WidgetGroup> widgetGroups)
     {
@@ -165,7 +163,7 @@ public static class WidgetCommands
 
         if (e.PropertyName is nameof(widget.Clickable) or nameof(widget.Enabled))
         {
-            Dispatcher.CurrentDispatcher.BeginInvoke(WidgetClickedRelayCommand.NotifyCanExecuteChanged, DispatcherPriority.ApplicationIdle);
+            Dispatcher.CurrentDispatcher.BeginInvoke(WidgetClickedCommand.NotifyCanExecuteChanged, DispatcherPriority.ApplicationIdle);
         }
     }
 

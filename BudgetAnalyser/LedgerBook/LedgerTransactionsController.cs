@@ -1,7 +1,6 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
@@ -34,6 +33,9 @@ public class LedgerTransactionsController : ControllerBase
         this.reconService = reconService ?? throw new ArgumentNullException(nameof(reconService));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         Messenger.Register<LedgerTransactionsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+        AddBalanceAdjustmentCommand = new RelayCommand(OnAddNewTransactionCommandExecuted, () => IsAddBalanceAdjustmentAllowed && !IsReadOnly);
+        DeleteTransactionCommand = new RelayCommand<LedgerTransaction?>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
+        ZeroNetAmountCommand = new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);
         Reset();
     }
 
@@ -43,13 +45,42 @@ public class LedgerTransactionsController : ControllerBase
     public IEnumerable<Account> Accounts => this.ledgerService.ValidLedgerAccounts();
 
     [UsedImplicitly]
-    public ICommand AddBalanceAdjustmentCommand => new RelayCommand(OnAddNewTransactionCommandExecuted, () => IsAddBalanceAdjustmentAllowed && !IsReadOnly);
+    public IRelayCommand AddBalanceAdjustmentCommand { get; }
 
     [UsedImplicitly]
-    public ICommand DeleteTransactionCommand => new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
+    public IRelayCommand<LedgerTransaction?> DeleteTransactionCommand { get; }
 
-    public bool InBalanceAdjustmentMode { get; private set; }
-    public bool InLedgerEntryMode { get; private set; }
+    public bool InBalanceAdjustmentMode
+    {
+        get;
+        private set
+        {
+            if (value == field)
+            {
+                return;
+            }
+
+            field = value;
+            OnPropertyChanged();
+            AddBalanceAdjustmentCommand.NotifyCanExecuteChanged();
+        }
+    }
+
+    // TODO I suspect this functionality has not been used in years.  Look to remove it.
+    public bool InLedgerEntryMode
+    {
+        get;
+        private set
+        {
+            if (value == field)
+            {
+                return;
+            }
+
+            field = value;
+            OnPropertyChanged();
+        }
+    }
 
     public bool IsAddBalanceAdjustmentAllowed => InBalanceAdjustmentMode;
 
@@ -61,6 +92,8 @@ public class LedgerTransactionsController : ControllerBase
             field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(IsAddBalanceAdjustmentAllowed));
+            AddBalanceAdjustmentCommand.NotifyCanExecuteChanged();
+            DeleteTransactionCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -71,6 +104,7 @@ public class LedgerTransactionsController : ControllerBase
         {
             field = value;
             OnPropertyChanged();
+            ZeroNetAmountCommand.NotifyCanExecuteChanged();
             OnPropertyChanged(nameof(InBalanceAdjustmentMode));
             OnPropertyChanged(nameof(InLedgerEntryMode));
         }
@@ -133,7 +167,7 @@ public class LedgerTransactionsController : ControllerBase
     public decimal TransactionsTotal => ShownTransactions.Sum(t => t.Amount);
 
     [UsedImplicitly]
-    public ICommand ZeroNetAmountCommand => new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);
+    public IRelayCommand ZeroNetAmountCommand { get; }
 
     /// <summary>
     ///     Show the Ledger Transactions view, for viewing and editing Balance Adjustments
