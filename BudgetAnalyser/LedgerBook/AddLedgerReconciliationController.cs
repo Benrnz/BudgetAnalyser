@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
@@ -30,6 +29,8 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
         Messenger.Register<AddLedgerReconciliationController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        AddBankBalanceCommand = new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
+        RemoveBankBalanceCommand = new RelayCommand<BankBalanceViewModel?>(OnRemoveBankBalanceCommandExecuted, _ => Editable);
     }
 
     // TODO Change this event to a message:
@@ -47,10 +48,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
 
             field = value;
             OnPropertyChanged();
+            AddBankBalanceCommand.NotifyCanExecuteChanged();
         }
     }
 
-    public ICommand AddBankBalanceCommand => new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
+    public IRelayCommand AddBankBalanceCommand { get; }
 
     public decimal? AdjustedBankBalanceTotal => AddBalanceVisibility ? default(decimal?) : BankBalances.Sum(b => b.AdjustedBalance);
 
@@ -63,7 +65,6 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             {
                 return;
             }
-
             field = value;
             OnPropertyChanged();
         }
@@ -105,6 +106,8 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             field = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            AddBankBalanceCommand.NotifyCanExecuteChanged();
+            RemoveBankBalanceCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -121,6 +124,8 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             field = value;
             OnPropertyChanged();
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+            AddBankBalanceCommand.NotifyCanExecuteChanged();
+            RemoveBankBalanceCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -131,7 +136,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     public bool HasRequiredBalances => this.parentBook is not null && this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount));
 
     [UsedImplicitly]
-    public ICommand RemoveBankBalanceCommand => new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, _ => Editable);
+    public IRelayCommand<BankBalanceViewModel?> RemoveBankBalanceCommand { get; }
 
     public Account? SelectedBankAccount
     {
@@ -140,6 +145,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         {
             field = value;
             OnPropertyChanged();
+            AddBankBalanceCommand.NotifyCanExecuteChanged();
         }
     }
 
