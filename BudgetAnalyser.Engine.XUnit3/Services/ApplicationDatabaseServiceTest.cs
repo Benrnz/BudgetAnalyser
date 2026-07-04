@@ -273,6 +273,17 @@ public class ApplicationDatabaseServiceTest
             .Returns(Task.FromResult(new ApplicationDatabase()));
     }
 
+    private static SecureString CreateSecureString(string text)
+    {
+        var securedText = new SecureString();
+        foreach (var c in text)
+        {
+            securedText.AppendChar(c);
+        }
+
+        return securedText;
+    }
+
     private void LoadDatabaseSetup()
     {
         this.mockRepo.LoadAsync(Arg.Any<string>())
@@ -287,16 +298,5 @@ public class ApplicationDatabaseServiceTest
         this.mockDirtyService.HasUnsavedChanges.Returns(true);
         this.mockDirtyService.IsDirty(ApplicationDataType.Budget).Returns(true);
         this.subject.NotifyOfChange(ApplicationDataType.Budget);
-    }
-
-    private static SecureString CreateSecureString(string text)
-    {
-        var securedText = new SecureString();
-        foreach (var c in text)
-        {
-            securedText.AppendChar(c);
-        }
-
-        return securedText;
     }
 }

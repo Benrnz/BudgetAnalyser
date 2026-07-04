@@ -15,12 +15,12 @@ public class PersistenceOperations
 
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly DemoFileHelper demoFileHelper;
+    private readonly EncryptFileController encryptFileController;
     private readonly ILogger logger;
     private readonly IUserMessageBox messageBox;
     private readonly Func<IUserPromptOpenFile> openFileFactory;
     private readonly IUserQuestionBoxYesNo questionBox;
     private readonly Func<IUserPromptSaveFile> saveFileFactory;
-    private readonly EncryptFileController encryptFileController;
     private DateTime lastSave = DateTime.Now;
 
     public PersistenceOperations(

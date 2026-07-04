@@ -65,6 +65,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
             {
                 return;
             }
+
             field = value;
             OnPropertyChanged();
         }

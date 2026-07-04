@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using Xunit.Sdk;
 
 namespace BudgetAnalyser.Engine.XUnit;
 
@@ -34,7 +35,36 @@ public class EngineIocRegistrationsTest
     };
 
     [Fact]
-    [Description("This test is not a functional test, but is designed to detect new interfaces that have not been assigned to a concrete type with the AutoRegisterWithIoCAttribute or added to the exclude list. This prevents runtime errors where the IoC container cannot resolve a concrete type for the new interface.")]
+    public void AddAutoRegistrations_ShouldAlsoResolveNamedInstancesUnkeyed()
+    {
+        var services = new ServiceCollection();
+        services.AddAutoRegistrations(GetType().Assembly);
+        var provider = services.BuildServiceProvider();
+
+        var allReaderWriters = provider.GetServices<IFileReaderWriter>().ToList();
+
+        allReaderWriters.Count.ShouldBe(2);
+        allReaderWriters.ShouldContain(x => x is EmbeddedResourceFileReaderWriterEncrypted);
+        allReaderWriters.ShouldContain(x => x is EmbeddedResourceFileReaderWriter);
+    }
+
+    [Fact]
+    public void AddAutoRegistrations_ShouldResolveNamedInstancesByKey()
+    {
+        var services = new ServiceCollection();
+        services.AddAutoRegistrations(GetType().Assembly);
+        var provider = services.BuildServiceProvider();
+
+        var encrypted = provider.GetRequiredKeyedService<IFileReaderWriter>(StorageConstants.EncryptedInstanceName);
+        var unprotected = provider.GetRequiredKeyedService<IFileReaderWriter>(StorageConstants.UnprotectedInstanceName);
+
+        encrypted.ShouldBeOfType<EmbeddedResourceFileReaderWriterEncrypted>();
+        unprotected.ShouldBeOfType<EmbeddedResourceFileReaderWriter>();
+    }
+
+    [Fact]
+    [Description(
+        "This test is not a functional test, but is designed to detect new interfaces that have not been assigned to a concrete type with the AutoRegisterWithIoCAttribute or added to the exclude list. This prevents runtime errors where the IoC container cannot resolve a concrete type for the new interface.")]
     public void EnsureAllInterfacesAreRegisteredWithIoC()
     {
         try
@@ -55,7 +85,7 @@ public class EngineIocRegistrationsTest
 
                 if (!dependencies.Any(d => IsSelfRegistered(interfaceType, d)))
                 {
-                    throw new Xunit.Sdk.XunitException($"Interface: {interfaceType.FullName} is not registered.");
+                    throw new XunitException($"Interface: {interfaceType.FullName} is not registered.");
                 }
 
                 Console.WriteLine(" registered.");
@@ -118,34 +148,6 @@ public class EngineIocRegistrationsTest
     {
         var result = EngineIocRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
         result.Count().ShouldBe(3);
-    }
-
-    [Fact]
-    public void AddAutoRegistrations_ShouldResolveNamedInstancesByKey()
-    {
-        var services = new ServiceCollection();
-        services.AddAutoRegistrations(GetType().Assembly);
-        var provider = services.BuildServiceProvider();
-
-        var encrypted = provider.GetRequiredKeyedService<IFileReaderWriter>(StorageConstants.EncryptedInstanceName);
-        var unprotected = provider.GetRequiredKeyedService<IFileReaderWriter>(StorageConstants.UnprotectedInstanceName);
-
-        encrypted.ShouldBeOfType<EmbeddedResourceFileReaderWriterEncrypted>();
-        unprotected.ShouldBeOfType<EmbeddedResourceFileReaderWriter>();
-    }
-
-    [Fact]
-    public void AddAutoRegistrations_ShouldAlsoResolveNamedInstancesUnkeyed()
-    {
-        var services = new ServiceCollection();
-        services.AddAutoRegistrations(GetType().Assembly);
-        var provider = services.BuildServiceProvider();
-
-        var allReaderWriters = provider.GetServices<IFileReaderWriter>().ToList();
-
-        allReaderWriters.Count.ShouldBe(2);
-        allReaderWriters.ShouldContain(x => x is EmbeddedResourceFileReaderWriterEncrypted);
-        allReaderWriters.ShouldContain(x => x is EmbeddedResourceFileReaderWriter);
     }
 
     [Fact]

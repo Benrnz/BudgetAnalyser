@@ -93,6 +93,15 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
     public event EventHandler? LedgerBookUpdated;
 
+    [UsedImplicitly]
+    public IRelayCommand AddLedgerCommand { get; }
+
+    [UsedImplicitly]
+    public IRelayCommand AddNewReconciliationCommand { get; }
+
+    [UsedImplicitly]
+    public IRelayCommand EditLedgerBookNameCommand { get; }
+
     public LedgerBookControllerFileOperations FileOperations { get; }
 
     public int NumberOfPeriodsToShow
@@ -110,15 +119,6 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    [UsedImplicitly]
-    public IRelayCommand AddLedgerCommand { get; }
-
-    [UsedImplicitly]
-    public IRelayCommand AddNewReconciliationCommand { get; }
-
-    [UsedImplicitly]
-    public IRelayCommand EditLedgerBookNameCommand { get; }
-
     public IRelayCommand<LedgerEntryLine?> ShowBankBalancesCommand { get; }
     public IRelayCommand<int> ShowHidePeriodsCommand { get; }
     public IRelayCommand<LedgerBucket?> ShowLedgerBucketDetailsCommand { get; }
@@ -129,10 +129,10 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     public ReconciliationToDoListController ToDoListController { get; }
 
     [UsedImplicitly]
-    public IRelayCommand UnlockCurrentLedgerLineCommand { get; }
+    public IRelayCommand TransferFundsCommand { get; }
 
     [UsedImplicitly]
-    public IRelayCommand TransferFundsCommand { get; }
+    public IRelayCommand UnlockCurrentLedgerLineCommand { get; }
 
     public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 

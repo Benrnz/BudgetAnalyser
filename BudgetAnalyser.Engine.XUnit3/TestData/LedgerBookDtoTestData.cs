@@ -565,4 +565,3 @@ internal static class LedgerBookDtoTestData
         return ledgerBookDto;
     }
 }
-

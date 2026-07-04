@@ -14,10 +14,10 @@ namespace BudgetAnalyser.Engine.XUnit.Services;
 
 public class TransactionManagerServiceTest
 {
-    private readonly ApplicationDatabase testAppDb = new();
-    private IBudgetBucketRepository budgetBucketRepo;
     private readonly IBudgetBucketRepository mockBudgetBucketRepo;
     private readonly ITransactionsListModelRepository mockTransactionsRepo;
+    private readonly ApplicationDatabase testAppDb = new();
+    private IBudgetBucketRepository budgetBucketRepo;
     private TransactionManagerService subject = null!;
     private TransactionsListModel testData;
 
@@ -120,14 +120,14 @@ public class TransactionManagerServiceTest
                 Account = TransactionsListModelTestData.ChequeAccount,
                 Amount = -255.65M,
                 BudgetBucket = TransactionsListModelTestData.SurplusBucket,
-                Date = new DateOnly(2013, 9, 10),
+                Date = new DateOnly(2013, 9, 10)
             })
             .AppendTransaction(new Transaction
             {
                 Account = TransactionsListModelTestData.ChequeAccount,
                 Amount = -1000M,
                 BudgetBucket = new FixedBudgetProjectBucket("FOO", "Bar", 2000M),
-                Date = new DateOnly(2013, 9, 9),
+                Date = new DateOnly(2013, 9, 9)
             })
             .Merge(this.testData)
             .Build();
@@ -197,12 +197,12 @@ public class TransactionManagerServiceTest
     [Fact]
     public async Task ImportAndMergeTransactionsExtract_ShouldCallTransactionsRepo_GivenStorageKeyAndAccount()
     {
-        this.mockTransactionsRepo.ImportTransactionsExtractAsync(Arg.Any<string>(), Arg.Any<global::BudgetAnalyser.Engine.BankAccount.Account>())
+        this.mockTransactionsRepo.ImportTransactionsExtractAsync(Arg.Any<string>(), Arg.Any<BankAccount.Account>())
             .Returns(Task.FromResult(TransactionsListModelTestData.TestData3()));
 
         await this.subject.ImportAndMergeTransactionsExtractAsync("Sticky Bag.csv", TransactionsListModelTestData.ChequeAccount);
 
-        await this.mockTransactionsRepo.Received(1).ImportTransactionsExtractAsync(Arg.Any<string>(), Arg.Any<global::BudgetAnalyser.Engine.BankAccount.Account>());
+        await this.mockTransactionsRepo.Received(1).ImportTransactionsExtractAsync(Arg.Any<string>(), Arg.Any<BankAccount.Account>());
     }
 
     [Fact]
@@ -212,7 +212,7 @@ public class TransactionManagerServiceTest
         this.testData.LoadTransactions(new List<Transaction>());
         Arrange();
 
-        this.mockTransactionsRepo.ImportTransactionsExtractAsync(Arg.Any<string>(), Arg.Any<global::BudgetAnalyser.Engine.BankAccount.Account>())
+        this.mockTransactionsRepo.ImportTransactionsExtractAsync(Arg.Any<string>(), Arg.Any<BankAccount.Account>())
             .Returns(Task.FromResult(TransactionsListModelTestData.TestData2()));
 
         await this.subject.ImportAndMergeTransactionsExtractAsync("Sticky Bag.csv", TransactionsListModelTestData.ChequeAccount);
@@ -226,7 +226,7 @@ public class TransactionManagerServiceTest
         this.testData = new TransactionsListModelBuilder().TestData2().Build();
         Arrange();
 
-        this.mockTransactionsRepo.ImportTransactionsExtractAsync(Arg.Any<string>(), Arg.Any<global::BudgetAnalyser.Engine.BankAccount.Account>())
+        this.mockTransactionsRepo.ImportTransactionsExtractAsync(Arg.Any<string>(), Arg.Any<BankAccount.Account>())
             .Returns(Task.FromResult(TransactionsListModelTestData.TestData2()));
 
         await Should.ThrowAsync<TransactionsAlreadyImportedException>(async () =>

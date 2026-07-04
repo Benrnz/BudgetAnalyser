@@ -31,12 +31,12 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
     private const string SurplusBackground = "Brush.TileBackgroundAlternate";
     private const string SurplusTextBrush = "Brush.CreditBackground1";
+    private readonly ILogger logger;
     private readonly ICommand showBankBalancesCommand;
     private readonly ICommand showHidePeriodsCommand;
     private readonly ICommand showLedgerBucketDetailsCommand;
     private readonly ICommand showRemarksCommand;
     private readonly ICommand showSurplusBalancesCommand;
-    private readonly ILogger logger;
     private readonly ICommand showTransactionsCommand;
     private ContentPresenter? contentPresenter;
     private Engine.Ledger.LedgerBook? ledgerBook;

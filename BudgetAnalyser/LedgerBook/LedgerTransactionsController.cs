@@ -25,8 +25,6 @@ public class LedgerTransactionsController : ControllerBase
     private LedgerEntryLine? entryLine;
     private bool isAddDirty;
     private bool wasChanged;
-    private bool doNotUseInBalanceAdjustmentMode;
-    private bool doNotUseInLedgerEntryMode;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
     public LedgerTransactionsController(IMessenger messenger, ILogger logger, ILedgerService ledgerService, IReconciliationService reconService) : base(messenger)
@@ -54,15 +52,15 @@ public class LedgerTransactionsController : ControllerBase
 
     public bool InBalanceAdjustmentMode
     {
-        get => this.doNotUseInBalanceAdjustmentMode;
+        get;
         private set
         {
-            if (value == this.doNotUseInBalanceAdjustmentMode)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseInBalanceAdjustmentMode = value;
+            field = value;
             OnPropertyChanged();
             AddBalanceAdjustmentCommand.NotifyCanExecuteChanged();
         }
@@ -71,15 +69,15 @@ public class LedgerTransactionsController : ControllerBase
     // TODO I suspect this functionality has not been used in years.  Look to remove it.
     public bool InLedgerEntryMode
     {
-        get => this.doNotUseInLedgerEntryMode;
+        get;
         private set
         {
-            if (value == this.doNotUseInLedgerEntryMode)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseInLedgerEntryMode = value;
+            field = value;
             OnPropertyChanged();
         }
     }

@@ -43,7 +43,7 @@ public partial class TopLedgerBookUserControl
         if (e.NewValue is not null)
         {
             ((TopLedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
-            Controller.RegisterListener(this,  (r, m) => OnLedgerBookReadyMessageReceived(m));
+            Controller.RegisterListener(this, (r, m) => OnLedgerBookReadyMessageReceived(m));
         }
 
         DynamicallyCreateLedgerBookGrid();

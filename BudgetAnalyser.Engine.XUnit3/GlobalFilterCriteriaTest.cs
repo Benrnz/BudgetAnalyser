@@ -1,5 +1,6 @@
 using System.Text;
 using Shouldly;
+
 namespace BudgetAnalyser.Engine.XUnit;
 
 public class GlobalFilterCriteriaTest
