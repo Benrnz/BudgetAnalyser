@@ -47,7 +47,6 @@
                     <TextBox x:Name="SearchTextBox"
                              GotFocus="OnSearchTextBoxGotFocus"
                              LostFocus="OnSearchTextBoxLostFocus"
-                             KeyUp="SearchTextBox_OnKeyUp"
                              MinWidth="27"
                              Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
                              ToolTip="Search for text within a transaction"
@@ -63,8 +62,8 @@
                     <Button x:Name="ClearSearchButton"
                             Grid.Column="1"
                             Style="{StaticResource Button.Round.SmallCross}"
-                            Click="ClearSearchButton_OnClick"
-                            IsEnabled="False"
+                            Command="{Binding ClearSearchCommand}"
+                            IsEnabled="{Binding TextFilter, Converter={StaticResource Converter.NotNullIsTrue}}"
                             Width="0" />
                     <ComboBox x:Name="BucketFilterComboBox"
                               DropDownClosed="OnBucketFilterComboBoxDropDownClosed"
@@ -171,10 +170,10 @@
                         HorizontalAlignment="Right">
                 <Button Style="{StaticResource Button.Round.Left}"
                         IsEnabled="{Binding CanNavigatePrevious}"
-                        Click="OnNavigatePreviousClick"
+                        Command="{Binding NavigatePreviousPageCommand}"
                         ToolTip="Previous Page" />
                 <Button Style="{StaticResource Button.Round.Right}"
-                        Click="OnNavigateNextClick"
+                        Command="{Binding NavigateNextPageCommand}"
                         IsEnabled="{Binding CanNavigateNext}"
                         ToolTip="Next Page" />
             </StackPanel>

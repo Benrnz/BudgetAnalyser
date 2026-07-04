@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.ComponentModel;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -40,6 +40,16 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.yesNoBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+        ClearSearchCommand = new RelayCommand(ClearSearch);
+        DeleteTransactionCommand = new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
+        EditTransactionCommand = new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
+        MergeBankExtractCommand = new RelayCommand(OnMergeExtractCommandExecute);
+        NavigateNextPageCommand = new RelayCommand(NavigateNextPage, () => CanNavigateNext);
+        NavigatePreviousPageCommand = new RelayCommand(NavigatePreviousPage, () => CanNavigatePrevious);
+        SplitTransactionCommand = new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
+
+        // When SelectedRow changes need to check Command CanExecute's
+        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
         Messenger.Register<TopTransactionsListController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
         Messenger.Register<TopTransactionsListController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
@@ -108,6 +118,8 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
     }
 
+    public IRelayCommand ClearSearchCommand { get; }
+
     public int CurrentPage
     {
         get;
@@ -119,13 +131,16 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
     } = 1;
 
-    public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
+    public IRelayCommand DeleteTransactionCommand { get; }
     internal EditingTransactionController EditingTransactionController { get; }
-    public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
+    public IRelayCommand EditTransactionCommand { get; }
     public TransactionsControllerFileOperations FileOperations { get; }
 
-    // TODO Change all Commands to cache values in a field!  This is why CanExecute seldom works!
-    public ICommand MergeBankExtractCommand => new RelayCommand(OnMergeExtractCommandExecute);
+    public IRelayCommand MergeBankExtractCommand { get; }
+
+    public IRelayCommand NavigateNextPageCommand { get; }
+
+    public IRelayCommand NavigatePreviousPageCommand { get; }
 
     public int PageSize
     {
@@ -148,7 +163,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
     } = 10;
 
-    public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
+    public IRelayCommand SplitTransactionCommand { get; }
 
     internal SplitTransactionController SplitTransactionController { get; }
 
@@ -193,6 +208,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     {
         TextFilter = null;
         ViewModel.Transactions = this.transactionService.ClearBucketAndTextFilters();
+        UpdateCommandCanExecute();
     }
 
     public void NavigateNextPage()
@@ -382,11 +398,29 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         SplitTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
     }
 
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(TransactionsListViewModel.SelectedRow))
+        {
+            UpdateCommandCanExecute();
+        }
+    }
+
+    private void UpdateCommandCanExecute()
+    {
+        DeleteTransactionCommand.NotifyCanExecuteChanged();
+        EditTransactionCommand.NotifyCanExecuteChanged();
+        SplitTransactionCommand.NotifyCanExecuteChanged();
+        NavigateNextPageCommand.NotifyCanExecuteChanged();
+        NavigatePreviousPageCommand.NotifyCanExecuteChanged();
+    }
+
     private void UpdatePagedTransactions()
     {
         CanNavigateNext = CanNavigatePrevious = false;
         ViewModel.PagedTransactions = new ObservableCollection<Transaction>(ViewModel.Transactions.Skip((CurrentPage - 1) * PageSize).Take(PageSize));
         CanNavigateNext = CurrentPage < TotalPages;
         CanNavigatePrevious = CurrentPage > 1;
+        UpdateCommandCanExecute();
     }
 }
