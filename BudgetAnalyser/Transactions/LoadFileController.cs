@@ -30,6 +30,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.userPromptOpenFileFactory = userPrompts.OpenFileFactory ?? throw new ArgumentNullException(nameof(userPrompts.OpenFileFactory));
         this.accountTypeRepository = accountTypeRepository ?? throw new ArgumentNullException(nameof(accountTypeRepository));
+        BrowseForFileCommand = new RelayCommand(OnBrowseForFileCommandExecute);
 
         Messenger.Register<LoadFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
@@ -37,7 +38,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
     [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
     public string AccountNameHelp => "When importing a new bank extract file, you must select the account the transactions come from.\nThis allows merging of multiple accounts into one file.";
 
-    public ICommand BrowseForFileCommand => new RelayCommand(OnBrowseForFileCommandExecute);
+    public IRelayCommand BrowseForFileCommand { get; }
     public IEnumerable<Account> ExistingAccountNames { get; private set; } = Array.Empty<Account>();
 
     public string? FileName
