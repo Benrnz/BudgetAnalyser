@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Input;
+using System.Windows;
 
 namespace BudgetAnalyser.LedgerBook;
 
@@ -28,16 +27,6 @@ public partial class TopLedgerBookUserControl
         builder.BuildGrid(Controller.ViewModel.LedgerBook, Resources, this.LedgerBookPanel, Controller.NumberOfPeriodsToShow);
     }
 
-    private void OnAddLedgerClicked(object? sender, RoutedEventArgs e)
-    {
-        Controller.OnAddNewLedgerCommandExecuted();
-    }
-
-    private void OnAddNewReconciliationClicked(object? sender, RoutedEventArgs e)
-    {
-        Controller.OnAddNewReconciliationCommandExecuted();
-    }
-
     private void OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
         if (!this.subscribedToMainWindowClose)
@@ -60,11 +49,6 @@ public partial class TopLedgerBookUserControl
         DynamicallyCreateLedgerBookGrid();
     }
 
-    private void OnLedgerBookNameClick(object? sender, MouseButtonEventArgs e)
-    {
-        Controller.EditLedgerBookName();
-    }
-
     private void OnLedgerBookReadyMessageReceived(LedgerBookReadyMessage message)
     {
         // this is only used when no Ledgerbook has been previously loaded. Data binding hasnt been set up to respond to the ViewModel.LedgerBook property changing until the UI is actually drawn
@@ -79,16 +63,6 @@ public partial class TopLedgerBookUserControl
     {
         ResetLedgerBookContent();
         DynamicallyCreateLedgerBookGrid();
-    }
-
-    private void OnTransferFundsClicked(object? sender, RoutedEventArgs e)
-    {
-        Controller.OnTransferFundsInitiated();
-    }
-
-    private void OnUnlockCurrentLedgerLineClicked(object? sender, RoutedEventArgs e)
-    {
-        Controller.OnUnlockLedgerLineCommandExecuted();
     }
 
     private void ResetLedgerBookContent()

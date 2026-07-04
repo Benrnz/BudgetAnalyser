@@ -87,19 +87,19 @@
                     Style="{StaticResource Button.Round.Save}" />
             <Button Style="{StaticResource Button.Round.TransferFunds}"
                     IsEnabled="{Binding ViewModel.NewLedgerLine, Converter={StaticResource Converter.NotNullIsTrue}}"
-                    Click="OnTransferFundsClicked" />
+                    Command="{Binding TransferFundsCommand}" />
             <Button Style="{StaticResource Button.Round.PlusR}"
                     IsEnabled="{Binding ViewModel.AddNewReconciliationIsEnabled}"
                     ToolTip="Add new reconciliation"
-                    Click="OnAddNewReconciliationClicked" />
+                    Command="{Binding AddNewReconciliationCommand}" />
             <Button Style="{StaticResource Button.Round.PlusL}"
                     IsEnabled="{Binding ViewModel.LedgerBook, Converter={StaticResource Converter.NotNullIsTrue}}"
                     ToolTip="Add new ledger"
-                    Click="OnAddLedgerClicked" />
+                    Command="{Binding AddLedgerCommand}" />
             <Button
-                    Click="OnUnlockCurrentLedgerLineClicked"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Unlock}"
+                    Command="{Binding UnlockCurrentLedgerLineCommand}"
                     ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line.">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource Converter.MultiAndBool}">
@@ -110,9 +110,11 @@
                     </MultiBinding>
                 </Button.IsEnabled>
             </Button>
-            <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                       Text="{Binding ViewModel.LedgerBook.Name}"
-                       MouseUp="OnLedgerBookNameClick" />
+            <TextBlock Style="{StaticResource TextBlock.Heading1}">
+                <Hyperlink Command="{Binding EditLedgerBookNameCommand}">
+                    <Run Text="{Binding ViewModel.LedgerBook.Name, Mode=OneWay}" />
+                </Hyperlink>
+            </TextBlock>
             <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                     Visibility="{Binding ViewModel.NoTransactionsListModelLoaded, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock Text="No Transactions"
