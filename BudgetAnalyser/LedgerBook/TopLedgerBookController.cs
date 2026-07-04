@@ -127,7 +127,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    public void DeregisterListener(LedgerBookUserControl recipient)
+    public void DeregisterListener(object recipient)
     {
         Messenger.Unregister<LedgerBookReadyMessage>(recipient);
     }
@@ -205,7 +205,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         FileOperations.Dirty = true;
     }
 
-    public void RegisterListener(LedgerBookUserControl recipient, MessageHandler<LedgerBookUserControl, LedgerBookReadyMessage> handler)
+    public void RegisterListener(object recipient, MessageHandler<object, LedgerBookReadyMessage> handler)
     {
         Messenger.Register(recipient, handler);
     }
