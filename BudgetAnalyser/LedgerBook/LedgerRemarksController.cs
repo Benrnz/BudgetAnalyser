@@ -19,8 +19,6 @@ public class LedgerRemarksController : ControllerBase
         Messenger.Register<LedgerRemarksController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public event EventHandler? Completed;
-
     public bool IsReadOnly
     {
         get;
@@ -79,8 +77,6 @@ public class LedgerRemarksController : ControllerBase
 
         LedgerEntryLine = null;
         Remarks = string.Empty;
-
-        var handler = Completed;
-        handler?.Invoke(this, EventArgs.Empty);
+        Messenger.Send<LedgerRemarksCompletedMessage>();
     }
 }

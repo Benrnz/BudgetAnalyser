@@ -84,6 +84,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         Messenger.Register<TopLedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<TopLedgerBookController, AddLedgerReconciliationCompletedMessage>(this, static (r, m) => r.OnAddReconciliationDialogClose(m));
         Messenger.Register<TopLedgerBookController, LedgerBucketUpdatedMessage>(this, static (r, m) => r.OnLedgerBucketUpdated(m));
+        Messenger.Register<TopLedgerBookController, LedgerRemarksCompletedMessage>(this, static (r, _) => r.OnShowRemarksCompleted());
         Messenger.Register<TopLedgerBookController, LedgerTransactionsCompletedMessage>(this, static (r, m) => r.OnShowTransactionsCompleted(m));
         Messenger.Register<TopLedgerBookController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
         Messenger.Register<TopLedgerBookController, LedgerBookReadyMessage>(this, (_, _) => ShowRemarksCommand.NotifyCanExecuteChanged());
@@ -244,7 +245,8 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
     private bool CanExecuteShowRemarksCommand(LedgerEntryLine? parameter)
     {
-        return parameter is not null && (!string.IsNullOrWhiteSpace(parameter.Remarks) || parameter == ViewModel.NewLedgerLine);
+        //return parameter is not null && parameter == ViewModel.NewLedgerLine;
+        return true;
     }
 
     private void CreatePeriodEndReconciliation(bool ignoreWarnings = false)
@@ -390,13 +392,11 @@ public class TopLedgerBookController : ControllerBase, IShowableController
             throw new ArgumentNullException(nameof(parameter), "Binding problem, command executed without required ledger entry line parameter.");
         }
 
-        this.ledgerRemarksController.Completed += OnShowRemarksCompleted;
         this.ledgerRemarksController.Show(parameter, parameter == ViewModel.NewLedgerLine);
     }
 
-    private void OnShowRemarksCompleted(object? sender, EventArgs? e)
+    private void OnShowRemarksCompleted()
     {
-        this.ledgerRemarksController.Completed -= OnShowRemarksCompleted;
     }
 
     private void OnShowSurplusBalancesCommandExecuted(LedgerEntryLine? line)
