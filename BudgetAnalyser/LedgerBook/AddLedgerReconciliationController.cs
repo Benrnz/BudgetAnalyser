@@ -33,9 +33,6 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         RemoveBankBalanceCommand = new RelayCommand<BankBalanceViewModel?>(OnRemoveBankBalanceCommandExecuted, _ => Editable);
     }
 
-    // TODO Change this event to a message:
-    public event EventHandler<EditBankBalancesEventArgs>? Complete;
-
     public bool AddBalanceVisibility
     {
         get;
@@ -302,8 +299,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
                 }
             }
 
-            var handler = Complete;
-            handler?.Invoke(this, new EditBankBalancesEventArgs { Canceled = Canceled });
+            Messenger.Send(new AddLedgerReconciliationCompletedMessage(Canceled));
         }
         finally
         {

@@ -82,6 +82,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         TransferFundsCommand = new RelayCommand(OnTransferFundsInitiated);
 
         Messenger.Register<TopLedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+        Messenger.Register<TopLedgerBookController, AddLedgerReconciliationCompletedMessage>(this, static (r, m) => r.OnAddReconciliationDialogClose(m));
         Messenger.Register<TopLedgerBookController, LedgerTransactionsCompletedMessage>(this, static (r, m) => r.OnShowTransactionsCompleted(m));
         Messenger.Register<TopLedgerBookController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
         Messenger.Register<TopLedgerBookController, LedgerBookReadyMessage>(this, (_, _) => ShowRemarksCommand.NotifyCanExecuteChanged());
@@ -196,7 +197,6 @@ public class TopLedgerBookController : ControllerBase, IShowableController
             }
         }
 
-        this.addLedgerReconciliationController.Complete += OnAddReconciliationDialogClose;
         this.addLedgerReconciliationController.ShowCreateDialog(ViewModel.LedgerBook!);
     }
 
@@ -312,11 +312,9 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         FileOperations.Dirty = true;
     }
 
-    private void OnAddReconciliationDialogClose(object? sender, EditBankBalancesEventArgs? e)
+    private void OnAddReconciliationDialogClose(AddLedgerReconciliationCompletedMessage message)
     {
-        this.addLedgerReconciliationController.Complete -= OnAddReconciliationDialogClose;
-
-        if (e is null || e.Canceled)
+        if (message.Canceled)
         {
             return;
         }
