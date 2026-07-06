@@ -194,7 +194,7 @@ public class LedgerTransactionsController : ControllerBase
         this.entryLine = ledgerEntryLine; // Will be null when editing an existing LedgerEntry as opposed to creating a new reconciliation.
         ShownTransactions.Clear();
         LedgerEntry.Transactions.ToList().ForEach(t => ShownTransactions.Add(t));
-        Title = string.Format(CultureInfo.CurrentCulture, "{0} Transactions", ledgerEntry.LedgerBucket.BudgetBucket.Code);
+        Title = $"{ledgerEntry.LedgerBucket.BudgetBucket.Code} Transactions";
         OpeningBalance = RetrieveOpeningBalance();
         ShowDialogCommon(isNew);
     }
