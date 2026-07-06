@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance ledgerBook:ShowSurplusBalancesController}">
 
-    <Grid>
+    <Grid Background="{StaticResource Brush.DialogBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"
                            MinHeight="50" />
