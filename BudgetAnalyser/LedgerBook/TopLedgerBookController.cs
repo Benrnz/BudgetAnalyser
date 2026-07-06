@@ -82,6 +82,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         TransferFundsCommand = new RelayCommand(OnTransferFundsInitiated);
 
         Messenger.Register<TopLedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+        Messenger.Register<TopLedgerBookController, LedgerTransactionsCompletedMessage>(this, static (r, m) => r.OnShowTransactionsCompleted(m));
         Messenger.Register<TopLedgerBookController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
         Messenger.Register<TopLedgerBookController, LedgerBookReadyMessage>(this, (_, _) => ShowRemarksCommand.NotifyCanExecuteChanged());
         Messenger.Register<TopLedgerBookController, LedgerBucketTransferCommandMessage>(this, static (r, m) => r.OnTransferFundsCommandReceived(m));
@@ -417,8 +418,6 @@ public class TopLedgerBookController : ControllerBase, IShowableController
             return;
         }
 
-        this.ledgerTransactionsController.Complete += OnShowTransactionsCompleted;
-
         if (parameter is LedgerEntry ledgerEntry)
         {
             this.ledgerTransactionsController.ShowLedgerTransactionsDialog(ViewModel.NewLedgerLine!, ledgerEntry);
@@ -433,15 +432,9 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    private void OnShowTransactionsCompleted(object? sender, LedgerTransactionEventArgs? args)
+    private void OnShowTransactionsCompleted(LedgerTransactionsCompletedMessage message)
     {
-        this.ledgerTransactionsController.Complete -= OnShowTransactionsCompleted;
-        if (args is null)
-        {
-            return;
-        }
-
-        if (args.WasModified)
+        if (message.WasModified)
         {
             RaiseLedgerBookUpdated();
         }

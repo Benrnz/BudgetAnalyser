@@ -35,9 +35,6 @@ public class LedgerTransactionsController : ControllerBase
         Reset();
     }
 
-    // TODO Change this event to a message
-    public event EventHandler<LedgerTransactionEventArgs>? Complete;
-
     public IEnumerable<Account> Accounts => this.ledgerService.ValidLedgerAccounts();
 
     public IRelayCommand AddBalanceAdjustmentCommand { get; }
@@ -255,8 +252,7 @@ public class LedgerTransactionsController : ControllerBase
             LedgerEntry = null;
         }
 
-        var handler = Complete;
-        handler?.Invoke(this, new LedgerTransactionEventArgs(this.wasChanged));
+        Messenger.Send(new LedgerTransactionsCompletedMessage(this.wasChanged));
 
         Reset();
     }
