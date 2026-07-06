@@ -24,7 +24,11 @@ public partial class ShellDialogView : UserControl
 
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
-            Controller.DialogCommand.Execute(ShellDialogButton.Ok);
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == 0 && (Keyboard.Modifiers & ModifierKeys.Shift) == 0 && (Keyboard.Modifiers & ModifierKeys.Alt) == 0)
+            {
+                // Only if Shift, Ctrl or Alt is not pressed.
+                Controller.DialogCommand.Execute(ShellDialogButton.Ok);
+            }
         }
         else if (e.Key == Key.Escape)
         {

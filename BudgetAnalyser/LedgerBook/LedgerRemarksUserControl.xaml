@@ -1,12 +1,23 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerRemarksUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             IsVisibleChanged="OnIsVisibleChanged">
-    <StackPanel>
+             xmlns:views="clr-namespace:BudgetAnalyser.LedgerBook"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance views:LedgerRemarksController }"
+             IsVisibleChanged="OnIsVisibleChanged"
+             Background="{StaticResource Brush.DialogBackground}">
+    <StackPanel Margin="20"
+        MinWidth="400"
+        MinHeight="150">
         <TextBox x:Name="RemarksTextBox"
+                 AcceptsReturn="True"
                  Text="{Binding Remarks}"
                  MinLines="2"
                  TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"
+                 HorizontalScrollBarVisibility="Hidden"
                  Visibility="{Binding IsReadOnly, Converter={StaticResource Converter.NotBoolToVis}}" />
         <TextBlock Text="{Binding Remarks}"
                    TextWrapping="Wrap"
