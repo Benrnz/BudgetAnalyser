@@ -43,7 +43,7 @@ public class ShowSurplusBalancesController : ControllerBase
         SurplusBalances = new ObservableCollection<BankBalance>(ledgerLine.SurplusBalances);
         this.ledgerEntryLine = ledgerLine;
 
-        var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
+        var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Close)
         {
             CorrelationId = Guid.NewGuid(),
             Title = "Surplus Balances in all Accounts"
