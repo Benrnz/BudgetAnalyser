@@ -299,7 +299,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
                 }
             }
 
-            Messenger.Send(new AddLedgerReconciliationCompletedMessage(Canceled));
+            Messenger.Send(new AddLedgerReconciliationCompletedMessage(!Canceled));
         }
         finally
         {

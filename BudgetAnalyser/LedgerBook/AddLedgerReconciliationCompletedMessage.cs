@@ -2,7 +2,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook;
 
-public class AddLedgerReconciliationCompletedMessage(bool canceled) : MessageBase
+public class AddLedgerReconciliationCompletedMessage(bool wasChanged) : MessageBase
 {
-    public bool Canceled { get; private set; } = canceled;
+    public bool WasChanged { get; private set; } = wasChanged;
 }

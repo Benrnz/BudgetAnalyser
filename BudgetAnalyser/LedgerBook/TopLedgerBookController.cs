@@ -314,12 +314,10 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
     private void OnAddReconciliationDialogClose(AddLedgerReconciliationCompletedMessage message)
     {
-        if (message.Canceled)
+        if (message.WasChanged)
         {
-            return;
+            CreatePeriodEndReconciliation();
         }
-
-        CreatePeriodEndReconciliation();
     }
 
     private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
