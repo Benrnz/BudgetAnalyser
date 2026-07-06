@@ -83,6 +83,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
         Messenger.Register<TopLedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
         Messenger.Register<TopLedgerBookController, AddLedgerReconciliationCompletedMessage>(this, static (r, m) => r.OnAddReconciliationDialogClose(m));
+        Messenger.Register<TopLedgerBookController, LedgerBucketUpdatedMessage>(this, static (r, m) => r.OnLedgerBucketUpdated(m));
         Messenger.Register<TopLedgerBookController, LedgerTransactionsCompletedMessage>(this, static (r, m) => r.OnShowTransactionsCompleted(m));
         Messenger.Register<TopLedgerBookController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
         Messenger.Register<TopLedgerBookController, LedgerBookReadyMessage>(this, (_, _) => ShowRemarksCommand.NotifyCanExecuteChanged());
@@ -337,11 +338,13 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         FileOperations.Close();
     }
 
-    private void OnLedgerBucketUpdated(object? sender, EventArgs? e)
+    private void OnLedgerBucketUpdated(LedgerBucketUpdatedMessage message)
     {
-        this.ledgerBucketViewController.Updated -= OnLedgerBucketUpdated;
-        RaiseLedgerBookUpdated();
-        FileOperations.Dirty = true;
+        if (message.WasChanged)
+        {
+            RaiseLedgerBookUpdated();
+            FileOperations.Dirty = true;
+        }
     }
 
     private void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs? eventArgs)
@@ -377,7 +380,6 @@ public class TopLedgerBookController : ControllerBase, IShowableController
             throw new ArgumentNullException(nameof(ledgerBucket), "Binding problem, command executed without required ledger bucket parameter.");
         }
 
-        this.ledgerBucketViewController.Updated += OnLedgerBucketUpdated;
         this.ledgerBucketViewController.ShowDialog(ledgerBucket, ViewModel.CurrentBudget!.Model);
     }
 
