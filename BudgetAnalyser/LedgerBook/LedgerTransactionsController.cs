@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
@@ -19,7 +18,6 @@ namespace BudgetAnalyser.LedgerBook;
 public class LedgerTransactionsController : ControllerBase
 {
     private readonly ILedgerService ledgerService;
-    private readonly ILogger logger;
     private readonly IReconciliationService reconService;
     private Guid dialogCorrelationId = Guid.NewGuid();
     private LedgerEntryLine? entryLine;
@@ -27,24 +25,21 @@ public class LedgerTransactionsController : ControllerBase
     private bool wasChanged;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-    public LedgerTransactionsController(IMessenger messenger, ILogger logger, ILedgerService ledgerService, IReconciliationService reconService) : base(messenger)
+    public LedgerTransactionsController(IMessenger messenger, ILedgerService ledgerService, IReconciliationService reconService) : base(messenger)
     {
         this.ledgerService = ledgerService ?? throw new ArgumentNullException(nameof(ledgerService));
         this.reconService = reconService ?? throw new ArgumentNullException(nameof(reconService));
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         Messenger.Register<LedgerTransactionsController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
-        AddBalanceAdjustmentCommand = new RelayCommand(OnAddNewTransactionCommandExecuted, () => IsAddBalanceAdjustmentAllowed && !IsReadOnly);
+        AddBalanceAdjustmentCommand = new RelayCommand(OnAddNewAdjustmentCommandExecuted, () => InBalanceAdjustmentMode && !IsReadOnly);
         DeleteTransactionCommand = new RelayCommand<LedgerTransaction?>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
-        ZeroNetAmountCommand = new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);
         Reset();
     }
 
+    // TODO Change this event to a message
     public event EventHandler<LedgerTransactionEventArgs>? Complete;
 
-    [UsedImplicitly]
     public IEnumerable<Account> Accounts => this.ledgerService.ValidLedgerAccounts();
 
-    [UsedImplicitly]
     public IRelayCommand AddBalanceAdjustmentCommand { get; }
 
     [UsedImplicitly]
@@ -66,7 +61,6 @@ public class LedgerTransactionsController : ControllerBase
         }
     }
 
-    // TODO I suspect this functionality has not been used in years.  Look to remove it.
     public bool InLedgerEntryMode
     {
         get;
@@ -82,8 +76,6 @@ public class LedgerTransactionsController : ControllerBase
         }
     }
 
-    public bool IsAddBalanceAdjustmentAllowed => InBalanceAdjustmentMode;
-
     public bool IsReadOnly
     {
         get;
@@ -91,7 +83,6 @@ public class LedgerTransactionsController : ControllerBase
         {
             field = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(IsAddBalanceAdjustmentAllowed));
             AddBalanceAdjustmentCommand.NotifyCanExecuteChanged();
             DeleteTransactionCommand.NotifyCanExecuteChanged();
         }
@@ -104,7 +95,6 @@ public class LedgerTransactionsController : ControllerBase
         {
             field = value;
             OnPropertyChanged();
-            ZeroNetAmountCommand.NotifyCanExecuteChanged();
             OnPropertyChanged(nameof(InBalanceAdjustmentMode));
             OnPropertyChanged(nameof(InLedgerEntryMode));
         }
@@ -166,13 +156,10 @@ public class LedgerTransactionsController : ControllerBase
 
     public decimal TransactionsTotal => ShownTransactions.Sum(t => t.Amount);
 
-    [UsedImplicitly]
-    public IRelayCommand ZeroNetAmountCommand { get; }
-
     /// <summary>
     ///     Show the Ledger Transactions view, for viewing and editing Balance Adjustments
     /// </summary>
-    public void ShowBankBalanceAdjustmentsDialog(LedgerEntryLine ledgerEntryLine, bool isNew)
+    public void ShowBankBalanceAdjustmentsDialog(LedgerEntryLine ledgerEntryLine, bool isReadOnly)
     {
         this.entryLine = ledgerEntryLine ?? throw new ArgumentNullException(nameof(ledgerEntryLine));
         InBalanceAdjustmentMode = true;
@@ -180,13 +167,13 @@ public class LedgerTransactionsController : ControllerBase
         LedgerEntry = null;
         ShownTransactions = new ObservableCollection<LedgerTransaction>(ledgerEntryLine.BankBalanceAdjustments);
         Title = "Balance Adjustment Transactions";
-        ShowDialogCommon(isNew);
+        ShowDialogCommon(isReadOnly);
     }
 
     /// <summary>
     ///     Show the Ledger Transactions view for viewing and editing Ledger Transactions.
     /// </summary>
-    public void ShowLedgerTransactionsDialog(LedgerEntryLine ledgerEntryLine, LedgerEntry ledgerEntry, bool isNew)
+    public void ShowLedgerTransactionsDialog(LedgerEntryLine ledgerEntryLine, LedgerEntry ledgerEntry)
     {
         LedgerEntry = ledgerEntry ?? throw new ArgumentNullException(nameof(ledgerEntry));
         InBalanceAdjustmentMode = false;
@@ -196,7 +183,7 @@ public class LedgerTransactionsController : ControllerBase
         LedgerEntry.Transactions.ToList().ForEach(t => ShownTransactions.Add(t));
         Title = $"{ledgerEntry.LedgerBucket.BudgetBucket.Code} Transactions";
         OpeningBalance = RetrieveOpeningBalance();
-        ShowDialogCommon(isNew);
+        ShowDialogCommon(true);  // Ledger Transactions cannot be edited or deleted.
     }
 
     private bool CanExecuteDeleteTransactionCommand(LedgerTransaction? arg)
@@ -204,12 +191,7 @@ public class LedgerTransactionsController : ControllerBase
         return !IsReadOnly && arg is not null;
     }
 
-    private bool CanExecuteZeroNetAmountCommand()
-    {
-        return LedgerEntry is not null && LedgerEntry.NetAmount != 0;
-    }
-
-    private void OnAddNewTransactionCommandExecuted()
+    private void OnAddNewAdjustmentCommandExecuted()
     {
         // This command is executed to show the add transaction panel, then again to add the transaction once the edit fields are completed.
         if (ShowAddingNewTransactionPanel)
@@ -236,13 +218,7 @@ public class LedgerTransactionsController : ControllerBase
             return;
         }
 
-        if (InLedgerEntryMode)
-        {
-            this.wasChanged = true;
-            this.reconService.RemoveTransaction(this.ledgerService.LedgerBook, LedgerEntry!, transaction.Id);
-            ShownTransactions.Remove(transaction);
-        }
-        else if (InBalanceAdjustmentMode)
+        if (InBalanceAdjustmentMode)
         {
             this.wasChanged = true;
             this.reconService.CancelBalanceAdjustment(this.entryLine!, transaction.Id);
@@ -264,7 +240,7 @@ public class LedgerTransactionsController : ControllerBase
         {
             if (ShowAddingNewTransactionPanel)
             {
-                OnAddNewTransactionCommandExecuted();
+                OnAddNewAdjustmentCommandExecuted();
             }
 
             Save();
@@ -283,39 +259,13 @@ public class LedgerTransactionsController : ControllerBase
         handler?.Invoke(this, new LedgerTransactionEventArgs(this.wasChanged));
 
         Reset();
-        this.wasChanged = false;
-    }
-
-    private void OnZeroNetAmountCommandExecuted()
-    {
-        if (LedgerEntry is null)
-        {
-            return;
-        }
-
-        if (LedgerEntry.NetAmount == 0)
-        {
-            return;
-        }
-
-        if (LedgerEntry.NetAmount > 0)
-        {
-            NewTransactionNarrative = "Zero the remainder - don't accumulate credits";
-            NewTransactionAmount = LedgerEntry.NetAmount;
-        }
-        else
-        {
-            NewTransactionNarrative = "Zero the remainder - supplement shortfall from surplus";
-            NewTransactionAmount = -LedgerEntry.NetAmount;
-        }
     }
 
     private void Reset()
     {
+        this.wasChanged = false;
         ShowAddingNewTransactionPanel = false;
         this.isAddDirty = false;
-        // LedgerEntry = null;    // Dont reset this here.  If the user is adding multiple transactions this will prevent adding any more transactions.
-        // this.entryLine = null; // Dont reset this here.  If the user is adding multiple transactions this will prevent adding any more transactions.
         NewTransactionAmount = 0;
         NewTransactionNarrative = null;
         NewTransactionAccount = null;
@@ -356,57 +306,21 @@ public class LedgerTransactionsController : ControllerBase
 
         if (InBalanceAdjustmentMode && this.isAddDirty)
         {
-            SaveBalanceAdjustment();
-        }
-        else if (InLedgerEntryMode && this.isAddDirty)
-        {
-            SaveNewEntryTransaction();
+            var newTransaction = this.reconService.CreateBalanceAdjustment(this.entryLine!, NewTransactionAmount, NewTransactionNarrative ?? string.Empty, NewTransactionAccount!);
+            ShownTransactions.Add(newTransaction);
+            this.wasChanged = true;
+            OnPropertyChanged(nameof(TransactionsTotal));
         }
 
         Reset();
         OnPropertyChanged(nameof(LedgerEntry));
     }
 
-    private void SaveBalanceAdjustment()
+    private void ShowDialogCommon(bool isReadOnly)
     {
-        var newTransaction = this.reconService.CreateBalanceAdjustment(this.entryLine!, NewTransactionAmount, NewTransactionNarrative ?? string.Empty, NewTransactionAccount!);
-        ShownTransactions.Add(newTransaction);
-        this.wasChanged = true;
-        OnPropertyChanged(nameof(TransactionsTotal));
-    }
-
-    private void SaveNewEntryTransaction()
-    {
-        var book = this.ledgerService.LedgerBook ?? throw new InvalidOperationException("LedgerBook is null and not initialised.");
-        try
-        {
-            if (this.entryLine is null || LedgerEntry is null)
-            {
-                this.logger.LogError(l => l.Format(
-                    "Silent error: Attempt to create a new ledger transaction, but LedgerLine or LedgerEntry is null. LedgerLine: {0}, LedgerEntry: {1}",
-                    this.entryLine,
-                    LedgerEntry));
-                return;
-            }
-
-            var newTransaction = this.reconService.CreateLedgerTransaction(book, this.entryLine, LedgerEntry, NewTransactionAmount, NewTransactionNarrative ?? string.Empty);
-            ShownTransactions.Add(newTransaction);
-        }
-        catch (ArgumentException)
-        {
-            // Invalid transaction data
-            return;
-        }
-
-        OnPropertyChanged(nameof(TransactionsTotal));
-        this.wasChanged = true;
-    }
-
-    private void ShowDialogCommon(bool isNew)
-    {
-        IsReadOnly = !isNew;
+        IsReadOnly = isReadOnly;
         this.dialogCorrelationId = Guid.NewGuid();
-        var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, IsReadOnly ? ShellDialogType.Ok : ShellDialogType.OkCancel)
+        var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, IsReadOnly ? ShellDialogType.Close : ShellDialogType.OkCancel)
         {
             CorrelationId = this.dialogCorrelationId,
             Title = Title

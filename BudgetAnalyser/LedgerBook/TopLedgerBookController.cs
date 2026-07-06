@@ -421,12 +421,11 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
         if (parameter is LedgerEntry ledgerEntry)
         {
-            var isNew = ViewModel.NewLedgerLine is not null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
-            this.ledgerTransactionsController.ShowLedgerTransactionsDialog(ViewModel.NewLedgerLine!, ledgerEntry, isNew);
+            this.ledgerTransactionsController.ShowLedgerTransactionsDialog(ViewModel.NewLedgerLine!, ledgerEntry);
         }
         else if (parameter is LedgerEntryLine bankBalanceAdjustments)
         {
-            this.ledgerTransactionsController.ShowBankBalanceAdjustmentsDialog(bankBalanceAdjustments, bankBalanceAdjustments == ViewModel.NewLedgerLine);
+            this.ledgerTransactionsController.ShowBankBalanceAdjustmentsDialog(bankBalanceAdjustments, bankBalanceAdjustments != ViewModel.NewLedgerLine);
         }
         else
         {
