@@ -95,8 +95,6 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         this.ledgerService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
     }
 
-    public event EventHandler? LedgerBookUpdated;
-
     [UsedImplicitly]
     public IRelayCommand AddLedgerCommand { get; }
 
@@ -158,7 +156,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
     public void DeregisterListener(object recipient)
     {
-        Messenger.Unregister<LedgerBookReadyMessage>(recipient);
+        Messenger.UnregisterAll(recipient);
     }
 
     public void EditLedgerBookName()
@@ -233,7 +231,18 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         FileOperations.Dirty = true;
     }
 
+    /// <summary>
+    ///     Allows the view to register for notifications when the LedgerBook is ready to be drawn and shown.
+    /// </summary>
     public void RegisterListener(object recipient, MessageHandler<object, LedgerBookReadyMessage> handler)
+    {
+        Messenger.Register(recipient, handler);
+    }
+
+    /// <summary>
+    ///     Allows the view to register for notifications when the LedgerBook is updated so it can reset and redraw.
+    /// </summary>
+    public void RegisterListener(object recipient, MessageHandler<object, LedgerBookUpdatedMessage> handler)
     {
         Messenger.Register(recipient, handler);
     }
@@ -264,7 +273,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
             FileOperations.ReconciliationChangesWillNeedToBeSaved();
             NumberOfPeriodsToShow++;
-            RaiseLedgerBookUpdated();
+            Messenger.Send<LedgerBookUpdatedMessage>();
             if (this.reconService.ReconciliationToDoList.Any())
             {
                 ToDoListController.Load(this.reconService.ReconciliationToDoList);
@@ -344,7 +353,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     {
         if (message.WasChanged)
         {
-            RaiseLedgerBookUpdated();
+            Messenger.Send<LedgerBookUpdatedMessage>();
             FileOperations.Dirty = true;
         }
     }
@@ -434,7 +443,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     {
         if (message.WasModified)
         {
-            RaiseLedgerBookUpdated();
+            Messenger.Send<LedgerBookUpdatedMessage>();
         }
     }
 
@@ -446,7 +455,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     private void OnTransferFundsCommandReceived(LedgerBucketTransferCommandMessage message)
     {
         this.reconService.TransferFunds(ViewModel.LedgerBook!, ViewModel.NewLedgerLine!, message.TransferFundsCommand);
-        RaiseLedgerBookUpdated();
+        Messenger.Send<LedgerBookUpdatedMessage>();
         FileOperations.ReconciliationChangesWillNeedToBeSaved();
     }
 
@@ -454,11 +463,5 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     {
         var result = this.questionBox.Show("Warning", "Warning: {0}\nDo you wish to proceed?", ex.Message);
         return result is not null && result.Value;
-    }
-
-    private void RaiseLedgerBookUpdated()
-    {
-        var handler = LedgerBookUpdated;
-        handler?.Invoke(this, EventArgs.Empty);
     }
 }

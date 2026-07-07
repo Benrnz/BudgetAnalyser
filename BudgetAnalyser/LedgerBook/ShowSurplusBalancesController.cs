@@ -11,15 +11,10 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class ShowSurplusBalancesController : ControllerBase
+public class ShowSurplusBalancesController(IMessenger messenger) : ControllerBase(messenger)
 {
     private LedgerEntryLine? ledgerEntryLine;
 
-    public ShowSurplusBalancesController(IMessenger messenger) : base(messenger)
-    {
-    }
-
-    [UsedImplicitly]
     public bool HasNegativeBalances => SurplusBalances.Any(b => b.Balance < 0);
 
     [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Instance method required for data binding")]
@@ -30,7 +25,6 @@ public class ShowSurplusBalancesController : ControllerBase
 
     public ObservableCollection<BankBalance> SurplusBalances { get; private set; } = new();
 
-    [UsedImplicitly]
     public decimal SurplusTotal => this.ledgerEntryLine?.CalculatedSurplus ?? 0;
 
     public void ShowDialog(LedgerEntryLine ledgerLine)
