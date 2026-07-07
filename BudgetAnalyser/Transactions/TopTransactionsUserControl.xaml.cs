@@ -54,12 +54,12 @@ public partial class TopTransactionsUserControl
         }
         else
         {
-            defaultView.Filter = Controller.BucketFilter == TransactionConstants.UncategorisedFilter ?
-            t =>
-            {
-                var txn = (Transaction)t;
-                return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
-            }
+            defaultView.Filter = Controller.BucketFilter == TransactionConstants.UncategorisedFilter
+                ? t =>
+                {
+                    var txn = (Transaction)t;
+                    return txn.BudgetBucket is null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
+                }
             : t =>
             {
                 var txn = (Transaction)t;

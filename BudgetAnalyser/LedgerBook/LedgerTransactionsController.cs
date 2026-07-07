@@ -180,7 +180,7 @@ public class LedgerTransactionsController : ControllerBase
         LedgerEntry.Transactions.ToList().ForEach(t => ShownTransactions.Add(t));
         Title = $"{ledgerEntry.LedgerBucket.BudgetBucket.Code} Transactions";
         OpeningBalance = RetrieveOpeningBalance();
-        ShowDialogCommon(true);  // Ledger Transactions cannot be edited or deleted.
+        ShowDialogCommon(true); // Ledger Transactions cannot be edited or deleted.
     }
 
     private bool CanExecuteDeleteTransactionCommand(LedgerTransaction? arg)
