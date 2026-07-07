@@ -29,6 +29,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\BudgetAnalyser.Encryption\BudgetAnalyser.Encryption.csproj"/>
+        <ProjectReference Include="..\BudgetAnalyser.Engine.XUnit3\BudgetAnalyser.Engine.XUnit3.csproj"/>
         <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj"/>
         <ProjectReference Include="..\BudgetAnalyser\BudgetAnalyser.Wpf.csproj"/>
     </ItemGroup>
