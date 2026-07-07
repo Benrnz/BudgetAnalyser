@@ -7,17 +7,9 @@ using CommunityToolkit.Mvvm.Messaging;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC]
-public class LedgerBookControllerFileOperations : INotifyPropertyChanged
+public class LedgerBookControllerFileOperations(IMessenger messenger, IApplicationDatabaseFacade applicationDatabaseService) : INotifyPropertyChanged
 {
-    private readonly IApplicationDatabaseFacade applicationDatabaseService;
-
-    public LedgerBookControllerFileOperations(IMessenger messenger, IApplicationDatabaseFacade applicationDatabaseService)
-    {
-        this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
-        MessengerInstance = messenger ?? throw new ArgumentNullException(nameof(messenger));
-
-        ViewModel = new LedgerBookViewModel();
-    }
+    private readonly IApplicationDatabaseFacade applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -40,9 +32,9 @@ public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     /// </summary>
     internal ILedgerService? LedgerService { get; set; }
 
-    public IMessenger MessengerInstance { get; }
+    private IMessenger MessengerInstance { get; } = messenger ?? throw new ArgumentNullException(nameof(messenger));
 
-    public LedgerBookViewModel ViewModel { get; }
+    public LedgerBookViewModel ViewModel { get; } = new();
 
     public void Close()
     {
