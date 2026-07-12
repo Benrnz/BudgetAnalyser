@@ -222,6 +222,7 @@ public class MainMenuController : ControllerBase
 
     private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
     {
+        // Open new Database file
         if (message.Widget is not CurrentFileWidget)
         {
             return;
