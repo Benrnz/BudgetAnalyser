@@ -28,7 +28,6 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
     public decimal Amount
     {
         get;
-        [UsedImplicitly]
         set
         {
             if (value == field)
@@ -45,7 +44,6 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
     public string Code
     {
         get;
-        [UsedImplicitly]
         set
         {
             if (value == field)
@@ -62,7 +60,6 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
     public string Description
     {
         get;
-        [UsedImplicitly]
         set
         {
             if (value == field)
