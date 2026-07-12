@@ -23,6 +23,74 @@ public partial class EditRulesUserControl
 
     private EditRulesController Controller => (EditRulesController)DataContext;
 
+    internal void OnRuleAdded(MatchingRule rule)
+    {
+        var flatList = (ObservableCollection<MatchingRule>)this.FlatListBox.ItemsSource;
+        if (flatList.All(r => r.RuleId != rule.RuleId))
+        {
+            flatList.Add(rule);
+        }
+
+        var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
+        var group = groupedList.SingleOrDefault(g => g.Bucket == rule.Bucket);
+        if (group is null)
+        {
+            group = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
+            groupedList.Add(group);
+        }
+
+        if (group.Rules.All(r => r.RuleId != rule.RuleId))
+        {
+            group.Rules.Add(rule);
+        }
+    }
+
+    internal void OnRuleRemoved(MatchingRule rule)
+    {
+        var flatList = (ObservableCollection<MatchingRule>)this.FlatListBox.ItemsSource;
+        flatList.Remove(rule);
+
+        var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
+        var group = groupedList.FirstOrDefault(g => g.Bucket == rule.Bucket);
+        group?.Rules.Remove(rule);
+    }
+
+    internal void OnSortChanged()
+    {
+        if (Controller.SortBy != this.currentSort)
+        {
+            this.currentSort = Controller.SortBy;
+            if (Controller.FlatListBoxVisibility)
+            {
+                switch (this.currentSort)
+                {
+                    case EditRulesController.DescriptionSortKey:
+                        var view1 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
+                        view1.SortDescriptions.Clear();
+                        view1.SortDescriptions.Add(new SortDescription("Description", ListSortDirection.Ascending));
+                        view1.Refresh();
+                        break;
+
+                    case EditRulesController.MatchesSortKey:
+                        var view2 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
+                        view2.SortDescriptions.Clear();
+                        view2.SortDescriptions.Add(new SortDescription("MatchCount", ListSortDirection.Descending));
+                        view2.Refresh();
+                        break;
+
+                    default:
+                        throw new ArgumentException("Invalid sort value: " + this.currentSort);
+                }
+            }
+
+            if (Controller.GroupByListBoxVisibility)
+            {
+                var view = CollectionViewSource.GetDefaultView(this.GroupedByListBox.ItemsSource);
+                view.Refresh();
+            }
+        }
+    }
+
     private void OnCheckedAndSelectedRule(object? sender, RoutedEventArgs e)
     {
         if (sender is not RadioButton radioButton)
@@ -40,19 +108,14 @@ public partial class EditRulesUserControl
 
     private void OnDataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
     {
-        if (e.OldValue is not null)
+        if (e.OldValue is EditRulesController oldController)
         {
-            var oldController = (EditRulesController)e.OldValue;
-            oldController.SortChanged -= OnSortChanged;
-            oldController.RuleRemoved -= OnRuleRemoved;
-            oldController.RuleAdded -= OnRuleAdded;
+            oldController.UnregisterViewHandlers(this);
         }
 
         if (e.NewValue is not null)
         {
-            Controller.SortChanged += OnSortChanged;
-            Controller.RuleRemoved += OnRuleRemoved;
-            Controller.RuleAdded += OnRuleAdded;
+            Controller.RegisterViewHandlers(this);
             this.currentSort = Controller.SortBy;
         }
     }
@@ -106,81 +169,6 @@ public partial class EditRulesUserControl
         // rule is chosen in a different group.  This is a big problem, because if code is written to deselect it manually (set it to null), this triggers data binding
         // to update the controller, which then deselects the rule the user has just chosen.
         Controller.SelectedRule = selectedRule;
-    }
-
-    private void OnRuleAdded(object? sender, MatchingRuleEventArgs e)
-    {
-        var rule = e.Rule;
-        var flatList = (ObservableCollection<MatchingRule>)this.FlatListBox.ItemsSource;
-        if (flatList.All(r => r.RuleId != rule.RuleId))
-        {
-            flatList.Add(rule);
-        }
-
-        var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
-        var group = groupedList.SingleOrDefault(g => g.Bucket == rule.Bucket);
-        if (group is null)
-        {
-            group = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
-            groupedList.Add(group);
-        }
-
-        if (group.Rules.All(r => r.RuleId != rule.RuleId))
-        {
-            group.Rules.Add(rule);
-        }
-    }
-
-    private void OnRuleRemoved(object? sender, EventArgs e)
-    {
-        if (sender is null)
-        {
-            return;
-        }
-
-        var rule = (MatchingRule)sender;
-        var flatList = (ObservableCollection<MatchingRule>)this.FlatListBox.ItemsSource;
-        flatList.Remove(rule);
-
-        var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
-        var group = groupedList.FirstOrDefault(g => g.Bucket == rule.Bucket);
-        group?.Rules.Remove(rule);
-    }
-
-    private void OnSortChanged(object? sender, EventArgs e)
-    {
-        if (Controller.SortBy != this.currentSort)
-        {
-            this.currentSort = Controller.SortBy;
-            if (Controller.FlatListBoxVisibility)
-            {
-                switch (this.currentSort)
-                {
-                    case EditRulesController.DescriptionSortKey:
-                        var view1 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
-                        view1.SortDescriptions.Clear();
-                        view1.SortDescriptions.Add(new SortDescription("Description", ListSortDirection.Ascending));
-                        view1.Refresh();
-                        break;
-
-                    case EditRulesController.MatchesSortKey:
-                        var view2 = CollectionViewSource.GetDefaultView(this.FlatListBox.ItemsSource);
-                        view2.SortDescriptions.Clear();
-                        view2.SortDescriptions.Add(new SortDescription("MatchCount", ListSortDirection.Descending));
-                        view2.Refresh();
-                        break;
-
-                    default:
-                        throw new ArgumentException("Invalid sort value: " + this.currentSort);
-                }
-            }
-
-            if (Controller.GroupByListBoxVisibility)
-            {
-                var view = CollectionViewSource.GetDefaultView(this.GroupedByListBox.ItemsSource);
-                view.Refresh();
-            }
-        }
     }
 
     private void OnVisibilityChangedAndButton(object? sender, DependencyPropertyChangedEventArgs e)
