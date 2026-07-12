@@ -28,9 +28,6 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
         Messenger.Register<ChooseBudgetBucketController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    // TODO Change this to a message:
-    public event EventHandler<BudgetBucketChosenEventArgs>? Chosen;
-
     [UsedImplicitly]
     public IEnumerable<Account> BankAccounts => this.accountRepo.ListCurrentlyUsedAccountTypes();
 
@@ -48,7 +45,6 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
 
     public string FilterDescription
     {
-        [UsedImplicitly]
         get;
         set
         {
@@ -118,17 +114,13 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
             return;
         }
 
-        var handler = Chosen;
-        if (handler is not null)
+        if (message.Response == ShellDialogButton.Cancel)
         {
-            if (message.Response == ShellDialogButton.Cancel)
-            {
-                handler(this, new BudgetBucketChosenEventArgs(this.dialogCorrelationId, true));
-            }
-            else
-            {
-                handler(this, new BudgetBucketChosenEventArgs(this.dialogCorrelationId, Selected, StoreInThisAccount));
-            }
+            Messenger.Send(new BudgetBucketChosenMessage(this, this.dialogCorrelationId, true));
+        }
+        else
+        {
+            Messenger.Send(new BudgetBucketChosenMessage(this, this.dialogCorrelationId, Selected, StoreInThisAccount));
         }
 
         Reset();
