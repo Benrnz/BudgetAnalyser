@@ -21,8 +21,6 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
         BudgetCycle = BudgetCycle.Monthly;
     }
 
-    public event EventHandler? Ready;
-
     /// <summary>
     ///     Gets the pay cycle for this budget. Can only be set during budget creation.
     /// </summary>
@@ -119,7 +117,7 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
 
         if (message.Response != ShellDialogButton.Cancel)
         {
-            Ready?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new NewBudgetModelReadyMessage(this.dialogCorrelationId, EffectiveFrom, BudgetCycle));
         }
     }
 }
