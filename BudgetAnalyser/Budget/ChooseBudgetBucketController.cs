@@ -28,12 +28,10 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
         Messenger.Register<ChooseBudgetBucketController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    [UsedImplicitly]
     public IEnumerable<Account> BankAccounts => this.accountRepo.ListCurrentlyUsedAccountTypes();
 
     public IEnumerable<BudgetBucket> BudgetBuckets
     {
-        [UsedImplicitly]
         get => this.doNotUseBudgetBuckets;
 
         private set

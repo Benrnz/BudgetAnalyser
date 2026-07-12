@@ -45,7 +45,6 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.userMessageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.dashboardService.NewDataSourceAvailable += OnNewDataSourceAvailable;
 
-        this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;
         this.createNewSurprisePaymentMonitorController.Complete += OnCreateNewSurprisePaymentMonitorComplete;
 
         this.correlationId = Guid.NewGuid();
@@ -53,6 +52,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
         Messenger.Register<TopDashboardController, BudgetBucketChosenMessage>(this, static (r, m) => r.OnBudgetBucketChosenForNewBucketMonitor(m));
+        Messenger.Register<TopDashboardController, CreateNewFixedBudgetCompletedMessage>(this, static (r, m) => r.OnCreateNewFixedProjectComplete(m));
     }
 
     public GlobalFilterController GlobalFilterController
@@ -110,9 +110,9 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void OnCreateNewFixedProjectComplete(object? sender, DialogResponseEventArgs dialogResponseEventArgs)
+    private void OnCreateNewFixedProjectComplete(CreateNewFixedBudgetCompletedMessage message)
     {
-        if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != this.correlationId)
+        if (message.Canceled || message.CorrelationId != this.correlationId)
         {
             return;
         }
