@@ -16,7 +16,6 @@ namespace BudgetAnalyser.Dashboard;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public sealed class TopDashboardController : ControllerBase, IShowableController
 {
-    private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
     private readonly DisusedRulesController disusedRulesController;
@@ -28,14 +27,12 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     public TopDashboardController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        CreateNewFixedBudgetController createNewFixedBudgetController,
         CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
         DisusedRulesController disusedRulesController,
         GlobalFilterController globalFilterController,
         UploadMobileDataController uploadMobileDataController,
         IDashboardService dashboardService) : base(messenger)
     {
-        this.createNewFixedBudgetController = createNewFixedBudgetController ?? throw new ArgumentNullException(nameof(createNewFixedBudgetController));
         this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController ?? throw new ArgumentNullException(nameof(createNewSurprisePaymentMonitorController));
         this.disusedRulesController = disusedRulesController ?? throw new ArgumentNullException(nameof(disusedRulesController));
         this.uploadMobileDataController = uploadMobileDataController ?? throw new ArgumentNullException(nameof(uploadMobileDataController));
@@ -119,12 +116,12 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         this.correlationId = Guid.NewGuid();
         var widget = this.dashboardService.CreateNewFixedBudgetMonitorWidget(
-            this.createNewFixedBudgetController.Code,
-            this.createNewFixedBudgetController.Description,
-            this.createNewFixedBudgetController.Amount);
+            message.Code,
+            message.Description,
+            message.Amount);
         if (widget is null)
         {
-            this.userMessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {this.createNewFixedBudgetController.Code} already exists.");
+            this.userMessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {message.Code} already exists.");
         }
     }
 

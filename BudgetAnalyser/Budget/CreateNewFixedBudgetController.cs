@@ -116,6 +116,11 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
             return;
         }
 
-        Messenger.Send(new CreateNewFixedBudgetCompletedMessage(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
+        Messenger.Send(new CreateNewFixedBudgetCompletedMessage(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel)
+        {
+            Code = Code,
+            Amount = Amount,
+            Description = Description
+        });
     }
 }
