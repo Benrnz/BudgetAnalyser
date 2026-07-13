@@ -64,7 +64,6 @@ public class TopBudgetController : ControllerBase, IShowableController
 
     public string BudgetMenuItemName
     {
-        [UsedImplicitly]
         get;
 
         set
@@ -190,7 +189,6 @@ public class TopBudgetController : ControllerBase, IShowableController
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal Surplus
     {
-        [UsedImplicitly]
         get;
         private set
         {
