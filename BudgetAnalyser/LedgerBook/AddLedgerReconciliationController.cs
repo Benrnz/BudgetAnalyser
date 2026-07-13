@@ -12,7 +12,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class AddLedgerReconciliationController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
+public class AddLedgerReconciliationController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IAccountTypeRepository accountTypeRepository;
     private readonly IUserMessageBox messageBox;
@@ -32,9 +32,6 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
         AddBankBalanceCommand = new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
         RemoveBankBalanceCommand = new RelayCommand<BankBalanceViewModel?>(OnRemoveBankBalanceCommandExecuted, _ => Editable);
     }
-
-    // TODO Change this event to a message:
-    public event EventHandler<EditBankBalancesEventArgs>? Complete;
 
     public bool AddBalanceVisibility
     {
@@ -155,9 +152,6 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     public bool CanExecuteOkButton => CreateMode ? Date != DateOnly.MinValue && HasRequiredBalances : Editable && Date != DateOnly.MinValue && HasRequiredBalances;
 
     public bool CanExecuteSaveButton => false;
-
-    public string ActionButtonToolTip => "Add new ledger entry line.";
-    public string CloseButtonToolTip => "Cancel";
 
     /// <summary>
     ///     Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine" /> to the <see cref="LedgerBook" />.
@@ -302,8 +296,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
                 }
             }
 
-            var handler = Complete;
-            handler?.Invoke(this, new EditBankBalancesEventArgs { Canceled = Canceled });
+            Messenger.Send(new AddLedgerReconciliationCompletedMessage(!Canceled));
         }
         finally
         {

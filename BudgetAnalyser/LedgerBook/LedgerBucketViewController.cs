@@ -28,8 +28,6 @@ public class LedgerBucketViewController : ControllerBase
         Messenger.Register<LedgerBucketViewController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public event EventHandler? Updated;
-
     public ObservableCollection<Account> BankAccounts { get; } = new();
 
     public BudgetBucket? BucketBeingTracked { get; private set; }
@@ -95,8 +93,7 @@ public class LedgerBucketViewController : ControllerBase
             }
 
             this.ledgerService.MoveLedgerToAccount(this.ledger, StoredInAccount!);
-            var handler = Updated;
-            handler?.Invoke(this, EventArgs.Empty);
+            Messenger.Send(new LedgerBucketUpdatedMessage(true));
         }
         finally
         {

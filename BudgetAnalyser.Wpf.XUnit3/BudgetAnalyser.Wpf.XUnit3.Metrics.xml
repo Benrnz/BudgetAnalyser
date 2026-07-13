@@ -2,15 +2,2694 @@
 <CodeMetricsReport Version="1.0">
   <Targets>
     <Target Name="BudgetAnalyser.Wpf.XUnit3.csproj">
-      <Assembly Name="BudgetAnalyser.Wpf.XUnit3, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Assembly Name="BudgetAnalyser.Wpf.XUnit3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
         <Metrics>
-          <Metric Name="MaintainabilityIndex" Value="100" />
-          <Metric Name="CyclomaticComplexity" Value="0" />
-          <Metric Name="ClassCoupling" Value="0" />
-          <Metric Name="DepthOfInheritance" Value="0" />
-          <Metric Name="SourceLines" Value="0" />
-          <Metric Name="ExecutableLines" Value="0" />
+          <Metric Name="MaintainabilityIndex" Value="75" />
+          <Metric Name="CyclomaticComplexity" Value="180" />
+          <Metric Name="ClassCoupling" Value="158" />
+          <Metric Name="DepthOfInheritance" Value="2" />
+          <Metric Name="SourceLines" Value="2516" />
+          <Metric Name="ExecutableLines" Value="1016" />
         </Metrics>
+        <Namespaces>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="82" />
+              <Metric Name="CyclomaticComplexity" Value="13" />
+              <Metric Name="ClassCoupling" Value="22" />
+              <Metric Name="DepthOfInheritance" Value="1" />
+              <Metric Name="SourceLines" Value="89" />
+              <Metric Name="ExecutableLines" Value="30" />
+            </Metrics>
+            <Types>
+              <NamedType Name="FakeLogger">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="82" />
+                  <Metric Name="CyclomaticComplexity" Value="8" />
+                  <Metric Name="ClassCoupling" Value="8" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="41" />
+                  <Metric Name="ExecutableLines" Value="14" />
+                </Metrics>
+                <Members>
+                  <Property Name="LogLevel FakeLogger.LogLevelFilter" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="12">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="LogLevel FakeLogger.LogLevelFilter.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="12">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void FakeLogger.LogLevelFilter.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="12">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="1" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Method Name="string FakeLogger.Format(string format, params object?[] parameters)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="14">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="92" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void FakeLogger.LogAlways(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="86" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void FakeLogger.LogError(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="86" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void FakeLogger.LogError(Exception ex, Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="31">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void FakeLogger.LogInfo(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="38">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="86" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void FakeLogger.LogWarning(Func&lt;ILogger, string&gt; logEntryBuilder)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\FakeLogger.cs" Line="44">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="86" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="MetaTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="79" />
+                  <Metric Name="CyclomaticComplexity" Value="4" />
+                  <Metric Name="ClassCoupling" Value="12" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="28" />
+                  <Metric Name="ExecutableLines" Value="13" />
+                </Metrics>
+                <Members>
+                  <Method Name="MetaTest.MetaTest(ITestOutputHelper testOutputHelper)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\MetaTest.cs" Line="7">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="28" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Field Name="int MetaTest.MinimumTestCount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\MetaTest.cs" Line="9">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="void MetaTest.ListAllTests()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\MetaTest.cs" Line="12">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="82" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MetaTest.NoDecreaseInTests()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\MetaTest.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="74" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="int MetaTest.DiscoverTestCount()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\MetaTest.cs" Line="27">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="SelfRegisteredExtensions">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="86" />
+                  <Metric Name="CyclomaticComplexity" Value="1" />
+                  <Metric Name="ClassCoupling" Value="3" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="8" />
+                  <Metric Name="ExecutableLines" Value="3" />
+                </Metrics>
+                <Members>
+                  <Method Name="void SelfRegisteredExtensions.AddSelfRegisteredExtensions(ITestApplicationBuilder builder, string[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\obj\Debug\net10.0-windows\SelfRegisteredExtensions.cs" Line="12">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="97" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3.ApplicationState">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="78" />
+              <Metric Name="CyclomaticComplexity" Value="13" />
+              <Metric Name="ClassCoupling" Value="27" />
+              <Metric Name="DepthOfInheritance" Value="2" />
+              <Metric Name="SourceLines" Value="110" />
+              <Metric Name="ExecutableLines" Value="33" />
+            </Metrics>
+            <Types>
+              <NamedType Name="PersistBaxAppStateAsJsonTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="67" />
+                  <Metric Name="CyclomaticComplexity" Value="4" />
+                  <Metric Name="ClassCoupling" Value="21" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="73" />
+                  <Metric Name="ExecutableLines" Value="24" />
+                </Metrics>
+                <Members>
+                  <Field Name="IUserMessageBox PersistBaxAppStateAsJsonTest.mockUserMessageBox" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTest.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="PersistBaxAppStateAsJsonTestHarness PersistBaxAppStateAsJsonTest.subject" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTest.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="PersistBaxAppStateAsJsonTest.PersistBaxAppStateAsJsonTest()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTest.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="84" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void PersistBaxAppStateAsJsonTest.Load_ShouldDeserializeDataCorrectly()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTest.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="62" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="12" />
+                      <Metric Name="SourceLines" Value="27" />
+                      <Metric Name="ExecutableLines" Value="9" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void PersistBaxAppStateAsJsonTest.Load_ShouldHandleCorruptFileGracefully()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTest.cs" Line="53">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void PersistBaxAppStateAsJsonTest.Persist_ShouldSerializeDataCorrectly()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTest.cs" Line="67">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="19" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="PersistBaxAppStateAsJsonTestHarness">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="88" />
+                  <Metric Name="CyclomaticComplexity" Value="9" />
+                  <Metric Name="ClassCoupling" Value="7" />
+                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="SourceLines" Value="33" />
+                  <Metric Name="ExecutableLines" Value="9" />
+                </Metrics>
+                <Members>
+                  <Method Name="PersistBaxAppStateAsJsonTestHarness.PersistBaxAppStateAsJsonTestHarness(IUserMessageBox userMessageBox)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="8">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="33" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Property Name="string PersistBaxAppStateAsJsonTestHarness.SerialisedData" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="10">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                    <Accessors>
+                      <Method Name="string PersistBaxAppStateAsJsonTestHarness.SerialisedData.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="10">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                      <Method Name="void PersistBaxAppStateAsJsonTestHarness.SerialisedData.set" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="10">
+                        <Metrics>
+                          <Metric Name="MaintainabilityIndex" Value="100" />
+                          <Metric Name="CyclomaticComplexity" Value="1" />
+                          <Metric Name="ClassCoupling" Value="0" />
+                          <Metric Name="SourceLines" Value="1" />
+                          <Metric Name="ExecutableLines" Value="0" />
+                        </Metrics>
+                      </Method>
+                    </Accessors>
+                  </Property>
+                  <Method Name="bool PersistBaxAppStateAsJsonTestHarness.CheckFileNameExists()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="12">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="Stream PersistBaxAppStateAsJsonTestHarness.CreateWritableStream()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="string PersistBaxAppStateAsJsonTestHarness.DefaultFileName()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="string PersistBaxAppStateAsJsonTestHarness.ReadAppStateFileAsText()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="27">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void PersistBaxAppStateAsJsonTestHarness.WriteToStream(Stream stream, BaxApplicationStateDto data)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ApplicationState\PersistBaxAppStateAsJsonTestHarness.cs" Line="32">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="74" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3.AutoGenerated">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="72" />
+              <Metric Name="CyclomaticComplexity" Value="3" />
+              <Metric Name="ClassCoupling" Value="11" />
+              <Metric Name="DepthOfInheritance" Value="1" />
+              <Metric Name="SourceLines" Value="15" />
+              <Metric Name="ExecutableLines" Value="4" />
+            </Metrics>
+            <Types>
+              <NamedType Name="XunitAutoGeneratedEntryPoint">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="72" />
+                  <Metric Name="CyclomaticComplexity" Value="3" />
+                  <Metric Name="ClassCoupling" Value="11" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="11" />
+                  <Metric Name="ExecutableLines" Value="4" />
+                </Metrics>
+                <Members>
+                  <Method Name="int XunitAutoGeneratedEntryPoint.Main(string[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\obj\Debug\net10.0-windows\XunitAutoGeneratedEntryPoint.cs" Line="8">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="79" />
+                      <Metric Name="CyclomaticComplexity" Value="3" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3.Budget">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="64" />
+              <Metric Name="CyclomaticComplexity" Value="30" />
+              <Metric Name="ClassCoupling" Value="53" />
+              <Metric Name="DepthOfInheritance" Value="1" />
+              <Metric Name="SourceLines" Value="433" />
+              <Metric Name="ExecutableLines" Value="290" />
+            </Metrics>
+            <Types>
+              <NamedType Name="ChooseBudgetBucketControllerTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="63" />
+                  <Metric Name="CyclomaticComplexity" Value="10" />
+                  <Metric Name="ClassCoupling" Value="35" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="142" />
+                  <Metric Name="ExecutableLines" Value="101" />
+                </Metrics>
+                <Members>
+                  <Field Name="BudgetBucketRepoAlwaysFind ChooseBudgetBucketControllerTest.bucketRepo" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IAccountTypeRepository ChooseBudgetBucketControllerTest.accountRepo" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="Account ChooseBudgetBucketControllerTest.chequeAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="Account ChooseBudgetBucketControllerTest.savingsAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IMessenger ChooseBudgetBucketControllerTest.messenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="ChooseBudgetBucketControllerTest.ChooseBudgetBucketControllerTest()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void ChooseBudgetBucketControllerTest.Constructor_ShouldThrowArgumentNullException_WhenAccountRepositoryIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="28">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="9" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void ChooseBudgetBucketControllerTest.Constructor_ShouldThrowArgumentNullException_WhenBucketRepositoryIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="34">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void ChooseBudgetBucketControllerTest.Constructor_ShouldPopulateBucketAndAccountLists()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="40">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="62" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="10" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void ChooseBudgetBucketControllerTest.Filter_ShouldReplaceTheBucketListAndRestoreItAfterCancel()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="52">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="49" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="22" />
+                      <Metric Name="SourceLines" Value="27" />
+                      <Metric Name="ExecutableLines" Value="27" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void ChooseBudgetBucketControllerTest.Selected_ShouldRaiseCanExecuteRequeryAndEnableOk()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="80">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="9" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void ChooseBudgetBucketControllerTest.ShowDialog_ShouldSendRequestMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="94">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="60" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="14" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void ChooseBudgetBucketControllerTest.ShowDialog_ThenOk_ShouldSendChosenBucketAndAccount()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="111">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="53" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="18" />
+                      <Metric Name="SourceLines" Value="23" />
+                      <Metric Name="ExecutableLines" Value="20" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void ChooseBudgetBucketControllerTest.ShowDialog_ThenResponseForDifferentCorrelationId_ShouldBeIgnored()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="135">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="60" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="14" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="13" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="ChooseBudgetBucketController ChooseBudgetBucketControllerTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\ChooseBudgetBucketControllerTest.cs" Line="151">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="91" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="CreateNewFixedBudgetControllerTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="64" />
+                  <Metric Name="CyclomaticComplexity" Value="10" />
+                  <Metric Name="ClassCoupling" Value="37" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="144" />
+                  <Metric Name="ExecutableLines" Value="96" />
+                </Metrics>
+                <Members>
+                  <Field Name="BudgetBucketRepoAlwaysFind CreateNewFixedBudgetControllerTest.bucketRepo" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IMessenger CreateNewFixedBudgetControllerTest.messenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IUserMessageBox CreateNewFixedBudgetControllerTest.messageBox" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="void CreateNewFixedBudgetControllerTest.Constructor_ShouldThrowArgumentNullException_WhenBucketRepositoryIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="76" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void CreateNewFixedBudgetControllerTest.Constructor_ShouldThrowArgumentNullException_WhenMessageBoxIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="30">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void CreateNewFixedBudgetControllerTest.ShowDialog_ShouldSendRequestMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="39">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="61" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="14" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void CreateNewFixedBudgetControllerTest.CanExecuteOkButton_ShouldBeFalse_WhenBucketCodeAlreadyExists()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="56">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="63" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="9" />
+                      <Metric Name="SourceLines" Value="14" />
+                      <Metric Name="ExecutableLines" Value="10" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void CreateNewFixedBudgetControllerTest.ShowDialog_ThenHelp_ShouldDisplayHelpTextAndNotSendCompletion()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="71">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="59" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="18" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="13" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void CreateNewFixedBudgetControllerTest.ShowDialog_ThenOk_ShouldSendCompletionMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="87">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="54" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="17" />
+                      <Metric Name="SourceLines" Value="22" />
+                      <Metric Name="ExecutableLines" Value="19" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void CreateNewFixedBudgetControllerTest.ShowDialog_ThenCancel_ShouldSendCanceledCompletionMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="110">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="57" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="15" />
+                      <Metric Name="SourceLines" Value="18" />
+                      <Metric Name="ExecutableLines" Value="15" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void CreateNewFixedBudgetControllerTest.ShowDialog_ShouldIgnoreResponsesForDifferentCorrelationIds()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="129">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="61" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="UserPrompts CreateNewFixedBudgetControllerTest.CreateUserPrompts()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="144">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="79" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="CreateNewFixedBudgetController CreateNewFixedBudgetControllerTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\CreateNewFixedBudgetControllerTest.cs" Line="154">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="91" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="NewBudgetModelControllerTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="64" />
+                  <Metric Name="CyclomaticComplexity" Value="10" />
+                  <Metric Name="ClassCoupling" Value="36" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="141" />
+                  <Metric Name="ExecutableLines" Value="93" />
+                </Metrics>
+                <Members>
+                  <Field Name="IUserMessageBox NewBudgetModelControllerTest.messageBox" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IMessenger NewBudgetModelControllerTest.messenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="void NewBudgetModelControllerTest.Constructor_ShouldDefaultBudgetCycleToMonthly()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="21">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void NewBudgetModelControllerTest.Constructor_ShouldThrowArgumentNullException_WhenMessageBoxIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="33">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void NewBudgetModelControllerTest.EffectiveFrom_ShouldRaiseCanExecuteRequeryAndEnableSave()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="42">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="66" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void NewBudgetModelControllerTest.ShowDialog_ShouldIgnoreResponsesForDifferentCorrelationIds()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="55">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="60" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void NewBudgetModelControllerTest.ShowDialog_ShouldSendRequestMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="71">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="57" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="15" />
+                      <Metric Name="SourceLines" Value="19" />
+                      <Metric Name="ExecutableLines" Value="15" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void NewBudgetModelControllerTest.ShowDialog_ThenCancel_ShouldNotSendReadyMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="91">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="61" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="14" />
+                      <Metric Name="ExecutableLines" Value="11" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void NewBudgetModelControllerTest.ShowDialog_ThenHelp_ShouldDisplayHelpTextAndNotSendReadyMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="106">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="59" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="18" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="13" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void NewBudgetModelControllerTest.ShowDialog_ThenOk_ShouldSendReadyMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="122">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="56" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="15" />
+                      <Metric Name="SourceLines" Value="19" />
+                      <Metric Name="ExecutableLines" Value="16" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="NewBudgetModelController NewBudgetModelControllerTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="141">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="UserPrompts NewBudgetModelControllerTest.CreateUserPrompts()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Budget\NewBudgetModelControllerTest.cs" Line="146">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="79" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3.LedgerBook">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="72" />
+              <Metric Name="CyclomaticComplexity" Value="42" />
+              <Metric Name="ClassCoupling" Value="77" />
+              <Metric Name="DepthOfInheritance" Value="1" />
+              <Metric Name="SourceLines" Value="591" />
+              <Metric Name="ExecutableLines" Value="312" />
+            </Metrics>
+            <Types>
+              <NamedType Name="AddLedgerReconciliationControllerTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="65" />
+                  <Metric Name="CyclomaticComplexity" Value="11" />
+                  <Metric Name="ClassCoupling" Value="54" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="203" />
+                  <Metric Name="ExecutableLines" Value="87" />
+                </Metrics>
+                <Members>
+                  <Field Name="Account AddLedgerReconciliationControllerTest.chequeAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IUserMessageBox AddLedgerReconciliationControllerTest.messageBox" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="23">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IMessenger AddLedgerReconciliationControllerTest.messenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="Account AddLedgerReconciliationControllerTest.savingsAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="AddLedgerReconciliationController AddLedgerReconciliationControllerTest.subject" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="AddLedgerReconciliationControllerTest.AddLedgerReconciliationControllerTest()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="28">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void AddLedgerReconciliationControllerTest.AddBankBalanceCommand_ShouldAddBalanceAndResetSelection_WhenInCreateMode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="41">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="60" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="11" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void AddLedgerReconciliationControllerTest.Constructor_ShouldThrowArgumentNullException_WhenAccountTypeRepositoryIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="58">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="76" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void AddLedgerReconciliationControllerTest.OnShellDialogResponseReceived_Help_ShouldDisplayHelpText()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="66">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void AddLedgerReconciliationControllerTest.OnShellDialogResponseReceived_Ok_ShouldSendCompletionAndResetState()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="83">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="55" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="17" />
+                      <Metric Name="SourceLines" Value="25" />
+                      <Metric Name="ExecutableLines" Value="16" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void AddLedgerReconciliationControllerTest.OnShellDialogResponseReceived_ShouldIgnoreMessagesForDifferentCorrelationId()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="109">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="62" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="17" />
+                      <Metric Name="SourceLines" Value="17" />
+                      <Metric Name="ExecutableLines" Value="9" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void AddLedgerReconciliationControllerTest.RemoveBankBalanceCommand_ShouldRemoveBalanceAndInvalidateRequiredBalances()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="127">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="60" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="17" />
+                      <Metric Name="ExecutableLines" Value="11" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void AddLedgerReconciliationControllerTest.ShowViewDialog_ShouldPopulateBankBalancesAndDisableEditing()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="145">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="58" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="12" />
+                      <Metric Name="SourceLines" Value="16" />
+                      <Metric Name="ExecutableLines" Value="13" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="LedgerBook AddLedgerReconciliationControllerTest.CreateLedgerBook()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="161">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="67" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="16" />
+                      <Metric Name="SourceLines" Value="25" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="LedgerEntryLine AddLedgerReconciliationControllerTest.CreateLedgerEntryLine()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="187">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="87" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="UserPrompts AddLedgerReconciliationControllerTest.CreateUserPrompts()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="197">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="75" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="AddLedgerReconciliationControllerTest.TestAccountTypeRepository">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="91" />
+                  <Metric Name="CyclomaticComplexity" Value="3" />
+                  <Metric Name="ClassCoupling" Value="5" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="14" />
+                  <Metric Name="ExecutableLines" Value="4" />
+                </Metrics>
+                <Members>
+                  <Method Name="TestAccountTypeRepository.TestAccountTypeRepository(params Account[] accounts)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="208">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="14" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                  <Field Name="IEnumerable&lt;Account&gt; TestAccountTypeRepository.accounts" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="210">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="Account? TestAccountTypeRepository.GetByKey(string key)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="212">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="83" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="IEnumerable&lt;Account&gt; TestAccountTypeRepository.ListCurrentlyUsedAccountTypes()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\AddLedgerReconciliationControllerTest.cs" Line="217">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="BankBalanceViewModelTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="74" />
+                  <Metric Name="CyclomaticComplexity" Value="6" />
+                  <Metric Name="ClassCoupling" Value="17" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="71" />
+                  <Metric Name="ExecutableLines" Value="21" />
+                </Metrics>
+                <Members>
+                  <Method Name="void BankBalanceViewModelTest.Constructor_ShouldThrowArgumentNullException_WhenBalanceIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\BankBalanceViewModelTest.cs" Line="12">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="78" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void BankBalanceViewModelTest.ShowAdjustedBalance_ShouldBeFalse_WhenLineIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\BankBalanceViewModelTest.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="79" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void BankBalanceViewModelTest.AdjustedBalance_ShouldReturnBalance_WhenLineIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\BankBalanceViewModelTest.cs" Line="28">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="78" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void BankBalanceViewModelTest.ShowAdjustedBalance_ShouldBeTrue_AndAdjustedBalance_ShouldIncludeMatchingAccountAdjustmentsOnly()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\BankBalanceViewModelTest.cs" Line="36">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="71" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="9" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void BankBalanceViewModelTest.Constructor_ShouldCopyAccountAndBalanceFromBankBalance()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\BankBalanceViewModelTest.cs" Line="46">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="71" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="LedgerEntryLine BankBalanceViewModelTest.CreateLine()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\BankBalanceViewModelTest.cs" Line="55">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="84" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="24" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="LedgerBookControllerFileOperationsTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="70" />
+                  <Metric Name="CyclomaticComplexity" Value="9" />
+                  <Metric Name="ClassCoupling" Value="22" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="104" />
+                  <Metric Name="ExecutableLines" Value="58" />
+                </Metrics>
+                <Members>
+                  <Field Name="IApplicationDatabaseFacade LedgerBookControllerFileOperationsTest.applicationDatabaseFacade" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IMessenger LedgerBookControllerFileOperationsTest.messenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="void LedgerBookControllerFileOperationsTest.Constructor_ShouldThrowArgumentNullException_WhenApplicationDatabaseFacadeIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="81" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBookControllerFileOperationsTest.Constructor_ShouldThrowArgumentNullException_WhenMessengerIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="81" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBookControllerFileOperationsTest.Dirty_ShouldNotifyApplicationDatabase_WhenSetToTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="31">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="75" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBookControllerFileOperationsTest.Dirty_ShouldNotNotifyApplicationDatabase_WhenSetToFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="41">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="75" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBookControllerFileOperationsTest.Close_ShouldClearTheViewModelAndSendClosedMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="51">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="62" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="11" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBookControllerFileOperationsTest.ReconciliationChangesWillNeedToBeSaved_ShouldMarkLedgerDirtyAndNotifyRelatedDataTypes()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="67">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBookControllerFileOperationsTest.SyncDataFromLedgerService_ShouldDoNothing_WhenLedgerServiceIsNotSet()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="79">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="64" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="SourceLines" Value="14" />
+                      <Metric Name="ExecutableLines" Value="10" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBookControllerFileOperationsTest.SyncDataFromLedgerService_ShouldPopulateTheViewModelAndSendRefreshMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="94">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="58" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="16" />
+                      <Metric Name="SourceLines" Value="18" />
+                      <Metric Name="ExecutableLines" Value="14" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="LedgerBookControllerFileOperations LedgerBookControllerFileOperationsTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBookControllerFileOperationsTest.cs" Line="112">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="LedgerBucketViewControllerTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="61" />
+                  <Metric Name="CyclomaticComplexity" Value="13" />
+                  <Metric Name="ClassCoupling" Value="52" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="205" />
+                  <Metric Name="ExecutableLines" Value="142" />
+                </Metrics>
+                <Members>
+                  <Field Name="Account LedgerBucketViewControllerTest.chequeAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IAccountTypeRepository LedgerBucketViewControllerTest.accountRepo" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="23">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="ILedgerService LedgerBucketViewControllerTest.ledgerService" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IUserMessageBox LedgerBucketViewControllerTest.messageBox" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IMessenger LedgerBucketViewControllerTest.messenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="Account LedgerBucketViewControllerTest.savingsAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="27">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="LedgerBucketViewControllerTest.LedgerBucketViewControllerTest()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="29">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.Constructor_ShouldThrowArgumentNullException_WhenAccountRepositoryIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="35">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.Constructor_ShouldThrowArgumentNullException_WhenLedgerServiceIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="46">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.Constructor_ShouldThrowArgumentNullException_WhenMessengerIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="57">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="76" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="9" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.Constructor_ShouldThrowArgumentNullException_WhenUserPromptsMessageBoxIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="65">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.ShowDialog_ShouldPopulateStateAndSendRequestMessage()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="77">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="49" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="28" />
+                      <Metric Name="SourceLines" Value="27" />
+                      <Metric Name="ExecutableLines" Value="25" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.ShowDialog_ThenCancel_ShouldLeaveStateIntact()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="105">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="54" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="27" />
+                      <Metric Name="SourceLines" Value="19" />
+                      <Metric Name="ExecutableLines" Value="17" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.ShowDialog_ThenHelp_ShouldDisplayHelpAndLeaveStateIntact()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="125">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="55" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="29" />
+                      <Metric Name="SourceLines" Value="19" />
+                      <Metric Name="ExecutableLines" Value="16" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.ShowDialog_ThenOkWithSameAccount_ShouldResetWithoutMovingTheLedger()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="145">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="53" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="29" />
+                      <Metric Name="SourceLines" Value="22" />
+                      <Metric Name="ExecutableLines" Value="20" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.ShowDialog_ThenOkWithDifferentAccount_ShouldMoveTheLedgerAndResetState()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="168">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="52" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="29" />
+                      <Metric Name="SourceLines" Value="23" />
+                      <Metric Name="ExecutableLines" Value="21" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void LedgerBucketViewControllerTest.ShowDialog_ShouldIgnoreResponsesForDifferentCorrelationIds()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="192">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="55" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="27" />
+                      <Metric Name="SourceLines" Value="18" />
+                      <Metric Name="ExecutableLines" Value="16" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="LedgerBucketViewController LedgerBucketViewControllerTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="210">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="UserPrompts LedgerBucketViewControllerTest.CreateUserPrompts()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\LedgerBook\LedgerBucketViewControllerTest.cs" Line="215">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="79" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3.Matching">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="71" />
+              <Metric Name="CyclomaticComplexity" Value="41" />
+              <Metric Name="ClassCoupling" Value="40" />
+              <Metric Name="DepthOfInheritance" Value="1" />
+              <Metric Name="SourceLines" Value="431" />
+              <Metric Name="ExecutableLines" Value="181" />
+            </Metrics>
+            <Types>
+              <NamedType Name="EditRulesControllerTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="71" />
+                  <Metric Name="CyclomaticComplexity" Value="41" />
+                  <Metric Name="ClassCoupling" Value="40" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="429" />
+                  <Metric Name="ExecutableLines" Value="181" />
+                </Metrics>
+                <Members>
+                  <Field Name="IApplicationDatabaseFacade EditRulesControllerTest.applicationDatabaseFacade" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IUserInputBox EditRulesControllerTest.inputBox" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IUserMessageBox EditRulesControllerTest.messageBox" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IMessenger EditRulesControllerTest.messenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="NewRuleController EditRulesControllerTest.newRuleController" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="21">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="ITransactionRuleService EditRulesControllerTest.ruleService" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="EditRulesController EditRulesControllerTest.subject" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="23">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IUserQuestionBoxYesNo EditRulesControllerTest.yesNoBox" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="EditRulesControllerTest.EditRulesControllerTest()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="58" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="15" />
+                      <Metric Name="SourceLines" Value="22" />
+                      <Metric Name="ExecutableLines" Value="13" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.DeleteRuleCommand_ShouldBecomeExecutableWhenRuleSelected()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="52">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.DeleteRuleCommand_ShouldReturnSameInstanceEveryTime()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="62">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="76" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.DeleteRuleCommand_Execute_WhenUserDeclines_DoesNotCallRuleServiceRemove()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="71">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.DeleteRuleCommand_Execute_WhenUserConfirms_CallsRuleServiceRemove()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="82">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="66" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.DeleteRuleCommand_Execute_WhenUserConfirmsAndRemoveSucceeds_ClearsSelectedRule()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="95">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.DeleteRuleCommand_Execute_WhenUserConfirmsAndRemoveSucceeds_NotifiesApplicationDatabase()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="107">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="67" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="12" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.DeleteRuleCommand_Execute_WhenRuleServiceReturnsFalse_DoesNotNotifyApplicationDatabase()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="119">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="67" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="12" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.EditRuleCommand_ShouldReturnSameInstanceEveryTime()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="133">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="76" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.EditRuleCommand_CanExecute_ReturnsFalseWhenNoRuleSelected()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="142">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="85" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.EditRuleCommand_CanExecute_ReturnsTrueWhenRuleSelected()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="148">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="78" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.EditRuleCommand_Execute_SetsEditingRuleTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="156">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="75" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.EditRuleCommand_Execute_WhenAlreadyEditing_TogglesEditingRuleToFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="166">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.EditRuleCommand_Execute_NotifiesApplicationDatabaseOfChange()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="177">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="74" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortBy_WhenSetToBucketSortKey_SetsGroupByListBoxVisibilityTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="189">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortBy_WhenSetToBucketSortKey_SetsFlatListBoxVisibilityFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="197">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortBy_WhenSetToDescriptionSortKey_SetsFlatListBoxVisibilityTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="205">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortBy_WhenSetToDescriptionSortKey_SetsGroupByListBoxVisibilityFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="213">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortBy_WhenSetToMatchesSortKey_SetsFlatListBoxVisibilityTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="221">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortBy_WhenSetToMatchesSortKey_SetsGroupByListBoxVisibilityFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="229">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortBy_WhenSetToInvalidKey_ThrowsArgumentException()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="237">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="81" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortBy_WhenSetToInvalidKey_LeavesPropertyUnchanged()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="243">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.AndOrText_WhenNoRuleSelected_ReturnsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="255">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.AndOrText_WhenRuleSelectedWithAndTrue_ReturnsAndText()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="261">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.AndOrText_WhenRuleSelectedWithAndFalse_ReturnsOrText()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="271">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.ShowReadOnlyRuleDetails_WhenNoRuleSelected_ReturnsFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="283">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.ShowReadOnlyRuleDetails_WhenRuleSelectedAndNotEditing_ReturnsTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="289">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.ShowReadOnlyRuleDetails_WhenEditingRule_ReturnsFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="297">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="75" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortCommand_WhenExecutedWithBucketKey_UpdatesSortByProperty()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="308">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.SortCommand_WhenExecutedWithDescriptionKey_UpdatesSortByProperty()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="316">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.RuleServiceClosedEvent_ClearsRulesCollection()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="326">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.RuleServiceClosedEvent_ClearsGroupedRulesCollection()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="337">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.RuleServiceClosedEvent_ClearsSelectedRule()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="348">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="75" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="9" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.RuleServiceSavedEvent_SetsEditingRuleToFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="358">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="10" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.RuleServiceNewDataSourceAvailableEvent_PopulatesRulesFromService()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="370">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="15" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.RuleServiceNewDataSourceAvailableEvent_SetsSortByToBucketSortKey()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="382">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="14" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.RuleServiceNewDataSourceAvailableEvent_ClearsSelectedRule()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="393">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="14" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.ShowDialog_WhenRulesIsEmpty_LoadsRulesFromService()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="407">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.ShowDialog_WhenRulesAlreadyLoaded_DoesNotReloadFromService()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="419">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="14" />
+                      <Metric Name="SourceLines" Value="14" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void EditRulesControllerTest.ConfigureRuleServiceWithOneRule()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="433">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="81" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="MatchingRule EditRulesControllerTest.CreateRule()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Matching\EditRulesControllerTest.cs" Line="439">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="95" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3.ShellDialog">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="77" />
+              <Metric Name="CyclomaticComplexity" Value="1" />
+              <Metric Name="ClassCoupling" Value="6" />
+              <Metric Name="DepthOfInheritance" Value="1" />
+              <Metric Name="SourceLines" Value="19" />
+              <Metric Name="ExecutableLines" Value="6" />
+            </Metrics>
+            <Types>
+              <NamedType Name="ShellDialogControllerTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="77" />
+                  <Metric Name="CyclomaticComplexity" Value="1" />
+                  <Metric Name="ClassCoupling" Value="6" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="17" />
+                  <Metric Name="ExecutableLines" Value="6" />
+                </Metrics>
+                <Members>
+                  <Field Name="IMessenger ShellDialogControllerTest.messenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ShellDialog\ShellDialogControllerTest.cs" Line="10">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="void ShellDialogControllerTest.DialogType_Close_ShouldOnlyShowCancelButton()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\ShellDialog\ShellDialogControllerTest.cs" Line="13">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3.TestData">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="80" />
+              <Metric Name="CyclomaticComplexity" Value="13" />
+              <Metric Name="ClassCoupling" Value="26" />
+              <Metric Name="DepthOfInheritance" Value="1" />
+              <Metric Name="SourceLines" Value="583" />
+              <Metric Name="ExecutableLines" Value="44" />
+            </Metrics>
+            <Types>
+              <NamedType Name="TestDataConstants">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="93" />
+                  <Metric Name="CyclomaticComplexity" Value="0" />
+                  <Metric Name="ClassCoupling" Value="0" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="30" />
+                  <Metric Name="ExecutableLines" Value="2" />
+                </Metrics>
+                <Members>
+                  <Field Name="string TestDataConstants.Budget1Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="5">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.Budget2Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="6">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.Budget5Name" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="7">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.BudgetCollectionTestDataFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="8">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.CarMtcBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="9">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.ChequeAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="10">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.DemoBudgetAnalyserFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="11">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.DemoBudgetFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="12">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.DemoLedgerBookFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="13">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.DemoRulesFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="14">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.DemoTransactionsFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.DoctorBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.EmptyBudgetFileName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.FoodBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.HairBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.IncomeBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.InsuranceHomeBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="21">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.PayCreditCardBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.PhoneBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="23">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.PowerBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.RatesBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.RegoBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.RentBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="27">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.SavingsAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="28">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.SavingsBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="29">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.VisaAccountName" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="30">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="string TestDataConstants.WaterBucketCode" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TestDataConstants.cs" Line="31">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="0" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                </Members>
+              </NamedType>
+              <NamedType Name="TransactionsListModelTestData">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="68" />
+                  <Metric Name="CyclomaticComplexity" Value="13" />
+                  <Metric Name="ClassCoupling" Value="26" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="549" />
+                  <Metric Name="ExecutableLines" Value="42" />
+                </Metrics>
+                <Members>
+                  <Field Name="SavedUpForExpenseBucket TransactionsListModelTestData.CarMtcBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="13">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="ChequeAccount TransactionsListModelTestData.ChequeAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="14">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="SavedUpForExpenseBucket TransactionsListModelTestData.HairBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="15">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IncomeBudgetBucket TransactionsListModelTestData.IncomeBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="SavedUpForExpenseBucket TransactionsListModelTestData.InsHomeBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="SpentPerPeriodExpenseBucket TransactionsListModelTestData.PhoneBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="18">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="SpentPerPeriodExpenseBucket TransactionsListModelTestData.PowerBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="SpentPerPeriodExpenseBucket TransactionsListModelTestData.RegoBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="PayCreditCardBucket TransactionsListModelTestData.PayCreditCard" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="21">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="SavedUpForExpenseBucket TransactionsListModelTestData.SavingsBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="22">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="88" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="SurplusBucket TransactionsListModelTestData.SurplusBucket" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="23">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="SavingsAccount TransactionsListModelTestData.SavingsAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="24">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="NamedTransaction TransactionsListModelTestData.TransactionType" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="25">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="VisaAccount TransactionsListModelTestData.VisaAccount" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="26">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="90" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="2" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="TransactionsListModel TransactionsListModelTestData.TestData1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="31">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="TransactionsListModel TransactionsListModelTestData.TestData2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="44">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="TransactionsListModel TransactionsListModelTestData.TestData2A()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="58">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="64" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="TransactionsListModel TransactionsListModelTestData.TestData3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="74">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="TransactionsListModel TransactionsListModelTestData.TestData4()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="89">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="TransactionsListModel TransactionsListModelTestData.TestData5()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="106">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="TransactionsListModel TransactionsListModelTestData.WithNullBudgetBuckets(TransactionsListModel instance)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="115">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="2" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="IEnumerable&lt;Transaction&gt; TransactionsListModelTestData.CreateTransactions1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="125">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="71" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="SourceLines" Value="77" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="IEnumerable&lt;Transaction&gt; TransactionsListModelTestData.CreateTransactions2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="203">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="14" />
+                      <Metric Name="SourceLines" Value="107" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="IEnumerable&lt;Transaction&gt; TransactionsListModelTestData.CreateTransactions3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="311">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="14" />
+                      <Metric Name="SourceLines" Value="107" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="IEnumerable&lt;Transaction&gt; TransactionsListModelTestData.CreateTransactions5()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\TestData\TransactionsListModelTestData.cs" Line="419">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="15" />
+                      <Metric Name="SourceLines" Value="140" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+          <Namespace Name="BudgetAnalyser.Wpf.XUnit3.Transactions">
+            <Metrics>
+              <Metric Name="MaintainabilityIndex" Value="80" />
+              <Metric Name="CyclomaticComplexity" Value="24" />
+              <Metric Name="ClassCoupling" Value="29" />
+              <Metric Name="DepthOfInheritance" Value="2" />
+              <Metric Name="SourceLines" Value="245" />
+              <Metric Name="ExecutableLines" Value="116" />
+            </Metrics>
+            <Types>
+              <NamedType Name="SplitTransactionControllerTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="66" />
+                  <Metric Name="CyclomaticComplexity" Value="14" />
+                  <Metric Name="ClassCoupling" Value="22" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="173" />
+                  <Metric Name="ExecutableLines" Value="88" />
+                </Metrics>
+                <Members>
+                  <Field Name="IBudgetBucketRepository SplitTransactionControllerTest.mockBucketRepo" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="16">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Field Name="IMessenger SplitTransactionControllerTest.mockMessenger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="17">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="SplitTransactionControllerTest.SplitTransactionControllerTest()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="19">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="78" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.ChangingSplinterAmount1_MakesValidTrue_WhenAmountsSumToOriginal()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="27">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.ChangingSplinterAmount1_ToZero_MakesValidFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="41">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.ChangingSplinterAmount2_MakesValidTrue_WhenAmountsSumToOriginal()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="55">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.ChangingSplinterAmount2_ToZero_MakesValidFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="69">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.NegativeAmounts_SetSplinterAmount1_ToNegative50_IsInvalid()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="83">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.NegativeAmounts_Splinter1_0_Splinter2_Neg100Point22_IsInvalid()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="94">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="66" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.NegativeAmounts_Splinter1_1_Splinter2_Neg101Point22_IsInvalid()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="107">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="64" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="9" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.NegativeAmounts_Splinter1_Neg50_Splinter2_Neg50Point22_IsValid()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="119">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="62" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="9" />
+                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="ExecutableLines" Value="9" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.OnShellDialogResponseReceived_MessageWithOkOrSave_ValidRemainsTrue_WhenNotForMe()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="133">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="59" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="12" />
+                      <Metric Name="SourceLines" Value="19" />
+                      <Metric Name="ExecutableLines" Value="12" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.Valid_IsFalse_WhenOriginalTransactionIsNullOrAmountZero()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="153">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="67" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="SplitTransactionController SplitTransactionControllerTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="164">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.SetOriginalTransaction(SplitTransactionController subject, Transaction tx)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="169">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="94" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void SplitTransactionControllerTest.SetPrivateAmounts(SplitTransactionController subject, decimal a1, decimal a2)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="174">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="84" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="SplitTransactionControllerTest.TestBucket">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="97" />
+                  <Metric Name="CyclomaticComplexity" Value="1" />
+                  <Metric Name="ClassCoupling" Value="1" />
+                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="SourceLines" Value="6" />
+                  <Metric Name="ExecutableLines" Value="0" />
+                </Metrics>
+                <Members>
+                  <Method Name="TestBucket.TestBucket(string code, string name)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\SplitTransactionControllerTest.cs" Line="182">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="97" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="3" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+              <NamedType Name="TransactionsListViewModelTest">
+                <Metrics>
+                  <Metric Name="MaintainabilityIndex" Value="77" />
+                  <Metric Name="CyclomaticComplexity" Value="9" />
+                  <Metric Name="ClassCoupling" Value="14" />
+                  <Metric Name="DepthOfInheritance" Value="1" />
+                  <Metric Name="SourceLines" Value="68" />
+                  <Metric Name="ExecutableLines" Value="28" />
+                </Metrics>
+                <Members>
+                  <Field Name="ITransactionManagerService TransactionsListViewModelTest.mockTransactionService" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="11">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="CyclomaticComplexity" Value="0" />
+                      <Metric Name="ClassCoupling" Value="1" />
+                      <Metric Name="SourceLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
+                    </Metrics>
+                  </Field>
+                  <Method Name="TransactionsListViewModelTest.TransactionsListViewModelTest()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="13">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="83" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void TransactionsListViewModelTest.GivenNoDataHasTransactionsShouldBeFalse()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="20">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="82" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void TransactionsListViewModelTest.GivenNoDataTransactionListModelNameShouldBeNoTransactionsLoaded()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="27">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="81" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void TransactionsListViewModelTest.GivenTestData1HasTransactionsShouldBeTrue()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="34">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="82" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void TransactionsListViewModelTest.GivenTestData1TotalCreditsShouldBe0()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="41">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="81" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void TransactionsListViewModelTest.GivenTestData1TransactionListModelNameShouldBeFooBar()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="48">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="81" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void TransactionsListViewModelTest.TriggerRefreshTotalsRowShouldRaise7Events()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="55">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="TransactionsListViewModel TransactionsListViewModelTest.Arrange()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="65">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="TransactionsListViewModel TransactionsListViewModelTest.CreateSubject()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Wpf.XUnit3\Transactions\TransactionsListViewModelTests.cs" Line="72">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="93" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="SourceLines" Value="4" />
+                      <Metric Name="ExecutableLines" Value="1" />
+                    </Metrics>
+                  </Method>
+                </Members>
+              </NamedType>
+            </Types>
+          </Namespace>
+        </Namespaces>
       </Assembly>
     </Target>
   </Targets>

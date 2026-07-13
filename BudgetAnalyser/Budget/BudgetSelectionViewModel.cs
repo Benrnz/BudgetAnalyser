@@ -2,16 +2,9 @@
 
 namespace BudgetAnalyser.Budget;
 
-public class BudgetSelectionViewModel
+public class BudgetSelectionViewModel(BudgetCollection budgets)
 {
-    public BudgetSelectionViewModel(BudgetCollection budgets)
-    {
-        Budgets = budgets;
-    }
+    public BudgetCollection Budgets { get; private set; } = budgets;
 
-    [UsedImplicitly]
-    public BudgetCollection Budgets { get; private set; }
-
-    [UsedImplicitly]
     public BudgetModel? Selected { get; set; }
 }

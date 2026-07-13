@@ -8,7 +8,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class TransferFundsController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
+public class TransferFundsController : ControllerBase, IShellDialogInteractivity
 {
     private Guid dialogCorrelationId;
     private LedgerEntryLine? ledgerEntryLine;
@@ -69,10 +69,6 @@ public class TransferFundsController : ControllerBase, IShellDialogToolTips, ISh
     ///     Will be called to ascertain the availability of the button.
     /// </summary>
     public bool CanExecuteSaveButton => IsOkToSave();
-
-    public string ActionButtonToolTip => "Save and action the transfer.";
-
-    public string CloseButtonToolTip => "Cancel the transfer.";
 
     public void RequerySuggested()
     {

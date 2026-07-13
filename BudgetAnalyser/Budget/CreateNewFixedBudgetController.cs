@@ -23,12 +23,9 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
     }
 
-    public event EventHandler<DialogResponseEventArgs>? Complete;
-
     public decimal Amount
     {
         get;
-        [UsedImplicitly]
         set
         {
             if (value == field)
@@ -45,7 +42,6 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
     public string Code
     {
         get;
-        [UsedImplicitly]
         set
         {
             if (value == field)
@@ -62,7 +58,6 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
     public string Description
     {
         get;
-        [UsedImplicitly]
         set
         {
             if (value == field)
@@ -121,7 +116,11 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
             return;
         }
 
-        var handler = Complete;
-        handler?.Invoke(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
+        Messenger.Send(new CreateNewFixedBudgetCompletedMessage(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel)
+        {
+            Code = Code,
+            Amount = Amount,
+            Description = Description
+        });
     }
 }

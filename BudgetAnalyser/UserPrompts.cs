@@ -13,36 +13,11 @@ public class UserPrompts
         IUserQuestionBoxYesNo yesNoBox,
         IUserInputBox inputBox)
     {
-        if (messageBox is null)
-        {
-            throw new ArgumentNullException(nameof(messageBox));
-        }
-
-        if (openFileFactory is null)
-        {
-            throw new ArgumentNullException(nameof(openFileFactory));
-        }
-
-        if (saveFileFactory is null)
-        {
-            throw new ArgumentNullException(nameof(saveFileFactory));
-        }
-
-        if (yesNoBox is null)
-        {
-            throw new ArgumentNullException(nameof(yesNoBox));
-        }
-
-        if (inputBox is null)
-        {
-            throw new ArgumentNullException(nameof(inputBox));
-        }
-
-        OpenFileFactory = openFileFactory;
-        SaveFileFactory = saveFileFactory;
-        MessageBox = messageBox;
-        YesNoBox = yesNoBox;
-        InputBox = inputBox;
+        OpenFileFactory = openFileFactory ?? throw new ArgumentNullException(nameof(openFileFactory));
+        SaveFileFactory = saveFileFactory ?? throw new ArgumentNullException(nameof(saveFileFactory));
+        MessageBox = messageBox ?? throw new ArgumentNullException(nameof(messageBox));
+        YesNoBox = yesNoBox ?? throw new ArgumentNullException(nameof(yesNoBox));
+        InputBox = inputBox ?? throw new ArgumentNullException(nameof(inputBox));
     }
 
     public IUserInputBox InputBox { get; private set; }

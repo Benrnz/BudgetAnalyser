@@ -34,10 +34,8 @@ public class AppliedRulesController : ControllerBase
         ShowRulesCommand = new RelayCommand(OnShowRulesCommandExecute);
     }
 
-    [UsedImplicitly]
     public IRelayCommand<TransactionsListModel?> ApplyRulesCommand { get; }
 
-    [UsedImplicitly]
     public ICommand CreateRuleCommand { get; }
 
     public bool Dirty
@@ -58,7 +56,6 @@ public class AppliedRulesController : ControllerBase
 
     public EditRulesController EditRulesController { get; }
 
-    [UsedImplicitly]
     public ICommand ShowRulesCommand { get; }
 
     private bool CanExecuteCreateRuleCommand(Transaction? transaction)

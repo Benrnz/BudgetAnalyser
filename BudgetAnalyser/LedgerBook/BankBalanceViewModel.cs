@@ -12,13 +12,10 @@ public class BankBalanceViewModel : BankBalance
     private readonly LedgerEntryLine? line;
 
     [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "It is validated.")]
-    public BankBalanceViewModel(LedgerEntryLine? line, BankBalance balance) : base(balance.Account, balance.Balance)
+    public BankBalanceViewModel(LedgerEntryLine? line, BankBalance balance)
+        : base(balance?.Account ?? throw new ArgumentNullException(nameof(balance)),
+            balance?.Balance ?? throw new ArgumentNullException(nameof(balance)))
     {
-        if (balance is null)
-        {
-            throw new ArgumentNullException(nameof(balance));
-        }
-
         this.line = line;
     }
 

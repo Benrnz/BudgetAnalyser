@@ -52,18 +52,6 @@ public class EditRulesController : ControllerBase
         RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
     }
 
-    /// <summary>
-    ///     These events are required because the ListBoxes do not update when items are added. God only knows why.
-    /// </summary>
-    public event EventHandler<MatchingRuleEventArgs>? RuleAdded;
-
-    /// <summary>
-    ///     These events are required because the ListBoxes do not update when items are removed. God only knows why.
-    /// </summary>
-    public event EventHandler<MatchingRuleEventArgs>? RuleRemoved;
-
-    public event EventHandler? SortChanged;
-
     public string? AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
 
     public IRelayCommand DeleteRuleCommand { get; }
@@ -154,8 +142,7 @@ public class EditRulesController : ControllerBase
                     throw new ArgumentException(value + " is not a valid sort by argument.");
             }
 
-            var handler = SortChanged;
-            handler?.Invoke(this, EventArgs.Empty);
+            Messenger.Send<RuleSortChangedMessage>();
         }
     }
 
@@ -190,6 +177,17 @@ public class EditRulesController : ControllerBase
         NewRuleController.RuleCreated += OnNewRuleCreated;
     }
 
+    /// <summary>
+    ///     Registers the view's message handlers with the messenger so the view is notified of rule and sort changes.
+    ///     All messenger interaction is managed here, keeping the view free of messenger dependencies.
+    /// </summary>
+    public void RegisterViewHandlers(EditRulesUserControl view)
+    {
+        Messenger.Register<EditRulesUserControl, RuleAddedMessage>(view, static (r, m) => r.OnRuleAdded(m.Rule));
+        Messenger.Register<EditRulesUserControl, RuleRemovedMessage>(view, static (r, m) => r.OnRuleRemoved(m.Rule));
+        Messenger.Register<EditRulesUserControl, RuleSortChangedMessage>(view, static (r, _) => r.OnSortChanged());
+    }
+
     public void ShowDialog()
     {
         if (Rules.Count == 0)
@@ -204,14 +202,21 @@ public class EditRulesController : ControllerBase
         });
     }
 
+    /// <summary>
+    ///     Unregisters all message handlers previously registered for the given view.
+    /// </summary>
+    public void UnregisterViewHandlers(EditRulesUserControl view)
+    {
+        Messenger.UnregisterAll(view);
+    }
+
     private void AddToList(MatchingRule rule)
     {
         if (!(rule is SingleUseMatchingRule))
         {
             Rules.Add(rule);
             RulesGroupedByBucket.Single(g => g.Bucket == rule.Bucket).Rules.Add(rule);
-            var handler = RuleAdded;
-            handler?.Invoke(this, new MatchingRuleEventArgs { Rule = rule });
+            Messenger.Send(new RuleAddedMessage(rule));
         }
 
         this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
@@ -297,8 +302,7 @@ public class EditRulesController : ControllerBase
 
         this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
 
-        var handler = RuleRemoved;
-        handler?.Invoke(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
+        Messenger.Send(new RuleRemovedMessage(selectedRule));
 
         SelectedRule = null;
     }

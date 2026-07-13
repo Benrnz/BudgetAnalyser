@@ -36,20 +36,19 @@ public partial class TopLedgerBookUserControl
 
         if (e.OldValue is not null)
         {
-            ((TopLedgerBookController)e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
-            ((TopLedgerBookController)e.OldValue).DeregisterListener(this);
+            Controller.DeregisterListener(this);
         }
 
         if (e.NewValue is not null)
         {
-            ((TopLedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
-            Controller.RegisterListener(this, (r, m) => OnLedgerBookReadyMessageReceived(m));
+            Controller.RegisterListener(this, (r, m) => OnLedgerBookReady(m));
+            Controller.RegisterListener(this, (r, m) => OnLedgerBookUpdated(m));
         }
 
         DynamicallyCreateLedgerBookGrid();
     }
 
-    private void OnLedgerBookReadyMessageReceived(LedgerBookReadyMessage message)
+    private void OnLedgerBookReady(LedgerBookReadyMessage message)
     {
         // this is only used when no Ledgerbook has been previously loaded. Data binding hasnt been set up to respond to the ViewModel.LedgerBook property changing until the UI is actually drawn
         // for the first time.
@@ -59,7 +58,7 @@ public partial class TopLedgerBookUserControl
         }
     }
 
-    private void OnLedgerBookUpdated(object? sender, EventArgs e)
+    private void OnLedgerBookUpdated(LedgerBookUpdatedMessage message)
     {
         ResetLedgerBookContent();
         DynamicallyCreateLedgerBookGrid();

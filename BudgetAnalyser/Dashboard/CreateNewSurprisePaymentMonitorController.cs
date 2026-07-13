@@ -30,7 +30,6 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
     // TODO Replace this event with a message.
     public event EventHandler<DialogResponseEventArgs>? Complete;
 
-    [UsedImplicitly]
     public IEnumerable<BudgetBucket> BudgetBuckets => this.bucketRepository.Buckets.ToList();
 
     public WeeklyOrFortnightly Frequency
@@ -62,7 +61,6 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
     public BudgetBucket? Selected
     {
         get;
-        [UsedImplicitly]
         set
         {
             if (Equals(value, field))

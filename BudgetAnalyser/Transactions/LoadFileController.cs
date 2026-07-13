@@ -13,7 +13,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class LoadFileController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips, IDisposable
+public class LoadFileController : ControllerBase, IShellDialogInteractivity, IDisposable
 {
     private readonly IAccountTypeRepository accountTypeRepository;
     private readonly IUserMessageBox messageBox;
@@ -156,10 +156,6 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
 
     public bool CanExecuteSaveButton => false;
 
-    public string ActionButtonToolTip { get; private set; } = string.Empty;
-
-    public string CloseButtonToolTip => "Cancel";
-
     public Task RequestUserInputForMerging(TransactionsListModel currentTransactionsList)
     {
         if (this.disposed)
@@ -170,7 +166,6 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, ISh
         MergeMode = true;
         SuggestedDateRange = string.Empty;
         Title = "Import Bank Extract";
-        ActionButtonToolTip = "Merge transactions from the selected file into the current transactions list.";
         CalculateSuggestedDateRange(currentTransactionsList);
 
         return RequestUserInputCommomPreparation();

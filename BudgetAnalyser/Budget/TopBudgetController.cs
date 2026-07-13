@@ -39,7 +39,6 @@ public class TopBudgetController : ControllerBase, IShowableController
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         NewBudgetController = newBudgetController ?? throw new ArgumentNullException(nameof(newBudgetController));
-        NewBudgetController.Ready += OnAddNewBudgetReady;
         AddNewExpenseCommand = new RelayCommand<ExpenseBucket?>(OnAddNewExpenseExecute);
         AddNewIncomeCommand = new RelayCommand(OnAddNewIncomeExecute);
         DeleteBudgetItemCommand = new RelayCommand<object?>(OnDeleteBudgetItemCommandExecute);
@@ -48,6 +47,7 @@ public class TopBudgetController : ControllerBase, IShowableController
         ShowAllCommand = new RelayCommand(OnShowAllCommandExecuted);
         Shown = false;
 
+        Messenger.Register<TopBudgetController, NewBudgetModelReadyMessage>(this, static (r, m) => r.OnAddNewBudgetReady(m));
         Messenger.Register<TopBudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnPopUpResponseReceived(m));
         this.maintenanceService.Closed += OnClosedNotificationReceived;
         this.maintenanceService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -64,7 +64,6 @@ public class TopBudgetController : ControllerBase, IShowableController
 
     public string BudgetMenuItemName
     {
-        [UsedImplicitly]
         get;
 
         set
@@ -190,7 +189,6 @@ public class TopBudgetController : ControllerBase, IShowableController
     // ReSharper disable once MemberCanBePrivate.Global
     public decimal Surplus
     {
-        [UsedImplicitly]
         get;
         private set
         {
@@ -252,7 +250,7 @@ public class TopBudgetController : ControllerBase, IShowableController
         NewBudgetController.ShowDialog(proposedDate);
     }
 
-    private void OnAddNewBudgetReady(object? sender, EventArgs e)
+    private void OnAddNewBudgetReady(NewBudgetModelReadyMessage message)
     {
         if (CurrentBudget is null)
         {
@@ -261,7 +259,7 @@ public class TopBudgetController : ControllerBase, IShowableController
 
         try
         {
-            var budget = this.maintenanceService.CloneBudgetModel(CurrentBudget.Model, NewBudgetController.EffectiveFrom, NewBudgetController.BudgetCycle);
+            var budget = this.maintenanceService.CloneBudgetModel(CurrentBudget.Model, message.EffectiveFrom, message.BudgetCycle);
             ShowOtherBudget(budget);
         }
         catch (ArgumentException ex)

@@ -16,27 +16,23 @@ namespace BudgetAnalyser.Dashboard;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public sealed class TopDashboardController : ControllerBase, IShowableController
 {
-    private readonly ChooseBudgetBucketController chooseBudgetBucketController;
-    private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
     private readonly DisusedRulesController disusedRulesController;
     private readonly UploadMobileDataController uploadMobileDataController;
     private readonly IUserMessageBox userMessageBox;
 
+    private Guid correlationId;
+
     public TopDashboardController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        ChooseBudgetBucketController chooseBudgetBucketController,
-        CreateNewFixedBudgetController createNewFixedBudgetController,
         CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
         DisusedRulesController disusedRulesController,
         GlobalFilterController globalFilterController,
         UploadMobileDataController uploadMobileDataController,
         IDashboardService dashboardService) : base(messenger)
     {
-        this.chooseBudgetBucketController = chooseBudgetBucketController ?? throw new ArgumentNullException(nameof(chooseBudgetBucketController));
-        this.createNewFixedBudgetController = createNewFixedBudgetController ?? throw new ArgumentNullException(nameof(createNewFixedBudgetController));
         this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController ?? throw new ArgumentNullException(nameof(createNewSurprisePaymentMonitorController));
         this.disusedRulesController = disusedRulesController ?? throw new ArgumentNullException(nameof(disusedRulesController));
         this.uploadMobileDataController = uploadMobileDataController ?? throw new ArgumentNullException(nameof(uploadMobileDataController));
@@ -46,24 +42,14 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.userMessageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.dashboardService.NewDataSourceAvailable += OnNewDataSourceAvailable;
 
-        this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
-        this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;
         this.createNewSurprisePaymentMonitorController.Complete += OnCreateNewSurprisePaymentMonitorComplete;
 
-        CorrelationId = Guid.NewGuid();
+        this.correlationId = Guid.NewGuid();
         WidgetGroups = new ObservableCollection<WidgetGroup>();
 
         Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
-    }
-
-    public Guid CorrelationId
-    {
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
+        Messenger.Register<TopDashboardController, BudgetBucketChosenMessage>(this, static (r, m) => r.OnBudgetBucketChosenForNewBucketMonitor(m));
+        Messenger.Register<TopDashboardController, CreateNewFixedBudgetCompletedMessage>(this, static (r, m) => r.OnCreateNewFixedProjectComplete(m));
     }
 
     public GlobalFilterController GlobalFilterController
@@ -99,15 +85,15 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void OnBudgetBucketChosenForNewBucketMonitor(object? sender, BudgetBucketChosenEventArgs args)
+    private void OnBudgetBucketChosenForNewBucketMonitor(BudgetBucketChosenMessage message)
     {
-        if (args.CorrelationId != CorrelationId)
+        if (message.CorrelationId != this.correlationId || message.Canceled)
         {
             return;
         }
 
-        CorrelationId = Guid.NewGuid();
-        var bucket = this.chooseBudgetBucketController.Selected;
+        this.correlationId = Guid.NewGuid();
+        var bucket = message.SelectedBucket;
         if (bucket is null)
         {
             // Cancelled by user.
@@ -121,32 +107,32 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void OnCreateNewFixedProjectComplete(object? sender, DialogResponseEventArgs dialogResponseEventArgs)
+    private void OnCreateNewFixedProjectComplete(CreateNewFixedBudgetCompletedMessage message)
     {
-        if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != CorrelationId)
+        if (message.Canceled || message.CorrelationId != this.correlationId)
         {
             return;
         }
 
-        CorrelationId = Guid.NewGuid();
+        this.correlationId = Guid.NewGuid();
         var widget = this.dashboardService.CreateNewFixedBudgetMonitorWidget(
-            this.createNewFixedBudgetController.Code,
-            this.createNewFixedBudgetController.Description,
-            this.createNewFixedBudgetController.Amount);
+            message.Code,
+            message.Description,
+            message.Amount);
         if (widget is null)
         {
-            this.userMessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {this.createNewFixedBudgetController.Code} already exists.");
+            this.userMessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {message.Code} already exists.");
         }
     }
 
     private void OnCreateNewSurprisePaymentMonitorComplete(object? sender, DialogResponseEventArgs dialogResponseEventArgs)
     {
-        if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != CorrelationId)
+        if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != this.correlationId)
         {
             return;
         }
 
-        CorrelationId = Guid.NewGuid();
+        this.correlationId = Guid.NewGuid();
         try
         {
             if (this.createNewSurprisePaymentMonitorController.Selected is null)

@@ -289,9 +289,17 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
             gridRow = AddDateCellToLedgerEntryLine(grid, gridRow, ref gridColumn, line);
 
             // Remarks
-            var remarksHyperlink = AddHyperlinkToGrid(grid, "...", ref gridRow, gridColumn, NormalStyle, line.Remarks, line);
+            var remarksHyperlink = AddHyperlinkToGrid(
+                grid,
+                $"{line.Remarks?.Substring(0, Math.Min(10, line.Remarks.Length))}...",
+                ref gridRow,
+                gridColumn,
+                NormalStyle,
+                line.Remarks,
+                line);
             var hyperlink = (Hyperlink)remarksHyperlink.Inlines.FirstInline;
             hyperlink.Command = this.showRemarksCommand;
+            hyperlink.CommandParameter = line;
 
             // Bank Balance
             AddBorderToGridCell(grid, BankBalanceBackground, false, gridRow, gridColumn);

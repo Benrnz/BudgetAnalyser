@@ -19,7 +19,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Filtering;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class GlobalFilterController : ControllerBase, IShellDialogToolTips
+public class GlobalFilterController : ControllerBase
 {
     private readonly IApplicationDatabaseService appDbService;
     private readonly IUserMessageBox userMessageBox;
@@ -44,17 +44,6 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
         Messenger.Register<GlobalFilterController, RequestFilterChangeMessage>(this, static (r, m) => r.OnGlobalFilterChangeRequested(m));
         Messenger.Register<GlobalFilterController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
     }
-
-    public string AccountTypeSummary
-    {
-        [UsedImplicitly]
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
 
     public ICommand AddPeriodCommand { get; }
 
@@ -99,10 +88,6 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
             OnPropertyChanged();
         }
     } = string.Empty;
-
-    public string ActionButtonToolTip => "Apply filter and close.";
-
-    public string CloseButtonToolTip => "Cancel and do not change the filter.";
 
     public void PromptUserForDates()
     {
@@ -229,7 +214,6 @@ public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     {
         DateSummaryLine1 = "No date filter applied.";
         DateSummaryLine2 = string.Empty;
-        AccountTypeSummary = "No account filter applied.";
 
         if (Criteria.Cleared)
         {

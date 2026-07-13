@@ -18,7 +18,7 @@ public class ShellDialogController : ControllerBase
         messenger.Register<ShellDialogCommandRequerySuggestedMessage>(this, (_, _) => this.dialogRelayCommand.NotifyCanExecuteChanged());
     }
 
-    public string ActionToolTip => Content is not IShellDialogToolTips customTooltips ? DialogType == ShellDialogType.SaveCancel ? "Save" : "Ok" : customTooltips.ActionButtonToolTip;
+    public string ActionToolTip => DialogType == ShellDialogType.SaveCancel ? "Save" : "Ok";
 
     public bool CancelButtonVisible
     {
@@ -30,7 +30,7 @@ public class ShellDialogController : ControllerBase
         }
     }
 
-    public string CloseToolTip => Content is not IShellDialogToolTips customTooltips ? "Close" : customTooltips.CloseButtonToolTip;
+    public string CloseToolTip => DialogType == ShellDialogType.Close ? "Close" : "Cancel";
 
     public object? Content
     {

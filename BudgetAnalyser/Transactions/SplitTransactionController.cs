@@ -11,7 +11,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class SplitTransactionController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
+public class SplitTransactionController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private Guid dialogCorrelationId;
@@ -143,9 +143,6 @@ public class SplitTransactionController : ControllerBase, IShellDialogToolTips, 
     public bool CanExecuteCancelButton => true;
     public bool CanExecuteOkButton => false;
     public bool CanExecuteSaveButton => Valid;
-
-    public string ActionButtonToolTip => "Save Split Transactions.";
-    public string CloseButtonToolTip => "Cancel.";
 
     public void ShowDialog(Transaction originalTransaction, Guid correlationId)
     {
