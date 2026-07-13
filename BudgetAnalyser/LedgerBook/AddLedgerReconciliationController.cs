@@ -12,7 +12,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class AddLedgerReconciliationController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
+public class AddLedgerReconciliationController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IAccountTypeRepository accountTypeRepository;
     private readonly IUserMessageBox messageBox;
@@ -152,9 +152,6 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogToo
     public bool CanExecuteOkButton => CreateMode ? Date != DateOnly.MinValue && HasRequiredBalances : Editable && Date != DateOnly.MinValue && HasRequiredBalances;
 
     public bool CanExecuteSaveButton => false;
-
-    public string ActionButtonToolTip => "Add new ledger entry line.";
-    public string CloseButtonToolTip => "Cancel";
 
     /// <summary>
     ///     Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine" /> to the <see cref="LedgerBook" />.

@@ -9,7 +9,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Budget;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
+public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IAccountTypeRepository accountRepo;
     private readonly IBudgetBucketRepository bucketRepository;
@@ -80,9 +80,6 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
     public bool CanExecuteCancelButton => true;
     public bool CanExecuteOkButton => Selected is not null;
     public bool CanExecuteSaveButton => false;
-
-    public string ActionButtonToolTip => "Select and use this Expense Budget Bucket.";
-    public string CloseButtonToolTip => "Cancel";
 
     public void Filter(Func<BudgetBucket, bool> predicate, string filterDescription)
     {
