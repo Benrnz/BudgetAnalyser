@@ -178,7 +178,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         if (message.Widget is DaysSinceLastImport)
         {
-            //OnTransactionExecuted();
+            Messenger.Send(new MainMenuTabRequestMessage(MainMenuTab.Transactions));
             return;
         }
 

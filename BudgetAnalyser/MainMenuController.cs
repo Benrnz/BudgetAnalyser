@@ -38,6 +38,8 @@ public class MainMenuController : ControllerBase
         ShowReportsCommand = new RelayCommand(OnReportsExecuted);
         ShowTransactionsCommand = new RelayCommand(OnTransactionExecuted);
 
+        Messenger.Register<MainMenuController, MainMenuTabRequestMessage>(this, static (r, m) => r.OnTabRequested(m));
+
         // Default visible tab is the Dashboard tab
         OnDashboardExecuted();
     }
@@ -151,6 +153,30 @@ public class MainMenuController : ControllerBase
         BeforeTabExecutedCommon();
         ReportsToggle = true;
         AfterTabExecutedCommon();
+    }
+
+    private void OnTabRequested(MainMenuTabRequestMessage message)
+    {
+        switch (message.Tab)
+        {
+            case MainMenuTab.Dashboard:
+                OnDashboardExecuted();
+                break;
+            case MainMenuTab.Transactions:
+                OnTransactionExecuted();
+                break;
+            case MainMenuTab.Ledger:
+                OnLedgerBookExecuted();
+                break;
+            case MainMenuTab.Budget:
+                OnBudgetExecuted();
+                break;
+            case MainMenuTab.Reports:
+                OnReportsExecuted();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     private void OnTransactionExecuted()
