@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using BudgetAnalyser.Engine;
+﻿using BudgetAnalyser.Engine;
 using CommunityToolkit.Mvvm.Input;
 
 namespace BudgetAnalyser;
@@ -7,10 +6,6 @@ namespace BudgetAnalyser;
 [AutoRegisterWithIoC]
 public static class PersistenceOperationCommands
 {
-    public static ICommand CreateNewDatabaseCommand { get; } = new RelayCommand(() => PersistenceOperations!.OnCreateNewDatabaseCommandExecute());
-    public static ICommand LoadDatabaseCommand { get; } = new RelayCommand(() => PersistenceOperations!.OnLoadDatabaseCommandExecute());
-    public static ICommand LoadDemoDatabaseCommand { get; } = new RelayCommand(() => PersistenceOperations!.OnLoadDemoDatabaseCommandExecute());
-
     [PropertyInjection]
     public static PersistenceOperations? PersistenceOperations
     {
@@ -20,8 +15,5 @@ public static class PersistenceOperationCommands
     }
 
     // These properties use fields rather than new'ing up instance for each call because this is a shared static class consumed by many forms.
-    public static RelayCommand SaveDatabaseCommand { get; } = new(() => PersistenceOperations!.OnSaveDatabaseCommandExecute(), () => PersistenceOperations!.HasUnsavedChanges);
-
-    [UsedImplicitly]
-    public static ICommand ValidateModelCommand { get; } = new RelayCommand(() => PersistenceOperations!.OnValidateModelsCommandExecute());
+    public static AsyncRelayCommand SaveDatabaseCommand { get; } = new(async () => await PersistenceOperations!.OnSaveDatabaseCommandExecute(), () => PersistenceOperations!.HasUnsavedChanges);
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
@@ -19,6 +20,8 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
     private readonly DisusedRulesController disusedRulesController;
+    private readonly ILogger logger;
+    private readonly PersistenceOperations persistenceOperations;
     private readonly UploadMobileDataController uploadMobileDataController;
     private readonly IUserMessageBox userMessageBox;
 
@@ -26,16 +29,20 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
     public TopDashboardController(
         IMessenger messenger,
+        ILogger logger,
         UserPrompts userPrompts,
         CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
         DisusedRulesController disusedRulesController,
         GlobalFilterController globalFilterController,
         UploadMobileDataController uploadMobileDataController,
-        IDashboardService dashboardService) : base(messenger)
+        IDashboardService dashboardService,
+        PersistenceOperations persistenceOperations) : base(messenger)
     {
         this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController ?? throw new ArgumentNullException(nameof(createNewSurprisePaymentMonitorController));
         this.disusedRulesController = disusedRulesController ?? throw new ArgumentNullException(nameof(disusedRulesController));
         this.uploadMobileDataController = uploadMobileDataController ?? throw new ArgumentNullException(nameof(uploadMobileDataController));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.persistenceOperations = persistenceOperations ?? throw new ArgumentNullException(nameof(persistenceOperations));
         GlobalFilterController = globalFilterController ?? throw new ArgumentNullException(nameof(globalFilterController));
 
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
@@ -47,9 +54,12 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.correlationId = Guid.NewGuid();
         WidgetGroups = new ObservableCollection<WidgetGroup>();
 
-        Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
-        Messenger.Register<TopDashboardController, BudgetBucketChosenMessage>(this, static (r, m) => r.OnBudgetBucketChosenForNewBucketMonitor(m));
-        Messenger.Register<TopDashboardController, CreateNewFixedBudgetCompletedMessage>(this, static (r, m) => r.OnCreateNewFixedProjectComplete(m));
+        Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+        Messenger.Register<TopDashboardController, BudgetBucketChosenMessage>(this, OnBudgetBucketChosenForNewBucketMonitor);
+        Messenger.Register<TopDashboardController, CreateNewFixedBudgetCompletedMessage>(this, OnCreateNewFixedProjectComplete);
+        Messenger.Register<TopDashboardController, ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+        Messenger.Register<TopDashboardController, ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+
     }
 
     public GlobalFilterController GlobalFilterController
@@ -85,14 +95,41 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void OnBudgetBucketChosenForNewBucketMonitor(BudgetBucketChosenMessage message)
+    private static void OnApplicationStateLoaded(TopDashboardController recipient, ApplicationStateLoadedMessage message)
     {
-        if (message.CorrelationId != this.correlationId || message.Canceled)
+        recipient.ObserveUnhandledFireAndForgetFailure(
+            recipient.OnApplicationStateLoadedAsync(message),
+            "Unhandled exception processing ApplicationStateLoadedMessage in TopDashboardController.");
+    }
+
+    private async Task OnApplicationStateLoadedAsync(ApplicationStateLoadedMessage message)
+    {
+        if (message is null)
+        {
+            throw new ArgumentNullException(nameof(message));
+        }
+
+        var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
+        if (storedMainAppState is not null)
+        {
+            await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
+        }
+    }
+
+    private static void OnApplicationStateRequested(TopDashboardController recipient, ApplicationStateRequestedMessage message)
+    {
+        var dataFileState = recipient.persistenceOperations.PreparePersistentStateData();
+        message.PersistThisModel(dataFileState);
+    }
+
+    private static void OnBudgetBucketChosenForNewBucketMonitor(TopDashboardController recipient, BudgetBucketChosenMessage message)
+    {
+        if (message.CorrelationId != recipient.correlationId || message.Canceled)
         {
             return;
         }
 
-        this.correlationId = Guid.NewGuid();
+        recipient.correlationId = Guid.NewGuid();
         var bucket = message.SelectedBucket;
         if (bucket is null)
         {
@@ -100,28 +137,28 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
             return;
         }
 
-        var widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
+        var widget = recipient.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
         if (widget is null)
         {
-            this.userMessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
+            recipient.userMessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
         }
     }
 
-    private void OnCreateNewFixedProjectComplete(CreateNewFixedBudgetCompletedMessage message)
+    private static void OnCreateNewFixedProjectComplete(TopDashboardController recipient, CreateNewFixedBudgetCompletedMessage message)
     {
-        if (message.Canceled || message.CorrelationId != this.correlationId)
+        if (message.Canceled || message.CorrelationId != recipient.correlationId)
         {
             return;
         }
 
-        this.correlationId = Guid.NewGuid();
-        var widget = this.dashboardService.CreateNewFixedBudgetMonitorWidget(
+        recipient.correlationId = Guid.NewGuid();
+        var widget = recipient.dashboardService.CreateNewFixedBudgetMonitorWidget(
             message.Code,
             message.Description,
             message.Amount);
         if (widget is null)
         {
-            this.userMessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {message.Code} already exists.");
+            recipient.userMessageBox.Show($"A new fixed budget project bucket cannot be created, because the code {message.Code} already exists.");
         }
     }
 
@@ -159,10 +196,40 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         WidgetCommands.ListenForWidgetChanges(WidgetGroups);
     }
 
-    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
+    private void OnWidgetActivatedMessageReceived(TopDashboardController recipient, WidgetActivatedMessage message)
     {
         if (message.Handled)
         {
+            return;
+        }
+
+        if (message.Widget is SaveWidget)
+        {
+            ObserveUnhandledFireAndForgetFailure(this.persistenceOperations.OnSaveDatabaseCommandExecute(), "Unhandled exception processing Save in TopDashboardController.");
+            return;
+        }
+
+        if (message.Widget is DaysSinceLastImport)
+        {
+            Messenger.Send(new MainMenuTabRequestMessage(MainMenuTab.Transactions));
+            return;
+        }
+
+        if (message.Widget is CurrentFileWidget)
+        {
+            ObserveUnhandledFireAndForgetFailure(ProcessCurrentFileWidgetActivated(message), "Unhandled exception processing CurrentFileWidget in TopDashboardController.");
+            return;
+        }
+
+        if (message.Widget is LoadDemoWidget)
+        {
+            ObserveUnhandledFireAndForgetFailure(ProcessLoadDemoWidgetActivated(message), "Unhandled exception processing LoadDemoWidget in TopDashboardController.");
+            return;
+        }
+
+        if (message.Widget is NewFileWidget)
+        {
+            ObserveUnhandledFireAndForgetFailure(ProcessCreateNewFileWidgetActivated(message), "Unhandled exception processing NewFileWidget in TopDashboardController.");
             return;
         }
 
@@ -176,5 +243,56 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         {
             this.uploadMobileDataController.ShowDialog(mobileWidget);
         }
+    }
+
+    private void ObserveUnhandledFireAndForgetFailure(Task task, string context)
+    {
+        _ = task.ContinueWith(
+            t =>
+            {
+                var baseException = t.Exception?.GetBaseException();
+                if (baseException is not null)
+                {
+                    this.logger.LogError(baseException, _ => context);
+                }
+            },
+            TaskContinuationOptions.OnlyOnFaulted);
+    }
+
+    private async Task ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
+    {
+        if (message.Widget is not NewFileWidget)
+        {
+            return;
+        }
+
+        message.Handled = true;
+
+        await this.persistenceOperations.OnCreateNewDatabaseCommandExecute();
+    }
+
+    private async Task ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
+    {
+        // Open new Database file
+        if (message.Widget is not CurrentFileWidget)
+        {
+            return;
+        }
+
+        message.Handled = true;
+
+        await this.persistenceOperations.OnLoadDatabaseCommandExecute();
+    }
+
+    private async Task ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
+    {
+        if (message.Widget is not LoadDemoWidget)
+        {
+            return;
+        }
+
+        message.Handled = true;
+
+        await this.persistenceOperations.OnLoadDemoDatabaseCommandExecute();
     }
 }

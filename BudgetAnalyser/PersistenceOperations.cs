@@ -49,7 +49,7 @@ public class PersistenceOperations
         await LoadDatabase(() => fileName);
     }
 
-    public async void OnCreateNewDatabaseCommandExecute()
+    public async Task OnCreateNewDatabaseCommandExecute()
     {
         if (!await PromptToSaveIfNecessary())
         {
@@ -75,7 +75,7 @@ public class PersistenceOperations
         await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
     }
 
-    public async void OnLoadDatabaseCommandExecute()
+    public async Task OnLoadDatabaseCommandExecute()
     {
         var fileName = PromptUserForFileName();
         if (fileName is null)
@@ -86,13 +86,13 @@ public class PersistenceOperations
         await LoadDatabase(fileName);
     }
 
-    public async void OnLoadDemoDatabaseCommandExecute()
+    public async Task OnLoadDemoDatabaseCommandExecute()
     {
         var fileName = this.demoFileHelper.FindDemoFile();
         await LoadDatabase(() => fileName);
     }
 
-    public async void OnSaveDatabaseCommandExecute()
+    public async Task OnSaveDatabaseCommandExecute()
     {
         // This is to stop excessive clicking on the save button crashing the app due to locked file from many threads trying to save at the same time.
         await OneSaveAtATime.WaitAsync();
@@ -115,11 +115,6 @@ public class PersistenceOperations
         {
             OneSaveAtATime.Release();
         }
-    }
-
-    public void OnValidateModelsCommandExecute()
-    {
-        ValidateModel("Validate Budget Analyser Data");
     }
 
     public ApplicationEngineState PreparePersistentStateData()

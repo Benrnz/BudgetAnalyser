@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -112,7 +112,7 @@ public class ShellController : ControllerBase
         return false;
     }
 
-    private async void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+    private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
     {
         if (message is null)
         {
@@ -133,13 +133,6 @@ public class ShellController : ControllerBase
 
             TopTransactionsController.PageSize = shellState.ListPageSize;
         }
-
-        // Todo this should move to DashboardController
-        var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
-        if (storedMainAppState is not null)
-        {
-            await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
-        }
     }
 
     private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
@@ -151,10 +144,6 @@ public class ShellController : ControllerBase
             ListPageSize = TopTransactionsController.PageSize
         };
         message.PersistThisModel(shellPersistentStateV1);
-
-        // Todo this should move to DashboardController
-        var dataFileState = this.persistenceOperations.PreparePersistentStateData();
-        message.PersistThisModel(dataFileState);
     }
 
     private void OnDialogRequested(ShellDialogRequestMessage message)
