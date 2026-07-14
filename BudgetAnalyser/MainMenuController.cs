@@ -1,7 +1,6 @@
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.Transactions;
@@ -38,7 +37,6 @@ public class MainMenuController : ControllerBase
         ShowLedgerBookCommand = new RelayCommand(OnLedgerBookExecuted);
         ShowReportsCommand = new RelayCommand(OnReportsExecuted);
         ShowTransactionsCommand = new RelayCommand(OnTransactionExecuted);
-        Messenger.Register<MainMenuController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
 
         // Default visible tab is the Dashboard tab
         OnDashboardExecuted();
@@ -160,89 +158,5 @@ public class MainMenuController : ControllerBase
         BeforeTabExecutedCommon();
         TransactionsToggle = true;
         AfterTabExecutedCommon();
-    }
-
-    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
-    {
-        if (message is null)
-        {
-            throw new ArgumentNullException(nameof(message));
-        }
-
-        if (message.Handled)
-        {
-            return;
-        }
-
-        if (message.Widget is SaveWidget)
-        {
-            if (PersistenceOperationCommands.SaveDatabaseCommand.CanExecute(null))
-            {
-                PersistenceOperationCommands.SaveDatabaseCommand.Execute(null);
-            }
-
-            return;
-        }
-
-        if (message.Widget is DaysSinceLastImport)
-        {
-            OnTransactionExecuted();
-            return;
-        }
-
-        if (message.Widget is CurrentFileWidget)
-        {
-            ProcessCurrentFileWidgetActivated(message);
-            return;
-        }
-
-        if (message.Widget is LoadDemoWidget)
-        {
-            ProcessLoadDemoWidgetActivated(message);
-            return;
-        }
-
-        if (message.Widget is NewFileWidget)
-        {
-            ProcessCreateNewFileWidgetActivated(message);
-        }
-    }
-
-    private void ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
-    {
-        if (message.Widget is not NewFileWidget)
-        {
-            return;
-        }
-
-        message.Handled = true;
-
-        PersistenceOperationCommands.CreateNewDatabaseCommand.Execute(this);
-    }
-
-    private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
-    {
-        // Open new Database file
-        if (message.Widget is not CurrentFileWidget)
-        {
-            return;
-        }
-
-        message.Handled = true;
-
-        PersistenceOperationCommands.LoadDatabaseCommand.Execute(this);
-    }
-
-    private void ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
-    {
-        if (message.Widget is not LoadDemoWidget)
-        {
-            return;
-        }
-
-        message.Handled = true;
-
-        // Could possibily go direct to PersistenceOperation class here.
-        PersistenceOperationCommands.LoadDemoDatabaseCommand.Execute(this);
     }
 }

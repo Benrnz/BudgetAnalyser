@@ -166,6 +166,40 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
             return;
         }
 
+        if (message.Widget is SaveWidget)
+        {
+            if (PersistenceOperationCommands.SaveDatabaseCommand.CanExecute(null))
+            {
+                PersistenceOperationCommands.SaveDatabaseCommand.Execute(null);
+            }
+
+            return;
+        }
+
+        if (message.Widget is DaysSinceLastImport)
+        {
+            //OnTransactionExecuted();
+            return;
+        }
+
+        if (message.Widget is CurrentFileWidget)
+        {
+            ProcessCurrentFileWidgetActivated(message);
+            return;
+        }
+
+        if (message.Widget is LoadDemoWidget)
+        {
+            ProcessLoadDemoWidgetActivated(message);
+            return;
+        }
+
+        if (message.Widget is NewFileWidget)
+        {
+            ProcessCreateNewFileWidgetActivated(message);
+            return;
+        }
+
         if (message.Widget is DisusedMatchingRuleWidget)
         {
             this.disusedRulesController.ShowDialog();
@@ -176,5 +210,43 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         {
             this.uploadMobileDataController.ShowDialog(mobileWidget);
         }
+    }
+
+    private void ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
+    {
+        if (message.Widget is not NewFileWidget)
+        {
+            return;
+        }
+
+        message.Handled = true;
+
+        PersistenceOperationCommands.CreateNewDatabaseCommand.Execute(this);
+    }
+
+    private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
+    {
+        // Open new Database file
+        if (message.Widget is not CurrentFileWidget)
+        {
+            return;
+        }
+
+        message.Handled = true;
+
+        PersistenceOperationCommands.LoadDatabaseCommand.Execute(this);
+    }
+
+    private void ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
+    {
+        if (message.Widget is not LoadDemoWidget)
+        {
+            return;
+        }
+
+        message.Handled = true;
+
+        // Could possibly go direct to PersistenceOperation class here.
+        PersistenceOperationCommands.LoadDemoDatabaseCommand.Execute(this);
     }
 }
