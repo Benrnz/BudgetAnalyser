@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
@@ -19,6 +20,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
     private readonly DisusedRulesController disusedRulesController;
+    private readonly PersistenceOperations persistenceOperations;
     private readonly UploadMobileDataController uploadMobileDataController;
     private readonly IUserMessageBox userMessageBox;
 
@@ -31,11 +33,13 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         DisusedRulesController disusedRulesController,
         GlobalFilterController globalFilterController,
         UploadMobileDataController uploadMobileDataController,
-        IDashboardService dashboardService) : base(messenger)
+        IDashboardService dashboardService,
+        PersistenceOperations persistenceOperations) : base(messenger)
     {
         this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController ?? throw new ArgumentNullException(nameof(createNewSurprisePaymentMonitorController));
         this.disusedRulesController = disusedRulesController ?? throw new ArgumentNullException(nameof(disusedRulesController));
         this.uploadMobileDataController = uploadMobileDataController ?? throw new ArgumentNullException(nameof(uploadMobileDataController));
+        this.persistenceOperations = persistenceOperations ?? throw new ArgumentNullException(nameof(persistenceOperations));
         GlobalFilterController = globalFilterController ?? throw new ArgumentNullException(nameof(globalFilterController));
 
         this.dashboardService = dashboardService ?? throw new ArgumentNullException(nameof(dashboardService));
@@ -47,9 +51,12 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.correlationId = Guid.NewGuid();
         WidgetGroups = new ObservableCollection<WidgetGroup>();
 
-        Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
+        Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m).Wait());
         Messenger.Register<TopDashboardController, BudgetBucketChosenMessage>(this, static (r, m) => r.OnBudgetBucketChosenForNewBucketMonitor(m));
         Messenger.Register<TopDashboardController, CreateNewFixedBudgetCompletedMessage>(this, static (r, m) => r.OnCreateNewFixedProjectComplete(m));
+        Messenger.Register<TopDashboardController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m).Wait());
+        Messenger.Register<TopDashboardController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
+
     }
 
     public GlobalFilterController GlobalFilterController
@@ -83,6 +90,26 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
             field = value;
             OnPropertyChanged();
         }
+    }
+
+    private async Task OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+    {
+        if (message is null)
+        {
+            throw new ArgumentNullException(nameof(message));
+        }
+
+        var storedMainAppState = message.ElementOfType<ApplicationEngineState>();
+        if (storedMainAppState is not null)
+        {
+            await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
+        }
+    }
+
+    private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
+    {
+        var dataFileState = this.persistenceOperations.PreparePersistentStateData();
+        message.PersistThisModel(dataFileState);
     }
 
     private void OnBudgetBucketChosenForNewBucketMonitor(BudgetBucketChosenMessage message)
@@ -159,7 +186,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         WidgetCommands.ListenForWidgetChanges(WidgetGroups);
     }
 
-    private void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
+    private async Task OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
     {
         if (message.Handled)
         {
@@ -168,11 +195,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         if (message.Widget is SaveWidget)
         {
-            if (PersistenceOperationCommands.SaveDatabaseCommand.CanExecute(null))
-            {
-                PersistenceOperationCommands.SaveDatabaseCommand.Execute(null);
-            }
-
+            await this.persistenceOperations.OnSaveDatabaseCommandExecute();
             return;
         }
 
@@ -184,19 +207,19 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         if (message.Widget is CurrentFileWidget)
         {
-            ProcessCurrentFileWidgetActivated(message);
+            await ProcessCurrentFileWidgetActivated(message);
             return;
         }
 
         if (message.Widget is LoadDemoWidget)
         {
-            ProcessLoadDemoWidgetActivated(message);
+            await ProcessLoadDemoWidgetActivated(message);
             return;
         }
 
         if (message.Widget is NewFileWidget)
         {
-            ProcessCreateNewFileWidgetActivated(message);
+            await ProcessCreateNewFileWidgetActivated(message);
             return;
         }
 
@@ -212,7 +235,7 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
+    private async Task ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
     {
         if (message.Widget is not NewFileWidget)
         {
@@ -221,10 +244,10 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         message.Handled = true;
 
-        PersistenceOperationCommands.CreateNewDatabaseCommand.Execute(this);
+        await this.persistenceOperations.OnCreateNewDatabaseCommandExecute();
     }
 
-    private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
+    private async Task ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
     {
         // Open new Database file
         if (message.Widget is not CurrentFileWidget)
@@ -234,10 +257,10 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         message.Handled = true;
 
-        PersistenceOperationCommands.LoadDatabaseCommand.Execute(this);
+        await this.persistenceOperations.OnLoadDatabaseCommandExecute();
     }
 
-    private void ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
+    private async Task ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
     {
         if (message.Widget is not LoadDemoWidget)
         {
@@ -246,7 +269,6 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         message.Handled = true;
 
-        // Could possibly go direct to PersistenceOperation class here.
-        PersistenceOperationCommands.LoadDemoDatabaseCommand.Execute(this);
+        await this.persistenceOperations.OnLoadDemoDatabaseCommandExecute();
     }
 }
