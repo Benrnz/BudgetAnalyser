@@ -176,7 +176,6 @@ public class TopTransactionsListControllerTest
             newRuleController,
             transactionRuleService,
             applicationDatabaseFacade);
-        var editingTransactionController = new EditingTransactionController(messenger, bucketRepository);
         var splitTransactionController = new SplitTransactionController(messenger, bucketRepository);
         var loadFileController = new LoadFileController(messenger, userPrompts, accountTypeRepository);
         var fileOperations = new TransactionsControllerFileOperations(
@@ -185,10 +184,10 @@ public class TopTransactionsListControllerTest
             loadFileController,
             applicationDatabaseFacade,
             transactionService);
+        var editingTransactionController = new EditingTransactionController(messenger, bucketRepository, userPrompts, transactionService, fileOperations, new FakeLogger());
         var subject = new TopTransactionsListController(
             messenger,
             new FakeLogger(),
-            userPrompts,
             appliedRulesController,
             editRulesController,
             editingTransactionController,

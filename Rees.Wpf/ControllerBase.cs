@@ -22,4 +22,23 @@ public abstract class ControllerBase : ObservableRecipient
     ///     Gets the dispatcher that was stored by the constructor. This will be the main UI thread dispatcher.
     /// </summary>
     protected Dispatcher Dispatcher { get; }
+
+    /// <summary>
+    ///     For use with async relay command handlers to perform some logging action if the handler throws an error.
+    /// </summary>
+    /// <param name="task">The task to observe for unhandled exceptions.</param>
+    /// <param name="loggingAction">The action to perform if an exception is thrown.</param>
+    protected void ObserveUnhandledFireAndForgetFailure(Task task, Action<Exception> loggingAction)
+    {
+        _ = task.ContinueWith(
+            t =>
+            {
+                var baseException = t.Exception?.GetBaseException();
+                if (baseException is not null)
+                {
+                    loggingAction(baseException);
+                }
+            },
+            TaskContinuationOptions.OnlyOnFaulted);
+    }
 }

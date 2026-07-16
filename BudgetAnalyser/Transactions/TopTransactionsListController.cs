@@ -11,7 +11,6 @@ using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
-using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Transactions;
 
@@ -20,13 +19,11 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 {
     private readonly ILogger logger;
     private readonly ITransactionManagerService transactionService;
-    private readonly IUserQuestionBoxYesNo yesNoBox;
     private Guid shellDialogCorrelationId;
 
     public TopTransactionsListController(
         IMessenger messenger,
         ILogger logger,
-        UserPrompts userPrompts,
         AppliedRulesController appliedRulesController,
         EditRulesController editRulesController,
         EditingTransactionController editingTransactionController,
@@ -41,11 +38,10 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         EditRulesController = editRulesController ?? throw new ArgumentNullException(nameof(editRulesController));
         EditingTransactionController = editingTransactionController ?? throw new ArgumentNullException(nameof(editingTransactionController));
         SplitTransactionController = splitTransactionController ?? throw new ArgumentNullException(nameof(splitTransactionController));
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
-        this.yesNoBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
+
         ClearSearchCommand = new RelayCommand(ClearSearch);
-        DeleteTransactionCommand = new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
         EditTransactionCommand = new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
         MergeBankExtractCommand = new RelayCommand(OnMergeExtractCommandExecute);
         NavigateNextPageCommand = new RelayCommand(NavigateNextPage, () => CanNavigateNext);
@@ -57,7 +53,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
         Messenger.Register<TopTransactionsListController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
         Messenger.Register<TopTransactionsListController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
-        Messenger.Register<TopTransactionsListController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
+        Messenger.Register<TopTransactionsListController, ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
 
         this.transactionService.Closed += OnClosedNotificationReceived;
         this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -132,8 +128,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
     } = 1;
 
-    public IRelayCommand DeleteTransactionCommand { get; }
-    internal EditingTransactionController EditingTransactionController { get; }
+    public EditingTransactionController EditingTransactionController { get; }
     public EditRulesController EditRulesController { get; }
     public IRelayCommand EditTransactionCommand { get; }
     public TransactionsControllerFileOperations FileOperations { get; }
@@ -240,7 +235,8 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         {
             // In theory should not occur.  When loading transactions from the BAX CSV file, transactions are created using the already loaded budget, and this process will throw if a bucket doesn't
             // exist.
-            this.logger.LogError(_ => "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in the new loaded Budget. This will result in those transactions being declassified. Check for unclassified transactions.");
+            this.logger.LogError(_ =>
+                "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in the new loaded Budget. This will result in those transactions being declassified. Check for unclassified transactions.");
         }
     }
 
@@ -265,7 +261,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
                 SplitTransactionController.SplinterAmount1,
                 SplitTransactionController.SplinterAmount2,
                 SplitTransactionController.SplinterBucket1!,
-                SplitTransactionController.SplinterBucket2!);  // Buckets validated by SplitTransactionController.
+                SplitTransactionController.SplinterBucket2!); // Buckets validated by SplitTransactionController.
 
             FileOperations.NotifyOfEdit();
             await FileOperations.SyncWithServiceAsync();
@@ -288,24 +284,6 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     private void OnClosedNotificationReceived(object? sender, EventArgs e)
     {
         FileOperations.Close();
-    }
-
-    private async void OnDeleteTransactionCommandExecute()
-    {
-        if (ViewModel.SelectedRow is null)
-        {
-            return;
-        }
-
-        var confirm = this.yesNoBox.Show(
-            "Are you sure you want to delete this transaction?",
-            "Delete Transaction");
-        if (confirm is not null && confirm.Value)
-        {
-            this.transactionService.RemoveTransaction(ViewModel.SelectedRow);
-            FileOperations.NotifyOfEdit();
-            await FileOperations.SyncWithServiceAsync();
-        }
     }
 
     private void OnEditTransactionCommandExecute()
@@ -363,8 +341,9 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         FileOperations.ViewModel.Dirty = false;
     }
 
-    private async void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
+    private void OnShellDialogResponseMessageReceived(TopTransactionsListController recipient, ShellDialogResponseMessage message)
     {
+        // TODO Could the Split Transaction Controller and Edit Transaction Controller's own thier own finalising and creation?
         if (!message.IsItForMe(this.shellDialogCorrelationId))
         {
             return;
@@ -376,7 +355,9 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
         else if (message.Content is SplitTransactionController)
         {
-            await FinaliseSplitTransaction(message);
+            ObserveUnhandledFireAndForgetFailure(
+                FinaliseSplitTransaction(message),
+                ex => this.logger.LogError(ex, _ => "Unhandled exception processing SplitTransactionController in TopTransactionsListController."));
         }
 
         this.shellDialogCorrelationId = Guid.Empty;
@@ -397,13 +378,14 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     {
         if (e.PropertyName == nameof(TransactionsListViewModel.SelectedRow))
         {
+            EditingTransactionController.Transaction = ViewModel.SelectedRow;
             UpdateCommandCanExecute();
         }
     }
 
     private void UpdateCommandCanExecute()
     {
-        DeleteTransactionCommand.NotifyCanExecuteChanged();
+        EditingTransactionController.DeleteTransactionCommand.NotifyCanExecuteChanged();
         EditTransactionCommand.NotifyCanExecuteChanged();
         SplitTransactionCommand.NotifyCanExecuteChanged();
         NavigateNextPageCommand.NotifyCanExecuteChanged();

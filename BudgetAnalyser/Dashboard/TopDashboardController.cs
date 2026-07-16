@@ -90,25 +90,11 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void ObserveUnhandledFireAndForgetFailure(Task task, string context)
-    {
-        _ = task.ContinueWith(
-            t =>
-            {
-                var baseException = t.Exception?.GetBaseException();
-                if (baseException is not null)
-                {
-                    this.logger.LogError(baseException, _ => context);
-                }
-            },
-            TaskContinuationOptions.OnlyOnFaulted);
-    }
-
-    private static void OnApplicationStateLoaded(TopDashboardController recipient, ApplicationStateLoadedMessage message)
+    private void OnApplicationStateLoaded(TopDashboardController recipient, ApplicationStateLoadedMessage message)
     {
         recipient.ObserveUnhandledFireAndForgetFailure(
             recipient.OnApplicationStateLoadedAsync(message),
-            "Unhandled exception processing ApplicationStateLoadedMessage in TopDashboardController.");
+            ex => this.logger.LogError(ex, _ => "Unhandled exception processing ApplicationStateLoadedMessage in TopDashboardController."));
     }
 
     private async Task OnApplicationStateLoadedAsync(ApplicationStateLoadedMessage message)
@@ -214,7 +200,9 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         if (message.Widget is SaveWidget)
         {
-            ObserveUnhandledFireAndForgetFailure(this.persistenceOperations.OnSaveDatabaseCommandExecute(), "Unhandled exception processing Save in TopDashboardController.");
+            ObserveUnhandledFireAndForgetFailure(
+                this.persistenceOperations.OnSaveDatabaseCommandExecute(),
+                ex => this.logger.LogError(ex, _ => "Unhandled exception processing Save in TopDashboardController."));
             return;
         }
 
@@ -226,19 +214,25 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
         if (message.Widget is CurrentFileWidget)
         {
-            ObserveUnhandledFireAndForgetFailure(ProcessCurrentFileWidgetActivated(message), "Unhandled exception processing CurrentFileWidget in TopDashboardController.");
+            ObserveUnhandledFireAndForgetFailure(
+                ProcessCurrentFileWidgetActivated(message),
+                ex => this.logger.LogError(ex, _ => "Unhandled exception processing CurrentFileWidget in TopDashboardController."));
             return;
         }
 
         if (message.Widget is LoadDemoWidget)
         {
-            ObserveUnhandledFireAndForgetFailure(ProcessLoadDemoWidgetActivated(message), "Unhandled exception processing LoadDemoWidget in TopDashboardController.");
+            ObserveUnhandledFireAndForgetFailure(
+                ProcessLoadDemoWidgetActivated(message),
+                ex => this.logger.LogError(ex, _ => "Unhandled exception processing LoadDemoWidget in TopDashboardController."));
             return;
         }
 
         if (message.Widget is NewFileWidget)
         {
-            ObserveUnhandledFireAndForgetFailure(ProcessCreateNewFileWidgetActivated(message), "Unhandled exception processing NewFileWidget in TopDashboardController.");
+            ObserveUnhandledFireAndForgetFailure(
+                ProcessCreateNewFileWidgetActivated(message),
+                ex => this.logger.LogError(ex, _ => "Unhandled exception processing NewFileWidget in TopDashboardController."));
             return;
         }
 
