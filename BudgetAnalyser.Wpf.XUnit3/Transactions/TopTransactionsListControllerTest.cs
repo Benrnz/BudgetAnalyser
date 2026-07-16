@@ -187,6 +187,7 @@ public class TopTransactionsListControllerTest
             transactionService);
         var subject = new TopTransactionsListController(
             messenger,
+            new FakeLogger(),
             userPrompts,
             appliedRulesController,
             editRulesController,

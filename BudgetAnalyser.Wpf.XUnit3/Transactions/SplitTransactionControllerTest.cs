@@ -27,6 +27,8 @@ public class SplitTransactionControllerTest
     public void ChangingSplinterAmount1_MakesValidTrue_WhenAmountsSumToOriginal()
     {
         var subject = CreateSubject();
+        subject.SplinterBucket1 = new TestBucket("TB", "Test");
+        subject.SplinterBucket2 = new TestBucket("TB", "Test");
         var original = new Transaction { Amount = 100M, BudgetBucket = new TestBucket("TB", "Test") };
 
         SetPrivateAmounts(subject, 40M, 60M);
@@ -55,6 +57,9 @@ public class SplitTransactionControllerTest
     public void ChangingSplinterAmount2_MakesValidTrue_WhenAmountsSumToOriginal()
     {
         var subject = CreateSubject();
+        subject.SplinterBucket1 = new TestBucket("TB", "Test");
+        subject.SplinterBucket2 = new TestBucket("TB", "Test");
+
         var original = new Transaction { Amount = 100M, BudgetBucket = new TestBucket("TB", "Test") };
 
         SetPrivateAmounts(subject, 75M, 25M);
@@ -133,6 +138,9 @@ public class SplitTransactionControllerTest
     public void OnShellDialogResponseReceived_MessageWithOkOrSave_ValidRemainsTrue_WhenNotForMe()
     {
         var subject = CreateSubject();
+        subject.SplinterBucket1 = new TestBucket("TB", "Test");
+        subject.SplinterBucket2 = new TestBucket("TB", "Test");
+
         var original = new Transaction { Amount = 100M, BudgetBucket = new TestBucket("TB", "Test") };
 
         SetPrivateAmounts(subject, 40M, 60M);

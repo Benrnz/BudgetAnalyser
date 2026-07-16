@@ -132,7 +132,13 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
 
             if (decimal.Round(SplinterAmount1 + SplinterAmount2, 2) != decimal.Round(OriginalTransaction.Amount, 2))
             {
-                InvalidMessage = string.Format(CultureInfo.CurrentCulture, "The two amounts do not add up to {0:C}", OriginalTransaction.Amount);
+                InvalidMessage = $"The two amounts do not add up to {OriginalTransaction.Amount:C}";
+                return false;
+            }
+
+            if (SplinterBucket1 == null || SplinterBucket2 == null)
+            {
+                InvalidMessage = "Both buckets must have a budget bucket selected.";
                 return false;
             }
 

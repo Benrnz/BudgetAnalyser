@@ -18,13 +18,14 @@ namespace BudgetAnalyser.Transactions;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public class TopTransactionsListController : ControllerBase, IShowableController
 {
-    private readonly IUserMessageBox messageBox;
+    private readonly ILogger logger;
     private readonly ITransactionManagerService transactionService;
     private readonly IUserQuestionBoxYesNo yesNoBox;
     private Guid shellDialogCorrelationId;
 
     public TopTransactionsListController(
         IMessenger messenger,
+        ILogger logger,
         UserPrompts userPrompts,
         AppliedRulesController appliedRulesController,
         EditRulesController editRulesController,
@@ -34,13 +35,14 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         ITransactionManagerService transactionService)
         : base(messenger)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
         AppliedRulesController = appliedRulesController ?? throw new ArgumentNullException(nameof(appliedRulesController));
         EditRulesController = editRulesController ?? throw new ArgumentNullException(nameof(editRulesController));
         EditingTransactionController = editingTransactionController ?? throw new ArgumentNullException(nameof(editingTransactionController));
         SplitTransactionController = splitTransactionController ?? throw new ArgumentNullException(nameof(splitTransactionController));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
-        this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.yesNoBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         ClearSearchCommand = new RelayCommand(ClearSearch);
         DeleteTransactionCommand = new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
@@ -236,10 +238,9 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     {
         if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
         {
-            this.messageBox.Show(
-                "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in " +
-                "the new loaded Budget. This will result in those transactions being declassified. \nCheck for unclassified transactions.",
-                "Data Loss Warning!");
+            // In theory should not occur.  When loading transactions from the BAX CSV file, transactions are created using the already loaded budget, and this process will throw if a bucket doesn't
+            // exist.
+            this.logger.LogError(_ => "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in the new loaded Budget. This will result in those transactions being declassified. Check for unclassified transactions.");
         }
     }
 
@@ -259,18 +260,12 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     {
         if (message.Response == ShellDialogButton.Save && SplitTransactionController.OriginalTransaction is not null)
         {
-            if (SplitTransactionController.SplinterBucket1 is null || SplitTransactionController.SplinterBucket2 is null)
-            {
-                this.messageBox.Show("Splinter buckets cannot be empty.", "Split Transaction Validation Error");
-                return;
-            }
-
             this.transactionService.SplitTransaction(
                 SplitTransactionController.OriginalTransaction,
                 SplitTransactionController.SplinterAmount1,
                 SplitTransactionController.SplinterAmount2,
-                SplitTransactionController.SplinterBucket1,
-                SplitTransactionController.SplinterBucket2);
+                SplitTransactionController.SplinterBucket1!,
+                SplitTransactionController.SplinterBucket2!);  // Buckets validated by SplitTransactionController.
 
             FileOperations.NotifyOfEdit();
             await FileOperations.SyncWithServiceAsync();
