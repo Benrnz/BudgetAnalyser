@@ -243,7 +243,7 @@
                                 <TextBlock Text="Create Rule" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding AppliedRulesController.ShowRulesCommand}">
+                        <MenuItem Command="{Binding EditRulesController.ShowRulesCommand}">
                             <MenuItem.Header>
                                 <TextBlock Text="Edit Rules" />
                             </MenuItem.Header>
