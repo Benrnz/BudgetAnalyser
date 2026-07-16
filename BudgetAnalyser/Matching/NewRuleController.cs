@@ -33,8 +33,6 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         Messenger.Register<NewRuleController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public event EventHandler? RuleCreated;
-
     public DecimalCriteria Amount
     {
         get;
@@ -260,7 +258,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
             Amount.Applicable ? Amount.Value : null,
             AndChecked);
 
-        RuleCreated?.Invoke(this, EventArgs.Empty);
+        Messenger.Send(new RuleCreatedMessage(NewRule));
     }
 
     private void RefreshSimilarRules()

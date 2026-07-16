@@ -34,6 +34,8 @@ public class AppliedRulesController : ControllerBase
         ApplyRulesCommand = new RelayCommand<TransactionsListModel?>(OnApplyRulesCommandExecute);
         CreateRuleCommand = new RelayCommand<Transaction?>(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
         ShowRulesCommand = new RelayCommand(OnShowRulesCommandExecute);
+
+        Messenger.Register<AppliedRulesController, RuleCreatedMessage>(this, static (r, m) => r.OnRuleCreated(m));
     }
 
     public IRelayCommand<TransactionsListModel?> ApplyRulesCommand { get; }
@@ -116,16 +118,10 @@ public class AppliedRulesController : ControllerBase
         NewRuleController.Amount.Value = transaction.Amount;
         NewRuleController.AndChecked = true;
         NewRuleController.ShowDialog(EditRulesController.Rules);
-
-        NewRuleController.RuleCreated += OnNewRuleCreated;
     }
 
-    private void OnNewRuleCreated(object? sender, EventArgs eventArgs)
+    private void OnRuleCreated(RuleCreatedMessage message)
     {
-        NewRuleController.RuleCreated -= OnNewRuleCreated;
-        if (NewRuleController.NewRule is not null)
-        {
-            EditRulesController.AddToList(NewRuleController.NewRule);
-        }
+        EditRulesController.AddToList(message.Rule);
     }
 }
