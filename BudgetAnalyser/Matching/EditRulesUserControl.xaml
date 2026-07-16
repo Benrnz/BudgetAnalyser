@@ -145,11 +145,11 @@
                     ToolTip="Delete Rule"
                     Visibility="{Binding SelectedRule, Converter={StaticResource Converter.NullToVis}}" />
             <Button Style="{StaticResource Button.Round.Unlock}"
-                    Command="{Binding EditRuleCommand}"
+                    Command="{Binding SelectRuleCommand}"
                     ToolTip="Edit Rule"
                     Visibility="{Binding ShowReadOnlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
             <Button Style="{StaticResource Button.Round.Lock}"
-                    Command="{Binding EditRuleCommand}"
+                    Command="{Binding SelectRuleCommand}"
                     ToolTip="Apply"
                     Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
         </StackPanel>
