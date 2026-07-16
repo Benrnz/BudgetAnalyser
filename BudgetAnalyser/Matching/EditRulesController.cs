@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
@@ -148,33 +147,6 @@ public class EditRulesController : ControllerBase
 
     public ICommand SortCommand { get; }
 
-    public void CreateNewRuleFromTransaction(Transaction transaction)
-    {
-        // TODO move to Applied Rules Controller if possible, the AppliedRules controller is the parent controller of EditRules and NewRule Controllers.
-        if (transaction is null)
-        {
-            throw new ArgumentNullException(nameof(transaction));
-        }
-
-        if (string.IsNullOrWhiteSpace(transaction.BudgetBucket?.Code))
-        {
-            MessageBox.Show("Select a Bucket code first.");
-            return;
-        }
-
-        NewRuleController.Initialize();
-        NewRuleController.Bucket = transaction.BudgetBucket;
-        NewRuleController.Description.Value = transaction.Description;
-        NewRuleController.Reference1.Value = transaction.Reference1;
-        NewRuleController.Reference2.Value = transaction.Reference2;
-        NewRuleController.Reference3.Value = transaction.Reference3;
-        NewRuleController.TransactionType.Value = transaction.TransactionType.Name;
-        NewRuleController.Amount.Value = transaction.Amount;
-        NewRuleController.AndChecked = true;
-        NewRuleController.ShowDialog(Rules);
-
-        NewRuleController.RuleCreated += OnNewRuleCreated;
-    }
 
     /// <summary>
     ///     Registers the view's message handlers with the messenger so the view is notified of rule and sort changes.
@@ -209,7 +181,7 @@ public class EditRulesController : ControllerBase
         Messenger.UnregisterAll(view);
     }
 
-    private void AddToList(MatchingRule rule)
+    internal void AddToList(MatchingRule rule)
     {
         if (!(rule is SingleUseMatchingRule))
         {
@@ -266,14 +238,6 @@ public class EditRulesController : ControllerBase
         Reset();
     }
 
-    private void OnNewRuleCreated(object? sender, EventArgs eventArgs)
-    {
-        NewRuleController.RuleCreated -= OnNewRuleCreated;
-        if (NewRuleController.NewRule is not null)
-        {
-            AddToList(NewRuleController.NewRule);
-        }
-    }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
     {

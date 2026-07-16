@@ -20,11 +20,13 @@ public class AppliedRulesController : ControllerBase
         IMessenger messenger,
         UserPrompts userPrompts,
         EditRulesController editRulesController,
+        NewRuleController newRuleController,
         ITransactionRuleService ruleService,
         IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
         EditRulesController = editRulesController ?? throw new ArgumentNullException(nameof(editRulesController));
+        NewRuleController = newRuleController ?? throw new ArgumentNullException(nameof(newRuleController));
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
@@ -56,6 +58,8 @@ public class AppliedRulesController : ControllerBase
 
     public EditRulesController EditRulesController { get; }
 
+    public NewRuleController NewRuleController { get; }
+
     public ICommand ShowRulesCommand { get; }
 
     private bool CanExecuteCreateRuleCommand(Transaction? transaction)
@@ -81,7 +85,7 @@ public class AppliedRulesController : ControllerBase
             return;
         }
 
-        EditRulesController.CreateNewRuleFromTransaction(transaction);
+        CreateNewRuleFromTransaction(transaction);
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
@@ -92,5 +96,36 @@ public class AppliedRulesController : ControllerBase
     private void OnShowRulesCommandExecute()
     {
         EditRulesController.ShowDialog();
+    }
+
+    private void CreateNewRuleFromTransaction(Transaction transaction)
+    {
+        if (string.IsNullOrWhiteSpace(transaction.BudgetBucket?.Code))
+        {
+            this.messageBox.Show("Select a Bucket code first.");
+            return;
+        }
+
+        NewRuleController.Initialize();
+        NewRuleController.Bucket = transaction.BudgetBucket;
+        NewRuleController.Description.Value = transaction.Description;
+        NewRuleController.Reference1.Value = transaction.Reference1;
+        NewRuleController.Reference2.Value = transaction.Reference2;
+        NewRuleController.Reference3.Value = transaction.Reference3;
+        NewRuleController.TransactionType.Value = transaction.TransactionType.Name;
+        NewRuleController.Amount.Value = transaction.Amount;
+        NewRuleController.AndChecked = true;
+        NewRuleController.ShowDialog(EditRulesController.Rules);
+
+        NewRuleController.RuleCreated += OnNewRuleCreated;
+    }
+
+    private void OnNewRuleCreated(object? sender, EventArgs eventArgs)
+    {
+        NewRuleController.RuleCreated -= OnNewRuleCreated;
+        if (NewRuleController.NewRule is not null)
+        {
+            EditRulesController.AddToList(NewRuleController.NewRule);
+        }
     }
 }

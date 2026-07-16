@@ -186,6 +186,7 @@ public class TopTransactionsListControllerTest
             messenger,
             userPrompts,
             editRulesController,
+            newRuleController,
             transactionRuleService,
             applicationDatabaseFacade);
         var editingTransactionController = new EditingTransactionController(messenger, bucketRepository);
