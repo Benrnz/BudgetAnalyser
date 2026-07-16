@@ -254,7 +254,8 @@
                                 <TextBlock Text="Edit Transaction" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding DeleteTransactionCommand}">
+                        <MenuItem Command="{Binding EditingTransactionController.DeleteTransactionCommand}"
+                                  CommandParameter="{Binding ViewModel.SelectedRow}">
                             <MenuItem.Header>
                                 <TextBlock Text="Delete Transaction" />
                             </MenuItem.Header>
