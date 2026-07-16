@@ -27,6 +27,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         IMessenger messenger,
         UserPrompts userPrompts,
         AppliedRulesController appliedRulesController,
+        EditRulesController editRulesController,
         EditingTransactionController editingTransactionController,
         SplitTransactionController splitTransactionController,
         TransactionsControllerFileOperations fileOperations,
@@ -35,6 +36,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     {
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
         AppliedRulesController = appliedRulesController ?? throw new ArgumentNullException(nameof(appliedRulesController));
+        EditRulesController = editRulesController ?? throw new ArgumentNullException(nameof(editRulesController));
         EditingTransactionController = editingTransactionController ?? throw new ArgumentNullException(nameof(editingTransactionController));
         SplitTransactionController = splitTransactionController ?? throw new ArgumentNullException(nameof(splitTransactionController));
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
@@ -63,11 +65,8 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     public AppliedRulesController AppliedRulesController { get; }
 
     /// <summary>
-    ///     Gets or sets the bucket filter.
-    ///     This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a
-    ///     bucket.
-    ///     Only relevant when the view is displaying transactions by date.  The filter is hidden when shown in GroupByBucket
-    ///     mode.
+    ///     Gets or sets the bucket filter. This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a bucket.
+    ///     Only relevant when the view is displaying transactions by date.  The filter is hidden when shown in GroupByBucket mode.
     /// </summary>
     public string? BucketFilter
     {
@@ -133,6 +132,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     public IRelayCommand DeleteTransactionCommand { get; }
     internal EditingTransactionController EditingTransactionController { get; }
+    public EditRulesController EditRulesController { get; }
     public IRelayCommand EditTransactionCommand { get; }
     public TransactionsControllerFileOperations FileOperations { get; }
 

@@ -190,6 +190,7 @@ public class TopTransactionsListControllerTest
             messenger,
             userPrompts,
             appliedRulesController,
+            editRulesController,
             editingTransactionController,
             splitTransactionController,
             fileOperations,

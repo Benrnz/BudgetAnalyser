@@ -39,6 +39,7 @@ public class EditRulesController : ControllerBase
         DeleteRuleCommand = new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
         SelectRuleCommand = new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
         SortCommand = new RelayCommand<string?>(OnSortCommandExecute);
+        ShowRulesCommand = new RelayCommand(ShowDialog);
 
         this.ruleService.Closed += OnClosedNotificationReceived;
         this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -112,6 +113,8 @@ public class EditRulesController : ControllerBase
             return result;
         }
     }
+
+    public ICommand ShowRulesCommand { get; }
 
     public string? SortBy
     {

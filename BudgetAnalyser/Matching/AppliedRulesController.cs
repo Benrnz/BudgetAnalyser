@@ -33,7 +33,6 @@ public class AppliedRulesController : ControllerBase
         this.ruleService.Saved += OnSavedNotificationReceived;
         ApplyRulesCommand = new RelayCommand<TransactionsListModel?>(OnApplyRulesCommandExecute);
         CreateRuleCommand = new RelayCommand<Transaction?>(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
-        ShowRulesCommand = new RelayCommand(OnShowRulesCommandExecute);
     }
 
     public IRelayCommand<TransactionsListModel?> ApplyRulesCommand { get; }
@@ -59,8 +58,6 @@ public class AppliedRulesController : ControllerBase
     public EditRulesController EditRulesController { get; }
 
     public NewRuleController NewRuleController { get; }
-
-    public ICommand ShowRulesCommand { get; }
 
     private bool CanExecuteCreateRuleCommand(Transaction? transaction)
     {
@@ -111,11 +108,5 @@ public class AppliedRulesController : ControllerBase
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
     {
         Dirty = false;
-    }
-
-    private void OnShowRulesCommandExecute()
-    {
-        // TODO
-        EditRulesController.ShowDialog();
     }
 }
