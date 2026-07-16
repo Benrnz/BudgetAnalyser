@@ -34,8 +34,6 @@ public class AppliedRulesController : ControllerBase
         ApplyRulesCommand = new RelayCommand<TransactionsListModel?>(OnApplyRulesCommandExecute);
         CreateRuleCommand = new RelayCommand<Transaction?>(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
         ShowRulesCommand = new RelayCommand(OnShowRulesCommandExecute);
-
-        Messenger.Register<AppliedRulesController, RuleCreatedMessage>(this, static (r, m) => r.OnRuleCreated(m));
     }
 
     public IRelayCommand<TransactionsListModel?> ApplyRulesCommand { get; }
@@ -69,6 +67,26 @@ public class AppliedRulesController : ControllerBase
         return transaction is not null;
     }
 
+    private void CreateNewRuleFromTransaction(Transaction transaction)
+    {
+        if (string.IsNullOrWhiteSpace(transaction.BudgetBucket?.Code))
+        {
+            this.messageBox.Show("Select a Bucket code first.");
+            return;
+        }
+
+        NewRuleController.Initialize();
+        NewRuleController.Bucket = transaction.BudgetBucket;
+        NewRuleController.Description.Value = transaction.Description;
+        NewRuleController.Reference1.Value = transaction.Reference1;
+        NewRuleController.Reference2.Value = transaction.Reference2;
+        NewRuleController.Reference3.Value = transaction.Reference3;
+        NewRuleController.TransactionType.Value = transaction.TransactionType.Name;
+        NewRuleController.Amount.Value = transaction.Amount;
+        NewRuleController.AndChecked = true;
+        NewRuleController.ShowDialog(EditRulesController.Rules);
+    }
+
     private void OnApplyRulesCommandExecute(TransactionsListModel? transactions = null)
     {
         var t = transactions ?? throw new ArgumentNullException(nameof(transactions));
@@ -97,31 +115,7 @@ public class AppliedRulesController : ControllerBase
 
     private void OnShowRulesCommandExecute()
     {
+        // TODO
         EditRulesController.ShowDialog();
-    }
-
-    private void CreateNewRuleFromTransaction(Transaction transaction)
-    {
-        if (string.IsNullOrWhiteSpace(transaction.BudgetBucket?.Code))
-        {
-            this.messageBox.Show("Select a Bucket code first.");
-            return;
-        }
-
-        NewRuleController.Initialize();
-        NewRuleController.Bucket = transaction.BudgetBucket;
-        NewRuleController.Description.Value = transaction.Description;
-        NewRuleController.Reference1.Value = transaction.Reference1;
-        NewRuleController.Reference2.Value = transaction.Reference2;
-        NewRuleController.Reference3.Value = transaction.Reference3;
-        NewRuleController.TransactionType.Value = transaction.TransactionType.Name;
-        NewRuleController.Amount.Value = transaction.Amount;
-        NewRuleController.AndChecked = true;
-        NewRuleController.ShowDialog(EditRulesController.Rules);
-    }
-
-    private void OnRuleCreated(RuleCreatedMessage message)
-    {
-        EditRulesController.AddToList(message.Rule);
     }
 }

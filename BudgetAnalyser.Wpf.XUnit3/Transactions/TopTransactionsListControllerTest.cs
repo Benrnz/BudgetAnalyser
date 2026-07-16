@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Filtering;
@@ -22,72 +21,6 @@ namespace BudgetAnalyser.Wpf.XUnit3.Transactions;
 
 public class TopTransactionsListControllerTest
 {
-    [Fact]
-    public void PageSize_ShouldDefaultToTen_WhenSetToZero()
-    {
-        var context = CreateContext();
-
-        context.Subject.PageSize = 0;
-
-        context.Subject.PageSize.ShouldBe(10);
-    }
-
-    [Fact]
-    public void CurrentPage_ShouldUpdatePagedTransactionsAndNavigationFlags()
-    {
-        var context = CreateContext();
-        var transactions = CreateTransactions(25);
-        PrivateAccessor.SetProperty(context.Subject.ViewModel, "Transactions", transactions);
-        context.Subject.PageSize = 10;
-
-        context.Subject.CurrentPage = 2;
-
-        context.Subject.ViewModel.PagedTransactions.Count.ShouldBe(10);
-        context.Subject.ViewModel.PagedTransactions.First().ShouldBeSameAs(transactions[10]);
-        context.Subject.CanNavigateNext.ShouldBeTrue();
-        context.Subject.CanNavigatePrevious.ShouldBeTrue();
-    }
-
-    [Fact]
-    public void NavigateNextPage_ShouldNotAdvancePastLastPage()
-    {
-        var context = CreateContext();
-        PrivateAccessor.SetProperty(context.Subject.ViewModel, "Transactions", CreateTransactions(15));
-        context.Subject.PageSize = 10;
-        context.Subject.CurrentPage = 1;
-
-        context.Subject.NavigateNextPage();
-        context.Subject.NavigateNextPage();
-
-        context.Subject.CurrentPage.ShouldBe(2);
-    }
-
-    [Fact]
-    public void NavigatePreviousPage_ShouldNotGoBelowFirstPage()
-    {
-        var context = CreateContext();
-        context.Subject.CurrentPage = 1;
-
-        context.Subject.NavigatePreviousPage();
-
-        context.Subject.CurrentPage.ShouldBe(1);
-    }
-
-    [Fact]
-    public void TextFilter_ShouldFilterBySearchText_AndResetCurrentPage()
-    {
-        var context = CreateContext();
-        var filtered = CreateTransactions(3);
-        context.TransactionService.FilterBySearchText("pay").Returns(filtered);
-        context.Subject.CurrentPage = 2;
-
-        context.Subject.TextFilter = "pay";
-
-        context.TransactionService.Received(1).FilterBySearchText("pay");
-        context.Subject.CurrentPage.ShouldBe(1);
-        context.Subject.ViewModel.Transactions.ShouldBeSameAs(filtered);
-    }
-
     [Fact]
     public void BucketFilter_ShouldFilterByBucket_AndResetCurrentPage()
     {
@@ -119,6 +52,22 @@ public class TopTransactionsListControllerTest
     }
 
     [Fact]
+    public void CurrentPage_ShouldUpdatePagedTransactionsAndNavigationFlags()
+    {
+        var context = CreateContext();
+        var transactions = CreateTransactions(25);
+        PrivateAccessor.SetProperty(context.Subject.ViewModel, "Transactions", transactions);
+        context.Subject.PageSize = 10;
+
+        context.Subject.CurrentPage = 2;
+
+        context.Subject.ViewModel.PagedTransactions.Count.ShouldBe(10);
+        context.Subject.ViewModel.PagedTransactions.First().ShouldBeSameAs(transactions[10]);
+        context.Subject.CanNavigateNext.ShouldBeTrue();
+        context.Subject.CanNavigatePrevious.ShouldBeTrue();
+    }
+
+    [Fact]
     public void FilterAppliedMessage_ShouldRefreshTransactions_WhenSentByAnotherController()
     {
         var context = CreateContext();
@@ -142,15 +91,54 @@ public class TopTransactionsListControllerTest
         context.Subject.CurrentPage.ShouldBe(1);
     }
 
-    private static List<Transaction> CreateTransactions(int count)
+    [Fact]
+    public void NavigateNextPage_ShouldNotAdvancePastLastPage()
     {
-        return Enumerable.Range(1, count).Select(
-            i => new Transaction
-            {
-                Date = new DateOnly(2026, 1, 1).AddDays(i),
-                Amount = i,
-                Description = "Tx " + i
-            }).ToList();
+        var context = CreateContext();
+        PrivateAccessor.SetProperty(context.Subject.ViewModel, "Transactions", CreateTransactions(15));
+        context.Subject.PageSize = 10;
+        context.Subject.CurrentPage = 1;
+
+        context.Subject.NavigateNextPage();
+        context.Subject.NavigateNextPage();
+
+        context.Subject.CurrentPage.ShouldBe(2);
+    }
+
+    [Fact]
+    public void NavigatePreviousPage_ShouldNotGoBelowFirstPage()
+    {
+        var context = CreateContext();
+        context.Subject.CurrentPage = 1;
+
+        context.Subject.NavigatePreviousPage();
+
+        context.Subject.CurrentPage.ShouldBe(1);
+    }
+
+    [Fact]
+    public void PageSize_ShouldDefaultToTen_WhenSetToZero()
+    {
+        var context = CreateContext();
+
+        context.Subject.PageSize = 0;
+
+        context.Subject.PageSize.ShouldBe(10);
+    }
+
+    [Fact]
+    public void TextFilter_ShouldFilterBySearchText_AndResetCurrentPage()
+    {
+        var context = CreateContext();
+        var filtered = CreateTransactions(3);
+        context.TransactionService.FilterBySearchText("pay").Returns(filtered);
+        context.Subject.CurrentPage = 2;
+
+        context.Subject.TextFilter = "pay";
+
+        context.TransactionService.Received(1).FilterBySearchText("pay");
+        context.Subject.CurrentPage.ShouldBe(1);
+        context.Subject.ViewModel.Transactions.ShouldBeSameAs(filtered);
     }
 
     private static TestContext CreateContext()
@@ -181,7 +169,7 @@ public class TopTransactionsListControllerTest
             inputBox);
 
         var newRuleController = new NewRuleController(messenger, logger, userPrompts, transactionRuleService, bucketRepository);
-        var editRulesController = new EditRulesController(messenger, userPrompts, newRuleController, transactionRuleService, applicationDatabaseFacade);
+        var editRulesController = new EditRulesController(messenger, userPrompts, transactionRuleService, applicationDatabaseFacade);
         var appliedRulesController = new AppliedRulesController(
             messenger,
             userPrompts,
@@ -208,6 +196,16 @@ public class TopTransactionsListControllerTest
             transactionService);
 
         return new TestContext(subject, messenger, transactionService);
+    }
+
+    private static List<Transaction> CreateTransactions(int count)
+    {
+        return Enumerable.Range(1, count).Select(i => new Transaction
+        {
+            Date = new DateOnly(2026, 1, 1).AddDays(i),
+            Amount = i,
+            Description = "Tx " + i
+        }).ToList();
     }
 
     private sealed record TestContext(

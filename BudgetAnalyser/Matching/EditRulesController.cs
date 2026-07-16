@@ -3,7 +3,6 @@ using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -29,7 +28,6 @@ public class EditRulesController : ControllerBase
     public EditRulesController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        NewRuleController newRuleController,
         ITransactionRuleService ruleService,
         IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
@@ -38,9 +36,8 @@ public class EditRulesController : ControllerBase
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
 
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
-        NewRuleController = newRuleController ?? throw new ArgumentNullException(nameof(newRuleController));
         DeleteRuleCommand = new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
-        EditRuleCommand = new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
+        SelectRuleCommand = new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule is not null);
         SortCommand = new RelayCommand<string?>(OnSortCommandExecute);
 
         this.ruleService.Closed += OnClosedNotificationReceived;
@@ -49,6 +46,8 @@ public class EditRulesController : ControllerBase
 
         Rules = new ObservableCollection<MatchingRule>();
         RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
+
+        Messenger.Register<EditRulesController, RuleCreatedMessage>(this, OnRuleCreated);
     }
 
     public string? AndOrText => SelectedRule is null ? null : SelectedRule.And ? "AND" : "OR";
@@ -65,8 +64,6 @@ public class EditRulesController : ControllerBase
             OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
         }
     }
-
-    public IRelayCommand EditRuleCommand { get; }
 
     public bool FlatListBoxVisibility
     {
@@ -88,7 +85,6 @@ public class EditRulesController : ControllerBase
         }
     }
 
-    public NewRuleController NewRuleController { get; }
     public ObservableCollection<MatchingRule> Rules { get; private set; }
     public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
 
@@ -102,9 +98,11 @@ public class EditRulesController : ControllerBase
             OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
             OnPropertyChanged(nameof(AndOrText));
             DeleteRuleCommand.NotifyCanExecuteChanged();
-            EditRuleCommand.NotifyCanExecuteChanged();
+            SelectRuleCommand.NotifyCanExecuteChanged();
         }
     }
+
+    public IRelayCommand SelectRuleCommand { get; }
 
     public bool ShowReadOnlyRuleDetails
     {
@@ -181,18 +179,6 @@ public class EditRulesController : ControllerBase
         Messenger.UnregisterAll(view);
     }
 
-    internal void AddToList(MatchingRule rule)
-    {
-        if (!(rule is SingleUseMatchingRule))
-        {
-            Rules.Add(rule);
-            RulesGroupedByBucket.Single(g => g.Bucket == rule.Bucket).Rules.Add(rule);
-            Messenger.Send(new RuleAddedMessage(rule));
-        }
-
-        this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
-    }
-
     private bool CanExecuteDeleteRuleCommand()
     {
         return SelectedRule is not null;
@@ -236,6 +222,19 @@ public class EditRulesController : ControllerBase
     private void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)
     {
         Reset();
+    }
+
+    private void OnRuleCreated(object recipient, RuleCreatedMessage message)
+    {
+        // Add to list
+        if (!(message.Rule is SingleUseMatchingRule))
+        {
+            Rules.Add(message.Rule);
+            RulesGroupedByBucket.Single(g => g.Bucket == message.Rule.Bucket).Rules.Add(message.Rule);
+            Messenger.Send(new RuleAddedMessage(message.Rule));
+        }
+
+        this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
     }
 
 
