@@ -19,13 +19,11 @@ public class AppliedRulesController : ControllerBase
     public AppliedRulesController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        EditRulesController editRulesController,
         NewRuleController newRuleController,
         ITransactionRuleService ruleService,
         IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
-        EditRulesController = editRulesController ?? throw new ArgumentNullException(nameof(editRulesController));
         NewRuleController = newRuleController ?? throw new ArgumentNullException(nameof(newRuleController));
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
@@ -55,8 +53,6 @@ public class AppliedRulesController : ControllerBase
         }
     }
 
-    public EditRulesController EditRulesController { get; }
-
     public NewRuleController NewRuleController { get; }
 
     private bool CanExecuteCreateRuleCommand(Transaction? transaction)
@@ -81,7 +77,8 @@ public class AppliedRulesController : ControllerBase
         NewRuleController.TransactionType.Value = transaction.TransactionType.Name;
         NewRuleController.Amount.Value = transaction.Amount;
         NewRuleController.AndChecked = true;
-        NewRuleController.ShowDialog(EditRulesController.Rules);
+
+        NewRuleController.ShowDialog(this.ruleService.MatchingRules);
     }
 
     private void OnApplyRulesCommandExecute(TransactionsListModel? transactions = null)
