@@ -146,7 +146,6 @@ public class EditRulesController : ControllerBase
         }
     }
 
-    [UsedImplicitly]
     public ICommand SortCommand { get; }
 
     public void CreateNewRuleFromTransaction(Transaction transaction)
