@@ -17,7 +17,6 @@ namespace BudgetAnalyser.Dashboard;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public sealed class TopDashboardController : ControllerBase, IShowableController
 {
-    private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
     private readonly IDashboardService dashboardService;
     private readonly DisusedRulesController disusedRulesController;
     private readonly ILogger logger;
@@ -31,14 +30,12 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         IMessenger messenger,
         ILogger logger,
         UserPrompts userPrompts,
-        CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
         DisusedRulesController disusedRulesController,
         GlobalFilterController globalFilterController,
         UploadMobileDataController uploadMobileDataController,
         IDashboardService dashboardService,
         PersistenceOperations persistenceOperations) : base(messenger)
     {
-        this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController ?? throw new ArgumentNullException(nameof(createNewSurprisePaymentMonitorController));
         this.disusedRulesController = disusedRulesController ?? throw new ArgumentNullException(nameof(disusedRulesController));
         this.uploadMobileDataController = uploadMobileDataController ?? throw new ArgumentNullException(nameof(uploadMobileDataController));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -49,17 +46,15 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.userMessageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.dashboardService.NewDataSourceAvailable += OnNewDataSourceAvailable;
 
-        this.createNewSurprisePaymentMonitorController.Complete += OnCreateNewSurprisePaymentMonitorComplete;
-
         this.correlationId = Guid.NewGuid();
         WidgetGroups = new ObservableCollection<WidgetGroup>();
 
         Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
         Messenger.Register<TopDashboardController, BudgetBucketChosenMessage>(this, OnBudgetBucketChosenForNewBucketMonitor);
         Messenger.Register<TopDashboardController, CreateNewFixedBudgetCompletedMessage>(this, OnCreateNewFixedProjectComplete);
+        Messenger.Register<TopDashboardController, CreateNewSurprisePaymentCompletedMessage>(this, OnCreateNewSurprisePaymentMonitorComplete);
         Messenger.Register<TopDashboardController, ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         Messenger.Register<TopDashboardController, ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-
     }
 
     public GlobalFilterController GlobalFilterController
@@ -93,6 +88,20 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
             field = value;
             OnPropertyChanged();
         }
+    }
+
+    private void ObserveUnhandledFireAndForgetFailure(Task task, string context)
+    {
+        _ = task.ContinueWith(
+            t =>
+            {
+                var baseException = t.Exception?.GetBaseException();
+                if (baseException is not null)
+                {
+                    this.logger.LogError(baseException, _ => context);
+                }
+            },
+            TaskContinuationOptions.OnlyOnFaulted);
     }
 
     private static void OnApplicationStateLoaded(TopDashboardController recipient, ApplicationStateLoadedMessage message)
@@ -162,9 +171,9 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         }
     }
 
-    private void OnCreateNewSurprisePaymentMonitorComplete(object? sender, DialogResponseEventArgs dialogResponseEventArgs)
+    private void OnCreateNewSurprisePaymentMonitorComplete(object recipient, CreateNewSurprisePaymentCompletedMessage message)
     {
-        if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != this.correlationId)
+        if (message.Canceled || message.CorrelationId != this.correlationId)
         {
             return;
         }
@@ -172,15 +181,15 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.correlationId = Guid.NewGuid();
         try
         {
-            if (this.createNewSurprisePaymentMonitorController.Selected is null)
+            if (string.IsNullOrWhiteSpace(message.BucketCode))
             {
                 return;
             }
 
             this.dashboardService.CreateNewSurprisePaymentMonitorWidget(
-                this.createNewSurprisePaymentMonitorController.Selected.Code,
-                this.createNewSurprisePaymentMonitorController.PaymentStartDate,
-                this.createNewSurprisePaymentMonitorController.Frequency);
+                message.BucketCode,
+                message.PaymentStartDate,
+                message.Frequency);
         }
         catch (ArgumentException ex)
         {
@@ -243,20 +252,6 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         {
             this.uploadMobileDataController.ShowDialog(mobileWidget);
         }
-    }
-
-    private void ObserveUnhandledFireAndForgetFailure(Task task, string context)
-    {
-        _ = task.ContinueWith(
-            t =>
-            {
-                var baseException = t.Exception?.GetBaseException();
-                if (baseException is not null)
-                {
-                    this.logger.LogError(baseException, _ => context);
-                }
-            },
-            TaskContinuationOptions.OnlyOnFaulted);
     }
 
     private async Task ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)

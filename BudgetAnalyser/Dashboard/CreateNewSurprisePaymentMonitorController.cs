@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
@@ -27,8 +26,6 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
         this.messageBox = userPrompts.MessageBox;
     }
 
-    // TODO Replace this event with a message.
-    public event EventHandler<DialogResponseEventArgs>? Complete;
 
     public IEnumerable<BudgetBucket> BudgetBuckets => this.bucketRepository.Buckets.ToList();
 
@@ -114,7 +111,12 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
             return;
         }
 
-        var handler = Complete;
-        handler?.Invoke(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
+        var canceled = message.Response == ShellDialogButton.Cancel;
+        Messenger.Send(new CreateNewSurprisePaymentCompletedMessage(this.dialogCorrelationId, canceled)
+        {
+            BucketCode = Selected?.Code ?? string.Empty,
+            PaymentStartDate = PaymentStartDate,
+            Frequency = Frequency
+        });
     }
 }
