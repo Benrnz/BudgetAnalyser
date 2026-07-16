@@ -9,9 +9,10 @@ namespace BudgetAnalyser.Engine.Services;
 [UsedImplicitly] // Used by IoC
 internal class OverallPerformanceChartService(OverallPerformanceBudgetAnalyser analyser) : IOverallPerformanceChartService
 {
+    // TODO this class has no reason to exist
     private readonly OverallPerformanceBudgetAnalyser analyser = analyser ?? throw new ArgumentNullException(nameof(analyser));
 
-    public OverallPerformanceBudgetResult BuildChart(TransactionsListModel transactions, BudgetCollection budgets, GlobalFilterCriteria criteria)
+    public OverallPerformanceBudgetResult BuildChart(TransactionsListModel transactions, BudgetCollection budgets, DateOnly startDate, DateOnly endDate)
     {
         if (transactions is null)
         {
@@ -23,11 +24,6 @@ internal class OverallPerformanceChartService(OverallPerformanceBudgetAnalyser a
             throw new ArgumentNullException(nameof(budgets));
         }
 
-        if (criteria is null)
-        {
-            throw new ArgumentNullException(nameof(criteria));
-        }
-
-        return this.analyser.Analyse(transactions, budgets, criteria);
+        return this.analyser.Analyse(transactions, budgets, startDate, endDate);
     }
 }

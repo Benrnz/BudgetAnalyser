@@ -84,9 +84,9 @@ public class OverallPerformanceController(IMessenger messenger, IOverallPerforma
         }
     } = string.Empty;
 
-    public void Load(TransactionsListModel transactions, BudgetCollection budgets, GlobalFilterCriteria criteria)
+    public void Load(TransactionsListModel transactions, BudgetCollection budgets, DateOnly startDate, DateOnly endDate)
     {
-        Analysis = this.chartService.BuildChart(transactions, budgets, criteria);
+        Analysis = this.chartService.BuildChart(transactions, budgets, startDate, endDate);
         OverallPerformance = (double)Analysis.OverallPerformance;
         ExpenseFilter = true;
         IncomeFilter = false;
