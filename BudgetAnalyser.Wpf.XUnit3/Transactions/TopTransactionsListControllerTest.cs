@@ -173,7 +173,6 @@ public class TopTransactionsListControllerTest
         var appliedRulesController = new AppliedRulesController(
             messenger,
             userPrompts,
-            editRulesController,
             newRuleController,
             transactionRuleService,
             applicationDatabaseFacade);
