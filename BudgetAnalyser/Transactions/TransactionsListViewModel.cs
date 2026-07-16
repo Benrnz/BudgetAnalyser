@@ -75,7 +75,6 @@ public class TransactionsListViewModel(IApplicationDatabaseFacade applicationDat
 
     public string TransactionListModelName => TransactionsList is not null ? Path.GetFileNameWithoutExtension(TransactionsList.StorageKey) : "[No Transactions Loaded]";
 
-    // TODO Does this need to be an ObservableCollection?
     public List<Transaction> Transactions
     {
         get;
