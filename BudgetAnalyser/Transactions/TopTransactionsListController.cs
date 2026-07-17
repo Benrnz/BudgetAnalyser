@@ -7,7 +7,6 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
-using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
@@ -19,7 +18,6 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 {
     private readonly ILogger logger;
     private readonly ITransactionManagerService transactionService;
-    private Guid shellDialogCorrelationId;
 
     public TopTransactionsListController(
         IMessenger messenger,
@@ -28,7 +26,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         EditRulesController editRulesController,
         EditingTransactionController editingTransactionController,
         SplitTransactionController splitTransactionController,
-        TransactionsControllerFileOperations fileOperations,
+        ITransactionsControllerFileOperations fileOperations,
         ITransactionManagerService transactionService)
         : base(messenger)
     {
@@ -53,7 +51,6 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
         Messenger.Register<TopTransactionsListController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
         Messenger.Register<TopTransactionsListController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
-        Messenger.Register<TopTransactionsListController, ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
 
         this.transactionService.Closed += OnClosedNotificationReceived;
         this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -131,7 +128,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     public EditingTransactionController EditingTransactionController { get; }
     public EditRulesController EditRulesController { get; }
     public IRelayCommand EditTransactionCommand { get; }
-    public TransactionsControllerFileOperations FileOperations { get; }
+    public ITransactionsControllerFileOperations FileOperations { get; }
 
     public IRelayCommand MergeBankExtractCommand { get; }
 
@@ -240,22 +237,6 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
     }
 
-    private async Task FinaliseSplitTransaction(ShellDialogResponseMessage message)
-    {
-        if (message.Response == ShellDialogButton.Save && SplitTransactionController.OriginalTransaction is not null)
-        {
-            this.transactionService.SplitTransaction(
-                SplitTransactionController.OriginalTransaction,
-                SplitTransactionController.SplinterAmount1,
-                SplitTransactionController.SplinterAmount2,
-                SplitTransactionController.SplinterBucket1!,
-                SplitTransactionController.SplinterBucket2!); // Buckets validated by SplitTransactionController.
-
-            FileOperations.NotifyOfEdit();
-            await FileOperations.SyncWithServiceAsync();
-        }
-    }
-
     private async void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
     {
         // Budget ready message will always arrive before transactions are loaded from application state.
@@ -276,7 +257,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     private void OnEditTransactionCommandExecute()
     {
-        if (ViewModel.SelectedRow is null || this.shellDialogCorrelationId != Guid.Empty)
+        if (ViewModel.SelectedRow is null)
         {
             return;
         }
@@ -328,24 +309,6 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         FileOperations.ViewModel.Dirty = false;
     }
 
-    private void OnShellDialogResponseMessageReceived(TopTransactionsListController recipient, ShellDialogResponseMessage message)
-    {
-        // TODO Could the Split Transaction Controller and Edit Transaction Controller's own thier own finalising and creation?
-        if (!message.IsItForMe(this.shellDialogCorrelationId))
-        {
-            return;
-        }
-
-        if (message.Content is SplitTransactionController)
-        {
-            ObserveUnhandledFireAndForgetFailure(
-                FinaliseSplitTransaction(message),
-                ex => this.logger.LogError(ex, _ => "Unhandled exception processing SplitTransactionController in TopTransactionsListController."));
-        }
-
-        this.shellDialogCorrelationId = Guid.Empty;
-    }
-
     private void OnSplitTransactionCommandExecute()
     {
         if (ViewModel.SelectedRow is null)
@@ -353,8 +316,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             return;
         }
 
-        this.shellDialogCorrelationId = Guid.NewGuid();
-        SplitTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
+        SplitTransactionController.ShowDialog(ViewModel.SelectedRow);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

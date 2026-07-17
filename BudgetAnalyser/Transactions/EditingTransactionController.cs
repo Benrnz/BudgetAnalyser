@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Transactions;
 public class EditingTransactionController : ControllerBase
 {
     private readonly IBudgetBucketRepository bucketRepo;
-    private readonly TransactionsControllerFileOperations fileOperations;
+    private readonly ITransactionsControllerFileOperations fileOperations;
     private readonly ILogger logger;
     private readonly ITransactionManagerService transactionService;
     private readonly IUserQuestionBoxYesNo yesNoBox;
@@ -26,7 +26,7 @@ public class EditingTransactionController : ControllerBase
         IBudgetBucketRepository bucketRepo,
         UserPrompts userPrompts,
         ITransactionManagerService transactionService,
-        TransactionsControllerFileOperations fileOperations,
+        ITransactionsControllerFileOperations fileOperations,
         ILogger logger)
         : base(messenger)
     {

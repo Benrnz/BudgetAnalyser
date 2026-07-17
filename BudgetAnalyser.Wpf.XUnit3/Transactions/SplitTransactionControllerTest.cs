@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Transactions;
@@ -14,13 +15,17 @@ namespace BudgetAnalyser.Wpf.XUnit3.Transactions;
 public class SplitTransactionControllerTest
 {
     private readonly IBudgetBucketRepository mockBucketRepo;
+    private readonly ITransactionsControllerFileOperations mockFileOperations;
     private readonly IMessenger mockMessenger;
+    private readonly ITransactionManagerService mockTransactionsService;
 
     public SplitTransactionControllerTest()
     {
         this.mockMessenger = Substitute.For<IMessenger>();
         this.mockBucketRepo = Substitute.For<IBudgetBucketRepository>();
         this.mockBucketRepo.Buckets.Returns(Array.Empty<BudgetBucket>());
+        this.mockTransactionsService = Substitute.For<ITransactionManagerService>();
+        this.mockFileOperations = Substitute.For<ITransactionsControllerFileOperations>();
     }
 
     [Fact]
@@ -89,7 +94,7 @@ public class SplitTransactionControllerTest
     {
         var subject = CreateSubject();
         var original = new Transaction { Amount = -100.22M, BudgetBucket = new TestBucket("TB", "Test") };
-        subject.ShowDialog(original, Guid.NewGuid());
+        subject.ShowDialog(original);
 
         subject.SplinterAmount1 = -50M;
         subject.Valid.ShouldBeFalse();
@@ -100,7 +105,7 @@ public class SplitTransactionControllerTest
     {
         var subject = CreateSubject();
         var original = new Transaction { Amount = -100.22M, BudgetBucket = new TestBucket("TB", "Test") };
-        subject.ShowDialog(original, Guid.NewGuid());
+        subject.ShowDialog(original);
 
         subject.SplinterAmount1 = 0M;
         subject.SplinterAmount2 = -100.22M;
@@ -113,7 +118,7 @@ public class SplitTransactionControllerTest
     {
         var subject = CreateSubject();
         var original = new Transaction { Amount = -100.22M, BudgetBucket = new TestBucket("TB", "Test") };
-        subject.ShowDialog(original, Guid.NewGuid());
+        subject.ShowDialog(original);
 
         subject.SplinterAmount1 = 1M;
         subject.SplinterAmount2 = -101.22M;
@@ -125,7 +130,7 @@ public class SplitTransactionControllerTest
     {
         var subject = CreateSubject();
         var original = new Transaction { Amount = -100.22M, BudgetBucket = new TestBucket("TB", "Test") };
-        subject.ShowDialog(original, Guid.NewGuid());
+        subject.ShowDialog(original);
 
         subject.SplinterAmount1 = -50M;
         subject.SplinterAmount2 = -50.22M;
@@ -171,7 +176,7 @@ public class SplitTransactionControllerTest
 
     private SplitTransactionController CreateSubject()
     {
-        return new SplitTransactionController(this.mockMessenger, this.mockBucketRepo);
+        return new SplitTransactionController(this.mockMessenger, this.mockBucketRepo, new FakeLogger(), this.mockTransactionsService, this.mockFileOperations);
     }
 
     private static void SetOriginalTransaction(SplitTransactionController subject, Transaction tx)

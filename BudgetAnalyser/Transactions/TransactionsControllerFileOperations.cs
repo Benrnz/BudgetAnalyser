@@ -10,7 +10,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class TransactionsControllerFileOperations : ControllerBase
+public class TransactionsControllerFileOperations : ControllerBase, ITransactionsControllerFileOperations
 {
     private readonly LoadFileController loadFileController;
     private readonly IUserMessageBox messageBox;
@@ -35,6 +35,8 @@ public class TransactionsControllerFileOperations : ControllerBase
         ViewModel = new TransactionsListViewModel(applicationDatabaseService, this.transactionService);
     }
 
+    public TransactionsListViewModel ViewModel { get; }
+
     public bool LoadingData
     {
         get;
@@ -50,9 +52,43 @@ public class TransactionsControllerFileOperations : ControllerBase
         }
     }
 
-    internal TransactionsListViewModel ViewModel { get; }
+    public void NotifyOfEdit()
+    {
+        ViewModel.Dirty = true;
+        Messenger.Send(new TransactionsListModelHasBeenModifiedMessage());
+    }
 
-    internal void Close()
+    public async Task SyncWithServiceAsync()
+    {
+        var transactionList = this.transactionService.TransactionsListModel;
+        ViewModel.TransactionsList = null; // Prevent events from firing while updating the model.
+        LoadingData = true;
+        await Dispatcher.CurrentDispatcher.BeginInvoke(
+            DispatcherPriority.Normal,
+            () =>
+            {
+                // Update all UI bound properties.
+                var requestCurrentFilterMessage = new RequestFilterMessage(this);
+                Messenger.Send(requestCurrentFilterMessage);
+                if (requestCurrentFilterMessage.Criteria is not null)
+                {
+                    this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
+                }
+
+                // Ensures initial first time load triggers load of transactions.
+                ViewModel.TransactionsList = transactionList;
+                ViewModel.TriggerRefreshTotalsRow();
+
+                // Triggers all UI elements to update
+                Messenger.Send(new FilterAppliedMessage(this, requestCurrentFilterMessage.Criteria ?? new GlobalFilterCriteria()));
+
+                Messenger.Send(new TransactionsListModelReadyMessage(ViewModel.TransactionsList));
+
+                LoadingData = false;
+            });
+    }
+
+    public void Close()
     {
         ViewModel.TransactionsList = null;
         NotifyOfReset();
@@ -60,9 +96,9 @@ public class TransactionsControllerFileOperations : ControllerBase
         Messenger.Send(new TransactionsListModelReadyMessage(null));
     }
 
-    internal async Task MergeInNewTransactions()
+    public async Task MergeInNewTransactions()
     {
-        PersistenceOperationCommands.SaveDatabaseCommand.Execute(this);
+        await PersistenceOperationCommands.SaveDatabaseCommand.ExecuteAsync(this);
 
         var fileName = await GetFileNameFromUser();
         if (string.IsNullOrWhiteSpace(fileName) || this.loadFileController.SelectedExistingAccountName is null)
@@ -99,42 +135,6 @@ public class TransactionsControllerFileOperations : ControllerBase
         {
             this.loadFileController.Reset();
         }
-    }
-
-    internal void NotifyOfEdit()
-    {
-        ViewModel.Dirty = true;
-        Messenger.Send(new TransactionsListModelHasBeenModifiedMessage());
-    }
-
-    internal async Task SyncWithServiceAsync()
-    {
-        var transactionList = this.transactionService.TransactionsListModel;
-        ViewModel.TransactionsList = null; // Prevent events from firing while updating the model.
-        LoadingData = true;
-        await Dispatcher.CurrentDispatcher.BeginInvoke(
-            DispatcherPriority.Normal,
-            () =>
-            {
-                // Update all UI bound properties.
-                var requestCurrentFilterMessage = new RequestFilterMessage(this);
-                Messenger.Send(requestCurrentFilterMessage);
-                if (requestCurrentFilterMessage.Criteria is not null)
-                {
-                    this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
-                }
-
-                // Ensures initial first time load triggers load of transactions.
-                ViewModel.TransactionsList = transactionList;
-                ViewModel.TriggerRefreshTotalsRow();
-
-                // Triggers all UI elements to update
-                Messenger.Send(new FilterAppliedMessage(this, requestCurrentFilterMessage.Criteria ?? new GlobalFilterCriteria()));
-
-                Messenger.Send(new TransactionsListModelReadyMessage(ViewModel.TransactionsList));
-
-                LoadingData = false;
-            });
     }
 
     private void FileCannotBeLoaded(Exception ex)
