@@ -7,9 +7,10 @@ namespace BudgetAnalyser.Engine.Reports;
 ///     An analyser class to build report data for the overall performance report.
 /// </summary>
 [AutoRegisterWithIoC]
-internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepository)
+internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepository, ILogger logger)
 {
     private readonly IBudgetBucketRepository bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
+    private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     private DateOnly beginDate;
     private BudgetCollection? budgetCollection;
@@ -33,10 +34,13 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
     public OverallPerformanceBudgetResult Analyse(TransactionsListModel transactionsModel, BudgetCollection budgets, DateOnly startDate, DateOnly endDateExcl)
     {
         this.transactions = transactionsModel.AllTransactions.Where(t => t.Date >= startDate && t.Date < endDateExcl).AsQueryable();
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Analyzing transactions from {startDate} to {endDateExcl}, total transactions: {this.transactions.Count()}");
         this.budgetCollection = budgets;
         this.beginDate = startDate;
         this.endDate = endDateExcl;
+
         AnalysisPreconditions();
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Budget Collection has {this.budgetCollection.Count} budgets.");
 
         var result = new OverallPerformanceBudgetResult();
 
@@ -45,6 +49,8 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         {
             return result;
         }
+
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Active Budget for the dates: {this.latestBudget.Name}. Effective From: {this.latestBudget.EffectiveFrom}.");
 
         CalculateTotalsAndAverage(result);
 
@@ -160,6 +166,9 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         var budgetedTotal = CalculateBudgetedTotalAmount(getBudgetedAmount, multipleBudgets, durationInPeriods);
         var perMonthBudget = budgetedTotal / durationInPeriods;
 
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: {bucket.Code}, Total Spent:{totalSpent:C}, Average Spend:{averageSpend:C}, Budgeted Total:{budgetedTotal:C}, Per Month Budget:" +
+            $"{perMonthBudget:C}");
+
         return new BucketPerformanceResult
         {
             Bucket = bucket,
@@ -196,10 +205,12 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         {
             case BudgetCycle.Fortnightly:
                 result.DurationInPeriods = TransactionsCalculations.CalculateDurationInFortnights(this.beginDate, this.endDate);
+                this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Duration in Fortnights: {result.DurationInPeriods}");
                 this.calculateNextPeriodDate = (d, iteration) => d.AddDays(14 * iteration);
                 break;
             case BudgetCycle.Monthly:
                 result.DurationInPeriods = TransactionsCalculations.CalculateDurationInMonths(this.beginDate, this.endDate);
+                this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Duration in Months: {result.DurationInPeriods}");
                 this.calculateNextPeriodDate = (d, iteration) => d.AddMonths(1 * iteration);
                 break;
             default:
@@ -209,9 +220,12 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         var totalExpensesSpend = this.transactions
             .Where(t => t.BudgetBucket is ExpenseBucket)
             .Sum(t => t.Amount);
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Total Expenses Spend: {totalExpensesSpend:C}");
 
         var totalSurplusSpend = this.transactions
+            .Where(t => t.BudgetBucket is SurplusBucket)
             .Sum(t => t.Amount);
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Total Surplus Spend: {totalSurplusSpend:C}");
 
         result.AverageSpend = totalExpensesSpend / result.DurationInPeriods; // Expected to be negative
         result.AverageSurplus = totalSurplusSpend / result.DurationInPeriods; // Expected to be negative
@@ -224,6 +238,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         }
 
         result.OverallPerformance = totalExpensesSpend + result.TotalBudgetExpenses;
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Overall Performance: {result.OverallPerformance:C}");
     }
 
     private BudgetModel EvaluateBudgetsInvolved(OverallPerformanceBudgetResult result)

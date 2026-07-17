@@ -14,11 +14,13 @@ public class OverallPerformanceBudgetAnalyserTest
     private readonly IBudgetBucketRepository bucketRepository = new BudgetBucketRepoAlwaysFind();
     private readonly TransactionsListModel transactionsTestData = TransactionsListModelTestData.TestData6();
     private BudgetCollection budgetsTestData = BudgetModelTestData.CreateCollectionWith2And5();
-    private GlobalFilterCriteria dateCriteria = new() { BeginDate = new DateOnly(2013, 1, 1), EndDate = new DateOnly(2014, 1, 1) };
+    private readonly ILogger logger;
 
-    public OverallPerformanceBudgetAnalyserTest()
+    // Setup
+    public OverallPerformanceBudgetAnalyserTest(ITestOutputHelper outputHelper)
     {
-        this.analyser = new OverallPerformanceBudgetAnalyser(this.bucketRepository);
+        this.logger = new XUnitLogger(outputHelper);
+        this.analyser = new OverallPerformanceBudgetAnalyser(this.bucketRepository, this.logger);
         this.bucketRepository.GetByCode(TransactionsListModelTestData.IncomeBucket.Code);
         this.bucketRepository.GetByCode(TransactionsListModelTestData.HairBucket.Code);
         this.bucketRepository.GetByCode(TransactionsListModelTestData.PowerBucket.Code);
