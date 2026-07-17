@@ -41,7 +41,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
         ClearSearchCommand = new RelayCommand(ClearSearch);
         EditTransactionCommand = new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
-        MergeBankExtractCommand = new RelayCommand(OnMergeExtractCommandExecute);
+        MergeBankExtractCommand = new AsyncRelayCommand(OnMergeExtractCommandExecute);
         NavigateNextPageCommand = new RelayCommand(NavigateNextPage, () => CanNavigateNext);
         NavigatePreviousPageCommand = new RelayCommand(NavigatePreviousPage, () => CanNavigatePrevious);
         SplitTransactionCommand = new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
@@ -49,8 +49,8 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         // When SelectedRow changes need to check Command CanExecute's
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
-        Messenger.Register<TopTransactionsListController, FilterAppliedMessage>(this, static (r, m) => r.OnGlobalDateFilterApplied(m));
-        Messenger.Register<TopTransactionsListController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+        Messenger.Register<TopTransactionsListController, FilterAppliedMessage>(this, OnGlobalDateFilterApplied);
+        Messenger.Register<TopTransactionsListController, BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
 
         this.transactionService.Closed += OnClosedNotificationReceived;
         this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
@@ -159,6 +159,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     public IRelayCommand SplitTransactionCommand { get; }
 
+    [UsedImplicitly]
     internal SplitTransactionController SplitTransactionController { get; }
 
     public string? TextFilter
@@ -237,7 +238,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
     }
 
-    private async void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
+    private void OnBudgetReadyMessageReceived(TopTransactionsListController recipient, BudgetReadyMessage message)
     {
         // Budget ready message will always arrive before transactions are loaded from application state.
         if (!message.ActiveBudget.BudgetActive)
@@ -246,7 +247,10 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             return;
         }
 
-        await CheckBudgetContainsAllUsedBucketsFromTransactions(message.Budgets);
+        ObserveUnhandledFireAndForgetFailure(
+            CheckBudgetContainsAllUsedBucketsFromTransactions(message.Budgets),
+            ex => this.logger.LogError(ex, _ => "Unhandled exception processing BudgetReadyMessage in TopTransactionsListController."));
+
         ViewModel.TriggerRefreshBucketFilterList();
     }
 
@@ -265,7 +269,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         EditingTransactionController.ShowDialog(ViewModel.SelectedRow);
     }
 
-    private void OnGlobalDateFilterApplied(FilterAppliedMessage message)
+    private void OnGlobalDateFilterApplied(TopTransactionsListController recipient, FilterAppliedMessage message)
     {
         if (message.Sender == this)
         {
@@ -288,7 +292,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         TextFilter = null;
     }
 
-    private async void OnMergeExtractCommandExecute()
+    private async Task OnMergeExtractCommandExecute()
     {
         TextFilter = null;
         BucketFilter = null;
@@ -297,10 +301,12 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         UpdatePagedTransactions();
     }
 
-    private async void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)
+    private void OnNewDataSourceAvailableNotificationReceived(object? sender, EventArgs e)
     {
         CurrentPage = 1;
-        await FileOperations.SyncWithServiceAsync();
+        ObserveUnhandledFireAndForgetFailure(
+            FileOperations.SyncWithServiceAsync(),
+            ex => this.logger.LogError(ex, _ => "Unhandled exception processing NewDataSourceAvailableNotificationReceived in TopTransactionsListController."));
         UpdatePagedTransactions();
     }
 

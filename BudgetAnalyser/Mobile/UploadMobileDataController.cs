@@ -53,7 +53,7 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         this.messageBoxService = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogMessageReceived(m));
+        Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, OnShellDialogMessageReceived);
     }
 
     public string AccessKeyId
@@ -170,7 +170,7 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         }
     }
 
-    private async void OnShellDialogMessageReceived(ShellDialogResponseMessage message)
+    private void OnShellDialogMessageReceived(UploadMobileDataController recipient, ShellDialogResponseMessage message)
     {
         if (!message.IsItForMe(this.correlationId))
         {
@@ -201,7 +201,9 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
                 this.appDbService.NotifyOfChange(ApplicationDataType.Ledger);
             }
 
-            await AttemptUploadAsync(budget, transactions, ledgerBook, filter);
+            ObserveUnhandledFireAndForgetFailure(
+                AttemptUploadAsync(budget, transactions, ledgerBook, filter),
+                ex => this.logger.LogError(ex, _ => "Unhandled exception processing UploadMobileDataController."));
         }
         finally
         {

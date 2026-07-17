@@ -82,15 +82,14 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         UnlockCurrentLedgerLineCommand = new RelayCommand(OnUnlockLedgerLineCommandExecuted);
         TransferFundsCommand = new RelayCommand(OnTransferFundsInitiated);
 
-        Messenger.Register<TopLedgerBookController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
-        Messenger.Register<TopLedgerBookController, AddLedgerReconciliationCompletedMessage>(this, static (r, m) => r.OnAddReconciliationDialogClose(m));
-        Messenger.Register<TopLedgerBookController, LedgerBucketUpdatedMessage>(this, static (r, m) => r.OnLedgerBucketUpdated(m));
-        Messenger.Register<TopLedgerBookController, LedgerRemarksCompletedMessage>(this, static (r, _) => r.OnShowRemarksCompleted());
-        Messenger.Register<TopLedgerBookController, LedgerTransactionsCompletedMessage>(this, static (r, m) => r.OnShowTransactionsCompleted(m));
-        Messenger.Register<TopLedgerBookController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
+        Messenger.Register<TopLedgerBookController, BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+        Messenger.Register<TopLedgerBookController, AddLedgerReconciliationCompletedMessage>(this, OnAddReconciliationDialogClose);
+        Messenger.Register<TopLedgerBookController, LedgerBucketUpdatedMessage>(this, OnLedgerBucketUpdated);
+        Messenger.Register<TopLedgerBookController, LedgerTransactionsCompletedMessage>(this, OnShowTransactionsCompleted);
+        Messenger.Register<TopLedgerBookController, TransactionsListModelReadyMessage>(this, OnTransactionsReadyMessageReceived);
         Messenger.Register<TopLedgerBookController, LedgerBookReadyMessage>(this, (_, _) => ShowRemarksCommand.NotifyCanExecuteChanged());
-        Messenger.Register<TopLedgerBookController, LedgerBucketTransferCommandMessage>(this, static (r, m) => r.OnTransferFundsCommandReceived(m));
-        Messenger.Register<TopLedgerBookController, BudgetBucketChosenMessage>(this, static (r, m) => r.OnAddNewLedgerComplete(m));
+        Messenger.Register<TopLedgerBookController, LedgerBucketTransferCommandMessage>(this, OnTransferFundsCommandReceived);
+        Messenger.Register<TopLedgerBookController, BudgetBucketChosenMessage>(this, OnAddNewLedgerComplete);
 
         this.ledgerService.Saved += OnSaveNotificationReceived;
         this.ledgerService.Closed += OnClosedNotificationReceived;
@@ -106,11 +105,13 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     [UsedImplicitly]
     public IRelayCommand EditLedgerBookNameCommand { get; }
 
+    [UsedImplicitly]
     public LedgerBookControllerFileOperations FileOperations { get; }
 
     public int NumberOfPeriodsToShow
     {
         get => this.doNotUseNumberOfPeriodsToShow;
+        [UsedImplicitly]
         set
         {
             if (value == this.doNotUseNumberOfPeriodsToShow)
@@ -130,6 +131,8 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     public IRelayCommand<LedgerEntryLine?> ShowRemarksCommand { get; }
     public IRelayCommand<LedgerEntryLine?> ShowSurplusBalancesCommand { get; }
     public IRelayCommand<object?> ShowTransactionsCommand { get; }
+
+    [UsedImplicitly]
     public ReconciliationToDoListController ToDoListController { get; }
 
     [UsedImplicitly]
@@ -234,7 +237,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         this.chooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book", this.chooseBudgetBucketCorrelationId.Value, true);
     }
 
-    private void OnAddNewLedgerComplete(BudgetBucketChosenMessage message)
+    private void OnAddNewLedgerComplete(TopLedgerBookController recipient, BudgetBucketChosenMessage message)
     {
         if (message.CorrelationId != this.chooseBudgetBucketCorrelationId)
         {
@@ -284,7 +287,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         this.addLedgerReconciliationController.ShowCreateDialog(ViewModel.LedgerBook!);
     }
 
-    private void OnAddReconciliationDialogClose(AddLedgerReconciliationCompletedMessage message)
+    private void OnAddReconciliationDialogClose(TopLedgerBookController recipient, AddLedgerReconciliationCompletedMessage message)
     {
         if (message.WasChanged)
         {
@@ -292,7 +295,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
+    private void OnBudgetReadyMessageReceived(TopLedgerBookController recipient, BudgetReadyMessage message)
     {
         // Warning: CurrentBudget is not used for reconciliation purposes, for recon purposes this needs to find the effective budget for the recon date, NOT the current budget.
         // CurrentBudget should only be used for UI purposes such as an indication of current budgeted amount for something etc.
@@ -326,7 +329,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         FileOperations.Dirty = true;
     }
 
-    private void OnLedgerBucketUpdated(LedgerBucketUpdatedMessage message)
+    private void OnLedgerBucketUpdated(TopLedgerBookController recipient, LedgerBucketUpdatedMessage message)
     {
         if (message.WasChanged)
         {
@@ -381,10 +384,6 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         this.ledgerRemarksController.Show(parameter, parameter == ViewModel.NewLedgerLine);
     }
 
-    private void OnShowRemarksCompleted()
-    {
-    }
-
     private void OnShowSurplusBalancesCommandExecuted(LedgerEntryLine? line)
     {
         if (line is null)
@@ -416,7 +415,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    private void OnShowTransactionsCompleted(LedgerTransactionsCompletedMessage message)
+    private void OnShowTransactionsCompleted(TopLedgerBookController recipient, LedgerTransactionsCompletedMessage message)
     {
         if (message.WasModified)
         {
@@ -424,12 +423,12 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         }
     }
 
-    private void OnTransactionsReadyMessageReceived(TransactionsListModelReadyMessage message)
+    private void OnTransactionsReadyMessageReceived(TopLedgerBookController recipient, TransactionsListModelReadyMessage message)
     {
         ViewModel.CurrentTransactionList = message.Model;
     }
 
-    private void OnTransferFundsCommandReceived(LedgerBucketTransferCommandMessage message)
+    private void OnTransferFundsCommandReceived(TopLedgerBookController recipient, LedgerBucketTransferCommandMessage message)
     {
         this.reconService.TransferFunds(ViewModel.LedgerBook!, ViewModel.NewLedgerLine!, message.TransferFundsCommand);
         Messenger.Send<LedgerBookUpdatedMessage>();

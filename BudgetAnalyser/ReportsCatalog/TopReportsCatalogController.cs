@@ -25,8 +25,8 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         OverallPerformanceController = overallPerformanceController ?? throw new ArgumentNullException(nameof(overallPerformanceController));
         this.inputBox = userPrompts.InputBox ?? throw new ArgumentNullException(nameof(userPrompts));
 
-        Messenger.Register<TopReportsCatalogController, TransactionsListModelReadyMessage>(this, static (r, m) => r.OnTransactionsReadyMessageReceived(m));
-        Messenger.Register<TopReportsCatalogController, BudgetReadyMessage>(this, static (r, m) => r.OnBudgetReadyMessageReceived(m));
+        Messenger.Register<TopReportsCatalogController, TransactionsListModelReadyMessage>(this, OnTransactionsReadyMessageReceived);
+        Messenger.Register<TopReportsCatalogController, BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
     }
 
     /// <summary>
@@ -72,13 +72,13 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         this.newWindowViewLoader.Show(OverallPerformanceController);
     }
 
-    private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
+    private void OnBudgetReadyMessageReceived(TopReportsCatalogController recipient, BudgetReadyMessage message)
     {
         this.budgets = message.Budgets;
         OnPropertyChanged(nameof(OverallPerformanceReportIsAvailable));
     }
 
-    private void OnTransactionsReadyMessageReceived(TransactionsListModelReadyMessage message)
+    private void OnTransactionsReadyMessageReceived(TopReportsCatalogController recipient, TransactionsListModelReadyMessage message)
     {
         this.currentTransactionsListModel = message.Model;
         OnPropertyChanged(nameof(OverallPerformanceReportIsAvailable));
