@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Reports;
 ///     An analyser class to build report data for the overall performance report.
 /// </summary>
 [AutoRegisterWithIoC]
-internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepository, ILogger logger)
+public class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepository, ILogger logger)
 {
     private readonly IBudgetBucketRepository bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
     private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -167,7 +167,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         var perMonthBudget = budgetedTotal / durationInPeriods;
 
         this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: {bucket.Code}, Total Spent:{totalSpent:C}, Average Spend:{averageSpend:C}, Budgeted Total:{budgetedTotal:C}, Per Month Budget:" +
-            $"{perMonthBudget:C}");
+                                 $"{perMonthBudget:C}");
 
         return new BucketPerformanceResult
         {

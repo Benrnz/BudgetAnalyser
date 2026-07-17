@@ -2,7 +2,6 @@
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
@@ -10,9 +9,9 @@ using Rees.Wpf;
 namespace BudgetAnalyser.ReportsCatalog.OverallPerformance;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class OverallPerformanceController(IMessenger messenger, IOverallPerformanceChartService chartService) : ControllerBase(messenger)
+public class OverallPerformanceController(IMessenger messenger, OverallPerformanceBudgetAnalyser chartService) : ControllerBase(messenger)
 {
-    private readonly IOverallPerformanceChartService chartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
+    private readonly OverallPerformanceBudgetAnalyser chartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
 
     public OverallPerformanceBudgetResult? Analysis { get; private set; }
 
@@ -86,7 +85,7 @@ public class OverallPerformanceController(IMessenger messenger, IOverallPerforma
 
     public void Load(TransactionsListModel transactions, BudgetCollection budgets, DateOnly startDate, DateOnly endDate)
     {
-        Analysis = this.chartService.BuildChart(transactions, budgets, startDate, endDate);
+        Analysis = this.chartService.Analyse(transactions, budgets, startDate, endDate);
         OverallPerformance = (double)Analysis.OverallPerformance;
         ExpenseFilter = true;
         IncomeFilter = false;
