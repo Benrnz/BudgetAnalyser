@@ -19,6 +19,7 @@ public class EditingTransactionController : ControllerBase
     private readonly ITransactionManagerService transactionService;
     private readonly IUserQuestionBoxYesNo yesNoBox;
     private BudgetBucket? originalBucket;
+    private Guid shellDialogCorrelationId;
 
     public EditingTransactionController(
         IMessenger messenger,
@@ -33,8 +34,11 @@ public class EditingTransactionController : ControllerBase
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
         this.fileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.yesNoBox = userPrompts?.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts));
+        this.yesNoBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts));
+
         DeleteTransactionCommand = new RelayCommand<Transaction>(OnDeleteTransactionCommandExecute, t => t is not null);
+
+        Messenger.Register<EditingTransactionController, ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
     }
 
     public IEnumerable<BudgetBucket> Buckets
@@ -64,8 +68,9 @@ public class EditingTransactionController : ControllerBase
         }
     }
 
-    public void ShowDialog(Transaction transaction, Guid correlationId)
+    public void ShowDialog(Transaction transaction)
     {
+        this.shellDialogCorrelationId = Guid.NewGuid();
         Transaction = transaction;
         this.originalBucket = Transaction.BudgetBucket;
         Buckets = this.bucketRepo.Buckets.Where(b => b.Active);
@@ -74,9 +79,9 @@ public class EditingTransactionController : ControllerBase
             new ShellDialogRequestMessage(
                 BudgetAnalyserFeature.Transactions,
                 this,
-                ShellDialogType.SaveCancel)
+                ShellDialogType.Ok)
             {
-                CorrelationId = correlationId,
+                CorrelationId = this.shellDialogCorrelationId,
                 Title = "Edit Transaction"
             });
     }
@@ -97,5 +102,20 @@ public class EditingTransactionController : ControllerBase
                 this.fileOperations.SyncWithServiceAsync(),
                 ex => this.logger.LogError(ex, _ => "Unhandled exception processing DeleteTransactionCommandExecute."));
         }
+    }
+
+    private void OnShellDialogResponseMessageReceived(EditingTransactionController recipient, ShellDialogResponseMessage message)
+    {
+        if (!message.IsItForMe(this.shellDialogCorrelationId))
+        {
+            return;
+        }
+
+        if (HasChanged)
+        {
+            this.fileOperations.NotifyOfEdit();
+        }
+
+        this.shellDialogCorrelationId = Guid.Empty;
     }
 }

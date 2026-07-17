@@ -240,18 +240,6 @@ public class TopTransactionsListController : ControllerBase, IShowableController
         }
     }
 
-    private void FinaliseEditTransaction(ShellDialogResponseMessage message)
-    {
-        if (message.Response == ShellDialogButton.Save)
-        {
-            var viewModel = (EditingTransactionController)message.Content;
-            if (viewModel.HasChanged)
-            {
-                FileOperations.NotifyOfEdit();
-            }
-        }
-    }
-
     private async Task FinaliseSplitTransaction(ShellDialogResponseMessage message)
     {
         if (message.Response == ShellDialogButton.Save && SplitTransactionController.OriginalTransaction is not null)
@@ -293,8 +281,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             return;
         }
 
-        this.shellDialogCorrelationId = Guid.NewGuid();
-        EditingTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
+        EditingTransactionController.ShowDialog(ViewModel.SelectedRow);
     }
 
     private void OnGlobalDateFilterApplied(FilterAppliedMessage message)
@@ -349,11 +336,7 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             return;
         }
 
-        if (message.Content is EditingTransactionController)
-        {
-            FinaliseEditTransaction(message);
-        }
-        else if (message.Content is SplitTransactionController)
+        if (message.Content is SplitTransactionController)
         {
             ObserveUnhandledFireAndForgetFailure(
                 FinaliseSplitTransaction(message),
