@@ -94,7 +94,7 @@ public class ShellController : ControllerBase
     /// <summary>
     ///     Notify the ShellController the Shell is closing.
     /// </summary>
-    internal async Task<bool> ShellClosing()
+    internal async Task ShellClosing()
     {
         if (this.persistenceOperations.HasUnsavedChanges)
         {
@@ -105,11 +105,7 @@ public class ShellController : ControllerBase
                 // which is also waiting here, resulting in a deadlock.  This method will only work by first cancelling the close, awaiting this method and then re-triggering it.
                 await this.persistenceOperations.SaveDatabase();
             }
-
-            return true;
         }
-
-        return false;
     }
 
     private void OnApplicationStateLoaded(ShellController recipient, ApplicationStateLoadedMessage message)

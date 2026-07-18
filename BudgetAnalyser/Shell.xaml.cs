@@ -58,19 +58,7 @@ public partial class ShellWindow
         Controller.SaveApplicationState();
         if (Controller.HasUnsavedChanges)
         {
-            e.Cancel = true;
-            if (await Controller.ShellClosing())
-            {
-                try
-                {
-                    Close();
-                }
-                catch (InvalidOperationException)
-                {
-                    // Continue, this ex is thrown when app is shutting down and user has chosen not to save.
-                    Application.Current.Shutdown();
-                }
-            }
+            await Controller.ShellClosing();
         }
     }
 }
