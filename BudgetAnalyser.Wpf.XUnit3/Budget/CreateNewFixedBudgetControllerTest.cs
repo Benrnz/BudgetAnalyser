@@ -1,7 +1,6 @@
 #nullable enable
 using System;
 using BudgetAnalyser.Budget;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Messaging;
@@ -15,8 +14,23 @@ namespace BudgetAnalyser.Wpf.XUnit3.Budget;
 public class CreateNewFixedBudgetControllerTest
 {
     private readonly BudgetBucketRepoAlwaysFind bucketRepo = new();
-    private readonly IMessenger messenger = new WeakReferenceMessenger();
     private readonly IUserMessageBox messageBox = Substitute.For<IUserMessageBox>();
+    private readonly IMessenger messenger = new WeakReferenceMessenger();
+
+    [Fact]
+    public void CanExecuteOkButton_ShouldBeFalse_WhenBucketCodeAlreadyExists()
+    {
+        var subject = CreateSubject();
+        ShellDialogCommandRequerySuggestedMessage? requeryMessage = null;
+        this.messenger.Register<object, ShellDialogCommandRequerySuggestedMessage>(this, (_, message) => requeryMessage = message);
+
+        subject.Code = "surplus";
+        subject.Description = "A new project";
+        subject.Amount = 50M;
+
+        subject.CanExecuteOkButton.ShouldBeFalse();
+        requeryMessage.ShouldNotBeNull();
+    }
 
     [Fact]
     public void Constructor_ShouldThrowArgumentNullException_WhenBucketRepositoryIsNull()
@@ -33,6 +47,22 @@ public class CreateNewFixedBudgetControllerTest
         PrivateAccessor.SetProperty(userPrompts, "MessageBox", null!);
 
         Should.Throw<ArgumentNullException>(() => new CreateNewFixedBudgetController(this.messenger, userPrompts, this.bucketRepo));
+    }
+
+    [Fact]
+    public void ShowDialog_ShouldIgnoreResponsesForDifferentCorrelationIds()
+    {
+        var subject = CreateSubject();
+        ShellDialogRequestMessage? request = null;
+        CreateNewFixedBudgetCompletedMessage? completed = null;
+        this.messenger.Register<object, ShellDialogRequestMessage>(this, (_, message) => request = message);
+        this.messenger.Register<object, CreateNewFixedBudgetCompletedMessage>(this, (_, message) => completed = message);
+
+        subject.ShowDialog(BudgetAnalyserFeature.Budget, Guid.NewGuid());
+        this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Ok) { CorrelationId = Guid.NewGuid() });
+
+        request.ShouldNotBeNull();
+        completed.ShouldBeNull();
     }
 
     [Fact]
@@ -53,18 +83,22 @@ public class CreateNewFixedBudgetControllerTest
     }
 
     [Fact]
-    public void CanExecuteOkButton_ShouldBeFalse_WhenBucketCodeAlreadyExists()
+    public void ShowDialog_ThenCancel_ShouldSendCanceledCompletionMessage()
     {
         var subject = CreateSubject();
-        ShellDialogCommandRequerySuggestedMessage? requeryMessage = null;
-        this.messenger.Register<object, ShellDialogCommandRequerySuggestedMessage>(this, (_, message) => requeryMessage = message);
+        ShellDialogRequestMessage? request = null;
+        CreateNewFixedBudgetCompletedMessage? completed = null;
+        this.messenger.Register<object, ShellDialogRequestMessage>(this, (_, message) => request = message);
+        this.messenger.Register<object, CreateNewFixedBudgetCompletedMessage>(this, (_, message) => completed = message);
 
-        subject.Code = "surplus";
-        subject.Description = "A new project";
-        subject.Amount = 50M;
+        subject.ShowDialog(BudgetAnalyserFeature.Budget, Guid.NewGuid());
+        subject.Code = "proj";
+        subject.Description = "Project";
+        subject.Amount = 123.45M;
+        this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Cancel) { CorrelationId = request!.CorrelationId });
 
-        subject.CanExecuteOkButton.ShouldBeFalse();
-        requeryMessage.ShouldNotBeNull();
+        completed.ShouldNotBeNull();
+        completed!.Canceled.ShouldBeTrue();
     }
 
     [Fact]
@@ -79,7 +113,7 @@ public class CreateNewFixedBudgetControllerTest
         subject.ShowDialog(BudgetAnalyserFeature.Budget, Guid.NewGuid());
         this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Help) { CorrelationId = request!.CorrelationId });
 
-        this.messageBox.Received(1).Show(Arg.Is<string>(text => text.Contains("special temporary budget bucket")));
+        this.messageBox.Received(1).Show(Arg.Is<string>(text => text!.Contains("special temporary budget bucket")));
         completed.ShouldBeNull();
     }
 
@@ -106,39 +140,9 @@ public class CreateNewFixedBudgetControllerTest
         completed.Amount.ShouldBe(123.45M);
     }
 
-    [Fact]
-    public void ShowDialog_ThenCancel_ShouldSendCanceledCompletionMessage()
+    private CreateNewFixedBudgetController CreateSubject()
     {
-        var subject = CreateSubject();
-        ShellDialogRequestMessage? request = null;
-        CreateNewFixedBudgetCompletedMessage? completed = null;
-        this.messenger.Register<object, ShellDialogRequestMessage>(this, (_, message) => request = message);
-        this.messenger.Register<object, CreateNewFixedBudgetCompletedMessage>(this, (_, message) => completed = message);
-
-        subject.ShowDialog(BudgetAnalyserFeature.Budget, Guid.NewGuid());
-        subject.Code = "proj";
-        subject.Description = "Project";
-        subject.Amount = 123.45M;
-        this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Cancel) { CorrelationId = request!.CorrelationId });
-
-        completed.ShouldNotBeNull();
-        completed!.Canceled.ShouldBeTrue();
-    }
-
-    [Fact]
-    public void ShowDialog_ShouldIgnoreResponsesForDifferentCorrelationIds()
-    {
-        var subject = CreateSubject();
-        ShellDialogRequestMessage? request = null;
-        CreateNewFixedBudgetCompletedMessage? completed = null;
-        this.messenger.Register<object, ShellDialogRequestMessage>(this, (_, message) => request = message);
-        this.messenger.Register<object, CreateNewFixedBudgetCompletedMessage>(this, (_, message) => completed = message);
-
-        subject.ShowDialog(BudgetAnalyserFeature.Budget, Guid.NewGuid());
-        this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Ok) { CorrelationId = Guid.NewGuid() });
-
-        request.ShouldNotBeNull();
-        completed.ShouldBeNull();
+        return new CreateNewFixedBudgetController(this.messenger, CreateUserPrompts(), this.bucketRepo);
     }
 
     private UserPrompts CreateUserPrompts()
@@ -149,10 +153,5 @@ public class CreateNewFixedBudgetControllerTest
             () => Substitute.For<IUserPromptSaveFile>(),
             Substitute.For<IUserQuestionBoxYesNo>(),
             Substitute.For<IUserInputBox>());
-    }
-
-    private CreateNewFixedBudgetController CreateSubject()
-    {
-        return new CreateNewFixedBudgetController(this.messenger, CreateUserPrompts(), this.bucketRepo);
     }
 }

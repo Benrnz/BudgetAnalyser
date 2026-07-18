@@ -126,7 +126,7 @@ public class MobileDataExporterTest
 
         await this.exporter.SaveCopyAsync(dataObject);
 
-        await this.mockReaderWriter.Received(1).WriteToDiskAsync(Arg.Is("D:\\temp\\MobileDataExport.json"), Arg.Is<string>(s => s.Length > 50));
+        await this.mockReaderWriter.Received(1).WriteToDiskAsync(Arg.Is("D:\\temp\\MobileDataExport.json"), Arg.Is<string>(s => s!.Length > 50));
     }
 
     [Fact]

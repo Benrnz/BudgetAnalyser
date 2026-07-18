@@ -76,7 +76,7 @@ public class AddLedgerReconciliationControllerTest
                 CorrelationId = correlationId
             });
 
-        this.messageBox.Received(1).Show(Arg.Is<string>(s => s.Contains("actual pay day")));
+        this.messageBox.Received(1).Show(Arg.Is<string>(s => s!.Contains("actual pay day")));
     }
 
     [Fact]
