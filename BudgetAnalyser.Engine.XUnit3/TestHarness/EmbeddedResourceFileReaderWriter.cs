@@ -41,7 +41,7 @@ public class EmbeddedResourceFileReaderWriter : IFileReaderWriter
     /// <param name="lineCount">The number of lines to load.</param>
     public Task<string> LoadFirstLinesFromDiskAsync(string fileName, int lineCount)
     {
-        throw new NotImplementedException("Implement these when required");
+        throw new NotImplementedException("Implement these when required for testing");
     }
 
     /// <summary>
@@ -58,6 +58,6 @@ public class EmbeddedResourceFileReaderWriter : IFileReaderWriter
     /// </summary>
     public Task WriteToDiskAsync(string fileName, string data)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 }

@@ -25,7 +25,6 @@ public class ChequeAccount : Account
     /// </summary>
     public override string ImagePath => "ChequeLogoImage";
 
-    // TODO If multiple cheque (or multiple non-savings) accounts are ever allowed, this may need to be more robust.
     /// <summary>
     ///     Gets a value indicating whether this account is an account where salaries are credited into.
     /// </summary>

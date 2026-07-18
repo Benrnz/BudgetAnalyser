@@ -353,7 +353,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
                         : "Warning! Bucket has been disabled.",
                     AutoMatchingReference = ReferenceNumberGenerator.IssueTransactionReferenceNumber()
                 };
-                // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
+
                 this.toDoList.Add(
                     new TransferTask
                     {
