@@ -177,37 +177,36 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
             return;
         }
 
-        try
+        if (message.Response == ShellDialogButton.Cancel)
         {
-            if (message.Response == ShellDialogButton.Cancel || this.widget is null)
-            {
-                return;
-            }
-
-            var budget = this.widget.BudgetCollection?.CurrentActiveBudget ?? throw new InvalidOperationException("Budget cannot be null when attempting to Upload mobile data.");
-            var transactions = this.widget.TransactionsList ?? throw new InvalidOperationException("TransactionsListModel cannot be null when attempting to Upload mobile data.");
-            var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
-            var filter = this.widget.Filter ?? throw new InvalidOperationException("Filter cannot be null when attempting to Upload mobile data.");
-            var mobileSettings = this.widget.LedgerBook.MobileSettings ??
-                                 throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
-            var changed = AccessKeyId != mobileSettings.AccessKeyId;
-            changed |= AccessKeySecret != mobileSettings.AccessKeySecret;
-            changed |= AmazonRegion != mobileSettings.AmazonS3Region;
-            if (changed)
-            {
-                mobileSettings.AccessKeyId = AccessKeyId;
-                mobileSettings.AccessKeySecret = AccessKeySecret;
-                mobileSettings.AmazonS3Region = AmazonRegion;
-                this.appDbService.NotifyOfChange(ApplicationDataType.Ledger);
-            }
-
-            ObserveUnhandledFireAndForgetFailure(
-                AttemptUploadAsync(budget, transactions, ledgerBook, filter),
-                ex => this.logger.LogError(ex, _ => "Unhandled exception processing UploadMobileDataController."));
+            return;
         }
-        finally
+
+        if (this.widget is null)
         {
-            this.widget = null;
+            this.logger.LogError(_ => "Widget cannot be null when attempting to Upload mobile data.");
+            return;
         }
+
+        var budget = this.widget.BudgetCollection?.CurrentActiveBudget ?? throw new InvalidOperationException("Budget cannot be null when attempting to Upload mobile data.");
+        var transactions = this.widget.TransactionsList ?? throw new InvalidOperationException("TransactionsListModel cannot be null when attempting to Upload mobile data.");
+        var ledgerBook = this.widget.LedgerBook ?? throw new InvalidOperationException("LedgerBook cannot be null when attempting to Upload mobile data.");
+        var filter = this.widget.Filter ?? throw new InvalidOperationException("Filter cannot be null when attempting to Upload mobile data.");
+        var mobileSettings = this.widget.LedgerBook.MobileSettings ??
+                             throw new InvalidOperationException("LedgerBook.MobileSettings cannot be null when attempting to Upload mobile data. Mobile has not been configured.");
+        var changed = AccessKeyId != mobileSettings.AccessKeyId;
+        changed |= AccessKeySecret != mobileSettings.AccessKeySecret;
+        changed |= AmazonRegion != mobileSettings.AmazonS3Region;
+        if (changed)
+        {
+            mobileSettings.AccessKeyId = AccessKeyId;
+            mobileSettings.AccessKeySecret = AccessKeySecret;
+            mobileSettings.AmazonS3Region = AmazonRegion;
+            this.appDbService.NotifyOfChange(ApplicationDataType.Ledger);
+        }
+
+        ObserveUnhandledFireAndForgetFailure(
+            AttemptUploadAsync(budget, transactions, ledgerBook, filter),
+            ex => this.logger.LogError(ex, _ => "Unhandled exception processing UploadMobileDataController."));
     }
 }
