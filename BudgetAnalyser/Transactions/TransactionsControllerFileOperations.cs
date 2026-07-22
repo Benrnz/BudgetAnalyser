@@ -63,7 +63,7 @@ public class TransactionsControllerFileOperations : ControllerBase, ITransaction
         var transactionList = this.transactionService.TransactionsListModel;
         ViewModel.TransactionsList = null; // Prevent events from firing while updating the model.
         LoadingData = true;
-        await Dispatcher.CurrentDispatcher.BeginInvoke(
+        await Dispatcher.BeginInvoke(
             DispatcherPriority.Normal,
             () =>
             {
