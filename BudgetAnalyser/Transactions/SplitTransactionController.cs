@@ -235,7 +235,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
 
         ObserveUnhandledFireAndForgetFailure(
             FinaliseSplitTransaction(message),
-            ex => this.logger.LogError(ex, _ => "Unhandled exception processing SplitTransactionController in TopTransactionsListController."));
+            ex => this.logger.LogError(ex, _ => "Unhandled exception processing FinaliseSplitTransaction in SplitTransactionController."));
 
         this.dialogCorrelationId = Guid.Empty;
         OriginalTransaction = null;
