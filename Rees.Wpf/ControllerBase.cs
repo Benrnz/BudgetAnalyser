@@ -39,6 +39,6 @@ public abstract class ControllerBase : ObservableRecipient
                     loggingAction(baseException);
                 }
             },
-            TaskContinuationOptions.OnlyOnFaulted);
+            TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
     }
 }
