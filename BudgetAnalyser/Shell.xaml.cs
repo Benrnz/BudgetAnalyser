@@ -9,6 +9,7 @@ namespace BudgetAnalyser;
 public partial class ShellWindow
 {
     private bool sizeHasBeenSet;
+    private bool isClosingAfterSave;
 
     public ShellWindow()
     {
@@ -53,24 +54,22 @@ public partial class ShellWindow
 
     private async void ShellWindow_OnClosing(object? sender, CancelEventArgs e)
     {
-        // While the application is closing using async tasks and the task factory is error prone.
-        // Must wait for the ShellClosing method to complete before continueing to close.
-        Controller.SaveApplicationState();
-        if (Controller.HasUnsavedChanges)
+        if (this.isClosingAfterSave)
         {
-            e.Cancel = true;
-            if (await Controller.ShellClosing())
-            {
-                try
-                {
-                    Close();
-                }
-                catch (InvalidOperationException)
-                {
-                    // Continue, this ex is thrown when app is shutting down and user has chosen not to save.
-                    Application.Current.Shutdown();
-                }
-            }
+            this.isClosingAfterSave = false; // allow the second close to complete
+            return;
         }
+
+        Controller.SaveApplicationState();
+
+        if (!Controller.HasUnsavedChanges)
+        {
+            return;
+        }
+
+        e.Cancel = true; // keep app alive while async close/save work finishes
+        await Controller.ShellClosing();
+        this.isClosingAfterSave = true;
+        Close(); // triggers Closing again, now allowed through
     }
 }

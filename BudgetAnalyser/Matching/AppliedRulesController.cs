@@ -19,19 +19,18 @@ public class AppliedRulesController : ControllerBase
     public AppliedRulesController(
         IMessenger messenger,
         UserPrompts userPrompts,
-        EditRulesController editRulesController,
+        NewRuleController newRuleController,
         ITransactionRuleService ruleService,
         IApplicationDatabaseFacade applicationDatabaseService)
         : base(messenger)
     {
-        EditRulesController = editRulesController ?? throw new ArgumentNullException(nameof(editRulesController));
+        NewRuleController = newRuleController ?? throw new ArgumentNullException(nameof(newRuleController));
         this.ruleService = ruleService ?? throw new ArgumentNullException(nameof(ruleService));
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.ruleService.Saved += OnSavedNotificationReceived;
         ApplyRulesCommand = new RelayCommand<TransactionsListModel?>(OnApplyRulesCommandExecute);
         CreateRuleCommand = new RelayCommand<Transaction?>(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
-        ShowRulesCommand = new RelayCommand(OnShowRulesCommandExecute);
     }
 
     public IRelayCommand<TransactionsListModel?> ApplyRulesCommand { get; }
@@ -54,13 +53,32 @@ public class AppliedRulesController : ControllerBase
         }
     }
 
-    public EditRulesController EditRulesController { get; }
-
-    public ICommand ShowRulesCommand { get; }
+    public NewRuleController NewRuleController { get; }
 
     private bool CanExecuteCreateRuleCommand(Transaction? transaction)
     {
         return transaction is not null;
+    }
+
+    private void CreateNewRuleFromTransaction(Transaction transaction)
+    {
+        if (string.IsNullOrWhiteSpace(transaction.BudgetBucket?.Code))
+        {
+            this.messageBox.Show("Select a Bucket code first.");
+            return;
+        }
+
+        NewRuleController.Initialize();
+        NewRuleController.Bucket = transaction.BudgetBucket;
+        NewRuleController.Description.Value = transaction.Description;
+        NewRuleController.Reference1.Value = transaction.Reference1;
+        NewRuleController.Reference2.Value = transaction.Reference2;
+        NewRuleController.Reference3.Value = transaction.Reference3;
+        NewRuleController.TransactionType.Value = transaction.TransactionType.Name;
+        NewRuleController.Amount.Value = transaction.Amount;
+        NewRuleController.AndChecked = true;
+
+        NewRuleController.ShowDialog(this.ruleService.MatchingRules);
     }
 
     private void OnApplyRulesCommandExecute(TransactionsListModel? transactions = null)
@@ -81,16 +99,11 @@ public class AppliedRulesController : ControllerBase
             return;
         }
 
-        EditRulesController.CreateNewRuleFromTransaction(transaction);
+        CreateNewRuleFromTransaction(transaction);
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
     {
         Dirty = false;
-    }
-
-    private void OnShowRulesCommandExecute()
-    {
-        EditRulesController.ShowDialog();
     }
 }

@@ -43,9 +43,9 @@ public class ShellController : ControllerBase
         TopReportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
         TopTransactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
 
-        Messenger.Register<ShellController, ShellDialogRequestMessage>(this, static (r, m) => r.OnDialogRequested(m));
-        Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, static (r, m) => r.OnApplicationStateRequested(m));
-        Messenger.Register<ShellController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
+        Messenger.Register<ShellController, ShellDialogRequestMessage>(this, OnDialogRequested);
+        Messenger.Register<ShellController, ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+        Messenger.Register<ShellController, ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
 
         LedgerBookTabDialog = new ShellDialogController(Messenger);
         DashboardTabDialog = new ShellDialogController(Messenger);
@@ -94,7 +94,7 @@ public class ShellController : ControllerBase
     /// <summary>
     ///     Notify the ShellController the Shell is closing.
     /// </summary>
-    internal async Task<bool> ShellClosing()
+    internal async Task ShellClosing()
     {
         if (this.persistenceOperations.HasUnsavedChanges)
         {
@@ -105,14 +105,10 @@ public class ShellController : ControllerBase
                 // which is also waiting here, resulting in a deadlock.  This method will only work by first cancelling the close, awaiting this method and then re-triggering it.
                 await this.persistenceOperations.SaveDatabase();
             }
-
-            return true;
         }
-
-        return false;
     }
 
-    private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+    private void OnApplicationStateLoaded(ShellController recipient, ApplicationStateLoadedMessage message)
     {
         if (message is null)
         {
@@ -135,7 +131,7 @@ public class ShellController : ControllerBase
         }
     }
 
-    private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
+    private void OnApplicationStateRequested(ShellController recipient, ApplicationStateRequestedMessage message)
     {
         var shellPersistentStateV1 = new ShellPersistentState
         {
@@ -146,7 +142,7 @@ public class ShellController : ControllerBase
         message.PersistThisModel(shellPersistentStateV1);
     }
 
-    private void OnDialogRequested(ShellDialogRequestMessage message)
+    private void OnDialogRequested(ShellController recipient, ShellDialogRequestMessage message)
     {
         // Each mega-tab has its own dialog controller.  This is so each area can have independent dialogs, allowing the user to refer to other mega-tabs while a dialog is open.
         switch (message.Location)

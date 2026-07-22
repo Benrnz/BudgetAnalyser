@@ -47,16 +47,16 @@ public class EmbeddedResourceFileReaderWriterEncrypted : IFileReaderWriter
 
     public Task<string> LoadFirstLinesFromDiskAsync(string fileName, int lineCount)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Implement these when required for testing");
     }
 
     public Task<string> LoadFromDiskAsync(string fileName)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Implement these when required for testing");
     }
 
     public Task WriteToDiskAsync(string fileName, string data)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 }

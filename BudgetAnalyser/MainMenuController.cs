@@ -38,7 +38,7 @@ public class MainMenuController : ControllerBase
         ShowReportsCommand = new RelayCommand(OnReportsExecuted);
         ShowTransactionsCommand = new RelayCommand(OnTransactionExecuted);
 
-        Messenger.Register<MainMenuController, MainMenuTabRequestMessage>(this, static (r, m) => r.OnTabRequested(m));
+        Messenger.Register<MainMenuController, MainMenuTabRequestMessage>(this, OnTabRequested);
 
         // Default visible tab is the Dashboard tab
         OnDashboardExecuted();
@@ -155,7 +155,7 @@ public class MainMenuController : ControllerBase
         AfterTabExecutedCommon();
     }
 
-    private void OnTabRequested(MainMenuTabRequestMessage message)
+    private void OnTabRequested(MainMenuController recipient, MainMenuTabRequestMessage message)
     {
         switch (message.Tab)
         {

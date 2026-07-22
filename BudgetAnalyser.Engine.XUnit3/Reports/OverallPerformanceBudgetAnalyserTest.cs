@@ -14,11 +14,13 @@ public class OverallPerformanceBudgetAnalyserTest
     private readonly IBudgetBucketRepository bucketRepository = new BudgetBucketRepoAlwaysFind();
     private readonly TransactionsListModel transactionsTestData = TransactionsListModelTestData.TestData6();
     private BudgetCollection budgetsTestData = BudgetModelTestData.CreateCollectionWith2And5();
-    private GlobalFilterCriteria dateCriteria = new() { BeginDate = new DateOnly(2013, 1, 1), EndDate = new DateOnly(2014, 1, 1) };
+    private readonly ILogger logger;
 
-    public OverallPerformanceBudgetAnalyserTest()
+    // Setup
+    public OverallPerformanceBudgetAnalyserTest(ITestOutputHelper outputHelper)
     {
-        this.analyser = new OverallPerformanceBudgetAnalyser(this.bucketRepository);
+        this.logger = new XUnitLogger(outputHelper);
+        this.analyser = new OverallPerformanceBudgetAnalyser(this.bucketRepository, this.logger);
         this.bucketRepository.GetByCode(TransactionsListModelTestData.IncomeBucket.Code);
         this.bucketRepository.GetByCode(TransactionsListModelTestData.HairBucket.Code);
         this.bucketRepository.GetByCode(TransactionsListModelTestData.PowerBucket.Code);
@@ -29,10 +31,9 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldErrorWhenMultipleBudgetsWithVariousPayCycles()
     {
-        this.dateCriteria = new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 1, 1), EndDate = new DateOnly(2014, 03, 1) };
         this.budgetsTestData[0].BudgetCycle = BudgetCycle.Monthly;
         this.budgetsTestData[1].BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 03, 1));
 
         result.Error.ShouldBeTrue();
         result.HasValidationMessage.ShouldBeTrue();
@@ -41,8 +42,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldFunctionWhenMultipleBudgetsWithSamePayCycles()
     {
-        this.dateCriteria = new GlobalFilterCriteria { BeginDate = new DateOnly(2013, 1, 1), EndDate = new DateOnly(2014, 03, 1) };
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 03, 1));
 
         result.Error.ShouldBeFalse();
         result.HasValidationMessage.ShouldBeTrue();
@@ -51,7 +51,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldRecogniseSingleBudget()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.UsesMultipleBudgets.ShouldBeFalse();
     }
 
@@ -60,7 +60,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData[0].BudgetCycle = BudgetCycle.Fortnightly;
         this.budgetsTestData[1].BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
 
         result.UsesMultipleBudgets.ShouldBeFalse();
     }
@@ -68,7 +68,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldReturnCorrectAverageSpend()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.AverageSpend.ShouldBe(-1000);
     }
 
@@ -77,14 +77,14 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.AverageSpend.ShouldBe(-461.54M, 0.01M);
     }
 
     [Fact]
     public void Analyse_ShouldReturnCorrectAverageSurplus()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.AverageSurplus.ShouldBe(-500);
     }
 
@@ -93,7 +93,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.AverageSurplus.ShouldBe(-230.77M, 0.01M);
     }
 
@@ -102,21 +102,21 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.DurationInPeriods.ShouldBe(26);
     }
 
     [Fact]
     public void Analyse_ShouldReturnCorrectNumberOfMonths()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.DurationInPeriods.ShouldBe(12);
     }
 
     [Fact]
     public void Analyse_ShouldReturnCorrectOverallPerformanceRating()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.OverallPerformance.ShouldBe(-2760);
     }
 
@@ -125,14 +125,14 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.OverallPerformance.ShouldBe(8020M, 0.01M);
     }
 
     [Fact]
     public void Analyse_ShouldReturnResultCorrectAvgForCarMtc()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.CarMtcBucket.Code).AverageSpend.ShouldBe(200);
     }
 
@@ -141,7 +141,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         var avgCarMtc = result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.CarMtcBucket.Code).AverageSpend;
         avgCarMtc.ShouldBe(92.31M, 0.01M);
     }
@@ -149,7 +149,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldReturnResultCorrectAvgForHair()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.HairBucket.Code).AverageSpend.ShouldBe(300);
     }
 
@@ -158,7 +158,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         var avgHair = result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.HairBucket.Code).AverageSpend;
         avgHair.ShouldBe(138.46M, 0.01M);
     }
@@ -166,7 +166,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldReturnResultCorrectAvgForPhone()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.PhoneBucket.Code).AverageSpend.ShouldBe(100);
     }
 
@@ -175,7 +175,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         var avgPhone = result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.PhoneBucket.Code).AverageSpend;
         avgPhone.ShouldBe(46.15M, 0.01M);
     }
@@ -183,7 +183,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldReturnResultCorrectAvgForPower()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.PowerBucket.Code).AverageSpend.ShouldBe(400);
     }
 
@@ -192,7 +192,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         var avgPower = result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.PowerBucket.Code).AverageSpend;
         avgPower.ShouldBe(184.62M, 0.01M);
     }
@@ -200,7 +200,7 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldReturnResultCorrectAvgForSurplus()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.SurplusBucket.Code).AverageSpend.ShouldBe(500);
     }
 
@@ -209,7 +209,7 @@ public class OverallPerformanceBudgetAnalyserTest
     {
         this.budgetsTestData = new BudgetCollection { BudgetModelTestData.CreateTestData5() };
         this.budgetsTestData.Single().BudgetCycle = BudgetCycle.Fortnightly;
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         var avgSurplus = result.Analyses.Single(b => b.Bucket.Code == TransactionsListModelTestData.SurplusBucket.Code).AverageSpend;
         avgSurplus.ShouldBe(230.77M, 0.01M);
     }
@@ -217,26 +217,20 @@ public class OverallPerformanceBudgetAnalyserTest
     [Fact]
     public void Analyse_ShouldReturnResultWithSingleBudget()
     {
-        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, this.dateCriteria);
+        var result = this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1));
         result.Analyses.Count().ShouldBe(6);
     }
 
     [Fact]
     public void Analyse_ShouldThrowArgumentNullException_WhenBudgetsIsNull()
     {
-        Should.Throw<ArgumentNullException>(() => this.analyser.Analyse(this.transactionsTestData, null!, this.dateCriteria));
-    }
-
-    [Fact]
-    public void Analyse_ShouldThrowArgumentNullException_WhenCriteriaIsNull()
-    {
-        Should.Throw<ArgumentNullException>(() => this.analyser.Analyse(this.transactionsTestData, this.budgetsTestData, null!));
+        Should.Throw<ArgumentNullException>(() => this.analyser.Analyse(this.transactionsTestData, null!, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1)));
     }
 
     [Fact]
     public void Analyse_ShouldThrowArgumentNullException_WhenTransactionsModelIsNull()
     {
-        Should.Throw<ArgumentNullException>(() => this.analyser.Analyse(null!, this.budgetsTestData, this.dateCriteria));
+        Should.Throw<NullReferenceException>(() => this.analyser.Analyse(null!, this.budgetsTestData, new DateOnly(2013, 1, 1), new DateOnly(2014, 01, 1)));
     }
 
     [Fact]

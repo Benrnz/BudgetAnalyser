@@ -1,20 +1,21 @@
-﻿using System.Diagnostics;
-
-namespace BudgetAnalyser.Engine.Transactions;
+﻿namespace BudgetAnalyser.Engine.Transactions;
 
 public static class TransactionsCalculations
 {
     /// <summary>
     ///     Calculates the duration in months from the beginning of the period to the end.
     /// </summary>
-    /// <param name="criteria">
-    ///     The criteria that is currently applied to the transactions list model. Pass in null to use first and last transaction dates.
-    /// </param>
     /// <param name="transactions">The list of transactions to use to determine duration.</param>
-    public static int CalculateDurationInFortnights(GlobalFilterCriteria? criteria, IEnumerable<Transaction> transactions)
+    /// <param name="startDate">The start date for the calculation.</param>
+    /// <param name="endDate">The end date for the calculation.</param>
+    public static int CalculateDurationInFortnights(DateOnly startDate, DateOnly endDate)
     {
-        var tuple = ValidateCriteria(criteria, transactions);
-        return tuple.Item1.DurationInWeeks(tuple.Item2) / 2;
+        if (startDate >= endDate)
+        {
+            return 0;
+        }
+
+        return Math.Max(1, startDate.DurationInWeeks(endDate) / 2);
     }
 
     /// <summary>
@@ -26,31 +27,24 @@ public static class TransactionsCalculations
     /// <param name="transactions">The list of transactions to use to determine duration.</param>
     public static int CalculateDurationInMonths(GlobalFilterCriteria? criteria, IEnumerable<Transaction> transactions)
     {
-        var tuple = ValidateCriteria(criteria, transactions);
-        return tuple.Item1.DurationInMonths(tuple.Item2);
+        if (criteria is null || criteria.Cleared || criteria.BeginDate is null || criteria.EndDate is null)
+        {
+            var myCopy = transactions.ToList();
+            var date1 = myCopy.Min(t => t.Date);
+            var date2 = myCopy.Max(t => t.Date);
+            return date1.DurationInMonths(date2);
+        }
+
+        return criteria.BeginDate.Value.DurationInMonths(criteria.EndDate.Value);
     }
 
-    private static (DateOnly, DateOnly) ValidateCriteria(GlobalFilterCriteria? criteria, IEnumerable<Transaction> transactions)
+    public static int CalculateDurationInMonths(DateOnly startDate, DateOnly endDate)
     {
-        var list = transactions.ToList();
-        var minDate = DateOnly.MaxValue;
-        var maxDate = DateOnly.MinValue;
-
-        if (criteria is not null && !criteria.Cleared)
+        if (startDate >= endDate)
         {
-            if (criteria.BeginDate is not null)
-            {
-                minDate = criteria.BeginDate.Value;
-                Debug.Assert(criteria.EndDate is not null);
-                maxDate = criteria.EndDate.Value;
-            }
-        }
-        else
-        {
-            minDate = list.Min(t => t.Date);
-            maxDate = list.Max(t => t.Date);
+            return 0;
         }
 
-        return (minDate, maxDate);
+        return startDate.DurationInMonths(endDate);
     }
 }

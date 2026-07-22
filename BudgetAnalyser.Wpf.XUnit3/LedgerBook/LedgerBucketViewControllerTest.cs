@@ -1,9 +1,7 @@
 #nullable enable
 using System;
 using System.Linq;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.XUnit.TestData;
@@ -19,8 +17,8 @@ namespace BudgetAnalyser.Wpf.XUnit3.LedgerBook;
 
 public class LedgerBucketViewControllerTest
 {
-    private readonly Account chequeAccount = new ChequeAccount("CHEQUE");
     private readonly IAccountTypeRepository accountRepo = Substitute.For<IAccountTypeRepository>();
+    private readonly Account chequeAccount = new ChequeAccount("CHEQUE");
     private readonly ILedgerService ledgerService = Substitute.For<ILedgerService>();
     private readonly IUserMessageBox messageBox = Substitute.For<IUserMessageBox>();
     private readonly IMessenger messenger = new WeakReferenceMessenger();
@@ -36,8 +34,7 @@ public class LedgerBucketViewControllerTest
     {
         var userPrompts = CreateUserPrompts();
 
-        var ex = Should.Throw<ArgumentNullException>(
-            () => new LedgerBucketViewController(this.messenger, userPrompts, null!, this.ledgerService));
+        var ex = Should.Throw<ArgumentNullException>(() => new LedgerBucketViewController(this.messenger, userPrompts, null!, this.ledgerService));
 
         ex.ParamName.ShouldBe("accountRepo");
     }
@@ -47,8 +44,7 @@ public class LedgerBucketViewControllerTest
     {
         var userPrompts = CreateUserPrompts();
 
-        var ex = Should.Throw<ArgumentNullException>(
-            () => new LedgerBucketViewController(this.messenger, userPrompts, this.accountRepo, null!));
+        var ex = Should.Throw<ArgumentNullException>(() => new LedgerBucketViewController(this.messenger, userPrompts, this.accountRepo, null!));
 
         ex.ParamName.ShouldBe("ledgerService");
     }
@@ -67,10 +63,28 @@ public class LedgerBucketViewControllerTest
         var userPrompts = CreateUserPrompts();
         PrivateAccessor.SetProperty(userPrompts, "MessageBox", null!);
 
-        var ex = Should.Throw<ArgumentNullException>(
-            () => new LedgerBucketViewController(this.messenger, userPrompts, this.accountRepo, this.ledgerService));
+        var ex = Should.Throw<ArgumentNullException>(() => new LedgerBucketViewController(this.messenger, userPrompts, this.accountRepo, this.ledgerService));
 
         ex.ParamName.ShouldBe("MessageBox");
+    }
+
+    [Fact]
+    public void ShowDialog_ShouldIgnoreResponsesForDifferentCorrelationIds()
+    {
+        var subject = CreateSubject();
+        var ledgerBucket = LedgerBookTestData.TestData1().Ledgers.Single(l => l.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+        var budgetModel = BudgetModelTestData.CreateTestData1();
+        ShellDialogRequestMessage? request = null;
+        this.messenger.Register<object, ShellDialogRequestMessage>(this, (_, message) => request = message);
+
+        subject.ShowDialog(ledgerBucket, budgetModel);
+        this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Ok) { CorrelationId = Guid.NewGuid() });
+
+        this.ledgerService.DidNotReceive().MoveLedgerToAccount(Arg.Any<LedgerBucket>(), Arg.Any<Account>());
+        this.messageBox.DidNotReceive().Show(Arg.Any<string>(), Arg.Any<string>());
+        subject.BankAccounts.Select(a => a.Name).ShouldBe(["CHEQUE", "SAVINGS"]);
+        subject.StoredInAccount.ShouldBe(ledgerBucket.StoredInAccount);
+        request.ShouldNotBeNull();
     }
 
     [Fact]
@@ -134,34 +148,11 @@ public class LedgerBucketViewControllerTest
         this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Help) { CorrelationId = request!.CorrelationId });
 
         this.messageBox.Received(1).Show(
-            Arg.Is<string>(text => text.Contains("Ledgers within the Ledger Book track the actual bank balance over time of a single Bucket.")),
+            Arg.Is<string>(text => text!.Contains("Ledgers within the Ledger Book track the actual bank balance over time of a single Bucket.")),
             Arg.Any<string>());
         subject.BankAccounts.Select(a => a.Name).ShouldBe(["CHEQUE", "SAVINGS"]);
         subject.BudgetAmount.ShouldBe(55M);
         this.ledgerService.DidNotReceive().MoveLedgerToAccount(Arg.Any<LedgerBucket>(), Arg.Any<Account>());
-    }
-
-    [Fact]
-    public void ShowDialog_ThenOkWithSameAccount_ShouldResetWithoutMovingTheLedger()
-    {
-        var subject = CreateSubject();
-        var ledgerBook = LedgerBookTestData.TestData1();
-        var ledgerBucket = ledgerBook.Ledgers.Single(l => l.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-        var budgetModel = BudgetModelTestData.CreateTestData1();
-        ShellDialogRequestMessage? request = null;
-        LedgerBucketUpdatedMessage? updatedMessage = null;
-        this.messenger.Register<object, ShellDialogRequestMessage>(this, (_, message) => request = message);
-        this.messenger.Register<object, LedgerBucketUpdatedMessage>(this, (_, message) => updatedMessage = message);
-
-        subject.ShowDialog(ledgerBucket, budgetModel);
-        this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Ok) { CorrelationId = request!.CorrelationId });
-
-        this.ledgerService.DidNotReceive().MoveLedgerToAccount(Arg.Any<LedgerBucket>(), Arg.Any<Account>());
-        updatedMessage.ShouldBeNull();
-        subject.BankAccounts.ShouldBeEmpty();
-        subject.StoredInAccount.ShouldBeNull();
-        subject.BudgetAmount.ShouldBe(0);
-        subject.BucketBeingTracked.ShouldBe(ledgerBucket.BudgetBucket);
     }
 
     [Fact]
@@ -189,22 +180,26 @@ public class LedgerBucketViewControllerTest
     }
 
     [Fact]
-    public void ShowDialog_ShouldIgnoreResponsesForDifferentCorrelationIds()
+    public void ShowDialog_ThenOkWithSameAccount_ShouldResetWithoutMovingTheLedger()
     {
         var subject = CreateSubject();
-        var ledgerBucket = LedgerBookTestData.TestData1().Ledgers.Single(l => l.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+        var ledgerBook = LedgerBookTestData.TestData1();
+        var ledgerBucket = ledgerBook.Ledgers.Single(l => l.BudgetBucket.Code == TestDataConstants.HairBucketCode);
         var budgetModel = BudgetModelTestData.CreateTestData1();
         ShellDialogRequestMessage? request = null;
+        LedgerBucketUpdatedMessage? updatedMessage = null;
         this.messenger.Register<object, ShellDialogRequestMessage>(this, (_, message) => request = message);
+        this.messenger.Register<object, LedgerBucketUpdatedMessage>(this, (_, message) => updatedMessage = message);
 
         subject.ShowDialog(ledgerBucket, budgetModel);
-        this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Ok) { CorrelationId = Guid.NewGuid() });
+        this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Ok) { CorrelationId = request!.CorrelationId });
 
         this.ledgerService.DidNotReceive().MoveLedgerToAccount(Arg.Any<LedgerBucket>(), Arg.Any<Account>());
-        this.messageBox.DidNotReceive().Show(Arg.Any<string>(), Arg.Any<string>());
-        subject.BankAccounts.Select(a => a.Name).ShouldBe(["CHEQUE", "SAVINGS"]);
-        subject.StoredInAccount.ShouldBe(ledgerBucket.StoredInAccount);
-        request.ShouldNotBeNull();
+        updatedMessage.ShouldBeNull();
+        subject.BankAccounts.ShouldBeEmpty();
+        subject.StoredInAccount.ShouldBeNull();
+        subject.BudgetAmount.ShouldBe(0);
+        subject.BucketBeingTracked.ShouldBe(ledgerBucket.BudgetBucket);
     }
 
     private LedgerBucketViewController CreateSubject()

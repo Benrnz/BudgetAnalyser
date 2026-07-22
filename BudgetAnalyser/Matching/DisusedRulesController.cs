@@ -38,7 +38,7 @@ public class DisusedRulesController : ControllerBase
         }
 
         RemoveRuleCommand = new RelayCommand<DisusedRuleViewModel?>(OnRemoveRuleExecuted, r => r is not null);
-        Messenger.Register<DisusedRulesController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+        Messenger.Register<DisusedRulesController, ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
     }
 
     public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; } = new();
@@ -68,7 +68,7 @@ public class DisusedRulesController : ControllerBase
         this.removedRules.Add(rule.MatchingRule);
     }
 
-    private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+    private void OnShellDialogResponseReceived(DisusedRulesController recipient, ShellDialogResponseMessage message)
     {
         if (!message.IsItForMe(this.dialogCorrelationId))
         {

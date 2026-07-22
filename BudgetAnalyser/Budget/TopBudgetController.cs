@@ -47,8 +47,8 @@ public class TopBudgetController : ControllerBase, IShowableController
         ShowAllCommand = new RelayCommand(OnShowAllCommandExecuted);
         Shown = false;
 
-        Messenger.Register<TopBudgetController, NewBudgetModelReadyMessage>(this, static (r, m) => r.OnAddNewBudgetReady(m));
-        Messenger.Register<TopBudgetController, ShellDialogResponseMessage>(this, static (r, m) => r.OnPopUpResponseReceived(m));
+        Messenger.Register<TopBudgetController, NewBudgetModelReadyMessage>(this, OnAddNewBudgetReady);
+        Messenger.Register<TopBudgetController, ShellDialogResponseMessage>(this, OnPopUpResponseReceived);
         this.maintenanceService.Closed += OnClosedNotificationReceived;
         this.maintenanceService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
         this.maintenanceService.Saving += OnSavingNotificationReceived;
@@ -250,7 +250,7 @@ public class TopBudgetController : ControllerBase, IShowableController
         NewBudgetController.ShowDialog(proposedDate);
     }
 
-    private void OnAddNewBudgetReady(NewBudgetModelReadyMessage message)
+    private void OnAddNewBudgetReady(TopBudgetController recipient, NewBudgetModelReadyMessage message)
     {
         if (CurrentBudget is null)
         {
@@ -391,7 +391,7 @@ public class TopBudgetController : ControllerBase, IShowableController
         SyncDataFromBudgetService();
     }
 
-    private void OnPopUpResponseReceived(ShellDialogResponseMessage message)
+    private void OnPopUpResponseReceived(TopBudgetController recipient, ShellDialogResponseMessage message)
     {
         if (!message.IsItForMe(this.dialogCorrelationId))
         {

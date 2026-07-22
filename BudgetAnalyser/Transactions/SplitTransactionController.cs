@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.ShellDialog;
 using CommunityToolkit.Mvvm.Input;
@@ -14,14 +14,25 @@ namespace BudgetAnalyser.Transactions;
 public class SplitTransactionController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IBudgetBucketRepository bucketRepo;
+    private readonly ITransactionsControllerFileOperations fileOperations;
+    private readonly ILogger logger;
+    private readonly ITransactionManagerService transactionsService;
     private Guid dialogCorrelationId;
     private decimal doNotUseSplinterAmount1;
     private decimal doNotUseSplinterAmount2;
 
-    public SplitTransactionController(IMessenger messenger, IBudgetBucketRepository bucketRepo) : base(messenger)
+    public SplitTransactionController(
+        IMessenger messenger,
+        IBudgetBucketRepository bucketRepo,
+        ILogger logger,
+        ITransactionManagerService transactionsService,
+        ITransactionsControllerFileOperations fileOperations) : base(messenger)
     {
         this.bucketRepo = bucketRepo ?? throw new ArgumentNullException(nameof(bucketRepo));
-        Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.transactionsService = transactionsService ?? throw new ArgumentNullException(nameof(transactionsService));
+        this.fileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
+        Messenger.Register<SplitTransactionController, ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         CalculateSplinter1Command = new RelayCommand(CalculateSplinter2);
         CalculateSplinter2Command = new RelayCommand(CalculateSplinter1);
     }
@@ -132,7 +143,13 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
 
             if (decimal.Round(SplinterAmount1 + SplinterAmount2, 2) != decimal.Round(OriginalTransaction.Amount, 2))
             {
-                InvalidMessage = string.Format(CultureInfo.CurrentCulture, "The two amounts do not add up to {0:C}", OriginalTransaction.Amount);
+                InvalidMessage = $"The two amounts do not add up to {OriginalTransaction.Amount:C}";
+                return false;
+            }
+
+            if (SplinterBucket1 == null || SplinterBucket2 == null)
+            {
+                InvalidMessage = "Both buckets must have a budget bucket selected.";
                 return false;
             }
 
@@ -144,10 +161,10 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
     public bool CanExecuteOkButton => false;
     public bool CanExecuteSaveButton => Valid;
 
-    public void ShowDialog(Transaction originalTransaction, Guid correlationId)
+    public void ShowDialog(Transaction originalTransaction)
     {
         BudgetBuckets = this.bucketRepo.Buckets;
-        this.dialogCorrelationId = correlationId;
+        this.dialogCorrelationId = Guid.NewGuid();
         OriginalTransaction = originalTransaction;
         SplinterAmount1 = OriginalTransaction.Amount;
         SplinterAmount2 = 0M;
@@ -155,7 +172,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
 
         var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.SaveCancel)
         {
-            CorrelationId = correlationId,
+            CorrelationId = this.dialogCorrelationId,
             Title = "Split Transaction"
         };
         Messenger.Send(dialogRequest);
@@ -193,14 +210,33 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
         Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
-    private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+    private async Task FinaliseSplitTransaction(ShellDialogResponseMessage message)
+    {
+        if (message.Response == ShellDialogButton.Save && OriginalTransaction is not null)
+        {
+            this.transactionsService.SplitTransaction(
+                OriginalTransaction,
+                SplinterAmount1,
+                SplinterAmount2,
+                SplinterBucket1!,
+                SplinterBucket2!); // Buckets already validated by CanExecute methods on the Commands.
+
+            this.fileOperations.NotifyOfEdit();
+            await this.fileOperations.SyncWithServiceAsync();
+        }
+    }
+
+    private void OnShellDialogResponseReceived(SplitTransactionController recipient, ShellDialogResponseMessage message)
     {
         if (!message.IsItForMe(this.dialogCorrelationId))
         {
             return;
         }
 
-        // TransactionsListModelController processes the request to add the two new transactions. This controller only needs to clear its form.
+        ObserveUnhandledFireAndForgetFailure(
+            FinaliseSplitTransaction(message),
+            ex => this.logger.LogError(ex, _ => "Unhandled exception processing FinaliseSplitTransaction in SplitTransactionController."));
+
         this.dialogCorrelationId = Guid.Empty;
         OriginalTransaction = null;
     }

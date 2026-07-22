@@ -43,39 +43,47 @@ public class EditRulesControllerTest
         var bucketRepo = Substitute.For<IBudgetBucketRepository>();
         this.newRuleController = new NewRuleController(this.messenger, logger, userPrompts, this.ruleService, bucketRepo);
 
-        this.subject = new EditRulesController(this.messenger, userPrompts, this.newRuleController, this.ruleService, this.applicationDatabaseFacade);
+        this.subject = new EditRulesController(this.messenger, userPrompts, this.ruleService, this.applicationDatabaseFacade);
     }
 
-    // ── DeleteRuleCommand ────────────────────────────────────────────────────
+    // ── AndOrText property ───────────────────────────────────────────────────
 
     [Fact]
-    public void DeleteRuleCommand_ShouldBecomeExecutableWhenRuleSelected()
+    public void AndOrText_WhenNoRuleSelected_ReturnsNull()
+    {
+        this.subject.AndOrText.ShouldBeNull();
+    }
+
+    [Fact]
+    public void AndOrText_WhenRuleSelectedWithAndFalse_ReturnsOrText()
     {
         var rule = CreateRule();
-
-        this.subject.DeleteRuleCommand.CanExecute(null).ShouldBeFalse();
+        rule.And = false;
         this.subject.SelectedRule = rule;
-        this.subject.DeleteRuleCommand.CanExecute(null).ShouldBeTrue();
+
+        this.subject.AndOrText.ShouldBe("OR");
     }
 
     [Fact]
-    public void DeleteRuleCommand_ShouldReturnSameInstanceEveryTime()
+    public void AndOrText_WhenRuleSelectedWithAndTrue_ReturnsAndText()
     {
-        var first = this.subject.DeleteRuleCommand;
-        var second = this.subject.DeleteRuleCommand;
+        var rule = CreateRule();
+        rule.And = true;
+        this.subject.SelectedRule = rule;
 
-        first.ShouldBeSameAs(second);
+        this.subject.AndOrText.ShouldBe("AND");
     }
 
     [Fact]
-    public void DeleteRuleCommand_Execute_WhenUserDeclines_DoesNotCallRuleServiceRemove()
+    public void DeleteRuleCommand_Execute_WhenRuleServiceReturnsFalse_DoesNotNotifyApplicationDatabase()
     {
         this.subject.SelectedRule = CreateRule();
-        this.yesNoBox.Show(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
+        this.yesNoBox.Show(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+        this.ruleService.RemoveRule(Arg.Any<MatchingRule>()).Returns(false);
 
         this.subject.DeleteRuleCommand.Execute(null);
 
-        this.ruleService.DidNotReceive().RemoveRule(Arg.Any<MatchingRule>());
+        this.applicationDatabaseFacade.DidNotReceive().NotifyOfChange(Arg.Any<ApplicationDataType>());
     }
 
     [Fact]
@@ -116,24 +124,33 @@ public class EditRulesControllerTest
     }
 
     [Fact]
-    public void DeleteRuleCommand_Execute_WhenRuleServiceReturnsFalse_DoesNotNotifyApplicationDatabase()
+    public void DeleteRuleCommand_Execute_WhenUserDeclines_DoesNotCallRuleServiceRemove()
     {
         this.subject.SelectedRule = CreateRule();
-        this.yesNoBox.Show(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
-        this.ruleService.RemoveRule(Arg.Any<MatchingRule>()).Returns(false);
+        this.yesNoBox.Show(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
 
         this.subject.DeleteRuleCommand.Execute(null);
 
-        this.applicationDatabaseFacade.DidNotReceive().NotifyOfChange(Arg.Any<ApplicationDataType>());
+        this.ruleService.DidNotReceive().RemoveRule(Arg.Any<MatchingRule>());
     }
 
-    // ── EditRuleCommand ──────────────────────────────────────────────────────
+    // ── DeleteRuleCommand ────────────────────────────────────────────────────
 
     [Fact]
-    public void EditRuleCommand_ShouldReturnSameInstanceEveryTime()
+    public void DeleteRuleCommand_ShouldBecomeExecutableWhenRuleSelected()
     {
-        var first = this.subject.EditRuleCommand;
-        var second = this.subject.EditRuleCommand;
+        var rule = CreateRule();
+
+        this.subject.DeleteRuleCommand.CanExecute(null).ShouldBeFalse();
+        this.subject.SelectedRule = rule;
+        this.subject.DeleteRuleCommand.CanExecute(null).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void DeleteRuleCommand_ShouldReturnSameInstanceEveryTime()
+    {
+        var first = this.subject.DeleteRuleCommand;
+        var second = this.subject.DeleteRuleCommand;
 
         first.ShouldBeSameAs(second);
     }
@@ -141,7 +158,7 @@ public class EditRulesControllerTest
     [Fact]
     public void EditRuleCommand_CanExecute_ReturnsFalseWhenNoRuleSelected()
     {
-        this.subject.EditRuleCommand.CanExecute(null).ShouldBeFalse();
+        this.subject.SelectRuleCommand.CanExecute(null).ShouldBeFalse();
     }
 
     [Fact]
@@ -149,7 +166,17 @@ public class EditRulesControllerTest
     {
         this.subject.SelectedRule = CreateRule();
 
-        this.subject.EditRuleCommand.CanExecute(null).ShouldBeTrue();
+        this.subject.SelectRuleCommand.CanExecute(null).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void EditRuleCommand_Execute_NotifiesApplicationDatabaseOfChange()
+    {
+        this.subject.SelectedRule = CreateRule();
+
+        this.subject.SelectRuleCommand.Execute(null);
+
+        this.applicationDatabaseFacade.Received(1).NotifyOfChange(ApplicationDataType.MatchingRules);
     }
 
     [Fact]
@@ -157,7 +184,7 @@ public class EditRulesControllerTest
     {
         this.subject.SelectedRule = CreateRule();
 
-        this.subject.EditRuleCommand.Execute(null);
+        this.subject.SelectRuleCommand.Execute(null);
 
         this.subject.EditingRule.ShouldBeTrue();
     }
@@ -166,158 +193,33 @@ public class EditRulesControllerTest
     public void EditRuleCommand_Execute_WhenAlreadyEditing_TogglesEditingRuleToFalse()
     {
         this.subject.SelectedRule = CreateRule();
-        this.subject.EditRuleCommand.Execute(null); // enter edit mode
+        this.subject.SelectRuleCommand.Execute(null); // enter edit mode
 
-        this.subject.EditRuleCommand.Execute(null); // exit edit mode
+        this.subject.SelectRuleCommand.Execute(null); // exit edit mode
 
         this.subject.EditingRule.ShouldBeFalse();
     }
 
-    [Fact]
-    public void EditRuleCommand_Execute_NotifiesApplicationDatabaseOfChange()
-    {
-        this.subject.SelectedRule = CreateRule();
-
-        this.subject.EditRuleCommand.Execute(null);
-
-        this.applicationDatabaseFacade.Received(1).NotifyOfChange(ApplicationDataType.MatchingRules);
-    }
-
-    // ── SortBy property ──────────────────────────────────────────────────────
+    // ── SelectRuleCommand ──────────────────────────────────────────────────────
 
     [Fact]
-    public void SortBy_WhenSetToBucketSortKey_SetsGroupByListBoxVisibilityTrue()
+    public void EditRuleCommand_ShouldReturnSameInstanceEveryTime()
     {
-        this.subject.SortBy = EditRulesController.BucketSortKey;
+        var first = this.subject.SelectRuleCommand;
+        var second = this.subject.SelectRuleCommand;
 
-        this.subject.GroupByListBoxVisibility.ShouldBeTrue();
+        first.ShouldBeSameAs(second);
     }
 
     [Fact]
-    public void SortBy_WhenSetToBucketSortKey_SetsFlatListBoxVisibilityFalse()
+    public void RuleServiceClosedEvent_ClearsGroupedRulesCollection()
     {
-        this.subject.SortBy = EditRulesController.BucketSortKey;
+        ConfigureRuleServiceWithOneRule();
+        this.ruleService.NewDataSourceAvailable += Raise.Event();
 
-        this.subject.FlatListBoxVisibility.ShouldBeFalse();
-    }
+        this.ruleService.Closed += Raise.Event();
 
-    [Fact]
-    public void SortBy_WhenSetToDescriptionSortKey_SetsFlatListBoxVisibilityTrue()
-    {
-        this.subject.SortBy = EditRulesController.DescriptionSortKey;
-
-        this.subject.FlatListBoxVisibility.ShouldBeTrue();
-    }
-
-    [Fact]
-    public void SortBy_WhenSetToDescriptionSortKey_SetsGroupByListBoxVisibilityFalse()
-    {
-        this.subject.SortBy = EditRulesController.DescriptionSortKey;
-
-        this.subject.GroupByListBoxVisibility.ShouldBeFalse();
-    }
-
-    [Fact]
-    public void SortBy_WhenSetToMatchesSortKey_SetsFlatListBoxVisibilityTrue()
-    {
-        this.subject.SortBy = EditRulesController.MatchesSortKey;
-
-        this.subject.FlatListBoxVisibility.ShouldBeTrue();
-    }
-
-    [Fact]
-    public void SortBy_WhenSetToMatchesSortKey_SetsGroupByListBoxVisibilityFalse()
-    {
-        this.subject.SortBy = EditRulesController.MatchesSortKey;
-
-        this.subject.GroupByListBoxVisibility.ShouldBeFalse();
-    }
-
-    [Fact]
-    public void SortBy_WhenSetToInvalidKey_ThrowsArgumentException()
-    {
-        Should.Throw<ArgumentException>(() => this.subject.SortBy = "NotAValidSortKey");
-    }
-
-    [Fact]
-    public void SortBy_WhenSetToInvalidKey_LeavesPropertyUnchanged()
-    {
-        this.subject.SortBy = EditRulesController.DescriptionSortKey;
-
-        Should.Throw<ArgumentException>(() => this.subject.SortBy = "NotAValidSortKey");
-
-        this.subject.SortBy.ShouldBe(EditRulesController.DescriptionSortKey);
-    }
-
-    // ── AndOrText property ───────────────────────────────────────────────────
-
-    [Fact]
-    public void AndOrText_WhenNoRuleSelected_ReturnsNull()
-    {
-        this.subject.AndOrText.ShouldBeNull();
-    }
-
-    [Fact]
-    public void AndOrText_WhenRuleSelectedWithAndTrue_ReturnsAndText()
-    {
-        var rule = CreateRule();
-        rule.And = true;
-        this.subject.SelectedRule = rule;
-
-        this.subject.AndOrText.ShouldBe("AND");
-    }
-
-    [Fact]
-    public void AndOrText_WhenRuleSelectedWithAndFalse_ReturnsOrText()
-    {
-        var rule = CreateRule();
-        rule.And = false;
-        this.subject.SelectedRule = rule;
-
-        this.subject.AndOrText.ShouldBe("OR");
-    }
-
-    // ── ShowReadOnlyRuleDetails property ─────────────────────────────────────
-
-    [Fact]
-    public void ShowReadOnlyRuleDetails_WhenNoRuleSelected_ReturnsFalse()
-    {
-        this.subject.ShowReadOnlyRuleDetails.ShouldBeFalse();
-    }
-
-    [Fact]
-    public void ShowReadOnlyRuleDetails_WhenRuleSelectedAndNotEditing_ReturnsTrue()
-    {
-        this.subject.SelectedRule = CreateRule();
-
-        this.subject.ShowReadOnlyRuleDetails.ShouldBeTrue();
-    }
-
-    [Fact]
-    public void ShowReadOnlyRuleDetails_WhenEditingRule_ReturnsFalse()
-    {
-        this.subject.SelectedRule = CreateRule();
-        this.subject.EditRuleCommand.Execute(null); // enter edit mode
-
-        this.subject.ShowReadOnlyRuleDetails.ShouldBeFalse();
-    }
-
-    // ── SortCommand ──────────────────────────────────────────────────────────
-
-    [Fact]
-    public void SortCommand_WhenExecutedWithBucketKey_UpdatesSortByProperty()
-    {
-        this.subject.SortCommand.Execute(EditRulesController.BucketSortKey);
-
-        this.subject.SortBy.ShouldBe(EditRulesController.BucketSortKey);
-    }
-
-    [Fact]
-    public void SortCommand_WhenExecutedWithDescriptionKey_UpdatesSortByProperty()
-    {
-        this.subject.SortCommand.Execute(EditRulesController.DescriptionSortKey);
-
-        this.subject.SortBy.ShouldBe(EditRulesController.DescriptionSortKey);
+        this.subject.RulesGroupedByBucket.ShouldBeEmpty();
     }
 
     // ── ruleService event handlers ───────────────────────────────────────────
@@ -334,17 +236,6 @@ public class EditRulesControllerTest
     }
 
     [Fact]
-    public void RuleServiceClosedEvent_ClearsGroupedRulesCollection()
-    {
-        ConfigureRuleServiceWithOneRule();
-        this.ruleService.NewDataSourceAvailable += Raise.Event();
-
-        this.ruleService.Closed += Raise.Event();
-
-        this.subject.RulesGroupedByBucket.ShouldBeEmpty();
-    }
-
-    [Fact]
     public void RuleServiceClosedEvent_ClearsSelectedRule()
     {
         this.subject.SelectedRule = CreateRule();
@@ -355,15 +246,15 @@ public class EditRulesControllerTest
     }
 
     [Fact]
-    public void RuleServiceSavedEvent_SetsEditingRuleToFalse()
+    public void RuleServiceNewDataSourceAvailableEvent_ClearsSelectedRule()
     {
         this.subject.SelectedRule = CreateRule();
-        this.subject.EditRuleCommand.Execute(null); // enter edit mode
-        this.subject.EditingRule.ShouldBeTrue();
+        this.ruleService.MatchingRules.Returns(Enumerable.Empty<MatchingRule>());
+        this.ruleService.MatchingRulesGroupedByBucket.Returns(Enumerable.Empty<RulesGroupedByBucket>());
 
-        this.ruleService.Saved += Raise.Event();
+        this.ruleService.NewDataSourceAvailable += Raise.Event();
 
-        this.subject.EditingRule.ShouldBeFalse();
+        this.subject.SelectedRule.ShouldBeNull();
     }
 
     [Fact]
@@ -390,15 +281,30 @@ public class EditRulesControllerTest
     }
 
     [Fact]
-    public void RuleServiceNewDataSourceAvailableEvent_ClearsSelectedRule()
+    public void RuleServiceSavedEvent_SetsEditingRuleToFalse()
     {
         this.subject.SelectedRule = CreateRule();
-        this.ruleService.MatchingRules.Returns(Enumerable.Empty<MatchingRule>());
+        this.subject.SelectRuleCommand.Execute(null); // enter edit mode
+        this.subject.EditingRule.ShouldBeTrue();
+
+        this.ruleService.Saved += Raise.Event();
+
+        this.subject.EditingRule.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void ShowDialog_WhenRulesAlreadyLoaded_DoesNotReloadFromService()
+    {
+        // Populate Rules first via the event, then call ShowDialog
+        var firstRule = CreateRule();
+        this.ruleService.MatchingRules.Returns(new[] { firstRule });
         this.ruleService.MatchingRulesGroupedByBucket.Returns(Enumerable.Empty<RulesGroupedByBucket>());
-
         this.ruleService.NewDataSourceAvailable += Raise.Event();
+        this.ruleService.ClearReceivedCalls();
 
-        this.subject.SelectedRule.ShouldBeNull();
+        this.subject.ShowDialog();
+
+        this.ruleService.DidNotReceive().MatchingRules.GetEnumerator();
     }
 
     // ── ShowDialog ───────────────────────────────────────────────────────────
@@ -416,18 +322,112 @@ public class EditRulesControllerTest
     }
 
     [Fact]
-    public void ShowDialog_WhenRulesAlreadyLoaded_DoesNotReloadFromService()
+    public void ShowReadOnlyRuleDetails_WhenEditingRule_ReturnsFalse()
     {
-        // Populate Rules first via the event, then call ShowDialog
-        var firstRule = CreateRule();
-        this.ruleService.MatchingRules.Returns(new[] { firstRule });
-        this.ruleService.MatchingRulesGroupedByBucket.Returns(Enumerable.Empty<RulesGroupedByBucket>());
-        this.ruleService.NewDataSourceAvailable += Raise.Event();
-        this.ruleService.ClearReceivedCalls();
+        this.subject.SelectedRule = CreateRule();
+        this.subject.SelectRuleCommand.Execute(null); // enter edit mode
 
-        this.subject.ShowDialog();
+        this.subject.ShowReadOnlyRuleDetails.ShouldBeFalse();
+    }
 
-        this.ruleService.DidNotReceive().MatchingRules.GetEnumerator();
+    // ── ShowReadOnlyRuleDetails property ─────────────────────────────────────
+
+    [Fact]
+    public void ShowReadOnlyRuleDetails_WhenNoRuleSelected_ReturnsFalse()
+    {
+        this.subject.ShowReadOnlyRuleDetails.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void ShowReadOnlyRuleDetails_WhenRuleSelectedAndNotEditing_ReturnsTrue()
+    {
+        this.subject.SelectedRule = CreateRule();
+
+        this.subject.ShowReadOnlyRuleDetails.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void SortBy_WhenSetToBucketSortKey_SetsFlatListBoxVisibilityFalse()
+    {
+        this.subject.SortBy = EditRulesController.BucketSortKey;
+
+        this.subject.FlatListBoxVisibility.ShouldBeFalse();
+    }
+
+    // ── SortBy property ──────────────────────────────────────────────────────
+
+    [Fact]
+    public void SortBy_WhenSetToBucketSortKey_SetsGroupByListBoxVisibilityTrue()
+    {
+        this.subject.SortBy = EditRulesController.BucketSortKey;
+
+        this.subject.GroupByListBoxVisibility.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void SortBy_WhenSetToDescriptionSortKey_SetsFlatListBoxVisibilityTrue()
+    {
+        this.subject.SortBy = EditRulesController.DescriptionSortKey;
+
+        this.subject.FlatListBoxVisibility.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void SortBy_WhenSetToDescriptionSortKey_SetsGroupByListBoxVisibilityFalse()
+    {
+        this.subject.SortBy = EditRulesController.DescriptionSortKey;
+
+        this.subject.GroupByListBoxVisibility.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void SortBy_WhenSetToInvalidKey_LeavesPropertyUnchanged()
+    {
+        this.subject.SortBy = EditRulesController.DescriptionSortKey;
+
+        Should.Throw<ArgumentException>(() => this.subject.SortBy = "NotAValidSortKey");
+
+        this.subject.SortBy.ShouldBe(EditRulesController.DescriptionSortKey);
+    }
+
+    [Fact]
+    public void SortBy_WhenSetToInvalidKey_ThrowsArgumentException()
+    {
+        Should.Throw<ArgumentException>(() => this.subject.SortBy = "NotAValidSortKey");
+    }
+
+    [Fact]
+    public void SortBy_WhenSetToMatchesSortKey_SetsFlatListBoxVisibilityTrue()
+    {
+        this.subject.SortBy = EditRulesController.MatchesSortKey;
+
+        this.subject.FlatListBoxVisibility.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void SortBy_WhenSetToMatchesSortKey_SetsGroupByListBoxVisibilityFalse()
+    {
+        this.subject.SortBy = EditRulesController.MatchesSortKey;
+
+        this.subject.GroupByListBoxVisibility.ShouldBeFalse();
+    }
+
+    // ── SortCommand ──────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SortCommand_WhenExecutedWithBucketKey_UpdatesSortByProperty()
+    {
+        this.subject.SortCommand.Execute(EditRulesController.BucketSortKey);
+
+        this.subject.SortBy.ShouldBe(EditRulesController.BucketSortKey);
+    }
+
+    [Fact]
+    public void SortCommand_WhenExecutedWithDescriptionKey_UpdatesSortByProperty()
+    {
+        this.subject.SortCommand.Execute(EditRulesController.DescriptionSortKey);
+
+        this.subject.SortBy.ShouldBe(EditRulesController.DescriptionSortKey);
     }
 
     private void ConfigureRuleServiceWithOneRule()

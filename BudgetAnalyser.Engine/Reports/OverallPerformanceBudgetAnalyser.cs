@@ -7,9 +7,10 @@ namespace BudgetAnalyser.Engine.Reports;
 ///     An analyser class to build report data for the overall performance report.
 /// </summary>
 [AutoRegisterWithIoC]
-internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepository)
+public class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepository, ILogger logger)
 {
     private readonly IBudgetBucketRepository bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
+    private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     private DateOnly beginDate;
     private BudgetCollection? budgetCollection;
@@ -17,25 +18,29 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
     private Func<DateOnly, int, DateOnly> calculateNextPeriodDate = (_, _) => throw new NotSupportedException();
     private DateOnly endDate;
     private BudgetModel? latestBudget;
-    private GlobalFilterCriteria? rawCriteria;
-    private TransactionsListModel? transactions;
+    private IQueryable<Transaction> transactions = new List<Transaction>().AsQueryable();
 
     /// <summary>
     ///     Analyses the supplied transaction model using the supplied budget within the criteria given to this method.
     /// </summary>
     /// <param name="budgets">The current budgets collection.</param>
-    /// <param name="criteria">The criteria to limit the analysis.</param>
     /// <param name="transactionsModel">The current transactions model.</param>
+    /// <param name="startDate">The start date for the analysis.</param>
+    /// <param name="endDateExcl">The end date for the analysis.</param>
     /// <exception cref="BudgetException">
     ///     Will be thrown if no budget is supplied or if no budget can be found for the dates given in the criteria.
     /// </exception>
     /// <exception cref="ArgumentException">If transactions model or budget is null.</exception>
-    public OverallPerformanceBudgetResult Analyse(TransactionsListModel transactionsModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
+    public OverallPerformanceBudgetResult Analyse(TransactionsListModel transactionsModel, BudgetCollection budgets, DateOnly startDate, DateOnly endDateExcl)
     {
-        this.transactions = transactionsModel;
+        this.transactions = transactionsModel.AllTransactions.Where(t => t.Date >= startDate && t.Date < endDateExcl).AsQueryable();
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Analyzing transactions from {startDate} to {endDateExcl}, total transactions: {this.transactions.Count()}");
         this.budgetCollection = budgets;
-        this.rawCriteria = criteria;
+        this.beginDate = startDate;
+        this.endDate = endDateExcl;
+
         AnalysisPreconditions();
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Budget Collection has {this.budgetCollection.Count} budgets.");
 
         var result = new OverallPerformanceBudgetResult();
 
@@ -44,6 +49,8 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         {
             return result;
         }
+
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Active Budget for the dates: {this.latestBudget.Name}. Effective From: {this.latestBudget.EffectiveFrom}.");
 
         CalculateTotalsAndAverage(result);
 
@@ -100,14 +107,14 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
     // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local - purpose of this function is to do pre-condition checks.
     private void AnalysisPreconditions()
     {
-        if (this.rawCriteria is null)
-        {
-            throw new ArgumentNullException(nameof(this.rawCriteria));
-        }
-
-        if (!this.rawCriteria.Cleared && (this.rawCriteria.BeginDate is null || this.rawCriteria.EndDate is null))
+        if (this.beginDate == DateOnly.MinValue || this.endDate == DateOnly.MinValue)
         {
             throw new ArgumentException("The given criteria does not contain any filtering dates.");
+        }
+
+        if (this.beginDate >= this.endDate)
+        {
+            throw new ArgumentException("The given start date is after the end date.");
         }
 
         if (this.transactions is null)
@@ -118,17 +125,6 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         if (this.budgetCollection is null)
         {
             throw new ArgumentNullException(nameof(this.budgetCollection));
-        }
-
-        if (this.rawCriteria.Cleared)
-        {
-            this.beginDate = this.transactions.AllTransactions.First().Date;
-            this.endDate = this.transactions.AllTransactions.Last().Date;
-        }
-        else
-        {
-            this.beginDate = this.rawCriteria.BeginDate ?? DateOnly.MinValue;
-            this.endDate = this.rawCriteria.EndDate ?? DateOnly.MinValue;
         }
     }
 
@@ -164,11 +160,14 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
 
     private BucketPerformanceResult CalculateBucketStatistics(Func<BudgetModel, decimal> getBudgetedAmount, BudgetBucket bucket, bool multipleBudgets, int durationInPeriods)
     {
-        var query = this.transactions!.Transactions.Where(t => t.BudgetBucket == bucket).ToList();
+        var query = this.transactions.Where(t => t.BudgetBucket == bucket).ToList();
         var totalSpent = query.Sum(t => t.Amount);
         var averageSpend = totalSpent / durationInPeriods;
         var budgetedTotal = CalculateBudgetedTotalAmount(getBudgetedAmount, multipleBudgets, durationInPeriods);
         var perMonthBudget = budgetedTotal / durationInPeriods;
+
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: {bucket.Code}, Total Spent:{totalSpent:C}, Average Spend:{averageSpend:C}, Budgeted Total:{budgetedTotal:C}, Per Month Budget:" +
+                                 $"{perMonthBudget:C}");
 
         return new BucketPerformanceResult
         {
@@ -205,24 +204,28 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         switch (this.budgetCycle)
         {
             case BudgetCycle.Fortnightly:
-                result.DurationInPeriods = TransactionsCalculations.CalculateDurationInFortnights(this.rawCriteria, this.transactions!.Transactions);
+                result.DurationInPeriods = TransactionsCalculations.CalculateDurationInFortnights(this.beginDate, this.endDate);
+                this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Duration in Fortnights: {result.DurationInPeriods}");
                 this.calculateNextPeriodDate = (d, iteration) => d.AddDays(14 * iteration);
                 break;
             case BudgetCycle.Monthly:
-                result.DurationInPeriods = TransactionsCalculations.CalculateDurationInMonths(this.rawCriteria, this.transactions!.Transactions);
+                result.DurationInPeriods = TransactionsCalculations.CalculateDurationInMonths(this.beginDate, this.endDate);
+                this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Duration in Months: {result.DurationInPeriods}");
                 this.calculateNextPeriodDate = (d, iteration) => d.AddMonths(1 * iteration);
                 break;
             default:
                 throw new NotSupportedException("The Overall Performance Budget Analyser does not support the budget cycle type: " + this.budgetCycle);
         }
 
-        var totalExpensesSpend = this.transactions!.Transactions
+        var totalExpensesSpend = this.transactions
             .Where(t => t.BudgetBucket is ExpenseBucket)
             .Sum(t => t.Amount);
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Total Expenses Spend: {totalExpensesSpend:C}");
 
-        var totalSurplusSpend = this.transactions!.Transactions
+        var totalSurplusSpend = this.transactions
             .Where(t => t.BudgetBucket is SurplusBucket)
             .Sum(t => t.Amount);
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Total Surplus Spend: {totalSurplusSpend:C}");
 
         result.AverageSpend = totalExpensesSpend / result.DurationInPeriods; // Expected to be negative
         result.AverageSurplus = totalSurplusSpend / result.DurationInPeriods; // Expected to be negative
@@ -235,6 +238,7 @@ internal class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRe
         }
 
         result.OverallPerformance = totalExpensesSpend + result.TotalBudgetExpenses;
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Overall Performance: {result.OverallPerformance:C}");
     }
 
     private BudgetModel EvaluateBudgetsInvolved(OverallPerformanceBudgetResult result)

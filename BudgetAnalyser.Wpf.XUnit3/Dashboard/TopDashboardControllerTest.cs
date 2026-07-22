@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Mobile;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
@@ -102,7 +101,6 @@ public class TopDashboardControllerTest
         var inputBox = Substitute.For<IUserInputBox>();
         var applicationDatabaseFacade = Substitute.For<IApplicationDatabaseFacade>();
         var applicationDatabaseService = Substitute.For<IApplicationDatabaseService>();
-        var bucketRepository = Substitute.For<IBudgetBucketRepository>();
         var ruleService = Substitute.For<ITransactionRuleService>();
         var dashboardService = Substitute.For<IDashboardService>();
         var mobileExporter = Substitute.For<IMobileDataExporter>();
@@ -121,9 +119,7 @@ public class TopDashboardControllerTest
         applicationDatabaseFacade.SaveAsync().Returns(Task.CompletedTask);
         applicationDatabaseFacade.ValidateAll(Arg.Any<StringBuilder>()).Returns(true);
         dashboardService.WidgetsToDisplay().Returns(new ObservableCollection<WidgetGroup>());
-        bucketRepository.Buckets.Returns(Array.Empty<BudgetBucket>());
 
-        var createNewSurprisePaymentMonitorController = new CreateNewSurprisePaymentMonitorController(messenger, userPrompts, bucketRepository);
         var disusedRulesController = new DisusedRulesController(messenger, ruleService, applicationDatabaseFacade);
         var globalFilterController = new GlobalFilterController(messenger, userPrompts, applicationDatabaseService);
         var uploadMobileDataController = new UploadMobileDataController(messenger, logger, userPrompts, mobileExporter, mobileUploader, applicationDatabaseFacade);
@@ -133,7 +129,6 @@ public class TopDashboardControllerTest
             messenger,
             logger,
             userPrompts,
-            createNewSurprisePaymentMonitorController,
             disusedRulesController,
             globalFilterController,
             uploadMobileDataController,

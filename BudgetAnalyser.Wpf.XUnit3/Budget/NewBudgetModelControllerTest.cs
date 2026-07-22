@@ -114,7 +114,7 @@ public class NewBudgetModelControllerTest
         subject.ShowDialog(DateOnlyExt.Today().AddDays(1));
         this.messenger.Send(new ShellDialogResponseMessage(subject, ShellDialogButton.Help) { CorrelationId = request!.CorrelationId });
 
-        this.messageBox.Received(1).Show(Arg.Is<string>(text => text.Contains("future dated")));
+        this.messageBox.Received(1).Show(Arg.Is<string>(text => text!.Contains("future dated")));
         ready.ShouldBeNull();
     }
 

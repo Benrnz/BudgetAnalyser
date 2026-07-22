@@ -11,6 +11,6 @@ public interface IUserInputBox
     /// <param name="heading">The window title</param>
     /// <param name="question">The main question text</param>
     /// <param name="defaultInput">An optional default value for the input box</param>
-    /// <returns>User response to the question, or null if the user cancelled.  The user cannot return null if 'Ok' is clicked.</returns>
+    /// <returns>User response to the question, or string.Empty if the user cancelled.  The user cannot return null if 'Ok' is clicked.</returns>
     string Show(string heading, string question, string defaultInput = "");
 }
