@@ -65,8 +65,12 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         }
 
         var (date1, date2) = RequestCurrentFilter();
-        OverallPerformanceController.Load(this.currentTransactionsListModel, this.budgets, date1!.Value, date2!.Value);
+        if (date1 is null || date2 is null || date2 <= date1)
+        {
+            return;
+        }
 
+        OverallPerformanceController.Load(this.currentTransactionsListModel, this.budgets, date1.Value, date2.Value);
         this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 650;
         this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 740;
         this.newWindowViewLoader.Show(OverallPerformanceController);
