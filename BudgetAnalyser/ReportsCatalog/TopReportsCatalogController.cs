@@ -66,13 +66,9 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
 
         var (date1, date2) = RequestCurrentFilter();
         if (date1 is null || date2 is null || date2 <= date1)
-
         {
-
             return;
-
         }
-
 
         OverallPerformanceController.Load(this.currentTransactionsListModel, this.budgets, date1.Value, date2.Value);
 
@@ -102,21 +98,26 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         while (date1 == DateOnly.MinValue)
         {
             var input = this.inputBox.Show("Enter the start date for the report in the format YYYY-MM-DD", "Report Start Date", defaultValue);
+            if (string.IsNullOrEmpty(input))
+            {
+                return (null, null);
+            }
+
             if (DateOnly.TryParse(input, out var date))
             {
                 date1 = date;
             }
         }
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return (null, null);
-            }
-
 
         defaultValue = DateTime.Today.FirstDateInMonth().ToString("yyyy-MM-dd");
         while (date2 == DateOnly.MinValue)
         {
             var input = this.inputBox.Show("Enter the end date for the report in the format YYYY-MM-DD", "Report End Date", defaultValue);
+            if (string.IsNullOrEmpty(input))
+            {
+                return (null, null);
+            }
+
             if (DateOnly.TryParse(input, out var date))
             {
                 date2 = date;
