@@ -64,13 +64,13 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
             return;
         }
 
-        var (date1, date2) = RequestCurrentFilter();
-        if (date1 is null || date2 is null || date2 <= date1)
+        var (startDateIncl, endDateIncl) = RequestDateRange();
+        if (startDateIncl is null || endDateIncl is null || endDateIncl <= startDateIncl)
         {
             return;
         }
 
-        OverallPerformanceController.Load(this.currentTransactionsListModel, this.budgets, date1.Value, date2.Value);
+        OverallPerformanceController.Load(this.currentTransactionsListModel, this.budgets, startDateIncl.Value, endDateIncl.Value);
 
         this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 650;
         this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 740;
@@ -89,7 +89,7 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         OnPropertyChanged(nameof(OverallPerformanceReportIsAvailable));
     }
 
-    private (DateOnly?, DateOnly?) RequestCurrentFilter()
+    private (DateOnly?, DateOnly?) RequestDateRange()
     {
         var date1 = DateOnly.MinValue;
         var date2 = DateOnly.MinValue;
@@ -97,7 +97,7 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         var defaultValue = DateTime.Today.FirstDateInMonth().AddMonths(-12).ToString("yyyy-MM-dd");
         while (date1 == DateOnly.MinValue)
         {
-            var input = this.inputBox.Show("Enter the start date for the report in the format YYYY-MM-DD", "Report Start Date", defaultValue);
+            var input = this.inputBox.Show("Enter the inclusive start date for the report in the format YYYY-MM-DD", "Report Start Date", defaultValue);
             if (string.IsNullOrEmpty(input))
             {
                 return (null, null);
@@ -112,7 +112,7 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         defaultValue = DateTime.Today.FirstDateInMonth().ToString("yyyy-MM-dd");
         while (date2 == DateOnly.MinValue)
         {
-            var input = this.inputBox.Show("Enter the end date for the report in the format YYYY-MM-DD", "Report End Date", defaultValue);
+            var input = this.inputBox.Show("Enter the inclusive end date for the report in the format YYYY-MM-DD", "Report End Date", defaultValue);
             if (string.IsNullOrEmpty(input))
             {
                 return (null, null);

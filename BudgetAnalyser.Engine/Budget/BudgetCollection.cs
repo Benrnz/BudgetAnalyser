@@ -5,9 +5,8 @@ using System.Text;
 namespace BudgetAnalyser.Engine.Budget;
 
 /// <summary>
-///     A collection of budgets.  The collection is always sorted in descending order on the
-///     <see cref="BudgetModel.EffectiveFrom" /> date. Ie: Future budgets are on top, then the current budget then archived
-///     budgets.
+///     A collection of budgets.  The collection is always sorted in descending order on the <see cref="BudgetModel.EffectiveFrom" /> date. Ie: Future budgets are on top, then the current budget
+///     then archived budgets.
 /// </summary>
 public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
 {
@@ -76,8 +75,7 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     }
 
     /// <summary>
-    ///     Validate the instance and populate any warnings and errors into the <paramref name="validationMessages" /> string
-    ///     builder.
+    ///     Validate the instance and populate any warnings and errors into the <paramref name="validationMessages" /> string  builder.
     /// </summary>
     /// <param name="validationMessages">A non-null string builder that will be appended to for any messages.</param>
     /// <returns>
@@ -119,17 +117,15 @@ public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     }
 
     /// <summary>
-    ///     Retrieves the applicable budgets for the specified date range.
+    ///     Retrieves the applicable budgets for the specified date range. Both dates are inclusive, because we need to find all budgets that could apply for a date range.
     /// </summary>
     /// <exception cref="BudgetException">
-    ///     The period covered by the dates given overlaps a period where no budgets are
-    ///     available.
+    ///     The period covered by the dates given overlaps a period where no budgets are available.
     /// </exception>
     public IEnumerable<BudgetModel> ForDates(DateOnly beginInclusive, DateOnly endInclusive)
     {
         var budgets = new List<BudgetModel>();
-        var firstEffectiveBudget = ForDate(beginInclusive) ?? throw new BudgetException(
-            "The period covered by the dates given overlaps a period where no budgets are available.");
+        var firstEffectiveBudget = ForDate(beginInclusive) ?? throw new BudgetException("The period covered by the dates given overlaps a period where no budgets are available.");
         budgets.Add(firstEffectiveBudget);
         budgets.AddRange(this.Where(b => b.EffectiveFrom >= beginInclusive && b.EffectiveFrom <= endInclusive));
         if (budgets.Count(b => b == firstEffectiveBudget) > 1)

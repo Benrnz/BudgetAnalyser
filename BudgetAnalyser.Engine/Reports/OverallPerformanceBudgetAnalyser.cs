@@ -25,19 +25,19 @@ public class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepo
     /// </summary>
     /// <param name="budgets">The current budgets collection.</param>
     /// <param name="transactionsModel">The current transactions model.</param>
-    /// <param name="startDate">The start date for the analysis.</param>
-    /// <param name="endDateExcl">The end date for the analysis.</param>
+    /// <param name="startDateIncl">The inclusive start date for the analysis.</param>
+    /// <param name="endDateIncl">The inclusive end date for the analysis.</param>
     /// <exception cref="BudgetException">
     ///     Will be thrown if no budget is supplied or if no budget can be found for the dates given in the criteria.
     /// </exception>
     /// <exception cref="ArgumentException">If transactions model or budget is null.</exception>
-    public OverallPerformanceBudgetResult Analyse(TransactionsListModel transactionsModel, BudgetCollection budgets, DateOnly startDate, DateOnly endDateExcl)
+    public OverallPerformanceBudgetResult Analyse(TransactionsListModel transactionsModel, BudgetCollection budgets, DateOnly startDateIncl, DateOnly endDateIncl)
     {
-        this.transactions = transactionsModel.AllTransactions.Where(t => t.Date >= startDate && t.Date < endDateExcl).AsQueryable();
-        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Analyzing transactions from {startDate} to {endDateExcl}, total transactions: {this.transactions.Count()}");
+        this.transactions = transactionsModel.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date <= endDateIncl).AsQueryable();
+        this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Analyzing transactions from {startDateIncl} to {endDateIncl}, total transactions: {this.transactions.Count()}");
         this.budgetCollection = budgets;
-        this.beginDate = startDate;
-        this.endDate = endDateExcl;
+        this.beginDate = startDateIncl;
+        this.endDate = endDateIncl;
 
         AnalysisPreconditions();
         this.logger.LogInfo(_ => $"OverallPerformanceBudgetAnalyser: Budget Collection has {this.budgetCollection.Count} budgets.");
