@@ -15,7 +15,8 @@ public static class TransactionsCalculations
             return 0;
         }
 
-        return Math.Max(1, startDate.DurationInWeeks(endDate) / 2);
+        return Math.Max(1, startDate.DurationInWeeks(endDate) / 2);
+
     }
 
     /// <summary>
