@@ -29,19 +29,19 @@
             </MenuItem>
             <Separator />
             <MenuItem Command="{x:Static dashboard:WidgetCommands.AddNewBucketMonitorWidgetCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
+                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.(FrameworkElement.Tag)}">
                 <MenuItem.Header>
                     <TextBlock Text="New Bucket Monitor Widget" />
                 </MenuItem.Header>
             </MenuItem>
             <MenuItem Command="{x:Static dashboard:WidgetCommands.AddNewFixedBudgetMonitorWidgetCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
+                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.(FrameworkElement.Tag)}">
                 <MenuItem.Header>
                     <TextBlock Text="New Fixed Budget Project Monitor Widget" />
                 </MenuItem.Header>
             </MenuItem>
             <MenuItem Command="{x:Static dashboard:WidgetCommands.AddNewSurprisePaymentMonitorWidgetCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
+                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.(FrameworkElement.Tag)}">
                 <MenuItem.Header>
                     <TextBlock Text="New Surprise Regular Payment Monitor Widget" />
                 </MenuItem.Header>
@@ -57,7 +57,7 @@
         <DataTemplate DataType="{x:Type widget:ProgressBarWidget}">
             <Border ContextMenu="{StaticResource WidgetContextMenu}"
                     Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
-                    Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"
+                    Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.(dashboard:TopDashboardController.CorrelationId)}"
                     ToolTip="{Binding ToolTip}"
                     Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">

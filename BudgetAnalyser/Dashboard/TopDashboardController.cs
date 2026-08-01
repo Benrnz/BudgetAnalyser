@@ -24,8 +24,6 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
     private readonly UploadMobileDataController uploadMobileDataController;
     private readonly IUserMessageBox userMessageBox;
 
-    private Guid correlationId;
-
     public TopDashboardController(
         IMessenger messenger,
         ILogger logger,
@@ -46,7 +44,6 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         this.userMessageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.dashboardService.NewDataSourceAvailable += OnNewDataSourceAvailable;
 
-        this.correlationId = Guid.NewGuid();
         WidgetGroups = new ObservableCollection<WidgetGroup>();
 
         Messenger.Register<TopDashboardController, WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
@@ -56,6 +53,8 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         Messenger.Register<TopDashboardController, ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         Messenger.Register<TopDashboardController, ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
     }
+
+    public Guid CorrelationId { get; private set; } = Guid.NewGuid();
 
     public GlobalFilterController GlobalFilterController
     {
@@ -119,12 +118,12 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
     private static void OnBudgetBucketChosenForNewBucketMonitor(TopDashboardController recipient, BudgetBucketChosenMessage message)
     {
-        if (message.CorrelationId != recipient.correlationId || message.Canceled)
+        if (message.CorrelationId != recipient.CorrelationId || message.Canceled)
         {
             return;
         }
 
-        recipient.correlationId = Guid.NewGuid();
+        recipient.CorrelationId = Guid.NewGuid();
         var bucket = message.SelectedBucket;
         if (bucket is null)
         {
@@ -141,12 +140,12 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
     private static void OnCreateNewFixedProjectComplete(TopDashboardController recipient, CreateNewFixedBudgetCompletedMessage message)
     {
-        if (message.Canceled || message.CorrelationId != recipient.correlationId)
+        if (message.Canceled || message.CorrelationId != recipient.CorrelationId)
         {
             return;
         }
 
-        recipient.correlationId = Guid.NewGuid();
+        recipient.CorrelationId = Guid.NewGuid();
         var widget = recipient.dashboardService.CreateNewFixedBudgetMonitorWidget(
             message.Code,
             message.Description,
@@ -159,12 +158,12 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
     private void OnCreateNewSurprisePaymentMonitorComplete(object recipient, CreateNewSurprisePaymentCompletedMessage message)
     {
-        if (message.Canceled || message.CorrelationId != this.correlationId)
+        if (message.Canceled || message.CorrelationId != CorrelationId)
         {
             return;
         }
 
-        this.correlationId = Guid.NewGuid();
+        CorrelationId = Guid.NewGuid();
         try
         {
             if (string.IsNullOrWhiteSpace(message.BucketCode))
