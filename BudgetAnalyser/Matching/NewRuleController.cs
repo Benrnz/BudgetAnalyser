@@ -34,11 +34,10 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         Messenger.Register<NewRuleController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    [UsedImplicitly]
     public DecimalCriteria Amount
     {
         get;
-        set
+        private set
         {
             if (Equals(value, field))
             {
@@ -74,8 +73,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public StringCriteria Description
     {
         get;
-        [UsedImplicitly]
-        set
+        private set
         {
             if (Equals(value, field))
             {
@@ -100,12 +98,11 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
                                          && IsValidRegex(Reference3)
                                          && IsValidRegex(TransactionType));
 
-    public MatchingRule? NewRule { get; set; }
+    public MatchingRule? NewRule { get; [UsedImplicitly] set; }
 
     public bool OrChecked
     {
         get => this.doNotUseOrChecked;
-        [UsedImplicitly]
         set
         {
             if (value == this.doNotUseOrChecked)
@@ -123,8 +120,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public StringCriteria Reference1
     {
         get;
-        [UsedImplicitly]
-        set
+        private set
         {
             if (Equals(value, field))
             {
@@ -141,8 +137,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public StringCriteria Reference2
     {
         get;
-        [UsedImplicitly]
-        set
+        private set
         {
             if (Equals(value, field))
             {
@@ -159,8 +154,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public StringCriteria Reference3
     {
         get;
-        [UsedImplicitly]
-        set
+        private set
         {
             if (Equals(value, field))
             {
@@ -178,14 +172,10 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
 
     public bool SimilarRulesExist { get; private set; }
 
-    [UsedImplicitly]
-    public string Title => "New Matching Rule for: " + Bucket;
-
     public StringCriteria TransactionType
     {
         get;
-        [UsedImplicitly]
-        set
+        private set
         {
             if (Equals(value, field))
             {
@@ -261,7 +251,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.SaveCancel)
         {
             CorrelationId = this.shellDialogCorrelationId,
-            Title = Title
+            Title = "New Matching Rule for: " + Bucket
         };
         Messenger.Send(dialogRequest);
     }
