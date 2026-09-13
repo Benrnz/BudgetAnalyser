@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -33,6 +34,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         Messenger.Register<NewRuleController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
+    [UsedImplicitly]
     public DecimalCriteria Amount
     {
         get;
@@ -72,6 +74,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public StringCriteria Description
     {
         get;
+        [UsedImplicitly]
         set
         {
             if (Equals(value, field))
@@ -85,6 +88,18 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
     } = new();
+
+    /// <summary>
+    ///     Gets a value indicating whether any criteria that will be used for matching is not a valid regular expression.
+    ///     Always false when <see cref="UseRegularExpressions" /> is not set.
+    /// </summary>
+    // TODO Double negative
+    public bool InvalidRegexPattern => UseRegularExpressions
+                                       && (IsInvalidRegex(Description)
+                                           || IsInvalidRegex(Reference1)
+                                           || IsInvalidRegex(Reference2)
+                                           || IsInvalidRegex(Reference3)
+                                           || IsInvalidRegex(TransactionType));
 
     public MatchingRule? NewRule { get; set; }
 
@@ -109,6 +124,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public StringCriteria Reference1
     {
         get;
+        [UsedImplicitly]
         set
         {
             if (Equals(value, field))
@@ -126,6 +142,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public StringCriteria Reference2
     {
         get;
+        [UsedImplicitly]
         set
         {
             if (Equals(value, field))
@@ -143,6 +160,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public StringCriteria Reference3
     {
         get;
+        [UsedImplicitly]
         set
         {
             if (Equals(value, field))
@@ -161,11 +179,13 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
 
     public bool SimilarRulesExist { get; private set; }
 
+    [UsedImplicitly]
     public string Title => "New Matching Rule for: " + Bucket;
 
     public StringCriteria TransactionType
     {
         get;
+        [UsedImplicitly]
         set
         {
             if (Equals(value, field))
@@ -180,13 +200,37 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         }
     } = new();
 
+    /// <summary>
+    ///     Gets or sets a value indicating whether the description, reference, and transaction type criteria should be treated as regular expressions rather than exact whole
+    ///     field matches. This value is copied onto the new <see cref="MatchingRule" /> when it is created.
+    /// </summary>
+    public bool UseRegularExpressions
+    {
+        get;
+        set
+        {
+            if (value == field)
+            {
+                return;
+            }
+
+            field = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(InvalidRegexPattern));
+            OnPropertyChanged(nameof(CanExecuteSaveButton));
+            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        }
+    }
+
     public bool CanExecuteCancelButton => true;
     public bool CanExecuteOkButton => false;
-    public bool CanExecuteSaveButton => Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable;
+    public bool CanExecuteSaveButton =>
+        (Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable) && !InvalidRegexPattern;
     public void Initialize()
     {
         SimilarRules = null;
         AndChecked = true;
+        UseRegularExpressions = false;
         NewRule = null;
         Description.PropertyChanged -= OnCriteriaValuePropertyChanged;
         Reference1.PropertyChanged -= OnCriteriaValuePropertyChanged;
@@ -223,9 +267,39 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         Messenger.Send(dialogRequest);
     }
 
+    /// <summary>
+    ///     Determines whether the given criteria will be used for matching but contains a malformed regular expression.
+    ///     <see cref="MatchingRule.Match" /> silently ignores a malformed pattern, which would otherwise result in a rule that never matches anything, so it is reported to the
+    ///     user here instead.
+    /// </summary>
+    // TODO Reverse this logic so not a double negative
+    private static bool IsInvalidRegex(StringCriteria criteria)
+    {
+        if (!criteria.Applicable || string.IsNullOrWhiteSpace(criteria.Value))
+        {
+            return false;
+        }
+
+        try
+        {
+            _ = new Regex(criteria.Value);
+        }
+        catch (ArgumentException)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     private void OnCriteriaValuePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         RefreshSimilarRules();
+
+        // The criteria properties only re-evaluate these when the whole criteria object is replaced, not when the user edits the value inside it.
+        OnPropertyChanged(nameof(InvalidRegexPattern));
+        OnPropertyChanged(nameof(CanExecuteSaveButton));
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -257,6 +331,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
             TransactionType.Applicable ? TransactionType.Value : null,
             Amount.Applicable ? Amount.Value : null,
             AndChecked);
+        NewRule.UseRegularExpressions = UseRegularExpressions;
 
         Messenger.Send(new RuleCreatedMessage(NewRule));
     }
