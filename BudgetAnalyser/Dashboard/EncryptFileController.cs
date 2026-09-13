@@ -27,12 +27,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 
     public EncryptFileController(IMessenger messenger, UserPrompts userPrompts, IApplicationDatabaseFacade appDbService) : base(messenger)
     {
-        this.appDbService = appDbService;
-        if (appDbService is null)
-        {
-            throw new ArgumentNullException(nameof(appDbService));
-        }
-
+        this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
         this.questionService = userPrompts.YesNoBox;
         this.messageService = userPrompts.MessageBox;
 
