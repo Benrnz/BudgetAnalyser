@@ -316,6 +316,9 @@
                      Color="{StaticResource Colour.SecondaryBackground}" />
 
 
+    <SolidColorBrush x:Key="Brush.ModernTile.Highlight"
+                     Color="{StaticResource Colour.ModernTile.Highlight}" />
+
     <SolidColorBrush x:Key="Brush.ModernTile.Background1"
                      Color="{StaticResource Colour.ModernTile.Background1}" />
 
