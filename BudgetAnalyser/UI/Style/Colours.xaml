@@ -25,20 +25,24 @@
         DarkRed
     </Color>
 
+    <!-- Material Design Teal 500 (primary) -->
     <Color x:Key="Colour.Button.Background">
-        #FF2C6F8E
+        #FF009688
     </Color>
 
+    <!-- Material Design Teal 100 (hover tint of primary) -->
     <Color x:Key="Colour.Button.Chrome">
-        #FFBEE6FD
+        #FFB2DFDB
     </Color>
 
+    <!-- White for contrast on the Teal 500 primary fill -->
     <Color x:Key="Colour.Button.Glyph">
-        #FF333333
+        White
     </Color>
 
+    <!-- Material Design Teal 700 (darker primary shade for outlines) -->
     <Color x:Key="Colour.Button.Stroke">
-        #AA333333
+        #FF00796B
     </Color>
 
     <Color x:Key="Colour.BudgetBucket.Income">
@@ -69,16 +73,18 @@
         Black
     </Color>
 
+    <!-- Material Design Teal 800 (darker primary shade for pressed states) -->
     <Color x:Key="Colour.ControlMedium">
-        #FF211AA9
+        #FF00695C
     </Color>
 
     <Color x:Key="Colour.ControlPressed">
-        #FF211AA9
+        #FF00695C
     </Color>
 
+    <!-- Material Design Teal 300 (lighter primary shade for hover states) -->
     <Color x:Key="Colour.ControlMouseOver">
-        #FF3843C4
+        #FF4DB6AC
     </Color>
 
     <Color x:Key="Colour.Debit1">
@@ -101,8 +107,9 @@
         #FFC5CBF9
     </Color>
 
+    <!-- Material Design disabled text: white at 38% opacity on dark surfaces -->
     <Color x:Key="Colour.DisabledForeground">
-        #FF888888
+        #61FFFFFF
     </Color>
 
     <Color x:Key="Colour.Glyph">
@@ -113,11 +120,13 @@
         #FFEF1954
     </Color>
 
+    <!-- Material Design dark theme default background -->
     <Color x:Key="Colour.MainBackground">
-        Black
+        #FF121212
     </Color>
 
-    <Color x:Key="Colour.ModernTile.Highlight">#FF2119FF</Color>
+    <!-- Material Design Teal A200 (vivid accent for tile hover highlight) -->
+    <Color x:Key="Colour.ModernTile.Highlight">#FF64FFDA</Color>
 
     <Color x:Key="Colour.ModernTile.Background1">#FF0073C6</Color>
 
@@ -143,16 +152,19 @@
         Red
     </Color>
 
+    <!-- Material Design dark theme surface colour at dialog (24dp) elevation -->
     <Color x:Key="Colour.Popup.Background">
-        #FF262626
+        #FF383838
     </Color>
 
+    <!-- Material Design dark theme surface colour at 1dp elevation -->
     <Color x:Key="Colour.SecondaryBackground">
-        #303030
+        #FF1E1E1E
     </Color>
 
+    <!-- Material Design Green 700 (secondary accent) -->
     <Color x:Key="Colour.SelectedItem">
-        #014F01
+        #FF388E3C
     </Color>
 
     <Color x:Key="Colour.Shadow">
@@ -163,16 +175,19 @@
         DarkOrange
     </Color>
 
+    <!-- Material Design Green 300 (ties label accents to the secondary hue) -->
     <Color x:Key="Colour.Text.Label">
-        DarkSeaGreen
+        #FF81C784
     </Color>
 
+    <!-- Material Design high-emphasis text: white at 87% opacity on dark surfaces -->
     <Color x:Key="Colour.Text.Default">
-        White
+        #DEFFFFFF
     </Color>
 
+    <!-- Material Design disabled text: white at 38% opacity on dark surfaces -->
     <Color x:Key="Colour.Text.Disabled">
-        #FF888888
+        #61FFFFFF
     </Color>
 
     <Color x:Key="Colour.Text.Reverse">
