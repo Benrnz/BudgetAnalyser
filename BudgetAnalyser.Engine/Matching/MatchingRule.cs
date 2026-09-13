@@ -341,7 +341,8 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
             totalComparisons++;
         }
 
-        var matched = And ? matchesMade == totalComparisons : matchesMade >= 1;
+        var matched = And ? matchesMade == totalComparisons && totalComparisons > 0 : matchesMade >= 1;
+
         if (matched)
         {
             LastMatch = DateTime.Now;
