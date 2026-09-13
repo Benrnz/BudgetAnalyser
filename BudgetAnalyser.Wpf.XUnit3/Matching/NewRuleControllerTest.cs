@@ -60,7 +60,7 @@ public class NewRuleControllerTest
 
         this.subject.UseRegularExpressions = true;
 
-        this.subject.InvalidRegexPattern.ShouldBeTrue();
+        this.subject.ValidRegexPattern.ShouldBeFalse();
         this.subject.CanExecuteSaveButton.ShouldBeFalse();
     }
 
@@ -73,7 +73,7 @@ public class NewRuleControllerTest
         this.subject.UseRegularExpressions = false;
 
         // Without regular expressions the value is only ever compared as literal text, so it cannot be malformed.
-        this.subject.InvalidRegexPattern.ShouldBeFalse();
+        this.subject.ValidRegexPattern.ShouldBeTrue();
         this.subject.CanExecuteSaveButton.ShouldBeTrue();
     }
 
@@ -85,12 +85,12 @@ public class NewRuleControllerTest
 
         this.subject.UseRegularExpressions = true;
 
-        this.subject.InvalidRegexPattern.ShouldBeFalse();
+        this.subject.ValidRegexPattern.ShouldBeTrue();
         this.subject.CanExecuteSaveButton.ShouldBeTrue();
     }
 
     [Fact]
-    public void InvalidRegexPattern_ShouldBeFalse_WhenMalformedCriteriaIsNotApplicable()
+    public void ValidRegexPattern_ShouldBeTrue_WhenMalformedCriteriaIsNotApplicable()
     {
         this.subject.Initialize();
         this.subject.Reference1.Value = MalformedPattern;
@@ -98,7 +98,7 @@ public class NewRuleControllerTest
 
         this.subject.UseRegularExpressions = true;
 
-        this.subject.InvalidRegexPattern.ShouldBeFalse();
+        this.subject.ValidRegexPattern.ShouldBeTrue();
     }
 
     // ── Creating the rule ────────────────────────────────────────────────────

@@ -90,16 +90,15 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     } = new();
 
     /// <summary>
-    ///     Gets a value indicating whether any criteria that will be used for matching is not a valid regular expression.
-    ///     Always false when <see cref="UseRegularExpressions" /> is not set.
+    ///     Gets a value indicating whether all criteria that will be used for matching are valid regular expressions.
+    ///     Always true when <see cref="UseRegularExpressions" /> is not set.
     /// </summary>
-    // TODO Double negative
-    public bool InvalidRegexPattern => UseRegularExpressions
-                                       && (IsInvalidRegex(Description)
-                                           || IsInvalidRegex(Reference1)
-                                           || IsInvalidRegex(Reference2)
-                                           || IsInvalidRegex(Reference3)
-                                           || IsInvalidRegex(TransactionType));
+    public bool ValidRegexPattern => !UseRegularExpressions
+                                     || (IsValidRegex(Description)
+                                         && IsValidRegex(Reference1)
+                                         && IsValidRegex(Reference2)
+                                         && IsValidRegex(Reference3)
+                                         && IsValidRegex(TransactionType));
 
     public MatchingRule? NewRule { get; set; }
 
@@ -216,7 +215,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
 
             field = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(InvalidRegexPattern));
+            OnPropertyChanged(nameof(ValidRegexPattern));
             OnPropertyChanged(nameof(CanExecuteSaveButton));
             Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
         }
@@ -225,7 +224,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     public bool CanExecuteCancelButton => true;
     public bool CanExecuteOkButton => false;
     public bool CanExecuteSaveButton =>
-        (Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable) && !InvalidRegexPattern;
+        (Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable) && ValidRegexPattern;
     public void Initialize()
     {
         SimilarRules = null;
@@ -268,16 +267,15 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     }
 
     /// <summary>
-    ///     Determines whether the given criteria will be used for matching but contains a malformed regular expression.
+    ///     Determines whether the given criteria will be used for matching and, if so, contains a well-formed regular expression.
     ///     <see cref="MatchingRule.Match" /> silently ignores a malformed pattern, which would otherwise result in a rule that never matches anything, so it is reported to the
     ///     user here instead.
     /// </summary>
-    // TODO Reverse this logic so not a double negative
-    private static bool IsInvalidRegex(StringCriteria criteria)
+    private static bool IsValidRegex(StringCriteria criteria)
     {
         if (!criteria.Applicable || string.IsNullOrWhiteSpace(criteria.Value))
         {
-            return false;
+            return true;
         }
 
         try
@@ -286,10 +284,10 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         }
         catch (ArgumentException)
         {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     private void OnCriteriaValuePropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -297,7 +295,7 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         RefreshSimilarRules();
 
         // The criteria properties only re-evaluate these when the whole criteria object is replaced, not when the user edits the value inside it.
-        OnPropertyChanged(nameof(InvalidRegexPattern));
+        OnPropertyChanged(nameof(ValidRegexPattern));
         OnPropertyChanged(nameof(CanExecuteSaveButton));
         Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
