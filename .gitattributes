@@ -1,1 +1,21 @@
+* text=auto eol=crlf
+
 *.cs text eol=crlf
+*.xaml text eol=crlf
+*.csproj text eol=crlf
+*.sln text eol=crlf
+*.json text eol=crlf
+*.xml text eol=crlf
+*.config text eol=crlf
+*.editorconfig text eol=crlf
+*.md text eol=crlf
+*.yml text eol=crlf
+*.txt text eol=crlf
+*.tt text eol=crlf
+*.csv text eol=crlf
+
+*.png binary
+*.ico binary
+*.svg binary
+*.bax binary
+*.secure binary
