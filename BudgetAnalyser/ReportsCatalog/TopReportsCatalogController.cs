@@ -94,7 +94,7 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         var date1 = DateOnly.MinValue;
         var date2 = DateOnly.MinValue;
 
-        var defaultValue = DateTime.Today.FirstDateInMonth().AddMonths(-12).ToString("yyyy-MM-dd");
+        var defaultValue = DateOnlyExt.Today().FirstDateInMonth().AddMonths(-12).ToString("yyyy-MM-dd");
         while (date1 == DateOnly.MinValue)
         {
             var input = this.inputBox.Show("Enter the inclusive start date for the report in the format YYYY-MM-DD", "Report Start Date", defaultValue);
@@ -109,7 +109,7 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
             }
         }
 
-        defaultValue = DateTime.Today.FirstDateInMonth().ToString("yyyy-MM-dd");
+        defaultValue = DateOnlyExt.Today().FirstDateInMonth().ToString("yyyy-MM-dd");
         while (date2 == DateOnly.MinValue)
         {
             var input = this.inputBox.Show("Enter the inclusive end date for the report in the format YYYY-MM-DD", "Report End Date", defaultValue);
