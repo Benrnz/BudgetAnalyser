@@ -8,6 +8,7 @@ using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Transactions;

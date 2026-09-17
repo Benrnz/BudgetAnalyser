@@ -4,6 +4,8 @@ using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.Engine.XUnit.TestData;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
 using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Wpf.XUnit3.TestData;

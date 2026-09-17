@@ -3,6 +3,7 @@ using System.ComponentModel;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
