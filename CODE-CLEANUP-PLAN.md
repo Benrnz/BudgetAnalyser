@@ -10,7 +10,7 @@ Each task has a checkbox, the exact files, and a verification step. Tasks within
 
 ---
 
-## Before you start: two constraints
+## Before you start: one constraint
 
 **1. "Least code" cannot mean terser syntax here.**
 
@@ -18,9 +18,6 @@ Each task has a checkbox, the exact files, and a verification step. Tasks within
 
 Expression-bodied *properties*, *indexers* and *accessors* are explicitly preferred (`= true:error`), so those are fair game.
 
-**2. Three latent bugs sit inside the code being cleaned up.**
-
-They are listed in [Decisions needed](#decisions-needed) at the bottom. Read that section before starting Phase 3 — two of the refactors force a behaviour choice, and you want that choice recorded in a test rather than inherited by accident.
 
 ---
 
@@ -485,47 +482,6 @@ Nullable reference types are enabled on every project, so a guard on a non-nulla
 - [ ] **`Widget.ValidateUpdateInput`.** Builds `dependencies` via `ToList()` then iterates `Dependencies` again instead, calls `.Count()` on a `List` twice, and `Dependencies` is typed `IEnumerable<Type>` so every call re-enumerates. Change the property to `IReadOnlyList<Type>` and use the list.
 
 - [ ] **Typo:** `OnShellDiaglogResponseMessageReceived` → `OnShellDialogResponseMessageReceived`, 2 occurrences.
-
----
-
-## Decisions needed
-
-Three latent bugs found by reading the duplicated code side by side. Each needs a call from you, not a refactor.
-
-### Decision 1 — An empty `MatchingRule` matches every transaction
-
-`IsRegexMatch` guards `if (totalComparisons == 0) { return false; }`. `IsWholeFieldMatch` **does not**. With every criterion blank and `And == true`, its verdict is `matchesMade == totalComparisons` → `0 == 0` → `true`, so a rule with no criteria claims every transaction it is offered.
-
-Whether that is reachable depends on whether `EditRulesController` can save a criteria-free rule — worth checking either way.
-
-**Recommendation:** keep the guard (the regex path's behaviour). "Match nothing" is the safe reading of "no criteria". Add a test for it **before** task 3.4 so the choice is recorded rather than inherited.
-
-### Decision 2 — `EncryptFileController`'s three mode flags contradict each other
-
-`DecryptFileMode`, `EncryptFileMode` and `EnterPasswordMode` are three `bool` properties, 54 lines between them, whose setters each write the other two backing fields directly. They do not agree: setting `DecryptFileMode = true` also sets `EnterPasswordMode = true`, while setting `EnterPasswordMode = true` clears `DecryptFileMode`. The resulting state depends on assignment order, and because the setters bypass each other the cross-notifications are whatever each one happened to list.
-
-This is one tri-state value, not three booleans.
-
-**Recommendation:** a private `enum` with three computed `bool` properties for the bindings — mutually exclusive by construction, about 12 lines.
-
-```csharp
-private enum PasswordDialogMode
-{
-    EnterPassword,
-    Encrypt,
-    Decrypt
-}
-```
-
-Decide first what `ShowDecryptFilesDialog` is meant to leave `EnterPasswordMode` as, since today it is `true` and the enum will force one answer.
-
-**Same class, second item:** `CanExecuteOkButton`'s getter reads `field` only on the `EncryptFileMode` branch while `private set` writes it on every path — so `SetConfirmedPassword` has no effect outside encrypt mode. Decide which behaviour is intended before rewriting the property.
-
-### Decision 3 — Two constructors guard after they assign
-
-`EncryptFileController` assigns `this.appDbService = appDbService;` and *then* throws on null. `LedgerBookGridBuilderV2` assigns all seven dependencies with no guard at all, while the rest of the Engine uses `?? throw`.
-
-Neither is a live bug — both still throw, or are reached only through DI — but the ordering reads as a mistake and will be copied. Settle it during task 4.2.
 
 ---
 
