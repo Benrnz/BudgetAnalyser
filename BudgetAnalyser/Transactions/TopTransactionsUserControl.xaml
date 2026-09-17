@@ -85,6 +85,9 @@
                                     Visibility="{Binding BucketFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}"
                                     Width="17" />
                 </Grid>
+                <Button Command="{Binding EditRulesController.ShowRulesCommand}"
+                        Style="{StaticResource Button.Round.EditRules}"
+                        ToolTip="Show and edit all matching rules" />
                 <Button Command="{Binding AppliedRulesController.ApplyRulesCommand}"
                         CommandParameter="{Binding ViewModel.TransactionsList}"
                         Style="{StaticResource Button.Round.ApplyRules}"
@@ -239,11 +242,6 @@
                                   CommandParameter="{Binding ViewModel.SelectedRow}">
                             <MenuItem.Header>
                                 <TextBlock Text="Create Rule" />
-                            </MenuItem.Header>
-                        </MenuItem>
-                        <MenuItem Command="{Binding EditRulesController.ShowRulesCommand}">
-                            <MenuItem.Header>
-                                <TextBlock Text="Edit Rules" />
                             </MenuItem.Header>
                         </MenuItem>
                         <Separator />

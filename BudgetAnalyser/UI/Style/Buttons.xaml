@@ -641,6 +641,50 @@
         </Setter>
     </Style>
 
+    <Style x:Key="Button.Round.EditRules"
+           BasedOn="{StaticResource Button.Round.Base}"
+           TargetType="Button">
+        <Setter Property="ToolTip"
+                Value="Edit Rules" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate>
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Path Data="M0,0 L14,0 M0,6 L14,6 M0,12 L14,12"
+                              Height="13"
+                              HorizontalAlignment="Left"
+                              Margin="11,10,0,0"
+                              Stretch="Uniform"
+                              Stroke="{StaticResource Brush.Button.Glyph}"
+                              StrokeThickness="2"
+                              VerticalAlignment="Top"
+                              Width="15" />
+                        <Path Data="M0,9 L9,0"
+                              Height="10"
+                              HorizontalAlignment="Left"
+                              Margin="19,20,0,0"
+                              Stretch="Uniform"
+                              Stroke="{StaticResource Brush.Button.Glyph}"
+                              StrokeEndLineCap="Triangle"
+                              StrokeStartLineCap="Round"
+                              StrokeThickness="2.5"
+                              VerticalAlignment="Top"
+                              Width="10" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="Button.Round.SaveAs"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="Button">
