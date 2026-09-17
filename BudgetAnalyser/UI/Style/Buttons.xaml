@@ -596,6 +596,89 @@
         </Setter>
     </Style>
 
+    <Style x:Key="Button.Round.ApplyRules"
+           BasedOn="{StaticResource Button.Round.Base}"
+           TargetType="Button">
+        <Setter Property="ToolTip"
+                Value="Apply Matching Rules" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate>
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock FontSize="22"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource Brush.Button.Glyph}"
+                                   HorizontalAlignment="Center"
+                                   Margin="-2,-8,0,0"
+                                   Text="r"
+                                   VerticalAlignment="Center" />
+                        <Path Data="M0,4 L3,7 L9,0"
+                              Height="8"
+                              HorizontalAlignment="Left"
+                              Margin="20,21,0,0"
+                              Stretch="Uniform"
+                              Stroke="{StaticResource Brush.Button.Glyph}"
+                              StrokeEndLineCap="Round"
+                              StrokeLineJoin="Round"
+                              StrokeStartLineCap="Round"
+                              StrokeThickness="2.5"
+                              VerticalAlignment="Top"
+                              Width="9" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Button.Round.EditRules"
+           BasedOn="{StaticResource Button.Round.Base}"
+           TargetType="Button">
+        <Setter Property="ToolTip"
+                Value="Edit Rules" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate>
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock FontSize="22"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource Brush.Button.Glyph}"
+                                   HorizontalAlignment="Center"
+                                   Margin="-2,-8,0,0"
+                                   Text="r"
+                                   VerticalAlignment="Center" />
+                        <Path Data="M0.99,9.99 L6.99,3.99 L9,0 L5.01,2.01 L-0.99,8.01 Z"
+                              Fill="{StaticResource Brush.Button.Glyph}"
+                              Height="10"
+                              HorizontalAlignment="Left"
+                              Margin="19,20,0,0"
+                              Stretch="Uniform"
+                              StrokeLineJoin="Round"
+                              VerticalAlignment="Top"
+                              Width="10" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="Button.Round.SaveAs"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="Button">

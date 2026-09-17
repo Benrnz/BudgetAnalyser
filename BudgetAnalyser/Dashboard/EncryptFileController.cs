@@ -20,19 +20,13 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     private readonly Guid dialogCorrelationId = Guid.NewGuid();
     private readonly IUserMessageBox messageService;
     private readonly IUserQuestionBoxYesNo questionService;
-    private bool doNotUseDecryptFileMode;
-    private bool doNotUseEncryptFileMode;
-    private bool doNotUseEnterPasswordMode;
     private SecureString? password;
+
+    public enum Mode { Encrypt, Decrypt, Login }
 
     public EncryptFileController(IMessenger messenger, UserPrompts userPrompts, IApplicationDatabaseFacade appDbService) : base(messenger)
     {
-        this.appDbService = appDbService;
-        if (appDbService is null)
-        {
-            throw new ArgumentNullException(nameof(appDbService));
-        }
-
+        this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
         this.questionService = userPrompts.YesNoBox;
         this.messageService = userPrompts.MessageBox;
 
@@ -40,62 +34,29 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
         Messenger.Register<EncryptFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDiaglogResponseMessageReceived(m));
     }
 
-    public bool DecryptFileMode
+    public Mode ControllerMode
     {
-        get => this.doNotUseDecryptFileMode;
+        get;
         private set
         {
-            if (value == this.doNotUseDecryptFileMode)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseDecryptFileMode = value;
-            this.doNotUseEncryptFileMode = !value;
-            this.doNotUseEnterPasswordMode = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(EnterPasswordMode));
-            OnPropertyChanged(nameof(EncryptFileMode));
-        }
-    }
-
-    public bool EncryptFileMode
-    {
-        get => this.doNotUseEncryptFileMode;
-        private set
-        {
-            if (value == this.doNotUseEncryptFileMode)
-            {
-                return;
-            }
-
-            this.doNotUseEncryptFileMode = value;
-            this.doNotUseEnterPasswordMode = !value;
-            this.doNotUseDecryptFileMode = !value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(EnterPasswordMode));
-            OnPropertyChanged(nameof(DecryptFileMode));
-        }
-    }
-
-    public bool EnterPasswordMode
-    {
-        get => this.doNotUseEnterPasswordMode;
-        private set
-        {
-            if (value == this.doNotUseEnterPasswordMode)
-            {
-                return;
-            }
-
-            this.doNotUseEnterPasswordMode = value;
-            this.doNotUseEncryptFileMode = !value;
-            this.doNotUseDecryptFileMode = !value;
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(EncryptFileMode));
             OnPropertyChanged(nameof(DecryptFileMode));
+            OnPropertyChanged(nameof(EnterPasswordMode));
         }
-    }
+    } = Mode.Login;
+
+    public bool DecryptFileMode => ControllerMode == Mode.Decrypt;
+
+    public bool EncryptFileMode => ControllerMode == Mode.Encrypt;
+
+    public bool EnterPasswordMode => ControllerMode == Mode.Login;
 
     public string EnterPasswordText { get; private set; } = string.Empty;
 
@@ -141,10 +102,8 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     /// </summary>
     public bool CanExecuteOkButton
     {
-        get => EncryptFileMode
-            ? this.password is not null && this.password.Length > 4 && field
-            : this.password is not null && this.password.Length > 4;
-        private set;
+        get =>
+        this.password is not null && this.password.Length > 4 && (!EncryptFileMode || field); private set;
     }
 
     /// <summary>
@@ -156,7 +115,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     {
         ValidationMessage = validationMessage;
         IsEncrypted = true;
-        DecryptFileMode = true;
+        ControllerMode = Mode.Decrypt;
         EnterPasswordText = "Confirm your password to decrypt your files";
         ShowEncryptDecryptDialogCommon();
     }
@@ -165,13 +124,13 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     {
         ValidationMessage = string.Empty;
         IsEncrypted = false;
-        EncryptFileMode = true;
+        ControllerMode = Mode.Encrypt;
         ShowEncryptDecryptDialogCommon();
     }
 
     public void ShowEnterPasswordDialog(string appDbFileName, string validationMessage = "")
     {
-        EnterPasswordMode = true;
+        ControllerMode = Mode.Login;
         FileName = appDbFileName;
         EnterPasswordText = "Please enter your password for ";
         ValidationMessage = validationMessage;

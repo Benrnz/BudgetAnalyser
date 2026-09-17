@@ -34,7 +34,7 @@
                       Margin="10"
                       BorderBrush="{StaticResource Brush.ControlBorder}">
                 <GroupBox.Header>
-                    <TextBlock Text=" AND or OR " />
+                    <TextBlock Text=" Matching options " />
                 </GroupBox.Header>
                 <StackPanel>
                     <RadioButton GroupName="AndOr"
@@ -51,6 +51,15 @@
                             <TextBlock Text="And" />
                         </RadioButton.Content>
                     </RadioButton>
+                    <CheckBox Margin="5"
+                              IsChecked="{Binding UseRegularExpressions}"
+                              ToolTip="When ticked the Description, Reference and Transaction Type values are treated as regular expressions (case insensitive).">
+                        <TextBlock Text="Use Regular Expressions" />
+                    </CheckBox>
+                    <TextBlock FontWeight="Bold"
+                               Margin="5,0,5,5"
+                               Text="One or more values is not a valid regular expression."
+                               Visibility="{Binding ValidRegexPattern, Converter={StaticResource Converter.NotBoolToVis}}" />
                 </StackPanel>
             </GroupBox>
             <CheckBox Grid.Row="1"
