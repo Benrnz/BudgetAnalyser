@@ -16,7 +16,6 @@
     <converters1:MultiBoolToVisibilityConverter x:Key="Converter.MultiBoolToVisibility" />
     <converters1:TextToResourceControlTemplateConverter x:Key="Converter.TextToControlTemplate" />
     <converters1:ConvertToStringConverter x:Key="Converter.ToString" />
-    <converters1:DebuggerConverter x:Key="Converter.Debugger" />
 
     <!-- Local -->
     <converters:BudgetBucketToStringConverter x:Key="Converter.BudgetBucketToString" />
