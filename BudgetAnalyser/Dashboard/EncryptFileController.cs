@@ -100,7 +100,9 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
     /// </summary>
-    public bool CanExecuteOkButton { get =>
+    public bool CanExecuteOkButton
+    {
+        get =>
         this.password is not null && this.password.Length > 4 && (!EncryptFileMode || field); private set;
     }
 
