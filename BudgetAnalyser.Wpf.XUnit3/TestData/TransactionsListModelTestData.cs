@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.BankAccount;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.XUnit.TestData;
@@ -118,7 +115,7 @@ public static class TransactionsListModelTestData
     {
         foreach (var txn in instance.AllTransactions)
         {
-            PrivateAccessor.SetField(txn, "budgetBucket", null);
+            PrivateAccessor.SetField(txn, "budgetBucket", null!);
         }
 
         return instance;

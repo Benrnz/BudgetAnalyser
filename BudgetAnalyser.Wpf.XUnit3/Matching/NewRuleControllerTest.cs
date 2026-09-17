@@ -1,6 +1,4 @@
-using System;
 using System.Runtime.ExceptionServices;
-using System.Threading;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
@@ -124,7 +122,7 @@ public class NewRuleControllerTest
     /// </summary>
     private MatchingRule SaveNewRuleViaDialog(bool useRegularExpressions)
     {
-        MatchingRule result = null;
+        MatchingRule? result = null;
 
         // A real messenger is required because the controller only acts on a dialog response carrying the correlation id it generated when the dialog was shown.
         RunOnStaThread(() =>
@@ -151,7 +149,7 @@ public class NewRuleControllerTest
         });
 
         result.ShouldNotBeNull();
-        return result;
+        return result!;
     }
 
     /// <summary>
@@ -159,7 +157,7 @@ public class NewRuleControllerTest
     /// </summary>
     private static void RunOnStaThread(Action action)
     {
-        ExceptionDispatchInfo failure = null;
+        ExceptionDispatchInfo? failure = null;
         var thread = new Thread(() =>
         {
             try

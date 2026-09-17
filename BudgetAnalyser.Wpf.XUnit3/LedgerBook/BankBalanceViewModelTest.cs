@@ -1,4 +1,3 @@
-using System;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.LedgerBook;

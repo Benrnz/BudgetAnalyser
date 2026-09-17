@@ -1,5 +1,3 @@
-#nullable enable
-using System;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine.XUnit.TestHarness;
 using BudgetAnalyser.ShellDialog;

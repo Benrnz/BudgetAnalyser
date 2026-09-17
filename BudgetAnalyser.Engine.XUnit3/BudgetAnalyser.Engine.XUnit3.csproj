@@ -1,14 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <OutputType>Exe</OutputType>
         <RootNamespace>BudgetAnalyser.Engine.XUnit</RootNamespace>
         <TargetFramework>net10.0</TargetFramework>
         <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
         <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
-        <LangVersion>default</LangVersion>
         <!--
         To enable the Microsoft Testing Platform 'dotnet test' experience, add property:
           <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
@@ -19,7 +16,6 @@
         For more information on Microsoft Testing Platform support in xUnit.net, please visit:
           https://xunit.net/docs/getting-started/v3/microsoft-testing-platform
         -->
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

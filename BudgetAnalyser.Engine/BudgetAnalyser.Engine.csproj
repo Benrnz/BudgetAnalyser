@@ -2,15 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <AssemblyName>BudgetAnalyser.Engine</AssemblyName>
         <RootNamespace>BudgetAnalyser.Engine</RootNamespace>
-        <AssemblyVersion>4.0.0</AssemblyVersion>
-        <FileVersion>4.0.0</FileVersion>
-        <Version>4.0.0</Version>
-        <LangVersion>default</LangVersion>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

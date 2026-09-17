@@ -3,17 +3,11 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0-windows</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
         <RootNamespace>BudgetAnalyser</RootNamespace>
-        <AssemblyVersion>4.0.0</AssemblyVersion>
-        <FileVersion>4.0.0</FileVersion>
         <StartupObject>BudgetAnalyser.App</StartupObject>
         <AssemblyName>BudgetAnalyser</AssemblyName>
         <ApplicationIcon>PieChart.ico</ApplicationIcon>
-        <LangVersion>default</LangVersion>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
