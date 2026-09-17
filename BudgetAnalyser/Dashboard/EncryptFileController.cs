@@ -20,7 +20,6 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     private readonly Guid dialogCorrelationId = Guid.NewGuid();
     private readonly IUserMessageBox messageService;
     private readonly IUserQuestionBoxYesNo questionService;
-    private bool passwordsMatch;
     private SecureString? password;
 
     public enum Mode { Encrypt, Decrypt, Login }
@@ -101,8 +100,11 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
     /// </summary>
-    public bool CanExecuteOkButton =>
-        this.password is not null && this.password.Length > 4 && (!EncryptFileMode || this.passwordsMatch);
+    public bool CanExecuteOkButton
+    {
+        get =>
+        this.password is not null && this.password.Length > 4 && (!EncryptFileMode || field); private set;
+    }
 
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
@@ -141,7 +143,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 
     internal void SetConfirmedPassword(bool confirmed)
     {
-        this.passwordsMatch = confirmed;
+        CanExecuteOkButton = confirmed;
         CommandManager.InvalidateRequerySuggested(); // This stopped working here after the conversion to .NET8. The RelayCommand on ShellDialogController is not refreshed.
         Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
@@ -253,7 +255,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 
     private void ShowEncryptDecryptDialogCommon()
     {
-        this.passwordsMatch = false;
+        CanExecuteOkButton = false;
         FileName = string.Empty;
 
         if (this.appDbService.HasUnsavedChanges)
