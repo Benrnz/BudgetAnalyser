@@ -21,7 +21,6 @@
     <!-- Local -->
     <converters:BudgetBucketToStringConverter x:Key="Converter.BudgetBucketToString" />
     <converters:BucketToColourConverter x:Key="Converter.BucketToColour" />
-    <converters:ImagePathConverter x:Key="Converter.ImagePath" />
     <converters:NumberSignToBrushConverter x:Key="Converter.NumberToBrush" />
     <converters:NumberToBoldConverter x:Key="Converter.NumberToBold" />
     <converters:DateOnlyToDateTimeConverter x:Key="Converter.DateOnly" />
