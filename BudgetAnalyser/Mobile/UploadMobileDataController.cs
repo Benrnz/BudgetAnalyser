@@ -12,7 +12,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Mobile;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class UploadMobileDataController : ControllerBase, IShellDialogInteractivity
+public partial class UploadMobileDataController : ControllerBase, IShellDialogInteractivity
 {
     private readonly string[] amazonRegions =
     {
@@ -56,52 +56,14 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         Messenger.Register<UploadMobileDataController, ShellDialogResponseMessage>(this, OnShellDialogMessageReceived);
     }
 
-    public string AccessKeyId
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial string AccessKeyId { get; set; } = string.Empty;
 
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string AccessKeySecret { get; set; } = string.Empty;
 
-    public string AccessKeySecret
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = string.Empty;
-
-    public string AmazonRegion
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string AmazonRegion { get; set; } = string.Empty;
 
     public IEnumerable<string> AmazonRegions => this.amazonRegions;
 
@@ -168,6 +130,16 @@ public class UploadMobileDataController : ControllerBase, IShellDialogInteractiv
         {
             this.widget.LockWhileUploading(false);
         }
+    }
+
+    partial void OnAccessKeyIdChanged(string value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnAccessKeySecretChanged(string value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private void OnShellDialogMessageReceived(UploadMobileDataController recipient, ShellDialogResponseMessage message)

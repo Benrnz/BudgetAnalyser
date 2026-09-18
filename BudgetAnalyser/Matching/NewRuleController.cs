@@ -13,7 +13,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Matching;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class NewRuleController : ControllerBase, IShellDialogInteractivity
+public partial class NewRuleController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private readonly ILogger logger;
@@ -34,22 +34,9 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         Messenger.Register<NewRuleController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public DecimalCriteria Amount
-    {
-        get;
-        private set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteSaveButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = new();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteSaveButton))]
+    public partial DecimalCriteria Amount { get; private set; } = new();
 
     public bool AndChecked
     {
@@ -70,35 +57,16 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
 
     public BudgetBucket? Bucket { get; set; }
 
-    public StringCriteria Description
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteSaveButton))]
+    public partial StringCriteria Description { get; private set; } = new();
+
+    public MatchingRule? NewRule
     {
         get;
-        private set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteSaveButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = new();
-
-    /// <summary>
-    ///     Gets a value indicating whether all criteria that will be used for matching are valid regular expressions.
-    ///     Always true when <see cref="UseRegularExpressions" /> is not set.
-    /// </summary>
-    public bool ValidRegexPattern => !UseRegularExpressions
-                                     || (IsValidRegex(Description)
-                                         && IsValidRegex(Reference1)
-                                         && IsValidRegex(Reference2)
-                                         && IsValidRegex(Reference3)
-                                         && IsValidRegex(TransactionType));
-
-    public MatchingRule? NewRule { get; [UsedImplicitly] set; }
+        [UsedImplicitly]
+        set;
+    }
 
     public bool OrChecked
     {
@@ -117,104 +85,52 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         }
     }
 
-    public StringCriteria Reference1
-    {
-        get;
-        private set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteSaveButton))]
+    public partial StringCriteria Reference1 { get; private set; } = new();
 
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteSaveButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = new();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteSaveButton))]
+    public partial StringCriteria Reference2 { get; private set; } = new();
 
-    public StringCriteria Reference2
-    {
-        get;
-        private set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteSaveButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = new();
-
-    public StringCriteria Reference3
-    {
-        get;
-        private set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteSaveButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = new();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteSaveButton))]
+    public partial StringCriteria Reference3 { get; private set; } = new();
 
     public IEnumerable<SimilarMatchedRule>? SimilarRules { get; private set; }
 
     public bool SimilarRulesExist { get; private set; }
 
-    public StringCriteria TransactionType
-    {
-        get;
-        private set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteSaveButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = new();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteSaveButton))]
+    public partial StringCriteria TransactionType { get; private set; } = new();
 
     /// <summary>
     ///     Gets or sets a value indicating whether the description, reference, and transaction type criteria should be treated as regular expressions rather than exact whole
     ///     field matches. This value is copied onto the new <see cref="MatchingRule" /> when it is created.
     /// </summary>
-    public bool UseRegularExpressions
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ValidRegexPattern))]
+    [NotifyPropertyChangedFor(nameof(CanExecuteSaveButton))]
+    public partial bool UseRegularExpressions { get; set; }
 
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(ValidRegexPattern));
-            OnPropertyChanged(nameof(CanExecuteSaveButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
+    /// <summary>
+    ///     Gets a value indicating whether all criteria that will be used for matching are valid regular expressions.
+    ///     Always true when <see cref="UseRegularExpressions" /> is not set.
+    /// </summary>
+    public bool ValidRegexPattern => !UseRegularExpressions
+                                     || (IsValidRegex(Description)
+                                         && IsValidRegex(Reference1)
+                                         && IsValidRegex(Reference2)
+                                         && IsValidRegex(Reference3)
+                                         && IsValidRegex(TransactionType));
 
     public bool CanExecuteCancelButton => true;
     public bool CanExecuteOkButton => false;
+
     public bool CanExecuteSaveButton =>
         (Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable) && ValidRegexPattern;
+
     public void Initialize()
     {
         SimilarRules = null;
@@ -280,6 +196,11 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         return true;
     }
 
+    partial void OnAmountChanged(DecimalCriteria value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
     private void OnCriteriaValuePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         RefreshSimilarRules();
@@ -287,6 +208,26 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         // The criteria properties only re-evaluate these when the whole criteria object is replaced, not when the user edits the value inside it.
         OnPropertyChanged(nameof(ValidRegexPattern));
         OnPropertyChanged(nameof(CanExecuteSaveButton));
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnDescriptionChanged(StringCriteria value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnReference1Changed(StringCriteria value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnReference2Changed(StringCriteria value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnReference3Changed(StringCriteria value)
+    {
         Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
@@ -322,6 +263,16 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
         NewRule.UseRegularExpressions = UseRegularExpressions;
 
         Messenger.Send(new RuleCreatedMessage(NewRule));
+    }
+
+    partial void OnTransactionTypeChanged(StringCriteria value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnUseRegularExpressionsChanged(bool value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private void RefreshSimilarRules()

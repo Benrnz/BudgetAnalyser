@@ -10,7 +10,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class TransactionsControllerFileOperations : ControllerBase, ITransactionsControllerFileOperations
+public partial class TransactionsControllerFileOperations : ControllerBase, ITransactionsControllerFileOperations
 {
     private readonly LoadFileController loadFileController;
     private readonly IUserMessageBox messageBox;
@@ -37,20 +37,8 @@ public class TransactionsControllerFileOperations : ControllerBase, ITransaction
 
     public TransactionsListViewModel ViewModel { get; }
 
-    public bool LoadingData
-    {
-        get;
-        private set
-        {
-            if (field == value)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool LoadingData { get; private set; }
 
     public void NotifyOfEdit()
     {

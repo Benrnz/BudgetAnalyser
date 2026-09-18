@@ -14,7 +14,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class TopTransactionsListController : ControllerBase, IShowableController
+public partial class TopTransactionsListController : ControllerBase, IShowableController
 {
     private readonly ILogger logger;
     private readonly ITransactionManagerService transactionService;
@@ -63,54 +63,14 @@ public class TopTransactionsListController : ControllerBase, IShowableController
     ///     Gets or sets the bucket filter. This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a bucket.
     ///     Only relevant when the view is displaying transactions by date.  The filter is hidden when shown in GroupByBucket mode.
     /// </summary>
-    public string? BucketFilter
-    {
-        get;
+    [ObservableProperty]
+    public partial string? BucketFilter { get; set; }
 
-        set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial bool CanNavigateNext { get; private set; }
 
-            field = value;
-            OnPropertyChanged();
-            ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
-            ViewModel.TriggerRefreshTotalsRow();
-            CurrentPage = 1;
-        }
-    }
-
-    public bool CanNavigateNext
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool CanNavigatePrevious
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool CanNavigatePrevious { get; private set; }
 
     public IRelayCommand ClearSearchCommand { get; }
 
@@ -184,20 +144,8 @@ public class TopTransactionsListController : ControllerBase, IShowableController
 
     public TransactionsListViewModel ViewModel => FileOperations.ViewModel;
 
-    public bool Shown
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool Shown { get; set; }
 
     public void ClearSearch()
     {
@@ -236,6 +184,13 @@ public class TopTransactionsListController : ControllerBase, IShowableController
             this.logger.LogError(_ =>
                 "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in the new loaded Budget. This will result in those transactions being declassified. Check for unclassified transactions.");
         }
+    }
+
+    partial void OnBucketFilterChanged(string? value)
+    {
+        ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
+        ViewModel.TriggerRefreshTotalsRow();
+        CurrentPage = 1;
     }
 
     private void OnBudgetReadyMessageReceived(TopTransactionsListController recipient, BudgetReadyMessage message)

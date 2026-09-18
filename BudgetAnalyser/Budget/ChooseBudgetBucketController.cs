@@ -9,7 +9,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Budget;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity
+public partial class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IAccountTypeRepository accountRepo;
     private readonly IBudgetBucketRepository bucketRepository;
@@ -29,48 +29,15 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
 
     public IEnumerable<Account> BankAccounts => this.accountRepo.ListCurrentlyUsedAccountTypes();
 
-    public IEnumerable<BudgetBucket> BudgetBuckets
-    {
-        get;
+    [ObservableProperty]
+    public partial IEnumerable<BudgetBucket> BudgetBuckets { get; private set; }
 
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial string FilterDescription { get; set; } = string.Empty;
 
-    public string FilterDescription
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
-
-    public BudgetBucket? Selected
-    {
-        get;
-        set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteOkButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteOkButton))]
+    public partial BudgetBucket? Selected { get; set; }
 
     public bool ShowBankAccount { get; set; }
 
@@ -99,6 +66,11 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
             Title = title
         };
         Messenger.Send(dialogRequest);
+    }
+
+    partial void OnSelectedChanged(BudgetBucket? value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

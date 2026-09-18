@@ -19,7 +19,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Filtering;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class GlobalFilterController : ControllerBase
+public partial class GlobalFilterController : ControllerBase
 {
     private readonly IApplicationDatabaseService appDbService;
     private readonly IUserMessageBox userMessageBox;
@@ -50,42 +50,23 @@ public class GlobalFilterController : ControllerBase
 
     public ICommand ClearCommand { get; }
 
-    public GlobalFilterCriteria Criteria
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial GlobalFilterCriteria Criteria { get; set; }
 
-            field = value;
-            OnPropertyChanged();
-            UpdateSummaries();
-        }
-    }
-
-    public string DateSummaryLine1
+    [ObservableProperty]
+    public partial string DateSummaryLine1
     {
         [UsedImplicitly]
         get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
+        private set;
     } = string.Empty;
 
-    public string DateSummaryLine2
+    [ObservableProperty]
+    public partial string DateSummaryLine2
     {
         [UsedImplicitly]
         get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
+        private set;
     } = string.Empty;
 
     public void PromptUserForDates()
@@ -154,6 +135,11 @@ public class GlobalFilterController : ControllerBase
     {
         Criteria.BeginDate = null;
         Criteria.EndDate = null;
+    }
+
+    partial void OnCriteriaChanged(GlobalFilterCriteria value)
+    {
+        UpdateSummaries();
     }
 
     private void OnGlobalFilterChangeRequested(RequestFilterChangeMessage message)

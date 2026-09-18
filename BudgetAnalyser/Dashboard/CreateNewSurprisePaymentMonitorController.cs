@@ -10,7 +10,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Dashboard;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellDialogInteractivity
+public partial class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly IUserMessageBox messageBox;
@@ -29,47 +29,14 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
 
     public IEnumerable<BudgetBucket> BudgetBuckets => this.bucketRepository.Buckets.ToList();
 
-    public WeeklyOrFortnightly Frequency
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial WeeklyOrFortnightly Frequency { get; set; }
 
-    public DateOnly PaymentStartDate
-    {
-        get;
-        set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial DateOnly PaymentStartDate { get; set; }
 
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
-
-    public BudgetBucket? Selected
-    {
-        get;
-        set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
+    [ObservableProperty]
+    public partial BudgetBucket? Selected { get; set; }
 
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
@@ -95,6 +62,16 @@ public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellD
             CorrelationId = this.dialogCorrelationId, Title = "Create new surprise regular payment monitor", HelpAvailable = true
         };
         Messenger.Send(dialogRequest);
+    }
+
+    partial void OnPaymentStartDateChanged(DateOnly value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnSelectedChanged(BudgetBucket? value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

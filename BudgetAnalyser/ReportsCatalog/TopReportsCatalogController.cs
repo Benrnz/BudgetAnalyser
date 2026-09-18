@@ -11,7 +11,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.ReportsCatalog;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class TopReportsCatalogController : ControllerBase, IShowableController
+public partial class TopReportsCatalogController : ControllerBase, IShowableController
 {
     private readonly IUserInputBox inputBox;
     private readonly NewWindowViewLoader newWindowViewLoader;
@@ -42,20 +42,8 @@ public class TopReportsCatalogController : ControllerBase, IShowableController
         && this.currentTransactionsListModel.Transactions.Any()
         && this.budgets?.CurrentActiveBudget is not null;
 
-    public bool Shown
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool Shown { get; set; }
 
     public void ShowOverallPerformanceReport()
     {

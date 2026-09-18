@@ -13,7 +13,7 @@ namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 // ReSharper disable once ClassNeverInstantiated.Global // Instantiated by IoC Container
-public class TopLedgerBookController : ControllerBase, IShowableController
+public partial class TopLedgerBookController : ControllerBase, IShowableController
 {
     private readonly AddLedgerReconciliationController addLedgerReconciliationController;
     private readonly ChooseBudgetBucketController chooseBudgetBucketController;
@@ -107,20 +107,12 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     [UsedImplicitly]
     public LedgerBookControllerFileOperations FileOperations { get; }
 
-    public int NumberOfPeriodsToShow
+    [ObservableProperty]
+    public partial int NumberOfPeriodsToShow
     {
         get;
         [UsedImplicitly]
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
+        set;
     }
 
     public IRelayCommand<LedgerEntryLine?> ShowBankBalancesCommand { get; }
@@ -142,21 +134,8 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
     public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
-    public bool Shown
-    {
-        get;
-
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool Shown { get; set; }
 
     public void DeregisterListener(object recipient)
     {

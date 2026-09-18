@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Budget;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 // ReSharper disable once ClassNeverInstantiated.Global
-public class NewBudgetModelController : ControllerBase, IShellDialogInteractivity
+public partial class NewBudgetModelController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IUserMessageBox messageBox;
     private Guid dialogCorrelationId;
@@ -26,40 +26,15 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
     /// </summary>
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
-    public BudgetCycle BudgetCycle
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(FortnightlyChecked));
-            OnPropertyChanged(nameof(MonthlyChecked));
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(FortnightlyChecked))]
+    [NotifyPropertyChangedFor(nameof(MonthlyChecked))]
+    public partial BudgetCycle BudgetCycle { get; set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public DateOnly EffectiveFrom
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteSaveButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteSaveButton))]
+    public partial DateOnly EffectiveFrom { get; set; }
 
     // ReSharper disable once UnusedMember.Global
     public bool FortnightlyChecked
@@ -100,6 +75,11 @@ public class NewBudgetModelController : ControllerBase, IShellDialogInteractivit
             CorrelationId = this.dialogCorrelationId, Title = "Create new Budget based on current", HelpAvailable = true
         };
         Messenger.Send(dialogRequest);
+    }
+
+    partial void OnEffectiveFromChanged(DateOnly value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

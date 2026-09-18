@@ -12,7 +12,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class AddLedgerReconciliationController : ControllerBase, IShellDialogInteractivity
+public partial class AddLedgerReconciliationController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IAccountTypeRepository accountTypeRepository;
     private readonly IUserMessageBox messageBox;
@@ -33,57 +33,20 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogInt
         RemoveBankBalanceCommand = new RelayCommand<BankBalanceViewModel?>(OnRemoveBankBalanceCommandExecuted, _ => Editable);
     }
 
-    public bool AddBalanceVisibility
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            AddBankBalanceCommand.NotifyCanExecuteChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool AddBalanceVisibility { get; private set; }
 
     public IRelayCommand AddBankBalanceCommand { get; }
 
     public decimal? AdjustedBankBalanceTotal => AddBalanceVisibility ? default(decimal?) : BankBalances.Sum(b => b.AdjustedBalance);
 
-    public IEnumerable<Account> BankAccounts
-    {
-        get;
-        private set
-        {
-            if (ReferenceEquals(value, field))
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial IEnumerable<Account> BankAccounts { get; private set; } = [];
 
-            field = value;
-            OnPropertyChanged();
-        }
-    } = [];
-
-    public decimal BankBalance
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(BankBalanceTotal));
-            OnPropertyChanged(nameof(AdjustedBankBalanceTotal));
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(BankBalanceTotal))]
+    [NotifyPropertyChangedFor(nameof(AdjustedBankBalanceTotal))]
+    public partial decimal BankBalance { get; set; }
 
     public ObservableCollection<BankBalanceViewModel> BankBalances { get; private set; } = new();
 
@@ -91,41 +54,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogInt
     public bool Canceled { get; private set; }
     public bool CreateMode { get; private set; }
 
-    public DateOnly Date
-    {
-        get;
-        set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial DateOnly Date { get; set; }
 
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-            AddBankBalanceCommand.NotifyCanExecuteChanged();
-            RemoveBankBalanceCommand.NotifyCanExecuteChanged();
-        }
-    }
-
-    public bool Editable
-    {
-        get;
-        private set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-            AddBankBalanceCommand.NotifyCanExecuteChanged();
-            RemoveBankBalanceCommand.NotifyCanExecuteChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool Editable { get; private set; }
 
     /// <summary>
     ///     Checks to make sure the <see cref="BankBalances" /> collection contains a balance for every ledger that will be
@@ -136,16 +69,8 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogInt
     [UsedImplicitly]
     public IRelayCommand<BankBalanceViewModel?> RemoveBankBalanceCommand { get; }
 
-    public Account? SelectedBankAccount
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-            AddBankBalanceCommand.NotifyCanExecuteChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial Account? SelectedBankAccount { get; set; }
 
     public bool CanExecuteCancelButton => true;
 
@@ -226,6 +151,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogInt
         return !AddBalanceVisibility || SelectedBankAccount is not null;
     }
 
+    partial void OnAddBalanceVisibilityChanged(bool value)
+    {
+        AddBankBalanceCommand.NotifyCanExecuteChanged();
+    }
+
     private void OnAddBankBalanceCommandExecuted()
     {
         if (CreateMode)
@@ -244,6 +174,20 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogInt
         AddNewBankBalance();
     }
 
+    partial void OnDateChanged(DateOnly value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        AddBankBalanceCommand.NotifyCanExecuteChanged();
+        RemoveBankBalanceCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnEditableChanged(bool value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        AddBankBalanceCommand.NotifyCanExecuteChanged();
+        RemoveBankBalanceCommand.NotifyCanExecuteChanged();
+    }
+
     private void OnRemoveBankBalanceCommandExecuted(BankBalanceViewModel? bankBalance)
     {
         if (bankBalance is null)
@@ -255,6 +199,11 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogInt
         OnPropertyChanged(nameof(BankBalanceTotal));
         OnPropertyChanged(nameof(AdjustedBankBalanceTotal));
         OnPropertyChanged(nameof(HasRequiredBalances));
+    }
+
+    partial void OnSelectedBankAccountChanged(Account? value)
+    {
+        AddBankBalanceCommand.NotifyCanExecuteChanged();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

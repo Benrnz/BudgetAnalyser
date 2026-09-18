@@ -15,7 +15,7 @@ namespace BudgetAnalyser.LedgerBook;
 ///     A controller for editing transactions and balance adjustments.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class LedgerTransactionsController : ControllerBase
+public partial class LedgerTransactionsController : ControllerBase
 {
     private readonly ILedgerService ledgerService;
     private readonly IReconciliationService reconService;
@@ -42,114 +42,38 @@ public class LedgerTransactionsController : ControllerBase
     [UsedImplicitly]
     public IRelayCommand<LedgerTransaction?> DeleteTransactionCommand { get; }
 
-    public bool InBalanceAdjustmentMode
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial bool InBalanceAdjustmentMode { get; private set; }
 
-            field = value;
-            OnPropertyChanged();
-            AddBalanceAdjustmentCommand.NotifyCanExecuteChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool InLedgerEntryMode { get; private set; }
 
-    public bool InLedgerEntryMode
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial bool IsReadOnly { get; set; }
 
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(InBalanceAdjustmentMode))]
+    [NotifyPropertyChangedFor(nameof(InLedgerEntryMode))]
+    public partial LedgerEntry? LedgerEntry { get; private set; }
 
-    public bool IsReadOnly
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-            AddBalanceAdjustmentCommand.NotifyCanExecuteChanged();
-            DeleteTransactionCommand.NotifyCanExecuteChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial Account? NewTransactionAccount { get; set; }
 
-    public LedgerEntry? LedgerEntry
-    {
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(InBalanceAdjustmentMode));
-            OnPropertyChanged(nameof(InLedgerEntryMode));
-        }
-    }
+    [ObservableProperty]
+    public partial decimal NewTransactionAmount { get; set; }
 
-    public Account? NewTransactionAccount
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public decimal NewTransactionAmount
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string? NewTransactionNarrative
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial string? NewTransactionNarrative { get; set; }
 
     public decimal OpeningBalance { get; private set; }
 
-    public bool ShowAddingNewTransactionPanel
-    {
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool ShowAddingNewTransactionPanel { get; private set; }
 
     public ObservableCollection<LedgerTransaction> ShownTransactions { get; private set; } = new();
 
-    public string Title
-    {
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string Title { get; private set; } = string.Empty;
 
     public decimal TransactionsTotal => ShownTransactions.Sum(t => t.Amount);
 
@@ -224,6 +148,17 @@ public class LedgerTransactionsController : ControllerBase
 
         OnPropertyChanged(nameof(TransactionsTotal));
         OnPropertyChanged(nameof(LedgerEntry));
+    }
+
+    partial void OnInBalanceAdjustmentModeChanged(bool value)
+    {
+        AddBalanceAdjustmentCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnIsReadOnlyChanged(bool value)
+    {
+        AddBalanceAdjustmentCommand.NotifyCanExecuteChanged();
+        DeleteTransactionCommand.NotifyCanExecuteChanged();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

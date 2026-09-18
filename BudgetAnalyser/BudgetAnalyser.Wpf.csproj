@@ -23,11 +23,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Metrics" Version="5.6.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
-        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Metrics" Version="5.6.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10"/>
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -52,6 +53,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Using Include="CommunityToolkit.Mvvm.ComponentModel"/>
         <Using Include="JetBrains.Annotations"/>
     </ItemGroup>
 

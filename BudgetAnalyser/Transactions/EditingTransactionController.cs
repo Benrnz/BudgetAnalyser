@@ -11,7 +11,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class EditingTransactionController : ControllerBase
+public partial class EditingTransactionController : ControllerBase
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private readonly ITransactionsControllerFileOperations fileOperations;
@@ -41,15 +41,12 @@ public class EditingTransactionController : ControllerBase
         Messenger.Register<EditingTransactionController, ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
     }
 
-    public IEnumerable<BudgetBucket> Buckets
+    [ObservableProperty]
+    public partial IEnumerable<BudgetBucket> Buckets
     {
         [UsedImplicitly]
         get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
+        private set;
     } = [];
 
     public IRelayCommand DeleteTransactionCommand { get; }
