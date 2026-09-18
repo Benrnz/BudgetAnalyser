@@ -36,18 +36,6 @@ public class NewRuleControllerTest
         this.subject = new NewRuleController(Substitute.For<IMessenger>(), this.logger, this.userPrompts, this.ruleService, this.bucketRepo);
     }
 
-    // ── UseRegularExpressions ────────────────────────────────────────────────
-
-    [Fact]
-    public void Initialize_ShouldResetUseRegularExpressionsToFalse()
-    {
-        this.subject.UseRegularExpressions = true;
-
-        this.subject.Initialize();
-
-        this.subject.UseRegularExpressions.ShouldBeFalse();
-    }
-
     // ── Regular expression validation ────────────────────────────────────────
 
     [Fact]
@@ -87,16 +75,24 @@ public class NewRuleControllerTest
         this.subject.CanExecuteSaveButton.ShouldBeTrue();
     }
 
-    [Fact]
-    public void ValidRegexPattern_ShouldBeTrue_WhenMalformedCriteriaIsNotApplicable()
-    {
-        this.subject.Initialize();
-        this.subject.Reference1.Value = MalformedPattern;
-        this.subject.Reference1.Applicable = false;
+    // ── UseRegularExpressions ────────────────────────────────────────────────
 
+    [Fact]
+    public void Initialize_ShouldResetUseRegularExpressionsToFalse()
+    {
         this.subject.UseRegularExpressions = true;
 
-        this.subject.ValidRegexPattern.ShouldBeTrue();
+        this.subject.Initialize();
+
+        this.subject.UseRegularExpressions.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void SaveResponse_ShouldNotSetUseRegularExpressionsOnNewRule_WhenOptionIsNotTicked()
+    {
+        var createdRule = SaveNewRuleViaDialog(false);
+
+        createdRule.UseRegularExpressions.ShouldBeFalse();
     }
 
     // ── Creating the rule ────────────────────────────────────────────────────
@@ -110,11 +106,40 @@ public class NewRuleControllerTest
     }
 
     [Fact]
-    public void SaveResponse_ShouldNotSetUseRegularExpressionsOnNewRule_WhenOptionIsNotTicked()
+    public void ValidRegexPattern_ShouldBeTrue_WhenMalformedCriteriaIsNotApplicable()
     {
-        var createdRule = SaveNewRuleViaDialog(false);
+        this.subject.Initialize();
+        this.subject.Reference1.Value = MalformedPattern;
+        this.subject.Reference1.Applicable = false;
 
-        createdRule.UseRegularExpressions.ShouldBeFalse();
+        this.subject.UseRegularExpressions = true;
+
+        this.subject.ValidRegexPattern.ShouldBeTrue();
+    }
+
+    /// <summary>
+    ///     Showing the dialog builds a WPF collection view over the similar rules, so the round trip is run on an STA thread.
+    /// </summary>
+    private static void RunOnStaThread(Action action)
+    {
+        ExceptionDispatchInfo? failure = null;
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                failure = ExceptionDispatchInfo.Capture(ex);
+            }
+        });
+
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+
+        failure?.Throw();
     }
 
     /// <summary>
@@ -142,7 +167,7 @@ public class NewRuleControllerTest
             var correlationId = Guid.Empty;
             messenger.Register<ShellDialogRequestMessage>(this, (_, message) => correlationId = message.CorrelationId);
 
-            controller.ShowDialog(Array.Empty<MatchingRule>());
+            controller.ShowDialog([]);
             messenger.Send(new ShellDialogResponseMessage(controller, ShellDialogButton.Save) { CorrelationId = correlationId });
 
             result = controller.NewRule;
@@ -150,30 +175,5 @@ public class NewRuleControllerTest
 
         result.ShouldNotBeNull();
         return result!;
-    }
-
-    /// <summary>
-    ///     Showing the dialog builds a WPF collection view over the similar rules, so the round trip is run on an STA thread.
-    /// </summary>
-    private static void RunOnStaThread(Action action)
-    {
-        ExceptionDispatchInfo? failure = null;
-        var thread = new Thread(() =>
-        {
-            try
-            {
-                action();
-            }
-            catch (Exception ex)
-            {
-                failure = ExceptionDispatchInfo.Capture(ex);
-            }
-        });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        thread.Join();
-
-        failure?.Throw();
     }
 }

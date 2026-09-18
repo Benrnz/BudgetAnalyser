@@ -150,7 +150,7 @@ public class TopTransactionsListControllerTest
         var transactionRuleService = Substitute.For<ITransactionRuleService>();
         var logger = Substitute.For<ILogger>();
 
-        bucketRepository.Buckets.Returns(Array.Empty<BudgetBucket>());
+        bucketRepository.Buckets.Returns([]);
         transactionService.ClearBucketAndTextFilters().Returns(new List<Transaction>());
         transactionService.FilterBySearchText(Arg.Any<string?>()).Returns(new List<Transaction>());
         transactionService.FilterByBucket(Arg.Any<string?>()).Returns(new List<Transaction>());

@@ -13,7 +13,7 @@ public class LedgerBookBuilder
     private readonly Dictionary<LedgerBucket, decimal> openingBalances = new();
     private readonly List<LedgerEntryLine> reconciliations = new();
     private bool lockWhenFinished = true;
-    private IEnumerable<BankBalance> tempBankBalances = Array.Empty<BankBalance>();
+    private IEnumerable<BankBalance> tempBankBalances = [];
     private DateOnly tempReconDate;
 
     public IEnumerable<LedgerBucket> LedgerBuckets => this.ledgerBuckets;
@@ -253,7 +253,7 @@ public class LedgerBookBuilder
 
         public LedgerEntryTestDataBuilder HasNoTransactions()
         {
-            this.ledgerTransactions = new List<LedgerTransaction>();
+            this.ledgerTransactions = [];
             return this.entryBuilder;
         }
     }

@@ -38,7 +38,7 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, IDi
     public string AccountNameHelp => "When importing a new bank extract file, you must select the account the transactions come from.\nThis allows merging of multiple accounts into one file.";
 
     public IRelayCommand BrowseForFileCommand { get; }
-    public IEnumerable<Account> ExistingAccountNames { get; private set; } = Array.Empty<Account>();
+    public IEnumerable<Account> ExistingAccountNames { get; private set; } = [];
 
     public string? FileName
     {

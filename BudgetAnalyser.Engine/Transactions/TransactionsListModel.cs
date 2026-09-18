@@ -103,7 +103,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
             this.changeHash = Guid.NewGuid();
             OnPropertyChanged();
         }
-    } = new List<Transaction>();
+    } = [];
 
     /// <summary>
     ///     Calculates a hash that represents a data state for the current instance.  When the data state changes the hash will change.

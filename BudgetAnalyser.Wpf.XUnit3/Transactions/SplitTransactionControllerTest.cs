@@ -23,7 +23,7 @@ public class SplitTransactionControllerTest
     {
         this.mockMessenger = Substitute.For<IMessenger>();
         this.mockBucketRepo = Substitute.For<IBudgetBucketRepository>();
-        this.mockBucketRepo.Buckets.Returns(Array.Empty<BudgetBucket>());
+        this.mockBucketRepo.Buckets.Returns([]);
         this.mockTransactionsService = Substitute.For<ITransactionManagerService>();
         this.mockFileOperations = Substitute.For<ITransactionsControllerFileOperations>();
     }

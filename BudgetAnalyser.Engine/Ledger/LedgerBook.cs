@@ -21,7 +21,7 @@ public class LedgerBook : IModelValidate
     /// </summary>
     internal LedgerBook()
     {
-        this.reconciliations = new List<LedgerEntryLine>();
+        this.reconciliations = [];
     }
 
     /// <summary>

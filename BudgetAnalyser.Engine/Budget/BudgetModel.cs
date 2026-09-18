@@ -21,8 +21,8 @@ public class BudgetModel : INotifyPropertyChanged
     /// </summary>
     public BudgetModel()
     {
-        Incomes = new List<Income>();
-        Expenses = new List<Expense>();
+        Incomes = [];
+        Expenses = [];
         this.doNotUseLastModified = DateTime.Now;
         // Set this here because the deserialisation process will reset if a value exists in the XML file. If not its better to have a date than min value.
         this.doNotUseEffectiveFrom = DateOnlyExt.Today();

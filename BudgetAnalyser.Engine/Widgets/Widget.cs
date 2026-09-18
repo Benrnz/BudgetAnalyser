@@ -110,7 +110,7 @@ public abstract class Widget : INotifyPropertyChanged
     ///     Gets or sets the dependencies for this widget to function. See
     ///     <see cref="IMonitorableDependencies" /> for a full list of supported dependency types.
     /// </summary>
-    public IEnumerable<Type> Dependencies { get; protected init; } = Array.Empty<Type>();
+    public IEnumerable<Type> Dependencies { get; protected init; } = [];
 
     /// <summary>
     ///     Gets or sets the detailed text to show in the widget UI tile.

@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using BudgetAnalyser.Engine.Ledger.Data;
 
 namespace BudgetAnalyser.Engine.Persistence;
 
@@ -35,7 +34,7 @@ public class JsonOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepos
         {
             BudgetCollectionRootDto = $"{path}.Budget.json",
             LedgerBookRootDto = $"{path}.LedgerBook.json",
-            LedgerReconciliationToDoCollection = new List<ToDoTaskDto>(),
+            LedgerReconciliationToDoCollection = [],
             MatchingRulesCollectionRootDto = $"{path}.MatchingRules.json",
             TransactionsCollectionRootDto = $"{path}.Transactions.csv",
             WidgetCollectionRootDto = $"{path}.Widgets.json",

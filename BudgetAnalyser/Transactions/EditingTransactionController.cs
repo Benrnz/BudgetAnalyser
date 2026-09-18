@@ -50,7 +50,7 @@ public class EditingTransactionController : ControllerBase
             field = value;
             OnPropertyChanged();
         }
-    } = Array.Empty<BudgetBucket>();
+    } = [];
 
     public IRelayCommand DeleteTransactionCommand { get; }
 

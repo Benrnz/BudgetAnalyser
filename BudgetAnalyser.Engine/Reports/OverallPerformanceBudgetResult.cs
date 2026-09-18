@@ -10,7 +10,7 @@ public class OverallPerformanceBudgetResult
     /// </summary>
     public IEnumerable<BucketPerformanceResult> Analyses => AnalysesList;
 
-    internal IList<BucketPerformanceResult> AnalysesList { get; set; } = new List<BucketPerformanceResult>();
+    internal IList<BucketPerformanceResult> AnalysesList { get; set; } = [];
 
     /// <summary>
     ///     Gets the average spend per month based on bank transaction data over a period of time. This excludes Surplus transactions, these are budgeted expenses only. Expected to be negative.

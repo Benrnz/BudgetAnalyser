@@ -38,7 +38,7 @@ public class TransferFundsController : ControllerBase, IShellDialogInteractivity
         }
     }
 
-    public IEnumerable<LedgerBucket> LedgerBuckets { get; private set; } = Array.Empty<LedgerBucket>();
+    public IEnumerable<LedgerBucket> LedgerBuckets { get; private set; } = [];
 
     public decimal? ToBalance
     {
@@ -143,6 +143,6 @@ public class TransferFundsController : ControllerBase, IShellDialogInteractivity
         this.ledgerEntryLine = null;
         TransferFundsDto = new TransferFundsCommand();
         BankTransferConfirmed = false;
-        LedgerBuckets = Array.Empty<LedgerBucket>();
+        LedgerBuckets = [];
     }
 }

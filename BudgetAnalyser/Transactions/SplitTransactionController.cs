@@ -37,7 +37,7 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
         CalculateSplinter2Command = new RelayCommand(CalculateSplinter1);
     }
 
-    public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; } = Array.Empty<BudgetBucket>();
+    public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; } = [];
 
     public ICommand CalculateSplinter1Command { get; }
     public ICommand CalculateSplinter2Command { get; }

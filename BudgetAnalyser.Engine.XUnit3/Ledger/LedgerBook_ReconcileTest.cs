@@ -19,7 +19,7 @@ public class LedgerBook_ReconcileTest
     public LedgerBook_ReconcileTest()
     {
         this.subject = LedgerBookTestData.TestData1();
-        this.testDataReconResult = new ReconciliationResult { Reconciliation = new LedgerEntryLine(ReconcileDate, NextReconcileBankBalance), Tasks = Array.Empty<ToDoTask>() };
+        this.testDataReconResult = new ReconciliationResult { Reconciliation = new LedgerEntryLine(ReconcileDate, NextReconcileBankBalance), Tasks = [] };
     }
 
     [Fact]

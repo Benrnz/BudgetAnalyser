@@ -66,7 +66,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogInt
             field = value;
             OnPropertyChanged();
         }
-    } = Array.Empty<Account>();
+    } = [];
 
     public decimal BankBalance
     {
@@ -309,7 +309,7 @@ public class AddLedgerReconciliationController : ControllerBase, IShellDialogInt
         this.parentBook = null;
         Date = DateOnly.MinValue;
         BankBalances = new ObservableCollection<BankBalanceViewModel>();
-        BankAccounts = Array.Empty<Account>();
+        BankAccounts = [];
         SelectedBankAccount = null;
     }
 
