@@ -110,7 +110,7 @@ public abstract class Widget : INotifyPropertyChanged
     ///     Gets or sets the dependencies for this widget to function. See
     ///     <see cref="IMonitorableDependencies" /> for a full list of supported dependency types.
     /// </summary>
-    public IEnumerable<Type> Dependencies { get; protected init; } = [];
+    public IReadOnlyList<Type> Dependencies { get; protected init; } = [];
 
     /// <summary>
     ///     Gets or sets the detailed text to show in the widget UI tile.
@@ -275,8 +275,7 @@ public abstract class Widget : INotifyPropertyChanged
     /// </summary>
     protected bool ValidateUpdateInput(object?[] input)
     {
-        var dependencies = Dependencies.ToList();
-        if (dependencies.Count() > input.Length)
+        if (Dependencies.Count > input.Length)
         {
             return false;
         }
@@ -298,6 +297,6 @@ public abstract class Widget : INotifyPropertyChanged
             }
         }
 
-        return nullCount != Dependencies.Count();
+        return nullCount != Dependencies.Count;
     }
 }

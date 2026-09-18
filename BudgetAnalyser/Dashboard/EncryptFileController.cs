@@ -31,7 +31,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
         this.messageService = userPrompts.MessageBox;
 
         Messenger.Register<EncryptFileController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
-        Messenger.Register<EncryptFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDiaglogResponseMessageReceived(m));
+        Messenger.Register<EncryptFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
     }
 
     public Mode ControllerMode
@@ -195,7 +195,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
             "Encrypt Data Files - Completed");
     }
 
-    private async void OnShellDiaglogResponseMessageReceived(ShellDialogResponseMessage message)
+    private async void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
     {
         if (!message.IsItForMe(this.dialogCorrelationId))
         {
