@@ -25,7 +25,6 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
         Dependencies = [typeof(TransactionsListModel), typeof(IBudgetBucketRepository)];
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
         Enabled = false;
-        BucketCode = NotSet;
     }
 
     /// <summary>
@@ -58,14 +57,13 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
     /// </summary>
     public string Id
     {
-        get;
+        get => BucketCode;
         set
         {
-            field = value;
+            BucketCode = value;
             OnPropertyChanged();
-            BucketCode = Id;
         }
-    } = NotSet;
+    }
 
     /// <summary>
     ///     Updates the widget with new input.
@@ -80,25 +78,16 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
 
         if (!ValidateUpdateInput(input))
         {
-            ToolTip = DisabledToolTip;
-            Enabled = false;
+            Disable();
             return;
         }
 
         TransactionsModel = input[0] as TransactionsListModel;
         this.bucketRepository = (IBudgetBucketRepository)input[1];
 
-        if (!this.bucketRepository.IsValidCode(BucketCode))
+        if (!this.bucketRepository.IsValidCode(BucketCode) || TransactionsModel is null)
         {
-            ToolTip = DisabledToolTip;
-            Enabled = false;
-            return;
-        }
-
-        if (TransactionsModel is null)
-        {
-            ToolTip = DisabledToolTip;
-            Enabled = false;
+            Disable();
             return;
         }
 
@@ -120,5 +109,11 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
         DetailedText = string.Format(CultureInfo.CurrentCulture, "{0} Project", bucket.SubCode);
 
         ColourStyleName = remainingBudget < 0.1M * totalBudget ? WidgetWarningStyle : StandardStyle;
+    }
+
+    private void Disable()
+    {
+        ToolTip = DisabledToolTip;
+        Enabled = false;
     }
 }
