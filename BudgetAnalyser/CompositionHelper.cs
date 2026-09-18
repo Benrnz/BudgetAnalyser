@@ -65,28 +65,18 @@ public static class CompositionHelper
         IList<IPersistentApplicationStateObject> rehydratedState = statePersistence.Load().ToList();
         if (rehydratedState.None())
         {
-            rehydratedState = CreateNewDefaultApplicationState();
+            rehydratedState = [];
         }
 
-        // Create a distinct list of sequences.
-        var sequences = rehydratedState.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
-
-        // Send state load messages in order.
-        foreach (var sequence in sequences)
+        // Send state load messages in order, grouped by sequence.
+        var sequenceGroups = rehydratedState.GroupBy(persistentModel => persistentModel.LoadSequence).OrderBy(group => group.Key);
+        foreach (var models in sequenceGroups)
         {
-            var sequenceCopy = sequence;
-            var models = rehydratedState.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
-            logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{sequence} {models.First().GetType().Name}");
+            logger.LogInfo(_ => $"ShellController sending ApplicationStateLoadedMessage for: Sequence{models.Key} {models.First().GetType().Name}");
             messenger.Send(new ApplicationStateLoadedMessage(models));
         }
 
         logger.LogInfo(_ => $"ShellController Initialise completing. Sending ApplicationStateLoadFinishedMessage. {DateTime.Now}");
         messenger.Send(new ApplicationStateLoadFinishedMessage());
-    }
-
-    private static IList<IPersistentApplicationStateObject> CreateNewDefaultApplicationState()
-    {
-        var appState = new List<IPersistentApplicationStateObject>();
-        return appState;
     }
 }
