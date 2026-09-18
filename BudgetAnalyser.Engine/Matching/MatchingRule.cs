@@ -18,6 +18,11 @@ namespace BudgetAnalyser.Engine.Matching;
 public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
 {
     private readonly IBudgetBucketRepository bucketRepository;
+    private Regex? descriptionRegex;
+    private Regex? reference1Regex;
+    private Regex? reference2Regex;
+    private Regex? reference3Regex;
+    private Regex? transactionTypeRegex;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="MatchingRule" /> class.
@@ -104,6 +109,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
         set
         {
             field = value;
+            this.descriptionRegex = null;
             OnPropertyChanged();
         }
     }
@@ -150,6 +156,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
         set
         {
             field = value?.Trim();
+            this.reference1Regex = null;
             OnPropertyChanged();
         }
     }
@@ -165,6 +172,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
         set
         {
             field = value?.Trim();
+            this.reference2Regex = null;
             OnPropertyChanged();
         }
     }
@@ -180,6 +188,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
         set
         {
             field = value?.Trim();
+            this.reference3Regex = null;
             OnPropertyChanged();
         }
     }
@@ -199,6 +208,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
         set
         {
             field = value;
+            this.transactionTypeRegex = null;
             OnPropertyChanged();
         }
     }
@@ -359,7 +369,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
 
         if (!string.IsNullOrWhiteSpace(Description))
         {
-            if (RegexIsMatch(transaction.Description, Description))
+            if (RegexIsMatch(transaction.Description, GetOrCompileRegex(ref this.descriptionRegex, Description)))
             {
                 matchesMade++;
             }
@@ -369,7 +379,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
 
         if (!string.IsNullOrWhiteSpace(Reference1))
         {
-            if (RegexIsMatch(transaction.Reference1, Reference1))
+            if (RegexIsMatch(transaction.Reference1, GetOrCompileRegex(ref this.reference1Regex, Reference1)))
             {
                 matchesMade++;
             }
@@ -379,7 +389,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
 
         if (!string.IsNullOrWhiteSpace(Reference2))
         {
-            if (RegexIsMatch(transaction.Reference2, Reference2))
+            if (RegexIsMatch(transaction.Reference2, GetOrCompileRegex(ref this.reference2Regex, Reference2)))
             {
                 matchesMade++;
             }
@@ -389,7 +399,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
 
         if (!string.IsNullOrWhiteSpace(Reference3))
         {
-            if (RegexIsMatch(transaction.Reference3, Reference3))
+            if (RegexIsMatch(transaction.Reference3, GetOrCompileRegex(ref this.reference3Regex, Reference3)))
             {
                 matchesMade++;
             }
@@ -399,7 +409,7 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
 
         if (!string.IsNullOrWhiteSpace(TransactionType))
         {
-            if (RegexIsMatch(transaction.TransactionType.Name, TransactionType))
+            if (RegexIsMatch(transaction.TransactionType.Name, GetOrCompileRegex(ref this.transactionTypeRegex, TransactionType)))
             {
                 matchesMade++;
             }
@@ -422,21 +432,43 @@ public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
         return matched;
     }
 
-    private static bool RegexIsMatch(string? value, string? pattern)
+    /// <summary>
+    ///     Returns the cached compiled regex for a criterion, compiling and caching it first if the criterion text has
+    ///     changed since it was last cached (its setter clears <paramref name="cache" /> to null). Most rules never use
+    ///     <see cref="UseRegularExpressions" />, so compiling is deferred until a regex match is actually attempted
+    ///     rather than done eagerly whenever the criterion text is set.
+    /// </summary>
+    private static Regex? GetOrCompileRegex(ref Regex? cache, string? pattern)
     {
-        if (string.IsNullOrWhiteSpace(value) || string.IsNullOrWhiteSpace(pattern))
+        return cache ??= CompileRegexOrNull(pattern);
+    }
+
+    /// <summary>
+    ///     Compiles <paramref name="pattern" /> so it can be reused for every transaction this rule is tested against,
+    ///     instead of being re-parsed by <see cref="Regex.IsMatch(string, string)" /> on every call.
+    ///     Returns null for a blank or invalid pattern; an invalid pattern is then treated the same as "no match"
+    ///     rather than throwing, since the user may still be part-way through typing it in.
+    /// </summary>
+    private static Regex? CompileRegexOrNull(string? pattern)
+    {
+        if (string.IsNullOrWhiteSpace(pattern))
         {
-            return false;
+            return null;
         }
 
         try
         {
-            return Regex.IsMatch(value, pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            return new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
         }
         catch (ArgumentException)
         {
-            return false;
+            return null;
         }
+    }
+
+    private static bool RegexIsMatch(string? value, Regex? regex)
+    {
+        return regex is not null && !string.IsNullOrWhiteSpace(value) && regex.IsMatch(value);
     }
 
     /// <summary>
