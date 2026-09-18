@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Widgets;
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.ProgressBarWidget" />
 public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
 {
-    private readonly string standardStyle;
+    private const string StandardStyle = "WidgetStandardStyle3";
     private IBudgetBucketRepository? bucketRepository;
 
     private ILogger? logger;
@@ -35,7 +35,6 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         ];
         RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(5);
         RemainingBudgetToolTip = "Remaining Balance for period is {0:C2} {1:P0}";
-        this.standardStyle = "WidgetStandardStyle3";
         BucketCode = "<NOT SET>";
     }
 
@@ -163,7 +162,7 @@ public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
         Value = Convert.ToDouble(remainingBalance);
         ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance, remainingBalance / totalBudget);
 
-        ColourStyleName = remainingBalance < 0.2M * totalBudget ? WidgetWarningStyle : this.standardStyle;
+        ColourStyleName = remainingBalance < 0.2M * totalBudget ? WidgetWarningStyle : StandardStyle;
     }
 
     protected virtual decimal CalculateTotalSpendInPeriod(LedgerEntryLine line)

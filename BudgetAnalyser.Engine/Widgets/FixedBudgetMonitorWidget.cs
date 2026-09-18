@@ -11,9 +11,9 @@ namespace BudgetAnalyser.Engine.Widgets;
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.IUserDefinedWidget" />
 public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWidget
 {
-    private readonly string disabledToolTip;
-    private readonly string remainingBudgetToolTip;
-    private readonly string standardStyle;
+    private const string DisabledToolTip = "No Transactions are loaded, or bucket doesn't exist.";
+    private const string RemainingBudgetToolTip = "{0} Remaining budget for this project: {1:C}. Total Spend {2:C}";
+    private const string StandardStyle = "WidgetStandardStyle1";
     private IBudgetBucketRepository? bucketRepository;
 
     /// <summary>
@@ -24,10 +24,6 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
         Category = WidgetGroup.ProjectsSectionName;
         Dependencies = [typeof(TransactionsListModel), typeof(IBudgetBucketRepository)];
         RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
-        this.standardStyle = "WidgetStandardStyle1";
-
-        this.disabledToolTip = "No Transactions are loaded, or bucket doesn't exist.";
-        this.remainingBudgetToolTip = "{0} Remaining budget for this project: {1:C}. Total Spend {2:C}";
         Enabled = false;
         BucketCode = NotSet;
     }
@@ -84,7 +80,7 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
 
         if (!ValidateUpdateInput(input))
         {
-            ToolTip = this.disabledToolTip;
+            ToolTip = DisabledToolTip;
             Enabled = false;
             return;
         }
@@ -94,14 +90,14 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
 
         if (!this.bucketRepository.IsValidCode(BucketCode))
         {
-            ToolTip = this.disabledToolTip;
+            ToolTip = DisabledToolTip;
             Enabled = false;
             return;
         }
 
         if (TransactionsModel is null)
         {
-            ToolTip = this.disabledToolTip;
+            ToolTip = DisabledToolTip;
             Enabled = false;
             return;
         }
@@ -119,10 +115,10 @@ public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWi
         var remainingBudget = totalBudget + totalSpend;
 
         Value = Convert.ToDouble(remainingBudget);
-        ToolTip = string.Format(CultureInfo.CurrentCulture, this.remainingBudgetToolTip, bucket.Description,
+        ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, bucket.Description,
             remainingBudget, totalSpend);
         DetailedText = string.Format(CultureInfo.CurrentCulture, "{0} Project", bucket.SubCode);
 
-        ColourStyleName = remainingBudget < 0.1M * totalBudget ? WidgetWarningStyle : this.standardStyle;
+        ColourStyleName = remainingBudget < 0.1M * totalBudget ? WidgetWarningStyle : StandardStyle;
     }
 }
