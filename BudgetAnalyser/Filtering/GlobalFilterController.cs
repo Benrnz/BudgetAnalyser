@@ -25,14 +25,13 @@ public class GlobalFilterController : ControllerBase
     private readonly IUserMessageBox userMessageBox;
     private BudgetModel? currentBudget;
     private Guid dialogCorrelationId;
-    private GlobalFilterCriteria doNotUseCriteria;
 
     public GlobalFilterController(IMessenger messenger, UserPrompts userPrompts, IApplicationDatabaseService appDbService) : base(messenger)
     {
         this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
         this.appDbService.NewDataSourceAvailable += OnNewFilter;
         this.userMessageBox = userPrompts.MessageBox;
-        this.doNotUseCriteria = new GlobalFilterCriteria();
+        Criteria = new GlobalFilterCriteria();
         this.currentBudget = null;
         AddPeriodCommand = new RelayCommand<DateOnly>(OnAddPeriodCommandExecute, d => d != DateOnly.MinValue);
         BackPeriodCommand = new RelayCommand<DateOnly>(OnBackPeriodCommandExecute, d => d != DateOnly.MinValue);
@@ -53,15 +52,15 @@ public class GlobalFilterController : ControllerBase
 
     public GlobalFilterCriteria Criteria
     {
-        get => this.doNotUseCriteria;
+        get;
         set
         {
-            if (value == this.doNotUseCriteria)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseCriteria = value;
+            field = value;
             OnPropertyChanged();
             UpdateSummaries();
         }

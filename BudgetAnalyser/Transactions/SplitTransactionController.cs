@@ -18,8 +18,6 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
     private readonly ILogger logger;
     private readonly ITransactionManagerService transactionsService;
     private Guid dialogCorrelationId;
-    private decimal doNotUseSplinterAmount1;
-    private decimal doNotUseSplinterAmount2;
 
     public SplitTransactionController(
         IMessenger messenger,
@@ -76,15 +74,15 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
 
     public decimal SplinterAmount1
     {
-        get => this.doNotUseSplinterAmount1;
+        get;
         set
         {
-            if (value == this.doNotUseSplinterAmount1)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseSplinterAmount1 = value;
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(TotalAmount));
             OnPropertyChanged(nameof(Valid));
@@ -94,15 +92,15 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
 
     public decimal SplinterAmount2
     {
-        get => this.doNotUseSplinterAmount2;
+        get;
         set
         {
-            if (value == this.doNotUseSplinterAmount2)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseSplinterAmount2 = value;
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(TotalAmount));
             OnPropertyChanged(nameof(Valid));
@@ -185,13 +183,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
             return;
         }
 
-        var other = decimal.Round(this.doNotUseSplinterAmount2, 2);
-        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
-        this.doNotUseSplinterAmount1 = calculated;
-        OnPropertyChanged(nameof(SplinterAmount1));
-        OnPropertyChanged(nameof(TotalAmount));
-        OnPropertyChanged(nameof(Valid));
-        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        var other = decimal.Round(SplinterAmount2, 2);
+        SplinterAmount1 = decimal.Round(OriginalTransaction.Amount - other, 2);
     }
 
     private void CalculateSplinter2()
@@ -201,13 +194,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
             return;
         }
 
-        var other = decimal.Round(this.doNotUseSplinterAmount1, 2);
-        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
-        this.doNotUseSplinterAmount2 = calculated;
-        OnPropertyChanged(nameof(SplinterAmount2));
-        OnPropertyChanged(nameof(TotalAmount));
-        OnPropertyChanged(nameof(Valid));
-        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        var other = decimal.Round(SplinterAmount1, 2);
+        SplinterAmount2 = decimal.Round(OriginalTransaction.Amount - other, 2);
     }
 
     private async Task FinaliseSplitTransaction(ShellDialogResponseMessage message)

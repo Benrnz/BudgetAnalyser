@@ -19,8 +19,8 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
     private readonly ILogger logger;
     private readonly IUserMessageBox messageBoxService;
     private readonly ITransactionRuleService rulesService;
-    private bool doNotUseAndChecked;
-    private bool doNotUseOrChecked;
+    private bool andChecked;
+    private bool orChecked;
     private Guid shellDialogCorrelationId;
 
     public NewRuleController(IMessenger messenger, ILogger logger, UserPrompts userPrompts, ITransactionRuleService rulesService, IBudgetBucketRepository bucketRepo) :
@@ -53,17 +53,17 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
 
     public bool AndChecked
     {
-        get => this.doNotUseAndChecked;
+        get => this.andChecked;
         set
         {
-            if (value == this.doNotUseAndChecked)
+            if (value == this.andChecked)
             {
                 return;
             }
 
-            this.doNotUseAndChecked = value;
+            this.andChecked = value;
             OnPropertyChanged();
-            this.doNotUseOrChecked = !AndChecked;
+            this.orChecked = !AndChecked;
             OnPropertyChanged(nameof(OrChecked));
         }
     }
@@ -102,17 +102,17 @@ public class NewRuleController : ControllerBase, IShellDialogInteractivity
 
     public bool OrChecked
     {
-        get => this.doNotUseOrChecked;
+        get => this.orChecked;
         set
         {
-            if (value == this.doNotUseOrChecked)
+            if (value == this.orChecked)
             {
                 return;
             }
 
-            this.doNotUseOrChecked = value;
+            this.orChecked = value;
             OnPropertyChanged();
-            this.doNotUseAndChecked = !OrChecked;
+            this.andChecked = !OrChecked;
             OnPropertyChanged(nameof(AndChecked));
         }
     }

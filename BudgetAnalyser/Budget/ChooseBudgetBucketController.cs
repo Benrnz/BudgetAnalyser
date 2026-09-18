@@ -14,7 +14,6 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
     private readonly IAccountTypeRepository accountRepo;
     private readonly IBudgetBucketRepository bucketRepository;
     private Guid dialogCorrelationId;
-    private IEnumerable<BudgetBucket> doNotUseBudgetBuckets;
     private bool filtered;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
@@ -23,7 +22,7 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.accountRepo = accountRepo ?? throw new ArgumentNullException(nameof(accountRepo));
-        this.doNotUseBudgetBuckets = bucketRepository.Buckets.ToList();
+        BudgetBuckets = bucketRepository.Buckets.ToList();
 
         Messenger.Register<ChooseBudgetBucketController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
@@ -32,11 +31,11 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
 
     public IEnumerable<BudgetBucket> BudgetBuckets
     {
-        get => this.doNotUseBudgetBuckets;
+        get;
 
         private set
         {
-            this.doNotUseBudgetBuckets = value;
+            field = value;
             OnPropertyChanged();
         }
     }

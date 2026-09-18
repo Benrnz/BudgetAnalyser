@@ -186,8 +186,8 @@ public class SplitTransactionControllerTest
 
     private static void SetPrivateAmounts(SplitTransactionController subject, decimal a1, decimal a2)
     {
-        PrivateAccessor.SetField(subject, "doNotUseSplinterAmount1", a1);
-        PrivateAccessor.SetField(subject, "doNotUseSplinterAmount2", a2);
+        subject.SplinterAmount1 = a1;
+        subject.SplinterAmount2 = a2;
     }
 
     private class TestBucket : BudgetBucket

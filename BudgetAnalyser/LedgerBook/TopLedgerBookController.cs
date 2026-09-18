@@ -31,7 +31,6 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     private readonly LedgerBookGridBuilderFactory uiBuilder;
     private BudgetCollection? budgetCollection;
     private Guid? chooseBudgetBucketCorrelationId;
-    private int doNotUseNumberOfPeriodsToShow;
 
     public TopLedgerBookController(
         IMessenger messenger,
@@ -61,7 +60,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         this.inputBox = userPrompts.InputBox ?? throw new ArgumentNullException(nameof(userPrompts.InputBox));
         FileOperations.LedgerService = this.ledgerService;
-        this.doNotUseNumberOfPeriodsToShow = 6;
+        NumberOfPeriodsToShow = 6;
         this.addLedgerReconciliationController = addLedgerReconciliationController ?? throw new ArgumentNullException(nameof(addLedgerReconciliationController));
         this.chooseBudgetBucketController = chooseBudgetBucketController ?? throw new ArgumentNullException(nameof(chooseBudgetBucketController));
         this.ledgerBucketViewController = ledgerBucketViewController ?? throw new ArgumentNullException(nameof(ledgerBucketViewController));
@@ -110,16 +109,16 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
     public int NumberOfPeriodsToShow
     {
-        get => this.doNotUseNumberOfPeriodsToShow;
+        get;
         [UsedImplicitly]
         set
         {
-            if (value == this.doNotUseNumberOfPeriodsToShow)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseNumberOfPeriodsToShow = value;
+            field = value;
             OnPropertyChanged();
         }
     }

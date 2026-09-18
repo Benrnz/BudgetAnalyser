@@ -8,23 +8,21 @@ namespace BudgetAnalyser.Engine.Widgets;
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
 public abstract class ProgressBarWidget : Widget
 {
-    private bool doNotUseEnabled;
-
     /// <summary>
     ///     Gets or sets a value indicating whether this <see cref="Widget" /> is enabled, showing data, and clickable.
     /// </summary>
     public override bool Enabled
     {
-        get => this.doNotUseEnabled;
+        get;
         protected set
         {
-            if (value == this.doNotUseEnabled)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseEnabled = value;
-            if (!this.doNotUseEnabled)
+            field = value;
+            if (!field)
             {
                 Value = 0;
                 ProgressBarVisibility = false;

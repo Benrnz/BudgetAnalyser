@@ -12,10 +12,6 @@ namespace BudgetAnalyser.Engine.Budget;
 /// </summary>
 public class BudgetModel : INotifyPropertyChanged
 {
-    private BudgetCycle doNotUseBudgetCycle;
-    private DateOnly doNotUseEffectiveFrom;
-    private DateTime doNotUseLastModified;
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetModel" /> class.
     /// </summary>
@@ -23,10 +19,10 @@ public class BudgetModel : INotifyPropertyChanged
     {
         Incomes = [];
         Expenses = [];
-        this.doNotUseLastModified = DateTime.Now;
+        LastModified = DateTime.Now;
         // Set this here because the deserialisation process will reset if a value exists in the XML file. If not its better to have a date than min value.
-        this.doNotUseEffectiveFrom = DateOnlyExt.Today();
-        this.doNotUseBudgetCycle = BudgetCycle.Monthly;
+        EffectiveFrom = DateOnlyExt.Today();
+        BudgetCycle = BudgetCycle.Monthly;
     }
 
     /// <summary>
@@ -39,15 +35,15 @@ public class BudgetModel : INotifyPropertyChanged
     /// </summary>
     public BudgetCycle BudgetCycle
     {
-        get => this.doNotUseBudgetCycle;
+        get;
         internal set
         {
-            if (value == this.doNotUseBudgetCycle)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseBudgetCycle = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -57,15 +53,15 @@ public class BudgetModel : INotifyPropertyChanged
     /// </summary>
     public DateOnly EffectiveFrom
     {
-        get => this.doNotUseEffectiveFrom;
+        get;
         set
         {
-            if (value.Equals(this.doNotUseEffectiveFrom))
+            if (value.Equals(field))
             {
                 return;
             }
 
-            this.doNotUseEffectiveFrom = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -86,15 +82,15 @@ public class BudgetModel : INotifyPropertyChanged
     /// </summary>
     public DateTime LastModified
     {
-        get => this.doNotUseLastModified;
+        get;
         set
         {
-            if (value.Equals(this.doNotUseLastModified))
+            if (value.Equals(field))
             {
                 return;
             }
 
-            this.doNotUseLastModified = value;
+            field = value;
             OnPropertyChanged();
         }
     }

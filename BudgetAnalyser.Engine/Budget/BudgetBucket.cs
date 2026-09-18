@@ -16,16 +16,12 @@ namespace BudgetAnalyser.Engine.Budget;
 [DebuggerDisplay("{TypeDescription} {Code} {Description}")]
 public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged, IComparable
 {
-    private bool doNotUseActive;
-    private string doNotUseCode = string.Empty;
-    private string doNotUseDescription = string.Empty;
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="BudgetBucket" /> class.
     /// </summary>
     protected BudgetBucket()
     {
-        this.doNotUseActive = true;
+        Active = true;
     }
 
     /// <summary>
@@ -42,8 +38,8 @@ public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged, ICo
             throw new ArgumentNullException(nameof(code));
         }
 
-        this.doNotUseDescription = name ?? throw new ArgumentNullException(nameof(name));
-        this.doNotUseCode = code.ToUpperInvariant();
+        Description = name ?? throw new ArgumentNullException(nameof(name));
+        Code = code;
     }
 
     /// <summary>
@@ -60,10 +56,10 @@ public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged, ICo
     /// </value>
     public bool Active
     {
-        get => this.doNotUseActive;
+        get;
         set
         {
-            this.doNotUseActive = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -73,37 +69,37 @@ public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged, ICo
     /// </summary>
     public string Code
     {
-        get => this.doNotUseCode;
+        get;
 
         set
         {
-            if (value == this.doNotUseCode)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseCode = value.ToUpperInvariant();
+            field = value.ToUpperInvariant();
             OnPropertyChanged();
         }
-    }
+    } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the description of this bucket.
     /// </summary>
     public string Description
     {
-        get => this.doNotUseDescription;
+        get;
         set
         {
-            if (value == this.doNotUseDescription)
+            if (value == field)
             {
                 return;
             }
 
-            this.doNotUseDescription = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = string.Empty;
 
     /// <summary>
     ///     Gets a description of this type of bucket. By default, this is the <see cref="System.Type.Name" />

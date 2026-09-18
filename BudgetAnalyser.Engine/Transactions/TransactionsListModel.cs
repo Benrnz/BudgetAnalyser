@@ -26,7 +26,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
 
     // Track whether Dispose has been called.
     private bool disposed;
-    private List<Transaction> doNotUseAllTransactions = new();
+    private List<Transaction> allTransactions = new();
     private IEnumerable<IGrouping<int, Transaction>>? duplicates;
     private int fullDuration;
 
@@ -52,11 +52,11 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
     /// </summary>
     public IEnumerable<Transaction> AllTransactions
     {
-        get => this.doNotUseAllTransactions;
+        get => this.allTransactions;
 
         private set
         {
-            this.doNotUseAllTransactions = value.ToList();
+            this.allTransactions = value.ToList();
             OnPropertyChanged();
         }
     }
@@ -247,7 +247,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
 
         transaction.PropertyChanged -= OnTransactionPropertyChanged;
         this.changeHash = Guid.NewGuid();
-        this.doNotUseAllTransactions.Remove(transaction);
+        this.allTransactions.Remove(transaction);
         Filter(this.currentFilter);
     }
 
