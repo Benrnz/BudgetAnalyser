@@ -32,7 +32,7 @@ public class NullToVisibilityConverter : OneWayValueConverter
     {
         var stringParameter = parameter as string;
         var hiddenValue = Visibility.Hidden;
-        var isNullIsh = value is null;
+        var isNullIsh = string.IsNullOrWhiteSpace(value?.ToString());
 
         if (stringParameter is not null)
         {
