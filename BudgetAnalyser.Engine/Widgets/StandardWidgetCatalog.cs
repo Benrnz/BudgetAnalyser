@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace BudgetAnalyser.Engine.Widgets;
+﻿namespace BudgetAnalyser.Engine.Widgets;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 // ReSharper disable once UnusedType.Global // IoC
@@ -10,8 +8,8 @@ internal class WidgetCatalog : IStandardWidgetCatalog
 
     public WidgetCatalog()
     {
-        var everyConcreteWidget = GetType().GetTypeInfo().Assembly.GetExportedTypes()
-            .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract)
+        var everyConcreteWidget = GetType().Assembly.GetExportedTypes()
+            .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract)
             .ToList();
 
         // Find and instantiate all standard widgets (not user defined widgets)

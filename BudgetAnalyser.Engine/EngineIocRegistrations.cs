@@ -96,11 +96,7 @@ public static class EngineIocRegistrations
         }
 
         var allTypes = assembly.GetTypes()
-            .Where(t =>
-            {
-                var typeInfo = t.GetTypeInfo();
-                return typeInfo is { IsClass: true, IsAbstract: true, IsSealed: true } && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null;
-            })
+            .Where(t => t is { IsClass: true, IsAbstract: true, IsSealed: true } && t.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null)
             .ToArray();
         foreach (var type in allTypes)
         {
@@ -129,15 +125,11 @@ public static class EngineIocRegistrations
         }
 
         var allTypes = assembly.GetTypes()
-            .Where(t =>
-            {
-                var typeInfo = t.GetTypeInfo();
-                return typeInfo is { IsAbstract: false, IsClass: true } && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null;
-            })
+            .Where(t => t is { IsAbstract: false, IsClass: true } && t.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null)
             .ToArray();
 
         return from type in allTypes
-               let autoRegisterAttribute = type.GetTypeInfo().GetCustomAttribute<AutoRegisterWithIoCAttribute>()
+               let autoRegisterAttribute = type.GetCustomAttribute<AutoRegisterWithIoCAttribute>()
                select new DependencyRegistrationRequirement { Type = type, IsSingleInstance = autoRegisterAttribute.SingleInstance, NamedInstanceName = autoRegisterAttribute.Named };
     }
 }

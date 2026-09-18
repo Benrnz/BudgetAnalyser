@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Reflection;
 using System.Windows;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Encryption;
@@ -30,9 +29,9 @@ public static class CompositionHelper
         var isMainThread = Application.Current.Dispatcher.CheckAccess();
         Debug.Assert(isMainThread, "CompositionHelper.BuildApplicationObjectGraph must be called on the main UI thread.");
 
-        var engineAssembly = typeof(TransactionsListModel).GetTypeInfo().Assembly;
-        var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
-        var thisAssembly = typeof(CompositionHelper).GetTypeInfo().Assembly;
+        var engineAssembly = typeof(TransactionsListModel).Assembly;
+        var encryptionAssembly = typeof(IFileEncryptor).Assembly;
+        var thisAssembly = typeof(CompositionHelper).Assembly;
 
         // Perform property injection for static classes that need it.
         // Property injection is a last resort, used only where data binding to static properties requires it.
