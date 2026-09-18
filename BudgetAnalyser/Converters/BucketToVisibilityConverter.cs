@@ -1,13 +1,14 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 using BudgetAnalyser.Engine.Budget;
+using Rees.Wpf.Converters;
 
 namespace BudgetAnalyser.Converters;
 
-public class BucketToVisibilityConverter : IValueConverter
+public class BucketToVisibilityConverter : OneWayValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    /// <inheritdoc />
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not BudgetBucket bucket)
         {
@@ -28,10 +29,5 @@ public class BucketToVisibilityConverter : IValueConverter
         }
 
         return Visibility.Visible;
-    }
-
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
     }
 }
