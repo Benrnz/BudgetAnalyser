@@ -45,8 +45,7 @@ public class LedgerBookControllerFileOperations(IMessenger messenger, IApplicati
     [NotifyPropertyChangedInvocator]
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        var handler = PropertyChanged;
-        handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     internal void ReconciliationChangesWillNeedToBeSaved()

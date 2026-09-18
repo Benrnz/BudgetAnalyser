@@ -144,8 +144,7 @@ public abstract class BudgetItem : INotifyPropertyChanged
     [NotifyPropertyChangedInvocator]
     protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        var handler = PropertyChanged;
-        handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     private static string EnsureNoRepeatedLastWord(string? sentence1, string sentence2)

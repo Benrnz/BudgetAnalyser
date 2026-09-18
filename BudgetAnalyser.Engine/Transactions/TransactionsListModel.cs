@@ -359,8 +359,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         ThrowIfDisposed();
-        var handler = PropertyChanged;
-        handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     private void OnTransactionPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
