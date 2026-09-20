@@ -1,6 +1,5 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Media;
 
 namespace Rees.Wpf.Converters;
@@ -14,19 +13,10 @@ namespace Rees.Wpf.Converters;
 ///     most likely result. For these reasons it is not recommended.  Use
 ///     <see cref="TextToResourceControlTemplateConverter" /> instead.
 /// </summary>
-public class TextToStaticResourceConverter : IValueConverter
+public class TextToStaticResourceConverter : OneWayValueConverter
 {
-    /// <summary>
-    ///     Converts a value.
-    /// </summary>
-    /// <param name="value">The value produced by the binding source.</param>
-    /// <param name="targetType">The type of the binding target property.</param>
-    /// <param name="parameter">The converter parameter to use.</param>
-    /// <param name="culture">The culture to use in the converter.</param>
-    /// <returns>
-    ///     A converted value. If the method returns null, the valid null value is used.
-    /// </returns>
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    /// <inheritdoc />
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var resourceName = value as string;
         if (string.IsNullOrWhiteSpace(resourceName))
@@ -36,21 +26,5 @@ public class TextToStaticResourceConverter : IValueConverter
 
         var returnValue = Application.Current.TryFindResource(resourceName);
         return returnValue;
-    }
-
-    /// <summary>
-    ///     Not Supported.
-    /// </summary>
-    /// <param name="value">The value that is produced by the binding target.</param>
-    /// <param name="targetType">The type to convert to.</param>
-    /// <param name="parameter">The converter parameter to use.</param>
-    /// <param name="culture">The culture to use in the converter.</param>
-    /// <returns>
-    ///     A converted value. If the method returns null, the valid null value is used.
-    /// </returns>
-    /// <exception cref="System.NotSupportedException"></exception>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
     }
 }

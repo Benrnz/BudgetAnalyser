@@ -30,45 +30,25 @@ public static class EngineIocRegistrations
         foreach (var dependency in dependencies)
         {
             var type = dependency.Type;
-            var interfaces = type.GetInterfaces();
-            var hasNamedRegistration = !string.IsNullOrWhiteSpace(dependency.NamedInstanceName);
+            var lifetime = dependency.IsSingleInstance ? ServiceLifetime.Singleton : ServiceLifetime.Transient;
             var namedRegistration = dependency.NamedInstanceName;
+            var hasNamedRegistration = !string.IsNullOrWhiteSpace(namedRegistration);
 
-            if (dependency.IsSingleInstance)
+            // Register as self so it can be resolved directly by concrete type.
+            services.Add(new ServiceDescriptor(type, type, lifetime));
+            if (hasNamedRegistration)
             {
-                // Register as self so it can be resolved directly by concrete type.
-                services.AddSingleton(type);
-                if (hasNamedRegistration)
-                {
-                    services.AddKeyedSingleton(type, namedRegistration, (sp, _) => sp.GetRequiredService(type));
-                }
-
-                // Register each implemented interface pointing to the self-registration factory so all
-                // interface resolutions share the same singleton instance.
-                foreach (var iface in interfaces)
-                {
-                    services.AddSingleton(iface, sp => sp.GetRequiredService(type));
-                    if (hasNamedRegistration)
-                    {
-                        services.AddKeyedSingleton(iface, namedRegistration, (sp, _) => sp.GetRequiredService(type));
-                    }
-                }
+                services.Add(new ServiceDescriptor(type, namedRegistration, (sp, _) => sp.GetRequiredService(type), lifetime));
             }
-            else
+
+            // Register each implemented interface pointing to the self-registration factory so all
+            // interface resolutions share the same instance.
+            foreach (var iface in type.GetInterfaces())
             {
-                services.AddTransient(type);
+                services.Add(new ServiceDescriptor(iface, sp => sp.GetRequiredService(type), lifetime));
                 if (hasNamedRegistration)
                 {
-                    services.AddKeyedTransient(type, namedRegistration, (sp, _) => sp.GetRequiredService(type));
-                }
-
-                foreach (var iface in interfaces)
-                {
-                    services.AddTransient(iface, sp => sp.GetRequiredService(type));
-                    if (hasNamedRegistration)
-                    {
-                        services.AddKeyedTransient(iface, namedRegistration, (sp, _) => sp.GetRequiredService(type));
-                    }
+                    services.Add(new ServiceDescriptor(iface, namedRegistration, (sp, _) => sp.GetRequiredService(type), lifetime));
                 }
             }
         }
@@ -99,20 +79,8 @@ public static class EngineIocRegistrations
             throw new ArgumentNullException(nameof(instances));
         }
 
-        foreach (var instance in instances)
-        {
-            var attributes = instance.GetType().GetTypeInfo().GetCustomAttributes<AutoRegisterWithIoCAttribute>();
-            var attribute = attributes.FirstOrDefault();
-            if (attribute is not null)
-            {
-                if (attribute.Named == name)
-                {
-                    return instance;
-                }
-            }
-        }
-
-        throw new NotSupportedException($"No instance found with the specified name '{name}'.");
+        return instances.FirstOrDefault(instance => instance.GetType().GetCustomAttribute<AutoRegisterWithIoCAttribute>()?.Named == name)
+               ?? throw new NotSupportedException($"No instance found with the specified name '{name}'.");
     }
 
     /// <summary>
@@ -128,11 +96,7 @@ public static class EngineIocRegistrations
         }
 
         var allTypes = assembly.GetTypes()
-            .Where(t =>
-            {
-                var typeInfo = t.GetTypeInfo();
-                return typeInfo is { IsClass: true, IsAbstract: true, IsSealed: true } && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null;
-            })
+            .Where(t => t is { IsClass: true, IsAbstract: true, IsSealed: true } && t.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null)
             .ToArray();
         foreach (var type in allTypes)
         {
@@ -161,15 +125,11 @@ public static class EngineIocRegistrations
         }
 
         var allTypes = assembly.GetTypes()
-            .Where(t =>
-            {
-                var typeInfo = t.GetTypeInfo();
-                return typeInfo is { IsAbstract: false, IsClass: true } && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null;
-            })
+            .Where(t => t is { IsAbstract: false, IsClass: true } && t.GetCustomAttribute<AutoRegisterWithIoCAttribute>() is not null)
             .ToArray();
 
         return from type in allTypes
-               let autoRegisterAttribute = type.GetTypeInfo().GetCustomAttribute<AutoRegisterWithIoCAttribute>()
+               let autoRegisterAttribute = type.GetCustomAttribute<AutoRegisterWithIoCAttribute>()
                select new DependencyRegistrationRequirement { Type = type, IsSingleInstance = autoRegisterAttribute.SingleInstance, NamedInstanceName = autoRegisterAttribute.Named };
     }
 }

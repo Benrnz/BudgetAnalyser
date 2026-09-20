@@ -8,7 +8,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC]
-public class ReconciliationToDoListController : ControllerBase
+public partial class ReconciliationToDoListController : ControllerBase
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
 
@@ -22,56 +22,35 @@ public class ReconciliationToDoListController : ControllerBase
         RemoveTaskCommand = new RelayCommand<ToDoTask?>(OnRemoveTaskCommandExecuted, t => t is not null);
     }
 
-    public bool AddingNewTask
+    [ObservableProperty]
+    public partial bool AddingNewTask
     {
         [UsedImplicitly]
         get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
+        private set;
     }
 
     public IRelayCommand AddReminderCommand { get; }
 
     public IRelayCommand BeginAddingReminderCommand { get; }
 
-    public string NewTaskDescription
+    [ObservableProperty]
+    public partial string NewTaskDescription
     {
         get;
         [UsedImplicitly]
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-            AddReminderCommand.NotifyCanExecuteChanged();
-        }
+        set;
     } = string.Empty;
 
     public IRelayCommand<ToDoTask?> RemoveReminderCommand { get; }
 
     public IRelayCommand<ToDoTask?> RemoveTaskCommand { get; }
 
-    public ToDoTask? SelectedTask
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial ToDoTask? SelectedTask { get; set; }
 
-    public ToDoCollection? Tasks
-    {
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial ToDoCollection? Tasks { get; private set; }
 
     [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
     //public string Title => "Reconciliation Reminders and To Do's";
@@ -90,6 +69,11 @@ public class ReconciliationToDoListController : ControllerBase
         AddingNewTask = false;
         Tasks!.Add(new ToDoTask { Description = NewTaskDescription, CanDelete = false, SystemGenerated = false });
         this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Tasks);
+    }
+
+    partial void OnNewTaskDescriptionChanged(string value)
+    {
+        AddReminderCommand.NotifyCanExecuteChanged();
     }
 
     private void OnRemoveReminderCommandExecuted(ToDoTask? task)

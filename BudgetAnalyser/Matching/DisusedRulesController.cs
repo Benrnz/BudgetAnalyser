@@ -49,7 +49,7 @@ public class DisusedRulesController : ControllerBase
     {
         var rules = DisusedMatchingRuleWidget.QueryRules(this.ruleService.MatchingRules);
         DisusedRules = new ObservableCollection<DisusedRuleViewModel>(rules.Select(r => new DisusedRuleViewModel { MatchingRule = r, RemoveCommand = RemoveRuleCommand }));
-        this.removedRules = new List<MatchingRule>();
+        this.removedRules = [];
         Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.Close)
         {
             CorrelationId = this.dialogCorrelationId,
@@ -90,7 +90,7 @@ public class DisusedRulesController : ControllerBase
 
     private void Reset()
     {
-        this.removedRules = new List<MatchingRule>();
+        this.removedRules = [];
         DisusedRules = new ObservableCollection<DisusedRuleViewModel>();
         this.dialogCorrelationId = Guid.NewGuid();
     }

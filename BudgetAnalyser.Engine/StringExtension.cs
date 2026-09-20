@@ -19,19 +19,9 @@ public static class StringExtension
             return instance;
         }
 
-        var useAn = Vowels.Contains(instance.ToCharArray(0, 1)[0]);
-
-        if (properCase && useAn)
-        {
-            return "An";
-        }
-
-        if (properCase)
-        {
-            return "A";
-        }
-
-        return useAn ? "an" : "a";
+        var useAn = Vowels.Contains(instance[0]);
+        var word = useAn ? "an" : "a";
+        return properCase ? char.ToUpperInvariant(word[0]) + word[1..] : word;
     }
 
     /// <summary>

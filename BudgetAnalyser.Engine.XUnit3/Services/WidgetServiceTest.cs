@@ -88,7 +88,7 @@ public class WidgetServiceTest
     [Fact]
     public void Initialise_ShouldThrow_GivenEmptyWidgetsFromPersistence()
     {
-        Should.Throw<ArgumentException>(() => this.service.Initialise(Array.Empty<Widget>()));
+        Should.Throw<ArgumentException>(() => this.service.Initialise([]));
     }
 
     [Fact]

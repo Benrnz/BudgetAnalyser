@@ -14,15 +14,15 @@ namespace BudgetAnalyser.Dashboard;
 ///     Enter Password dialog, ie logging in, and used to encrypt files.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class EncryptFileController : ControllerBase, IShellDialogInteractivity
+public partial class EncryptFileController : ControllerBase, IShellDialogInteractivity
 {
+    public enum Mode { Encrypt, Decrypt, Login }
+
     private readonly IApplicationDatabaseFacade appDbService;
     private readonly Guid dialogCorrelationId = Guid.NewGuid();
     private readonly IUserMessageBox messageService;
     private readonly IUserQuestionBoxYesNo questionService;
     private SecureString? password;
-
-    public enum Mode { Encrypt, Decrypt, Login }
 
     public EncryptFileController(IMessenger messenger, UserPrompts userPrompts, IApplicationDatabaseFacade appDbService) : base(messenger)
     {
@@ -31,26 +31,14 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
         this.messageService = userPrompts.MessageBox;
 
         Messenger.Register<EncryptFileController, WidgetActivatedMessage>(this, static (r, m) => r.OnWidgetActivatedMessageReceived(m));
-        Messenger.Register<EncryptFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDiaglogResponseMessageReceived(m));
+        Messenger.Register<EncryptFileController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseMessageReceived(m));
     }
 
-    public Mode ControllerMode
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(EncryptFileMode));
-            OnPropertyChanged(nameof(DecryptFileMode));
-            OnPropertyChanged(nameof(EnterPasswordMode));
-        }
-    } = Mode.Login;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(EncryptFileMode))]
+    [NotifyPropertyChangedFor(nameof(DecryptFileMode))]
+    [NotifyPropertyChangedFor(nameof(EnterPasswordMode))]
+    public partial Mode ControllerMode { get; private set; } = Mode.Login;
 
     public bool DecryptFileMode => ControllerMode == Mode.Decrypt;
 
@@ -62,35 +50,11 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
 
     public string FileName { get; private set; } = string.Empty;
 
-    public bool IsEncrypted
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial bool IsEncrypted { get; private set; }
 
-            field = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string ValidationMessage
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string ValidationMessage { get; private set; } = string.Empty;
 
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
@@ -103,7 +67,8 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
     public bool CanExecuteOkButton
     {
         get =>
-        this.password is not null && this.password.Length > 4 && (!EncryptFileMode || field); private set;
+            this.password is not null && this.password.Length > 4 && (!EncryptFileMode || field);
+        private set;
     }
 
     /// <summary>
@@ -195,7 +160,7 @@ public class EncryptFileController : ControllerBase, IShellDialogInteractivity
             "Encrypt Data Files - Completed");
     }
 
-    private async void OnShellDiaglogResponseMessageReceived(ShellDialogResponseMessage message)
+    private async void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
     {
         if (!message.IsItForMe(this.dialogCorrelationId))
         {

@@ -1,14 +1,15 @@
-﻿using System.Globalization;
-using System.Windows.Data;
+using System.Globalization;
+using Rees.Wpf.Converters;
 
 namespace BudgetAnalyser.Converters;
 
 /// <summary>
 ///     Only used in conjunction with Matching Rules and converting a true/false boolean value into And for true and Or for false.
 /// </summary>
-public class BoolToAndConverter : IValueConverter
+public class BoolToAndConverter : OneWayValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    /// <inheritdoc />
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is bool b)
         {
@@ -16,10 +17,5 @@ public class BoolToAndConverter : IValueConverter
         }
 
         return null;
-    }
-
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
     }
 }

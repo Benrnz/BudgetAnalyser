@@ -1,4 +1,4 @@
-using System.Globalization;
+using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Transactions;
@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Transactions;
 ///     An Importer for ASB Everyday Accounts CSV files.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class AsbAccountExtractImporterV1 : IBankExtractImporter
+internal class AsbAccountExtractImporterV1 : CsvBankExtractImporterBase
 {
     private const int DateIndex = 0;
     private const int UniqueIdIndex = 1;
@@ -17,12 +17,9 @@ internal class AsbAccountExtractImporterV1 : IBankExtractImporter
     private const int MemoIndex = 5;
     private const int AmountIndex = 6;
     private const int MetadataLineCount = 7;
+    private const int ExpectedColumnCount = 7;
 
     private static readonly Dictionary<string, TransactionType> TransactionTypes = new();
-
-    private readonly BankImportUtilities importUtilities;
-    private readonly ILogger logger;
-    private readonly IReaderWriterSelector readerWriterSelector;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="AsbAccountExtractImporterV1" /> class.
@@ -30,13 +27,11 @@ internal class AsbAccountExtractImporterV1 : IBankExtractImporter
     /// <exception cref="System.ArgumentNullException">
     /// </exception>
     public AsbAccountExtractImporterV1(BankImportUtilities importUtilities, ILogger logger, IReaderWriterSelector readerWriterSelector)
+        : base(importUtilities, logger, readerWriterSelector)
     {
-        this.importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
-        this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
-        // ASB importers are NZ specific.
     }
+
+    protected override string ExpectedHeaderLine => "Date,Unique Id,Tran Type,Cheque Number,Payee,Memo,Amount";
 
     /// <summary>
     ///     Load the given file into a <see cref="TransactionsListModel" />.
@@ -46,11 +41,11 @@ internal class AsbAccountExtractImporterV1 : IBankExtractImporter
     ///     The account to classify these transactions. This is useful when merging one extract with another. For example,
     ///     merging a cheque account export with visa account export, each can be classified using an account.
     /// </param>
-    public async Task<TransactionsListModel> LoadAsync(string fileName, Account account)
+    public override async Task<TransactionsListModel> LoadAsync(string fileName, Account account)
     {
         try
         {
-            this.importUtilities.AbortIfFileDoesntExist(fileName);
+            ImportUtilities.AbortIfFileDoesntExist(fileName);
         }
         catch (FileNotFoundException ex)
         {
@@ -80,29 +75,130 @@ internal class AsbAccountExtractImporterV1 : IBankExtractImporter
                 continue;
             }
 
-            var split = SplitByCommaDelimited(line);
-            var transaction = new Transaction
-            {
-                Account = account,
-                Description = this.importUtilities.FetchString(split, MemoIndex),
-                Reference1 = this.importUtilities.FetchString(split, PayeeIndex),
-                Reference2 = this.importUtilities.FetchString(split, ChequeNumberIndex),
-                Reference3 = this.importUtilities.FetchString(split, UniqueIdIndex),
-                Amount = this.importUtilities.FetchDecimal(split, AmountIndex),
-                Date = this.importUtilities.FetchDate(split, DateIndex)
-            };
-            transaction.TransactionType = FetchTransactionType(split, transaction.Amount);
-            transactions.Add(transaction);
+            transactions.Add(ParseLine(SplitByCommaDelimited(line), account));
         }
 
-        return new TransactionsListModel(this.logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
+        return new TransactionsListModel(Logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
     }
 
-    private string[] SplitByCommaDelimited(string line)
+    /// <summary>
+    ///     Test the given file to see if this importer implementation can read and import it.
+    ///     This will open and read some of the contents of the file.
+    /// </summary>
+    public override async Task<bool> TasteTestAsync(string fileName)
+    {
+        ImportUtilities.AbortIfFileDoesntExist(fileName);
+
+        var lines = await ReadFirstLinesAsync(fileName);
+        if (lines is null || lines.Length < 8 || lines[7].IsNothing())
+        {
+            return false;
+        }
+
+        try
+        {
+            if (!VerifyMetadataLine(lines[1]))
+            {
+                return false;
+            }
+
+            // Headerline will be at line index 6 if there is an Available Balance line, otherwise line index 5.
+            var lineIndex = 6;
+            if (!VerifyColumnHeaderLine(lines[lineIndex]))
+            {
+                lineIndex = 5;
+                if (!VerifyColumnHeaderLine(lines[lineIndex]))
+                {
+                    return false;
+                }
+            }
+
+            lineIndex++;
+
+            if (!VerifyFirstDataLine(SplitByCommaDelimited(lines[lineIndex])))
+            {
+                return false;
+            }
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected override Transaction ParseLine(string[] split, Account account)
+    {
+        var transaction = new Transaction
+        {
+            Account = account,
+            Description = ImportUtilities.FetchString(split, MemoIndex),
+            Reference1 = ImportUtilities.FetchString(split, PayeeIndex),
+            Reference2 = ImportUtilities.FetchString(split, ChequeNumberIndex),
+            Reference3 = ImportUtilities.FetchString(split, UniqueIdIndex),
+            Amount = ImportUtilities.FetchDecimal(split, AmountIndex),
+            Date = ImportUtilities.FetchDate(split, DateIndex)
+        };
+        transaction.TransactionType = FetchTransactionType(ImportUtilities, TransactionTypes, split, TransactionTypeIndex, transaction.Amount);
+        return transaction;
+    }
+
+    /// <summary>
+    ///     Reads a chunk of text asynchronously.
+    /// </summary>
+    protected override async Task<string> ReadTextChunkAsync(string filePath)
+    {
+        var reader = ReaderWriterSelector.SelectReaderWriter(false);
+        return await reader.LoadFirstLinesFromDiskAsync(filePath, 9);
+    }
+
+    protected override bool VerifyFirstDataLine(string[] split)
+    {
+        if (split.Length < ExpectedColumnCount)
+        {
+            return false;
+        }
+
+        try
+        {
+            var date = ImportUtilities.FetchDate(split, DateIndex);
+            if (date == DateOnly.MinValue)
+            {
+                return false;
+            }
+
+            var amount = ImportUtilities.FetchDecimal(split, AmountIndex);
+            if (amount == 0)
+            {
+                return false;
+            }
+
+            var payee = ImportUtilities.FetchString(split, PayeeIndex);
+            if (string.IsNullOrWhiteSpace(payee))
+            {
+                return false;
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private async Task<string[]?> ReadFirstLinesAsync(string fileName)
+    {
+        var chunk = await ReadTextChunkAsync(fileName);
+        return chunk.IsNothing() ? null : chunk.SplitLines(9);
+    }
+
+    private static string[] SplitByCommaDelimited(string line)
     {
         if (string.IsNullOrEmpty(line))
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         if (line.IndexOf('"') == -1)
@@ -110,7 +206,7 @@ internal class AsbAccountExtractImporterV1 : IBankExtractImporter
             return line.Split(',');
         }
 
-        var sb = new System.Text.StringBuilder(line.Length);
+        var sb = new StringBuilder(line.Length);
         var inQuotes = false;
 
         for (var i = 0; i < line.Length; i++)
@@ -145,138 +241,7 @@ internal class AsbAccountExtractImporterV1 : IBankExtractImporter
         return processed.Split(',');
     }
 
-    /// <summary>
-    ///     Test the given file to see if this importer implementation can read and import it.
-    ///     This will open and read some of the contents of the file.
-    /// </summary>
-    public async Task<bool> TasteTestAsync(string fileName)
-    {
-        this.importUtilities.AbortIfFileDoesntExist(fileName);
-
-        var lines = await ReadFirstLinesAsync(fileName);
-        if (lines is null || lines.Length < 8 || lines[7].IsNothing())
-        {
-            return false;
-        }
-
-        try
-        {
-            if (!VerifyMetadataLine(lines[1]))
-            {
-                return false;
-            }
-
-            // Headerline will be at line index 6 if there is an Available Balance line, otherwise line index 5.
-            var lineIndex = 6;
-            if (!VerifyColumnHeaderLine(lines[lineIndex]))
-            {
-                lineIndex = 5;
-                if (!VerifyColumnHeaderLine(lines[lineIndex]))
-                {
-                    return false;
-                }
-            }
-            lineIndex++;
-
-            if (!VerifyFirstDataLine(lines[lineIndex]))
-            {
-                return false;
-            }
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    ///     Reads the lines from the file asynchronously.
-    /// </summary>
-    protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
-    {
-        var reader = this.readerWriterSelector.SelectReaderWriter(false);
-        var allText = await reader.LoadFromDiskAsync(fileName);
-        return allText.SplitLines();
-    }
-
-    /// <summary>
-    ///     Reads a chunk of text asynchronously.
-    /// </summary>
-    protected virtual async Task<string> ReadTextChunkAsync(string filePath)
-    {
-        var reader = this.readerWriterSelector.SelectReaderWriter(false);
-        return await reader.LoadFirstLinesFromDiskAsync(filePath, 9);
-    }
-
-    private TransactionType FetchTransactionType(string[] array, decimal amount)
-    {
-        var stringType = this.importUtilities.FetchString(array, TransactionTypeIndex);
-        if (stringType.IsNothing())
-        {
-            return NamedTransaction.Empty;
-        }
-
-        if (TransactionTypes.TryGetValue(stringType, out var cachedType))
-        {
-            return cachedType;
-        }
-
-        var transactionType = new NamedTransaction(stringType, amount < 0);
-        TransactionTypes.Add(stringType, transactionType);
-        return transactionType;
-    }
-
-    private async Task<string[]?> ReadFirstLinesAsync(string fileName)
-    {
-        var chunk = await ReadTextChunkAsync(fileName);
-        return chunk.IsNothing() ? null : chunk.SplitLines(9);
-    }
-
-    private static bool VerifyColumnHeaderLine(string line)
-    {
-        var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
-        return string.CompareOrdinal(compareTo, "Date,Unique Id,Tran Type,Cheque Number,Payee,Memo,Amount") == 0;
-    }
-
-    private bool VerifyFirstDataLine(string line)
-    {
-        var split = SplitByCommaDelimited(line);
-        if (split.Length < 7)
-        {
-            return false;
-        }
-
-        try
-        {
-            var date = this.importUtilities.FetchDate(split, DateIndex);
-            if (date == DateOnly.MinValue)
-            {
-                return false;
-            }
-
-            var amount = this.importUtilities.FetchDecimal(split, AmountIndex);
-            if (amount == 0)
-            {
-                return false;
-            }
-
-            var payee = this.importUtilities.FetchString(split, PayeeIndex);
-            if (string.IsNullOrWhiteSpace(payee))
-            {
-                return false;
-            }
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private bool VerifyMetadataLine(string line)
+    private static bool VerifyMetadataLine(string line)
     {
         var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
         return compareTo.Contains("Bank") && compareTo.Contains("Account");

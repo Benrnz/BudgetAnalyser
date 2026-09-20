@@ -44,7 +44,7 @@ public class TransactionRuleServiceTest
         this.mockRuleFactory.CreateNewRule(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string[]>(), Arg.Any<string>(), Arg.Any<decimal?>(), Arg.Any<bool>())
             .Returns(new MatchingRule(this.mockBucketRepo) { And = true, BucketCode = TestDataConstants.CarMtcBucketCode, Description = "Test Description" });
 
-        this.subject.CreateNewRule(" ", " ", Array.Empty<string>(), null, null, true);
+        this.subject.CreateNewRule(" ", " ", [], null, null, true);
 
         this.subject.MatchingRules.Count().ShouldBe(1);
     }

@@ -1,5 +1,3 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
 using BudgetAnalyser.Engine.Matching.Data;
 using BudgetAnalyser.Engine.Persistence;
 
@@ -11,11 +9,10 @@ namespace BudgetAnalyser.Engine.Matching;
 /// <seealso cref="BudgetAnalyser.Engine.Matching.IMatchingRuleRepository" />
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, MatchingRule> mapper, ILogger logger, IReaderWriterSelector readerWriterSelector)
-    : IMatchingRuleRepository
+    : JsonOnDiskRepositoryBase<List<MatchingRuleDto>>(readerWriterSelector), IMatchingRuleRepository
 {
     private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IDtoMapper<MatchingRuleDto, MatchingRule> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    private readonly IReaderWriterSelector readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
 
     /// <inheritdoc />
     public IEnumerable<MatchingRule> CreateNew()
@@ -43,7 +40,7 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         }
 
         this.logger.LogInfo(_ => $"{nameof(JsonOnDiskMatchingRuleRepository)} Loading Matching Rules from: {storageKey}");
-        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+        var reader = ReaderWriterSelector.SelectReaderWriter(isEncrypted);
         if (!reader.FileExists(storageKey))
         {
             throw new KeyNotFoundException("Storage key can not be found: " + storageKey);
@@ -52,18 +49,12 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         List<MatchingRuleDto> dataEntities;
         try
         {
-            dataEntities = await LoadFromDiskAsync(storageKey, isEncrypted);
+            dataEntities = await LoadJsonFromDiskAsync(storageKey, isEncrypted);
         }
         catch (Exception ex)
         {
             this.logger.LogWarning(_ => $"{nameof(JsonOnDiskMatchingRuleRepository)} Deserialisation failed for: {storageKey}");
             throw new DataFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Json deserialiser, the file format is invalid.", ex);
-        }
-
-        if (dataEntities is null)
-        {
-            this.logger.LogWarning(_ => $"{nameof(JsonOnDiskMatchingRuleRepository)} Deserialised Matching Rules file completed but isn't castable into List<MatchingRuleDto>");
-            throw new DataFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
         }
 
         var realModel = dataEntities.Select(d => this.mapper.ToModel(d));
@@ -90,68 +81,32 @@ internal class JsonOnDiskMatchingRuleRepository(IDtoMapper<MatchingRuleDto, Matc
         this.logger.LogInfo(_ => $"{nameof(JsonOnDiskMatchingRuleRepository)} Saved Matching Rules to: {storageKey}");
     }
 
-    [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
-    protected virtual async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName, bool isEncrypted)
+    protected override Exception CreateCorruptFileException()
     {
-        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = reader.CreateReadableStream(fileName);
-        var dto = await JsonSerializer.DeserializeAsync<List<MatchingRuleDto>>(stream, new JsonSerializerOptions());
-
-        return dto ?? throw new DataFormatException("Unable to deserialise Matching Rules into the correct type. File is corrupt.");
+        return new DataFormatException("Unable to deserialise Matching Rules into the correct type. File is corrupt.");
     }
 
-    protected virtual IEnumerable<MatchingRuleDto> MapToDto(IEnumerable<MatchingRule> model)
+    protected virtual List<MatchingRuleDto> MapToDto(IEnumerable<MatchingRule> model)
     {
-        return model.Select(r => this.mapper.ToDto(r));
-    }
-
-    protected virtual async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities, bool isEncrypted)
-    {
-        var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = writer.CreateWritableStream(fileName);
-        await SerialiseAndWriteToStream(stream, dataEntities);
-    }
-
-    protected virtual async Task SerialiseAndWriteToStream(Stream stream, IEnumerable<MatchingRuleDto> dataEntities)
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        await JsonSerializer.SerializeAsync(stream, dataEntities, options);
+        return model.Select(r => this.mapper.ToDto(r)).ToList();
     }
 
     private IList<MatchingRule> PreventDuplicates(IList<MatchingRule> model)
     {
-        // Remove duplicates.
-        var duplicatesExist = model.GroupBy(r => r.RuleId).Any(g => g.Count() > 1);
-        if (!duplicatesExist)
+        var seen = new HashSet<Guid>();
+        var result = new List<MatchingRule>(model.Count);
+        foreach (var rule in model)
         {
-            return model;
+            if (seen.Add(rule.RuleId))
+            {
+                result.Add(rule);
+                continue;
+            }
+
+            this.logger.LogWarning(_ =>
+                $"Duplicate RuleID found and will be removed: {rule.RuleId} {rule.BucketCode} {rule.LastMatch:o} And:{rule.And} {rule.Description} {rule.TransactionType} {rule.Reference1}");
         }
 
-        var knownList = new HashSet<Guid>();
-        var indexOfDuplicate = 0;
-        bool foundDuplicate;
-        do
-        {
-            foundDuplicate = false;
-            for (var index = indexOfDuplicate; index < model.Count; index++)
-            {
-                if (!knownList.Add(model[index].RuleId))
-                {
-                    indexOfDuplicate = index;
-                    foundDuplicate = true;
-                    break;
-                }
-            }
-
-            if (foundDuplicate)
-            {
-                var rule = model[indexOfDuplicate];
-                this.logger.LogWarning(_ =>
-                    $"Duplicate RuleID found and will be removed: {rule.RuleId} {rule.BucketCode} {rule.LastMatch:o} And:{rule.And} {rule.Description} {rule.TransactionType} {rule.Reference1}");
-                model.RemoveAt(indexOfDuplicate);
-            }
-        } while (foundDuplicate);
-
-        return model;
+        return result;
     }
 }

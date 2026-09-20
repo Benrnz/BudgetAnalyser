@@ -37,30 +37,35 @@ public class MyService : IMyService { }
 
 **Important**: Any new service must have this attribute or be manually registered in `CompositionHelper`.
 
-### 2. Private Field Naming Convention: `doNotUse` Prefix
+### 2. Property Backing Storage: the `field` Keyword
 
-Use `doNotUse` prefix for private backing fields **ONLY in classes that implement or derive from**:
+Use C# 14's contextual `field` keyword for the backing storage of change-notifying properties **in classes that implement or derive from**:
 - `ControllerBase`
 - `ObservableRecipient`
 - `INotifyPropertyChanged`
 
 ```csharp
-private string doNotUseDescription;
-
 public string Description
 {
-    get => this.doNotUseDescription;
+    get;
     set
     {
-        this.doNotUseDescription = value;
-        OnPropertyChanged(); // Only fires if value changed
+        if (value == field)
+        {
+            return;
+        }
+
+        field = value;
+        OnPropertyChanged();
     }
 }
 ```
 
-This convention signals "don't access directly; use the property." It's essential for MVVM-aware classes where direct field access bypasses change notification. **Do NOT use this prefix in regular service or utility classes** — use standard naming conventions instead (e.g., `_description`).
+`field` refers to the compiler-generated backing storage for the enclosing property, so there is no explicit private field to declare or accidentally access directly — the property is the only way in or out. This is essential for MVVM-aware classes where direct field access bypasses change notification.
 
-Use pascal casing for any other type of private field.
+Only fall back to an explicit private field when the property's accessors genuinely need something `field` can't give them — e.g. a different declared type than the property (a `List<T>` field behind an `IEnumerable<T>` property so internal code can call `.Add`/`.Remove`), or two properties that read or write each other's storage directly. In those cases, use ordinary camelCase naming for the field — do not prefix it with `doNotUse`; that convention is retired.
+
+For regular service or utility classes, use plain camelCase instead. Use pascal casing for any other type of private field.
 Do NOT prefix private fields with _ (underscore).
 
 ### 3. MVVM Structure: Controllers = ViewModels

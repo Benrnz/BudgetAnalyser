@@ -12,13 +12,4 @@ public static class EnumerableExtension
     {
         return !instance.Any();
     }
-
-    /// <summary>
-    ///     Calculates an average and is tolerant of empty collections.
-    /// </summary>
-    public static decimal SafeAverage<T>(this IEnumerable<T> instance, Func<T, decimal> selector)
-    {
-        var copy = instance.ToList();
-        return copy.None() ? 0 : copy.Average(selector);
-    }
 }

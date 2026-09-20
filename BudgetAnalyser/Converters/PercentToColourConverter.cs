@@ -1,11 +1,12 @@
-﻿using System.Globalization;
-using System.Windows.Data;
+using System.Globalization;
+using Rees.Wpf.Converters;
 
 namespace BudgetAnalyser.Converters;
 
-public class PercentToColourConverter : IValueConverter
+public class PercentToColourConverter : OneWayValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    /// <inheritdoc />
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (parameter is null || value is null)
         {
@@ -31,11 +32,6 @@ public class PercentToColourConverter : IValueConverter
         {
             return ConverterHelper.TransparentBrush;
         }
-    }
-
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
     }
 
     private static object? ConvertToExpenseColors(double percent)

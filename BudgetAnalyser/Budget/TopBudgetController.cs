@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Budget;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 // ReSharper disable once ClassNeverInstantiated.Global
-public class TopBudgetController : ControllerBase, IShowableController
+public partial class TopBudgetController : ControllerBase, IShowableController
 {
     private const string CloseBudgetMenuName = "Close _Budget";
     private const string EditBudgetMenuName = "Edit Current _Budget";
@@ -62,21 +62,8 @@ public class TopBudgetController : ControllerBase, IShowableController
 
     public IRelayCommand AddNewIncomeCommand { get; }
 
-    public string BudgetMenuItemName
-    {
-        get;
-
-        set
-        {
-            if (Equals(value, BudgetMenuItemName))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string BudgetMenuItemName { get; set; } = string.Empty;
 
     public BudgetCollection? Budgets { get; private set; }
 
@@ -121,63 +108,20 @@ public class TopBudgetController : ControllerBase, IShowableController
     public IRelayCommand DetailsCommand { get; }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public bool Dirty
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            if (Dirty && CurrentBudget is not null)
-            {
-                CurrentBudget.Model.LastModified = DateTime.Now;
-                this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Budget);
-            }
-        }
-    }
+    [ObservableProperty]
+    public partial bool Dirty { get; private set; }
 
     public BindingList<Expense> Expenses { get; private set; } = new();
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public decimal ExpenseTotal
-    {
-        get;
-
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial decimal ExpenseTotal { get; private set; }
 
     public BindingList<Income> Incomes { get; private set; } = new();
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public decimal IncomeTotal
-    {
-        get;
-
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial decimal IncomeTotal { get; private set; }
 
     public IRelayCommand NewBudgetCommand { get; }
 
@@ -187,40 +131,14 @@ public class TopBudgetController : ControllerBase, IShowableController
     public IRelayCommand ShowAllCommand { get; }
 
     // ReSharper disable once MemberCanBePrivate.Global
-    public decimal Surplus
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial decimal Surplus { get; private set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public string? TruncatedFileName => Budgets?.StorageKey.TruncateLeft(100, true);
 
-    public bool Shown
-    {
-        get;
-
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            BudgetMenuItemName = field ? CloseBudgetMenuName : EditBudgetMenuName;
-        }
-    }
+    [ObservableProperty]
+    public partial bool Shown { get; set; }
 
     private void BudgetModelOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
     {
@@ -364,6 +282,15 @@ public class TopBudgetController : ControllerBase, IShowableController
         Messenger.Send(popUpRequest);
     }
 
+    partial void OnDirtyChanged(bool value)
+    {
+        if (value && CurrentBudget is not null)
+        {
+            CurrentBudget.Model.LastModified = DateTime.Now;
+            this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Budget);
+        }
+    }
+
     private void OnExpenseAmountPropertyChanged(object? sender, EventArgs propertyChangedEventArgs)
     {
         if (!this.isLoadingBudgetModel && ExpenseTotal != 0)
@@ -421,6 +348,11 @@ public class TopBudgetController : ControllerBase, IShowableController
     private void OnShowAllCommandExecuted()
     {
         SelectOtherBudget();
+    }
+
+    partial void OnShownChanged(bool value)
+    {
+        BudgetMenuItemName = value ? CloseBudgetMenuName : EditBudgetMenuName;
     }
 
     private void OnValidatingNotificationReceived(object? sender, ValidatingEventArgs eventArgs)

@@ -13,7 +13,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class LoadFileController : ControllerBase, IShellDialogInteractivity, IDisposable
+public partial class LoadFileController : ControllerBase, IShellDialogInteractivity, IDisposable
 {
     private readonly IAccountTypeRepository accountTypeRepository;
     private readonly IUserMessageBox messageBox;
@@ -38,47 +38,13 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, IDi
     public string AccountNameHelp => "When importing a new bank extract file, you must select the account the transactions come from.\nThis allows merging of multiple accounts into one file.";
 
     public IRelayCommand BrowseForFileCommand { get; }
-    public IEnumerable<Account> ExistingAccountNames { get; private set; } = Array.Empty<Account>();
+    public IEnumerable<Account> ExistingAccountNames { get; private set; } = [];
 
-    public string? FileName
-    {
-        get;
+    [ObservableProperty]
+    public partial string? FileName { get; set; }
 
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            if (!string.IsNullOrWhiteSpace(FileName))
-            {
-                CheckFileName();
-                CheckAccountName();
-            }
-            else
-            {
-                FileTypeSelectionReady = false;
-            }
-        }
-    }
-
-    public bool FileTypeSelectionReady
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool FileTypeSelectionReady { get; private set; }
 
     public bool MergeMode
     {
@@ -86,40 +52,13 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, IDi
         private set;
     }
 
-    public Account? SelectedExistingAccountName
-    {
-        get;
-
-        set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            CheckAccountName();
-            CheckFileName();
-        }
-    }
+    [ObservableProperty]
+    public partial Account? SelectedExistingAccountName { get; set; }
 
     public string SuggestedDateRange { get; private set; } = string.Empty;
 
-    public string Title
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string Title { get; private set; } = string.Empty;
 
     /// <summary>
     ///     Implement IDisposable.
@@ -138,21 +77,8 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, IDi
 
     public bool CanExecuteCancelButton => true;
 
-    public bool CanExecuteOkButton
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
+    [ObservableProperty]
+    public partial bool CanExecuteOkButton { get; private set; }
 
     public bool CanExecuteSaveButton => false;
 
@@ -304,6 +230,30 @@ public class LoadFileController : ControllerBase, IShellDialogInteractivity, IDi
         {
             this.showingDialog = false;
         }
+    }
+
+    partial void OnCanExecuteOkButtonChanged(bool value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnFileNameChanged(string? value)
+    {
+        if (!string.IsNullOrWhiteSpace(FileName))
+        {
+            CheckFileName();
+            CheckAccountName();
+        }
+        else
+        {
+            FileTypeSelectionReady = false;
+        }
+    }
+
+    partial void OnSelectedExistingAccountNameChanged(Account? value)
+    {
+        CheckAccountName();
+        CheckFileName();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

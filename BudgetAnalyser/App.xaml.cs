@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Markup;
@@ -38,8 +37,8 @@ public partial class App
 
         Current.Exit += OnApplicationExit;
 
-        var encryptionAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
-        var thisAssembly = typeof(CompositionHelper).GetTypeInfo().Assembly;
+        var encryptionAssembly = typeof(IFileEncryptor).Assembly;
+        var thisAssembly = typeof(CompositionHelper).Assembly;
 
         this.host = Host.CreateDefaultBuilder()
             .UseDefaultServiceProvider((_, options) =>

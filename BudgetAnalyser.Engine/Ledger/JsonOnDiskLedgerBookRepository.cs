@@ -1,6 +1,5 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
-using System.Text.Json;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Transactions;
@@ -17,13 +16,11 @@ internal class JsonOnDiskLedgerBookRepository(
     BankImportUtilities importUtilities,
     IReaderWriterSelector readerWriterSelector,
     ILogger logger)
-    : ILedgerBookRepository
+    : JsonOnDiskRepositoryBase<LedgerBookDto>(readerWriterSelector), ILedgerBookRepository
 {
-    private static readonly JsonSerializerOptions Options = new();
     private readonly BankImportUtilities importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
     private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    private readonly IReaderWriterSelector readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
 
     public async Task<LedgerBook> CreateNewAndSaveAsync(string storageKey)
     {
@@ -112,28 +109,18 @@ internal class JsonOnDiskLedgerBookRepository(
         var dataEntity = MapToDto(book, CalculateChecksum(book));
         this.logger.LogInfo(_ => $"Saving Ledger Book to disk: {book.StorageKey}. Checksum is: {dataEntity.Checksum}");
 
-        await SaveDtoToDiskAsync(dataEntity, isEncrypted);
+        await SaveToDiskAsync(dataEntity.StorageKey, dataEntity, isEncrypted);
     }
 
-    protected virtual async Task<LedgerBookDto> LoadJsonFromDiskAsync(string fileName, bool isEncrypted)
+    protected override Exception CreateCorruptFileException()
     {
-        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = reader.CreateReadableStream(fileName);
-        var ledgerBookDto = await JsonSerializer.DeserializeAsync<LedgerBookDto>(stream, Options);
-
-        return ledgerBookDto ?? throw new CorruptedLedgerBookException("Unable to deserialise ledger book data into correct type.");
+        return new CorruptedLedgerBookException("Unable to deserialise ledger book data into correct type.");
     }
 
     protected virtual LedgerBookDto MapToDto(LedgerBook book, double checksum)
     {
         var dto = this.mapper.ToDto(book);
         return dto with { Checksum = checksum };
-    }
-
-    protected virtual async Task SerialiseAndWriteToStream(Stream stream, LedgerBookDto dataEntity)
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        await JsonSerializer.SerializeAsync(stream, dataEntity, options);
     }
 
     protected virtual void UpdateModifiedDate(LedgerBook book)
@@ -148,17 +135,5 @@ internal class JsonOnDiskLedgerBookRepository(
             (double)l.LedgerBalance
             + l.BankBalanceAdjustments.Sum(b => (double)b.Amount)
             + l.Entries.Sum(e => (double)e.Balance));
-    }
-
-    private async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity, bool isEncrypted)
-    {
-        if (dataEntity is null)
-        {
-            throw new ArgumentNullException(nameof(dataEntity));
-        }
-
-        var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = writer.CreateWritableStream(dataEntity.StorageKey);
-        await SerialiseAndWriteToStream(stream, dataEntity);
     }
 }

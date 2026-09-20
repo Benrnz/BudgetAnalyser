@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows.Data;
 
 namespace Rees.Wpf.Converters;
@@ -9,7 +9,7 @@ namespace Rees.Wpf.Converters;
 ///     standard StringFormat binding
 ///     parameter is ignored.
 /// </summary>
-public class ConvertToStringConverter : IValueConverter
+public class ConvertToStringConverter : OneWayValueConverter
 {
     /// <summary>
     ///     Converts a value to a string.
@@ -22,7 +22,7 @@ public class ConvertToStringConverter : IValueConverter
     /// <param name="targetType">The type of the binding target property.</param>
     /// <param name="parameter">The converter parameter to use.</param>
     /// <param name="culture">The culture to use in the converter.</param>
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is null)
         {
@@ -47,14 +47,5 @@ public class ConvertToStringConverter : IValueConverter
         return value is decimal or double or float
             ? System.Convert.ToDouble(value).ToString(parameter.ToString())
             : (object?)value.ToString();
-    }
-
-    /// <summary>
-    ///     Not Supported in this implementation.
-    /// </summary>
-    /// <exception cref="System.NotSupportedException"></exception>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
     }
 }

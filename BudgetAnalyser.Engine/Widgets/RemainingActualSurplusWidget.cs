@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Widgets;
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.ProgressBarWidget" />
 public class RemainingActualSurplusWidget : ProgressBarWidget
 {
-    private readonly string standardStyle;
+    private const string StandardStyle = "WidgetStandardStyle3";
     private IBudgetCurrencyContext? budget;
     private GlobalFilterCriteria? filter;
     private LedgerBook? ledgerBook;
@@ -27,7 +27,6 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         DetailedText = "Bank Surplus";
         Name = "Surplus A";
         Dependencies = [typeof(TransactionsListModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation), typeof(IBudgetCurrencyContext), typeof(ILogger)];
-        this.standardStyle = "WidgetStandardStyle3";
     }
 
     private ILogger Logger
@@ -100,7 +99,7 @@ public class RemainingActualSurplusWidget : ProgressBarWidget
         Maximum = Convert.ToDouble(openingBalance);
         Value = Convert.ToDouble(remainingBalance);
         Minimum = 0;
-        ColourStyleName = remainingBalance < 0.2M * openingBalance ? WidgetWarningStyle : this.standardStyle;
+        ColourStyleName = remainingBalance < 0.2M * openingBalance ? WidgetWarningStyle : StandardStyle;
 
         ToolTip = $"Remaining Surplus for period is {remainingBalance:C} of {openingBalance:C} {remainingBalance / openingBalance:P0}";
     }

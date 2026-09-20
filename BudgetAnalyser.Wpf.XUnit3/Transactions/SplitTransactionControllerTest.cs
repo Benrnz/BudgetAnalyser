@@ -1,8 +1,8 @@
-using System;
 using System.ComponentModel;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
+using BudgetAnalyser.Engine.XUnit.TestHarness;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
@@ -23,7 +23,7 @@ public class SplitTransactionControllerTest
     {
         this.mockMessenger = Substitute.For<IMessenger>();
         this.mockBucketRepo = Substitute.For<IBudgetBucketRepository>();
-        this.mockBucketRepo.Buckets.Returns(Array.Empty<BudgetBucket>());
+        this.mockBucketRepo.Buckets.Returns([]);
         this.mockTransactionsService = Substitute.For<ITransactionManagerService>();
         this.mockFileOperations = Substitute.For<ITransactionsControllerFileOperations>();
     }
@@ -186,8 +186,8 @@ public class SplitTransactionControllerTest
 
     private static void SetPrivateAmounts(SplitTransactionController subject, decimal a1, decimal a2)
     {
-        PrivateAccessor.SetField(subject, "doNotUseSplinterAmount1", a1);
-        PrivateAccessor.SetField(subject, "doNotUseSplinterAmount2", a2);
+        subject.SplinterAmount1 = a1;
+        subject.SplinterAmount2 = a2;
     }
 
     private class TestBucket : BudgetBucket

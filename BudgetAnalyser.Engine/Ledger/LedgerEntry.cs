@@ -24,7 +24,7 @@ public class LedgerEntry
     /// </summary>
     internal LedgerEntry()
     {
-        this.transactions = new List<LedgerTransaction>();
+        this.transactions = [];
     }
 
     /// <summary>

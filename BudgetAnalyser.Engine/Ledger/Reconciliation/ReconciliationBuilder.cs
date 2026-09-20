@@ -10,7 +10,7 @@ internal class ReconciliationBuilder(ILogger logger) : IReconciliationBuilder
 {
     internal const string MatchedPrefix = "Matched ";
     private readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IList<ToDoTask> toDoList = new List<ToDoTask>();
+    private readonly IList<ToDoTask> toDoList = [];
 
     public LedgerBook? LedgerBook { get; set; }
 
