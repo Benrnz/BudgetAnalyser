@@ -11,7 +11,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class MainMenuController : ControllerBase
+public partial class MainMenuController : ControllerBase
 {
     private readonly TopBudgetController budgetController;
     private readonly TopDashboardController dashboardController;
@@ -44,45 +44,17 @@ public class MainMenuController : ControllerBase
         OnDashboardExecuted();
     }
 
-    public bool BudgetToggle
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool BudgetToggle { get; set; }
 
-    public bool DashboardToggle
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool DashboardToggle { get; set; }
 
-    public bool LedgerBookToggle
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool LedgerBookToggle { get; set; }
 
-    public bool ReportsToggle
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool ReportsToggle { get; set; }
 
     public IRelayCommand ShowBudgetCommand { get; }
 
@@ -94,15 +66,8 @@ public class MainMenuController : ControllerBase
 
     public IRelayCommand ShowTransactionsCommand { get; }
 
-    public bool TransactionsToggle
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool TransactionsToggle { get; set; }
 
     private void AfterTabExecutedCommon()
     {

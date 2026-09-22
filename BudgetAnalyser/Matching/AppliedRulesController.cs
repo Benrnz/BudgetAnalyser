@@ -10,7 +10,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Matching;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class AppliedRulesController : ControllerBase
+public partial class AppliedRulesController : ControllerBase
 {
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
     private readonly IUserMessageBox messageBox;
@@ -37,21 +37,8 @@ public class AppliedRulesController : ControllerBase
 
     public ICommand CreateRuleCommand { get; }
 
-    public bool Dirty
-    {
-        get;
-
-        set
-        {
-            field = value;
-            if (Dirty)
-            {
-                this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
-            }
-
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool Dirty { get; set; }
 
     public NewRuleController NewRuleController { get; }
 
@@ -100,6 +87,14 @@ public class AppliedRulesController : ControllerBase
         }
 
         CreateNewRuleFromTransaction(transaction);
+    }
+
+    partial void OnDirtyChanged(bool value)
+    {
+        if (value)
+        {
+            this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
+        }
     }
 
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)

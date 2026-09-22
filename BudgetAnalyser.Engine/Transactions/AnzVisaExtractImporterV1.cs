@@ -1,4 +1,3 @@
-﻿using System.Globalization;
 using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Transactions;
@@ -7,7 +6,7 @@ namespace BudgetAnalyser.Engine.Transactions;
 ///     An importer for ANZ Visa bank extracts.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-internal class AnzVisaExtractImporterV1 : IBankExtractImporter
+internal class AnzVisaExtractImporterV1 : CsvBankExtractImporterBase
 {
     private const int Reference1Index = 0;
     private const int TransactionTypeIndex = 1;
@@ -22,121 +21,46 @@ internal class AnzVisaExtractImporterV1 : IBankExtractImporter
         { CreditTransactionType, new NamedTransaction("Credit Card Credit") }, { DebitTransactionType, new NamedTransaction("Credit Card Debit", true) }
     };
 
-    private readonly BankImportUtilities importUtilities;
-    private readonly ILogger logger;
-    private readonly IReaderWriterSelector readerWriterSelector;
-
     public AnzVisaExtractImporterV1(BankImportUtilities importUtilities, ILogger logger, IReaderWriterSelector readerWriterSelector)
+        : base(importUtilities, logger, readerWriterSelector)
     {
-        this.importUtilities = importUtilities ?? throw new ArgumentNullException(nameof(importUtilities));
-        this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
-        // ANZ importers are NZ specific at this stage.
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
     }
 
-    /// <summary>
-    ///     Load the given file into a <see cref="TransactionsListModel" />.
-    /// </summary>
-    /// <param name="fileName">The file to load.</param>
-    /// <param name="account">
-    ///     The account to classify these transactions. This is useful when merging one extract with another. For example,
-    ///     merging a cheque account export with visa account export, each can be classified using an account.
-    /// </param>
-    public async Task<TransactionsListModel> LoadAsync(string fileName, Account account)
+    protected override string ExpectedHeaderLine => "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge";
+
+    protected override Transaction ParseLine(string[] split, Account account)
     {
-        try
+        var transactionType = FetchTransactionType(split);
+        return new Transaction
         {
-            this.importUtilities.AbortIfFileDoesntExist(fileName);
-        }
-        catch (FileNotFoundException ex)
-        {
-            throw new KeyNotFoundException(ex.Message, ex);
-        }
-
-        var transactions = new List<Transaction>();
-        var firstTime = true;
-        foreach (var line in await ReadLinesAsync(fileName))
-        {
-            if (firstTime)
-            {
-                // File contains column headers
-                firstTime = false;
-                continue;
-            }
-
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
-
-            var split = line.Split(',');
-            var transactionType = FetchTransactionType(split);
-            var transaction = new Transaction
-            {
-                Account = account,
-                Reference1 = this.importUtilities.FetchString(split, Reference1Index),
-                TransactionType = transactionType,
-                Description = this.importUtilities.FetchString(split, DescriptionIndex),
-                Date = this.importUtilities.FetchDate(split, DateIndex),
-                Amount = FetchAmount(split, transactionType)
-            };
-            transactions.Add(transaction);
-        }
-
-        return new TransactionsListModel(this.logger) { StorageKey = fileName, LastImport = DateTime.Now }.LoadTransactions(transactions);
+            Account = account,
+            Reference1 = ImportUtilities.FetchString(split, Reference1Index),
+            TransactionType = transactionType,
+            Description = ImportUtilities.FetchString(split, DescriptionIndex),
+            Date = ImportUtilities.FetchDate(split, DateIndex),
+            Amount = FetchAmount(split, transactionType)
+        };
     }
 
-    /// <summary>
-    ///     Test the given file to see if this importer implementation can read and import it.
-    ///     This will open and read some of the contents of the file.
-    /// </summary>
-    public async Task<bool> TasteTestAsync(string fileName)
+    protected override bool VerifyFirstDataLine(string[] split)
     {
-        this.importUtilities.AbortIfFileDoesntExist(fileName);
-        var lines = await ReadFirstTwoLinesAsync(fileName);
-        if (lines is null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
+        var card = ImportUtilities.FetchString(split, Reference1Index);
+        if (card.IsSomething())
         {
-            return false;
-        }
-
-        try
-        {
-            if (!VerifyColumnHeaderLine(lines[0]))
-            {
-                return false;
-            }
-
-            if (!VerifyFirstDataLine(lines[1]))
+            if (!char.IsDigit(card.ToCharArray()[0]))
             {
                 return false;
             }
         }
-        catch (Exception)
+
+        var amount = ImportUtilities.FetchDecimal(split, AmountIndex);
+        if (amount == 0)
         {
             return false;
         }
 
-        return true;
-    }
-
-    /// <summary>
-    ///     Reads the lines from the file asynchronously.
-    /// </summary>
-    protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
-    {
-        var reader = this.readerWriterSelector.SelectReaderWriter(false);
-        var allText = await reader.LoadFromDiskAsync(fileName);
-        return allText.SplitLines();
-    }
-
-    /// <summary>
-    ///     Reads a chunk of text asynchronously.
-    /// </summary>
-    protected virtual async Task<string> ReadTextChunkAsync(string filePath)
-    {
-        var reader = this.readerWriterSelector.SelectReaderWriter(false);
-        return await reader.LoadFirstLinesFromDiskAsync(filePath, 2);
+        var date = ImportUtilities.FetchDate(split, DateIndex);
+        return date != DateOnly.MinValue;
     }
 
     private decimal FetchAmount(string[] array, NamedTransaction transaction)
@@ -148,7 +72,7 @@ internal class AnzVisaExtractImporterV1 : IBankExtractImporter
                 return 0;
             }
 
-            var amount = this.importUtilities.FetchDecimal(array, AmountIndex);
+            var amount = ImportUtilities.FetchDecimal(array, AmountIndex);
             if (transaction.IsDebit)
             {
                 amount *= -1;
@@ -158,14 +82,14 @@ internal class AnzVisaExtractImporterV1 : IBankExtractImporter
         }
         catch (InvalidDataException ex)
         {
-            this.logger.LogError(ex, l => l.Format("Unable to convert provided string to a decimal. Probable format change in bank file."));
+            Logger.LogError(ex, l => l.Format("Unable to convert provided string to a decimal. Probable format change in bank file."));
             throw;
         }
     }
 
     private NamedTransaction FetchTransactionType(string[] array)
     {
-        var stringType = this.importUtilities.FetchString(array, TransactionTypeIndex);
+        var stringType = ImportUtilities.FetchString(array, TransactionTypeIndex);
         if (string.IsNullOrWhiteSpace(stringType))
         {
             return NamedTransaction.Empty;
@@ -176,43 +100,8 @@ internal class AnzVisaExtractImporterV1 : IBankExtractImporter
             return cachedTransactionType;
         }
 
-        var fullTypeText = stringType;
-        var transactionType = new NamedTransaction(fullTypeText, true);
+        var transactionType = new NamedTransaction(stringType, true);
         TransactionTypes.Add(stringType, transactionType);
         return transactionType;
-    }
-
-    private async Task<string[]?> ReadFirstTwoLinesAsync(string fileName)
-    {
-        var chunk = await ReadTextChunkAsync(fileName);
-        return chunk.IsNothing() ? null : chunk.SplitLines(2);
-    }
-
-    private static bool VerifyColumnHeaderLine(string line)
-    {
-        var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
-        return string.CompareOrdinal(compareTo, "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge") == 0;
-    }
-
-    private bool VerifyFirstDataLine(string line)
-    {
-        var split = line.Split(',');
-        var card = this.importUtilities.FetchString(split, Reference1Index);
-        if (card.IsSomething())
-        {
-            if (!char.IsDigit(card.ToCharArray()[0]))
-            {
-                return false;
-            }
-        }
-
-        var amount = this.importUtilities.FetchDecimal(split, AmountIndex);
-        if (amount == 0)
-        {
-            return false;
-        }
-
-        var date = this.importUtilities.FetchDate(split, DateIndex);
-        return date != DateOnly.MinValue;
     }
 }

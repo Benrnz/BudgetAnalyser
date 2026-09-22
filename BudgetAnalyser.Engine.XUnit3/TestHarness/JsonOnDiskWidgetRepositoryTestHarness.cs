@@ -11,7 +11,7 @@ internal class JsonOnDiskWidgetRepositoryTestHarness : JsonOnDiskWidgetRepositor
     public JsonOnDiskWidgetRepositoryTestHarness(ILogger logger, IReaderWriterSelector readerWriterSelector)
         : base(new MapperWidgetToDto(new WidgetCatalog()), logger, readerWriterSelector, new WidgetCatalog())
     {
-        Dto = Array.Empty<WidgetDto>();
+        Dto = [];
         SerialisedData = string.Empty;
         SerialisedBytes = [];
         if (readerWriterSelector.SelectReaderWriter(true) is EmbeddedResourceFileReaderWriterEncrypted encryptor)
@@ -20,7 +20,7 @@ internal class JsonOnDiskWidgetRepositoryTestHarness : JsonOnDiskWidgetRepositor
         }
     }
 
-    public IEnumerable<WidgetDto> Dto { get; set; }
+    public List<WidgetDto> Dto { get; set; }
 
     public bool IsEncryptedAtLastAccess { get; private set; }
 
@@ -34,19 +34,19 @@ internal class JsonOnDiskWidgetRepositoryTestHarness : JsonOnDiskWidgetRepositor
         return Dto.ToList();
     }
 
-    protected override IEnumerable<WidgetDto> MapToDto(IEnumerable<Widget> widgets)
+    protected override List<WidgetDto> MapToDto(IEnumerable<Widget> widgets)
     {
         Dto = base.MapToDto(widgets);
         return Dto;
     }
 
-    protected override Task SaveToDiskAsync(string fileName, IEnumerable<WidgetDto> dataEntities, bool isEncrypted)
+    protected override Task SaveToDiskAsync(string fileName, List<WidgetDto> dataEntities, bool isEncrypted)
     {
         IsEncryptedAtLastAccess = isEncrypted;
         return base.SaveToDiskAsync(fileName, dataEntities, isEncrypted);
     }
 
-    protected override async Task SerialiseAndWriteToStream(Stream stream, IEnumerable<WidgetDto> dataEntities)
+    protected override async Task SerialiseAndWriteToStream(Stream stream, List<WidgetDto> dataEntities)
     {
         await base.SerialiseAndWriteToStream(stream, dataEntities);
         stream.Position = 0;

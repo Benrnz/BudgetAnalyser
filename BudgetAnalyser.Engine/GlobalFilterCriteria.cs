@@ -9,14 +9,12 @@ namespace BudgetAnalyser.Engine;
 /// </summary>
 public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDataChangeDetection
 {
-    private bool doNotUseCleared;
-
     /// <summary>
     ///     Constructs a new instance of <see cref="GlobalFilterCriteria" />
     /// </summary>
     public GlobalFilterCriteria()
     {
-        this.doNotUseCleared = true;
+        Cleared = true;
     }
 
     /// <summary>
@@ -48,10 +46,10 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
     /// </summary>
     public bool Cleared
     {
-        get => this.doNotUseCleared;
+        get;
         private set
         {
-            this.doNotUseCleared = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -83,7 +81,7 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
         unchecked
         {
             var hashCode = BeginDate.GetHashCode();
-            hashCode = (hashCode * 397) ^ this.doNotUseCleared.GetHashCode();
+            hashCode = (hashCode * 397) ^ Cleared.GetHashCode();
             hashCode = (hashCode * 397) ^ EndDate.GetHashCode();
             return hashCode;
         }
@@ -155,7 +153,6 @@ public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDat
     /// </summary>
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        var handler = PropertyChanged;
-        handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

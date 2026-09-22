@@ -70,7 +70,6 @@ public static class DateOnlyExt
 
     public static DateOnly Today()
     {
-        var now = DateTime.Now;
-        return new DateOnly(now.Year, now.Month, now.Day);
+        return DateOnly.FromDateTime(DateTime.Today);
     }
 }

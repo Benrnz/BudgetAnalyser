@@ -9,12 +9,11 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Budget;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity
+public partial class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IAccountTypeRepository accountRepo;
     private readonly IBudgetBucketRepository bucketRepository;
     private Guid dialogCorrelationId;
-    private IEnumerable<BudgetBucket> doNotUseBudgetBuckets;
     private bool filtered;
 
     [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
@@ -23,55 +22,22 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.accountRepo = accountRepo ?? throw new ArgumentNullException(nameof(accountRepo));
-        this.doNotUseBudgetBuckets = bucketRepository.Buckets.ToList();
+        BudgetBuckets = bucketRepository.Buckets.ToList();
 
         Messenger.Register<ChooseBudgetBucketController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
     public IEnumerable<Account> BankAccounts => this.accountRepo.ListCurrentlyUsedAccountTypes();
 
-    public IEnumerable<BudgetBucket> BudgetBuckets
-    {
-        get => this.doNotUseBudgetBuckets;
+    [ObservableProperty]
+    public partial IEnumerable<BudgetBucket> BudgetBuckets { get; private set; }
 
-        private set
-        {
-            this.doNotUseBudgetBuckets = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial string FilterDescription { get; set; } = string.Empty;
 
-    public string FilterDescription
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
-
-    public BudgetBucket? Selected
-    {
-        get;
-        set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CanExecuteOkButton));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanExecuteOkButton))]
+    public partial BudgetBucket? Selected { get; set; }
 
     public bool ShowBankAccount { get; set; }
 
@@ -100,6 +66,11 @@ public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteract
             Title = title
         };
         Messenger.Send(dialogRequest);
+    }
+
+    partial void OnSelectedChanged(BudgetBucket? value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

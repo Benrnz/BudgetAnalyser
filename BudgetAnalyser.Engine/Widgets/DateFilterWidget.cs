@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Widgets;
 [UsedImplicitly] // Instantiated by Widget Service/Repo
 public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
 {
-    private readonly string standardStyleName;
+    private const string StandardStyleName = "Brush.ModernTile.Background2";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="DateFilterWidget" /> class.
@@ -24,7 +24,6 @@ public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
         Dependencies = [typeof(GlobalFilterCriteria)];
         ImageResourceName = "DateFilterImage";
         Size = WidgetSize.Medium;
-        this.standardStyleName = "Brush.ModernTile.Background2";
         WidgetStyle = "ModernTileMediumStyle2";
         Clickable = true;
     }
@@ -62,7 +61,7 @@ public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
 
     private void DateFilterApplied(GlobalFilterCriteria criteria)
     {
-        ColourStyleName = this.standardStyleName;
+        ColourStyleName = StandardStyleName;
         DetailedText = $"Filtered from {criteria.BeginDate:d} to {criteria.EndDate:d}";
     }
 

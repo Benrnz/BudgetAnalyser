@@ -6,7 +6,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.ShellDialog;
 
-public class ShellDialogController : ControllerBase
+public partial class ShellDialogController : ControllerBase
 {
     private readonly RelayCommand<ShellDialogButton> dialogRelayCommand;
 
@@ -20,121 +20,46 @@ public class ShellDialogController : ControllerBase
 
     public string ActionToolTip => DialogType == ShellDialogType.SaveCancel ? "Save" : "Ok";
 
-    public bool CancelButtonVisible
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool CancelButtonVisible { get; set; }
 
     public string CloseToolTip => DialogType == ShellDialogType.Close ? "Close" : "Cancel";
 
-    public object? Content
-    {
-        get;
-        set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            this.dialogRelayCommand.NotifyCanExecuteChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial object? Content { get; set; }
 
     public Guid CorrelationId { get; set; }
 
     public ICommand DialogCommand { get; private init; }
 
-    public ShellDialogType DialogType
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ActionToolTip))]
+    [NotifyPropertyChangedFor(nameof(CloseToolTip))]
+    public partial ShellDialogType DialogType { get; set; }
 
-            field = value;
-            OkButtonVisible = DialogType == ShellDialogType.Ok || DialogType == ShellDialogType.OkCancel;
-            SaveButtonVisible = DialogType == ShellDialogType.SaveCancel;
-            CancelButtonVisible = DialogType != ShellDialogType.Ok;
-            OnPropertyChanged(nameof(ActionToolTip));
-            OnPropertyChanged(nameof(CloseToolTip));
-            OnPropertyChanged();
-        }
-    }
-
-    public bool HelpButtonVisible
+    [ObservableProperty]
+    public partial bool HelpButtonVisible
     {
         [UsedImplicitly]
         get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
+        set;
     }
 
-    public bool OkButtonVisible
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(OkIsCancel));
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(OkIsCancel))]
+    public partial bool OkButtonVisible { get; set; }
 
     public bool OkIsCancel => OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible;
 
-    public bool SaveButtonVisible
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial bool SaveButtonVisible { get; set; }
 
-            field = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string Title
+    [ObservableProperty]
+    public partial string Title
     {
         [UsedImplicitly]
         get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
+        set;
     } = string.Empty;
 
     /// <summary>
@@ -174,6 +99,11 @@ public class ShellDialogController : ControllerBase
         }
 
         return true;
+    }
+
+    partial void OnContentChanged(object? value)
+    {
+        this.dialogRelayCommand.NotifyCanExecuteChanged();
     }
 
     private void OnDialogCommandExecute(ShellDialogButton commandType)
@@ -222,5 +152,12 @@ public class ShellDialogController : ControllerBase
                 // Setting the content to null will hide the dialog, its visibility is bound to the Content is not null
                 Content = null;
             });
+    }
+
+    partial void OnDialogTypeChanged(ShellDialogType value)
+    {
+        OkButtonVisible = DialogType == ShellDialogType.Ok || DialogType == ShellDialogType.OkCancel;
+        SaveButtonVisible = DialogType == ShellDialogType.SaveCancel;
+        CancelButtonVisible = DialogType != ShellDialogType.Ok;
     }
 }

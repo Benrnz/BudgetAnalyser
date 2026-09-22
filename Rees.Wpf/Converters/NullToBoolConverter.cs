@@ -1,14 +1,19 @@
-﻿using System.Globalization;
-using System.Windows.Data;
+using System.Globalization;
 
 namespace Rees.Wpf.Converters;
 
 /// <summary>
 ///     If a value is Null will return true, if it is something it will return false.
+///     Set <see cref="Invert" /> to true to get the opposite: true when the value is something, false when it is null.
 ///     Useful to bind IsEnabled properties to the presence of a value a command might be dependent on.
 /// </summary>
-public class NullToBoolConverter : IValueConverter
+public class NullToBoolConverter : OneWayValueConverter
 {
+    /// <summary>
+    ///     When true, inverts the result: returns true when the value is something, false when it is null.
+    /// </summary>
+    public bool Invert { get; set; }
+
     /// <summary>
     ///     Converts a <see cref="bool" />value.
     /// </summary>
@@ -17,26 +22,11 @@ public class NullToBoolConverter : IValueConverter
     /// <param name="parameter">Not Used.</param>
     /// <param name="culture">Not Used.</param>
     /// <returns>
-    ///     Will always return true, or false. False if the value is something, true if it is null.
+    ///     Will always return true, or false. False if the value is something, true if it is null (opposite when
+    ///     <see cref="Invert" /> is true).
     /// </returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return value is null;
-    }
-
-    /// <summary>
-    ///     Not Supported.
-    /// </summary>
-    /// <param name="value">The value that is produced by the binding target.</param>
-    /// <param name="targetType">The type to convert to.</param>
-    /// <param name="parameter">The converter parameter to use.</param>
-    /// <param name="culture">The culture to use in the converter.</param>
-    /// <returns>
-    ///     A converted value. If the method returns null, the valid null value is used.
-    /// </returns>
-    /// <exception cref="System.NotSupportedException"></exception>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
+        return Invert ? value is not null : value is null;
     }
 }

@@ -1,6 +1,4 @@
-using System;
 using System.Runtime.ExceptionServices;
-using System.Threading;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
@@ -38,8 +36,7 @@ public class NewRuleControllerTest
         this.subject = new NewRuleController(Substitute.For<IMessenger>(), this.logger, this.userPrompts, this.ruleService, this.bucketRepo);
     }
 
-    // ── UseRegularExpressions ────────────────────────────────────────────────
-
+    // ── Regular expression validation ────────────────────────────────────────
     [Fact]
     public void Initialize_ShouldResetUseRegularExpressionsToFalse()
     {
@@ -49,9 +46,7 @@ public class NewRuleControllerTest
 
         this.subject.UseRegularExpressions.ShouldBeFalse();
     }
-
-    // ── Regular expression validation ────────────────────────────────────────
-
+    
     [Fact]
     public void CanExecuteSaveButton_ShouldBeFalse_WhenUsingRegularExpressionsAndPatternIsMalformed()
     {
@@ -89,16 +84,24 @@ public class NewRuleControllerTest
         this.subject.CanExecuteSaveButton.ShouldBeTrue();
     }
 
-    [Fact]
-    public void ValidRegexPattern_ShouldBeTrue_WhenMalformedCriteriaIsNotApplicable()
-    {
-        this.subject.Initialize();
-        this.subject.Reference1.Value = MalformedPattern;
-        this.subject.Reference1.Applicable = false;
+    // ── UseRegularExpressions ────────────────────────────────────────────────
 
+    [Fact]
+    public void Initialize_ShouldResetUseRegularExpressionsToFalse()
+    {
         this.subject.UseRegularExpressions = true;
 
-        this.subject.ValidRegexPattern.ShouldBeTrue();
+        this.subject.Initialize();
+
+        this.subject.UseRegularExpressions.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void SaveResponse_ShouldNotSetUseRegularExpressionsOnNewRule_WhenOptionIsNotTicked()
+    {
+        var createdRule = SaveNewRuleViaDialog(false);
+
+        createdRule.UseRegularExpressions.ShouldBeFalse();
     }
 
     // ── Creating the rule ────────────────────────────────────────────────────
@@ -112,11 +115,40 @@ public class NewRuleControllerTest
     }
 
     [Fact]
-    public void SaveResponse_ShouldNotSetUseRegularExpressionsOnNewRule_WhenOptionIsNotTicked()
+    public void ValidRegexPattern_ShouldBeTrue_WhenMalformedCriteriaIsNotApplicable()
     {
-        var createdRule = SaveNewRuleViaDialog(false);
+        this.subject.Initialize();
+        this.subject.Reference1.Value = MalformedPattern;
+        this.subject.Reference1.Applicable = false;
 
-        createdRule.UseRegularExpressions.ShouldBeFalse();
+        this.subject.UseRegularExpressions = true;
+
+        this.subject.ValidRegexPattern.ShouldBeTrue();
+    }
+
+    /// <summary>
+    ///     Showing the dialog builds a WPF collection view over the similar rules, so the round trip is run on an STA thread.
+    /// </summary>
+    private static void RunOnStaThread(Action action)
+    {
+        ExceptionDispatchInfo? failure = null;
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                failure = ExceptionDispatchInfo.Capture(ex);
+            }
+        });
+
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+
+        failure?.Throw();
     }
 
     /// <summary>
@@ -124,7 +156,7 @@ public class NewRuleControllerTest
     /// </summary>
     private MatchingRule SaveNewRuleViaDialog(bool useRegularExpressions)
     {
-        MatchingRule result = null;
+        MatchingRule? result = null;
 
         // A real messenger is required because the controller only acts on a dialog response carrying the correlation id it generated when the dialog was shown.
         RunOnStaThread(() =>
@@ -144,38 +176,13 @@ public class NewRuleControllerTest
             var correlationId = Guid.Empty;
             messenger.Register<ShellDialogRequestMessage>(this, (_, message) => correlationId = message.CorrelationId);
 
-            controller.ShowDialog(Array.Empty<MatchingRule>());
+            controller.ShowDialog([]);
             messenger.Send(new ShellDialogResponseMessage(controller, ShellDialogButton.Save) { CorrelationId = correlationId });
 
             result = controller.NewRule;
         });
 
         result.ShouldNotBeNull();
-        return result;
-    }
-
-    /// <summary>
-    ///     Showing the dialog builds a WPF collection view over the similar rules, so the round trip is run on an STA thread.
-    /// </summary>
-    private static void RunOnStaThread(Action action)
-    {
-        ExceptionDispatchInfo failure = null;
-        var thread = new Thread(() =>
-        {
-            try
-            {
-                action();
-            }
-            catch (Exception ex)
-            {
-                failure = ExceptionDispatchInfo.Capture(ex);
-            }
-        });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        thread.Join();
-
-        failure?.Throw();
+        return result!;
     }
 }

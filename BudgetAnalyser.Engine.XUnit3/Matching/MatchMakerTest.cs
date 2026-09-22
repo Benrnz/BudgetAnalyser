@@ -1,5 +1,4 @@
 ﻿using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Engine.XUnit.TestData;
@@ -19,7 +18,7 @@ public class MatchMakerTest
 
     public MatchMakerTest(ITestOutputHelper testOutputHelper)
     {
-        this.testData.BucketRepo = new BudgetBucketRepoAlwaysFind().Initialise(Array.Empty<BudgetBucketDto>());
+        this.testData.BucketRepo = new BudgetBucketRepoAlwaysFind().Initialise([]);
         this.allRules = this.testData.TestData1();
         this.testDataTransactions = TransactionsListModelTestData.TestData2().WithNullBudgetBuckets().AllTransactions.ToList();
         this.mockBudgetBucketRepo = Substitute.For<IBudgetBucketRepository>();

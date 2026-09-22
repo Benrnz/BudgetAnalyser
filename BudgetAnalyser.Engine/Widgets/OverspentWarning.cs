@@ -37,7 +37,7 @@ public class OverspentWarning : Widget
         this.logger = logger;
     }
 
-    internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; } = Array.Empty<KeyValuePair<BudgetBucket, decimal>>();
+    internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; } = [];
 
     public decimal Tolerance
     {

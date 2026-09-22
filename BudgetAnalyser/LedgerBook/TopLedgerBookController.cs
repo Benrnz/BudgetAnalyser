@@ -13,7 +13,7 @@ namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 // ReSharper disable once ClassNeverInstantiated.Global // Instantiated by IoC Container
-public class TopLedgerBookController : ControllerBase, IShowableController
+public partial class TopLedgerBookController : ControllerBase, IShowableController
 {
     private readonly AddLedgerReconciliationController addLedgerReconciliationController;
     private readonly ChooseBudgetBucketController chooseBudgetBucketController;
@@ -31,7 +31,6 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     private readonly LedgerBookGridBuilderFactory uiBuilder;
     private BudgetCollection? budgetCollection;
     private Guid? chooseBudgetBucketCorrelationId;
-    private int doNotUseNumberOfPeriodsToShow;
 
     public TopLedgerBookController(
         IMessenger messenger,
@@ -61,7 +60,7 @@ public class TopLedgerBookController : ControllerBase, IShowableController
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         this.inputBox = userPrompts.InputBox ?? throw new ArgumentNullException(nameof(userPrompts.InputBox));
         FileOperations.LedgerService = this.ledgerService;
-        this.doNotUseNumberOfPeriodsToShow = 6;
+        NumberOfPeriodsToShow = 6;
         this.addLedgerReconciliationController = addLedgerReconciliationController ?? throw new ArgumentNullException(nameof(addLedgerReconciliationController));
         this.chooseBudgetBucketController = chooseBudgetBucketController ?? throw new ArgumentNullException(nameof(chooseBudgetBucketController));
         this.ledgerBucketViewController = ledgerBucketViewController ?? throw new ArgumentNullException(nameof(ledgerBucketViewController));
@@ -108,20 +107,12 @@ public class TopLedgerBookController : ControllerBase, IShowableController
     [UsedImplicitly]
     public LedgerBookControllerFileOperations FileOperations { get; }
 
-    public int NumberOfPeriodsToShow
+    [ObservableProperty]
+    public partial int NumberOfPeriodsToShow
     {
-        get => this.doNotUseNumberOfPeriodsToShow;
+        get;
         [UsedImplicitly]
-        set
-        {
-            if (value == this.doNotUseNumberOfPeriodsToShow)
-            {
-                return;
-            }
-
-            this.doNotUseNumberOfPeriodsToShow = value;
-            OnPropertyChanged();
-        }
+        set;
     }
 
     public IRelayCommand<LedgerEntryLine?> ShowBankBalancesCommand { get; }
@@ -143,21 +134,8 @@ public class TopLedgerBookController : ControllerBase, IShowableController
 
     public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
-    public bool Shown
-    {
-        get;
-
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool Shown { get; set; }
 
     public void DeregisterListener(object recipient)
     {

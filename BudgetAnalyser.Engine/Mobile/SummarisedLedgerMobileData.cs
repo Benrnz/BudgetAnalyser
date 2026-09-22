@@ -12,7 +12,7 @@ public class SummarisedLedgerMobileData
     /// </summary>
     public SummarisedLedgerMobileData()
     {
-        LedgerBuckets = new List<SummarisedLedgerBucket>();
+        LedgerBuckets = [];
     }
 
     /// <summary>

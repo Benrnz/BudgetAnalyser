@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Dashboard;
 
 //[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Necessary in this case, this class is used to monitor all parts of the system.")]
 [AutoRegisterWithIoC(SingleInstance = true)]
-public sealed class TopDashboardController : ControllerBase, IShowableController
+public sealed partial class TopDashboardController : ControllerBase, IShowableController
 {
     private readonly IDashboardService dashboardService;
     private readonly DisusedRulesController disusedRulesController;
@@ -54,20 +54,8 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
         Messenger.Register<TopDashboardController, ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
     }
 
-    public Guid CorrelationId
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial Guid CorrelationId { get; private set; }
 
     public GlobalFilterController GlobalFilterController
     {
@@ -87,20 +75,8 @@ public sealed class TopDashboardController : ControllerBase, IShowableController
 
     public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
-    public bool Shown
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool Shown { get; set; }
 
     private void OnApplicationStateLoaded(TopDashboardController recipient, ApplicationStateLoadedMessage message)
     {

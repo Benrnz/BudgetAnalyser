@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
@@ -60,7 +57,7 @@ public class PersistBaxAppStateAsJsonTest
 
         // Assert
         result.ShouldBeEmpty();
-        this.mockUserMessageBox.Received(1).Show(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("Unable to load previously used application preferences")));
+        this.mockUserMessageBox.Received(1).Show(Arg.Any<Exception>(), Arg.Is<string>(s => s!.Contains("Unable to load previously used application preferences")));
     }
 
     [Fact]

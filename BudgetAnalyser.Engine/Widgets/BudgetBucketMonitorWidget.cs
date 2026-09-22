@@ -7,17 +7,9 @@
 /// <seealso cref="BudgetAnalyser.Engine.Widgets.IUserDefinedWidget" />
 public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUserDefinedWidget
 {
-    private readonly string disabledToolTip;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="BudgetBucketMonitorWidget" /> class.
-    /// </summary>
-    public BudgetBucketMonitorWidget()
-    {
-        this.disabledToolTip =
-            "Either there are no Transactions or Budget present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget " +
-            "cannot be calculated.";
-    }
+    private const string DisabledToolTip =
+        "Either there are no Transactions or Budget present, or the Bucket Code is not valid, or the filtered date range doesn't match a reconciliation ledger line. Budget " +
+        "cannot be calculated.";
 
     /// <summary>
     ///     Gets the type of the widget. In this case same as GetType().Name
@@ -46,7 +38,7 @@ public sealed class BudgetBucketMonitorWidget : RemainingBudgetBucketWidget, IUs
         DetailedText = BucketCode;
         if (!Enabled)
         {
-            ToolTip = this.disabledToolTip;
+            ToolTip = DisabledToolTip;
         }
     }
 }

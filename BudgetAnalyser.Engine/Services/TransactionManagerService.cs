@@ -65,7 +65,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <inheritdoc />
     public void Close()
     {
-        this.transactions = new List<Transaction>();
+        this.transactions = [];
         TransactionsListModel?.Dispose();
         TransactionsListModel = null;
         this.budgetCollection = null;

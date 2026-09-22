@@ -54,7 +54,7 @@ public class OverallPerformanceBudgetAnalyser(IBudgetBucketRepository bucketRepo
 
         CalculateTotalsAndAverage(result);
 
-        result.AnalysesList = new List<BucketPerformanceResult>();
+        result.AnalysesList = [];
         var list = new List<BucketPerformanceResult>();
 
         foreach (var bucket in this.bucketRepository.Buckets)

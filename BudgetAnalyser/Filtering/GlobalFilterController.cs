@@ -19,20 +19,19 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Filtering;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class GlobalFilterController : ControllerBase
+public partial class GlobalFilterController : ControllerBase
 {
     private readonly IApplicationDatabaseService appDbService;
     private readonly IUserMessageBox userMessageBox;
     private BudgetModel? currentBudget;
     private Guid dialogCorrelationId;
-    private GlobalFilterCriteria doNotUseCriteria;
 
     public GlobalFilterController(IMessenger messenger, UserPrompts userPrompts, IApplicationDatabaseService appDbService) : base(messenger)
     {
         this.appDbService = appDbService ?? throw new ArgumentNullException(nameof(appDbService));
         this.appDbService.NewDataSourceAvailable += OnNewFilter;
         this.userMessageBox = userPrompts.MessageBox;
-        this.doNotUseCriteria = new GlobalFilterCriteria();
+        Criteria = new GlobalFilterCriteria();
         this.currentBudget = null;
         AddPeriodCommand = new RelayCommand<DateOnly>(OnAddPeriodCommandExecute, d => d != DateOnly.MinValue);
         BackPeriodCommand = new RelayCommand<DateOnly>(OnBackPeriodCommandExecute, d => d != DateOnly.MinValue);
@@ -51,42 +50,23 @@ public class GlobalFilterController : ControllerBase
 
     public ICommand ClearCommand { get; }
 
-    public GlobalFilterCriteria Criteria
-    {
-        get => this.doNotUseCriteria;
-        set
-        {
-            if (value == this.doNotUseCriteria)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial GlobalFilterCriteria Criteria { get; set; }
 
-            this.doNotUseCriteria = value;
-            OnPropertyChanged();
-            UpdateSummaries();
-        }
-    }
-
-    public string DateSummaryLine1
+    [ObservableProperty]
+    public partial string DateSummaryLine1
     {
         [UsedImplicitly]
         get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
+        private set;
     } = string.Empty;
 
-    public string DateSummaryLine2
+    [ObservableProperty]
+    public partial string DateSummaryLine2
     {
         [UsedImplicitly]
         get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
+        private set;
     } = string.Empty;
 
     public void PromptUserForDates()
@@ -155,6 +135,11 @@ public class GlobalFilterController : ControllerBase
     {
         Criteria.BeginDate = null;
         Criteria.EndDate = null;
+    }
+
+    partial void OnCriteriaChanged(GlobalFilterCriteria value)
+    {
+        UpdateSummaries();
     }
 
     private void OnGlobalFilterChangeRequested(RequestFilterChangeMessage message)

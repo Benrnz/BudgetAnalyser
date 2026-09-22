@@ -8,7 +8,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class LedgerRemarksController : ControllerBase
+public partial class LedgerRemarksController : ControllerBase
 {
     private readonly IReconciliationService reconciliationService;
     private Guid dialogCorrelationId;
@@ -19,35 +19,14 @@ public class LedgerRemarksController : ControllerBase
         Messenger.Register<LedgerRemarksController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
     }
 
-    public bool IsReadOnly
-    {
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool IsReadOnly { get; private set; }
 
-    public LedgerEntryLine? LedgerEntryLine
-    {
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial LedgerEntryLine? LedgerEntryLine { get; private set; }
 
-    public string Remarks
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string Remarks { get; set; } = string.Empty;
 
     public void Show(LedgerEntryLine line, bool isNew)
     {

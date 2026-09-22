@@ -9,7 +9,7 @@ using Rees.Wpf.Contracts;
 namespace BudgetAnalyser.Budget;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class CreateNewFixedBudgetController : ControllerBase, IShellDialogInteractivity
+public partial class CreateNewFixedBudgetController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly IUserMessageBox messageBox;
@@ -23,53 +23,14 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
     }
 
-    public decimal Amount
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial decimal Amount { get; set; }
 
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
+    [ObservableProperty]
+    public partial string Code { get; set; } = string.Empty;
 
-    public string Code
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = string.Empty;
-
-    public string Description
-    {
-        get;
-        set
-        {
-            if (value == field)
-            {
-                return;
-            }
-
-            field = value;
-            OnPropertyChanged();
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string Description { get; set; } = string.Empty;
 
     /// <summary>
     ///     Will be called to ascertain the availability of the button.
@@ -100,6 +61,21 @@ public class CreateNewFixedBudgetController : ControllerBase, IShellDialogIntera
             HelpAvailable = true
         };
         Messenger.Send(dialogRequest);
+    }
+
+    partial void OnAmountChanged(decimal value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnCodeChanged(string value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnDescriptionChanged(string value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 
     private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

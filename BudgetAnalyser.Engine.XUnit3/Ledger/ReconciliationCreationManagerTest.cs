@@ -53,7 +53,7 @@ public class ReconciliationCreationManagerTest
                 Description = "Last transaction"
             })
             .Build();
-        this.testDataToDoList = new List<ToDoTask>();
+        this.testDataToDoList = [];
 
         this.subject = new ReconciliationCreationManager(this.mockRuleService, this.mockReconciliationConsistency, this.mockReconciliationBuilder, new FakeLogger());
 

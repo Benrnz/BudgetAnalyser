@@ -11,15 +11,13 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class SplitTransactionController : ControllerBase, IShellDialogInteractivity
+public partial class SplitTransactionController : ControllerBase, IShellDialogInteractivity
 {
     private readonly IBudgetBucketRepository bucketRepo;
     private readonly ITransactionsControllerFileOperations fileOperations;
     private readonly ILogger logger;
     private readonly ITransactionManagerService transactionsService;
     private Guid dialogCorrelationId;
-    private decimal doNotUseSplinterAmount1;
-    private decimal doNotUseSplinterAmount2;
 
     public SplitTransactionController(
         IMessenger messenger,
@@ -37,78 +35,27 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
         CalculateSplinter2Command = new RelayCommand(CalculateSplinter1);
     }
 
-    public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; } = Array.Empty<BudgetBucket>();
+    public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; } = [];
 
     public ICommand CalculateSplinter1Command { get; }
     public ICommand CalculateSplinter2Command { get; }
 
-    public string? InvalidMessage
-    {
-        get;
-        private set
-        {
-            if (value == field)
-            {
-                return;
-            }
+    [ObservableProperty]
+    public partial string? InvalidMessage { get; private set; }
 
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Valid))]
+    public partial Transaction? OriginalTransaction { get; private set; }
 
-    public Transaction? OriginalTransaction
-    {
-        get;
-        private set
-        {
-            if (Equals(value, field))
-            {
-                return;
-            }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TotalAmount))]
+    [NotifyPropertyChangedFor(nameof(Valid))]
+    public partial decimal SplinterAmount1 { get; set; }
 
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(Valid));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
-
-    public decimal SplinterAmount1
-    {
-        get => this.doNotUseSplinterAmount1;
-        set
-        {
-            if (value == this.doNotUseSplinterAmount1)
-            {
-                return;
-            }
-
-            this.doNotUseSplinterAmount1 = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(TotalAmount));
-            OnPropertyChanged(nameof(Valid));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
-
-    public decimal SplinterAmount2
-    {
-        get => this.doNotUseSplinterAmount2;
-        set
-        {
-            if (value == this.doNotUseSplinterAmount2)
-            {
-                return;
-            }
-
-            this.doNotUseSplinterAmount2 = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(TotalAmount));
-            OnPropertyChanged(nameof(Valid));
-            Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TotalAmount))]
+    [NotifyPropertyChangedFor(nameof(Valid))]
+    public partial decimal SplinterAmount2 { get; set; }
 
     public BudgetBucket? SplinterBucket1 { get; set; }
     public BudgetBucket? SplinterBucket2 { get; set; }
@@ -185,13 +132,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
             return;
         }
 
-        var other = decimal.Round(this.doNotUseSplinterAmount2, 2);
-        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
-        this.doNotUseSplinterAmount1 = calculated;
-        OnPropertyChanged(nameof(SplinterAmount1));
-        OnPropertyChanged(nameof(TotalAmount));
-        OnPropertyChanged(nameof(Valid));
-        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        var other = decimal.Round(SplinterAmount2, 2);
+        SplinterAmount1 = decimal.Round(OriginalTransaction.Amount - other, 2);
     }
 
     private void CalculateSplinter2()
@@ -201,13 +143,8 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
             return;
         }
 
-        var other = decimal.Round(this.doNotUseSplinterAmount1, 2);
-        var calculated = decimal.Round(OriginalTransaction.Amount - other, 2);
-        this.doNotUseSplinterAmount2 = calculated;
-        OnPropertyChanged(nameof(SplinterAmount2));
-        OnPropertyChanged(nameof(TotalAmount));
-        OnPropertyChanged(nameof(Valid));
-        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+        var other = decimal.Round(SplinterAmount1, 2);
+        SplinterAmount2 = decimal.Round(OriginalTransaction.Amount - other, 2);
     }
 
     private async Task FinaliseSplitTransaction(ShellDialogResponseMessage message)
@@ -226,6 +163,11 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
         }
     }
 
+    partial void OnOriginalTransactionChanged(Transaction? value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
     private void OnShellDialogResponseReceived(SplitTransactionController recipient, ShellDialogResponseMessage message)
     {
         if (!message.IsItForMe(this.dialogCorrelationId))
@@ -239,5 +181,15 @@ public class SplitTransactionController : ControllerBase, IShellDialogInteractiv
 
         this.dialogCorrelationId = Guid.Empty;
         OriginalTransaction = null;
+    }
+
+    partial void OnSplinterAmount1Changed(decimal value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
+    }
+
+    partial void OnSplinterAmount2Changed(decimal value)
+    {
+        Messenger.Send<ShellDialogCommandRequerySuggestedMessage>();
     }
 }

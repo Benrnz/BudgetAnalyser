@@ -17,39 +17,29 @@ public class DisusedRulesController : ControllerBase
     private readonly ITransactionRuleService ruleService;
     private Guid dialogCorrelationId = Guid.NewGuid();
     private List<MatchingRule> removedRules = new();
+    private readonly IRelayCommand<DisusedRuleViewModel?> removeRuleCommand;
 
     public DisusedRulesController(IMessenger messenger, ITransactionRuleService ruleService, IApplicationDatabaseFacade dbService) : base(messenger)
     {
         this.ruleService = ruleService;
         this.dbService = dbService;
-        if (messenger is null)
-        {
-            throw new ArgumentNullException(nameof(messenger));
-        }
+        ArgumentNullException.ThrowIfNull(messenger);
+        ArgumentNullException.ThrowIfNull(ruleService);
+        ArgumentNullException.ThrowIfNull(dbService);
 
-        if (ruleService is null)
-        {
-            throw new ArgumentNullException(nameof(ruleService));
-        }
-
-        if (dbService is null)
-        {
-            throw new ArgumentNullException(nameof(dbService));
-        }
-
-        RemoveRuleCommand = new RelayCommand<DisusedRuleViewModel?>(OnRemoveRuleExecuted, r => r is not null);
+        this.removeRuleCommand = new RelayCommand<DisusedRuleViewModel?>(OnRemoveRuleExecuted, r => r is not null);
         Messenger.Register<DisusedRulesController, ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
     }
 
     public ObservableCollection<DisusedRuleViewModel> DisusedRules { get; private set; } = new();
 
-    public IRelayCommand<DisusedRuleViewModel?> RemoveRuleCommand { get; }
 
     public void ShowDialog()
     {
+        // TODO can the QueryRules method be moved to the RulesService instead?
         var rules = DisusedMatchingRuleWidget.QueryRules(this.ruleService.MatchingRules);
-        DisusedRules = new ObservableCollection<DisusedRuleViewModel>(rules.Select(r => new DisusedRuleViewModel { MatchingRule = r, RemoveCommand = RemoveRuleCommand }));
-        this.removedRules = new List<MatchingRule>();
+        DisusedRules = new ObservableCollection<DisusedRuleViewModel>(rules.Select(r => new DisusedRuleViewModel { MatchingRule = r, RemoveCommand = this.removeRuleCommand }));
+        this.removedRules = [];
         Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.Close)
         {
             CorrelationId = this.dialogCorrelationId,
@@ -90,7 +80,7 @@ public class DisusedRulesController : ControllerBase
 
     private void Reset()
     {
-        this.removedRules = new List<MatchingRule>();
+        this.removedRules = [];
         DisusedRules = new ObservableCollection<DisusedRuleViewModel>();
         this.dialogCorrelationId = Guid.NewGuid();
     }

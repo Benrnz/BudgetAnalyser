@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
@@ -10,12 +10,10 @@ namespace BudgetAnalyser.Engine.Budget;
 /// </summary>
 /// <seealso cref="BudgetAnalyser.Engine.Budget.IBudgetRepository" />
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class JsonOnDiskBudgetRepository : IBudgetRepository
+public class JsonOnDiskBudgetRepository : JsonOnDiskRepositoryBase<BudgetCollectionDto>, IBudgetRepository
 {
-    private static readonly JsonSerializerOptions Options = new();
     private readonly IBudgetBucketRepository budgetBucketRepository;
     private readonly IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper;
-    private readonly IReaderWriterSelector readerWriterSelector;
     private BudgetCollection currentBudgetCollection;
     private bool isEncryptedAtLastAccess;
 
@@ -23,10 +21,10 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
     ///     Initializes a new instance of the <see cref="JsonOnDiskBudgetRepository" /> class.
     /// </summary>
     public JsonOnDiskBudgetRepository(IBudgetBucketRepository bucketRepository, IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper, IReaderWriterSelector readerWriterSelector)
+        : base(readerWriterSelector)
     {
         this.budgetBucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        this.readerWriterSelector = readerWriterSelector ?? throw new ArgumentNullException(nameof(readerWriterSelector));
         var budget = new BudgetModel();
         this.currentBudgetCollection = new BudgetCollection(budget);
         this.budgetBucketRepository.Initialise(new List<BudgetBucketDto>());
@@ -68,7 +66,7 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
         }
 
         this.isEncryptedAtLastAccess = isEncrypted;
-        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+        var reader = ReaderWriterSelector.SelectReaderWriter(isEncrypted);
 
         if (!reader.FileExists(storageKey))
         {
@@ -130,13 +128,9 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
         this.isEncryptedAtLastAccess = isEncrypted;
     }
 
-    protected virtual async Task<BudgetCollectionDto> LoadJsonFromDiskAsync(string fileName, bool isEncrypted)
+    protected override Exception CreateCorruptFileException()
     {
-        var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = reader.CreateReadableStream(fileName);
-        var dto = await JsonSerializer.DeserializeAsync<BudgetCollectionDto>(stream, Options);
-
-        return dto ?? throw new DataFormatException("Unable to deserialise Budget into correct type. File is corrupt.");
+        return new DataFormatException("Unable to deserialise Budget into correct type. File is corrupt.");
     }
 
     protected virtual BudgetCollectionDto MapToDto()
@@ -144,21 +138,8 @@ public class JsonOnDiskBudgetRepository : IBudgetRepository
         return this.mapper.ToDto(this.currentBudgetCollection);
     }
 
-    protected virtual async Task SaveDtoToDiskAsync(BudgetCollectionDto dataEntity, bool isEncrypted)
+    protected virtual Task SaveDtoToDiskAsync(BudgetCollectionDto dataEntity, bool isEncrypted)
     {
-        if (dataEntity is null)
-        {
-            throw new ArgumentNullException(nameof(dataEntity));
-        }
-
-        var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
-        await using var stream = writer.CreateWritableStream(dataEntity.StorageKey);
-        await SerialiseAndWriteToStream(stream, dataEntity);
-    }
-
-    protected virtual async Task SerialiseAndWriteToStream(Stream stream, BudgetCollectionDto dataEntity)
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        await JsonSerializer.SerializeAsync(stream, dataEntity, options);
+        return SaveToDiskAsync(dataEntity.StorageKey, dataEntity, isEncrypted);
     }
 }

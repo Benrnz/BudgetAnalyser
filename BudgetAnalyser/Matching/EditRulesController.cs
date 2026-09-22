@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Matching;
 ///     The Controller for <see cref="EditRulesUserControl" /> .
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class EditRulesController : ControllerBase
+public partial class EditRulesController : ControllerBase
 {
     public const string BucketSortKey = "Bucket";
     public const string DescriptionSortKey = "Description";
@@ -53,52 +53,22 @@ public class EditRulesController : ControllerBase
 
     public IRelayCommand DeleteRuleCommand { get; }
 
-    public bool EditingRule
-    {
-        get;
-        private set
-        {
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowReadOnlyRuleDetails))]
+    public partial bool EditingRule { get; private set; }
 
-    public bool FlatListBoxVisibility
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool FlatListBoxVisibility { get; set; }
 
-    public bool GroupByListBoxVisibility
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-        }
-    }
+    [ObservableProperty]
+    public partial bool GroupByListBoxVisibility { get; set; }
 
     public ObservableCollection<MatchingRule> Rules { get; private set; }
     public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
 
-    public MatchingRule? SelectedRule
-    {
-        get;
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(ShowReadOnlyRuleDetails));
-            DeleteRuleCommand.NotifyCanExecuteChanged();
-            SelectRuleCommand.NotifyCanExecuteChanged();
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowReadOnlyRuleDetails))]
+    public partial MatchingRule? SelectedRule { get; set; }
 
     public IRelayCommand SelectRuleCommand { get; }
 
@@ -241,6 +211,12 @@ public class EditRulesController : ControllerBase
     private void OnSavedNotificationReceived(object? sender, EventArgs eventArgs)
     {
         EditingRule = false;
+    }
+
+    partial void OnSelectedRuleChanged(MatchingRule? value)
+    {
+        DeleteRuleCommand.NotifyCanExecuteChanged();
+        SelectRuleCommand.NotifyCanExecuteChanged();
     }
 
     private void OnSortCommandExecute(string? sortBy)

@@ -12,7 +12,7 @@ internal class JsonOnDiskMatchingRuleRepositoryTestHarness : JsonOnDiskMatchingR
     public JsonOnDiskMatchingRuleRepositoryTestHarness(ILogger logger, IReaderWriterSelector readerWriterSelector, IBudgetBucketRepository bucketRepo)
         : base(new MapperMatchingRuleToDto2(bucketRepo), logger, readerWriterSelector)
     {
-        Dto = Array.Empty<MatchingRuleDto>();
+        Dto = [];
         SerialisedData = string.Empty;
         SerialisedBytes = [];
         if (readerWriterSelector.SelectReaderWriter(true) is EmbeddedResourceFileReaderWriterEncrypted encryptor)
@@ -21,7 +21,7 @@ internal class JsonOnDiskMatchingRuleRepositoryTestHarness : JsonOnDiskMatchingR
         }
     }
 
-    public IEnumerable<MatchingRuleDto> Dto { get; set; }
+    public List<MatchingRuleDto> Dto { get; set; }
 
     public bool IsEncryptedAtLastAccess { get; private set; }
 
@@ -29,25 +29,25 @@ internal class JsonOnDiskMatchingRuleRepositoryTestHarness : JsonOnDiskMatchingR
 
     public string SerialisedData { get; private set; }
 
-    protected override async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName, bool isEncrypted)
+    protected override async Task<List<MatchingRuleDto>> LoadJsonFromDiskAsync(string fileName, bool isEncrypted)
     {
-        Dto = await base.LoadFromDiskAsync(fileName, isEncrypted);
+        Dto = await base.LoadJsonFromDiskAsync(fileName, isEncrypted);
         return Dto.ToList();
     }
 
-    protected override IEnumerable<MatchingRuleDto> MapToDto(IEnumerable<MatchingRule> widgets)
+    protected override List<MatchingRuleDto> MapToDto(IEnumerable<MatchingRule> widgets)
     {
         Dto = base.MapToDto(widgets);
         return Dto;
     }
 
-    protected override Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities, bool isEncrypted)
+    protected override Task SaveToDiskAsync(string fileName, List<MatchingRuleDto> dataEntities, bool isEncrypted)
     {
         IsEncryptedAtLastAccess = isEncrypted;
         return base.SaveToDiskAsync(fileName, dataEntities, isEncrypted);
     }
 
-    protected override async Task SerialiseAndWriteToStream(Stream stream, IEnumerable<MatchingRuleDto> dataEntities)
+    protected override async Task SerialiseAndWriteToStream(Stream stream, List<MatchingRuleDto> dataEntities)
     {
         await base.SerialiseAndWriteToStream(stream, dataEntities);
         stream.Position = 0;

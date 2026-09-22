@@ -9,79 +9,30 @@ using Rees.Wpf;
 namespace BudgetAnalyser.ReportsCatalog.OverallPerformance;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
-public class OverallPerformanceController(IMessenger messenger, OverallPerformanceBudgetAnalyser chartService) : ControllerBase(messenger)
+public partial class OverallPerformanceController(IMessenger messenger, OverallPerformanceBudgetAnalyser chartService) : ControllerBase(messenger)
 {
     private readonly OverallPerformanceBudgetAnalyser chartService = chartService ?? throw new ArgumentNullException(nameof(chartService));
 
     public OverallPerformanceBudgetResult? Analysis { get; private set; }
 
-    public string DurationLabel
-    {
-        get;
-        private set
-        {
-            if (value != field)
-            {
-                field = value;
-                OnPropertyChanged();
-            }
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string DurationLabel { get; private set; } = string.Empty;
 
-    public bool ExpenseFilter
-    {
-        get;
+    [ObservableProperty]
+    public partial bool ExpenseFilter { get; set; } = true;
 
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-            RefreshCollection();
-        }
-    } = true;
-
-    public bool IncomeFilter
-    {
-        get;
-
-        set
-        {
-            field = value;
-            OnPropertyChanged();
-            RefreshCollection();
-        }
-    }
+    [ObservableProperty]
+    public partial bool IncomeFilter { get; set; }
 
     public double OverallPerformance { get; private set; }
 
-    public bool ShowValidationMessage
-    {
-        get;
-        private set
-        {
-            if (value != field)
-            {
-                field = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+    [ObservableProperty]
+    public partial bool ShowValidationMessage { get; private set; }
 
     public string Title => "Overall Budget Performance";
 
-    public string ValidationMessage
-    {
-        get;
-
-        private set
-        {
-            if (value != field)
-            {
-                field = value;
-                OnPropertyChanged();
-            }
-        }
-    } = string.Empty;
+    [ObservableProperty]
+    public partial string ValidationMessage { get; private set; } = string.Empty;
 
     public void Load(TransactionsListModel transactions, BudgetCollection budgets, DateOnly startDateIncl, DateOnly endDateIncl)
     {
@@ -110,6 +61,16 @@ public class OverallPerformanceController(IMessenger messenger, OverallPerforman
             var result = !(bucketAnalysis.Bucket is IncomeBudgetBucket);
             return result;
         };
+    }
+
+    partial void OnExpenseFilterChanged(bool value)
+    {
+        RefreshCollection();
+    }
+
+    partial void OnIncomeFilterChanged(bool value)
+    {
+        RefreshCollection();
     }
 
     private void RefreshCollection()

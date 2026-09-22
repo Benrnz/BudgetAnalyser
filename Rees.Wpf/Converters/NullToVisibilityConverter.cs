@@ -1,16 +1,23 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 
 namespace Rees.Wpf.Converters;
 
 /// <summary>
-///     Returns <see cref="Visibility.Hidden" /> when the value is null or an empty string. Otherwise,
-///     <see cref="Visibility.Collapsed" />.
-///     This is the opposite of <see cref="NotNullToVisibilityConverter" />.
+///     Returns <see cref="Visibility.Hidden" /> (or <see cref="Visibility.Collapsed" /> if the converter parameter is
+///     "Collapsed") when the value is null. Otherwise, <see cref="Visibility.Visible" />.
+///     Set <see cref="Invert" /> to true to get the opposite: <see cref="Visibility.Visible" /> when the value is null,
+///     the hidden value otherwise.
+///     If the converter parameter is "" or "Empty" and the value is a string, an empty or whitespace-only string is
+///     also treated as null.
 /// </summary>
-public class NullToVisibilityConverter : IValueConverter
+public class NullToVisibilityConverter : OneWayValueConverter
 {
+    /// <summary>
+    ///     When true, inverts the result: visible when the value is null, hidden otherwise.
+    /// </summary>
+    public bool Invert { get; set; }
+
     /// <summary>
     ///     Converts a value.
     /// </summary>
@@ -21,45 +28,30 @@ public class NullToVisibilityConverter : IValueConverter
     /// <returns>
     ///     A converted value. If the method returns null, the valid null value is used.
     /// </returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var stringParameter = parameter as string;
-        var valueAsString = value as string;
         var hiddenValue = Visibility.Hidden;
-        var test = () => value is null;
+        var isNullIsh = string.IsNullOrWhiteSpace(value?.ToString());
 
         if (stringParameter is not null)
         {
+            if (value is string && (stringParameter == string.Empty || stringParameter == "Empty"))
+            {
+                isNullIsh = string.IsNullOrWhiteSpace(value.ToString());
+            }
+
             if (stringParameter == "Collapsed")
             {
                 hiddenValue = Visibility.Collapsed;
             }
         }
 
-        if (valueAsString is not null)
+        if (Invert)
         {
-            if (valueAsString == string.Empty)
-            {
-                test = () => string.IsNullOrWhiteSpace(value!.ToString());
-            }
+            return isNullIsh ? Visibility.Visible : hiddenValue;
         }
 
-        return test() ? hiddenValue : Visibility.Visible;
-    }
-
-    /// <summary>
-    ///     Not Supported.
-    /// </summary>
-    /// <param name="value">The value that is produced by the binding target.</param>
-    /// <param name="targetType">The type to convert to.</param>
-    /// <param name="parameter">The converter parameter to use.</param>
-    /// <param name="culture">The culture to use in the converter.</param>
-    /// <returns>
-    ///     A converted value. If the method returns null, the valid null value is used.
-    /// </returns>
-    /// <exception cref="System.NotSupportedException"></exception>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
+        return isNullIsh ? hiddenValue : Visibility.Visible;
     }
 }

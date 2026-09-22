@@ -30,7 +30,7 @@ public class DisusedMatchingRuleWidget : Widget
     ///     Gets the list of disused matching rules.
     /// </summary>
     // ReSharper disable once UnusedAutoPropertyAccessor.Global Used in Xaml binding
-    public IEnumerable<MatchingRule> DisusedMatchingRules { get; private set; } = Array.Empty<MatchingRule>();
+    public IEnumerable<MatchingRule> DisusedMatchingRules { get; private set; } = [];
 
     /// <summary>
     ///     Returns a query that filters to disused rules
