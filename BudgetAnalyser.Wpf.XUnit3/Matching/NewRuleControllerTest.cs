@@ -46,7 +46,7 @@ public class NewRuleControllerTest
 
         this.subject.UseRegularExpressions.ShouldBeFalse();
     }
-    
+
     [Fact]
     public void CanExecuteSaveButton_ShouldBeFalse_WhenUsingRegularExpressionsAndPatternIsMalformed()
     {
@@ -85,16 +85,6 @@ public class NewRuleControllerTest
     }
 
     // ── UseRegularExpressions ────────────────────────────────────────────────
-
-    [Fact]
-    public void Initialize_ShouldResetUseRegularExpressionsToFalse()
-    {
-        this.subject.UseRegularExpressions = true;
-
-        this.subject.Initialize();
-
-        this.subject.UseRegularExpressions.ShouldBeFalse();
-    }
 
     [Fact]
     public void SaveResponse_ShouldNotSetUseRegularExpressionsOnNewRule_WhenOptionIsNotTicked()
