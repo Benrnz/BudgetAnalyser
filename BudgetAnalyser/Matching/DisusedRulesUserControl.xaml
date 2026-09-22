@@ -58,6 +58,7 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <ListBox ItemsSource="{Binding DisusedRules}" />
+        <ListBox ItemContainerStyle="{StaticResource ListBox.NoVisualStatesContainerStyle}"
+                 ItemsSource="{Binding DisusedRules}" />
     </Grid>
 </UserControl>
