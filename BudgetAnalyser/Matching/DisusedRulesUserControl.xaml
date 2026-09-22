@@ -9,6 +9,22 @@
              d:DataContext="{d:DesignInstance matching:DisusedRulesController}">
 
     <UserControl.Resources>
+        <DataTemplate DataType="{x:Type matching:DisusedRuleViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+                        Margin="3,10,3,10"
+                        Command="{Binding RemoveCommand}"
+                        CommandParameter="{Binding .}"
+                        Style="{StaticResource Button.Round.SmallCross}" />
+                <ContentPresenter Grid.Column="1"
+                                  Content="{Binding MatchingRule}" />
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type matching1:MatchingRule}">
             <DataTemplate.Resources>
                 <Style x:Key="TextBlock.MathcingRuleStyle"
@@ -19,7 +35,31 @@
                     <Setter Property="HorizontalAlignment"
                             Value="Left" />
                 </Style>
+                <Style x:Key="Border.DisusedRulePill"
+                       TargetType="Border">
+                    <Setter Property="Background"
+                            Value="{StaticResource Brush.TileBackgroundAlternate}" />
+                    <Setter Property="CornerRadius"
+                            Value="12" />
+                    <Setter Property="Padding"
+                            Value="10,3" />
+                    <Setter Property="Margin"
+                            Value="10,3,10,3" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                </Style>
+                <Style x:Key="TextBlock.DisusedRulePill"
+                       BasedOn="{StaticResource {x:Type TextBlock}}"
+                       TargetType="TextBlock">
+                    <Setter Property="FontSize"
+                            Value="13" />
+                    <Setter Property="TextTrimming"
+                            Value="CharacterEllipsis" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Center" />
+                </Style>
             </DataTemplate.Resources>
+
             <Grid Visibility="{Binding Hidden, Converter={StaticResource Converter.NotBoolToVis}}"
                   HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -28,35 +68,49 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Style="{StaticResource TextBlock.MathcingRuleStyle}"
-                           Text="{Binding Description}"
-                           ToolTip="{Binding Description}" />
-                <StackPanel Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource TextBlock.MathcingRuleStyle}"
-                               Text="{Binding LastMatch, StringFormat=d}"
-                               ToolTip="The last date and time this rule was matched against a transaction." />
-                    <TextBlock Margin="2,2,0,2"
-                               Style="{StaticResource TextBlock.MathcingRuleStyle}"
-                               Text="x" />
-                    <TextBlock Margin="0,2,2,2"
-                               Style="{StaticResource TextBlock.MathcingRuleStyle}"
-                               Text="{Binding MatchCount}"
-                               ToolTip="The number of times this rule has been used to match transactions." />
-                </StackPanel>
+                <TextBlock Grid.Column="0"
+                           Margin="10,3,10,3"
+                           Style="{StaticResource TextBlock.MathcingRuleStyle}"
+                           Text="{Binding MatchCount, StringFormat='x{0}'}"
+                           ToolTip="{Binding LastMatch, StringFormat='Last matched: {0:g}'}" />
+
+                <Border Grid.Column="1"
+                        Background="{StaticResource Brush.BudgetBucket.Accumulated}"
+                        Style="{StaticResource Border.DisusedRulePill}">
+                    <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
+                               Text="{Binding Bucket.Code}"
+                               ToolTip="Budget Bucket Code" />
+                </Border>
+
+                <UniformGrid Grid.Column="2"
+                             Columns="4"
+                             Rows="1">
+                    <Border Style="{StaticResource Border.DisusedRulePill}">
+                        <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
+                                   Text="{Binding Description}"
+                                   ToolTip="Description" />
+                    </Border>
+                    <Border Style="{StaticResource Border.DisusedRulePill}">
+                        <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
+                                   Text="{Binding Reference1}"
+                                   ToolTip="Reference 1" />
+                    </Border>
+                    <Border Style="{StaticResource Border.DisusedRulePill}">
+                        <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
+                                   Text="{Binding Reference2}"
+                                   ToolTip="Reference 2" />
+                    </Border>
+                    <Border Style="{StaticResource Border.DisusedRulePill}">
+                        <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
+                                   Text="{Binding Reference3}"
+                                   ToolTip="Reference 3" />
+                    </Border>
+                </UniformGrid>
             </Grid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type matching:DisusedRuleViewModel}">
-            <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding RemoveCommand}"
-                        CommandParameter="{Binding .}"
-                        Style="{StaticResource Button.Round.SmallCross}" />
-                <matching:MatchingRuleUserControl DataContext="{Binding MatchingRule}" />
-            </StackPanel>
-        </DataTemplate>
     </UserControl.Resources>
+
     <Grid>
         <ListBox ItemContainerStyle="{StaticResource ListBox.NoVisualStatesContainerStyle}"
                  ItemsSource="{Binding DisusedRules}" />
