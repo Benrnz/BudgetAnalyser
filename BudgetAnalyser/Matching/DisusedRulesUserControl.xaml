@@ -85,22 +85,26 @@
                 <UniformGrid Grid.Column="2"
                              Columns="4"
                              Rows="1">
-                    <Border Style="{StaticResource Border.DisusedRulePill}">
+                    <Border Style="{StaticResource Border.DisusedRulePill}"
+                            ToolTip="Description">
                         <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
                                    Text="{Binding Description}"
                                    ToolTip="Description" />
                     </Border>
-                    <Border Style="{StaticResource Border.DisusedRulePill}">
+                    <Border Style="{StaticResource Border.DisusedRulePill}"
+                            ToolTip="Reference 1">
                         <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
                                    Text="{Binding Reference1}"
                                    ToolTip="Reference 1" />
                     </Border>
-                    <Border Style="{StaticResource Border.DisusedRulePill}">
+                    <Border Style="{StaticResource Border.DisusedRulePill}"
+                            ToolTip="Reference 2">
                         <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
                                    Text="{Binding Reference2}"
                                    ToolTip="Reference 2" />
                     </Border>
-                    <Border Style="{StaticResource Border.DisusedRulePill}">
+                    <Border Style="{StaticResource Border.DisusedRulePill}"
+                            ToolTip="Reference 3" >
                         <TextBlock Style="{StaticResource TextBlock.DisusedRulePill}"
                                    Text="{Binding Reference3}"
                                    ToolTip="Reference 3" />
