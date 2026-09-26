@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance reportsCatalog:TopReportsCatalogController}"
@@ -14,7 +15,25 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <WrapPanel Orientation="Horizontal">
-            <Border Style="{StaticResource ModernTileMediumStyle1}">
+            <materialDesign:Card>
+                <materialDesign:Card.Style>
+                    <!-- The base tile style lifts on hover based on a widget's Clickable property; this tile isn't a widget -->
+                    <Style TargetType="{x:Type materialDesign:Card}"
+                           BasedOn="{StaticResource ModernTileMediumStyle1}">
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}"
+                                               Value="True" />
+                                    <Condition Binding="{Binding OverallPerformanceReportIsAvailable}"
+                                               Value="True" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="materialDesign:ElevationAssist.Elevation"
+                                        Value="Dp8" />
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </materialDesign:Card.Style>
                 <Grid>
                     <Rectangle Fill="{StaticResource Brush.Text.Default}"
                                Height="30"
@@ -54,7 +73,7 @@
                             IsEnabled="{Binding OverallPerformanceReportIsAvailable}"
                             Style="{StaticResource Button.ModernTile.Overlay}" />
                 </Grid>
-            </Border>
+            </materialDesign:Card>
 
         </WrapPanel>
         <Border Grid.Row="1" />

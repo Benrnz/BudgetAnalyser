@@ -225,15 +225,6 @@
     <SolidColorBrush x:Key="Brush.DialogBackground"
                      Color="{StaticResource Colour.Popup.Background}" />
 
-    <LinearGradientBrush x:Key="Brush.DialogBorder"
-                         EndPoint="0,1"
-                         StartPoint="0,0">
-        <GradientStop Color="{StaticResource Colour.BorderMedium}"
-                      Offset="0" />
-        <GradientStop Color="{StaticResource Colour.BorderDark}"
-                      Offset="1" />
-    </LinearGradientBrush>
-
     <SolidColorBrush x:Key="Brush.Text.Label"
                      Color="{StaticResource Colour.Text.Label}" />
 

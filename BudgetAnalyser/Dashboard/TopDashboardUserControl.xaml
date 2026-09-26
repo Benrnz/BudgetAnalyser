@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:widget="clr-namespace:BudgetAnalyser.Engine.Widgets;assembly=BudgetAnalyser.Engine"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              MinHeight="200"
@@ -55,11 +56,11 @@
         </ContextMenu>
 
         <DataTemplate DataType="{x:Type widget:ProgressBarWidget}">
-            <Border ContextMenu="{StaticResource WidgetContextMenu}"
-                    Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
-                    Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.(dashboard:TopDashboardController.CorrelationId)}"
-                    ToolTip="{Binding ToolTip}"
-                    Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
+            <materialDesign:Card ContextMenu="{StaticResource WidgetContextMenu}"
+                                 Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
+                                 Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.(dashboard:TopDashboardController.CorrelationId)}"
+                                 ToolTip="{Binding ToolTip}"
+                                 Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -91,15 +92,15 @@
                             Style="{StaticResource Button.ModernTile.Overlay}"
                             Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
-            </Border>
+            </materialDesign:Card>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type widget:Widget}">
-            <Border ContextMenu="{StaticResource WidgetContextMenu}"
-                    Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
-                    Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.(dashboard:TopDashboardController.CorrelationId)}"
-                    ToolTip="{Binding ToolTip}"
-                    Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
+            <materialDesign:Card ContextMenu="{StaticResource WidgetContextMenu}"
+                                 Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
+                                 Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.(dashboard:TopDashboardController.CorrelationId)}"
+                                 ToolTip="{Binding ToolTip}"
+                                 Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -144,7 +145,7 @@
                             Style="{StaticResource Button.ModernTile.Overlay}"
                             Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
-            </Border>
+            </materialDesign:Card>
         </DataTemplate>
     </UserControl.Resources>
 
