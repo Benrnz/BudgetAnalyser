@@ -164,6 +164,35 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 .badge1 { height: 25px; padding: 0 3px; font-size: 12px; border: 2px solid var(--divider); background: var(--positive-container); }
 .badge2 { height: 25px; width: 35px; font-size: 12px; background: var(--surface); }
 
+.sumchip { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 4px 12px; border-radius: 4px; }
+.sumchip .l { font-size: 12px; font-weight: 500; }
+.sumchip.info { border: 1px solid var(--divider); }
+.sumchip.info .l { color: var(--text-medium); }
+.sumchip.info .v { font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.sumchip.alert { background: var(--negative-container); color: var(--text-high); }
+.sumchip svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.dtable { font-size: 14px; overflow-x: auto; }
+.dtable .hdr, .dtable .r { min-width: 520px; }
+.dtable .hdr, .dtable .r { display: grid; grid-template-columns: 90px 90px minmax(140px, 1fr) 100px 90px; gap: 0; align-items: center; padding: 0 9px; }
+.dtable .hdr { font-size: 13px; font-weight: 500; color: var(--text-medium); padding-bottom: 8px; border-bottom: 1px solid var(--divider); }
+.dtable .r { height: 32px; margin: 1px; padding: 0 8px; }
+.dtable .r:nth-child(even) { background: var(--surface-raised); }
+.dtable .r:nth-child(odd) { background: var(--surface); }
+.dtable .r:hover { box-shadow: inset 0 0 0 999px rgba(255,255,255,.04); }
+.dtable .r.dup { background: var(--negative-container); }
+.dtable .num { text-align: right; padding-right: 6px; font-variant-numeric: tabular-nums; }
+.dtable span { padding-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dtable .num { padding-left: 0; }
+
+.empty-state { text-align: center; padding: 32px 16px; }
+.empty-state svg { width: 56px; height: 56px; fill: none; stroke: var(--text-disabled); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.empty-state .t { font-size: 20px; margin: 16px 0 8px; }
+.empty-state .b { font-size: 14px; color: var(--text-medium); max-width: 420px; margin: 0 auto; }
+.spinner { width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid rgba(159,168,218,.25); border-top-color: var(--primary); animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
 .field { display: inline-flex; flex-direction: column; min-width: 180px; }
 .field .box { position: relative; border: 1px solid var(--divider); border-radius: 4px; background: var(--surface); min-height: 40px; padding: 8px 10px; font-size: 14px; color: var(--text-high); }
 .field .box.focus { border: 2px solid var(--primary); padding: 7px 9px; }
@@ -235,7 +264,10 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <a href="#buttons">Buttons</a>
     <a href="#tabs">Tab strip</a>
     <a href="#tiles">Dashboard tiles</a>
+    <a href="#chips">Summary chips</a>
     <a href="#badges">Badges &amp; oil lights</a>
+    <a href="#lists">Lists &amp; tables</a>
+    <a href="#empty">Empty &amp; loading</a>
     <a href="#inputs">Inputs</a>
     <a href="#dialog">Dialogs</a>
     <a href="#tooltip">Tooltips &amp; menus</a>
@@ -254,7 +286,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <p class="muted">This page is a visual reference. The XAML stays the source of truth, so update this page in the same commit as any style change.</p>
     <div class="meta">
         <span>Last updated: 2026-09-27</span>
-        <span>Matches branch <code>claude/ux-material-design</code> at Phase 5 (colour palette, Indigo primary)</span>
+        <span>Matches branch <code>claude/ux-material-design</code>: Phase 5 (colour palette, Indigo primary) and Phase 4 for the Transactions screen</span>
         <span>Plan: <a href="ux-material-design-plan.md">ux-material-design-plan.md</a></span>
     </div>
 </header>
@@ -467,6 +499,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <div class="caption">Credit · Debit · NotSoBadDebit · Neutral</div>
         </div>
     </div>
+    <p class="caption">In lists, amounts are coloured by sign with the light tones (see <a href="#lists">Lists &amp; tables</a>). When a row itself has a status fill, such as a duplicate row, set its amount back to <code>Brush.Text.Default</code>, because the light tones fail contrast on container fills.</p>
 </section>
 
 <!-- ============================================================ -->
@@ -564,9 +597,35 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 </section>
 
 <!-- ============================================================ -->
+<section id="chips">
+    <h2>Summary chips</h2>
+    <p class="lede">Chips are compact figures shown above a list, such as totals and counts. There are two kinds, and the difference is whether the chip is alerting you to a problem.</p>
+    <div class="panel" style="background:var(--background)">
+        <div class="row" style="gap:8px">
+            <span class="sumchip info"><span class="l">CR</span><span class="v" style="color:var(--positive)">$4,820.00</span></span>
+            <span class="sumchip info"><span class="l">DR</span><span class="v" style="color:var(--negative)">$3,912.45</span></span>
+            <span class="sumchip info"><span class="l" style="font-size:14px">Δ</span><span class="v" style="color:var(--positive)">$907.55</span></span>
+            <span class="sumchip info"><span class="v">148</span><span class="l">Transactions</span></span>
+            <span class="sumchip alert"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></svg><span class="l">2 suspected duplicates</span></span>
+        </div>
+        <div class="caption">Four informational chips, followed by one alert chip.</div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Kind</th><th>Look</th><th>Use for</th></tr></thead>
+        <tbody>
+            <tr><td>Informational (<code>Border.SummaryChip.Info</code>)</td><td>No fill, 1px Divider outline. The label is 12px Medium in Text.Label. The value is 14px Medium, either Text.Default or coloured with a light tone (Positive.Text, Negative.Text, or <code>NumberToBrush</code> with <code>Light</code>).</td><td>Figures that are there for information, such as totals, differences and counts</td></tr>
+            <tr><td>Alert (<code>Border.SummaryChip</code> with a container fill)</td><td>A container-tone fill with 12px Medium <code>Brush.BadgeText</code>. It can include a 16px <code>PackIcon</code>, for example <code>AlertOutline</code>.</td><td>Something the user should act on, for example suspected duplicate transactions</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p class="caption">Both kinds are at least 32px high, with padding 12,4, 4px corners and 8px between chips. The styles are currently local to <code>TopTransactionsUserControl.xaml</code>. If another screen needs them, move them into a shared dictionary.</p>
+</section>
+
+<!-- ============================================================ -->
 <section id="badges">
     <h2>Badges &amp; oil lights</h2>
-    <p class="lede">These are small status markers from <code>OilLight.xaml</code>, with bold light text on a container fill and 3px corners.</p>
+    <p class="lede">These are small status markers from <code>OilLight.xaml</code>, with bold light text on a container fill and 3px corners. They're still used on older screens. For figures above a list, use <a href="#chips">summary chips</a> instead. Don't use an oil light for an empty list either: use an <a href="#empty">empty state</a>.</p>
     <div class="panel">
         <div class="row">
             <span class="badge oil" style="background:var(--positive-container)">ON TRACK</span>
@@ -579,6 +638,60 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <span class="badge badge2">3</span>
         </div>
         <div class="caption"><code>Badge.Border1</code> (height 25, credit fill with a 2px divider border) · <code>Badge.Border2</code> (25×35, Surface fill), both with <code>Badge.Text</code> (12px bold).</div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="lists">
+    <h2>Lists &amp; tables</h2>
+    <p class="lede">Dense data lists are a <code>ListBox</code> with a data template laid out in a <code>Grid</code>. A header row above the list uses the same <code>SharedSizeGroup</code> columns, so the headers line up with the data. The reference implementation is the transaction list: <code>TopTransactionsUserControl.xaml</code> with <code>TransactionListBox.xaml</code>.</p>
+    <div class="panel dtable" style="background:var(--background)">
+        <div class="hdr"><span>Date</span><span class="num">Amount</span><span>Description</span><span>Bucket</span><span>Type</span></div>
+        <div class="r"><span>12/09/2026</span><span class="num" style="color:var(--negative)">-84.20</span><span>Countdown Wellington</span><span>FOOD</span><span>Eftpos</span></div>
+        <div class="r"><span>12/09/2026</span><span class="num" style="color:var(--positive)">2,410.00</span><span>Salary</span><span>INCOME</span><span>Credit</span></div>
+        <div class="r"><span>11/09/2026</span><span class="num" style="color:var(--negative)">-12.50</span><span>Coffee Supreme</span><span>CAFEWRK</span><span>Eftpos</span></div>
+        <div class="r dup"><span>11/09/2026</span><span class="num">-12.50</span><span>Coffee Supreme</span><span>CAFEWRK</span><span>Eftpos</span></div>
+        <div class="r"><span>10/09/2026</span><span class="num" style="color:var(--negative)">-65.00</span><span>Z Energy</span><span>FUEL</span><span>Eftpos</span></div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Part</th><th>Spec</th></tr></thead>
+        <tbody>
+            <tr><td>Header row</td><td>13px Medium in Text.Label, with a 1px ControlBorder divider underneath and 8px below the labels. It's only visible when there are rows. Its left padding equals the item margin plus the item padding (1 + 8 = 9), and each header <code>TextBlock</code> uses the same horizontal margins as its row cell. Right-align numeric headers.</td></tr>
+            <tr><td>Rows</td><td>32px high (Material's compact table height). Item padding is 8,0 and item margin is 1. Rows alternate between <code>Brush.TileBackground</code> and <code>Brush.TileBackgroundAlternate</code>. The toolkit's <code>MaterialDesignListBoxItem</code> provides the hover and selection highlights.</td></tr>
+            <tr><td>Amounts</td><td>Right-aligned and coloured by sign with <code>Converter.NumberToBrush</code> and <code>ConverterParameter=Light</code>.</td></tr>
+            <tr><td>Flagged rows</td><td><code>Brush.Negative.Container</code> fill. Coloured text in the row goes back to <code>Brush.Text.Default</code>.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="empty">
+    <h2>Empty &amp; loading states</h2>
+    <p class="lede">When a list has nothing to show, tell the user why and what to do next, in a calm tone. An empty list isn't an error, so don't use red or orange.</p>
+    <div class="grid cols-2">
+        <div class="panel" style="background:var(--background)">
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+                <div class="t">No transactions file loaded</div>
+                <div class="b">Open or create a Budget Analyser file from the Dashboard to see its transactions here.</div>
+            </div>
+        </div>
+        <div class="panel" style="background:var(--background)">
+            <div class="row" style="gap:8px;padding:8px 0"><div class="spinner" role="progressbar" aria-label="Loading"></div><span style="color:var(--text-medium);font-size:14px">Loading data...</span></div>
+            <div class="caption" style="margin-top:16px">Loading uses an indeterminate <code>MaterialDesignCircularProgressBar</code> (20×20) with 14px Text.Label text, 8px apart.</div>
+        </div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Part</th><th>Spec</th></tr></thead>
+        <tbody>
+            <tr><td>Icon</td><td>A 56×56 <code>PackIcon</code> in <code>Brush.Text.Disabled</code>, using an outline style such as <code>FileDocumentOutline</code> or <code>FilterRemoveOutline</code></td></tr>
+            <tr><td>Title</td><td>20px Text.Default, 16px above and 8px below. Say what's missing.</td></tr>
+            <tr><td>Body</td><td>14px Text.Label, centred and wrapped, max width 420. Say what to do next. Put this text on screen, not in a tooltip.</td></tr>
+        </tbody>
+    </table>
     </div>
 </section>
 
@@ -658,12 +771,12 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 <!-- ============================================================ -->
 <section id="spacing">
     <h2>Spacing &amp; shape</h2>
-    <p class="lede">New layout should use Material's 8dp grid (4 for tight gaps). Many older screens still use 2px and 5px margins. Phase 4 will move them onto the grid.</p>
+    <p class="lede">New layout should use Material's 8dp grid (4 for tight gaps). Screens use a 16px inset from the left, right and bottom edges. Headings are the exception: <code>TextBlock.Heading1</code> already has a 10px left margin, so give its container 6px. The Transactions screen is on the grid. Other screens still use 2px and 5px margins, and Phase 4 will move them over.</p>
     <div class="grid cols-2">
         <div class="panel">
             <div class="spacing-bar"><i style="width:4px"></i><code>4</code> tight gaps, tab spacing</div>
-            <div class="spacing-bar"><i style="width:8px"></i><code>8</code> between dialog buttons, oil light margin</div>
-            <div class="spacing-bar"><i style="width:16px"></i><code>16</code> button padding, action row insets</div>
+            <div class="spacing-bar"><i style="width:8px"></i><code>8</code> between dialog buttons, between chips, header to toolbar rows</div>
+            <div class="spacing-bar"><i style="width:16px"></i><code>16</code> page inset, button padding, action row insets</div>
             <div class="spacing-bar"><i style="width:24px"></i><code>24</code> dialog content padding</div>
             <div class="spacing-bar"><i style="width:40px"></i><code>40</code> dialog outer margin, icon button size</div>
         </div>
@@ -690,6 +803,9 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
                 <li>Use the light hue tones for amounts and icons on grey surfaces.</li>
                 <li>Use <code>ElevationAssist.Elevation</code> for depth.</li>
                 <li>Reserve orange for "needs attention" and red for "wrong or overspent".</li>
+                <li>Use outlined chips for informational figures, and save filled chips for alerts.</li>
+                <li>Show an empty state (icon, title, next step) when a list has nothing to show.</li>
+                <li>Give data lists a header row.</li>
                 <li>Update this guide in the same commit as a style change.</li>
             </ul>
         </div>
@@ -702,6 +818,8 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
                 <li>Use light tones (Primary, Positive, Negative) as fills behind text.</li>
                 <li>Use Text.Medium or Text.Disabled on coloured fills.</li>
                 <li>Add custom <code>DropShadowEffect</code>s or bespoke animations.</li>
+                <li>Use a filled status colour for something that is only informational.</li>
+                <li>Hide essential guidance, such as how to fix an empty list, in a tooltip.</li>
             </ul>
         </div>
     </div>
@@ -724,6 +842,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td><code>UI/Style/ToolTip.xaml</code>, <code>Menu.xaml</code></td><td>Tooltip and context and drop-down menus</td></tr>
             <tr><td><code>MainMenuUserControl.xaml</code></td><td><code>TabButtonStyle</code> (tab strip)</td></tr>
             <tr><td><code>ShellDialog/ShellDialogView.xaml</code></td><td>Modal dialog overlay</td></tr>
+            <tr><td><code>Transactions/TopTransactionsUserControl.xaml</code>, <code>Transactions/TransactionListBox.xaml</code></td><td>Reference implementation for summary chips, a data list with headers, and empty and loading states</td></tr>
             <tr><td><code>Converters/ConverterHelper.cs</code>, <code>LedgerBook/LedgerBookGridBuilderV2.cs</code>, <code>BudgetAnalyser.Engine/Widgets/*</code></td><td>Brush and style keys looked up by string</td></tr>
         </tbody>
     </table>
@@ -741,9 +860,10 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td>Inactive tab labels use Text.Disabled (3.57:1), which is below AA for 14px text</td><td><code>TabButtonStyle</code></td><td>Consider Text.Medium (7.16:1)</td></tr>
             <tr><td>The active tab underline (PrimaryContainer) has 2.42:1 contrast on the tab strip, which is below 3:1 for UI elements. This is a deliberate choice so the underline matches the tiles, and the active label also switches to high emphasis.</td><td><code>Brush.ModernTile.Highlight</code></td><td>If it reads too faintly, use Indigo 400 <code>#5C6BC0</code> (3.85:1)</td></tr>
             <tr><td>Type sizes are ad hoc (10–36px) and not yet on the Material type scale</td><td><code>TextBlock.xaml</code></td><td>Phase 4</td></tr>
-            <tr><td>Some margins (2, 3, 5px) are off the 8dp grid</td><td>Various screens</td><td>Phase 4</td></tr>
+            <tr><td>Some margins (2, 3, 5px) are off the 8dp grid</td><td>Dashboard, Ledger Book, Budget, Reports (Transactions is done)</td><td>Phase 4</td></tr>
+            <tr><td>The Transactions search box and bucket filter expand and collapse with a 1-second width animation. That's bespoke motion, and slow compared with Material's roughly 250ms.</td><td><code>TopTransactionsUserControl.xaml.cs</code></td><td>Shorten the duration, or use a fixed-width field. Either way it's a code-behind change.</td></tr>
             <tr><td>Legacy names don't describe what they do: <code>Button.Round.*</code> buttons are rectangular, and there are <code>OilLight</code> and <code>ModernTile.Highlight</code> (which is the tab indicator)</td><td>Buttons, OilLight, Colours</td><td>Kept for compatibility, since some are referenced from C#</td></tr>
-            <tr><td>Glyphs are custom vector assets instead of Material <code>PackIcon</code>s</td><td><code>UI/Assets/*Image.xaml</code></td><td>Phase 6</td></tr>
+            <tr><td>Glyphs are custom vector assets instead of Material <code>PackIcon</code>s. New UI already uses <code>PackIcon</code> (the Transactions empty states and duplicates chip), so the two styles are mixed for now.</td><td><code>UI/Assets/*Image.xaml</code></td><td>Phase 6</td></tr>
             <tr><td>The tooltip uses a hand-rolled <code>DropShadowEffect</code> template</td><td><code>ToolTip.xaml</code></td><td>Phase 6</td></tr>
         </tbody>
     </table>
