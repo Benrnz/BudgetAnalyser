@@ -37,9 +37,6 @@
     <!-- Warning (needs attention, saved-up buckets). Orange 900 fails AA with light text, so this is darkened slightly. -->
     <Color x:Key="Colour.Palette.WarningContainer">#FFA64B00</Color>
 
-    <!-- Info (second tile colour): Blue 800 -->
-    <Color x:Key="Colour.Palette.InfoContainer">#FF1565C0</Color>
-
 
     <!-- Semantic brushes. Keys are referenced by name from views, converters and BudgetAnalyser.Engine widgets. -->
 
@@ -149,7 +146,7 @@
                      Color="{StaticResource Colour.Palette.PrimaryContainer}" />
 
     <SolidColorBrush x:Key="Brush.ModernTile.Background2"
-                     Color="{StaticResource Colour.Palette.InfoContainer}" />
+                     Color="{StaticResource Colour.Palette.PrimaryContainer}" />
 
     <SolidColorBrush x:Key="Brush.ModernTile.Background3"
                      Color="{StaticResource Colour.Palette.SurfaceRaised}" />
