@@ -30,6 +30,7 @@ requiring changes to `BudgetAnalyser.Engine`.
   typography, motion, spacing) to the *existing* interaction model
   (tab strip + single content area + modal overlay). No navigation drawer,
   no bottom sheets, no gesture-heavy patterns.
+- **Dark Theme**: The app is currently a dark theme only app. There is no light theme. This should remain unchanged. Colour choices and contrasts must be compatible with a dark theme.
 
 ## Recommended approach
 
