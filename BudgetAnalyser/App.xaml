@@ -6,13 +6,15 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Material Design colour/token foundation (Phase 0 of the Material Design UX redesign).
-                     Only the palette resources are merged here, not MaterialDesign2.Defaults.xaml - that
-                     pulls in Material control templates app-wide and is deferred to a later phase so this
-                     step only affects colour. -->
+                <!-- Material Design colour/token foundation (Phase 0 of the Material Design UX redesign). -->
                 <materialDesign:BundledTheme BaseTheme="Dark"
                                               PrimaryColor="Teal"
                                               SecondaryColor="Green" />
+
+                <!-- Material control templates (Phase 2): our own UI/Style/*.xaml dictionaries below are merged
+                     afterwards, so an implicit style we define for a control type still wins for that type;
+                     any control type we don't style ourselves picks up Material's default look automatically. -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
 
                 <ResourceDictionary Source="UI/ConvertersDictionary.xaml" />
 
@@ -44,7 +46,6 @@
                 <ResourceDictionary Source="UI/Style/ListBox.xaml" />
                 <ResourceDictionary Source="UI/Style/DatePicker.xaml" />
                 <ResourceDictionary Source="UI/Style/ToolTip.xaml" />
-                <ResourceDictionary Source="UI/Style/ListView.xaml" />
                 <ResourceDictionary Source="UI/Style/ScrollBar.xaml" />
                 <ResourceDictionary Source="UI/Style/ScrollViewer.xaml" />
                 <ResourceDictionary Source="UI/Style/OilLight.xaml" />
