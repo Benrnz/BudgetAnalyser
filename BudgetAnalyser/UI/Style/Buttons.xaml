@@ -211,35 +211,6 @@
                 Value="False" />
     </Style>
 
-    <Style x:Key="Button.Round.Load"
-           BasedOn="{StaticResource Button.Round.Base}"
-           TargetType="Button">
-        <Setter Property="ToolTip"
-                Value="Load" />
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <Grid Width="40"
-                          Height="40">
-                        <Path Data="M6,0 L20,0 L20,18 L6,18 L6,0"
-                              Fill="{StaticResource Brush.Button.Stroke}"
-                              HorizontalAlignment="Left"
-                              Margin="8,12,10,10"
-                              StrokeThickness="1"
-                              VerticalAlignment="Top" />
-                        <Path Data="M0,10 L14,10 L18,18 L4,18 L0,10"
-                              Fill="{StaticResource Brush.Button.Glyph}"
-                              HorizontalAlignment="Left"
-                              Margin="8,12,10,10"
-                              Stroke="{StaticResource Brush.Button.Stroke}"
-                              StrokeThickness="1"
-                              VerticalAlignment="Top" />
-                    </Grid>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="Button.Round.Lock"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
@@ -318,24 +289,6 @@
                 Value="False" />
         <Setter Property="IsDefault"
                 Value="True" />
-    </Style>
-
-    <Style x:Key="Button.Round.Pie"
-           BasedOn="{StaticResource Button.Round.Base}"
-           TargetType="{x:Type Button}">
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <ContentControl Template="{StaticResource PieChartImage}"
-                                    Height="20"
-                                    HorizontalAlignment="Center"
-                                    Width="20"
-                                    VerticalAlignment="Center" />
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="ToolTip"
-                Value="Pie Graph" />
     </Style>
 
     <Style x:Key="Button.Round.PlusL"
@@ -488,42 +441,6 @@
         </Setter>
     </Style>
 
-    <Style x:Key="Button.Round.SaveAs"
-           BasedOn="{StaticResource Button.Round.Base}"
-           TargetType="Button">
-        <Setter Property="ToolTip"
-                Value="Save As" />
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <Grid Width="40"
-                          Height="40">
-                        <Path Data="M0,0 L6,0 L6,8 L14,8 L14,0 L16,0 L20,4 L20,20 L0,20 L0,0"
-                              Fill="{StaticResource Brush.Button.Glyph}"
-                              Height="15"
-                              HorizontalAlignment="Left"
-                              Margin="9,9,0,0"
-                              Stretch="Uniform"
-                              Stroke="{StaticResource Brush.Button.Glyph}"
-                              StrokeThickness="1"
-                              VerticalAlignment="Top"
-                              Width="15" />
-                        <Path Data="M0,0 L6,0 L6,8 L14,8 L14,0 L16,0 L20,4 L20,20 L0,20 L0,0"
-                              Fill="{StaticResource Brush.Button.Glyph}"
-                              Height="15"
-                              HorizontalAlignment="Left"
-                              Margin="15,15,0,0"
-                              Stretch="Uniform"
-                              Stroke="{StaticResource Brush.Button.Glyph}"
-                              StrokeThickness="1"
-                              VerticalAlignment="Top"
-                              Width="15" />
-                    </Grid>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="Button.Round.SmallCross"
            BasedOn="{StaticResource Button.Round.Cross}"
            TargetType="Button">
@@ -539,98 +456,6 @@
                                 CenterY="0.5"
                                 ScaleX="0.5"
                                 ScaleY="0.5" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="Button.Round.Smiley"
-           BasedOn="{StaticResource Button.Round.Base}"
-           TargetType="{x:Type Button}">
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <Image RenderTransformOrigin="0.5,0.5">
-                        <Image.RenderTransform>
-                            <ScaleTransform ScaleX="0.5"
-                                            ScaleY="0.5" />
-                        </Image.RenderTransform>
-                        <Image.Source>
-                            <DrawingImage>
-                                <DrawingImage.Drawing>
-                                    <DrawingGroup Opacity="1">
-                                        <DrawingGroup.Children>
-                                            <DrawingGroup Opacity="1">
-                                                <DrawingGroup.Children>
-                                                    <GeometryDrawing Brush="{x:Null}">
-                                                        <GeometryDrawing.Geometry>
-                                                            <PathGeometry FillRule="Nonzero"
-                                                                          Figures="M0,0L512,0 512,512 0,512 0,0z" />
-                                                        </GeometryDrawing.Geometry>
-                                                    </GeometryDrawing>
-                                                </DrawingGroup.Children>
-                                            </DrawingGroup>
-                                            <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
-                                                             Pen="{x:Null}">
-                                                <GeometryDrawing.Geometry>
-                                                    <PathGeometry FillRule="Nonzero"
-                                                                  Figures="M96,256.847991943359C142.884994506836,283.903991699219 198.024993896484,299.380004882813 256,299.380004882813 313.975006103516,299.380004882813 369.114990234375,283.976989746094 416,256.920013427734 408.713012695313,346.139007568359 339.436004638672,416 256,416 172.565994262695,416 103.289001464844,346.063995361328 96,256.847991943359z M351.999969482422,127.999992370605C357.524749755859,127.999992370605,363.049560546875,130.143585205078,367.999969482422,134.430770874023C377.900817871094,143.005157470703,384,158.851257324219,384,176C384,193.148742675781 377.900848388672,208.994842529297 368.000030517578,217.569213867188 358.099212646484,226.143600463867 345.90087890625,226.143600463867 336.000030517578,217.569229125977C326.099182128906,208.994842529297,320,193.148742675781,320,176C320,158.851257324219,326.099151611328,143.005157470703,335.999969482422,134.430786132813C340.950378417969,130.143585205078,346.475158691406,128,351.999969482422,127.999992370605z M159.999969482422,127.999992370605C165.524765014648,127.999992370605,171.049560546875,130.143585205078,175.999969482422,134.430770874023C185.900817871094,143.005157470703,191.999984741211,158.851257324219,192,176C192.000015258789,193.148742675781 185.900863647461,208.994842529297 176.000030517578,217.569213867188 166.099197387695,226.143600463867 153.900863647461,226.143600463867 144.000030517578,217.569229125977C134.099182128906,208.994842529297,128.000015258789,193.148742675781,128,176C127.999984741211,158.851257324219,134.099136352539,143.005157470703,143.999969482422,134.430786132813C148.950378417969,130.143585205078,154.475173950195,128,159.999969482422,127.999992370605z M256,48C141.125,48 48,141.125 48,256 48,370.875 141.125,464 256,464 370.875,464 464,370.875 464,256 464,141.125 370.875,48 256,48z M256,0C397.385009765625,0 512,114.61499786377 512,256 512,397.385009765625 397.385009765625,512 256,512 114.61499786377,512 0,397.385009765625 0,256 0,114.61499786377 114.61499786377,0 256,0z" />
-                                                </GeometryDrawing.Geometry>
-                                            </GeometryDrawing>
-                                        </DrawingGroup.Children>
-                                    </DrawingGroup>
-                                </DrawingImage.Drawing>
-                            </DrawingImage>
-                        </Image.Source>
-                    </Image>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="Button.Round.SquareLoop"
-           BasedOn="{StaticResource Button.Round.Base}"
-           TargetType="{x:Type Button}">
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <Image RenderTransformOrigin="0.5,0.5">
-                        <Image.RenderTransform>
-                            <ScaleTransform ScaleX="0.5"
-                                            ScaleY="0.5" />
-                        </Image.RenderTransform>
-                        <Image.Source>
-                            <DrawingImage>
-                                <DrawingImage.Drawing>
-                                    <DrawingGroup Opacity="1">
-                                        <DrawingGroup.Children>
-                                            <DrawingGroup Opacity="1">
-                                                <DrawingGroup.Children>
-                                                    <GeometryDrawing Brush="{x:Null}">
-                                                        <GeometryDrawing.Pen>
-                                                            <Pen Brush="#FFDA9890"
-                                                                 Thickness="1" />
-                                                        </GeometryDrawing.Pen>
-                                                        <GeometryDrawing.Geometry>
-                                                            <PathGeometry FillRule="Nonzero"
-                                                                          Figures="M0,0L512,0 512,512 0,512 0,0z" />
-                                                        </GeometryDrawing.Geometry>
-                                                    </GeometryDrawing>
-                                                </DrawingGroup.Children>
-                                            </DrawingGroup>
-                                            <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
-                                                             Pen="{x:Null}">
-                                                <GeometryDrawing.Geometry>
-                                                    <PathGeometry FillRule="Nonzero"
-                                                                  Figures="M448,224L512,224 512,416 128,416 128,512 0,384 128,256 128,352 448,352 448,224z M384,0L512,128 384,256 384,160 64,160 64,288 0,288 0,96 384,96 384,0z" />
-                                                </GeometryDrawing.Geometry>
-                                            </GeometryDrawing>
-                                        </DrawingGroup.Children>
-                                    </DrawingGroup>
-                                </DrawingImage.Drawing>
-                            </DrawingImage>
-                        </Image.Source>
-                    </Image>
-                </DataTemplate>
             </Setter.Value>
         </Setter>
     </Style>

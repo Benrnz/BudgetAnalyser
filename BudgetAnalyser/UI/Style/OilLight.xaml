@@ -53,22 +53,6 @@
                 Value="Center" />
     </Style>
 
-    <Style x:Key="Badge.BorderLarge"
-           TargetType="Border">
-        <Setter Property="Background"
-                Value="{StaticResource Brush.TileBackgroundAlternate}" />
-        <Setter Property="CornerRadius"
-                Value="3" />
-        <Setter Property="Height"
-                Value="30" />
-        <Setter Property="Width"
-                Value="100" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-    </Style>
-
     <Style x:Key="Badge.Border.WarningOilLightStyle"
            TargetType="Border">
         <Setter Property="CornerRadius"

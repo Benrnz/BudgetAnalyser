@@ -27,23 +27,6 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="ListBox.TransactionContainer2"
-           BasedOn="{StaticResource ListBox.TransactionContainer}"
-           TargetType="ListBoxItem">
-        <Style.Triggers>
-            <Trigger Property="ItemsControl.AlternationIndex"
-                     Value="0">
-                <Setter Property="Background"
-                        Value="{StaticResource Brush.TileBackgroundAlternate}" />
-            </Trigger>
-            <Trigger Property="ItemsControl.AlternationIndex"
-                     Value="1">
-                <Setter Property="Background"
-                        Value="{StaticResource Brush.TileBackground}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
     <DataTemplate x:Key="TransactionTemplate1"
                   DataType="{x:Type transactions:Transaction}">
         <Border x:Name="MainBorder"
