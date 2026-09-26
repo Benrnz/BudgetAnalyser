@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		.gitignore = .gitignore
 		README.md = README.md
 		BudgetAnalyser.sln.DotSettings = BudgetAnalyser.sln.DotSettings
+		docs\ux-material-design-plan.md = docs\ux-material-design-plan.md
+		docs\ux-style-guide.html = docs\ux-style-guide.html
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf.XUnit3", "BudgetAnalyser.Wpf.XUnit3\BudgetAnalyser.Wpf.XUnit3.csproj", "{A0D0F267-7151-4F13-AD07-43FF7BE49F49}"
