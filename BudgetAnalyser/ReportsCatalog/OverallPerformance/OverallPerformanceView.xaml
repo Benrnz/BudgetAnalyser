@@ -60,6 +60,7 @@
                              Maximum="2"
                              Minimum="0"
                              Opacity="0.33"
+                             Style="{x:Null}"
                              Value="{Binding Percent, Mode=OneTime}"
                              VerticalAlignment="Stretch" />
             </Grid>

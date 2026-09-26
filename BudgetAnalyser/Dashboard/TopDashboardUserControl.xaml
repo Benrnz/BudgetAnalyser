@@ -73,6 +73,7 @@
                                  Maximum="{Binding Maximum}"
                                  Minimum="{Binding Minimum}"
                                  Orientation="Vertical"
+                                 Style="{x:Null}"
                                  ToolTip="{Binding ToolTip}"
                                  Value="{Binding Value}"
                                  VerticalAlignment="Stretch"
