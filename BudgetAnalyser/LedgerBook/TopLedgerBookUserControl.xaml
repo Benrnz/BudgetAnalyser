@@ -73,64 +73,76 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="5">
+    <Grid>
         <Grid.RowDefinitions>
-            <!-- Toolbar -->
+            <!-- Header bar & Tool bar -->
             <RowDefinition Height="Auto" />
             <!-- Main Content -->
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Toolbar -->
-        <StackPanel Orientation="Horizontal">
-            <Button Command="{x:Static budgetAnalyser:PersistenceOperationCommands.SaveDatabaseCommand}"
-                    Style="{StaticResource Button.Round.Save}" />
-            <Button Style="{StaticResource Button.Round.TransferFunds}"
-                    IsEnabled="{Binding ViewModel.NewLedgerLine, Converter={StaticResource Converter.NotNullIsTrue}}"
-                    Command="{Binding TransferFundsCommand}" />
-            <Button Style="{StaticResource Button.Round.PlusR}"
-                    IsEnabled="{Binding ViewModel.AddNewReconciliationIsEnabled}"
-                    ToolTip="Add new reconciliation"
-                    Command="{Binding AddNewReconciliationCommand}" />
-            <Button Style="{StaticResource Button.Round.PlusL}"
-                    IsEnabled="{Binding ViewModel.LedgerBook, Converter={StaticResource Converter.NotNullIsTrue}}"
-                    ToolTip="Add new ledger"
-                    Command="{Binding AddLedgerCommand}" />
-            <Button
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource Button.Round.Unlock}"
-                    Command="{Binding UnlockCurrentLedgerLineCommand}"
-                    ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line.">
-                <Button.IsEnabled>
-                    <MultiBinding Converter="{StaticResource Converter.MultiAndBool}">
-                        <Binding Path="ViewModel.NewLedgerLine"
-                                 Converter="{StaticResource Converter.NullIsTrue}" />
-                        <Binding Path="ViewModel.LedgerBook"
-                                 Converter="{StaticResource Converter.NotNullIsTrue}" />
-                    </MultiBinding>
-                </Button.IsEnabled>
-            </Button>
-            <TextBlock Style="{StaticResource TextBlock.Heading1}">
-                <Hyperlink Command="{Binding EditLedgerBookNameCommand}">
-                    <Run Text="{Binding ViewModel.LedgerBook.Name, Mode=OneWay}" />
-                </Hyperlink>
-            </TextBlock>
-            <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    Visibility="{Binding ViewModel.NoTransactionsListModelLoaded, Converter={StaticResource Converter.BoolToVis}}">
-                <TextBlock Text="No Transactions"
-                           Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                           ToolTip="Warning! No transactions are loaded, therefore adding a reconciliation will not auto-match transactions." />
-            </Border>
-            <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    Visibility="{Binding ViewModel.NoBudgetLoaded, Converter={StaticResource Converter.BoolToVis}}">
-                <TextBlock Text="No Budget"
-                           Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                           ToolTip="Warning! No budget is loaded for the current date, reconciliation might still be possible, but check you have a budget for the reconciliation date before attempting a reconciliation." />
-            </Border>
-        </StackPanel>
+        <!-- Header bar & Tool bar -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <!-- Header bar -->
+            <StackPanel Margin="8,2,2,2"
+                        Orientation="Horizontal">
+                <TextBlock Style="{StaticResource TextBlock.Heading1}">
+                    <Hyperlink Command="{Binding EditLedgerBookNameCommand}">
+                        <Run Text="{Binding ViewModel.LedgerBook.Name, Mode=OneWay}" />
+                    </Hyperlink>
+                </TextBlock>
+                <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                        Visibility="{Binding ViewModel.NoTransactionsListModelLoaded, Converter={StaticResource Converter.BoolToVis}}">
+                    <TextBlock Text="No Transactions"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                               ToolTip="Warning! No transactions are loaded, therefore adding a reconciliation will not auto-match transactions." />
+                </Border>
+                <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                        Visibility="{Binding ViewModel.NoBudgetLoaded, Converter={StaticResource Converter.BoolToVis}}">
+                    <TextBlock Text="No Budget"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                               ToolTip="Warning! No budget is loaded for the current date, reconciliation might still be possible, but check you have a budget for the reconciliation date before attempting a reconciliation." />
+                </Border>
+            </StackPanel>
+            <!-- Toolbar -->
+            <StackPanel Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <Button Command="{x:Static budgetAnalyser:PersistenceOperationCommands.SaveDatabaseCommand}"
+                        Style="{StaticResource Button.Round.Save}" />
+                <Button Style="{StaticResource Button.Round.TransferFunds}"
+                        IsEnabled="{Binding ViewModel.NewLedgerLine, Converter={StaticResource Converter.NotNullIsTrue}}"
+                        Command="{Binding TransferFundsCommand}" />
+                <Button Style="{StaticResource Button.Round.PlusR}"
+                        IsEnabled="{Binding ViewModel.AddNewReconciliationIsEnabled}"
+                        ToolTip="Add new reconciliation"
+                        Command="{Binding AddNewReconciliationCommand}" />
+                <Button Style="{StaticResource Button.Round.PlusL}"
+                        IsEnabled="{Binding ViewModel.LedgerBook, Converter={StaticResource Converter.NotNullIsTrue}}"
+                        ToolTip="Add new ledger"
+                        Command="{Binding AddLedgerCommand}" />
+                <Button Style="{StaticResource Button.Round.Unlock}"
+                        Command="{Binding UnlockCurrentLedgerLineCommand}"
+                        ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line.">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource Converter.MultiAndBool}">
+                            <Binding Path="ViewModel.NewLedgerLine"
+                                     Converter="{StaticResource Converter.NullIsTrue}" />
+                            <Binding Path="ViewModel.LedgerBook"
+                                     Converter="{StaticResource Converter.NotNullIsTrue}" />
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
+            </StackPanel>
+        </Grid>
 
         <!-- Main Content -->
         <Grid Grid.Row="1"
+              Margin="5"
               Visibility="{Binding ViewModel.NoLedgerBookLoaded, Converter={StaticResource Converter.NotBoolToVis}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
