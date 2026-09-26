@@ -98,10 +98,12 @@ scale (`MaterialDesignHeadline*`, `MaterialDesignBody*` for
 spacing. Do this screen-by-screen, testing each against real data before
 moving to the next.
 
-### Phase 5 — Polish
+### Phase 5 - Colours
+Evaluate colour choices throughout the app for better alignment with best UX practice and material design. All changes must be in alignment with a dark theme. Suggest a more constrained and consistent colour palette, so not as many colours are used as there are currently.
+Colours should be complimentary of each other and provide good contrast if text appears on top of a colour. 
 
-- Optional light/dark theme toggle (near-free once Phase 0 is done) — a
-  nice-to-have given today's single "OilLight" theme.
+### Phase 6 — Polish
+
 - Consistent iconography: swap the custom vector `UI/Assets/*Image.xaml`
   glyphs for `PackIcon` (Material icon font) where a like-for-like icon
   exists; keep custom ones (logos: Visa/Amex/Mastercard) as-is.
