@@ -24,8 +24,8 @@
     --text-medium: rgba(255,255,255,0.60);
     --text-disabled: rgba(255,255,255,0.38);
 
-    --primary: #80CBC4;
-    --primary-container: #00695C;
+    --primary: #9FA8DA;
+    --primary-container: #3949AB;
     --positive: #81C784;
     --positive-container: #1B5E20;
     --negative: #EF9A9A;
@@ -124,9 +124,9 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     transition: box-shadow .15s, background-color .15s;
 }
 .btn-primary { background: var(--primary-container); color: #fff; height: 36px; min-width: 64px; padding: 0 16px; box-shadow: var(--dp2); }
-.btn-primary:hover { box-shadow: var(--dp8); background: #0b7a6c; }
+.btn-primary:hover { box-shadow: var(--dp8); background: #4555B8; }
 .btn-secondary { background: transparent; color: var(--primary); height: 36px; min-width: 64px; padding: 0 16px; }
-.btn-secondary:hover { background: rgba(128,203,196,.08); }
+.btn-secondary:hover { background: rgba(159,168,218,.08); }
 .btn-icon { background: var(--primary-container); color: #fff; width: 40px; height: 40px; padding: 0; box-shadow: var(--dp2); font-size: 22px; font-weight: 700; text-transform: none; }
 .btn-icon:hover { box-shadow: var(--dp8); }
 .btn-icon svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
@@ -137,7 +137,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 .tabs { display: flex; background: var(--background); box-shadow: 0 2px 6px rgba(0,0,0,.5); padding-left: 12px; overflow-x: auto; border-radius: 6px 6px 0 0; }
 .tab { min-width: 120px; height: 48px; padding: 0 16px; margin-right: 4px; display: flex; flex-direction: column; font: 500 14px var(--font); color: var(--text-disabled); cursor: pointer; background: none; border: none; }
 .tab span { flex: 1; display: flex; align-items: center; justify-content: center; }
-.tab i { height: 3px; border-radius: 1.5px; background: var(--primary); opacity: 0; }
+.tab i { height: 3px; border-radius: 1.5px; background: var(--primary-container); opacity: 0; }
 .tab:hover { color: var(--text-high); }
 .tab.active { color: var(--text-high); }
 .tab.active i { opacity: 1; }
@@ -254,7 +254,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <p class="muted">This page is a visual reference. The XAML stays the source of truth, so update this page in the same commit as any style change.</p>
     <div class="meta">
         <span>Last updated: 2026-09-27</span>
-        <span>Matches branch <code>claude/ux-material-design</code> at Phase 5 (colour palette)</span>
+        <span>Matches branch <code>claude/ux-material-design</code> at Phase 5 (colour palette, Indigo primary)</span>
         <span>Plan: <a href="ux-material-design-plan.md">ux-material-design-plan.md</a></span>
     </div>
 </header>
@@ -265,8 +265,8 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <p class="lede">These come from the Material Design plan and should guide every new screen.</p>
     <div class="grid cols-2">
         <div class="panel"><h3 style="margin-top:0">Dark theme only</h3><p class="muted">The app has no light theme. Pick every colour for a near-black background, and check its contrast there.</p></div>
-        <div class="panel"><h3 style="margin-top:0">A small palette</h3><p class="muted">The app uses four hues: teal, green, red and orange. Each hue has a <em>light tone</em> for text on surfaces and a <em>container tone</em> for fills. Don't add new hues.</p></div>
-        <div class="panel"><h3 style="margin-top:0">Colour carries meaning</h3><p class="muted">Green means positive or credit, red means negative or debit, orange means "needs attention", and teal is the brand and interactive colour. Never use colour just for decoration.</p></div>
+        <div class="panel"><h3 style="margin-top:0">A small palette</h3><p class="muted">The app uses four hues: indigo, green, red and orange. Each hue has a <em>light tone</em> for text on surfaces and a <em>container tone</em> for fills. Don't add new hues.</p></div>
+        <div class="panel"><h3 style="margin-top:0">Colour carries meaning</h3><p class="muted">Green means positive or credit, red means negative or debit, orange means "needs attention", and indigo is the brand and interactive colour. Never use colour just for decoration.</p></div>
         <div class="panel"><h3 style="margin-top:0">Keep it simple</h3><p class="muted">The app keeps a tab strip, one content area and a modal overlay. Motion stays at toolkit defaults (ripple and elevation). Don't add drawers, sheets or gestures.</p></div>
     </div>
 </section>
@@ -300,10 +300,10 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <div class="grid cols-2">
         <div>
             <div class="hue-pair">
-                <div style="background:var(--background)"><span class="label" style="color:var(--text-medium)">Primary · #80CBC4 · Teal 200</span><span class="demo" style="color:var(--primary)">Selected tab</span></div>
-                <div style="background:var(--primary-container)"><span class="label">PrimaryContainer · #00695C · Teal 800</span><span class="demo">Button / tile</span></div>
+                <div style="background:var(--background)"><span class="label" style="color:var(--text-medium)">Primary · #9FA8DA · Indigo 200</span><span class="demo" style="color:var(--primary)">Flat button</span></div>
+                <div style="background:var(--primary-container)"><span class="label">PrimaryContainer · #3949AB · Indigo 600</span><span class="demo">Button / tile</span></div>
             </div>
-            <div class="caption">Brand and interactive elements: buttons, tiles, the active tab indicator, focus rings and flat button text.</div>
+            <div class="caption">Brand and interactive elements: The fill is used for buttons, tiles and the active tab indicator. The light shade is used for focus rings and flat button text.</div>
         </div>
         <div>
             <div class="hue-pair">
@@ -362,7 +362,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td><code>Brush.Primary.Container</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Primary fills</td></tr>
             <tr><td><code>Brush.Button.Background</code>, <code>Brush.Button.Stroke</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Raised buttons, round menu buttons</td></tr>
             <tr><td><code>Brush.Button.Glyph</code></td><td><span class="chip" style="background:#fff"></span>White</td><td>Icons and text on buttons</td></tr>
-            <tr><td><code>Brush.ModernTile.Highlight</code></td><td><span class="chip" style="background:var(--primary)"></span>Primary</td><td>Active tab underline</td></tr>
+            <tr><td><code>Brush.ModernTile.Highlight</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Active tab underline (matches the button and tile fill)</td></tr>
             <tr><td><code>Brush.ModernTile.Background1</code> / <code>2</code> <b>C#</b></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Standard dashboard tiles</td></tr>
             <tr><td><code>Brush.ModernTile.Background3</code></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Neutral dashboard tile</td></tr>
             <tr><td><code>Brush.ModernTile.Disabled</code></td><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td>Disabled tiles</td></tr>
@@ -379,13 +379,13 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 
             <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Menus (Menu.xaml)</td></tr>
             <tr><td><code>Menu.Static.Background</code></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Drop-down menu surface</td></tr>
-            <tr><td><code>MenuItem.Highlight.Background</code>, <code>MenuItem.Selected.Background</code></td><td><span class="chip" style="background:rgba(128,203,196,.12)"></span>Primary @ 12%</td><td>Hovered or selected menu item (Material state layer)</td></tr>
+            <tr><td><code>MenuItem.Highlight.Background</code>, <code>MenuItem.Selected.Background</code></td><td><span class="chip" style="background:rgba(159,168,218,.12)"></span>Primary @ 12%</td><td>Hovered or selected menu item (Material state layer)</td></tr>
             <tr><td><code>MenuItem.Highlight.Border</code>, <code>MenuItem.Selected.Border</code></td><td><span class="chip" style="background:var(--primary)"></span>Primary</td><td>Hovered or selected menu item outline</td></tr>
             <tr><td><code>Menu.Static.Border</code>, <code>Menu.Static.Separator</code></td><td><span class="chip" style="background:rgba(255,255,255,.12)"></span>Divider</td><td>Menu border and separators</td></tr>
         </tbody>
     </table>
     </div>
-    <p class="caption">The toolkit's own theme comes from <code>BundledTheme BaseTheme="Dark" PrimaryColor="Teal" SecondaryColor="Teal"</code> in <code>App.xaml</code>. Toolkit resources such as <code>PrimaryHueMidBrush</code> (used by the tab ripple) resolve from it.</p>
+    <p class="caption">The toolkit's own theme comes from <code>BundledTheme BaseTheme="Dark" PrimaryColor="Indigo" SecondaryColor="Indigo"</code> in <code>App.xaml</code>. Toolkit resources such as <code>PrimaryHueMidBrush</code> (used by the tab ripple) resolve from it.</p>
 </section>
 
 <!-- ============================================================ -->
@@ -396,15 +396,15 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <table>
         <thead><tr><th>Background</th><th>TextHigh</th><th>TextMedium</th><th>TextDisabled</th><th>White</th><th>Primary</th><th>Positive</th><th>Negative</th></tr></thead>
         <tbody>
-            <tr><td><span class="chip" style="background:var(--background)"></span>Background</td><td><span class="cr pass">14.19</span></td><td><span class="cr pass">7.16</span></td><td><span class="cr large">3.57</span></td><td><span class="cr pass">18.73</span></td><td><span class="cr pass">10.04</span></td><td><span class="cr pass">9.31</span></td><td><span class="cr pass">8.71</span></td></tr>
-            <tr><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td><span class="cr pass">12.87</span></td><td><span class="cr pass">6.77</span></td><td><span class="cr large">3.57</span></td><td><span class="cr pass">16.67</span></td><td><span class="cr pass">8.94</span></td><td><span class="cr pass">8.28</span></td><td><span class="cr pass">7.75</span></td></tr>
-            <tr><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td><span class="cr pass">10.98</span></td><td><span class="cr pass">6.08</span></td><td><span class="cr large">3.35</span></td><td><span class="cr pass">13.97</span></td><td><span class="cr pass">7.49</span></td><td><span class="cr pass">6.94</span></td><td><span class="cr pass">6.49</span></td></tr>
-            <tr><td><span class="chip" style="background:var(--dialog)"></span>Dialog</td><td><span class="cr pass">9.31</span></td><td><span class="cr pass">5.35</span></td><td><span class="cr large">3.14</span></td><td><span class="cr pass">11.73</span></td><td><span class="cr pass">6.29</span></td><td><span class="cr pass">5.83</span></td><td><span class="cr pass">5.45</span></td></tr>
-            <tr><td><span class="chip" style="background:var(--tooltip)"></span>Tooltip</td><td><span class="cr pass">5.20</span></td><td><span class="cr large">3.40</span></td><td><span class="cr fail">2.28</span></td><td><span class="cr pass">6.19</span></td><td><span class="cr large">3.32</span></td><td><span class="cr large">3.08</span></td><td><span class="cr fail">2.88</span></td></tr>
-            <tr><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td><span class="cr pass">5.45</span></td><td><span class="cr large">3.43</span></td><td><span class="cr fail">2.25</span></td><td><span class="cr pass">6.61</span></td><td><span class="cr large">3.55</span></td><td><span class="cr large">3.29</span></td><td><span class="cr large">3.07</span></td></tr>
-            <tr><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td><span class="cr pass">6.40</span></td><td><span class="cr large">3.97</span></td><td><span class="cr fail">2.50</span></td><td><span class="cr pass">7.87</span></td><td><span class="cr large">4.22</span></td><td><span class="cr large">3.91</span></td><td><span class="cr large">3.66</span></td></tr>
-            <tr><td><span class="chip" style="background:var(--negative-container)"></span>NegativeContainer</td><td><span class="cr pass">5.29</span></td><td><span class="cr large">3.15</span></td><td><span class="cr fail">2.00</span></td><td><span class="cr pass">6.57</span></td><td><span class="cr large">3.52</span></td><td><span class="cr large">3.26</span></td><td><span class="cr large">3.05</span></td></tr>
-            <tr><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td><span class="cr pass">4.80</span></td><td><span class="cr large">3.10</span></td><td><span class="cr fail">2.08</span></td><td><span class="cr pass">5.79</span></td><td><span class="cr large">3.10</span></td><td><span class="cr fail">2.88</span></td><td><span class="cr fail">2.69</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--background)"></span>Background</td><td><span class="cr pass">14.19</span></td><td><span class="cr pass">7.16</span></td><td><span class="cr large">3.57</span></td><td><span class="cr pass">18.73</span></td><td><span class="cr pass">8.11</span></td><td><span class="cr pass">9.31</span></td><td><span class="cr pass">8.71</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td><span class="cr pass">12.87</span></td><td><span class="cr pass">6.77</span></td><td><span class="cr large">3.57</span></td><td><span class="cr pass">16.67</span></td><td><span class="cr pass">7.21</span></td><td><span class="cr pass">8.28</span></td><td><span class="cr pass">7.75</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td><span class="cr pass">10.98</span></td><td><span class="cr pass">6.08</span></td><td><span class="cr large">3.35</span></td><td><span class="cr pass">13.97</span></td><td><span class="cr pass">6.04</span></td><td><span class="cr pass">6.94</span></td><td><span class="cr pass">6.49</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--dialog)"></span>Dialog</td><td><span class="cr pass">9.31</span></td><td><span class="cr pass">5.35</span></td><td><span class="cr large">3.14</span></td><td><span class="cr pass">11.73</span></td><td><span class="cr pass">5.07</span></td><td><span class="cr pass">5.83</span></td><td><span class="cr pass">5.45</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--tooltip)"></span>Tooltip</td><td><span class="cr pass">5.20</span></td><td><span class="cr large">3.40</span></td><td><span class="cr fail">2.28</span></td><td><span class="cr pass">6.19</span></td><td><span class="cr fail">2.68</span></td><td><span class="cr large">3.08</span></td><td><span class="cr fail">2.88</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td><span class="cr pass">6.29</span></td><td><span class="cr large">3.90</span></td><td><span class="cr fail">2.47</span></td><td><span class="cr pass">7.73</span></td><td><span class="cr large">3.35</span></td><td><span class="cr large">3.84</span></td><td><span class="cr large">3.59</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td><span class="cr pass">6.40</span></td><td><span class="cr large">3.97</span></td><td><span class="cr fail">2.50</span></td><td><span class="cr pass">7.87</span></td><td><span class="cr large">3.41</span></td><td><span class="cr large">3.91</span></td><td><span class="cr large">3.66</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--negative-container)"></span>NegativeContainer</td><td><span class="cr pass">5.29</span></td><td><span class="cr large">3.15</span></td><td><span class="cr fail">2.00</span></td><td><span class="cr pass">6.57</span></td><td><span class="cr fail">2.84</span></td><td><span class="cr large">3.26</span></td><td><span class="cr large">3.05</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td><span class="cr pass">4.80</span></td><td><span class="cr large">3.10</span></td><td><span class="cr fail">2.08</span></td><td><span class="cr pass">5.79</span></td><td><span class="cr fail">2.50</span></td><td><span class="cr fail">2.88</span></td><td><span class="cr fail">2.69</span></td></tr>
         </tbody>
     </table>
     </div>
@@ -517,7 +517,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 <!-- ============================================================ -->
 <section id="tabs">
     <h2>Tab strip</h2>
-    <p class="lede">This is the <code>TabButtonStyle</code> in <code>MainMenuUserControl.xaml</code>, a Material top-app-bar tab. It's flat with a 3px Primary underline on the active tab and a Primary ripple on press. Hovering a tab raises its label to high emphasis.</p>
+    <p class="lede">This is the <code>TabButtonStyle</code> in <code>MainMenuUserControl.xaml</code>, a Material top-app-bar tab. It's flat with a 3px PrimaryContainer underline on the active tab, the same indigo as buttons and tiles, and a toolkit primary ripple on press. Hovering a tab raises its label to high emphasis.</p>
     <div class="tabs" role="tablist">
         <button class="tab active"><span>Dashboard</span><i></i></button>
         <button class="tab"><span>Transactions</span><i></i></button>
@@ -645,7 +645,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
         <div class="panel">
             <div style="background:var(--surface-raised);border:1px solid var(--divider);border-radius:4px;box-shadow:var(--dp8);width:220px;padding:4px 0;font-size:14px">
                 <div style="padding:6px 14px">Split transaction…</div>
-                <div style="padding:5px 13px;background:rgba(128,203,196,.12);border:1px solid var(--primary);margin:0 1px">Edit rule</div>
+                <div style="padding:5px 13px;background:rgba(159,168,218,.12);border:1px solid var(--primary);margin:0 1px">Edit rule</div>
                 <div style="padding:6px 14px;color:var(--text-disabled)">Delete (disabled)</div>
                 <div style="height:1px;background:var(--divider);margin:4px 0"></div>
                 <div style="padding:6px 14px">Copy amount</div>
@@ -714,7 +714,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <table>
         <thead><tr><th>File</th><th>Contents</th></tr></thead>
         <tbody>
-            <tr><td><code>BudgetAnalyser/App.xaml</code></td><td><code>BundledTheme</code> (Dark, Teal/Teal), <code>MaterialDesign2.Defaults.xaml</code>, and merge order. The app dictionaries are merged after the toolkit's, so they win.</td></tr>
+            <tr><td><code>BudgetAnalyser/App.xaml</code></td><td><code>BundledTheme</code> (Dark, Indigo/Indigo), <code>MaterialDesign2.Defaults.xaml</code>, and merge order. The app dictionaries are merged after the toolkit's, so they win.</td></tr>
             <tr><td><code>UI/Style/Colours.xaml</code></td><td>Palette and semantic brushes. <strong>This is the colour source of truth.</strong></td></tr>
             <tr><td><code>UI/Style/Buttons.xaml</code></td><td>Dialog, square and <code>Button.Round.*</code> icon buttons</td></tr>
             <tr><td><code>UI/Style/TextBlock.xaml</code></td><td>Type styles</td></tr>
@@ -739,6 +739,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
         <thead><tr><th>Gap</th><th>Where</th><th>Planned</th></tr></thead>
         <tbody>
             <tr><td>Inactive tab labels use Text.Disabled (3.57:1), which is below AA for 14px text</td><td><code>TabButtonStyle</code></td><td>Consider Text.Medium (7.16:1)</td></tr>
+            <tr><td>The active tab underline (PrimaryContainer) has 2.42:1 contrast on the tab strip, which is below 3:1 for UI elements. This is a deliberate choice so the underline matches the tiles, and the active label also switches to high emphasis.</td><td><code>Brush.ModernTile.Highlight</code></td><td>If it reads too faintly, use Indigo 400 <code>#5C6BC0</code> (3.85:1)</td></tr>
             <tr><td>Type sizes are ad hoc (10–36px) and not yet on the Material type scale</td><td><code>TextBlock.xaml</code></td><td>Phase 4</td></tr>
             <tr><td>Some margins (2, 3, 5px) are off the 8dp grid</td><td>Various screens</td><td>Phase 4</td></tr>
             <tr><td>Legacy names don't describe what they do: <code>Button.Round.*</code> buttons are rectangular, and there are <code>OilLight</code> and <code>ModernTile.Highlight</code> (which is the tab indicator)</td><td>Buttons, OilLight, Colours</td><td>Kept for compatibility, since some are referenced from C#</td></tr>

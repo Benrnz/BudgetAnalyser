@@ -22,9 +22,9 @@
     <Color x:Key="Colour.Palette.TextMedium">#99FFFFFF</Color>
     <Color x:Key="Colour.Palette.TextDisabled">#61FFFFFF</Color>
 
-    <!-- Primary (brand): Teal 200 / Teal 800 -->
-    <Color x:Key="Colour.Palette.Primary">#FF80CBC4</Color>
-    <Color x:Key="Colour.Palette.PrimaryContainer">#FF00695C</Color>
+    <!-- Primary (brand): Indigo 200 / Indigo 600 -->
+    <Color x:Key="Colour.Palette.Primary">#FF9FA8DA</Color>
+    <Color x:Key="Colour.Palette.PrimaryContainer">#FF3949AB</Color>
 
     <!-- Positive (credit, surplus, income, under budget): Green 300 / Green 900 -->
     <Color x:Key="Colour.Palette.Positive">#FF81C784</Color>
@@ -111,9 +111,9 @@
     <SolidColorBrush x:Key="Brush.Button.Glyph"
                      Color="White" />
 
-    <!-- Active tab indicator -->
+    <!-- Active tab indicator: matches the button/tile fill so the brand colour reads as one shade -->
     <SolidColorBrush x:Key="Brush.ModernTile.Highlight"
-                     Color="{StaticResource Colour.Palette.Primary}" />
+                     Color="{StaticResource Colour.Palette.PrimaryContainer}" />
 
     <!-- Status fills (container tones, always with light text) -->
     <SolidColorBrush x:Key="Brush.CreditBackground1"
