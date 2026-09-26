@@ -22,6 +22,47 @@
                 Value="2" />
     </Style>
 
+    <!-- Dialog Buttons: text-labelled rectangular buttons for a dialog's action row, following Material's dialog
+         guidance (36px high, 64px minimum width, 8px apart). The confirming action is filled; dismissive or
+         secondary actions are flat text buttons. Toolbar actions use the square icon buttons below instead. -->
+    <Style x:Key="Button.Dialog.Primary"
+           TargetType="Button"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}">
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="Margin"
+                Value="8,0,0,0" />
+        <Setter Property="MinWidth"
+                Value="64" />
+        <Setter Property="Height"
+                Value="36" />
+        <Setter Property="Padding"
+                Value="16,0" />
+        <Setter Property="Background"
+                Value="{StaticResource Brush.Button.Background}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource Brush.Button.Background}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.Button.Glyph}" />
+    </Style>
+
+    <Style x:Key="Button.Dialog.Secondary"
+           TargetType="Button"
+           BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="Margin"
+                Value="8,0,0,0" />
+        <Setter Property="MinWidth"
+                Value="64" />
+        <Setter Property="Height"
+                Value="36" />
+        <Setter Property="Padding"
+                Value="16,0" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.Primary}" />
+    </Style>
+
     <!-- Icon Buttons: rectangular Material raised buttons hosting the app's existing hand-drawn glyphs.
          The glyph is supplied via ContentTemplate (a DataTemplate, cloned per instance) rather than a
          Content setter, because these styles are shared by many buttons across the app - a Content
@@ -266,29 +307,6 @@
         </Setter>
         <Setter Property="ToolTip"
                 Value="New" />
-    </Style>
-
-    <Style x:Key="Button.Round.Ok"
-           BasedOn="{StaticResource Button.Round.Base}"
-           TargetType="{x:Type Button}">
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <TextBlock Text="Ok"
-                               Foreground="{StaticResource Brush.Button.Glyph}"
-                               Margin="-1,-3,0,0"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               FontSize="16"
-                               FontFamily="Segoe UI"
-                               FontWeight="Bold" />
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="IsCancel"
-                Value="False" />
-        <Setter Property="IsDefault"
-                Value="True" />
     </Style>
 
     <Style x:Key="Button.Round.PlusL"

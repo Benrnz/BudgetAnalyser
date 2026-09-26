@@ -96,6 +96,9 @@
                      Color="{StaticResource Colour.Palette.Negative}" />
 
     <!-- Primary -->
+    <SolidColorBrush x:Key="Brush.Primary"
+                     Color="{StaticResource Colour.Palette.Primary}" />
+
     <SolidColorBrush x:Key="Brush.Primary.Container"
                      Color="{StaticResource Colour.Palette.PrimaryContainer}" />
 

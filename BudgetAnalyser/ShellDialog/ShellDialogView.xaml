@@ -41,38 +41,40 @@
                             HorizontalAlignment="Right"
                             Margin="16,8,16,16"
                             Orientation="Horizontal">
+                    <!-- Material dialog order: secondary actions first, the confirming action last (rightmost) -->
                     <Button Command="{Binding DialogCommand}"
-                            ToolTip="Help"
-                            Style="{StaticResource Button.Round.Info}"
+                            Content="Help"
+                            Style="{StaticResource Button.Dialog.Secondary}"
                             Visibility="{Binding HelpButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
                         <Button.CommandParameter>
                             <shellDialog:ShellDialogButton>Help</shellDialog:ShellDialogButton>
                         </Button.CommandParameter>
                     </Button>
+                    <!-- Labelled "Close" when it is a close-only dialog, otherwise "Cancel" -->
                     <Button Command="{Binding DialogCommand}"
-                            ToolTip="{Binding ActionToolTip}"
-                            Style="{StaticResource Button.Round.Save}"
+                            Content="{Binding CloseToolTip}"
+                            Style="{StaticResource Button.Dialog.Secondary}"
+                            Visibility="{Binding CancelButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
+                        <Button.CommandParameter>
+                            <shellDialog:ShellDialogButton>Cancel</shellDialog:ShellDialogButton>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Command="{Binding DialogCommand}"
+                            Content="Save"
+                            Style="{StaticResource Button.Dialog.Primary}"
                             Visibility="{Binding SaveButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
                         <Button.CommandParameter>
                             <shellDialog:ShellDialogButton>Save</shellDialog:ShellDialogButton>
                         </Button.CommandParameter>
                     </Button>
                     <Button Command="{Binding DialogCommand}"
+                            Content="OK"
                             IsDefault="False"
                             IsCancel="{Binding OkIsCancel}"
-                            ToolTip="{Binding ActionToolTip}"
-                            Style="{StaticResource Button.Round.Ok}"
+                            Style="{StaticResource Button.Dialog.Primary}"
                             Visibility="{Binding OkButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
                         <Button.CommandParameter>
                             <shellDialog:ShellDialogButton>Ok</shellDialog:ShellDialogButton>
-                        </Button.CommandParameter>
-                    </Button>
-                    <Button Command="{Binding DialogCommand}"
-                            Style="{StaticResource Button.Round.Cross}"
-                            ToolTip="{Binding CloseToolTip}"
-                            Visibility="{Binding CancelButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
-                        <Button.CommandParameter>
-                            <shellDialog:ShellDialogButton>Cancel</shellDialog:ShellDialogButton>
                         </Button.CommandParameter>
                     </Button>
                 </StackPanel>
