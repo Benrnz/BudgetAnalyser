@@ -8,14 +8,13 @@ public static class ConverterHelper
 {
     private const string AccumulatedBucket = "Brush.BudgetBucket.Accumulated";
     private const string CreditBackground1 = "Brush.CreditBackground1";
-    private const string CreditBackground2 = "Brush.CreditBackground2";
+    private const string PositiveText = "Brush.Positive.Text";
     private const string DebitBackground1 = "Brush.DebitBackground1";
-    private const string DebitBackground2 = "Brush.DebitBackground2";
+    private const string NegativeText = "Brush.Negative.Text";
     private const string IncomeBucket = "Brush.BudgetBucket.Income";
     private const string NeutralNumberBackground = "Brush.NeutralNumberBackground";
     private const string NotSoBadDebit = "Brush.NotSoBadDebit";
     private const string SecondaryBackground = "Brush.SecondaryBackground";
-    private const string SlightDebit = "Brush.SlightDebit";
     private const string SpentMonthlyBucket = "Brush.BudgetBucket.SpentMonthly";
     private const string TileBackground = "Brush.TileBackground";
     private const string TileBackgroundAlternate = "Brush.TileBackgroundAlternate";
@@ -27,13 +26,13 @@ public static class ConverterHelper
     public static readonly Brush? CreditBackground1Brush = Application.Current.Resources[CreditBackground1] as Brush;
 
     [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-    public static readonly Brush? CreditBackground2Brush = Application.Current.Resources[CreditBackground2] as Brush;
+    public static readonly Brush? PositiveTextBrush = Application.Current.Resources[PositiveText] as Brush;
 
     [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
     public static readonly Brush? DebitBackground1Brush = Application.Current.Resources[DebitBackground1] as Brush;
 
     [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-    public static readonly Brush? DebitBackground2Brush = Application.Current.Resources[DebitBackground2] as Brush;
+    public static readonly Brush? NegativeTextBrush = Application.Current.Resources[NegativeText] as Brush;
 
     [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
     public static readonly Brush? IncomeBucketBrush = Application.Current.Resources[IncomeBucket] as Brush;
@@ -46,9 +45,6 @@ public static class ConverterHelper
 
     [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
     public static readonly Brush? SecondaryBackgroundBrush = Application.Current.Resources[SecondaryBackground] as Brush;
-
-    [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-    public static readonly Brush? SlightDebitBrush = Application.Current.Resources[SlightDebit] as Brush;
 
     [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
     public static readonly Brush? SpentPeriodicallyBucketBrush = Application.Current.Resources[SpentMonthlyBucket] as Brush;

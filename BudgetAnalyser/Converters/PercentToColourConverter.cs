@@ -43,7 +43,7 @@ public class PercentToColourConverter : OneWayValueConverter
 
         if (percent < 0.85)
         {
-            return ConverterHelper.SlightDebitBrush;
+            return ConverterHelper.NeutralNumberBackgroundBrush;
         }
 
         return percent < 1.15 ? ConverterHelper.NotSoBadDebitBrush : (object?)ConverterHelper.DebitBackground1Brush;
@@ -61,7 +61,7 @@ public class PercentToColourConverter : OneWayValueConverter
             return ConverterHelper.NotSoBadDebitBrush;
         }
 
-        return percent < 1.00 ? ConverterHelper.SlightDebitBrush : (object?)ConverterHelper.CreditBackground1Brush;
+        return percent < 1.00 ? ConverterHelper.NeutralNumberBackgroundBrush : (object?)ConverterHelper.CreditBackground1Brush;
     }
 
     private static object? ConvertToPerformanceColors(double percent)

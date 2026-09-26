@@ -21,7 +21,7 @@
            TargetType="TextBlock"
            BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Foreground"
-                Value="{StaticResource Brush.Text.Reverse}" />
+                Value="{StaticResource Brush.Text.Default}" />
         <Setter Property="FontSize"
                 Value="14" />
     </Style>

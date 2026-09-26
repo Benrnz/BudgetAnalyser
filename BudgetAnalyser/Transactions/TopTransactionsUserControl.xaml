@@ -109,7 +109,7 @@
             <StackPanel Grid.Column="0"
                         Orientation="Horizontal"
                         SnapsToDevicePixels="True"
-                        TextBlock.Foreground="{StaticResource Brush.MainBackground}">
+                        TextBlock.Foreground="{StaticResource Brush.Text.Default}">
                 <TextBlock Background="{StaticResource Brush.NeutralNumberBackground}"
                            Margin="4"
                            Padding="4"
@@ -162,9 +162,9 @@
                                    Text="Transactions" />
                     </StackPanel>
                 </Border>
-                <Border Background="{StaticResource Brush.ImportantHighlightLight}"
+                <Border Background="{StaticResource Brush.Negative.Container}"
                         Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                        ToolTip="Potentially corrupt data exists in the transactions. Some transactions appear as exact duplicates of others. Look for pink highlighted rows."
+                        ToolTip="Potentially corrupt data exists in the transactions. Some transactions appear as exact duplicates of others. Look for red highlighted rows."
                         Visibility="{Binding ViewModel.DuplicateSummary, Converter={StaticResource Converter.NullToVis}}">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="{Binding ViewModel.DuplicateSummary}" />

@@ -9,7 +9,7 @@
                 <!-- Material Design colour/token foundation (Phase 0 of the Material Design UX redesign). -->
                 <materialDesign:BundledTheme BaseTheme="Dark"
                                               PrimaryColor="Teal"
-                                              SecondaryColor="Green" />
+                                              SecondaryColor="Teal" />
 
                 <!-- Material control templates (Phase 2): our own UI/Style/*.xaml dictionaries below are merged
                      afterwards, so an implicit style we define for a control type still wins for that type;

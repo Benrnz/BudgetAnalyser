@@ -100,7 +100,7 @@
                 <DataTrigger.Setters>
                     <Setter Property="Background"
                             TargetName="MainBorder"
-                            Value="{StaticResource Brush.ImportantHighlightLight}" />
+                            Value="{StaticResource Brush.Negative.Container}" />
                 </DataTrigger.Setters>
             </DataTrigger>
         </DataTemplate.Triggers>

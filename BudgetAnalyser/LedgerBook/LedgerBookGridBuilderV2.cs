@@ -30,7 +30,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private const string NumberStyle = "LedgerBookTextBlockNumber";
     private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
     private const string SurplusBackground = "Brush.TileBackgroundAlternate";
-    private const string SurplusTextBrush = "Brush.CreditBackground1";
+    private const string SurplusTextBrush = "Brush.Positive.Text";
     private readonly ILogger logger;
     private readonly ICommand showBankBalancesCommand;
     private readonly ICommand showHidePeriodsCommand;

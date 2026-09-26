@@ -154,7 +154,7 @@
                HorizontalAlignment="Stretch">
         <TextBlock DockPanel.Dock="Bottom"
                    FontSize="10"
-                   Foreground="{StaticResource Brush.TileBackground}"
+                   Foreground="{StaticResource Brush.Text.Disabled}"
                    HorizontalAlignment="Right"
                    Text="{Binding VersionString}"
                    VerticalAlignment="Bottom" />

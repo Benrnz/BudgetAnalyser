@@ -248,7 +248,7 @@
                       HorizontalScrollBarVisibility="Hidden"
                       Margin="2">
             <StackPanel>
-                <TextBlock Foreground="{StaticResource Brush.CreditBackground1}"
+                <TextBlock Foreground="{StaticResource Brush.Positive.Text}"
                            HorizontalAlignment="Left"
                            Style="{StaticResource TotalStyle}"
                            Text="Incomes" />
@@ -282,7 +282,7 @@
                       HorizontalScrollBarVisibility="Hidden"
                       Margin="2">
             <StackPanel>
-                <TextBlock Foreground="{StaticResource Brush.DebitBackground1}"
+                <TextBlock Foreground="{StaticResource Brush.Negative.Text}"
                            HorizontalAlignment="Left"
                            Style="{StaticResource TotalStyle}"
                            Text="Expenses" />
