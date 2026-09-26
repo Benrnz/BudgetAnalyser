@@ -13,6 +13,9 @@
     <Style x:Key="ListBox.TransactionContainer"
            BasedOn="{StaticResource ListBox.StandardContainerStyle}"
            TargetType="ListBoxItem">
+        <!-- Explicit so the column header row in TopTransactionsUserControl can line up (item margin 1 + padding 8) -->
+        <Setter Property="Padding"
+                Value="8,0" />
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex"
                      Value="0">
@@ -33,7 +36,8 @@
                 Margin="0,1,2,1">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
+                    <!-- Material dense data-table row height -->
+                    <RowDefinition Height="32" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="A"
@@ -58,7 +62,9 @@
                 <TextBlock Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Date, StringFormat=\{0:d\}}"
                            ToolTip="{Binding Date, Converter={StaticResource Converter.ToString}, ConverterParameter='D'}" />
-                <TextBlock Grid.Column="1"
+                <TextBlock x:Name="AmountText"
+                           Grid.Column="1"
+                           Foreground="{Binding Amount, Converter={StaticResource Converter.NumberToBrush}, ConverterParameter=Light}"
                            Style="{StaticResource TextBlock.TransactionNumber}"
                            Text="{Binding Amount, StringFormat=\{0:N2\}}"
                            ToolTip="{Binding Amount, Converter={StaticResource Converter.ToString}, ConverterParameter='C'}" />
@@ -101,6 +107,10 @@
                     <Setter Property="Background"
                             TargetName="MainBorder"
                             Value="{StaticResource Brush.Negative.Container}" />
+                    <!-- Light hue tones fail contrast on a container fill, so the amount goes back to plain light text -->
+                    <Setter Property="Foreground"
+                            TargetName="AmountText"
+                            Value="{StaticResource Brush.Text.Default}" />
                 </DataTrigger.Setters>
             </DataTrigger>
         </DataTemplate.Triggers>
