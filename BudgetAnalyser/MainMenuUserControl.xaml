@@ -10,9 +10,17 @@
 
     <UserControl.Resources>
 
-        <!-- Material top-app-bar tab: flat, ripple feedback on press, underline indicator when active -->
+        <!-- Material top-app-bar tab: flat, ripple feedback on press, underline indicator and Primary label when active -->
         <Style x:Key="TabButtonStyle"
                TargetType="{x:Type ToggleButton}">
+            <Style.Resources>
+                <!-- The app-wide TextBlock style sets its own Foreground, which would stop the label following the tab's -->
+                <Style TargetType="TextBlock"
+                       BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Foreground"
+                            Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}" />
+                </Style>
+            </Style.Resources>
             <Setter Property="Margin"
                     Value="0,0,4,0" />
             <Setter Property="Padding"
@@ -28,7 +36,7 @@
             <Setter Property="FontWeight"
                     Value="Medium" />
             <Setter Property="Foreground"
-                    Value="{StaticResource Brush.Text.Disabled}" />
+                    Value="{StaticResource Brush.Text.Default}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -60,12 +68,7 @@
                                         Property="Opacity"
                                         Value="1" />
                                 <Setter Property="Foreground"
-                                        Value="{StaticResource Brush.Text.Default}" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver"
-                                     Value="True">
-                                <Setter Property="Foreground"
-                                        Value="{StaticResource Brush.Text.Default}" />
+                                        Value="{StaticResource Brush.Primary}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

@@ -135,11 +135,10 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 .btn-secondary:disabled { background: transparent; }
 
 .tabs { display: flex; background: var(--background); box-shadow: 0 2px 6px rgba(0,0,0,.5); padding-left: 12px; overflow-x: auto; border-radius: 6px 6px 0 0; }
-.tab { min-width: 120px; height: 48px; padding: 0 16px; margin-right: 4px; display: flex; flex-direction: column; font: 500 14px var(--font); color: var(--text-disabled); cursor: pointer; background: none; border: none; }
+.tab { min-width: 120px; height: 48px; padding: 0 16px; margin-right: 4px; display: flex; flex-direction: column; font: 500 14px var(--font); color: var(--text-high); cursor: pointer; background: none; border: none; }
 .tab span { flex: 1; display: flex; align-items: center; justify-content: center; }
 .tab i { height: 3px; border-radius: 1.5px; background: var(--primary-container); opacity: 0; }
-.tab:hover { color: var(--text-high); }
-.tab.active { color: var(--text-high); }
+.tab.active { color: var(--primary); }
 .tab.active i { opacity: 1; }
 
 .tiles { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -392,16 +391,16 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td><code>Brush.Shadow</code></td><td><span class="chip" style="background:#000"></span>Black</td><td>Translucent shading overlay only (for example, report progress bars)</td></tr>
 
             <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Text</td></tr>
-            <tr><td><code>Brush.Text.Default</code> <b>C#</b></td><td><span class="chip" style="background:var(--text-high)"></span>TextHigh</td><td>Body text, values, active tab label</td></tr>
+            <tr><td><code>Brush.Text.Default</code> <b>C#</b></td><td><span class="chip" style="background:var(--text-high)"></span>TextHigh</td><td>Body text, values, inactive tab labels</td></tr>
             <tr><td><code>Brush.Text.Label</code></td><td><span class="chip" style="background:var(--text-medium)"></span>TextMedium</td><td>Field labels (<code>TextBlock.LabelStyle</code>)</td></tr>
-            <tr><td><code>Brush.Text.Disabled</code></td><td><span class="chip" style="background:var(--text-disabled)"></span>TextDisabled</td><td>Disabled text, inactive tab labels</td></tr>
+            <tr><td><code>Brush.Text.Disabled</code></td><td><span class="chip" style="background:var(--text-disabled)"></span>TextDisabled</td><td>Disabled text</td></tr>
             <tr><td><code>Brush.BadgeText</code></td><td><span class="chip" style="background:var(--text-high)"></span>TextHigh</td><td>Text on badges and oil lights</td></tr>
             <tr><td><code>Brush.Positive.Text</code> <b>C#</b></td><td><span class="chip" style="background:var(--positive)"></span>Positive</td><td>Positive amounts, ledger surplus</td></tr>
             <tr><td><code>Brush.Negative.Text</code> <b>C#</b></td><td><span class="chip" style="background:var(--negative)"></span>Negative</td><td>Negative amounts</td></tr>
             <tr><td><code>Brush.ImportantHighlightLight</code></td><td><span class="chip" style="background:var(--negative)"></span>Negative</td><td>Validation errors and warning glyphs</td></tr>
 
             <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Primary / interactive</td></tr>
-            <tr><td><code>Brush.Primary</code></td><td><span class="chip" style="background:var(--primary)"></span>Primary</td><td>Flat (secondary) button text</td></tr>
+            <tr><td><code>Brush.Primary</code></td><td><span class="chip" style="background:var(--primary)"></span>Primary</td><td>Flat (secondary) button text, screen titles, active tab label</td></tr>
             <tr><td><code>Brush.Primary.Container</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Primary fills</td></tr>
             <tr><td><code>Brush.Button.Background</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Raised buttons, round menu buttons</td></tr>
             <tr><td><code>Brush.Button.Glyph</code></td><td><span class="chip" style="background:#fff"></span>White</td><td>Icons and text on buttons</td></tr>
@@ -569,7 +568,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 <!-- ============================================================ -->
 <section id="tabs">
     <h2>Tab strip</h2>
-    <p class="lede">This is the <code>TabButtonStyle</code> in <code>MainMenuUserControl.xaml</code>, a Material top-app-bar tab. It's flat with a 3px PrimaryContainer underline on the active tab, the same indigo as buttons and tiles, and a toolkit primary ripple on press. Hovering a tab raises its label to high emphasis.</p>
+    <p class="lede">This is the <code>TabButtonStyle</code> in <code>MainMenuUserControl.xaml</code>, a Material top-app-bar tab. It's flat with a 3px PrimaryContainer underline on the active tab, the same indigo as buttons and tiles, and a toolkit primary ripple on press. The active label turns Primary, matching the <code>TextBlock.PageTitle</code> screen titles.</p>
     <div class="tabs" role="tablist">
         <button class="tab active"><span>Dashboard</span><i></i></button>
         <button class="tab"><span>Transactions</span><i></i></button>
@@ -578,7 +577,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
         <button class="tab"><span>Reports</span><i></i></button>
     </div>
     <div class="panel" style="border-radius:0 0 6px 6px;border-top:none;height:60px"></div>
-    <p class="caption">Each tab is 48px high, at least 120px wide, with padding 16,0 and gap 4. The first tab has a 12px left inset. Inactive labels use Text.Disabled and the active label uses Text.Default.</p>
+    <p class="caption">Each tab is 48px high, at least 120px wide, with padding 16,0 and gap 4. The first tab has a 12px left inset. Inactive labels use Text.Default and the active label uses Primary. The tab style overrides the app-wide TextBlock foreground so the label follows the tab's colour.</p>
     <script>
         document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
             document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
@@ -918,7 +917,6 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <table>
         <thead><tr><th>Gap</th><th>Where</th><th>Planned</th></tr></thead>
         <tbody>
-            <tr><td>Inactive tab labels use Text.Disabled (3.57:1), which is below AA for 14px text</td><td><code>TabButtonStyle</code></td><td>Consider Text.Medium (7.16:1)</td></tr>
             <tr><td>The active tab underline (PrimaryContainer) has 2.42:1 contrast on the tab strip, which is below 3:1 for UI elements. This is a deliberate choice so the underline matches the tiles, and the active label also switches to high emphasis.</td><td><code>Brush.ModernTile.Highlight</code></td><td>If it reads too faintly, use Indigo 400 <code>#5C6BC0</code> (3.85:1)</td></tr>
             <tr><td>Type sizes are ad hoc (10–36px) and not yet on the Material type scale</td><td><code>TextBlock.xaml</code></td><td>Phase 4</td></tr>
             <tr><td>Some margins (2, 3, 5px) are off the 8dp grid</td><td>Dashboard, Ledger Book (Transactions, Budget and Reports are done)</td><td>Phase 4</td></tr>
