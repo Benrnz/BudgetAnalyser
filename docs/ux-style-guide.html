@@ -835,7 +835,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 <!-- ============================================================ -->
 <section id="spacing">
     <h2>Spacing &amp; shape</h2>
-    <p class="lede">New layout should use Material's 8dp grid (4 for tight gaps). Screens use a 16px inset from the left, right and bottom edges. Headings are the exception: <code>TextBlock.Heading1</code> already has a 10px left margin, so give its container 6px. The Transactions and Budget screens are on the grid. Other screens still use 2px and 5px margins, and Phase 4 will move them over.</p>
+    <p class="lede">New layout should use Material's 8dp grid (4 for tight gaps). Screens use a 16px inset from the left, right and bottom edges. Headings are the exception: <code>TextBlock.Heading1</code> already has a 10px left margin, so give its container 6px. The Transactions, Budget and Reports screens are on the grid. Other screens still use 2px and 5px margins, and Phase 4 will move them over.</p>
     <div class="grid cols-2">
         <div class="panel">
             <div class="spacing-bar"><i style="width:4px"></i><code>4</code> tight gaps, tab spacing</div>
@@ -928,7 +928,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td>Inactive tab labels use Text.Disabled (3.57:1), which is below AA for 14px text</td><td><code>TabButtonStyle</code></td><td>Consider Text.Medium (7.16:1)</td></tr>
             <tr><td>The active tab underline (PrimaryContainer) has 2.42:1 contrast on the tab strip, which is below 3:1 for UI elements. This is a deliberate choice so the underline matches the tiles, and the active label also switches to high emphasis.</td><td><code>Brush.ModernTile.Highlight</code></td><td>If it reads too faintly, use Indigo 400 <code>#5C6BC0</code> (3.85:1)</td></tr>
             <tr><td>Type sizes are ad hoc (10–36px) and not yet on the Material type scale</td><td><code>TextBlock.xaml</code></td><td>Phase 4</td></tr>
-            <tr><td>Some margins (2, 3, 5px) are off the 8dp grid</td><td>Dashboard, Ledger Book, Reports (Transactions and Budget are done)</td><td>Phase 4</td></tr>
+            <tr><td>Some margins (2, 3, 5px) are off the 8dp grid</td><td>Dashboard, Ledger Book (Transactions, Budget and Reports are done)</td><td>Phase 4</td></tr>
             <tr><td>The Active checkbox on Budget rows only shows on hover, so it's hard to discover</td><td><code>TopBudgetMaintenance.xaml</code></td><td>Consider making it always visible</td></tr>
             <tr><td><code>Badge.Border1</code> is no longer used, since the budget name now uses status chips</td><td><code>OilLight.xaml</code></td><td>Remove it</td></tr>
             <tr><td>The Transactions search box and bucket filter expand and collapse with a 1-second width animation. That's bespoke motion, and slow compared with Material's roughly 250ms.</td><td><code>TopTransactionsUserControl.xaml.cs</code></td><td>Shorten the duration, or use a fixed-width field. Either way it's a code-behind change.</td></tr>
