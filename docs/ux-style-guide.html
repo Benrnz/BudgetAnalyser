@@ -131,7 +131,6 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 .btn-icon { background: var(--primary-container); color: #fff; width: 40px; height: 40px; padding: 0; box-shadow: var(--dp2); font-size: 22px; font-weight: 700; text-transform: none; }
 .btn-icon:hover { box-shadow: var(--dp8); }
 .btn-icon svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-.btn-square { background: var(--primary-container); color: #fff; width: 100px; height: 40px; box-shadow: var(--dp2); }
 .btn:disabled { background: rgba(255,255,255,.12); color: var(--text-disabled); box-shadow: none; cursor: default; }
 .btn-secondary:disabled { background: transparent; }
 
@@ -162,7 +161,6 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 
 .badge { display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; color: var(--text-high); font-weight: 700; }
 .oil { min-width: 150px; margin: 0; padding: 6px 3px; font-size: 10px; }
-.badge1 { height: 25px; padding: 0 3px; font-size: 12px; border: 2px solid var(--divider); background: var(--positive-container); }
 .badge2 { height: 25px; width: 35px; font-size: 12px; background: var(--surface); }
 
 .sumchip { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 4px 12px; border-radius: 4px; }
@@ -385,7 +383,6 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
         <tbody>
             <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Surfaces</td></tr>
             <tr><td><code>Brush.MainBackground</code> <b>C#</b></td><td><span class="chip" style="background:var(--background)"></span>Background</td><td>Page background, list backgrounds, read-only text boxes</td></tr>
-            <tr><td><code>Brush.SecondaryBackground</code> <b>C#</b></td><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td>Secondary panels</td></tr>
             <tr><td><code>Brush.TileBackgroundAlternate</code> <b>C#</b></td><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td>Text box fill, alternate rows, ledger bank balance and surplus cells</td></tr>
             <tr><td><code>Brush.TileBackground</code> <b>C#</b></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>List item cards, highlighted ledger cells</td></tr>
             <tr><td><code>Brush.NeutralNumberBackground</code> <b>C#</b></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Neutral (zero) number fills</td></tr>
@@ -414,7 +411,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td><code>Brush.ModernTile.Disabled</code></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Disabled tiles</td></tr>
 
             <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Status fills (always light text on top)</td></tr>
-            <tr><td><code>Brush.CreditBackground1</code> <b>C#</b></td><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td>Credit fills, nominal oil light, <code>Badge.Border1</code></td></tr>
+            <tr><td><code>Brush.CreditBackground1</code> <b>C#</b></td><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td>Credit fills, nominal oil light</td></tr>
             <tr><td><code>Brush.DebitBackground1</code> <b>C#</b>, <code>Brush.Negative.Container</code>, <code>Brush.RedOilLight</code></td><td><span class="chip" style="background:var(--negative-container)"></span>NegativeContainer</td><td>Debit fills, red oil light</td></tr>
             <tr><td><code>Brush.NotSoBadDebit</code> <b>C#</b>, <code>Brush.WarningOilLight</code></td><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td>Mild overspend, warning tiles and oil lights</td></tr>
 
@@ -558,10 +555,6 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
         <div class="caption">Add · Minus · Save · Left · Right · Cross · Lock · All · disabled. There are also Build, Clear, Info, PlusL/PlusR, ApplyRules, EditRules, SmallCross, TransferFunds and Unlock. The glyphs shown here are stand-ins for the app's vector assets.</div>
     </div>
 
-    <h3>Square text button</h3>
-    <div class="panel"><div class="row"><button class="btn btn-square">Import</button></div>
-        <div class="caption"><code>Button.Square.BaseStyle</code> is 100×40 with margin 5 and padding 2.</div></div>
-
     <h3>Page action buttons</h3>
     <p class="muted">A labelled action on a page, such as adding an item under a list, uses the same filled indigo button as a dialog's primary action. Don't use status colours (green, red or orange) as button fills, even when the action creates something of that type.</p>
     <div class="panel" style="background:var(--background)">
@@ -612,7 +605,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <table>
         <thead><tr><th>Widget style name</th><th>Fill</th><th>Meaning</th></tr></thead>
         <tbody>
-            <tr><td><code>WidgetStandardStyle</code>, <code>WidgetStandardStyle2</code>, <code>ModernTileMedium/SmallStyle1/2</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Normal state</td></tr>
+            <tr><td><code>WidgetStandardStyle</code>, <code>ModernTileMedium/SmallStyle1/2</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Normal state</td></tr>
             <tr><td><code>WidgetWarningStyle</code></td><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td>Needs attention (for example: no file open, no date filter, import overdue, 20+ disused rules)</td></tr>
             <tr><td><code>WidgetStandardStyle3</code></td><td><span class="chip" style="background:var(--tile)"></span>Tile</td><td>Neutral or informational</td></tr>
             <tr><td>(Enabled = false)</td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Disabled tile</td></tr>
@@ -673,10 +666,9 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
         </div>
         <div class="caption"><code>Badge.Border.NominalOilLightStyle</code> · <code>…WarningOilLightStyle</code> · <code>…RedOilLightStyle</code>. Each has min width 150 and margin 8, with <code>Badge.TextBlock.WarningLightStyle</code> text (10px bold).</div>
         <div class="row" style="margin-top:20px">
-            <span class="badge badge1">SURPLUS</span>
             <span class="badge badge2">3</span>
         </div>
-        <div class="caption"><code>Badge.Border1</code> (height 25, credit fill with a 2px divider border) · <code>Badge.Border2</code> (25×35, Surface fill), both with <code>Badge.Text</code> (12px bold).</div>
+        <div class="caption"><code>Badge.Border2</code> (25×35, Surface fill) with <code>Badge.Text</code> (12px bold).</div>
     </div>
 </section>
 
@@ -931,7 +923,6 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td>Type sizes are ad hoc (10–36px) and not yet on the Material type scale</td><td><code>TextBlock.xaml</code></td><td>Phase 4</td></tr>
             <tr><td>Some margins (2, 3, 5px) are off the 8dp grid</td><td>Dashboard, Ledger Book (Transactions, Budget and Reports are done)</td><td>Phase 4</td></tr>
             <tr><td>The Active checkbox on Budget rows only shows on hover, so it's hard to discover</td><td><code>TopBudgetMaintenance.xaml</code></td><td>Consider making it always visible</td></tr>
-            <tr><td><code>Badge.Border1</code> is no longer used, since the budget name now uses status chips</td><td><code>OilLight.xaml</code></td><td>Remove it</td></tr>
             <tr><td>The Transactions search box and bucket filter expand and collapse with a 1-second width animation. That's bespoke motion, and slow compared with Material's roughly 250ms.</td><td><code>TopTransactionsUserControl.xaml.cs</code></td><td>Shorten the duration, or use a fixed-width field. Either way it's a code-behind change.</td></tr>
             <tr><td>Legacy names don't describe what they do: <code>Button.Round.*</code> buttons are rectangular, and there are <code>OilLight</code> and <code>ModernTile.Highlight</code> (which is the tab indicator)</td><td>Buttons, OilLight, Colours</td><td>Kept for compatibility, since some are referenced from C#</td></tr>
             <tr><td>Glyphs are custom vector assets instead of Material <code>PackIcon</code>s. New UI already uses <code>PackIcon</code> (the Transactions empty states and duplicates chip), so the two styles are mixed for now.</td><td><code>UI/Assets/*Image.xaml</code></td><td>Phase 6</td></tr>

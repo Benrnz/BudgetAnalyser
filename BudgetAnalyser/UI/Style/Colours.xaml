@@ -45,9 +45,6 @@
     <SolidColorBrush x:Key="Brush.MainBackground"
                      Color="{StaticResource Colour.Palette.Background}" />
 
-    <SolidColorBrush x:Key="Brush.SecondaryBackground"
-                     Color="{StaticResource Colour.Palette.Surface}" />
-
     <SolidColorBrush x:Key="Brush.TileBackgroundAlternate"
                      Color="{StaticResource Colour.Palette.Surface}" />
 

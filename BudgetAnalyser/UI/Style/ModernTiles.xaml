@@ -113,12 +113,6 @@
                 Value="{StaticResource Brush.ModernTile.Background1}" />
     </Style>
 
-    <Style x:Key="WidgetStandardStyle2"
-           TargetType="Panel">
-        <Setter Property="Background"
-                Value="{StaticResource Brush.ModernTile.Background2}" />
-    </Style>
-
     <Style x:Key="WidgetStandardStyle3"
            TargetType="Panel">
         <Setter Property="Background"

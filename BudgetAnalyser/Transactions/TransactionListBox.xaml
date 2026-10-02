@@ -1,14 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
                     xmlns:transactions="clr-namespace:BudgetAnalyser.Engine.Transactions;assembly=BudgetAnalyser.Engine"
                     xmlns:transactionsUi="clr-namespace:BudgetAnalyser.Transactions"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
-
-    <converters1:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility" />
-
-    <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
 
     <Style x:Key="ListBox.TransactionContainer"
            BasedOn="{StaticResource ListBox.StandardContainerStyle}"

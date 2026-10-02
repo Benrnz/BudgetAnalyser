@@ -12,7 +12,6 @@
     <converters1:BoolToVisibility2Converter x:Key="Converter.BoolToVis2" />
     <converters1:NullToVisibilityConverter x:Key="Converter.NullToVis" />
     <converters1:NullToVisibilityConverter x:Key="Converter.NotNullToVis" Invert="True" />
-    <converters1:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility" />
     <converters1:MultiBoolToVisibilityConverter x:Key="Converter.MultiBoolToVisibility" />
     <converters1:TextToResourceControlTemplateConverter x:Key="Converter.TextToControlTemplate" />
     <converters1:ConvertToStringConverter x:Key="Converter.ToString" />

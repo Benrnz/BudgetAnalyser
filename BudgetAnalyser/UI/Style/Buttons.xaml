@@ -1,27 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-
-    <!-- Rectangular Buttons -->
-    <Style x:Key="Button.Square.BaseStyle"
-           TargetType="Button"
-           BasedOn="{StaticResource MaterialDesignRaisedButton}">
-        <Setter Property="Cursor"
-                Value="Hand" />
-        <Setter Property="Margin"
-                Value="5" />
-        <Setter Property="MinWidth"
-                Value="0" />
-        <Setter Property="MinHeight"
-                Value="0" />
-        <Setter Property="Width"
-                Value="100" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="Padding"
-                Value="2" />
-    </Style>
-
     <!-- Dialog Buttons: text-labelled rectangular buttons for a dialog's action row, following Material's dialog
          guidance (36px high, 64px minimum width, 8px apart). The confirming action is filled; dismissive or
          secondary actions are flat text buttons. Toolbar actions use the square icon buttons below instead. -->
