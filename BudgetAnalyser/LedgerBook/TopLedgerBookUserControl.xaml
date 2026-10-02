@@ -12,9 +12,25 @@
 
     <UserControl.Resources>
 
+        <!-- Links take the colour of their TextBlock (rather than the system blue) so ledger numbers keep their
+             semantic colours. They are underlined on hover to show they are clickable. -->
         <Style TargetType="Hyperlink">
             <Setter Property="TextDecorations"
                     Value="{x:Null}" />
+            <Setter Property="Foreground"
+                    Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TextBlock}}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+                    <Setter Property="TextDecorations"
+                            Value="Underline" />
+                </Trigger>
+                <Trigger Property="IsEnabled"
+                         Value="False">
+                    <Setter Property="Foreground"
+                            Value="{StaticResource Brush.Text.Disabled}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="LedgerBookTextBlockNumber"
