@@ -1,5 +1,7 @@
 ﻿using System.Text;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
@@ -171,7 +173,9 @@ public class PersistenceOperations
     private async void OnPasswordSetMessageReceived(PasswordSetMessage message)
     {
         // Reload the database file - treat it as a normal file open scenario.
-        await LoadDatabase(message.DatabaseStorageKey);
+        // This message arrives from the shell dialog's ApplicationIdle callback. Awaits capture the current dispatcher priority, so without re-dispatching at Normal every
+        // continuation in the load would run below Render, forcing a full layout and render pass after each service loads.
+        await Application.Current.Dispatcher.InvokeAsync(() => LoadDatabase(message.DatabaseStorageKey), DispatcherPriority.Normal).Task.Unwrap();
     }
 
     private async Task<bool> PromptToSaveIfNecessary()
