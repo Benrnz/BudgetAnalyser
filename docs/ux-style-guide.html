@@ -17,6 +17,7 @@
     --surface: #1E1E1E;
     --surface-raised: #2C2C2C;
     --dialog: #383838;
+    --tile: #424242;
     --divider: rgba(255,255,255,0.12);
     --tooltip: #616161;
 
@@ -156,7 +157,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
 .tile.clickable::after { content: ""; position: absolute; inset: 0; background: rgba(255,255,255,.87); opacity: 0; transition: opacity .15s; }
 .tile.clickable:hover { box-shadow: var(--dp8); }
 .tile.clickable:hover::after { opacity: .12; }
-.tile.disabled { background: var(--surface) !important; color: var(--text-disabled); }
+.tile.disabled { background: var(--surface-raised) !important; color: var(--text-disabled); }
 .tile.disabled .t-detail { color: var(--text-disabled); }
 
 .badge { display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; color: var(--text-high); font-weight: 700; }
@@ -297,7 +298,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
         single dark theme, built on MaterialDesignInXamlToolkit plus the app's own dictionaries under <code>BudgetAnalyser/UI/Style</code>.</p>
     <p class="muted">This page is a visual reference. The XAML stays the source of truth, so update this page in the same commit as any style change.</p>
     <div class="meta">
-        <span>Last updated: 2026-09-27</span>
+        <span>Last updated: 2026-10-02</span>
         <span>Matches branch <code>claude/ux-material-design</code>: Phase 5 (colour palette, Indigo primary) and Phase 4 for the Transactions and Budget screens</span>
         <span>Plan: <a href="ux-material-design-plan.md">ux-material-design-plan.md</a></span>
     </div>
@@ -323,9 +324,10 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
     <h3>Surfaces (Material dark elevation steps)</h3>
     <div class="grid cols-3">
         <div class="swatch"><div class="fill" style="background:var(--background)">Aa</div><div class="info"><div class="key">Colour.Palette.Background</div><div class="hex">#121212 · 0dp</div><div class="use">Window and page background, the tab strip, read-only fields</div></div></div>
-        <div class="swatch"><div class="fill" style="background:var(--surface)">Aa</div><div class="info"><div class="key">Colour.Palette.Surface</div><div class="hex">#1E1E1E · 1dp</div><div class="use">Secondary panels, input fills, alternate rows, disabled tiles</div></div></div>
-        <div class="swatch"><div class="fill" style="background:var(--surface-raised)">Aa</div><div class="info"><div class="key">Colour.Palette.SurfaceRaised</div><div class="hex">#2C2C2C · 6dp</div><div class="use">List items, neutral number cells, menus, the neutral tile</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--surface)">Aa</div><div class="info"><div class="key">Colour.Palette.Surface</div><div class="hex">#1E1E1E · 1dp</div><div class="use">Secondary panels, input fills, alternate rows</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--surface-raised)">Aa</div><div class="info"><div class="key">Colour.Palette.SurfaceRaised</div><div class="hex">#2C2C2C · 6dp</div><div class="use">List items, neutral number cells, menus, disabled tiles</div></div></div>
         <div class="swatch"><div class="fill" style="background:var(--dialog)">Aa</div><div class="info"><div class="key">Colour.Palette.Dialog</div><div class="hex">#383838 · 24dp</div><div class="use">Modal dialog card</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--tile)">Aa</div><div class="info"><div class="key">Colour.Palette.Tile</div><div class="hex">#424242 · Grey 800</div><div class="use">Neutral dashboard tiles (lighter than the elevation steps so tile edges stay visible on the page)</div></div></div>
         <div class="swatch"><div class="fill" style="background:var(--tooltip)">Aa</div><div class="info"><div class="key">Colour.Palette.Tooltip</div><div class="hex">#616161 · Grey 700</div><div class="use">Tooltip background</div></div></div>
         <div class="swatch"><div class="fill" style="background:var(--background);box-shadow:inset 0 -2px 0 var(--divider), inset 0 0 0 1px var(--divider)"><span class="muted" style="font-weight:400;font-size:12px">1px line</span></div><div class="info"><div class="key">Colour.Palette.Divider</div><div class="hex">#1FFFFFFF · white 12%</div><div class="use">Borders, dividers, control outlines</div></div></div>
     </div>
@@ -408,8 +410,8 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td><code>Brush.Button.Glyph</code></td><td><span class="chip" style="background:#fff"></span>White</td><td>Icons and text on buttons</td></tr>
             <tr><td><code>Brush.ModernTile.Highlight</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Active tab underline (matches the button and tile fill)</td></tr>
             <tr><td><code>Brush.ModernTile.Background1</code> / <code>2</code> <b>C#</b></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Standard dashboard tiles</td></tr>
-            <tr><td><code>Brush.ModernTile.Background3</code></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Neutral dashboard tile</td></tr>
-            <tr><td><code>Brush.ModernTile.Disabled</code></td><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td>Disabled tiles</td></tr>
+            <tr><td><code>Brush.ModernTile.Background3</code></td><td><span class="chip" style="background:var(--tile)"></span>Tile</td><td>Neutral dashboard tile</td></tr>
+            <tr><td><code>Brush.ModernTile.Disabled</code></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Disabled tiles</td></tr>
 
             <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Status fills (always light text on top)</td></tr>
             <tr><td><code>Brush.CreditBackground1</code> <b>C#</b></td><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td>Credit fills, nominal oil light, <code>Badge.Border1</code></td></tr>
@@ -444,6 +446,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <tr><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td><span class="cr pass">12.87</span></td><td><span class="cr pass">6.77</span></td><td><span class="cr large">3.57</span></td><td><span class="cr pass">16.67</span></td><td><span class="cr pass">7.21</span></td><td><span class="cr pass">8.28</span></td><td><span class="cr pass">7.75</span></td></tr>
             <tr><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td><span class="cr pass">10.98</span></td><td><span class="cr pass">6.08</span></td><td><span class="cr large">3.35</span></td><td><span class="cr pass">13.97</span></td><td><span class="cr pass">6.04</span></td><td><span class="cr pass">6.94</span></td><td><span class="cr pass">6.49</span></td></tr>
             <tr><td><span class="chip" style="background:var(--dialog)"></span>Dialog</td><td><span class="cr pass">9.31</span></td><td><span class="cr pass">5.35</span></td><td><span class="cr large">3.14</span></td><td><span class="cr pass">11.73</span></td><td><span class="cr pass">5.07</span></td><td><span class="cr pass">5.83</span></td><td><span class="cr pass">5.45</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--tile)"></span>Tile</td><td><span class="cr pass">8.08</span></td><td><span class="cr pass">4.81</span></td><td><span class="cr fail">2.90</span></td><td><span class="cr pass">10.05</span></td><td><span class="cr large">4.35</span></td><td><span class="cr pass">4.99</span></td><td><span class="cr pass">4.67</span></td></tr>
             <tr><td><span class="chip" style="background:var(--tooltip)"></span>Tooltip</td><td><span class="cr pass">5.20</span></td><td><span class="cr large">3.40</span></td><td><span class="cr fail">2.28</span></td><td><span class="cr pass">6.19</span></td><td><span class="cr fail">2.68</span></td><td><span class="cr large">3.08</span></td><td><span class="cr fail">2.88</span></td></tr>
             <tr><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td><span class="cr pass">6.29</span></td><td><span class="cr large">3.90</span></td><td><span class="cr fail">2.47</span></td><td><span class="cr pass">7.73</span></td><td><span class="cr large">3.35</span></td><td><span class="cr large">3.84</span></td><td><span class="cr large">3.59</span></td></tr>
             <tr><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td><span class="cr pass">6.40</span></td><td><span class="cr large">3.97</span></td><td><span class="cr fail">2.50</span></td><td><span class="cr pass">7.87</span></td><td><span class="cr large">3.41</span></td><td><span class="cr large">3.91</span></td><td><span class="cr large">3.66</span></td></tr>
@@ -599,7 +602,7 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
             <div class="tile clickable" style="background:var(--primary-container)"><span class="t-title">Current file</span><span class="t-big">Budget</span><span class="t-detail">Budget2026.bax</span></div>
             <div class="tile clickable" style="background:var(--warning-container)"><span class="t-title">Days since import</span><span class="t-big">12</span><span class="t-detail">Import transactions</span></div>
             <div class="tile clickable small" style="background:var(--primary-container)"><span class="t-title">Rules</span><span class="t-big">4</span></div>
-            <div class="tile" style="background:var(--surface-raised)"><span class="t-title">Surplus</span><span class="t-big" style="color:var(--positive)">$812</span><span class="t-detail">This month</span></div>
+            <div class="tile" style="background:var(--tile)"><span class="t-title">Surplus</span><span class="t-big" style="color:var(--positive)">$812</span><span class="t-detail">This month</span></div>
             <div class="tile disabled"><span class="t-title">Overspent</span><span class="t-big">—</span><span class="t-detail">No budget loaded</span></div>
         </div>
         <div class="caption">Hover over the clickable tiles to see the state layer and elevation.</div>
@@ -610,8 +613,8 @@ td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px;
         <tbody>
             <tr><td><code>WidgetStandardStyle</code>, <code>WidgetStandardStyle2</code>, <code>ModernTileMedium/SmallStyle1/2</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Normal state</td></tr>
             <tr><td><code>WidgetWarningStyle</code></td><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td>Needs attention (for example: no file open, no date filter, import overdue, 20+ disused rules)</td></tr>
-            <tr><td><code>WidgetStandardStyle3</code></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Neutral or informational</td></tr>
-            <tr><td>(Enabled = false)</td><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td>Disabled tile</td></tr>
+            <tr><td><code>WidgetStandardStyle3</code></td><td><span class="chip" style="background:var(--tile)"></span>Tile</td><td>Neutral or informational</td></tr>
+            <tr><td>(Enabled = false)</td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Disabled tile</td></tr>
         </tbody>
     </table>
     </div>

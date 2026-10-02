@@ -14,6 +14,7 @@
     <Color x:Key="Colour.Palette.Surface">#FF1E1E1E</Color>          <!-- 1dp -->
     <Color x:Key="Colour.Palette.SurfaceRaised">#FF2C2C2C</Color>    <!-- 6dp -->
     <Color x:Key="Colour.Palette.Dialog">#FF383838</Color>           <!-- 24dp -->
+    <Color x:Key="Colour.Palette.Tile">#FF424242</Color>             <!-- Grey 800: neutral dashboard tiles, light enough for tile edges to stand out -->
     <Color x:Key="Colour.Palette.Divider">#1FFFFFFF</Color>          <!-- white 12% -->
     <Color x:Key="Colour.Palette.Tooltip">#FF616161</Color>          <!-- Grey 700 -->
 
@@ -152,8 +153,8 @@
                      Color="{StaticResource Colour.Palette.PrimaryContainer}" />
 
     <SolidColorBrush x:Key="Brush.ModernTile.Background3"
-                     Color="{StaticResource Colour.Palette.SurfaceRaised}" />
+                     Color="{StaticResource Colour.Palette.Tile}" />
 
     <SolidColorBrush x:Key="Brush.ModernTile.Disabled"
-                     Color="{StaticResource Colour.Palette.Surface}" />
+                     Color="{StaticResource Colour.Palette.SurfaceRaised}" />
 </ResourceDictionary>
