@@ -177,41 +177,41 @@
                                             <ColumnDefinition SharedSizeGroup="Col6" />
                                             <ColumnDefinition SharedSizeGroup="Col7" />
                                         </Grid.ColumnDefinitions>
-                                        <Border Background="{StaticResource Brush.ImportantHighlightLight}"
+                                        <Border Background="{StaticResource Brush.Primary.Container}"
                                                 CornerRadius="2"
                                                 Margin="2"
                                                 Visibility="{Binding DescriptionMatched, Converter={StaticResource Converter.BoolToVis}}"/>
                                         <TextBlock Text="{Binding Description}" />
                                         <Border Grid.Column="1"
-                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                Background="{StaticResource Brush.Primary.Container}"
                                                 CornerRadius="2"
                                                 Margin="2"
                                                 Visibility="{Binding Reference1Matched, Converter={StaticResource Converter.BoolToVis}}" />
                                         <TextBlock Grid.Column="1"
                                                    Text="{Binding Reference1}" />
                                         <Border Grid.Column="2"
-                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                Background="{StaticResource Brush.Primary.Container}"
                                                 CornerRadius="2"
                                                 Margin="2"
                                                 Visibility="{Binding Reference2Matched, Converter={StaticResource Converter.BoolToVis}}" />
                                         <TextBlock Grid.Column="2"
                                                    Text="{Binding Reference2}" />
                                         <Border Grid.Column="3"
-                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                Background="{StaticResource Brush.Primary.Container}"
                                                 CornerRadius="2"
                                                 Margin="2"
                                                 Visibility="{Binding Reference3Matched, Converter={StaticResource Converter.BoolToVis}}" />
                                         <TextBlock Grid.Column="3"
                                                    Text="{Binding Reference3}" />
                                         <Border Grid.Column="4"
-                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                Background="{StaticResource Brush.Primary.Container}"
                                                 CornerRadius="2"
                                                 Margin="2"
                                                 Visibility="{Binding AmountMatched, Converter={StaticResource Converter.BoolToVis}}" />
                                         <TextBlock Grid.Column="4"
                                                    Text="{Binding Amount, StringFormat=C}" />
                                         <Border Grid.Column="5"
-                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                Background="{StaticResource Brush.Primary.Container}"
                                                 CornerRadius="2"
                                                 Margin="2"
                                                 Visibility="{Binding TransactionTypeMatched, Converter={StaticResource Converter.BoolToVis}}" />

@@ -2,24 +2,24 @@
 <CodeMetricsReport Version="1.0">
   <Targets>
     <Target Name="BudgetAnalyser.Engine.XUnit3.csproj">
-      <Assembly Name="BudgetAnalyser.Engine.XUnit3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Assembly Name="BudgetAnalyser.Engine.XUnit3, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
         <Metrics>
           <Metric Name="MaintainabilityIndex" Value="76" />
-          <Metric Name="CyclomaticComplexity" Value="1843" />
+          <Metric Name="CyclomaticComplexity" Value="1822" />
           <Metric Name="ClassCoupling" Value="388" />
           <Metric Name="DepthOfInheritance" Value="3" />
-          <Metric Name="SourceLines" Value="21978" />
-          <Metric Name="ExecutableLines" Value="6445" />
+          <Metric Name="SourceLines" Value="21874" />
+          <Metric Name="ExecutableLines" Value="6424" />
         </Metrics>
         <Namespaces>
           <Namespace Name="BudgetAnalyser.Engine.XUnit">
             <Metrics>
-              <Metric Name="MaintainabilityIndex" Value="80" />
-              <Metric Name="CyclomaticComplexity" Value="164" />
+              <Metric Name="MaintainabilityIndex" Value="79" />
+              <Metric Name="CyclomaticComplexity" Value="140" />
               <Metric Name="ClassCoupling" Value="80" />
               <Metric Name="DepthOfInheritance" Value="2" />
-              <Metric Name="SourceLines" Value="1422" />
-              <Metric Name="ExecutableLines" Value="517" />
+              <Metric Name="SourceLines" Value="1272" />
+              <Metric Name="ExecutableLines" Value="470" />
             </Metrics>
             <Types>
               <NamedType Name="AutoRegisterWithIoCProcessorPropertyInjectionTestSource">
@@ -334,234 +334,6 @@
                       <Metric Name="ClassCoupling" Value="5" />
                       <Metric Name="SourceLines" Value="7" />
                       <Metric Name="ExecutableLines" Value="4" />
-                    </Metrics>
-                  </Method>
-                </Members>
-              </NamedType>
-              <NamedType Name="DateTimeExtensionTest">
-                <Metrics>
-                  <Metric Name="MaintainabilityIndex" Value="80" />
-                  <Metric Name="CyclomaticComplexity" Value="24" />
-                  <Metric Name="ClassCoupling" Value="4" />
-                  <Metric Name="DepthOfInheritance" Value="1" />
-                  <Metric Name="SourceLines" Value="146" />
-                  <Metric Name="ExecutableLines" Value="48" />
-                </Metrics>
-                <Members>
-                  <Method Name="void DateTimeExtensionTest.FebruaryToMarchIsOneMonth()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="11">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.FindNextWeekDayShouldReturn1stJuneGiven30thMay()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="17">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.FindNextWeekDayShouldReturn1stJuneGiven31stMay()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="23">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.FindNextWeekDayShouldReturn29thMayGiven29thMay()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="29">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.Given1DecemberFirstDateInMonthShouldReturn1December()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="35">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.Given28FebruaryLastDateInMonthShouldReturn28February()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="41">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.Given28JanuaryFirstDateInMonthShouldReturn1January()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="47">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.Given30JanuaryLastDateInMonthShouldReturn31January()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="53">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.Given5February2000LastDateInMonthShouldReturn29February()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="59">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.Given5JuneLastDateInMonthShouldReturn30June()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="65">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.January2014To17thMarch2014IsRoundedDownToTenWeeks()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="71">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.January2014To17thMarch2014IsRoundedDownToTwoMonths()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="77">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.January2014To23rdMarch2014IsRoundedUpToElevenWeeks()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="83">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.January2014To23rdMarch2014IsRoundedUpToThreeMonths()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="89">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.JanuaryToJanuaryIsOneMonth()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="95">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.JanuaryToJanuaryIsOneWeek()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="101">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.JanuaryToJuneIs21Weeks()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="107">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.JanuaryToJuneIsFiveMonths()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="113">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.October2013ToMarch2014Is21Weeks()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="119">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.October2013ToMarch2014IsFiveMonths()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="125">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.OneStandardPayFortnightIsTwoWeeks1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="131">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.OneStandardPayFortnightIsTwoWeeks2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="137">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.OneStandardPayMonthIsOneMonth1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="143">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void DateTimeExtensionTest.OneStandardPayMonthIsOneMonth2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\DateTimeExtensionTest.cs" Line="149">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
                 </Members>
@@ -1521,21 +1293,21 @@
               </NamedType>
               <NamedType Name="SelfRegisteredExtensions">
                 <Metrics>
-                  <Metric Name="MaintainabilityIndex" Value="86" />
+                  <Metric Name="MaintainabilityIndex" Value="81" />
                   <Metric Name="CyclomaticComplexity" Value="1" />
-                  <Metric Name="ClassCoupling" Value="3" />
+                  <Metric Name="ClassCoupling" Value="4" />
                   <Metric Name="DepthOfInheritance" Value="1" />
-                  <Metric Name="SourceLines" Value="8" />
-                  <Metric Name="ExecutableLines" Value="3" />
+                  <Metric Name="SourceLines" Value="9" />
+                  <Metric Name="ExecutableLines" Value="4" />
                 </Metrics>
                 <Members>
                   <Method Name="void SelfRegisteredExtensions.AddSelfRegisteredExtensions(ITestApplicationBuilder builder, string[] args)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\obj\Debug\net10.0\SelfRegisteredExtensions.cs" Line="12">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="97" />
+                      <Metric Name="MaintainabilityIndex" Value="88" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="2" />
-                      <Metric Name="SourceLines" Value="4" />
-                      <Metric Name="ExecutableLines" Value="1" />
+                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
                 </Members>
@@ -4795,7 +4567,7 @@
             <Metrics>
               <Metric Name="MaintainabilityIndex" Value="75" />
               <Metric Name="CyclomaticComplexity" Value="404" />
-              <Metric Name="ClassCoupling" Value="151" />
+              <Metric Name="ClassCoupling" Value="150" />
               <Metric Name="DepthOfInheritance" Value="1" />
               <Metric Name="SourceLines" Value="4045" />
               <Metric Name="ExecutableLines" Value="1550" />
@@ -6358,7 +6130,7 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="79" />
                   <Metric Name="CyclomaticComplexity" Value="8" />
-                  <Metric Name="ClassCoupling" Value="23" />
+                  <Metric Name="ClassCoupling" Value="22" />
                   <Metric Name="DepthOfInheritance" Value="1" />
                   <Metric Name="SourceLines" Value="63" />
                   <Metric Name="ExecutableLines" Value="23" />
@@ -6404,7 +6176,7 @@
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="80" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="9" />
+                      <Metric Name="ClassCoupling" Value="8" />
                       <Metric Name="SourceLines" Value="5" />
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
@@ -8413,7 +8185,7 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="66" />
                   <Metric Name="CyclomaticComplexity" Value="26" />
-                  <Metric Name="ClassCoupling" Value="62" />
+                  <Metric Name="ClassCoupling" Value="61" />
                   <Metric Name="DepthOfInheritance" Value="1" />
                   <Metric Name="SourceLines" Value="307" />
                   <Metric Name="ExecutableLines" Value="111" />
@@ -8549,7 +8321,7 @@
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="55" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="39" />
+                      <Metric Name="ClassCoupling" Value="38" />
                       <Metric Name="SourceLines" Value="30" />
                       <Metric Name="ExecutableLines" Value="13" />
                     </Metrics>
@@ -9419,11 +9191,11 @@
           <Namespace Name="BudgetAnalyser.Engine.XUnit.Matching">
             <Metrics>
               <Metric Name="MaintainabilityIndex" Value="73" />
-              <Metric Name="CyclomaticComplexity" Value="130" />
-              <Metric Name="ClassCoupling" Value="64" />
+              <Metric Name="CyclomaticComplexity" Value="134" />
+              <Metric Name="ClassCoupling" Value="63" />
               <Metric Name="DepthOfInheritance" Value="1" />
-              <Metric Name="SourceLines" Value="1131" />
-              <Metric Name="ExecutableLines" Value="499" />
+              <Metric Name="SourceLines" Value="1183" />
+              <Metric Name="ExecutableLines" Value="529" />
             </Metrics>
             <Types>
               <NamedType Name="DataMatchingRuleToMatchingRuleMapperTest">
@@ -9432,7 +9204,7 @@
                   <Metric Name="CyclomaticComplexity" Value="16" />
                   <Metric Name="ClassCoupling" Value="14" />
                   <Metric Name="DepthOfInheritance" Value="1" />
-                  <Metric Name="SourceLines" Value="110" />
+                  <Metric Name="SourceLines" Value="111" />
                   <Metric Name="ExecutableLines" Value="39" />
                 </Metrics>
                 <Members>
@@ -9450,11 +9222,11 @@
                       <Metric Name="MaintainabilityIndex" Value="86" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="4" />
-                      <Metric Name="SourceLines" Value="15" />
+                      <Metric Name="SourceLines" Value="16" />
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.AmountShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="29">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.AmountShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="30">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9463,7 +9235,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.BucketCodeShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="36">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.BucketCodeShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="37">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9472,7 +9244,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.CreatedDatesShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="43">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.CreatedDatesShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="44">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="78" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -9481,7 +9253,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.DescriptionShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="50">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.DescriptionShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="51">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9490,7 +9262,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.LastMatchShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="57">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.LastMatchShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="58">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="78" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -9499,7 +9271,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.MatchCountShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="64">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.MatchCountShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="65">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9508,7 +9280,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.NumberOfDataMatchingRulePropertiesShouldBe12()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="71">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.NumberOfDataMatchingRulePropertiesShouldBe14()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="72">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="82" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9517,7 +9289,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.Reference1ShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="78">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.Reference1ShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="79">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9526,7 +9298,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.Reference2ShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="85">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.Reference2ShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="86">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9535,7 +9307,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.Reference3ShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="92">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.Reference3ShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="93">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9544,7 +9316,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.RuleIdShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="99">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.RuleIdShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="100">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9553,7 +9325,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.TransactionTypeShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="106">
+                  <Method Name="void DataMatchingRuleToMatchingRuleMapperTest.TransactionTypeShouldBeMapped()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="107">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="79" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9562,7 +9334,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="MatchingRule DataMatchingRuleToMatchingRuleMapperTest.ArrangeAndAct()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="112">
+                  <Method Name="MatchingRule DataMatchingRuleToMatchingRuleMapperTest.ArrangeAndAct()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" Line="113">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="83" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9579,7 +9351,7 @@
                   <Metric Name="CyclomaticComplexity" Value="17" />
                   <Metric Name="ClassCoupling" Value="14" />
                   <Metric Name="DepthOfInheritance" Value="1" />
-                  <Metric Name="SourceLines" Value="97" />
+                  <Metric Name="SourceLines" Value="98" />
                   <Metric Name="ExecutableLines" Value="29" />
                 </Metrics>
                 <Members>
@@ -9615,7 +9387,7 @@
                       <Metric Name="MaintainabilityIndex" Value="86" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
                       <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="13" />
+                      <Metric Name="SourceLines" Value="14" />
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                     <Accessors>
@@ -9624,13 +9396,13 @@
                           <Metric Name="MaintainabilityIndex" Value="86" />
                           <Metric Name="CyclomaticComplexity" Value="1" />
                           <Metric Name="ClassCoupling" Value="6" />
-                          <Metric Name="SourceLines" Value="12" />
+                          <Metric Name="SourceLines" Value="13" />
                           <Metric Name="ExecutableLines" Value="1" />
                         </Metrics>
                       </Method>
                     </Accessors>
                   </Property>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapAmount()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="35">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapAmount()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="36">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9639,7 +9411,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapBucket()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="41">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapBucket()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="42">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="83" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9648,7 +9420,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapBucketCode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="47">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapBucketCode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="48">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9657,7 +9429,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapCreated()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="53">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapCreated()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="54">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="83" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -9666,7 +9438,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapDescription()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="59">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapDescription()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="60">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9675,7 +9447,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapId()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="65">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapId()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="66">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="86" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9684,7 +9456,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapLastMatch()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="71">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapLastMatch()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="72">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="83" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -9693,7 +9465,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapMatchCount()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="77">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapMatchCount()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="78">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9702,7 +9474,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapReference1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="83">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapReference1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="84">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9711,7 +9483,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapReference2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="89">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapReference2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="90">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9720,7 +9492,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapReference3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="95">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapReference3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="96">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9729,7 +9501,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapTransactionType()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="101">
+                  <Method Name="void DtoToMatchingRuleMapperTest.ShouldMapTransactionType()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\DtoToMatchingRuleMapperTest.cs" Line="102">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -9992,11 +9764,11 @@
               <NamedType Name="MatchingRuleTest">
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="68" />
-                  <Metric Name="CyclomaticComplexity" Value="27" />
+                  <Metric Name="CyclomaticComplexity" Value="31" />
                   <Metric Name="ClassCoupling" Value="20" />
                   <Metric Name="DepthOfInheritance" Value="1" />
-                  <Metric Name="SourceLines" Value="264" />
-                  <Metric Name="ExecutableLines" Value="143" />
+                  <Metric Name="SourceLines" Value="314" />
+                  <Metric Name="ExecutableLines" Value="173" />
                 </Metrics>
                 <Members>
                   <Field Name="IBudgetBucketRepository MatchingRuleTest.bucketRepo" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="12">
@@ -10035,43 +9807,7 @@
                       <Metric Name="ExecutableLines" Value="5" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.AndMatchShouldMatchOnReferences()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="47">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="66" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="11" />
-                      <Metric Name="ExecutableLines" Value="7" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.AndMatchShouldMatchOnTransacionType()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="59">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="68" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="8" />
-                      <Metric Name="SourceLines" Value="10" />
-                      <Metric Name="ExecutableLines" Value="6" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.AndMatchShouldNotMatchOnDescription1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="70">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="72" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="9" />
-                      <Metric Name="ExecutableLines" Value="5" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.AndMatchShouldNotMatchOnDescription2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="80">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="72" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="9" />
-                      <Metric Name="ExecutableLines" Value="5" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.AndMatchShouldNotMatchOnDescription3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="90">
+                  <Method Name="void MatchingRuleTest.AndMatchShouldMatchOnDescriptionRegex()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="47">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10080,88 +9816,7 @@
                       <Metric Name="ExecutableLines" Value="6" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.AnObjectIsNotEqualWithNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="101">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="77" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="7" />
-                      <Metric Name="ExecutableLines" Value="4" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.CtorShouldInitialiseCreated()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="109">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="80" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="6" />
-                      <Metric Name="ExecutableLines" Value="3" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.CtorShouldInitialiseId()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="116">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="80" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="5" />
-                      <Metric Name="SourceLines" Value="6" />
-                      <Metric Name="ExecutableLines" Value="3" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.CtorShouldThrowIfNullBucketRepo()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="123">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="83" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="3" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.MatchShouldSetLastMatchWhenMatchIsMade()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="129">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="69" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="7" />
-                      <Metric Name="SourceLines" Value="9" />
-                      <Metric Name="ExecutableLines" Value="6" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.MatchShouldSetMatchCountWhenMatchIsMade()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="139">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="69" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="9" />
-                      <Metric Name="ExecutableLines" Value="6" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.MatchShouldThrowWhenTransactionIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="149">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="77" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="8" />
-                      <Metric Name="SourceLines" Value="6" />
-                      <Metric Name="ExecutableLines" Value="4" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnAmountAndDescription()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="156">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="66" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="7" />
-                      <Metric Name="SourceLines" Value="11" />
-                      <Metric Name="ExecutableLines" Value="7" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnDescription3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="168">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="67" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="6" />
-                      <Metric Name="SourceLines" Value="11" />
-                      <Metric Name="ExecutableLines" Value="7" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnReferences()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="180">
+                  <Method Name="void MatchingRuleTest.AndMatchShouldMatchOnDescriptionAndReferenceRegex1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="58">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="65" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10170,7 +9825,160 @@
                       <Metric Name="ExecutableLines" Value="8" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnTransacionType()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="193">
+                  <Method Name="void MatchingRuleTest.AndMatchShouldMatchOnDescriptionAndReferenceRegex2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="71">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnDescriptionRegex()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="84">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.AndMatchShouldMatchOnReferences()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="97">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="66" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.AndMatchShouldMatchOnTransacionType()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="109">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="68" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.AndMatchShouldNotMatchOnDescription1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="120">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.AndMatchShouldNotMatchOnDescription2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="130">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="5" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.AndMatchShouldNotMatchOnDescription3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="140">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.AnObjectIsNotEqualWithNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="151">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="77" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="7" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.CtorShouldInitialiseCreated()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="159">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.CtorShouldInitialiseId()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="166">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="80" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="5" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.CtorShouldThrowIfNullBucketRepo()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="173">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="83" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="5" />
+                      <Metric Name="ExecutableLines" Value="3" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.MatchShouldSetLastMatchWhenMatchIsMade()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="179">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.MatchShouldSetMatchCountWhenMatchIsMade()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="189">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="9" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.MatchShouldThrowWhenTransactionIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="199">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="77" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="SourceLines" Value="6" />
+                      <Metric Name="ExecutableLines" Value="4" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnAmountAndDescription()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="206">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="66" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnDescription3()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="218">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="67" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="11" />
+                      <Metric Name="ExecutableLines" Value="7" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnReferences()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="230">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="6" />
+                      <Metric Name="SourceLines" Value="12" />
+                      <Metric Name="ExecutableLines" Value="8" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void MatchingRuleTest.OrMatchShouldMatchOnTransacionType()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="243">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="66" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10179,7 +9987,7 @@
                       <Metric Name="ExecutableLines" Value="7" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.OrMatchShouldNotMatchOnDescription1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="205">
+                  <Method Name="void MatchingRuleTest.OrMatchShouldNotMatchOnDescription1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="255">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10188,7 +9996,7 @@
                       <Metric Name="ExecutableLines" Value="6" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.OrMatchShouldNotMatchOnDescription2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="216">
+                  <Method Name="void MatchingRuleTest.OrMatchShouldNotMatchOnDescription2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="266">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10197,7 +10005,7 @@
                       <Metric Name="ExecutableLines" Value="6" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.RulesWithDifferentIdAreConsideredNotEqual()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="227">
+                  <Method Name="void MatchingRuleTest.RulesWithDifferentIdAreConsideredNotEqual()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="277">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="70" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10206,7 +10014,7 @@
                       <Metric Name="ExecutableLines" Value="6" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.RulesWithSameIdAreConsideredEqual()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="238">
+                  <Method Name="void MatchingRuleTest.RulesWithSameIdAreConsideredEqual()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="288">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="70" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10215,7 +10023,7 @@
                       <Metric Name="ExecutableLines" Value="6" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.TwoObjectsReferringToSameAreEqual()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="248">
+                  <Method Name="void MatchingRuleTest.TwoObjectsReferringToSameAreEqual()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="298">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="70" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10224,7 +10032,7 @@
                       <Metric Name="ExecutableLines" Value="6" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleTest.TwoObjectsReferringToSameAreEqual2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="258">
+                  <Method Name="void MatchingRuleTest.TwoObjectsReferringToSameAreEqual2()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="308">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="70" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10233,7 +10041,7 @@
                       <Metric Name="ExecutableLines" Value="6" />
                     </Metrics>
                   </Method>
-                  <Method Name="MatchingRule MatchingRuleTest.Arrange(Guid? id = null)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="269">
+                  <Method Name="MatchingRule MatchingRuleTest.Arrange(Guid? id = null)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleTest.cs" Line="319">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="77" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -10326,7 +10134,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchingRuleToDataMatchingRuleMapperTest.NumberOfDataMatchingRulePropertiesShouldBe12()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleToDataMatchingRuleMapperTest.cs" Line="71">
+                  <Method Name="void MatchingRuleToDataMatchingRuleMapperTest.NumberOfDataMatchingRulePropertiesShouldBe13()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchingRuleToDataMatchingRuleMapperTest.cs" Line="71">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="82" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10562,13 +10370,13 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="64" />
                   <Metric Name="CyclomaticComplexity" Value="17" />
-                  <Metric Name="ClassCoupling" Value="33" />
+                  <Metric Name="ClassCoupling" Value="32" />
                   <Metric Name="DepthOfInheritance" Value="1" />
                   <Metric Name="SourceLines" Value="221" />
                   <Metric Name="ExecutableLines" Value="136" />
                 </Metrics>
                 <Members>
-                  <Field Name="IEnumerable&lt;MatchingRule&gt; MatchMakerTest.allRules" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="14">
+                  <Field Name="IEnumerable&lt;MatchingRule&gt; MatchMakerTest.allRules" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="13">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -10577,7 +10385,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Field Name="ILogger MatchMakerTest.logger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="15">
+                  <Field Name="ILogger MatchMakerTest.logger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="14">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -10586,7 +10394,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Field Name="IBudgetBucketRepository MatchMakerTest.mockBudgetBucketRepo" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="16">
+                  <Field Name="IBudgetBucketRepository MatchMakerTest.mockBudgetBucketRepo" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="15">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -10595,7 +10403,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Field Name="MatchingRulesTestDataGenerated MatchMakerTest.testData" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="17">
+                  <Field Name="MatchingRulesTestDataGenerated MatchMakerTest.testData" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="16">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -10604,7 +10412,7 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="IList&lt;Transaction&gt; MatchMakerTest.testDataTransactions" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="18">
+                  <Field Name="IList&lt;Transaction&gt; MatchMakerTest.testDataTransactions" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="17">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
@@ -10613,16 +10421,16 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Method Name="MatchMakerTest.MatchMakerTest(ITestOutputHelper testOutputHelper)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="20">
+                  <Method Name="MatchMakerTest.MatchMakerTest(ITestOutputHelper testOutputHelper)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="19">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="17" />
+                      <Metric Name="ClassCoupling" Value="16" />
                       <Metric Name="SourceLines" Value="8" />
                       <Metric Name="ExecutableLines" Value="5" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.CtorShouldThrowIfBucketRepoIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="30">
+                  <Method Name="void MatchMakerTest.CtorShouldThrowIfBucketRepoIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="29">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="81" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10631,7 +10439,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.CtorShouldThrowIfLoggerIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="36">
+                  <Method Name="void MatchMakerTest.CtorShouldThrowIfLoggerIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="35">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="81" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10640,7 +10448,7 @@
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReference1IsBucketCode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="42">
+                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReference1IsBucketCode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="41">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10649,7 +10457,7 @@
                       <Metric Name="ExecutableLines" Value="8" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReference2IsBucketCode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="55">
+                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReference2IsBucketCode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="54">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10658,7 +10466,7 @@
                       <Metric Name="ExecutableLines" Value="8" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReference3IsBucketCode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="68">
+                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReference3IsBucketCode()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="67">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10667,7 +10475,7 @@
                       <Metric Name="ExecutableLines" Value="8" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReferenceIsPartialBucketCode(string bucketeCode, string? reference, bool expectedResult)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="86">
+                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReferenceIsPartialBucketCode(string bucketeCode, string? reference, bool expectedResult)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="85">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="56" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10676,7 +10484,7 @@
                       <Metric Name="ExecutableLines" Value="15" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReferenceIsSupersetBucketCode(string bucketCode, string reference, bool expectedResult)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="104">
+                  <Method Name="void MatchMakerTest.MatchShouldMatchIfReferenceIsSupersetBucketCode(string bucketCode, string reference, bool expectedResult)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="103">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="58" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10685,7 +10493,7 @@
                       <Metric Name="ExecutableLines" Value="13" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldPreferMatchFromReferenceOverRules()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="119">
+                  <Method Name="void MatchMakerTest.MatchShouldPreferMatchFromReferenceOverRules()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="118">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="54" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10694,7 +10502,7 @@
                       <Metric Name="ExecutableLines" Value="18" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldReturnFalseIfNoMatchesAreMade()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="142">
+                  <Method Name="void MatchMakerTest.MatchShouldReturnFalseIfNoMatchesAreMade()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="141">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10703,7 +10511,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldReturnTrueIfRuleMatchesAmount()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="150">
+                  <Method Name="void MatchMakerTest.MatchShouldReturnTrueIfRuleMatchesAmount()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="149">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="63" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10712,7 +10520,7 @@
                       <Metric Name="ExecutableLines" Value="9" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldReturnTrueIfRuleMatchesAmountAndDescription()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="165">
+                  <Method Name="void MatchMakerTest.MatchShouldReturnTrueIfRuleMatchesAmountAndDescription()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="164">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="57" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10721,7 +10529,7 @@
                       <Metric Name="ExecutableLines" Value="14" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldReturnTrueIfRuleMatchesDescription()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="185">
+                  <Method Name="void MatchMakerTest.MatchShouldReturnTrueIfRuleMatchesDescription()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="184">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10730,7 +10538,7 @@
                       <Metric Name="ExecutableLines" Value="9" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldReturnTrueIfRuleMatchesReference1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="200">
+                  <Method Name="void MatchMakerTest.MatchShouldReturnTrueIfRuleMatchesReference1()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="199">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10739,7 +10547,7 @@
                       <Metric Name="ExecutableLines" Value="9" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldThrowIfGivenNullRulesList()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="215">
+                  <Method Name="void MatchMakerTest.MatchShouldThrowIfGivenNullRulesList()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="214">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10748,7 +10556,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="void MatchMakerTest.MatchShouldThrowIfGivenNullTransactionList()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="222">
+                  <Method Name="void MatchMakerTest.MatchShouldThrowIfGivenNullTransactionList()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="221">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -10757,7 +10565,7 @@
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
-                  <Method Name="Matchmaker MatchMakerTest.Arrange()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="228">
+                  <Method Name="Matchmaker MatchMakerTest.Arrange()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Matching\MatchMakerTest.cs" Line="227">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -11321,22 +11129,22 @@
           </Namespace>
           <Namespace Name="BudgetAnalyser.Engine.XUnit.Reports">
             <Metrics>
-              <Metric Name="MaintainabilityIndex" Value="70" />
-              <Metric Name="CyclomaticComplexity" Value="28" />
-              <Metric Name="ClassCoupling" Value="31" />
+              <Metric Name="MaintainabilityIndex" Value="69" />
+              <Metric Name="CyclomaticComplexity" Value="27" />
+              <Metric Name="ClassCoupling" Value="33" />
               <Metric Name="DepthOfInheritance" Value="1" />
-              <Metric Name="SourceLines" Value="239" />
-              <Metric Name="ExecutableLines" Value="129" />
+              <Metric Name="SourceLines" Value="233" />
+              <Metric Name="ExecutableLines" Value="125" />
             </Metrics>
             <Types>
               <NamedType Name="OverallPerformanceBudgetAnalyserTest">
                 <Metrics>
-                  <Metric Name="MaintainabilityIndex" Value="70" />
-                  <Metric Name="CyclomaticComplexity" Value="28" />
-                  <Metric Name="ClassCoupling" Value="31" />
+                  <Metric Name="MaintainabilityIndex" Value="69" />
+                  <Metric Name="CyclomaticComplexity" Value="27" />
+                  <Metric Name="ClassCoupling" Value="33" />
                   <Metric Name="DepthOfInheritance" Value="1" />
-                  <Metric Name="SourceLines" Value="237" />
-                  <Metric Name="ExecutableLines" Value="129" />
+                  <Metric Name="SourceLines" Value="231" />
+                  <Metric Name="ExecutableLines" Value="125" />
                 </Metrics>
                 <Members>
                   <Field Name="OverallPerformanceBudgetAnalyser OverallPerformanceBudgetAnalyserTest.analyser" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="13">
@@ -11375,45 +11183,45 @@
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
                   </Field>
-                  <Field Name="GlobalFilterCriteria OverallPerformanceBudgetAnalyserTest.dateCriteria" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="17">
+                  <Field Name="ILogger OverallPerformanceBudgetAnalyserTest.logger" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="17">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
+                      <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
-                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="ClassCoupling" Value="1" />
                       <Metric Name="SourceLines" Value="1" />
-                      <Metric Name="ExecutableLines" Value="1" />
+                      <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                   </Field>
-                  <Method Name="OverallPerformanceBudgetAnalyserTest.OverallPerformanceBudgetAnalyserTest()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="19">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="68" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="7" />
-                      <Metric Name="SourceLines" Value="9" />
-                      <Metric Name="ExecutableLines" Value="6" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldErrorWhenMultipleBudgetsWithVariousPayCycles()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="30">
+                  <Method Name="OverallPerformanceBudgetAnalyserTest.OverallPerformanceBudgetAnalyserTest(ITestOutputHelper outputHelper)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="20">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="65" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="11" />
+                      <Metric Name="ClassCoupling" Value="10" />
                       <Metric Name="SourceLines" Value="11" />
                       <Metric Name="ExecutableLines" Value="7" />
                     </Metrics>
                   </Method>
-                  <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldFunctionWhenMultipleBudgetsWithSamePayCycles()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="42">
+                  <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldErrorWhenMultipleBudgetsWithVariousPayCycles()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="32">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="69" />
+                      <Metric Name="MaintainabilityIndex" Value="67" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="9" />
-                      <Metric Name="SourceLines" Value="9" />
-                      <Metric Name="ExecutableLines" Value="5" />
+                      <Metric Name="SourceLines" Value="10" />
+                      <Metric Name="ExecutableLines" Value="6" />
+                    </Metrics>
+                  </Method>
+                  <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldFunctionWhenMultipleBudgetsWithSamePayCycles()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="43">
+                    <Metrics>
+                      <Metric Name="MaintainabilityIndex" Value="73" />
+                      <Metric Name="CyclomaticComplexity" Value="1" />
+                      <Metric Name="ClassCoupling" Value="7" />
+                      <Metric Name="SourceLines" Value="8" />
+                      <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldRecogniseSingleBudget()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="52">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="78" />
+                      <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="7" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11422,7 +11230,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldRecogniseSingleBudget_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="59">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="9" />
                       <Metric Name="SourceLines" Value="9" />
@@ -11431,7 +11239,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnCorrectAverageSpend()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="69">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="77" />
+                      <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="8" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11440,7 +11248,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnCorrectAverageSpend_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="76">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="13" />
                       <Metric Name="SourceLines" Value="8" />
@@ -11449,7 +11257,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnCorrectAverageSurplus()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="85">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="77" />
+                      <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="8" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11458,7 +11266,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnCorrectAverageSurplus_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="92">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="13" />
                       <Metric Name="SourceLines" Value="8" />
@@ -11467,7 +11275,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnCorrectNumberOfFortnights()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="101">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="12" />
                       <Metric Name="SourceLines" Value="8" />
@@ -11476,7 +11284,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnCorrectNumberOfMonths()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="110">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="78" />
+                      <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="7" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11485,7 +11293,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnCorrectOverallPerformanceRating()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="117">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="77" />
+                      <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="8" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11494,7 +11302,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnCorrectOverallPerformanceRating_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="124">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="MaintainabilityIndex" Value="69" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="13" />
                       <Metric Name="SourceLines" Value="8" />
@@ -11503,7 +11311,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForCarMtc()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="133">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="15" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11512,7 +11320,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForCarMtc_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="140">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="18" />
                       <Metric Name="SourceLines" Value="9" />
@@ -11521,7 +11329,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForHair()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="150">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="15" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11530,7 +11338,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForHair_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="157">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="18" />
                       <Metric Name="SourceLines" Value="9" />
@@ -11539,7 +11347,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForPhone()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="167">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="15" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11548,7 +11356,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForPhone_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="174">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="18" />
                       <Metric Name="SourceLines" Value="9" />
@@ -11557,7 +11365,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForPower()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="184">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="15" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11566,7 +11374,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForPower_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="191">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="18" />
                       <Metric Name="SourceLines" Value="9" />
@@ -11575,7 +11383,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForSurplus()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="201">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="72" />
+                      <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="15" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11584,7 +11392,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultCorrectAvgForSurplus_Fortnight()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="208">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="65" />
+                      <Metric Name="MaintainabilityIndex" Value="64" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="18" />
                       <Metric Name="SourceLines" Value="9" />
@@ -11593,7 +11401,7 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldReturnResultWithSingleBudget()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="218">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="77" />
+                      <Metric Name="MaintainabilityIndex" Value="76" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="10" />
                       <Metric Name="SourceLines" Value="6" />
@@ -11602,32 +11410,23 @@
                   </Method>
                   <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldThrowArgumentNullException_WhenBudgetsIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="225">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="79" />
+                      <Metric Name="MaintainabilityIndex" Value="77" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="9" />
                       <Metric Name="SourceLines" Value="5" />
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldThrowArgumentNullException_WhenCriteriaIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="231">
+                  <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldThrowArgumentNullException_WhenTransactionsModelIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="231">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="79" />
+                      <Metric Name="MaintainabilityIndex" Value="77" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="9" />
                       <Metric Name="SourceLines" Value="5" />
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
                   </Method>
-                  <Method Name="void OverallPerformanceBudgetAnalyserTest.Analyse_ShouldThrowArgumentNullException_WhenTransactionsModelIsNull()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="237">
-                    <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="79" />
-                      <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="9" />
-                      <Metric Name="SourceLines" Value="5" />
-                      <Metric Name="ExecutableLines" Value="3" />
-                    </Metrics>
-                  </Method>
-                  <Method Name="void OverallPerformanceBudgetAnalyserTest.OutputTestData()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="243">
+                  <Method Name="void OverallPerformanceBudgetAnalyserTest.OutputTestData()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Reports\OverallPerformanceBudgetAnalyserTest.cs" Line="237">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -12740,7 +12539,7 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="65" />
                   <Metric Name="CyclomaticComplexity" Value="6" />
-                  <Metric Name="ClassCoupling" Value="37" />
+                  <Metric Name="ClassCoupling" Value="36" />
                   <Metric Name="DepthOfInheritance" Value="1" />
                   <Metric Name="SourceLines" Value="102" />
                   <Metric Name="ExecutableLines" Value="37" />
@@ -12804,7 +12603,7 @@
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="70" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="15" />
+                      <Metric Name="ClassCoupling" Value="14" />
                       <Metric Name="SourceLines" Value="10" />
                       <Metric Name="ExecutableLines" Value="4" />
                     </Metrics>
@@ -13024,7 +12823,7 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="72" />
                   <Metric Name="CyclomaticComplexity" Value="13" />
-                  <Metric Name="ClassCoupling" Value="42" />
+                  <Metric Name="ClassCoupling" Value="41" />
                   <Metric Name="DepthOfInheritance" Value="1" />
                   <Metric Name="SourceLines" Value="130" />
                   <Metric Name="ExecutableLines" Value="55" />
@@ -13149,9 +12948,9 @@
                   </Method>
                   <Method Name="void WidgetServiceTest.Initialise_ShouldThrow_GivenEmptyWidgetsFromPersistence()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\Services\WidgetServiceTest.cs" Line="89">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="82" />
+                      <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="8" />
+                      <Metric Name="ClassCoupling" Value="7" />
                       <Metric Name="SourceLines" Value="5" />
                       <Metric Name="ExecutableLines" Value="3" />
                     </Metrics>
@@ -13300,7 +13099,7 @@
             <Metrics>
               <Metric Name="MaintainabilityIndex" Value="78" />
               <Metric Name="CyclomaticComplexity" Value="150" />
-              <Metric Name="ClassCoupling" Value="102" />
+              <Metric Name="ClassCoupling" Value="101" />
               <Metric Name="DepthOfInheritance" Value="1" />
               <Metric Name="SourceLines" Value="5559" />
               <Metric Name="ExecutableLines" Value="403" />
@@ -13636,7 +13435,7 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="67" />
                   <Metric Name="CyclomaticComplexity" Value="22" />
-                  <Metric Name="ClassCoupling" Value="33" />
+                  <Metric Name="ClassCoupling" Value="32" />
                   <Metric Name="DepthOfInheritance" Value="1" />
                   <Metric Name="SourceLines" Value="280" />
                   <Metric Name="ExecutableLines" Value="71" />
@@ -13682,7 +13481,7 @@
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="93" />
                       <Metric Name="CyclomaticComplexity" Value="0" />
-                      <Metric Name="ClassCoupling" Value="3" />
+                      <Metric Name="ClassCoupling" Value="2" />
                       <Metric Name="SourceLines" Value="1" />
                       <Metric Name="ExecutableLines" Value="1" />
                     </Metrics>
@@ -14081,7 +13880,7 @@
                   </Method>
                   <Method Name="LedgerEntryTestDataBuilder SpecificLedgerEntryTestDataBuilder.HasNoTransactions()" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestData\LedgerBookBuilder.cs" Line="254">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="86" />
+                      <Metric Name="MaintainabilityIndex" Value="88" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="3" />
                       <Metric Name="SourceLines" Value="5" />
@@ -15561,8 +15360,8 @@
             <Metrics>
               <Metric Name="MaintainabilityIndex" Value="86" />
               <Metric Name="CyclomaticComplexity" Value="204" />
-              <Metric Name="ClassCoupling" Value="91" />
-              <Metric Name="DepthOfInheritance" Value="2" />
+              <Metric Name="ClassCoupling" Value="90" />
+              <Metric Name="DepthOfInheritance" Value="3" />
               <Metric Name="SourceLines" Value="846" />
               <Metric Name="ExecutableLines" Value="211" />
             </Metrics>
@@ -15572,7 +15371,7 @@
                   <Metric Name="MaintainabilityIndex" Value="90" />
                   <Metric Name="CyclomaticComplexity" Value="9" />
                   <Metric Name="ClassCoupling" Value="10" />
-                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
                   <Metric Name="SourceLines" Value="23" />
                   <Metric Name="ExecutableLines" Value="2" />
                 </Metrics>
@@ -15669,7 +15468,7 @@
                   <Metric Name="MaintainabilityIndex" Value="90" />
                   <Metric Name="CyclomaticComplexity" Value="9" />
                   <Metric Name="ClassCoupling" Value="10" />
-                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
                   <Metric Name="SourceLines" Value="23" />
                   <Metric Name="ExecutableLines" Value="2" />
                 </Metrics>
@@ -15766,7 +15565,7 @@
                   <Metric Name="MaintainabilityIndex" Value="90" />
                   <Metric Name="CyclomaticComplexity" Value="9" />
                   <Metric Name="ClassCoupling" Value="9" />
-                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
                   <Metric Name="SourceLines" Value="23" />
                   <Metric Name="ExecutableLines" Value="2" />
                 </Metrics>
@@ -16279,7 +16078,7 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="83" />
                   <Metric Name="CyclomaticComplexity" Value="7" />
-                  <Metric Name="ClassCoupling" Value="14" />
+                  <Metric Name="ClassCoupling" Value="15" />
                   <Metric Name="DepthOfInheritance" Value="1" />
                   <Metric Name="SourceLines" Value="56" />
                   <Metric Name="ExecutableLines" Value="11" />
@@ -16343,9 +16142,9 @@
               </NamedType>
               <NamedType Name="EmbeddedResourceFileReaderWriterEncrypted">
                 <Metrics>
-                  <Metric Name="MaintainabilityIndex" Value="83" />
+                  <Metric Name="MaintainabilityIndex" Value="82" />
                   <Metric Name="CyclomaticComplexity" Value="18" />
-                  <Metric Name="ClassCoupling" Value="17" />
+                  <Metric Name="ClassCoupling" Value="18" />
                   <Metric Name="DepthOfInheritance" Value="1" />
                   <Metric Name="SourceLines" Value="55" />
                   <Metric Name="ExecutableLines" Value="17" />
@@ -16496,7 +16295,7 @@
                   </Method>
                   <Method Name="Task&lt;string&gt; EmbeddedResourceFileReaderWriterEncrypted.LoadFirstLinesFromDiskAsync(string fileName, int lineCount)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\EmbeddedResourceFileReaderWriterEncrypted.cs" Line="48">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="MaintainabilityIndex" Value="96" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="3" />
                       <Metric Name="SourceLines" Value="4" />
@@ -16505,7 +16304,7 @@
                   </Method>
                   <Method Name="Task&lt;string&gt; EmbeddedResourceFileReaderWriterEncrypted.LoadFromDiskAsync(string fileName)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\EmbeddedResourceFileReaderWriterEncrypted.cs" Line="53">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="100" />
+                      <Metric Name="MaintainabilityIndex" Value="96" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
                       <Metric Name="ClassCoupling" Value="3" />
                       <Metric Name="SourceLines" Value="4" />
@@ -16920,7 +16719,7 @@
                   <Metric Name="MaintainabilityIndex" Value="78" />
                   <Metric Name="CyclomaticComplexity" Value="15" />
                   <Metric Name="ClassCoupling" Value="14" />
-                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
                   <Metric Name="SourceLines" Value="61" />
                   <Metric Name="ExecutableLines" Value="22" />
                 </Metrics>
@@ -17102,7 +16901,7 @@
                   <Metric Name="MaintainabilityIndex" Value="85" />
                   <Metric Name="CyclomaticComplexity" Value="9" />
                   <Metric Name="ClassCoupling" Value="12" />
-                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
                   <Metric Name="SourceLines" Value="39" />
                   <Metric Name="ExecutableLines" Value="10" />
                 </Metrics>
@@ -17216,8 +17015,8 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="78" />
                   <Metric Name="CyclomaticComplexity" Value="15" />
-                  <Metric Name="ClassCoupling" Value="20" />
-                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="ClassCoupling" Value="19" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
                   <Metric Name="SourceLines" Value="63" />
                   <Metric Name="ExecutableLines" Value="23" />
                 </Metrics>
@@ -17233,14 +17032,14 @@
                   </Field>
                   <Method Name="JsonOnDiskMatchingRuleRepositoryTestHarness.JsonOnDiskMatchingRuleRepositoryTestHarness(ILogger logger, IReaderWriterSelector readerWriterSelector, IBudgetBucketRepository bucketRepo)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="12">
                     <Metrics>
-                      <Metric Name="MaintainabilityIndex" Value="70" />
+                      <Metric Name="MaintainabilityIndex" Value="71" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
-                      <Metric Name="ClassCoupling" Value="12" />
+                      <Metric Name="ClassCoupling" Value="11" />
                       <Metric Name="SourceLines" Value="11" />
                       <Metric Name="ExecutableLines" Value="5" />
                     </Metrics>
                   </Method>
-                  <Property Name="IEnumerable&lt;MatchingRuleDto&gt; JsonOnDiskMatchingRuleRepositoryTestHarness.Dto" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="24">
+                  <Property Name="List&lt;MatchingRuleDto&gt; JsonOnDiskMatchingRuleRepositoryTestHarness.Dto" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="24">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -17249,7 +17048,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                     <Accessors>
-                      <Method Name="IEnumerable&lt;MatchingRuleDto&gt; JsonOnDiskMatchingRuleRepositoryTestHarness.Dto.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="24">
+                      <Method Name="List&lt;MatchingRuleDto&gt; JsonOnDiskMatchingRuleRepositoryTestHarness.Dto.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="24">
                         <Metrics>
                           <Metric Name="MaintainabilityIndex" Value="100" />
                           <Metric Name="CyclomaticComplexity" Value="1" />
@@ -17356,7 +17155,7 @@
                       </Method>
                     </Accessors>
                   </Property>
-                  <Method Name="Task&lt;List&lt;MatchingRuleDto&gt;&gt; JsonOnDiskMatchingRuleRepositoryTestHarness.LoadFromDiskAsync(string fileName, bool isEncrypted)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="32">
+                  <Method Name="Task&lt;List&lt;MatchingRuleDto&gt;&gt; JsonOnDiskMatchingRuleRepositoryTestHarness.LoadJsonFromDiskAsync(string fileName, bool isEncrypted)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="32">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="83" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -17365,16 +17164,16 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="IEnumerable&lt;MatchingRuleDto&gt; JsonOnDiskMatchingRuleRepositoryTestHarness.MapToDto(IEnumerable&lt;MatchingRule&gt; widgets)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="38">
+                  <Method Name="List&lt;MatchingRuleDto&gt; JsonOnDiskMatchingRuleRepositoryTestHarness.MapToDto(IEnumerable&lt;MatchingRule&gt; widgets)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="38">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="ClassCoupling" Value="5" />
                       <Metric Name="SourceLines" Value="5" />
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task JsonOnDiskMatchingRuleRepositoryTestHarness.SaveToDiskAsync(string fileName, IEnumerable&lt;MatchingRuleDto&gt; dataEntities, bool isEncrypted)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="44">
+                  <Method Name="Task JsonOnDiskMatchingRuleRepositoryTestHarness.SaveToDiskAsync(string fileName, List&lt;MatchingRuleDto&gt; dataEntities, bool isEncrypted)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="44">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="84" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -17383,7 +17182,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task JsonOnDiskMatchingRuleRepositoryTestHarness.SerialiseAndWriteToStream(Stream stream, IEnumerable&lt;MatchingRuleDto&gt; dataEntities)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="50">
+                  <Method Name="Task JsonOnDiskMatchingRuleRepositoryTestHarness.SerialiseAndWriteToStream(Stream stream, List&lt;MatchingRuleDto&gt; dataEntities)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskMatchingRuleRepositoryTestHarness.cs" Line="50">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="59" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -17398,8 +17197,8 @@
                 <Metrics>
                   <Metric Name="MaintainabilityIndex" Value="78" />
                   <Metric Name="CyclomaticComplexity" Value="15" />
-                  <Metric Name="ClassCoupling" Value="21" />
-                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="ClassCoupling" Value="20" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
                   <Metric Name="SourceLines" Value="63" />
                   <Metric Name="ExecutableLines" Value="23" />
                 </Metrics>
@@ -17417,12 +17216,12 @@
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="70" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
-                      <Metric Name="ClassCoupling" Value="13" />
+                      <Metric Name="ClassCoupling" Value="12" />
                       <Metric Name="SourceLines" Value="11" />
                       <Metric Name="ExecutableLines" Value="5" />
                     </Metrics>
                   </Method>
-                  <Property Name="IEnumerable&lt;WidgetDto&gt; JsonOnDiskWidgetRepositoryTestHarness.Dto" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="23">
+                  <Property Name="List&lt;WidgetDto&gt; JsonOnDiskWidgetRepositoryTestHarness.Dto" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="23">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="100" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -17431,7 +17230,7 @@
                       <Metric Name="ExecutableLines" Value="0" />
                     </Metrics>
                     <Accessors>
-                      <Method Name="IEnumerable&lt;WidgetDto&gt; JsonOnDiskWidgetRepositoryTestHarness.Dto.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="23">
+                      <Method Name="List&lt;WidgetDto&gt; JsonOnDiskWidgetRepositoryTestHarness.Dto.get" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="23">
                         <Metrics>
                           <Metric Name="MaintainabilityIndex" Value="100" />
                           <Metric Name="CyclomaticComplexity" Value="1" />
@@ -17547,16 +17346,16 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="IEnumerable&lt;WidgetDto&gt; JsonOnDiskWidgetRepositoryTestHarness.MapToDto(IEnumerable&lt;Widget&gt; widgets)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="37">
+                  <Method Name="List&lt;WidgetDto&gt; JsonOnDiskWidgetRepositoryTestHarness.MapToDto(IEnumerable&lt;Widget&gt; widgets)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="37">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="85" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
-                      <Metric Name="ClassCoupling" Value="4" />
+                      <Metric Name="ClassCoupling" Value="5" />
                       <Metric Name="SourceLines" Value="5" />
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task JsonOnDiskWidgetRepositoryTestHarness.SaveToDiskAsync(string fileName, IEnumerable&lt;WidgetDto&gt; dataEntities, bool isEncrypted)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="43">
+                  <Method Name="Task JsonOnDiskWidgetRepositoryTestHarness.SaveToDiskAsync(string fileName, List&lt;WidgetDto&gt; dataEntities, bool isEncrypted)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="43">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="84" />
                       <Metric Name="CyclomaticComplexity" Value="1" />
@@ -17565,7 +17364,7 @@
                       <Metric Name="ExecutableLines" Value="2" />
                     </Metrics>
                   </Method>
-                  <Method Name="Task JsonOnDiskWidgetRepositoryTestHarness.SerialiseAndWriteToStream(Stream stream, IEnumerable&lt;WidgetDto&gt; dataEntities)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="49">
+                  <Method Name="Task JsonOnDiskWidgetRepositoryTestHarness.SerialiseAndWriteToStream(Stream stream, List&lt;WidgetDto&gt; dataEntities)" File="D:\Development\BudgetAnalyserProject\BudgetAnalyser-Working2\BudgetAnalyser.Engine.XUnit3\TestHarness\JsonOnDiskWidgetRepositoryTestHarness.cs" Line="49">
                     <Metrics>
                       <Metric Name="MaintainabilityIndex" Value="59" />
                       <Metric Name="CyclomaticComplexity" Value="2" />
@@ -17649,7 +17448,7 @@
                   <Metric Name="MaintainabilityIndex" Value="90" />
                   <Metric Name="CyclomaticComplexity" Value="9" />
                   <Metric Name="ClassCoupling" Value="10" />
-                  <Metric Name="DepthOfInheritance" Value="2" />
+                  <Metric Name="DepthOfInheritance" Value="3" />
                   <Metric Name="SourceLines" Value="23" />
                   <Metric Name="ExecutableLines" Value="2" />
                 </Metrics>

@@ -1,18 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
                     xmlns:transactions="clr-namespace:BudgetAnalyser.Engine.Transactions;assembly=BudgetAnalyser.Engine"
                     xmlns:transactionsUi="clr-namespace:BudgetAnalyser.Transactions"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
-    <converters1:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility" />
-
-    <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
-
     <Style x:Key="ListBox.TransactionContainer"
            BasedOn="{StaticResource ListBox.StandardContainerStyle}"
            TargetType="ListBoxItem">
+        <!-- Explicit so the column header row in TopTransactionsUserControl can line up (item margin 1 + padding 8) -->
+        <Setter Property="Padding"
+                Value="8,0" />
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex"
                      Value="0">
@@ -23,23 +21,6 @@
                      Value="1">
                 <Setter Property="Background"
                         Value="{StaticResource Brush.TileBackgroundAlternate}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="ListBox.TransactionContainer2"
-           BasedOn="{StaticResource ListBox.TransactionContainer}"
-           TargetType="ListBoxItem">
-        <Style.Triggers>
-            <Trigger Property="ItemsControl.AlternationIndex"
-                     Value="0">
-                <Setter Property="Background"
-                        Value="{StaticResource Brush.TileBackgroundAlternate}" />
-            </Trigger>
-            <Trigger Property="ItemsControl.AlternationIndex"
-                     Value="1">
-                <Setter Property="Background"
-                        Value="{StaticResource Brush.TileBackground}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -50,7 +31,8 @@
                 Margin="0,1,2,1">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
+                    <!-- Material dense data-table row height -->
+                    <RowDefinition Height="32" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="A"
@@ -75,7 +57,9 @@
                 <TextBlock Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Date, StringFormat=\{0:d\}}"
                            ToolTip="{Binding Date, Converter={StaticResource Converter.ToString}, ConverterParameter='D'}" />
-                <TextBlock Grid.Column="1"
+                <TextBlock x:Name="AmountText"
+                           Grid.Column="1"
+                           Foreground="{Binding Amount, Converter={StaticResource Converter.NumberToBrush}, ConverterParameter=Light}"
                            Style="{StaticResource TextBlock.TransactionNumber}"
                            Text="{Binding Amount, StringFormat=\{0:N2\}}"
                            ToolTip="{Binding Amount, Converter={StaticResource Converter.ToString}, ConverterParameter='C'}" />
@@ -117,7 +101,11 @@
                 <DataTrigger.Setters>
                     <Setter Property="Background"
                             TargetName="MainBorder"
-                            Value="{StaticResource Brush.ImportantHighlightLight}" />
+                            Value="{StaticResource Brush.Negative.Container}" />
+                    <!-- Light hue tones fail contrast on a container fill, so the amount goes back to plain light text -->
+                    <Setter Property="Foreground"
+                            TargetName="AmountText"
+                            Value="{StaticResource Brush.Text.Default}" />
                 </DataTrigger.Setters>
             </DataTrigger>
         </DataTemplate.Triggers>

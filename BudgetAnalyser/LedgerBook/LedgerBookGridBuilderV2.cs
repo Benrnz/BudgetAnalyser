@@ -17,12 +17,15 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
 {
     private const string BankBalanceBackground = "Brush.TileBackgroundAlternate";
     private const string BankBalanceTextBrush = "Brush.Text.Default";
+    private const string CreditTextBrush = "Brush.Positive.Text";
+    private const string DebitTextBrush = "Brush.Negative.Text";
+    private const string ZeroTextBrush = "Brush.Text.Default";
     private const string DateColumnStyle = "LedgerBookTextBlockHeadingRight";
     private const string DateFormat = "d-MMM-yy";
     private const string HeadingStyle = "LedgerBookTextBlockHeading";
     private const string ImportantNumberStyle = "LedgerBookTextBlockImportantNumber";
     private const string LessButtonStyle = "Button.Round.Minus";
-    private const string LightBorderBrush = "Brush.BorderLight";
+    private const string LightBorderBrush = "Brush.ControlBorder";
     private const string MainBackground = "Brush.MainBackground";
     private const string MoreButtonStyle = "Button.Round.Add";
     private const string NormalHighlightBackground = "Brush.TileBackground";
@@ -30,7 +33,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private const string NumberStyle = "LedgerBookTextBlockNumber";
     private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
     private const string SurplusBackground = "Brush.TileBackgroundAlternate";
-    private const string SurplusTextBrush = "Brush.CreditBackground1";
+    private const string SurplusTextBrush = "Brush.Positive.Text";
     private readonly ILogger logger;
     private readonly ICommand showBankBalancesCommand;
     private readonly ICommand showHidePeriodsCommand;
@@ -313,16 +316,17 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
                 line);
             hyperlink = (Hyperlink)bankBalanceText.Inlines.FirstInline;
             hyperlink.Command = this.showBankBalancesCommand;
-            bankBalanceText.Foreground = (Brush)FindResource(BankBalanceTextBrush);
+            bankBalanceText.Foreground = AmountBrush(line.LedgerBalance);
 
             // Balance Adjustments
-            AddHyperlinkToGrid(
+            var adjustmentsText = AddHyperlinkToGrid(
                 grid,
                 line.TotalBalanceAdjustments.ToString("N", CultureInfo.CurrentCulture),
                 ref gridRow,
                 gridColumn,
                 ImportantNumberStyle,
                 parameter: line);
+            adjustmentsText.Foreground = AmountBrush(line.TotalBalanceAdjustments);
 
             // Surplus
             gridRow = AddSurplusCell(grid, gridRow, gridColumn, line);
@@ -370,7 +374,8 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
                     }
                     else
                     {
-                        AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
+                        var balanceText = AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
+                        balanceText.Foreground = AmountBrush(balance);
                     }
                 }
                 else
@@ -385,8 +390,10 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
                         continue;
                     }
 
-                    AddHyperlinkToGrid(grid, netAmount.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
-                    AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
+                    var netAmountText = AddHyperlinkToGrid(grid, netAmount.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
+                    netAmountText.Foreground = AmountBrush(netAmount);
+                    var balanceText = AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
+                    balanceText.Foreground = AmountBrush(balance);
                 }
             }
 
@@ -476,10 +483,23 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         {
             Style = (Style)FindResource(ImportantNumberStyle),
             ToolTip = string.Format(CultureInfo.CurrentCulture, "Total Surplus: {0:N}. Click for more detail...", line.CalculatedSurplus),
-            Foreground = (Brush)FindResource(SurplusTextBrush)
+            Foreground = AmountBrush(line.CalculatedSurplus)
         };
         stackPanel.Children.Add(textBlock);
         return ++gridRow;
+    }
+
+    /// <summary>
+    ///     Colours amounts by sign like the transaction list: green for credits, red for debits. Zero stays neutral, as many ledger cells are zero.
+    /// </summary>
+    private Brush AmountBrush(decimal amount)
+    {
+        if (amount == 0)
+        {
+            return (Brush)FindResource(ZeroTextBrush);
+        }
+
+        return (Brush)FindResource(amount < 0 ? DebitTextBrush : CreditTextBrush);
     }
 
     private static string BuildToolTipForBankBalance(LedgerEntryLine line)

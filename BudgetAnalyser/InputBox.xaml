@@ -27,10 +27,13 @@
                  VerticalScrollBarVisibility="Visible" />
         <StackPanel Grid.Row="2"
                     HorizontalAlignment="Right"
+                    Margin="16,8,16,16"
                     Orientation="Horizontal">
-            <Button Style="{StaticResource Button.Round.Cross}"
+            <Button Content="Cancel"
+                    Style="{StaticResource Button.Dialog.Secondary}"
                     Click="OnCancelButtonClick" />
-            <Button Style="{StaticResource Button.Round.Save}"
+            <Button Content="OK"
+                    Style="{StaticResource Button.Dialog.Primary}"
                     Click="OnOkButtonClick" />
         </StackPanel>
     </Grid>

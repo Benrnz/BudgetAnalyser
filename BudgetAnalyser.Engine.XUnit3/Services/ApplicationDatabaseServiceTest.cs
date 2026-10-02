@@ -79,6 +79,18 @@ public class ApplicationDatabaseServiceTest
     }
 
     [Fact]
+    public async Task CreateNewDatabaseAsync_ShouldNotifyDependentsOfNewDatabase()
+    {
+        CreateNewDatabaseSetup();
+        var mockDependencies = Substitute.For<IMonitorableDependencies>();
+        var subjectWithMockDependencies = CreateSubject(mockDependencies);
+
+        var appDb = await subjectWithMockDependencies.CreateNewDatabaseAsync("Foo");
+
+        mockDependencies.Received(1).NotifyOfDependencyChange(appDb);
+    }
+
+    [Fact]
     public async Task CreateNewDatabaseAsync_ShouldReturnNonNullAppDb()
     {
         CreateNewDatabaseSetup();
@@ -170,6 +182,18 @@ public class ApplicationDatabaseServiceTest
 
         await this.mockService1.Received(1).LoadAsync(Arg.Any<ApplicationDatabase>());
         await this.mockService2.Received(1).LoadAsync(Arg.Any<ApplicationDatabase>());
+    }
+
+    [Fact]
+    public async Task LoadDatabaseAsync_ShouldNotifyDependentsOfLoadedDatabase()
+    {
+        LoadDatabaseSetup();
+        var mockDependencies = Substitute.For<IMonitorableDependencies>();
+        var subjectWithMockDependencies = CreateSubject(mockDependencies);
+
+        var appDb = await subjectWithMockDependencies.LoadAsync("Foo");
+
+        mockDependencies.Received(1).NotifyOfDependencyChange(appDb);
     }
 
     [Fact]
@@ -271,6 +295,17 @@ public class ApplicationDatabaseServiceTest
     {
         this.mockRepo.CreateNewAsync(Arg.Any<string>())
             .Returns(Task.FromResult(new ApplicationDatabase()));
+    }
+
+    private ApplicationDatabaseService CreateSubject(IMonitorableDependencies monitorableDependencies)
+    {
+        return new ApplicationDatabaseService(
+            this.mockRepo,
+            this.mockServices,
+            monitorableDependencies,
+            this.mockCredentials,
+            new FakeLogger(),
+            this.mockDirtyService);
     }
 
     private static SecureString CreateSecureString(string text)
