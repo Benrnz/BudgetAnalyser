@@ -90,9 +90,9 @@
             <!-- Header bar: Heading1 adds its own 10px left margin, giving a 16px page inset -->
             <StackPanel Margin="6,0,0,0"
                         Orientation="Horizontal">
-                <TextBlock Style="{StaticResource TextBlock.Heading1}"
+                <TextBlock Style="{StaticResource TextBlock.PageTitle}"
                            Text="{Binding ViewModel.TransactionListModelName}" />
-                <TextBlock Style="{StaticResource TextBlock.Heading1}"
+                <TextBlock Style="{StaticResource TextBlock.PageTitle}"
                            Margin="2"
                            Text="*"
                            ToolTip="There are unsaved changes"

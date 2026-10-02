@@ -74,6 +74,14 @@
                 Value="10,2,2,2" />
     </Style>
 
+    <!-- Main screen titles (Transactions, Ledger Book, Budget): Heading1 in the Primary accent so they stand out from body text -->
+    <Style x:Key="TextBlock.PageTitle"
+           TargetType="{x:Type TextBlock}"
+           BasedOn="{StaticResource TextBlock.Heading1}">
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.Primary}" />
+    </Style>
+
     <Style x:Key="TextBlock.Paragraph"
            TargetType="TextBlock"
            BasedOn="{StaticResource {x:Type TextBlock}}">

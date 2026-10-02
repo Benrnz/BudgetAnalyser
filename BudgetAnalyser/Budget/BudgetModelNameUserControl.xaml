@@ -8,7 +8,7 @@
     <StackPanel Orientation="Horizontal">
         <Grid>
             <TextBlock x:Name="budgetNameTextBlock"
-                       Style="{StaticResource TextBlock.Heading1}"
+                       Style="{StaticResource TextBlock.PageTitle}"
                        Text="{Binding Model.Name}"
                        ToolTip="Double click to rename this budget." />
             <TextBox x:Name="budgetNameTextBox"

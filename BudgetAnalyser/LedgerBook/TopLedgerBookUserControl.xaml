@@ -106,7 +106,7 @@
             <!-- Header bar -->
             <StackPanel Margin="8,2,2,2"
                         Orientation="Horizontal">
-                <TextBlock Style="{StaticResource TextBlock.Heading1}">
+                <TextBlock Style="{StaticResource TextBlock.PageTitle}">
                     <Hyperlink Command="{Binding EditLedgerBookNameCommand}">
                         <Run Text="{Binding ViewModel.LedgerBook.Name, Mode=OneWay}" />
                     </Hyperlink>
