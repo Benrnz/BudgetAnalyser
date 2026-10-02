@@ -60,9 +60,6 @@
     <SolidColorBrush x:Key="Brush.ToolTip.Background"
                      Color="{StaticResource Colour.Palette.Tooltip}" />
 
-    <SolidColorBrush x:Key="Brush.BorderLight"
-                     Color="{StaticResource Colour.Palette.Divider}" />
-
     <SolidColorBrush x:Key="Brush.ControlBorder"
                      Color="{StaticResource Colour.Palette.Divider}" />
 
@@ -103,9 +100,6 @@
     <SolidColorBrush x:Key="Brush.Button.Background"
                      Color="{StaticResource Colour.Palette.PrimaryContainer}" />
 
-    <SolidColorBrush x:Key="Brush.Button.Stroke"
-                     Color="{StaticResource Colour.Palette.PrimaryContainer}" />
-
     <SolidColorBrush x:Key="Brush.Button.Glyph"
                      Color="White" />
 
@@ -128,9 +122,6 @@
 
     <SolidColorBrush x:Key="Brush.WarningOilLight"
                      Color="{StaticResource Colour.Palette.WarningContainer}" />
-
-    <SolidColorBrush x:Key="Brush.RedOilLight"
-                     Color="{StaticResource Colour.Palette.NegativeContainer}" />
 
     <!-- Budget bucket types -->
     <SolidColorBrush x:Key="Brush.BudgetBucket.Income"

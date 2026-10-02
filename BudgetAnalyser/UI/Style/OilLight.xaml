@@ -48,7 +48,7 @@
            TargetType="Border"
            BasedOn="{StaticResource Badge.Border.WarningOilLightStyle}">
         <Setter Property="Background"
-                Value="{StaticResource Brush.RedOilLight}" />
+                Value="{StaticResource Brush.Negative.Container}" />
     </Style>
 
     <Style x:Key="Badge.Border.NominalOilLightStyle"

@@ -25,7 +25,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
     private const string HeadingStyle = "LedgerBookTextBlockHeading";
     private const string ImportantNumberStyle = "LedgerBookTextBlockImportantNumber";
     private const string LessButtonStyle = "Button.Round.Minus";
-    private const string LightBorderBrush = "Brush.BorderLight";
+    private const string LightBorderBrush = "Brush.ControlBorder";
     private const string MainBackground = "Brush.MainBackground";
     private const string MoreButtonStyle = "Button.Round.Add";
     private const string NormalHighlightBackground = "Brush.TileBackground";

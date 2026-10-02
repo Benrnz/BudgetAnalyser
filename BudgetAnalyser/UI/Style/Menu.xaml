@@ -11,7 +11,7 @@
         <Setter Property="Background"
                 Value="{StaticResource Brush.Button.Background}" />
         <Setter Property="BorderBrush"
-                Value="{StaticResource Brush.Button.Stroke}" />
+                Value="{StaticResource Brush.Button.Background}" />
         <Setter Property="BorderThickness"
                 Value="3" />
         <Setter Property="VerticalAlignment"
