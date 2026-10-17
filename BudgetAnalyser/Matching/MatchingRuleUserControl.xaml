@@ -5,17 +5,6 @@
              xmlns:matching="clr-namespace:BudgetAnalyser.Engine.Matching;assembly=BudgetAnalyser.Engine"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance  matching:MatchingRule}">
-    <UserControl.Resources>
-        <Style x:Key="TextBlock.MathcingRuleStyle"
-               BasedOn="{StaticResource {x:Type TextBlock}}"
-               TargetType="TextBlock">
-            <Setter Property="FontSize"
-                    Value="18" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Left" />
-        </Style>
-    </UserControl.Resources>
-
     <Grid Visibility="{Binding Hidden, Converter={StaticResource Converter.NotBoolToVis}}"
           HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
@@ -24,20 +13,20 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Style="{StaticResource TextBlock.MathcingRuleStyle}"
+        <TextBlock Style="{StaticResource TextBlock.MatchingRule}"
                    Text="{Binding Description}"
                    ToolTip="{Binding Description}" />
         <StackPanel Grid.Column="1"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-            <TextBlock Style="{StaticResource TextBlock.MathcingRuleStyle}"
+            <TextBlock Style="{StaticResource TextBlock.MatchingRule}"
                        Text="{Binding LastMatch, StringFormat=d}"
                        ToolTip="The last date and time this rule was matched against a transaction." />
             <TextBlock Margin="2,2,0,2"
-                       Style="{StaticResource TextBlock.MathcingRuleStyle}"
+                       Style="{StaticResource TextBlock.MatchingRule}"
                        Text="x" />
             <TextBlock Margin="0,2,2,2"
-                       Style="{StaticResource TextBlock.MathcingRuleStyle}"
+                       Style="{StaticResource TextBlock.MatchingRule}"
                        Text="{Binding MatchCount}"
                        ToolTip="The number of times this rule has been used to match transactions." />
         </StackPanel>

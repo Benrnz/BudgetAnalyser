@@ -27,11 +27,6 @@ public abstract class Widget : INotifyPropertyChanged
     protected const string WidgetStandardStyle = "WidgetStandardStyle";
 
     /// <summary>
-    ///     A constant for an alternative standard widget style. (Green)
-    /// </summary>
-    protected const string WidgetStandardStyle2 = "WidgetStandardStyle2";
-
-    /// <summary>
     ///     A constant for an alternative standard widget style. (Purple)
     /// </summary>
     protected const string WidgetStandardStyle3 = "WidgetStandardStyle3";

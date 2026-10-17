@@ -10,27 +10,7 @@
         <Setter Property="Margin"
                 Value="3" />
         <Setter Property="Foreground"
-                Value="{StaticResource Brush.MainBackground}" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-    </Style>
-
-    <Style x:Key="Badge.Border1"
-           TargetType="Border">
-        <Setter Property="BorderBrush"
-                Value="{StaticResource Brush.ControlBorder}" />
-        <Setter Property="Background"
-                Value="{StaticResource Brush.CreditBackground1}" />
-        <Setter Property="BorderThickness"
-                Value="2" />
-        <Setter Property="CornerRadius"
-                Value="3" />
-        <Setter Property="Height"
-                Value="25" />
-        <Setter Property="Margin"
-                Value="5" />
+                Value="{StaticResource Brush.BadgeText}" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
         <Setter Property="HorizontalAlignment"
@@ -53,22 +33,6 @@
                 Value="Center" />
     </Style>
 
-    <Style x:Key="Badge.BorderLarge"
-           TargetType="Border">
-        <Setter Property="Background"
-                Value="{StaticResource Brush.TileBackgroundAlternate}" />
-        <Setter Property="CornerRadius"
-                Value="3" />
-        <Setter Property="Height"
-                Value="30" />
-        <Setter Property="Width"
-                Value="100" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-    </Style>
-
     <Style x:Key="Badge.Border.WarningOilLightStyle"
            TargetType="Border">
         <Setter Property="CornerRadius"
@@ -84,7 +48,7 @@
            TargetType="Border"
            BasedOn="{StaticResource Badge.Border.WarningOilLightStyle}">
         <Setter Property="Background"
-                Value="{StaticResource Brush.RedOilLight}" />
+                Value="{StaticResource Brush.Negative.Container}" />
     </Style>
 
     <Style x:Key="Badge.Border.NominalOilLightStyle"

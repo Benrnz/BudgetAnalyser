@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Budget Analyser UX Guide</title>
+<!--
+    Budget Analyser UX style guide.
+    This page mirrors the WPF resource dictionaries - it is documentation, not a source of truth.
+    When you change BudgetAnalyser/UI/Style/Colours.xaml (or any style it lists), update the matching
+    CSS token in :root below and the relevant section, then bump the "Last updated" date.
+-->
+<style>
+:root {
+    /* Mirrors Colour.Palette.* in BudgetAnalyser/UI/Style/Colours.xaml */
+    --background: #121212;
+    --surface: #1E1E1E;
+    --surface-raised: #2C2C2C;
+    --dialog: #383838;
+    --tile: #424242;
+    --divider: rgba(255,255,255,0.12);
+    --tooltip: #616161;
+
+    --text-high: rgba(255,255,255,0.87);
+    --text-medium: rgba(255,255,255,0.60);
+    --text-disabled: rgba(255,255,255,0.38);
+
+    --primary: #9FA8DA;
+    --primary-container: #3949AB;
+    --positive: #81C784;
+    --positive-container: #1B5E20;
+    --negative: #EF9A9A;
+    --negative-container: #B71C1C;
+    --warning-container: #A64B00;
+
+    /* Material dark elevation shadows, approximated */
+    --dp2: 0 1px 3px rgba(0,0,0,.6), 0 1px 2px rgba(0,0,0,.5);
+    --dp8: 0 4px 10px rgba(0,0,0,.6), 0 8px 18px rgba(0,0,0,.45);
+    --dp24: 0 12px 28px rgba(0,0,0,.7), 0 24px 48px rgba(0,0,0,.5);
+
+    --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Cascadia Mono", Consolas, "SF Mono", monospace;
+    color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text-high);
+    font: 15px/1.55 var(--font);
+    -webkit-font-smoothing: antialiased;
+}
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--surface-raised); padding: 1px 5px; border-radius: 3px; color: var(--text-high); }
+a { color: var(--primary); }
+h1, h2, h3 { font-weight: 600; line-height: 1.25; margin: 0; }
+p { margin: 0 0 12px; }
+.muted { color: var(--text-medium); }
+
+/* Layout */
+.layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); max-width: 1240px; margin: 0 auto; }
+nav.toc {
+    position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+    padding: 32px 16px 32px 24px; border-right: 1px solid var(--divider);
+}
+nav.toc .brand { font-size: 13px; font-weight: 600; color: var(--primary); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 16px; }
+nav.toc a { display: block; color: var(--text-medium); text-decoration: none; padding: 5px 0 5px 10px; font-size: 14px; border-left: 2px solid transparent; }
+nav.toc a:hover { color: var(--text-high); border-left-color: var(--primary); }
+main { padding: 40px 48px 96px; min-width: 0; }
+header.hero { padding-bottom: 32px; border-bottom: 1px solid var(--divider); margin-bottom: 8px; }
+header.hero h1 { font-size: 34px; font-style: italic; font-weight: 400; margin-bottom: 8px; }
+header.hero .meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: var(--text-medium); margin-top: 16px; }
+section { padding-top: 48px; }
+section > h2 { font-size: 24px; margin-bottom: 6px; }
+section > .lede { color: var(--text-medium); max-width: 72ch; margin-bottom: 24px; }
+h3 { font-size: 16px; margin: 28px 0 12px; color: var(--text-high); }
+
+.panel { background: var(--surface); border: 1px solid var(--divider); border-radius: 6px; padding: 24px; }
+.grid { display: grid; gap: 16px; }
+.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.caption { font-size: 12px; color: var(--text-medium); margin-top: 8px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--divider); border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--divider); vertical-align: top; }
+th { color: var(--text-medium); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; background: var(--surface); }
+tr:last-child td { border-bottom: none; }
+td .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 8px; border: 1px solid var(--divider); }
+
+/* Swatches */
+.swatch { border-radius: 6px; overflow: hidden; border: 1px solid var(--divider); background: var(--surface); }
+.swatch .fill { height: 96px; padding: 12px; display: flex; flex-direction: column; justify-content: flex-end; font-weight: 600; }
+.swatch .info { padding: 10px 12px; font-size: 12px; }
+.swatch .info .key { font-family: var(--mono); color: var(--text-high); font-size: 12px; word-break: break-all; }
+.swatch .info .hex { font-family: var(--mono); color: var(--text-medium); }
+.swatch .info .use { color: var(--text-medium); margin-top: 6px; }
+
+.hue-pair { display: grid; grid-template-columns: 1fr 1fr; border-radius: 6px; overflow: hidden; border: 1px solid var(--divider); }
+.hue-pair > div { padding: 14px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
+.hue-pair .label { font-size: 12px; font-family: var(--mono); }
+.hue-pair .demo { font-size: 20px; font-weight: 600; }
+
+/* Contrast pills */
+.cr { display: inline-block; font-family: var(--mono); font-size: 12px; padding: 1px 7px; border-radius: 10px; white-space: nowrap; }
+.cr.pass { background: rgba(129,199,132,.16); color: var(--positive); }
+.cr.large { background: rgba(166,75,0,.35); color: #FFCC80; }
+.cr.fail { background: rgba(239,154,154,.16); color: var(--negative); }
+
+/* Typography samples */
+.type-row { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--divider); }
+.type-row:last-child { border-bottom: none; }
+.type-row .spec { font-size: 12px; color: var(--text-medium); }
+.type-row .spec code { font-size: 11px; }
+
+/* App component mocks */
+.btn {
+    font: 500 14px var(--font); letter-spacing: .03em; text-transform: uppercase;
+    border: none; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+    transition: box-shadow .15s, background-color .15s;
+}
+.btn-primary { background: var(--primary-container); color: #fff; height: 36px; min-width: 64px; padding: 0 16px; box-shadow: var(--dp2); }
+.btn-primary:hover { box-shadow: var(--dp8); background: #4555B8; }
+.btn-secondary { background: transparent; color: var(--primary); height: 36px; min-width: 64px; padding: 0 16px; }
+.btn-secondary:hover { background: rgba(159,168,218,.08); }
+.btn-icon { background: var(--primary-container); color: #fff; width: 40px; height: 40px; padding: 0; box-shadow: var(--dp2); font-size: 22px; font-weight: 700; text-transform: none; }
+.btn-icon:hover { box-shadow: var(--dp8); }
+.btn-icon svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.btn:disabled { background: rgba(255,255,255,.12); color: var(--text-disabled); box-shadow: none; cursor: default; }
+.btn-secondary:disabled { background: transparent; }
+
+.tabs { display: flex; background: var(--background); box-shadow: 0 2px 6px rgba(0,0,0,.5); padding-left: 12px; overflow-x: auto; border-radius: 6px 6px 0 0; }
+.tab { min-width: 120px; height: 48px; padding: 0 16px; margin-right: 4px; display: flex; flex-direction: column; font: 500 14px var(--font); color: var(--text-high); cursor: pointer; background: none; border: none; }
+.tab span { flex: 1; display: flex; align-items: center; justify-content: center; }
+.tab i { height: 3px; border-radius: 1.5px; background: var(--primary-container); opacity: 0; }
+.tab.active { color: var(--primary); }
+.tab.active i { opacity: 1; }
+
+.tiles { display: flex; flex-wrap: wrap; gap: 10px; }
+.tile {
+    width: 200px; height: 100px; border-radius: 4px; box-shadow: var(--dp2); position: relative; overflow: hidden;
+    padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; color: var(--text-high);
+    transition: box-shadow .15s;
+}
+.tile.small { width: 100px; }
+.tile .t-title { font-size: 12px; }
+.tile .t-big { font-size: 28px; font-weight: 600; line-height: 1; }
+.tile .t-detail { font-size: 12px; color: var(--text-high); }
+.tile.clickable { cursor: pointer; }
+.tile.clickable::after { content: ""; position: absolute; inset: 0; background: rgba(255,255,255,.87); opacity: 0; transition: opacity .15s; }
+.tile.clickable:hover { box-shadow: var(--dp8); }
+.tile.clickable:hover::after { opacity: .12; }
+.tile.disabled { background: var(--surface-raised) !important; color: var(--text-disabled); }
+.tile.disabled .t-detail { color: var(--text-disabled); }
+
+.badge { display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; color: var(--text-high); font-weight: 700; }
+.oil { min-width: 150px; margin: 0; padding: 6px 3px; font-size: 10px; }
+.badge2 { height: 25px; width: 35px; font-size: 12px; background: var(--surface); }
+
+.sumchip { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 4px 12px; border-radius: 4px; }
+.sumchip .l { font-size: 12px; font-weight: 500; }
+.sumchip.info { border: 1px solid var(--divider); }
+.sumchip.info .l { color: var(--text-medium); }
+.sumchip.info .v { font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.sumchip.alert { background: var(--negative-container); color: var(--text-high); }
+.sumchip svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.dtable { font-size: 14px; overflow-x: auto; }
+.dtable .hdr, .dtable .r { min-width: 520px; }
+.dtable .hdr, .dtable .r { display: grid; grid-template-columns: 90px 90px minmax(140px, 1fr) 100px 90px; gap: 0; align-items: center; padding: 0 9px; }
+.dtable .hdr { font-size: 13px; font-weight: 500; color: var(--text-medium); padding-bottom: 8px; border-bottom: 1px solid var(--divider); }
+.dtable .r { height: 32px; margin: 1px; padding: 0 8px; }
+.dtable .r:nth-child(even) { background: var(--surface-raised); }
+.dtable .r:nth-child(odd) { background: var(--surface); }
+.dtable .r:hover { box-shadow: inset 0 0 0 999px rgba(255,255,255,.04); }
+.dtable .r.dup { background: var(--negative-container); }
+.dtable .num { text-align: right; padding-right: 6px; font-variant-numeric: tabular-nums; }
+.dtable span { padding-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dtable .num { padding-left: 0; }
+
+.sechdr { font-size: 16px; font-weight: 500; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid var(--divider); }
+.brow { display: flex; align-items: center; height: 48px; background: var(--surface-raised); margin-bottom: 2px; }
+.brow > i { width: 4px; align-self: stretch; }
+.brow .chk { width: 16px; height: 16px; margin-left: 8px; border: 2px solid var(--text-medium); border-radius: 2px; visibility: hidden; }
+.brow .txt { flex: 1; min-width: 0; margin: 0 8px; }
+.brow .code { font-size: 14px; font-weight: 500; }
+.brow .desc { font-size: 12px; color: var(--text-medium); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brow .amt { font-size: 16px; min-width: 100px; text-align: right; margin: 0 8px; font-variant-numeric: tabular-nums; }
+.brow .del { width: 32px; height: 32px; margin-right: 4px; visibility: hidden; background: no-repeat center/18px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3'/%3E%3C/svg%3E"); }
+.brow:hover .chk, .brow:hover .del { visibility: visible; }
+.brow.off .code, .brow.off .desc { color: var(--text-disabled); }
+.empty-state { text-align: center; padding: 32px 16px; }
+.empty-state svg { width: 56px; height: 56px; fill: none; stroke: var(--text-disabled); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.empty-state .t { font-size: 20px; margin: 16px 0 8px; }
+.empty-state .b { font-size: 14px; color: var(--text-medium); max-width: 420px; margin: 0 auto; }
+.spinner { width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid rgba(159,168,218,.25); border-top-color: var(--primary); animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+.field { display: inline-flex; flex-direction: column; min-width: 180px; }
+.field .box { position: relative; border: 1px solid var(--divider); border-radius: 4px; background: var(--surface); min-height: 40px; padding: 8px 10px; font-size: 14px; color: var(--text-high); }
+.field .box.focus { border: 2px solid var(--primary); padding: 7px 9px; }
+.field .box .float { position: absolute; top: -8px; left: 8px; padding: 0 4px; font-size: 11px; background: var(--surface); color: var(--primary); }
+.field .box.readonly { background: var(--background); border-color: transparent; }
+.field .box.combo::after { content: "▾"; position: absolute; right: 10px; color: var(--text-medium); }
+.field .err { color: var(--negative); font-style: italic; font-size: 13px; margin-top: 4px; }
+
+.scrim-demo { position: relative; background: var(--background); border-radius: 6px; overflow: hidden; padding: 40px 24px; border: 1px solid var(--divider); }
+.scrim-demo .bg-content { position: absolute; inset: 0; padding: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-content: flex-start; }
+.scrim-demo .bg-content div { width: 160px; height: 80px; background: var(--primary-container); border-radius: 4px; }
+.scrim-demo .scrim { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
+.dialog { position: relative; max-width: 620px; margin: 0 auto; background: var(--dialog); border-radius: 4px; box-shadow: var(--dp24); }
+.dialog h4 { margin: 0; padding: 24px 24px 16px; font-size: 30px; font-style: italic; font-weight: 400; }
+.dialog .body { padding: 0 24px 8px; color: var(--text-high); font-size: 14px; }
+.dialog .actions { display: flex; justify-content: flex-end; gap: 8px; padding: 8px 16px 16px; }
+
+.tooltip-mock { display: inline-block; background: var(--tooltip); border: 1px solid var(--divider); border-radius: 3px; padding: 4px 8px; font-style: italic; font-size: 13px; box-shadow: 3px 3px 5px rgba(0,0,0,.6); max-width: 320px; }
+
+.elev { height: 90px; border-radius: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 13px; }
+.elev b { font-size: 16px; }
+
+.numbers .n { font-variant-numeric: tabular-nums; text-align: right; min-width: 100px; display: inline-block; }
+
+.spacing-bar { display: flex; align-items: center; gap: 12px; font-size: 13px; margin: 6px 0; }
+.spacing-bar i { display: inline-block; height: 14px; background: var(--primary); border-radius: 2px; opacity: .8; }
+
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.do-dont > div { border-radius: 6px; padding: 16px 18px; background: var(--surface); border-top: 3px solid; }
+.do-dont .do { border-color: var(--positive); }
+.do-dont .dont { border-color: var(--negative); }
+.do-dont h4 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+.do-dont .do h4 { color: var(--positive); }
+.do-dont .dont h4 { color: var(--negative); }
+.do-dont ul { margin: 0; padding-left: 18px; }
+.do-dont li { margin: 4px 0; }
+
+.callout { border-left: 3px solid var(--primary); background: var(--surface); padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 14px; }
+.callout.warn { border-left-color: var(--warning-container); }
+
+@media (max-width: 1000px) {
+    .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--divider); padding: 16px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+    nav.toc .brand { width: 100%; margin-bottom: 4px; }
+    nav.toc a { padding: 2px 0; border: none; }
+    main { padding: 24px 16px 64px; }
+    .cols-2, .cols-3, .cols-4, .do-dont { grid-template-columns: 1fr; }
+    .type-row { grid-template-columns: 1fr; gap: 4px; }
+    .tile { width: 100%; max-width: 200px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+    <div class="brand">UX Guide</div>
+    <a href="#principles">Principles</a>
+    <a href="#palette">Palette</a>
+    <a href="#semantic">Semantic brushes</a>
+    <a href="#contrast">Contrast</a>
+    <a href="#elevation">Surfaces &amp; elevation</a>
+    <a href="#type">Typography</a>
+    <a href="#numbers">Money &amp; numbers</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#tabs">Tab strip</a>
+    <a href="#tiles">Dashboard tiles</a>
+    <a href="#chips">Summary chips</a>
+    <a href="#badges">Badges &amp; oil lights</a>
+    <a href="#lists">Lists &amp; tables</a>
+    <a href="#editable-lists">Editable lists</a>
+    <a href="#empty">Empty &amp; loading</a>
+    <a href="#inputs">Inputs</a>
+    <a href="#dialog">Dialogs</a>
+    <a href="#tooltip">Tooltips &amp; menus</a>
+    <a href="#spacing">Spacing &amp; shape</a>
+    <a href="#rules">Do / Don't</a>
+    <a href="#files">Source files</a>
+    <a href="#gaps">Known gaps</a>
+</nav>
+
+<main>
+
+<header class="hero">
+    <h1>Budget Analyser UX Guide</h1>
+    <p class="muted">Colours, type and component styles used in the Budget Analyser WPF app. The app follows Material Design in a
+        single dark theme, built on MaterialDesignInXamlToolkit plus the app's own dictionaries under <code>BudgetAnalyser/UI/Style</code>.</p>
+    <p class="muted">This page is a visual reference. The XAML stays the source of truth, so update this page in the same commit as any style change.</p>
+    <div class="meta">
+        <span>Last updated: 2026-10-02</span>
+        <span>Matches branch <code>claude/ux-material-design</code>: Phase 5 (colour palette, Indigo primary) and Phase 4 for the Transactions and Budget screens</span>
+        <span>Plan: <a href="ux-material-design-plan.md">ux-material-design-plan.md</a></span>
+    </div>
+</header>
+
+<!-- ============================================================ -->
+<section id="principles">
+    <h2>Principles</h2>
+    <p class="lede">These come from the Material Design plan and should guide every new screen.</p>
+    <div class="grid cols-2">
+        <div class="panel"><h3 style="margin-top:0">Dark theme only</h3><p class="muted">The app has no light theme. Pick every colour for a near-black background, and check its contrast there.</p></div>
+        <div class="panel"><h3 style="margin-top:0">A small palette</h3><p class="muted">The app uses four hues: indigo, green, red and orange. Each hue has a <em>light tone</em> for text on surfaces and a <em>container tone</em> for fills. Don't add new hues.</p></div>
+        <div class="panel"><h3 style="margin-top:0">Colour carries meaning</h3><p class="muted">Green means positive or credit, red means negative or debit, orange means "needs attention", and indigo is the brand and interactive colour. Never use colour just for decoration.</p></div>
+        <div class="panel"><h3 style="margin-top:0">Keep it simple</h3><p class="muted">The app keeps a tab strip, one content area and a modal overlay. Motion stays at toolkit defaults (ripple and elevation). Don't add drawers, sheets or gestures.</p></div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="palette">
+    <h2>Palette</h2>
+    <p class="lede">Every colour in the app comes from <code>Colour.Palette.*</code> in <code>Colours.xaml</code>. Views reference the semantic <code>Brush.*</code> keys, never the palette colours directly.</p>
+
+    <h3>Surfaces (Material dark elevation steps)</h3>
+    <div class="grid cols-3">
+        <div class="swatch"><div class="fill" style="background:var(--background)">Aa</div><div class="info"><div class="key">Colour.Palette.Background</div><div class="hex">#121212 · 0dp</div><div class="use">Window and page background, the tab strip, read-only fields</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--surface)">Aa</div><div class="info"><div class="key">Colour.Palette.Surface</div><div class="hex">#1E1E1E · 1dp</div><div class="use">Secondary panels, input fills, alternate rows</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--surface-raised)">Aa</div><div class="info"><div class="key">Colour.Palette.SurfaceRaised</div><div class="hex">#2C2C2C · 6dp</div><div class="use">List items, neutral number cells, menus, disabled tiles</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--dialog)">Aa</div><div class="info"><div class="key">Colour.Palette.Dialog</div><div class="hex">#383838 · 24dp</div><div class="use">Modal dialog card</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--tile)">Aa</div><div class="info"><div class="key">Colour.Palette.Tile</div><div class="hex">#424242 · Grey 800</div><div class="use">Neutral dashboard tiles (lighter than the elevation steps so tile edges stay visible on the page)</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--tooltip)">Aa</div><div class="info"><div class="key">Colour.Palette.Tooltip</div><div class="hex">#616161 · Grey 700</div><div class="use">Tooltip background</div></div></div>
+        <div class="swatch"><div class="fill" style="background:var(--background);box-shadow:inset 0 -2px 0 var(--divider), inset 0 0 0 1px var(--divider)"><span class="muted" style="font-weight:400;font-size:12px">1px line</span></div><div class="info"><div class="key">Colour.Palette.Divider</div><div class="hex">#1FFFFFFF · white 12%</div><div class="use">Borders, dividers, control outlines</div></div></div>
+    </div>
+
+    <h3>Text emphasis (white at Material opacities)</h3>
+    <div class="panel" style="background:var(--background)">
+        <div class="row" style="gap:32px">
+            <div><div style="color:var(--text-high);font-size:20px">High emphasis</div><div class="caption"><code>TextHigh</code> #DEFFFFFF · 87%</div></div>
+            <div><div style="color:var(--text-medium);font-size:20px">Medium emphasis</div><div class="caption"><code>TextMedium</code> #99FFFFFF · 60%</div></div>
+            <div><div style="color:var(--text-disabled);font-size:20px">Disabled</div><div class="caption"><code>TextDisabled</code> #61FFFFFF · 38%</div></div>
+        </div>
+    </div>
+
+    <h3>Hues: light tone and container tone</h3>
+    <p class="muted" style="max-width:72ch">Use the light tone for text, icons and accents drawn directly on a dark surface. Use the container tone for fills, and always put light text (<code>TextHigh</code> or white) on top of it. Never put a light tone behind text.</p>
+    <div class="grid cols-2">
+        <div>
+            <div class="hue-pair">
+                <div style="background:var(--background)"><span class="label" style="color:var(--text-medium)">Primary · #9FA8DA · Indigo 200</span><span class="demo" style="color:var(--primary)">Flat button</span></div>
+                <div style="background:var(--primary-container)"><span class="label">PrimaryContainer · #3949AB · Indigo 600</span><span class="demo">Button / tile</span></div>
+            </div>
+            <div class="caption">Brand and interactive elements: The fill is used for buttons, tiles and the active tab indicator. The light shade is used for focus rings and flat button text.</div>
+        </div>
+        <div>
+            <div class="hue-pair">
+                <div style="background:var(--background)"><span class="label" style="color:var(--text-medium)">Positive · #81C784 · Green 300</span><span class="demo" style="color:var(--positive)">+1,250.00</span></div>
+                <div style="background:var(--positive-container)"><span class="label">PositiveContainer · #1B5E20 · Green 900</span><span class="demo">Income</span></div>
+            </div>
+            <div class="caption">Credit, surplus, income and under budget.</div>
+        </div>
+        <div>
+            <div class="hue-pair">
+                <div style="background:var(--background)"><span class="label" style="color:var(--text-medium)">Negative · #EF9A9A · Red 200</span><span class="demo" style="color:var(--negative)">-342.10</span></div>
+                <div style="background:var(--negative-container)"><span class="label">NegativeContainer · #B71C1C · Red 900</span><span class="demo">Overspent</span></div>
+            </div>
+            <div class="caption">Debit, overspending, errors and validation messages.</div>
+        </div>
+        <div>
+            <div class="hue-pair">
+                <div style="background:var(--background)"><span class="label" style="color:var(--text-medium)">(no light tone)</span><span class="demo muted" style="font-size:14px;font-weight:400">Warnings drawn on surfaces use Negative</span></div>
+                <div style="background:var(--warning-container)"><span class="label">WarningContainer · #A64B00</span><span class="demo">Needs attention</span></div>
+            </div>
+            <div class="caption">Needs attention and saved-up (accumulated) buckets. This is darkened from Orange 900 so that light text passes AA.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="semantic">
+    <h2>Semantic brushes</h2>
+    <p class="lede">These are the brush keys views should use. Keys marked <strong>C#</strong> are looked up by name from code (<code>ConverterHelper</code>, <code>LedgerBookGridBuilderV2</code>, Engine widgets), so renaming one breaks the app at runtime without a compile error.</p>
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Brush key</th><th>Palette colour</th><th>Used for</th></tr></thead>
+        <tbody>
+            <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Surfaces</td></tr>
+            <tr><td><code>Brush.MainBackground</code> <b>C#</b></td><td><span class="chip" style="background:var(--background)"></span>Background</td><td>Page background, list backgrounds, read-only text boxes</td></tr>
+            <tr><td><code>Brush.TileBackgroundAlternate</code> <b>C#</b></td><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td>Text box fill, alternate rows, ledger bank balance and surplus cells</td></tr>
+            <tr><td><code>Brush.TileBackground</code> <b>C#</b></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>List item cards, highlighted ledger cells</td></tr>
+            <tr><td><code>Brush.NeutralNumberBackground</code> <b>C#</b></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Neutral (zero) number fills</td></tr>
+            <tr><td><code>Brush.DialogBackground</code></td><td><span class="chip" style="background:var(--dialog)"></span>Dialog</td><td>Shell dialog card and dialog content panels</td></tr>
+            <tr><td><code>Brush.ToolTip.Background</code></td><td><span class="chip" style="background:var(--tooltip)"></span>Tooltip</td><td>Tooltips</td></tr>
+            <tr><td><code>Brush.ControlBorder</code> <b>C#</b></td><td><span class="chip" style="background:rgba(255,255,255,.12)"></span>Divider</td><td>Borders and control outlines</td></tr>
+            <tr><td><code>Brush.Shadow</code></td><td><span class="chip" style="background:#000"></span>Black</td><td>Translucent shading overlay only (for example, report progress bars)</td></tr>
+
+            <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Text</td></tr>
+            <tr><td><code>Brush.Text.Default</code> <b>C#</b></td><td><span class="chip" style="background:var(--text-high)"></span>TextHigh</td><td>Body text, values, inactive tab labels</td></tr>
+            <tr><td><code>Brush.Text.Label</code></td><td><span class="chip" style="background:var(--text-medium)"></span>TextMedium</td><td>Field labels (<code>TextBlock.LabelStyle</code>)</td></tr>
+            <tr><td><code>Brush.Text.Disabled</code></td><td><span class="chip" style="background:var(--text-disabled)"></span>TextDisabled</td><td>Disabled text</td></tr>
+            <tr><td><code>Brush.BadgeText</code></td><td><span class="chip" style="background:var(--text-high)"></span>TextHigh</td><td>Text on badges and oil lights</td></tr>
+            <tr><td><code>Brush.Positive.Text</code> <b>C#</b></td><td><span class="chip" style="background:var(--positive)"></span>Positive</td><td>Positive amounts, ledger surplus</td></tr>
+            <tr><td><code>Brush.Negative.Text</code> <b>C#</b></td><td><span class="chip" style="background:var(--negative)"></span>Negative</td><td>Negative amounts</td></tr>
+            <tr><td><code>Brush.ImportantHighlightLight</code></td><td><span class="chip" style="background:var(--negative)"></span>Negative</td><td>Validation errors and warning glyphs</td></tr>
+
+            <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Primary / interactive</td></tr>
+            <tr><td><code>Brush.Primary</code></td><td><span class="chip" style="background:var(--primary)"></span>Primary</td><td>Flat (secondary) button text, screen titles, active tab label</td></tr>
+            <tr><td><code>Brush.Primary.Container</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Primary fills</td></tr>
+            <tr><td><code>Brush.Button.Background</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Raised buttons, round menu buttons</td></tr>
+            <tr><td><code>Brush.Button.Glyph</code></td><td><span class="chip" style="background:#fff"></span>White</td><td>Icons and text on buttons</td></tr>
+            <tr><td><code>Brush.ModernTile.Highlight</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Active tab underline (matches the button and tile fill)</td></tr>
+            <tr><td><code>Brush.ModernTile.Background1</code> / <code>2</code> <b>C#</b></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Standard dashboard tiles</td></tr>
+            <tr><td><code>Brush.ModernTile.Background3</code></td><td><span class="chip" style="background:var(--tile)"></span>Tile</td><td>Neutral dashboard tile</td></tr>
+            <tr><td><code>Brush.ModernTile.Disabled</code></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Disabled tiles</td></tr>
+
+            <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Status fills (always light text on top)</td></tr>
+            <tr><td><code>Brush.CreditBackground1</code> <b>C#</b></td><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td>Credit fills, nominal oil light</td></tr>
+            <tr><td><code>Brush.DebitBackground1</code> <b>C#</b>, <code>Brush.Negative.Container</code></td><td><span class="chip" style="background:var(--negative-container)"></span>NegativeContainer</td><td>Debit fills, red oil light</td></tr>
+            <tr><td><code>Brush.NotSoBadDebit</code> <b>C#</b>, <code>Brush.WarningOilLight</code></td><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td>Mild overspend, warning tiles and oil lights</td></tr>
+
+            <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Budget bucket types</td></tr>
+            <tr><td><code>Brush.BudgetBucket.Income</code> <b>C#</b></td><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td>Income buckets</td></tr>
+            <tr><td><code>Brush.BudgetBucket.SpentMonthly</code> <b>C#</b></td><td><span class="chip" style="background:var(--negative-container)"></span>NegativeContainer</td><td>Spent-monthly expense buckets</td></tr>
+            <tr><td><code>Brush.BudgetBucket.Accumulated</code> <b>C#</b></td><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td>Saved-up (accumulated) expense buckets</td></tr>
+
+            <tr><td colspan="3" class="muted" style="background:var(--surface);font-size:12px;text-transform:uppercase;letter-spacing:.04em">Menus (Menu.xaml)</td></tr>
+            <tr><td><code>Menu.Static.Background</code></td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Drop-down menu surface</td></tr>
+            <tr><td><code>MenuItem.Highlight.Background</code>, <code>MenuItem.Selected.Background</code></td><td><span class="chip" style="background:rgba(159,168,218,.12)"></span>Primary @ 12%</td><td>Hovered or selected menu item (Material state layer)</td></tr>
+            <tr><td><code>MenuItem.Highlight.Border</code>, <code>MenuItem.Selected.Border</code></td><td><span class="chip" style="background:var(--primary)"></span>Primary</td><td>Hovered or selected menu item outline</td></tr>
+            <tr><td><code>Menu.Static.Border</code>, <code>Menu.Static.Separator</code></td><td><span class="chip" style="background:rgba(255,255,255,.12)"></span>Divider</td><td>Menu border and separators</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p class="caption">The toolkit's own theme comes from <code>BundledTheme BaseTheme="Dark" PrimaryColor="Indigo" SecondaryColor="Indigo"</code> in <code>App.xaml</code>. Toolkit resources such as <code>PrimaryHueMidBrush</code> (used by the tab ripple) resolve from it.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="contrast">
+    <h2>Contrast</h2>
+    <p class="lede">These are WCAG 2.x contrast ratios, with translucent text blended onto the fill first. The AA target is 4.5:1 for body text and 3:1 for large text (18pt, or 14pt bold) and UI outlines.</p>
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Background</th><th>TextHigh</th><th>TextMedium</th><th>TextDisabled</th><th>White</th><th>Primary</th><th>Positive</th><th>Negative</th></tr></thead>
+        <tbody>
+            <tr><td><span class="chip" style="background:var(--background)"></span>Background</td><td><span class="cr pass">14.19</span></td><td><span class="cr pass">7.16</span></td><td><span class="cr large">3.57</span></td><td><span class="cr pass">18.73</span></td><td><span class="cr pass">8.11</span></td><td><span class="cr pass">9.31</span></td><td><span class="cr pass">8.71</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--surface)"></span>Surface</td><td><span class="cr pass">12.87</span></td><td><span class="cr pass">6.77</span></td><td><span class="cr large">3.57</span></td><td><span class="cr pass">16.67</span></td><td><span class="cr pass">7.21</span></td><td><span class="cr pass">8.28</span></td><td><span class="cr pass">7.75</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td><span class="cr pass">10.98</span></td><td><span class="cr pass">6.08</span></td><td><span class="cr large">3.35</span></td><td><span class="cr pass">13.97</span></td><td><span class="cr pass">6.04</span></td><td><span class="cr pass">6.94</span></td><td><span class="cr pass">6.49</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--dialog)"></span>Dialog</td><td><span class="cr pass">9.31</span></td><td><span class="cr pass">5.35</span></td><td><span class="cr large">3.14</span></td><td><span class="cr pass">11.73</span></td><td><span class="cr pass">5.07</span></td><td><span class="cr pass">5.83</span></td><td><span class="cr pass">5.45</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--tile)"></span>Tile</td><td><span class="cr pass">8.08</span></td><td><span class="cr pass">4.81</span></td><td><span class="cr fail">2.90</span></td><td><span class="cr pass">10.05</span></td><td><span class="cr large">4.35</span></td><td><span class="cr pass">4.99</span></td><td><span class="cr pass">4.67</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--tooltip)"></span>Tooltip</td><td><span class="cr pass">5.20</span></td><td><span class="cr large">3.40</span></td><td><span class="cr fail">2.28</span></td><td><span class="cr pass">6.19</span></td><td><span class="cr fail">2.68</span></td><td><span class="cr large">3.08</span></td><td><span class="cr fail">2.88</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td><span class="cr pass">6.29</span></td><td><span class="cr large">3.90</span></td><td><span class="cr fail">2.47</span></td><td><span class="cr pass">7.73</span></td><td><span class="cr large">3.35</span></td><td><span class="cr large">3.84</span></td><td><span class="cr large">3.59</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--positive-container)"></span>PositiveContainer</td><td><span class="cr pass">6.40</span></td><td><span class="cr large">3.97</span></td><td><span class="cr fail">2.50</span></td><td><span class="cr pass">7.87</span></td><td><span class="cr large">3.41</span></td><td><span class="cr large">3.91</span></td><td><span class="cr large">3.66</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--negative-container)"></span>NegativeContainer</td><td><span class="cr pass">5.29</span></td><td><span class="cr large">3.15</span></td><td><span class="cr fail">2.00</span></td><td><span class="cr pass">6.57</span></td><td><span class="cr fail">2.84</span></td><td><span class="cr large">3.26</span></td><td><span class="cr large">3.05</span></td></tr>
+            <tr><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td><span class="cr pass">4.80</span></td><td><span class="cr large">3.10</span></td><td><span class="cr fail">2.08</span></td><td><span class="cr pass">5.79</span></td><td><span class="cr fail">2.50</span></td><td><span class="cr fail">2.88</span></td><td><span class="cr fail">2.69</span></td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p class="caption"><span class="cr pass">pass</span> ≥ 4.5 &nbsp; <span class="cr large">large text / UI only</span> 3.0–4.49 &nbsp; <span class="cr fail">fail</span> &lt; 3.0</p>
+    <div class="callout"><strong>Rule of thumb:</strong> on a container (coloured) fill, use only <code>TextHigh</code> or white. Medium-emphasis text and light hue tones are only readable on the grey surfaces.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="elevation">
+    <h2>Surfaces &amp; elevation</h2>
+    <p class="lede">On a dark theme, higher surfaces are lighter, as well as casting a shadow. Cards use the toolkit's <code>ElevationAssist.Elevation</code>, so don't hand-roll <code>DropShadowEffect</code> on new elements.</p>
+    <div class="grid cols-4">
+        <div class="elev" style="background:var(--background);border:1px solid var(--divider)"><b>0dp</b><span class="muted">Page</span></div>
+        <div class="elev" style="background:var(--surface);box-shadow:var(--dp2)"><b>1–2dp</b><span class="muted">Panels · tiles (Dp2)</span></div>
+        <div class="elev" style="background:var(--surface-raised);box-shadow:var(--dp8)"><b>6–8dp</b><span class="muted">Menus · tile hover (Dp8)</span></div>
+        <div class="elev" style="background:var(--dialog);box-shadow:var(--dp24)"><b>24dp</b><span class="muted">Dialog (Dp24)</span></div>
+    </div>
+    <p class="caption">The tab strip is the one exception. It uses a small <code>DropShadowEffect</code> (blur 6, depth 2, 50% black) pointing down onto the content.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="type">
+    <h2>Typography</h2>
+    <p class="lede">The app uses the WPF default font (Segoe UI). Styles live in <code>TextBlock.xaml</code>. By default, a TextBlock is 16px <code>Text.Default</code> with a 2px margin, vertically centred, and trims with an ellipsis instead of wrapping.</p>
+    <div class="panel">
+        <div class="type-row"><div class="spec"><code>TextBlock.Heading1</code><br>36px italic · margin 10,2,2,2<br>Dialog titles</div><div style="font-size:36px;font-style:italic;line-height:1.2">Ledger Book</div></div>
+        <div class="type-row"><div class="spec"><code>TextBlock.PageTitle</code><br>Heading1 in Primary<br>Transactions, Ledger Book and Budget screen titles</div><div style="font-size:36px;font-style:italic;line-height:1.2;color:var(--primary)">ReesAccounts2020 LedgerBook</div></div>
+        <div class="type-row"><div class="spec"><code>TextBlock.ImportantNumber</code><br>24px · right-aligned · colour and bold set by converters</div><div class="numbers"><span class="n" style="font-size:24px;color:var(--positive);font-weight:700">1,250.00</span> &nbsp; <span class="n" style="font-size:24px;color:var(--negative);font-weight:700">-342.10</span></div></div>
+        <div class="type-row"><div class="spec">Default <code>TextBlock</code><br>16px · Text.Default</div><div style="font-size:16px">Countdown Supermarket Wellington</div></div>
+        <div class="type-row"><div class="spec"><code>TextBlock.LabelStyle</code><br>15px · Text.Label · margin 2,2,10,2<br><code>…LabelRightAlignedStyle</code> right-aligns it</div><div style="font-size:15px;color:var(--text-medium)">Bucket code</div></div>
+        <div class="type-row"><div class="spec">Tab label (<code>TabButtonStyle</code>)<br>14px Medium</div><div style="font-size:14px;font-weight:500">Transactions</div></div>
+        <div class="type-row"><div class="spec">Inputs: <code>TextBox</code>, <code>DatePicker</code><br>14px</div><div style="font-size:14px">12/09/2026</div></div>
+        <div class="type-row"><div class="spec"><code>TextBlock.ContextMenuStyle</code><br>14px</div><div style="font-size:14px">Split transaction…</div></div>
+        <div class="type-row"><div class="spec"><code>TextBlock.Paragraph</code><br>13px · left-aligned</div><div style="font-size:13px">Import a bank statement to see transactions for this period.</div></div>
+        <div class="type-row"><div class="spec"><code>TextBlock.Widget.Paragraph</code>, <code>Badge.Text</code><br>12px (badge text is bold)</div><div style="font-size:12px">Last import 3 days ago &nbsp; <b>SURPLUS</b></div></div>
+        <div class="type-row"><div class="spec"><code>Badge.TextBlock.WarningLightStyle</code><br>10px bold · centred</div><div style="font-size:10px;font-weight:700">OVERSPENT</div></div>
+        <div class="type-row"><div class="spec"><code>TextBlock.ValidationError</code><br>Italic · ImportantHighlightLight</div><div style="font-style:italic;color:var(--negative)">* Amount must be greater than zero</div></div>
+    </div>
+    <p class="caption">Phase 4 of the plan will map these onto the toolkit type scale (<code>MaterialDesignHeadline*</code>, <code>MaterialDesignBody*</code>). Update this section when that lands.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="numbers">
+    <h2>Money &amp; numbers</h2>
+    <p class="lede">Amounts are right-aligned (<code>TextBlock.Number</code>, min width 100). Their colour comes from <code>Converter.NumberToBrush</code>: the <em>light</em> tone for text on a surface, and the <em>container</em> tone when the number sits in a fill.</p>
+    <div class="grid cols-2">
+        <div class="panel numbers">
+            <div class="muted" style="font-size:12px;margin-bottom:8px">Text on a surface (<code>ConverterParameter="Light"</code>)</div>
+            <div><span style="color:var(--text-medium)">Income</span> <span class="n" style="color:var(--positive);float:right">4,820.00</span></div>
+            <div><span style="color:var(--text-medium)">Groceries</span> <span class="n" style="color:var(--negative);float:right">-612.45</span></div>
+            <div><span style="color:var(--text-medium)">Transfer</span> <span class="n" style="float:right">0.00</span></div>
+        </div>
+        <div class="panel numbers">
+            <div class="muted" style="font-size:12px;margin-bottom:8px">Status fills</div>
+            <div class="row" style="gap:8px">
+                <span class="badge" style="background:var(--positive-container);padding:6px 10px;font-weight:600">+4,820.00</span>
+                <span class="badge" style="background:var(--negative-container);padding:6px 10px;font-weight:600">-612.45</span>
+                <span class="badge" style="background:var(--warning-container);padding:6px 10px;font-weight:600">-18.20</span>
+                <span class="badge" style="background:var(--surface-raised);padding:6px 10px;font-weight:600">0.00</span>
+            </div>
+            <div class="caption">Credit · Debit · NotSoBadDebit · Neutral</div>
+        </div>
+    </div>
+    <p class="caption">In lists, amounts are coloured by sign with the light tones (see <a href="#lists">Lists &amp; tables</a>). When a row itself has a status fill, such as a duplicate row, set its amount back to <code>Brush.Text.Default</code>, because the light tones fail contrast on container fills.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="buttons">
+    <h2>Buttons</h2>
+    <p class="lede">All buttons are based on the toolkit's <code>MaterialDesignRaisedButton</code> or <code>MaterialDesignFlatButton</code>, and have rectangular 4px corners. Pressing a button shows the Material ripple. Styles live in <code>Buttons.xaml</code>.</p>
+
+    <h3>Dialog action row</h3>
+    <div class="panel" style="background:var(--dialog)">
+        <div class="row" style="justify-content:flex-end;gap:8px">
+            <button class="btn btn-secondary">Help</button>
+            <button class="btn btn-secondary">Cancel</button>
+            <button class="btn btn-primary">Save</button>
+        </div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Style</th><th>Look</th><th>Spec</th></tr></thead>
+        <tbody>
+            <tr><td><code>Button.Dialog.Primary</code></td><td>Filled PrimaryContainer, white label</td><td>Height 36, min width 64, padding 16,0, margin 8,0,0,0. Use it for the confirming action, placed last (rightmost).</td></tr>
+            <tr><td><code>Button.Dialog.Secondary</code></td><td>Flat, Primary-coloured label</td><td>Same size as the primary button. Use it for dismissive and secondary actions (Help, Cancel/Close), placed before the primary button.</td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <h3>Toolbar icon buttons (<code>Button.Round.*</code>)</h3>
+    <p class="muted">These are 40×40 PrimaryContainer buttons with a white glyph and a tooltip. They are still named "Round" for compatibility, but they're rectangular now. The glyph is set through <code>ContentTemplate</code>, never through a <code>Content</code> setter, because a shared UIElement would only render in one button.</p>
+    <div class="panel">
+        <div class="row" style="gap:8px">
+            <button class="btn btn-icon" title="Button.Round.Add">+</button>
+            <button class="btn btn-icon" title="Button.Round.Minus">−</button>
+            <button class="btn btn-icon" title="Button.Round.Save"><svg viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h8V3"/><rect x="8" y="13" width="8" height="6"/></svg></button>
+            <button class="btn btn-icon" title="Button.Round.Left"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <button class="btn btn-icon" title="Button.Round.Right"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+            <button class="btn btn-icon" title="Button.Round.Cross"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            <button class="btn btn-icon" title="Button.Round.Lock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+            <button class="btn btn-icon" title="Button.Round.All" style="font-size:16px">All</button>
+            <button class="btn btn-icon" disabled title="Disabled">+</button>
+        </div>
+        <div class="caption">Add · Minus · Save · Left · Right · Cross · Lock · All · disabled. There are also Build, Clear, Info, PlusL/PlusR, ApplyRules, EditRules, SmallCross, TransferFunds and Unlock. The glyphs shown here are stand-ins for the app's vector assets.</div>
+    </div>
+
+    <h3>Page action buttons</h3>
+    <p class="muted">A labelled action on a page, such as adding an item under a list, uses the same filled indigo button as a dialog's primary action. Don't use status colours (green, red or orange) as button fills, even when the action creates something of that type.</p>
+    <div class="panel" style="background:var(--background)">
+        <div class="row" style="gap:8px">
+            <button class="btn btn-primary">Add spent monthly expense</button>
+            <button class="btn btn-primary">Add saved up for expense</button>
+        </div>
+        <div class="caption"><code>Button.AddBudgetItem</code> in <code>TopBudgetMaintenance.xaml</code> is based on <code>Button.Dialog.Primary</code>. It only changes the margin (0,0,8,0), because these buttons run left to right from the page edge. Set the text with <code>Content</code>, not a child <code>TextBlock</code>, so it picks up the button's font and colour.</div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="tabs">
+    <h2>Tab strip</h2>
+    <p class="lede">This is the <code>TabButtonStyle</code> in <code>MainMenuUserControl.xaml</code>, a Material top-app-bar tab. It's flat with a 3px PrimaryContainer underline on the active tab, the same indigo as buttons and tiles, and a toolkit primary ripple on press. The active label turns Primary, matching the <code>TextBlock.PageTitle</code> screen titles.</p>
+    <div class="tabs" role="tablist">
+        <button class="tab active"><span>Dashboard</span><i></i></button>
+        <button class="tab"><span>Transactions</span><i></i></button>
+        <button class="tab"><span>Ledger Book</span><i></i></button>
+        <button class="tab"><span>Budget</span><i></i></button>
+        <button class="tab"><span>Reports</span><i></i></button>
+    </div>
+    <div class="panel" style="border-radius:0 0 6px 6px;border-top:none;height:60px"></div>
+    <p class="caption">Each tab is 48px high, at least 120px wide, with padding 16,0 and gap 4. The first tab has a 12px left inset. Inactive labels use Text.Default and the active label uses Primary. The tab style overrides the app-wide TextBlock foreground so the label follows the tab's colour.</p>
+    <script>
+        document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+            t.classList.add('active');
+        }));
+    </script>
+</section>
+
+<!-- ============================================================ -->
+<section id="tiles">
+    <h2>Dashboard tiles</h2>
+    <p class="lede">Tiles are Material <code>Card</code>s (<code>ModernTileMediumBaseStyle</code>): 200×100, 4px corners, 10px top and left margin, Dp2 elevation. Hovering a clickable tile lifts it to Dp8 and adds a 12% white state layer. The Engine widgets choose a tile's colour by style name.</p>
+    <div class="panel" style="background:var(--background)">
+        <div class="tiles">
+            <div class="tile clickable" style="background:var(--primary-container)"><span class="t-title">Current file</span><span class="t-big">Budget</span><span class="t-detail">Budget2026.bax</span></div>
+            <div class="tile clickable" style="background:var(--warning-container)"><span class="t-title">Days since import</span><span class="t-big">12</span><span class="t-detail">Import transactions</span></div>
+            <div class="tile clickable small" style="background:var(--primary-container)"><span class="t-title">Rules</span><span class="t-big">4</span></div>
+            <div class="tile" style="background:var(--tile)"><span class="t-title">Surplus</span><span class="t-big" style="color:var(--positive)">$812</span><span class="t-detail">This month</span></div>
+            <div class="tile disabled"><span class="t-title">Overspent</span><span class="t-big">—</span><span class="t-detail">No budget loaded</span></div>
+        </div>
+        <div class="caption">Hover over the clickable tiles to see the state layer and elevation.</div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Widget style name</th><th>Fill</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td><code>WidgetStandardStyle</code>, <code>ModernTileMedium/SmallStyle1/2</code></td><td><span class="chip" style="background:var(--primary-container)"></span>PrimaryContainer</td><td>Normal state</td></tr>
+            <tr><td><code>WidgetWarningStyle</code></td><td><span class="chip" style="background:var(--warning-container)"></span>WarningContainer</td><td>Needs attention (for example: no file open, no date filter, import overdue, 20+ disused rules)</td></tr>
+            <tr><td><code>WidgetStandardStyle3</code></td><td><span class="chip" style="background:var(--tile)"></span>Tile</td><td>Neutral or informational</td></tr>
+            <tr><td>(Enabled = false)</td><td><span class="chip" style="background:var(--surface-raised)"></span>SurfaceRaised</td><td>Disabled tile</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <div class="callout warn">The tile and widget style keys are referenced as strings from <code>BudgetAnalyser.Engine</code> widgets, so they must not be renamed.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="chips">
+    <h2>Summary chips</h2>
+    <p class="lede">Chips are compact figures shown above a list, such as totals and counts. There are two kinds, and the difference is whether the chip is alerting you to a problem.</p>
+    <div class="panel" style="background:var(--background)">
+        <div class="row" style="gap:8px">
+            <span class="sumchip info"><span class="l">CR</span><span class="v" style="color:var(--positive)">$4,820.00</span></span>
+            <span class="sumchip info"><span class="l">DR</span><span class="v" style="color:var(--negative)">$3,912.45</span></span>
+            <span class="sumchip info"><span class="l" style="font-size:14px">Δ</span><span class="v" style="color:var(--positive)">$907.55</span></span>
+            <span class="sumchip info"><span class="v">148</span><span class="l">Transactions</span></span>
+            <span class="sumchip alert"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></svg><span class="l">2 suspected duplicates</span></span>
+        </div>
+        <div class="caption">Four informational chips, followed by one alert chip.</div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Kind</th><th>Look</th><th>Use for</th></tr></thead>
+        <tbody>
+            <tr><td>Informational (<code>Border.SummaryChip.Info</code>)</td><td>No fill, 1px Divider outline. The label is 12px Medium in Text.Label. The value is 14px Medium, either Text.Default or coloured with a light tone (Positive.Text, Negative.Text, or <code>NumberToBrush</code> with <code>Light</code>).</td><td>Figures that are there for information, such as totals, differences and counts</td></tr>
+            <tr><td>Alert (<code>Border.SummaryChip</code> with a container fill)</td><td>A container-tone fill with 12px Medium <code>Brush.BadgeText</code>. It can include a 16px <code>PackIcon</code>, for example <code>AlertOutline</code>.</td><td>Something the user should act on, for example suspected duplicate transactions</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p class="caption">Both kinds are at least 32px high, with padding 12,4, 4px corners and 8px between chips. The styles are shared in <code>UI/Style/Chips.xaml</code>.</p>
+
+    <h3>Status chips</h3>
+    <p class="muted">Status chips are informational chips holding a single word next to a title. They describe the item's state and aren't alerts. The budget name uses them (<code>BudgetModelNameUserControl.xaml</code>): they come after the name, 16px from it.</p>
+    <div class="panel" style="background:var(--background)">
+        <div class="row" style="gap:8px">
+            <span style="font-size:30px;font-style:italic;margin-right:8px">Budget 2026</span>
+            <span class="sumchip info"><span class="l" style="color:var(--text-high)">Fortnightly</span></span>
+            <span class="sumchip info"><span class="l" style="color:var(--positive)">Active</span></span>
+            <span class="sumchip info"><span class="l">Archived</span></span>
+            <span class="sumchip info"><span class="l" style="color:var(--primary)">Future</span></span>
+        </div>
+        <div class="caption">The label colour carries the meaning: Text.Default for plain facts (the pay cycle), Positive.Text for Active, Text.Label for Archived, and Primary for Future.</div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="badges">
+    <h2>Badges &amp; oil lights</h2>
+    <p class="lede">These are small status markers from <code>OilLight.xaml</code>, with bold light text on a container fill and 3px corners. They're still used on older screens. For figures above a list, use <a href="#chips">summary chips</a> instead. Don't use an oil light for an empty list either: use an <a href="#empty">empty state</a>.</p>
+    <div class="panel">
+        <div class="row">
+            <span class="badge oil" style="background:var(--positive-container)">ON TRACK</span>
+            <span class="badge oil" style="background:var(--warning-container)">NEARLY OVERSPENT</span>
+            <span class="badge oil" style="background:var(--negative-container)">OVERSPENT</span>
+        </div>
+        <div class="caption"><code>Badge.Border.NominalOilLightStyle</code> · <code>…WarningOilLightStyle</code> · <code>…RedOilLightStyle</code>. Each has min width 150 and margin 8, with <code>Badge.TextBlock.WarningLightStyle</code> text (10px bold).</div>
+        <div class="row" style="margin-top:20px">
+            <span class="badge badge2">3</span>
+        </div>
+        <div class="caption"><code>Badge.Border2</code> (25×35, Surface fill) with <code>Badge.Text</code> (12px bold).</div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="lists">
+    <h2>Lists &amp; tables</h2>
+    <p class="lede">Dense data lists are a <code>ListBox</code> with a data template laid out in a <code>Grid</code>. A header row above the list uses the same <code>SharedSizeGroup</code> columns, so the headers line up with the data. The reference implementation is the transaction list: <code>TopTransactionsUserControl.xaml</code> with <code>TransactionListBox.xaml</code>.</p>
+    <div class="panel dtable" style="background:var(--background)">
+        <div class="hdr"><span>Date</span><span class="num">Amount</span><span>Description</span><span>Bucket</span><span>Type</span></div>
+        <div class="r"><span>12/09/2026</span><span class="num" style="color:var(--negative)">-84.20</span><span>Countdown Wellington</span><span>FOOD</span><span>Eftpos</span></div>
+        <div class="r"><span>12/09/2026</span><span class="num" style="color:var(--positive)">2,410.00</span><span>Salary</span><span>INCOME</span><span>Credit</span></div>
+        <div class="r"><span>11/09/2026</span><span class="num" style="color:var(--negative)">-12.50</span><span>Coffee Supreme</span><span>CAFEWRK</span><span>Eftpos</span></div>
+        <div class="r dup"><span>11/09/2026</span><span class="num">-12.50</span><span>Coffee Supreme</span><span>CAFEWRK</span><span>Eftpos</span></div>
+        <div class="r"><span>10/09/2026</span><span class="num" style="color:var(--negative)">-65.00</span><span>Z Energy</span><span>FUEL</span><span>Eftpos</span></div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Part</th><th>Spec</th></tr></thead>
+        <tbody>
+            <tr><td>Header row</td><td>13px Medium in Text.Label, with a 1px ControlBorder divider underneath and 8px below the labels. It's only visible when there are rows. Its left padding equals the item margin plus the item padding (1 + 8 = 9), and each header <code>TextBlock</code> uses the same horizontal margins as its row cell. Right-align numeric headers.</td></tr>
+            <tr><td>Rows</td><td>32px high (Material's compact table height). Item padding is 8,0 and item margin is 1. Rows alternate between <code>Brush.TileBackground</code> and <code>Brush.TileBackgroundAlternate</code>. The toolkit's <code>MaterialDesignListBoxItem</code> provides the hover and selection highlights.</td></tr>
+            <tr><td>Amounts</td><td>Right-aligned and coloured by sign with <code>Converter.NumberToBrush</code> and <code>ConverterParameter=Light</code>.</td></tr>
+            <tr><td>Flagged rows</td><td><code>Brush.Negative.Container</code> fill. Coloured text in the row goes back to <code>Brush.Text.Default</code>.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="editable-lists">
+    <h2>Editable lists</h2>
+    <p class="lede">Lists where each item is edited in place use a Material two-line list item instead of a table row. The reference implementation is the Budget screen's income and expense lists (<code>TopBudgetMaintenance.xaml</code>).</p>
+    <div class="panel" style="background:var(--background);max-width:560px">
+        <div class="sechdr">Expenses</div>
+        <div class="brow"><i style="background:var(--negative-container)"></i><span class="chk"></span><div class="txt"><div class="code">FOOD</div><div class="desc">Groceries and household</div></div><div class="amt">$850.00</div><span class="del"></span></div>
+        <div class="brow"><i style="background:var(--warning-container)"></i><span class="chk"></span><div class="txt"><div class="code">CARMTC</div><div class="desc">Car maintenance</div></div><div class="amt">$120.00</div><span class="del"></span></div>
+        <div class="brow off"><i style="background:var(--surface)"></i><span class="chk"></span><div class="txt"><div class="code">SCHOOLX</div><div class="desc">School trips (inactive)</div></div><div class="amt"></div><span class="del"></span></div>
+        <div class="caption">Hover a row to show its Active checkbox and delete button.</div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Part</th><th>Spec</th></tr></thead>
+        <tbody>
+            <tr><td>Section header</td><td>16px Medium Text.Default, with a 1px ControlBorder divider 8px below it and another 8px before the list. It sits outside the scrolling area so it stays visible.</td></tr>
+            <tr><td>Row</td><td>48px high on <code>Brush.TileBackground</code>, with 2px between rows. The container adds no padding.</td></tr>
+            <tr><td>Type strip</td><td>4px wide on the left edge, filled with <code>Converter.BucketToColour</code>. It turns grey (TileBackgroundAlternate) when the bucket is inactive.</td></tr>
+            <tr><td>Text</td><td>The primary line (code) is 14px Medium and the secondary line (description) is 12px Text.Label. The amount is 16px, right-aligned, with a minimum width of 100.</td></tr>
+            <tr><td>Inline editing</td><td>Borderless <code>TextBox</code>es (based on <code>BudgetTile</code>) that show a Text.Label underline on hover and the toolkit's focus underline while editing</td></tr>
+            <tr><td>Row actions</td><td>They appear only when the row is hovered, and keep their space when hidden (<code>Converter.BoolToVis2</code>). Delete is a 32×32 <code>MaterialDesignIconForegroundButton</code> with an 18px <code>DeleteOutline</code> icon in Text.Label.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="empty">
+    <h2>Empty &amp; loading states</h2>
+    <p class="lede">When a list has nothing to show, tell the user why and what to do next, in a calm tone. An empty list isn't an error, so don't use red or orange.</p>
+    <div class="grid cols-2">
+        <div class="panel" style="background:var(--background)">
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+                <div class="t">No transactions file loaded</div>
+                <div class="b">Open or create a Budget Analyser file from the Dashboard to see its transactions here.</div>
+            </div>
+        </div>
+        <div class="panel" style="background:var(--background)">
+            <div class="row" style="gap:8px;padding:8px 0"><div class="spinner" role="progressbar" aria-label="Loading"></div><span style="color:var(--text-medium);font-size:14px">Loading data...</span></div>
+            <div class="caption" style="margin-top:16px">Loading uses an indeterminate <code>MaterialDesignCircularProgressBar</code> (20×20) with 14px Text.Label text, 8px apart.</div>
+        </div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Part</th><th>Spec</th></tr></thead>
+        <tbody>
+            <tr><td>Icon</td><td>A 56×56 <code>PackIcon</code> in <code>Brush.Text.Disabled</code>, using an outline style such as <code>FileDocumentOutline</code> or <code>FilterRemoveOutline</code></td></tr>
+            <tr><td>Title</td><td>20px Text.Default, 16px above and 8px below. Say what's missing.</td></tr>
+            <tr><td>Body</td><td>14px Text.Label, centred and wrapped, max width 420. Say what to do next. Put this text on screen, not in a tooltip.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="inputs">
+    <h2>Inputs</h2>
+    <p class="lede">Inputs are based on toolkit styles: <code>MaterialDesignOutlinedTextBox</code>, <code>MaterialDesignComboBox</code>, <code>MaterialDesignDatePicker</code>, <code>MaterialDesignRadioButton</code>, <code>MaterialDesignExpander</code>, <code>MaterialDesignListBox</code> and <code>MaterialDesignScrollBar</code>.</p>
+    <div class="panel">
+        <div class="row" style="align-items:flex-start;gap:24px">
+            <div class="field"><div class="box">Countdown</div><div class="caption">TextBox · rest</div></div>
+            <div class="field"><div class="box focus"><span class="float">Description</span>Countdown</div><div class="caption">TextBox · focused (Primary)</div></div>
+            <div class="field"><div class="box readonly">ABC-1234</div><div class="caption"><code>TextBox.ReadOnly</code></div></div>
+            <div class="field"><div class="box combo">SURPLUS</div><div class="caption">ComboBox · <code>BudgetBucketComboStyle</code></div></div>
+            <div class="field"><div class="box" style="border-color:var(--negative)">-abc</div><div class="err">* Not a valid amount</div><div class="caption">Validation error template</div></div>
+        </div>
+    </div>
+    <div class="table-wrap" style="margin-top:12px">
+    <table>
+        <thead><tr><th>Control</th><th>App overrides</th></tr></thead>
+        <tbody>
+            <tr><td>TextBox (implicit)</td><td>Min width 130, min height 30, 14px text, padding 3, margin 2, TileBackgroundAlternate fill, ControlBorder outline. The error template appends "*" and the message in <code>TextBlock.ValidationError</code>.</td></tr>
+            <tr><td><code>TextBox.ReadOnly</code></td><td>MainBackground fill with no border.</td></tr>
+            <tr><td><code>BudgetTile</code> (TextBox)</td><td>Transparent, borderless, with white text. Used for editable values on coloured tiles.</td></tr>
+            <tr><td>ComboBox (implicit)</td><td>Min width 120, margin 2. <code>BudgetBucketComboStyle</code> and <code>ComboBox.Account</code> are 130 wide.</td></tr>
+            <tr><td>DatePicker</td><td>Width 113, 14px, margin 3.</td></tr>
+            <tr><td>RadioButton</td><td>Margin 5, content centred.</td></tr>
+            <tr><td>ListBox / items</td><td>MainBackground list. <code>ListBox.StandardContainerStyle</code> uses transparent items and <code>…NoVisualStatesContainerStyle</code> uses TileBackground items, both with margin 1.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="dialog">
+    <h2>Dialogs</h2>
+    <p class="lede">Dialogs use the shared <code>ShellDialogView</code> overlay, not separate windows. It draws a 50% black scrim over the content area, with a Dialog-coloured <code>Card</code> at Dp24 elevation on top. The card has 4px corners and a minimum width of 1000.</p>
+    <div class="scrim-demo">
+        <div class="bg-content" aria-hidden="true"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div class="scrim"></div>
+        <div class="dialog" role="dialog" aria-label="Example dialog">
+            <h4>Edit Budget Bucket</h4>
+            <div class="body">
+                <div class="row" style="gap:12px;margin-bottom:12px"><span style="color:var(--text-medium);font-size:15px;min-width:90px">Code</span><div class="field"><div class="box">GROCERIES</div></div></div>
+                <div class="row" style="gap:12px"><span style="color:var(--text-medium);font-size:15px;min-width:90px">Monthly</span><div class="field"><div class="box" style="text-align:right">850.00</div></div></div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary">Help</button>
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+    <p class="caption">The title uses <code>TextBlock.Heading1</code> with margin 24,24,24,16. The content scrolls vertically with margin 24,0,24,8. The action row is right-aligned with margin 16,8,16,16. Button order is Help, Cancel/Close, then Save or OK last.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="tooltip">
+    <h2>Tooltips &amp; menus</h2>
+    <div class="grid cols-2">
+        <div class="panel">
+            <span class="tooltip-mock">It's been 12 days since new transactions have been imported.</span>
+            <div class="caption"><code>ToolTip</code> (implicit): Tooltip fill, divider border, 3px corners, italic Text.Default, max width 600, drop shadow.</div>
+        </div>
+        <div class="panel">
+            <div style="background:var(--surface-raised);border:1px solid var(--divider);border-radius:4px;box-shadow:var(--dp8);width:220px;padding:4px 0;font-size:14px">
+                <div style="padding:6px 14px">Split transaction…</div>
+                <div style="padding:5px 13px;background:rgba(159,168,218,.12);border:1px solid var(--primary);margin:0 1px">Edit rule</div>
+                <div style="padding:6px 14px;color:var(--text-disabled)">Delete (disabled)</div>
+                <div style="height:1px;background:var(--divider);margin:4px 0"></div>
+                <div style="padding:6px 14px">Copy amount</div>
+            </div>
+            <div class="caption"><code>RoundMenuButton</code> and <code>RoundMenuItemButton</code>: SurfaceRaised menu, 12% Primary state layer with a Primary outline on hover, Divider separators.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="spacing">
+    <h2>Spacing &amp; shape</h2>
+    <p class="lede">New layout should use Material's 8dp grid (4 for tight gaps). Screens use a 16px inset from the left, right and bottom edges. Headings are the exception: <code>TextBlock.Heading1</code> already has a 10px left margin, so give its container 6px. The Transactions, Budget and Reports screens are on the grid. Other screens still use 2px and 5px margins, and Phase 4 will move them over.</p>
+    <div class="grid cols-2">
+        <div class="panel">
+            <div class="spacing-bar"><i style="width:4px"></i><code>4</code> tight gaps, tab spacing</div>
+            <div class="spacing-bar"><i style="width:8px"></i><code>8</code> between dialog buttons, between chips, header to toolbar rows</div>
+            <div class="spacing-bar"><i style="width:16px"></i><code>16</code> page inset, button padding, action row insets</div>
+            <div class="spacing-bar"><i style="width:24px"></i><code>24</code> dialog content padding</div>
+            <div class="spacing-bar"><i style="width:40px"></i><code>40</code> dialog outer margin, icon button size</div>
+        </div>
+        <div class="panel">
+            <div class="row" style="gap:20px">
+                <div style="text-align:center"><div style="width:60px;height:40px;background:var(--primary-container);border-radius:3px"></div><div class="caption">3px<br>badges, tooltip</div></div>
+                <div style="text-align:center"><div style="width:60px;height:40px;background:var(--primary-container);border-radius:4px"></div><div class="caption">4px<br>buttons, cards, dialog</div></div>
+                <div style="text-align:center"><div style="width:60px;height:40px;background:var(--primary-container);border-radius:16px"></div><div class="caption">16px<br>round menu button</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="rules">
+    <h2>Do / Don't</h2>
+    <div class="do-dont">
+        <div class="do">
+            <h4>Do</h4>
+            <ul>
+                <li>Reference semantic <code>Brush.*</code> keys from views.</li>
+                <li>Base new control styles on a toolkit style with <code>BasedOn</code>.</li>
+                <li>Put only <code>TextHigh</code> or white text on a container fill.</li>
+                <li>Use the light hue tones for amounts and icons on grey surfaces.</li>
+                <li>Use <code>ElevationAssist.Elevation</code> for depth.</li>
+                <li>Reserve orange for "needs attention" and red for "wrong or overspent".</li>
+                <li>Use outlined chips for informational figures, and save filled chips for alerts.</li>
+                <li>Show an empty state (icon, title, next step) when a list has nothing to show.</li>
+                <li>Give data lists a header row.</li>
+                <li>Use the filled indigo button for page actions, the same as a dialog's primary action.</li>
+                <li>Update this guide in the same commit as a style change.</li>
+            </ul>
+        </div>
+        <div class="dont">
+            <h4>Don't</h4>
+            <ul>
+                <li>Hard-code hex colours in views (only <code>ScratchPad.xaml</code> does, and it's a scratch file).</li>
+                <li>Add a new hue, or a third tone of an existing hue, without updating the palette and this guide.</li>
+                <li>Rename brush or tile keys that C# looks up by string.</li>
+                <li>Use light tones (Primary, Positive, Negative) as fills behind text.</li>
+                <li>Use Text.Medium or Text.Disabled on coloured fills.</li>
+                <li>Add custom <code>DropShadowEffect</code>s or bespoke animations.</li>
+                <li>Use a filled status colour for something that is only informational.</li>
+                <li>Hide essential guidance, such as how to fix an empty list, in a tooltip.</li>
+                <li>Fill buttons with status colours (green, red, orange). A colour strip or swatch can show a type instead.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="files">
+    <h2>Source files</h2>
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>File</th><th>Contents</th></tr></thead>
+        <tbody>
+            <tr><td><code>BudgetAnalyser/App.xaml</code></td><td><code>BundledTheme</code> (Dark, Indigo/Indigo), <code>MaterialDesign2.Defaults.xaml</code>, and merge order. The app dictionaries are merged after the toolkit's, so they win.</td></tr>
+            <tr><td><code>UI/Style/Colours.xaml</code></td><td>Palette and semantic brushes. <strong>This is the colour source of truth.</strong></td></tr>
+            <tr><td><code>UI/Style/Buttons.xaml</code></td><td>Dialog, square and <code>Button.Round.*</code> icon buttons</td></tr>
+            <tr><td><code>UI/Style/TextBlock.xaml</code></td><td>Type styles</td></tr>
+            <tr><td><code>UI/Style/TextBox.xaml</code>, <code>ComboBox.xaml</code>, <code>DatePicker.xaml</code>, <code>RadioButton.xaml</code>, <code>Expander.xaml</code>, <code>ListBox.xaml</code>, <code>ScrollBar.xaml</code>, <code>ScrollViewer.xaml</code></td><td>Input and list controls based on toolkit styles</td></tr>
+            <tr><td><code>UI/Style/ModernTiles.xaml</code></td><td>Dashboard tile cards, the hover overlay and widget panel styles</td></tr>
+            <tr><td><code>UI/Style/OilLight.xaml</code></td><td>Badges and oil lights</td></tr>
+            <tr><td><code>UI/Style/Chips.xaml</code></td><td>Summary chips (informational and alert)</td></tr>
+            <tr><td><code>UI/Style/ToolTip.xaml</code>, <code>Menu.xaml</code></td><td>Tooltip and context and drop-down menus</td></tr>
+            <tr><td><code>MainMenuUserControl.xaml</code></td><td><code>TabButtonStyle</code> (tab strip)</td></tr>
+            <tr><td><code>ShellDialog/ShellDialogView.xaml</code></td><td>Modal dialog overlay</td></tr>
+            <tr><td><code>Transactions/TopTransactionsUserControl.xaml</code>, <code>Transactions/TransactionListBox.xaml</code></td><td>Reference implementation for summary chips, a data list with headers, and empty and loading states</td></tr>
+            <tr><td><code>Budget/TopBudgetMaintenance.xaml</code>, <code>Budget/BudgetModelNameUserControl.xaml</code></td><td>Reference implementation for editable lists, status chips and page action buttons</td></tr>
+            <tr><td><code>Converters/ConverterHelper.cs</code>, <code>LedgerBook/LedgerBookGridBuilderV2.cs</code>, <code>BudgetAnalyser.Engine/Widgets/*</code></td><td>Brush and style keys looked up by string</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="gaps">
+    <h2>Known gaps</h2>
+    <p class="lede">These are things that don't yet meet the guide. Remove each item once it's fixed.</p>
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Gap</th><th>Where</th><th>Planned</th></tr></thead>
+        <tbody>
+            <tr><td>The active tab underline (PrimaryContainer) has 2.42:1 contrast on the tab strip, which is below 3:1 for UI elements. This is a deliberate choice so the underline matches the tiles, and the active label also switches to high emphasis.</td><td><code>Brush.ModernTile.Highlight</code></td><td>If it reads too faintly, use Indigo 400 <code>#5C6BC0</code> (3.85:1)</td></tr>
+            <tr><td>Type sizes are ad hoc (10–36px) and not yet on the Material type scale</td><td><code>TextBlock.xaml</code></td><td>Phase 4</td></tr>
+            <tr><td>Some margins (2, 3, 5px) are off the 8dp grid</td><td>Dashboard, Ledger Book (Transactions, Budget and Reports are done)</td><td>Phase 4</td></tr>
+            <tr><td>The Active checkbox on Budget rows only shows on hover, so it's hard to discover</td><td><code>TopBudgetMaintenance.xaml</code></td><td>Consider making it always visible</td></tr>
+            <tr><td>The Transactions search box and bucket filter expand and collapse with a 1-second width animation. That's bespoke motion, and slow compared with Material's roughly 250ms.</td><td><code>TopTransactionsUserControl.xaml.cs</code></td><td>Shorten the duration, or use a fixed-width field. Either way it's a code-behind change.</td></tr>
+            <tr><td>Legacy names don't describe what they do: <code>Button.Round.*</code> buttons are rectangular, and there are <code>OilLight</code> and <code>ModernTile.Highlight</code> (which is the tab indicator)</td><td>Buttons, OilLight, Colours</td><td>Kept for compatibility, since some are referenced from C#</td></tr>
+            <tr><td>Glyphs are custom vector assets instead of Material <code>PackIcon</code>s. New UI already uses <code>PackIcon</code> (the Transactions empty states and duplicates chip), so the two styles are mixed for now.</td><td><code>UI/Assets/*Image.xaml</code></td><td>Phase 6</td></tr>
+            <tr><td>The tooltip uses a hand-rolled <code>DropShadowEffect</code> template</td><td><code>ToolTip.xaml</code></td><td>Phase 6</td></tr>
+        </tbody>
+    </table>
+    </div>
+</section>
+
+</main>
+</div>
+</body>
+</html>

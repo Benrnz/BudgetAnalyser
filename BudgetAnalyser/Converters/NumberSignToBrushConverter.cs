@@ -19,7 +19,7 @@ public class NumberSignToBrushConverter : OneWayValueConverter
     {
         if (light)
         {
-            return number < 0 ? ConverterHelper.DebitBackground2Brush : ConverterHelper.CreditBackground2Brush;
+            return number < 0 ? ConverterHelper.NegativeTextBrush : ConverterHelper.PositiveTextBrush;
         }
 
         return number < 0 ? ConverterHelper.DebitBackground1Brush : ConverterHelper.CreditBackground1Brush;

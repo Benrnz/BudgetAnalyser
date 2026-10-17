@@ -25,7 +25,7 @@
                             <DropShadowEffect Direction="315" />
                         </Border.Effect>
                         <TextBlock FontStyle="Italic"
-                                   Foreground="{StaticResource Brush.MainBackground}"
+                                   Foreground="{StaticResource Brush.Text.Default}"
                                    HorizontalAlignment="Left"
                                    Margin="4"
                                    Text="{TemplateBinding Content}"

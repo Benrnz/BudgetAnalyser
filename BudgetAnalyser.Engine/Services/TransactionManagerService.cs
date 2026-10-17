@@ -203,7 +203,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         if (bucket is null)
         {
-            return new List<Transaction>(TransactionsListModel.Transactions);
+            return ClearBucketAndTextFilters();
         }
 
         var paternityTest = new BudgetBucketPaternity();
@@ -250,6 +250,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
         this.monitorableDependencies.NotifyOfDependencyChange(criteria);
         TransactionsListModel.Filter(criteria);
+        ResetTransactionsCollection();
     }
 
     /// <inheritdoc />
@@ -425,6 +426,6 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
     private void ResetTransactionsCollection()
     {
-        this.transactions = TransactionsListModel is null ? new List<Transaction>() : new List<Transaction>(TransactionsListModel.Transactions);
+        this.transactions = TransactionsListModel is null ? new List<Transaction>() : [.. TransactionsListModel.Transactions];
     }
 }

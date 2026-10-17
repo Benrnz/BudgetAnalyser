@@ -23,6 +23,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf.XUnit3", "BudgetAnalyser.Wpf.XUnit3\BudgetAnalyser.Wpf.XUnit3.csproj", "{A0D0F267-7151-4F13-AD07-43FF7BE49F49}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{133BA98A-533B-454D-941E-DC0DB1224FEE}"
+	ProjectSection(SolutionItems) = preProject
+		docs\ux-material-design-plan.md = docs\ux-material-design-plan.md
+		docs\ux-style-guide.html = docs\ux-style-guide.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,5 +117,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E4914235-BA9E-4D89-B012-D9AB731919D3}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{133BA98A-533B-454D-941E-DC0DB1224FEE} = {53D5700D-77BB-4836-9DAF-CF79B4E87B37}
 	EndGlobalSection
 EndGlobal

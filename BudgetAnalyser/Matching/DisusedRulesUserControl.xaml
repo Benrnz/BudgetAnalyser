@@ -27,14 +27,6 @@
 
         <DataTemplate DataType="{x:Type matching1:MatchingRule}">
             <DataTemplate.Resources>
-                <Style x:Key="TextBlock.MathcingRuleStyle"
-                       BasedOn="{StaticResource {x:Type TextBlock}}"
-                       TargetType="TextBlock">
-                    <Setter Property="FontSize"
-                            Value="18" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                </Style>
                 <Style x:Key="Border.DisusedRulePill"
                        TargetType="Border">
                     <Setter Property="Background"
@@ -70,7 +62,7 @@
 
                 <TextBlock Grid.Column="0"
                            Margin="10,3,10,3"
-                           Style="{StaticResource TextBlock.MathcingRuleStyle}"
+                           Style="{StaticResource TextBlock.MatchingRule}"
                            Text="{Binding MatchCount, StringFormat='x{0}'}"
                            ToolTip="{Binding LastMatch, StringFormat='Last matched: {0:g}'}" />
 

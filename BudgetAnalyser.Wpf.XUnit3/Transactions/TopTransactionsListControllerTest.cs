@@ -83,7 +83,7 @@ public class TopTransactionsListControllerTest
 
         context.TransactionService.Received(1).FilterTransactions(criteria);
         context.Subject.TextFilter.ShouldBeNull();
-        context.Subject.BucketFilter.ShouldBe("FOOD");
+        context.Subject.BucketFilter.ShouldBeNull();
         context.Subject.CurrentPage.ShouldBe(1);
     }
 

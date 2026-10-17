@@ -1,0 +1,75 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Summary chips (see "Summary chips" in docs/ux-style-guide.html).
+         Alert chips use Border.SummaryChip with a status fill (container tone) and light text.
+         Informational chips use Border.SummaryChip.Info: an outline only, with the colour carried by the value text. -->
+    <Style x:Key="Border.SummaryChip"
+           TargetType="Border">
+        <Setter Property="CornerRadius"
+                Value="4" />
+        <Setter Property="MinHeight"
+                Value="32" />
+        <Setter Property="Padding"
+                Value="12,4" />
+        <Setter Property="Margin"
+                Value="0,0,8,0" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+    </Style>
+
+    <Style x:Key="Border.SummaryChip.Info"
+           TargetType="Border"
+           BasedOn="{StaticResource Border.SummaryChip}">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource Brush.ControlBorder}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+    </Style>
+
+    <Style x:Key="TextBlock.SummaryChip.Label"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize"
+                Value="12" />
+        <Setter Property="FontWeight"
+                Value="Medium" />
+        <Setter Property="Margin"
+                Value="0,0,8,0" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.BadgeText}" />
+    </Style>
+
+    <Style x:Key="TextBlock.SummaryChip.Value"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize"
+                Value="16" />
+        <Setter Property="FontWeight"
+                Value="SemiBold" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.BadgeText}" />
+    </Style>
+
+    <Style x:Key="TextBlock.SummaryChip.Info.Label"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource TextBlock.SummaryChip.Label}">
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.Text.Label}" />
+    </Style>
+
+    <Style x:Key="TextBlock.SummaryChip.Info.Value"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource TextBlock.SummaryChip.Value}">
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="FontWeight"
+                Value="Medium" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.Text.Default}" />
+    </Style>
+</ResourceDictionary>

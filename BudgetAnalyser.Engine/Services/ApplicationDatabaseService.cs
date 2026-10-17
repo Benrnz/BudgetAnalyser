@@ -96,6 +96,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             await service.CreateNewAsync(this.budgetAnalyserDatabase);
         }
 
+        this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
         this.monitorableDependencies.NotifyOfDependencyChange(GlobalFilter);
 
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
@@ -197,6 +198,7 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
             throw new DataFormatException("A subordinate data file contains unsupported data.", ex);
         }
 
+        this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
         return this.budgetAnalyserDatabase;
     }
 

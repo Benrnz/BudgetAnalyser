@@ -97,12 +97,12 @@ public partial class EncryptFileController : ControllerBase, IShellDialogInterac
     {
         ControllerMode = Mode.Login;
         FileName = appDbFileName;
-        EnterPasswordText = "Please enter your password for ";
+        EnterPasswordText = "Please enter the encryption password to decrypt and open the file ";
         ValidationMessage = validationMessage;
         Messenger.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
         {
             CorrelationId = this.dialogCorrelationId,
-            Title = "Enter Password"
+            Title = "Enter Encryption Password"
         });
     }
 
