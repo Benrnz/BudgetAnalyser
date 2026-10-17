@@ -426,6 +426,6 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
 
     private void ResetTransactionsCollection()
     {
-        this.transactions = TransactionsListModel is null ? new List<Transaction>() : [..TransactionsListModel.Transactions];
+        this.transactions = TransactionsListModel is null ? new List<Transaction>() : [.. TransactionsListModel.Transactions];
     }
 }
