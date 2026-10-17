@@ -256,11 +256,11 @@
                 <Button Style="{StaticResource Button.Round.Left}"
                         IsEnabled="{Binding CanNavigatePrevious}"
                         Command="{Binding NavigatePreviousPageCommand}"
-                        ToolTip="Previous Page" />
+                        ToolTip="Previous Page (32 rows per page)" />
                 <Button Style="{StaticResource Button.Round.Right}"
                         Command="{Binding NavigateNextPageCommand}"
                         IsEnabled="{Binding CanNavigateNext}"
-                        ToolTip="Next Page" />
+                        ToolTip="Next Page (32 rows per page)" />
             </StackPanel>
         </Grid>
 

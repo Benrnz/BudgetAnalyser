@@ -236,15 +236,14 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
             return;
         }
 
-        var bucketFilter = BucketFilter;
+        // A new date range resets the bucket and text filters.
         BucketFilter = null;
+        TextFilter = null;
         this.transactionService.FilterTransactions(message.Criteria);
         ViewModel.TransactionsList = this.transactionService.TransactionsListModel;
         ViewModel.Transactions = ViewModel.TransactionsList!.Transactions.ToList();
         CurrentPage = 1;
         ViewModel.TriggerRefreshTotalsRow();
-        BucketFilter = bucketFilter;
-        TextFilter = null;
     }
 
     private async Task OnMergeExtractCommandExecute()
