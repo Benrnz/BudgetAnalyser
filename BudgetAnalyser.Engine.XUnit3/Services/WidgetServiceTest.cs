@@ -86,6 +86,16 @@ public class WidgetServiceTest
     }
 
     [Fact]
+    public void Initialise_ShouldReplacePreviousWidgets_WhenCalledAgain()
+    {
+        this.service.Initialise(new List<Widget> { new TestWidget("Widget1") });
+        this.service.Initialise(new List<Widget> { new TestWidget("Widget1"), new TestWidget("Widget2") });
+
+        var arrangedWidgets = this.service.ArrangeWidgetsForDisplay();
+        arrangedWidgets.Single().Widgets.Select(w => w.Name).ShouldBe(["Widget1", "Widget2"], true);
+    }
+
+    [Fact]
     public void Initialise_ShouldThrow_GivenEmptyWidgetsFromPersistence()
     {
         Should.Throw<ArgumentException>(() => this.service.Initialise([]));

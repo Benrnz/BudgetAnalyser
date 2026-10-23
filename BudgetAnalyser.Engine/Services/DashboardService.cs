@@ -11,6 +11,7 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
 {
     private readonly IDirtyDataService dirtyDataService;
     private readonly ILogger logger;
+    private readonly IStandardWidgetCatalog widgetCatalog;
     private readonly IWidgetRepository widgetRepo;
     private readonly IWidgetService widgetService;
     private ObservableCollection<WidgetGroup> widgetGroups = new();
@@ -19,12 +20,14 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
         IWidgetService widgetService,
         ILogger logger,
         IWidgetRepository widgetRepo,
-        IDirtyDataService dirtyDataService)
+        IDirtyDataService dirtyDataService,
+        IStandardWidgetCatalog widgetCatalog)
     {
         this.widgetService = widgetService ?? throw new ArgumentNullException(nameof(widgetService));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.widgetRepo = widgetRepo ?? throw new ArgumentNullException(nameof(widgetRepo));
         this.dirtyDataService = dirtyDataService ?? throw new ArgumentNullException(nameof(dirtyDataService));
+        this.widgetCatalog = widgetCatalog ?? throw new ArgumentNullException(nameof(widgetCatalog));
     }
 
     public event EventHandler? NewDataSourceAvailable;
@@ -95,7 +98,21 @@ internal class DashboardService : IDashboardService, ISupportsModelPersistence
             return null;
         }
 
-        return UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        return UpdateWidgetCollectionWithNewAddition(widget);
+    }
+
+    /// <inheritdoc />
+    public void InitialiseWithDefaultWidgets()
+    {
+        if (this.widgetGroups.Any())
+        {
+            // A file has already been loaded.
+            return;
+        }
+
+        this.widgetService.Initialise(this.widgetCatalog.GetAll());
+        this.widgetGroups = this.widgetService.ArrangeWidgetsForDisplay();
+        NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
     }
 
     /// <inheritdoc />

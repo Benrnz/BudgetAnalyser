@@ -44,6 +44,16 @@ public class TopDashboardControllerTest
     }
 
     [Fact]
+    public void ApplicationStateLoadFinishedMessage_ShouldInitialiseDefaultWidgets()
+    {
+        var context = CreateContext();
+
+        context.Messenger.Send(new ApplicationStateLoadFinishedMessage());
+
+        context.DashboardService.Received(1).InitialiseWithDefaultWidgets();
+    }
+
+    [Fact]
     public void ApplicationStateRequestedMessage_ShouldPersistPreparedEngineState()
     {
         var context = CreateContext();
@@ -132,7 +142,7 @@ public class TopDashboardControllerTest
             dashboardService,
             persistenceOperations);
 
-        return new TestContext(subject, messenger, applicationDatabaseFacade, persistenceOperations);
+        return new TestContext(subject, messenger, applicationDatabaseFacade, dashboardService, persistenceOperations);
     }
 
     private static async Task WaitForSignal(Task signal)
@@ -146,5 +156,6 @@ public class TopDashboardControllerTest
         TopDashboardController Subject,
         IMessenger Messenger,
         IApplicationDatabaseFacade ApplicationDatabaseFacade,
+        IDashboardService DashboardService,
         PersistenceOperations PersistenceOperations);
 }
