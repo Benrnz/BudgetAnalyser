@@ -71,6 +71,10 @@ On the Dashboard use the _Load Demo_ tile to explore the app with sample data, o
 * `BudgetAnalyser` - the WPF user interface.
 * `Rees.Wpf` - shared WPF helpers (converters, behaviours, base controller classes).
 * `BudgetAnalyser.Engine.XUnit3`, `BudgetAnalyser.Wpf.XUnit3` - unit tests.
+* `BudgetAnalyser.InstallTest` - an end to end clean install test. It clones the repo into an empty temp folder, builds, runs the unit tests, launches the app, closes it
+  with the window's close button and checks it exits with code 0. It is slow and needs network access so it is skipped unless enabled:
+  `$env:BUDGETANALYSER_INSTALL_TEST=1; dotnet test BudgetAnalyser.InstallTest`. Set `BUDGETANALYSER_INSTALL_TEST_REPO` and `BUDGETANALYSER_INSTALL_TEST_BRANCH` to test a
+  different fork or branch (defaults to `master` on GitHub).
 
 All package dependencies are available on Nuget.org.
 
