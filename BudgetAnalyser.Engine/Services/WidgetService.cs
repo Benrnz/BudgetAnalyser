@@ -19,7 +19,7 @@ internal class WidgetService : IWidgetService
 
     private readonly ILogger logger;
     private readonly IMonitorableDependencies monitoringServices;
-    private readonly CancellationTokenSource scheduledTaskCancellation = new();
+    private CancellationTokenSource scheduledTaskCancellation = new();
 
     public WidgetService(IBudgetBucketRepository bucketRepository, IMonitorableDependencies monitorableDependencies, ILogger logger)
     {
@@ -42,6 +42,11 @@ internal class WidgetService : IWidgetService
         {
             throw new ArgumentException("The widgets collection should never be empty, it must contain a default set of widgets.", nameof(widgetsFromPersistence));
         }
+
+        // May be re-initialised, for example, the default widgets shown at start up are replaced when a file is loaded.
+        CancelScheduledUpdates();
+        this.scheduledTaskCancellation = new CancellationTokenSource();
+        this.cachedWidgets.Clear();
 
         foreach (var widget in widgets)
         {

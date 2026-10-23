@@ -51,6 +51,7 @@ public sealed partial class TopDashboardController : ControllerBase, IShowableCo
         Messenger.Register<TopDashboardController, CreateNewFixedBudgetCompletedMessage>(this, OnCreateNewFixedProjectComplete);
         Messenger.Register<TopDashboardController, CreateNewSurprisePaymentCompletedMessage>(this, OnCreateNewSurprisePaymentMonitorComplete);
         Messenger.Register<TopDashboardController, ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+        Messenger.Register<TopDashboardController, ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
         Messenger.Register<TopDashboardController, ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
     }
 
@@ -97,6 +98,12 @@ public sealed partial class TopDashboardController : ControllerBase, IShowableCo
         {
             await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
         }
+    }
+
+    private static void OnApplicationStateLoadFinished(TopDashboardController recipient, ApplicationStateLoadFinishedMessage message)
+    {
+        // There may be no previously used file, or it may fail to load. Either way, the dashboard must offer a way to open, create or demo a file.
+        recipient.dashboardService.InitialiseWithDefaultWidgets();
     }
 
     private static void OnApplicationStateRequested(TopDashboardController recipient, ApplicationStateRequestedMessage message)

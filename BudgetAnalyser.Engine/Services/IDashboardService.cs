@@ -38,6 +38,12 @@ public interface IDashboardService : IServiceFoundation
     Widget? CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateOnly paymentDate, WeeklyOrFortnightly frequency);
 
     /// <summary>
+    ///     Shows the standard set of widgets when no Budget Analyser file has been loaded, so the user can open, create or demo a file.
+    ///     Does nothing if widgets have already been loaded.
+    /// </summary>
+    void InitialiseWithDefaultWidgets();
+
+    /// <summary>
     ///     Removes a multi-instance widget from the widget groups.
     /// </summary>
     /// <param name="widgetToRemove">The widget to remove.</param>
