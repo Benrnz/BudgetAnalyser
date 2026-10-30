@@ -285,7 +285,11 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <views:BudgetModelNameUserControl DataContext="{Binding CurrentBudget}" />
+            <views:BudgetModelNameUserControl DataContext="{Binding CurrentBudget}"
+                                              Visibility="{Binding DataContext.NoBudgetLoaded, RelativeSource={RelativeSource AncestorType=Grid}, Converter={StaticResource Converter.NotBoolToVis}}" />
+            <TextBlock Style="{StaticResource TextBlock.PageTitle}"
+                       Text="[No Budget Loaded]"
+                       Visibility="{Binding NoBudgetLoaded, Converter={StaticResource Converter.BoolToVis}}" />
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
