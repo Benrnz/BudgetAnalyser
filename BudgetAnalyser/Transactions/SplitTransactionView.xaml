@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Transactions.SplitTransactionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:BudgetAnalyser.UI"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:transactions="clr-namespace:BudgetAnalyser.Transactions"
@@ -51,6 +52,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="SplinterAmount1"
+                     ui:NumberTextBox.SingleDecimalPoint="True"
                      Grid.Column="0"
                      Text="{Binding SplinterAmount1, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Column="1"
@@ -90,6 +92,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="SplinterAmount2"
+                     ui:NumberTextBox.SingleDecimalPoint="True"
                      Grid.Column="0"
                      Text="{Binding SplinterAmount2, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Column="1"

@@ -4,6 +4,7 @@
              xmlns:matchingUI="clr-namespace:BudgetAnalyser.Matching"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:BudgetAnalyser.UI"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
              DataContextChanged="OnDataContextChanged" d:DataContext="{d:DesignInstance matchingUI:EditRulesController}">
@@ -259,6 +260,7 @@
                            Visibility="{Binding ShowReadOnlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBox Grid.Column="1"
                          Grid.Row="5"
+                         ui:NumberTextBox.SingleDecimalPoint="True"
                          Text="{Binding SelectedRule.Amount, StringFormat=N2}"
                          Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
 
@@ -317,7 +319,7 @@
                 <TextBlock Grid.Row="11"
                            Grid.Column="0"
                            Text="And / Or Matching?"
-                           Style="{StaticResource TextBlock.LabelStyle}"/>
+                           Style="{StaticResource TextBlock.LabelStyle}" />
                 <StackPanel Grid.Row="11"
                             Grid.Column="1"
                             Orientation="Horizontal"

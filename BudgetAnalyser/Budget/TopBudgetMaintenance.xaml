@@ -3,6 +3,7 @@
              xmlns:budget="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
              xmlns:views="clr-namespace:BudgetAnalyser.Budget"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:BudgetAnalyser.UI"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:wpf="clr-namespace:Rees.Wpf;assembly=Rees.Wpf"
              xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
@@ -68,6 +69,8 @@
                     Value="Right" />
             <Setter Property="Margin"
                     Value="8,0" />
+            <Setter Property="ui:NumberTextBox.SingleDecimalPoint"
+                    Value="True" />
         </Style>
 
         <!-- Leading strip showing the bucket type colour (greyed out when the bucket is inactive) -->
@@ -238,8 +241,6 @@
         <Style x:Key="TextBlock.SectionHeader"
                TargetType="TextBlock"
                BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="FontSize"
-                    Value="16" />
             <Setter Property="FontWeight"
                     Value="Medium" />
             <Setter Property="Margin"
