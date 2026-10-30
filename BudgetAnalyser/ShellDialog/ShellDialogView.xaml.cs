@@ -27,6 +27,8 @@ public partial class ShellDialogView : UserControl
             if ((Keyboard.Modifiers & ModifierKeys.Control) == 0 && (Keyboard.Modifiers & ModifierKeys.Shift) == 0 && (Keyboard.Modifiers & ModifierKeys.Alt) == 0)
             {
                 // Only if Shift, Ctrl or Alt is not pressed.
+                // Number TextBoxes only update their source on lost focus, so commit the one being edited first.
+                (Keyboard.FocusedElement as TextBox)?.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
                 Controller.DialogCommand.Execute(ShellDialogButton.Ok);
             }
         }
