@@ -96,7 +96,7 @@
             <TextBox Grid.Column="1"
                      Grid.Row="5"
                      Margin="2"
-                     Text="{Binding Amount.Value, StringFormat=C, Delay=300, UpdateSourceTrigger=PropertyChanged}" />
+                     Text="{Binding Amount.Value, StringFormat=N2, Delay=300, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox Grid.Row="6"
                       IsChecked="{Binding TransactionType.Applicable}"
                       Margin="2" />

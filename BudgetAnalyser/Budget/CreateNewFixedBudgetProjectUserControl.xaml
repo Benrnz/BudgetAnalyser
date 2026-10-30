@@ -29,7 +29,7 @@
                     Grid.Row="1">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Amount" />
-            <TextBox Text="{Binding Amount, StringFormat=C, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{Binding Amount, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel Grid.Column="0"
                     Grid.ColumnSpan="2"

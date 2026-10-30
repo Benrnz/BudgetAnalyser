@@ -97,7 +97,7 @@
             <TextBox.Text>
                 <Binding Path="TransferFundsDto.TransferAmount"
                          UpdateSourceTrigger="PropertyChanged"
-                         StringFormat="C">
+                         StringFormat="N2">
                     <Binding.ValidationRules>
                         <validationRules:GreaterThanOrEqualToZeroRule ValidationStep="RawProposedValue" />
                         <validationRules:NotEqualToZeroRule ValidationStep="RawProposedValue" />

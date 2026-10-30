@@ -177,7 +177,7 @@
                             Orientation="Horizontal">
                     <TextBox x:Name="NewTransactionAmountTextBox"
                              Margin="5,1,5,1"
-                             Text="{Binding NewTransactionAmount}" />
+                             Text="{Binding NewTransactionAmount, StringFormat=N2}" />
                 </StackPanel>
             </Grid>
         </GroupBox>

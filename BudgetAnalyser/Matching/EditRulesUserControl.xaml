@@ -259,7 +259,7 @@
                            Visibility="{Binding ShowReadOnlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBox Grid.Column="1"
                          Grid.Row="5"
-                         Text="{Binding SelectedRule.Amount}"
+                         Text="{Binding SelectedRule.Amount, StringFormat=N2}"
                          Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
 
                 <TextBlock Grid.Row="6"
