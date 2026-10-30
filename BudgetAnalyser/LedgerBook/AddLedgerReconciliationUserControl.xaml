@@ -33,7 +33,7 @@
                        Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <TextBox x:Name="BankBalance"
                      ui:NumberTextBox.SingleDecimalPoint="True"
-                     Text="{Binding BankBalance, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding BankBalance, StringFormat=N2}"
                      Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <ComboBox ItemsSource="{Binding BankAccounts}"
                       MaxWidth="300"

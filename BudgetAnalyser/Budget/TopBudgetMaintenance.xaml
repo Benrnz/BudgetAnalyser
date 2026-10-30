@@ -160,7 +160,7 @@
 
                 <TextBox Grid.Column="3"
                          Style="{StaticResource BudgetItemAmount}"
-                         Text="{Binding Amount, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding Amount, StringFormat=N2}"
                          Visibility="{Binding Bucket.Active, Converter={StaticResource Converter.BoolToVis}}" />
 
                 <Button Grid.Column="4"
@@ -206,7 +206,7 @@
 
                 <TextBox Grid.Column="3"
                          Style="{StaticResource BudgetItemAmount}"
-                         Text="{Binding Amount, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding Amount, StringFormat=N2}"
                          Visibility="{Binding Bucket.Active, Converter={StaticResource Converter.BoolToVis}}" />
 
                 <Button Grid.Column="4"

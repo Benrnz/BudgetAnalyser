@@ -95,10 +95,10 @@
                  MaxWidth="120"
                  HorizontalAlignment="Left"
                  ui:NumberTextBox.SingleDecimalPoint="True"
-                 KeyUp="Amount_OnSourceUpdated">
+                 Binding.SourceUpdated="Amount_OnSourceUpdated">
             <TextBox.Text>
                 <Binding Path="TransferFundsDto.TransferAmount"
-                         UpdateSourceTrigger="PropertyChanged"
+                         NotifyOnSourceUpdated="True"
                          StringFormat="N2">
                     <Binding.ValidationRules>
                         <validationRules:GreaterThanOrEqualToZeroRule ValidationStep="RawProposedValue" />

@@ -31,7 +31,7 @@
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Amount" />
             <TextBox ui:NumberTextBox.SingleDecimalPoint="True"
-                     Text="{Binding Amount, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
+                     Text="{Binding Amount, StringFormat=N2}" />
         </StackPanel>
         <StackPanel Grid.Column="0"
                     Grid.ColumnSpan="2"

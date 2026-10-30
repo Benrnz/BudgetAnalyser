@@ -27,9 +27,6 @@ public partial class App
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        // Stop TextBoxes with a StringFormat and UpdateSourceTrigger=PropertyChanged from re-formatting the text on every keystroke.
-        // The formatted value is still shown when the source property is changed by the app.
-        FrameworkCompatibilityPreferences.KeepTextBoxDisplaySynchronizedWithTextProperty = false;
         base.OnStartup(e);
         // Ensure the current culture passed into bindings is the OS culture.
         // By default, WPF uses en-US as the culture, regardless of the system settings.

@@ -54,7 +54,7 @@
             <TextBox x:Name="SplinterAmount1"
                      ui:NumberTextBox.SingleDecimalPoint="True"
                      Grid.Column="0"
-                     Text="{Binding SplinterAmount1, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
+                     Text="{Binding SplinterAmount1, StringFormat=N2}" />
             <Button Grid.Column="1"
                     Margin="4,0,0,0"
                     Width="20"
@@ -94,7 +94,7 @@
             <TextBox x:Name="SplinterAmount2"
                      ui:NumberTextBox.SingleDecimalPoint="True"
                      Grid.Column="0"
-                     Text="{Binding SplinterAmount2, StringFormat=N2, UpdateSourceTrigger=PropertyChanged}" />
+                     Text="{Binding SplinterAmount2, StringFormat=N2}" />
             <Button Grid.Column="1"
                     Margin="4,0,0,0"
                     Width="20"
