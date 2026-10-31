@@ -114,6 +114,7 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
             field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(TotalPages));
+            CurrentPage = 1;
         }
     } = 10;
 

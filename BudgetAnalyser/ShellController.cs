@@ -5,6 +5,7 @@ using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
+using BudgetAnalyser.Settings;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Messaging;
@@ -28,6 +29,7 @@ public class ShellController : ControllerBase
         TopDashboardController dashboardController,
         TopLedgerBookController ledgerBookController,
         TopReportsCatalogController reportsCatalogController,
+        TopSettingsController settingsController,
         TopTransactionsListController transactionsController,
         IPersistApplicationState statePersistence,
         PersistenceOperations persistenceOperations)
@@ -41,6 +43,7 @@ public class ShellController : ControllerBase
         TopDashboardController = dashboardController ?? throw new ArgumentNullException(nameof(dashboardController));
         TopLedgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
         TopReportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
+        TopSettingsController = settingsController ?? throw new ArgumentNullException(nameof(settingsController));
         TopTransactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
 
         Messenger.Register<ShellController, ShellDialogRequestMessage>(this, OnDialogRequested);
@@ -64,6 +67,7 @@ public class ShellController : ControllerBase
     public TopDashboardController TopDashboardController { get; }
     public TopLedgerBookController TopLedgerBookController { get; }
     public TopReportsCatalogController TopReportsCatalogController { get; }
+    public TopSettingsController TopSettingsController { get; }
     public TopTransactionsListController TopTransactionsController { get; }
     public ShellDialogController TransactionsTabDialog { get; }
     internal Point WindowSize { get; set; }

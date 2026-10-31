@@ -123,6 +123,21 @@ public class TopTransactionsListControllerTest
     }
 
     [Fact]
+    public void PageSize_ShouldRepageTransactions_AndResetCurrentPage()
+    {
+        var context = CreateContext();
+        var transactions = CreateTransactions(25);
+        PrivateAccessor.SetProperty(context.Subject.ViewModel, "Transactions", transactions);
+        context.Subject.CurrentPage = 2;
+
+        context.Subject.PageSize = 20;
+
+        context.Subject.CurrentPage.ShouldBe(1);
+        context.Subject.TotalPages.ShouldBe(2);
+        context.Subject.ViewModel.PagedTransactions.Count.ShouldBe(20);
+    }
+
+    [Fact]
     public void TextFilter_ShouldFilterBySearchText_AndResetCurrentPage()
     {
         var context = CreateContext();
@@ -137,7 +152,7 @@ public class TopTransactionsListControllerTest
         context.Subject.ViewModel.Transactions.ShouldBeSameAs(filtered);
     }
 
-    private static TestContext CreateContext()
+    internal static TestContext CreateContext()
     {
         var messenger = new WeakReferenceMessenger();
         var messageBox = Substitute.For<IUserMessageBox>();
@@ -204,7 +219,7 @@ public class TopTransactionsListControllerTest
         }).ToList();
     }
 
-    private sealed record TestContext(
+    internal sealed record TestContext(
         TopTransactionsListController Subject,
         IMessenger Messenger,
         ITransactionManagerService TransactionService);

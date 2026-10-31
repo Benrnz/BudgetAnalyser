@@ -3,6 +3,7 @@ using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
+using BudgetAnalyser.Settings;
 using BudgetAnalyser.Transactions;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -17,6 +18,7 @@ public partial class MainMenuController : ControllerBase
     private readonly TopDashboardController dashboardController;
     private readonly TopLedgerBookController ledgerBookController;
     private readonly TopReportsCatalogController reportsCatalogController;
+    private readonly TopSettingsController settingsController;
     private readonly TopTransactionsListController transactionsController;
 
     public MainMenuController(
@@ -25,6 +27,7 @@ public partial class MainMenuController : ControllerBase
         TopLedgerBookController ledgerBookController,
         TopBudgetController budgetController,
         TopReportsCatalogController reportsCatalogController,
+        TopSettingsController settingsController,
         IMessenger messenger) : base(messenger)
     {
         this.dashboardController = dashboardController ?? throw new ArgumentNullException(nameof(dashboardController));
@@ -32,10 +35,12 @@ public partial class MainMenuController : ControllerBase
         this.ledgerBookController = ledgerBookController ?? throw new ArgumentNullException(nameof(ledgerBookController));
         this.budgetController = budgetController ?? throw new ArgumentNullException(nameof(budgetController));
         this.reportsCatalogController = reportsCatalogController ?? throw new ArgumentNullException(nameof(reportsCatalogController));
+        this.settingsController = settingsController ?? throw new ArgumentNullException(nameof(settingsController));
         ShowBudgetCommand = new RelayCommand(OnBudgetExecuted);
         ShowDashboardCommand = new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
         ShowLedgerBookCommand = new RelayCommand(OnLedgerBookExecuted);
         ShowReportsCommand = new RelayCommand(OnReportsExecuted);
+        ShowSettingsCommand = new RelayCommand(OnSettingsExecuted);
         ShowTransactionsCommand = new RelayCommand(OnTransactionExecuted);
 
         Messenger.Register<MainMenuController, MainMenuTabRequestMessage>(this, OnTabRequested);
@@ -56,6 +61,9 @@ public partial class MainMenuController : ControllerBase
     [ObservableProperty]
     public partial bool ReportsToggle { get; set; }
 
+    [ObservableProperty]
+    public partial bool SettingsToggle { get; set; }
+
     public IRelayCommand ShowBudgetCommand { get; }
 
     public IRelayCommand ShowDashboardCommand { get; }
@@ -63,6 +71,8 @@ public partial class MainMenuController : ControllerBase
     public IRelayCommand ShowLedgerBookCommand { get; }
 
     public IRelayCommand ShowReportsCommand { get; }
+
+    public IRelayCommand ShowSettingsCommand { get; }
 
     public IRelayCommand ShowTransactionsCommand { get; }
 
@@ -76,6 +86,7 @@ public partial class MainMenuController : ControllerBase
         this.ledgerBookController.Shown = LedgerBookToggle;
         this.budgetController.Shown = BudgetToggle;
         this.reportsCatalogController.Shown = ReportsToggle;
+        this.settingsController.Shown = SettingsToggle;
     }
 
     private void BeforeTabExecutedCommon()
@@ -85,6 +96,7 @@ public partial class MainMenuController : ControllerBase
         LedgerBookToggle = false;
         BudgetToggle = false;
         ReportsToggle = false;
+        SettingsToggle = false;
     }
 
     private static bool CanExecuteDashboardCommand()
@@ -120,6 +132,13 @@ public partial class MainMenuController : ControllerBase
         AfterTabExecutedCommon();
     }
 
+    private void OnSettingsExecuted()
+    {
+        BeforeTabExecutedCommon();
+        SettingsToggle = true;
+        AfterTabExecutedCommon();
+    }
+
     private void OnTabRequested(MainMenuController recipient, MainMenuTabRequestMessage message)
     {
         switch (message.Tab)
@@ -138,6 +157,9 @@ public partial class MainMenuController : ControllerBase
                 break;
             case MainMenuTab.Reports:
                 OnReportsExecuted();
+                break;
+            case MainMenuTab.Settings:
+                OnSettingsExecuted();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
