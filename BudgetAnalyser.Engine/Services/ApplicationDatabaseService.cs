@@ -58,6 +58,9 @@ internal class ApplicationDatabaseService : IApplicationDatabaseService
     /// <inheritdoc />
     public void Close()
     {
+        // Never retain the password of a closed file, otherwise a different file encrypted with the same password would open without prompting.
+        SetCredential(null);
+
         if (this.budgetAnalyserDatabase is null)
         {
             return;

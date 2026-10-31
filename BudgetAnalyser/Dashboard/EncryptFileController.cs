@@ -190,8 +190,8 @@ public partial class EncryptFileController : ControllerBase, IShellDialogInterac
 
             if (EnterPasswordMode)
             {
-                this.appDbService.SetCredential(this.password ?? new SecureString());
-                Messenger.Send(new PasswordSetMessage { DatabaseStorageKey = FileName });
+                // The credential is set by the load, after the current file is closed.
+                Messenger.Send(new PasswordSetMessage { DatabaseStorageKey = FileName, Password = this.password ?? new SecureString() });
                 // Incorrect password is handled by calling code.
             }
         }

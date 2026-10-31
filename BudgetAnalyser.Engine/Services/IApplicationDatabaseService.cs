@@ -31,6 +31,7 @@ public interface IApplicationDatabaseService : IServiceFoundation
     /// <summary>
     ///     Closes the currently loaded Budget Analyser file, and therefore any other application data is also closed.
     ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before calling this method.
+    ///     Any stored encryption credential is also cleared, so it must be set after calling this method.
     /// </summary>
     void Close();
 
