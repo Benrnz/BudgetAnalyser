@@ -65,7 +65,9 @@ public partial class TopBudgetController : ControllerBase, IShowableController
     [ObservableProperty]
     public partial string BudgetMenuItemName { get; set; } = string.Empty;
 
-    public BudgetCollection? Budgets { get; private set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NoBudgetLoaded))]
+    public partial BudgetCollection? Budgets { get; private set; }
 
     // ReSharper disable once MemberCanBePrivate.Global
     public BudgetCurrencyContext? CurrentBudget
@@ -127,6 +129,8 @@ public partial class TopBudgetController : ControllerBase, IShowableController
 
     // ReSharper disable once MemberCanBePrivate.Global
     public NewBudgetModelController NewBudgetController { get; }
+
+    public bool NoBudgetLoaded => Budgets is null;
 
     public IRelayCommand ShowAllCommand { get; }
 

@@ -42,6 +42,24 @@ public class ApplicationDatabaseServiceTest
     }
 
     [Fact]
+    public void Close_ShouldClearCredential()
+    {
+        PrivateAccessor.SetField(this.subject, "budgetAnalyserDatabase", new ApplicationDatabase());
+
+        this.subject.Close();
+
+        this.mockCredentials.Received(1).SetPasskey(null);
+    }
+
+    [Fact]
+    public void Close_ShouldClearCredential_GivenNothingLoaded()
+    {
+        this.subject.Close();
+
+        this.mockCredentials.Received(1).SetPasskey(null);
+    }
+
+    [Fact]
     public void Close_ShouldCloseAllServices()
     {
         PrivateAccessor.SetField(this.subject, "budgetAnalyserDatabase", new ApplicationDatabase());
@@ -297,17 +315,6 @@ public class ApplicationDatabaseServiceTest
             .Returns(Task.FromResult(new ApplicationDatabase()));
     }
 
-    private ApplicationDatabaseService CreateSubject(IMonitorableDependencies monitorableDependencies)
-    {
-        return new ApplicationDatabaseService(
-            this.mockRepo,
-            this.mockServices,
-            monitorableDependencies,
-            this.mockCredentials,
-            new FakeLogger(),
-            this.mockDirtyService);
-    }
-
     private static SecureString CreateSecureString(string text)
     {
         var securedText = new SecureString();
@@ -317,6 +324,17 @@ public class ApplicationDatabaseServiceTest
         }
 
         return securedText;
+    }
+
+    private ApplicationDatabaseService CreateSubject(IMonitorableDependencies monitorableDependencies)
+    {
+        return new ApplicationDatabaseService(
+            this.mockRepo,
+            this.mockServices,
+            monitorableDependencies,
+            this.mockCredentials,
+            new FakeLogger(),
+            this.mockDirtyService);
     }
 
     private void LoadDatabaseSetup()

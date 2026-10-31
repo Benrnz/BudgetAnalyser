@@ -42,6 +42,7 @@
                     Value="3,3,10,3" />
         </Style>
 
+        <!-- The LedgerBookTextBlock* styles are referenced by key from LedgerBookGridBuilderV2 at runtime -->
         <Style x:Key="LedgerBookTextBlockHeading"
                BasedOn="{StaticResource TextBlock.Paragraph}"
                TargetType="TextBlock">
@@ -106,7 +107,11 @@
             <!-- Header bar -->
             <StackPanel Margin="8,2,2,2"
                         Orientation="Horizontal">
-                <TextBlock Style="{StaticResource TextBlock.PageTitle}">
+                <TextBlock Style="{StaticResource TextBlock.PageTitle}"
+                           Text="[No Ledger Book Loaded]"
+                           Visibility="{Binding ViewModel.NoLedgerBookLoaded, Converter={StaticResource Converter.BoolToVis}}" />
+                <TextBlock Style="{StaticResource TextBlock.PageTitle}"
+                           Visibility="{Binding ViewModel.NoLedgerBookLoaded, Converter={StaticResource Converter.NotBoolToVis}}">
                     <Hyperlink Command="{Binding EditLedgerBookNameCommand}">
                         <Run Text="{Binding ViewModel.LedgerBook.Name, Mode=OneWay}" />
                     </Hyperlink>

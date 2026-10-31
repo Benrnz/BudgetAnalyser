@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -130,7 +131,7 @@ public class PersistenceOperations
         CommandManager.InvalidateRequerySuggested();
     }
 
-    private async Task LoadDatabase(Func<string> getFileName)
+    private async Task LoadDatabase(Func<string> getFileName, SecureString? password = null)
     {
         if (!await PromptToSaveIfNecessary())
         {
@@ -145,7 +146,12 @@ public class PersistenceOperations
             return;
         }
 
+        // Closing clears any stored password, so the password for the file being opened must be set after this.
         this.applicationDatabaseService.Close();
+        if (password is not null)
+        {
+            this.applicationDatabaseService.SetCredential(password);
+        }
 
         try
         {
@@ -175,7 +181,7 @@ public class PersistenceOperations
         // Reload the database file - treat it as a normal file open scenario.
         // This message arrives from the shell dialog's ApplicationIdle callback. Awaits capture the current dispatcher priority, so without re-dispatching at Normal every
         // continuation in the load would run below Render, forcing a full layout and render pass after each service loads.
-        await Application.Current.Dispatcher.InvokeAsync(() => LoadDatabase(message.DatabaseStorageKey), DispatcherPriority.Normal).Task.Unwrap();
+        await Application.Current.Dispatcher.InvokeAsync(() => LoadDatabase(() => message.DatabaseStorageKey, message.Password), DispatcherPriority.Normal).Task.Unwrap();
     }
 
     private async Task<bool> PromptToSaveIfNecessary()
