@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,25 +15,26 @@ namespace BudgetAnalyser.LedgerBook;
 
 public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
 {
-    private const string BankBalanceBackground = "Brush.TileBackgroundAlternate";
-    private const string BankBalanceTextBrush = "Brush.Text.Default";
-    private const string CreditTextBrush = "Brush.Positive.Text";
-    private const string DebitTextBrush = "Brush.Negative.Text";
-    private const string ZeroTextBrush = "Brush.Text.Default";
-    private const string DateColumnStyle = "LedgerBookTextBlockHeadingRight";
+    internal const string BankBalanceBackground = "Brush.TileBackgroundAlternate";
+    internal const string BankBalanceTextBrush = "Brush.Text.Default";
+    internal const string CreditTextBrush = "Brush.Positive.Text";
+    internal const string DebitTextBrush = "Brush.Negative.Text";
+    internal const string ZeroTextBrush = "Brush.Text.Default";
+    internal const string DateColumnStyle = "LedgerBookTextBlockHeadingRight";
     private const string DateFormat = "d-MMM-yy";
-    private const string HeadingStyle = "LedgerBookTextBlockHeading";
-    private const string ImportantNumberStyle = "LedgerBookTextBlockImportantNumber";
-    private const string LessButtonStyle = "Button.Round.Minus";
-    private const string LightBorderBrush = "Brush.ControlBorder";
-    private const string MainBackground = "Brush.MainBackground";
-    private const string MoreButtonStyle = "Button.Round.Add";
-    private const string NormalHighlightBackground = "Brush.TileBackground";
-    private const string NormalStyle = "LedgerBookTextBlockOther";
-    private const string NumberStyle = "LedgerBookTextBlockNumber";
-    private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
-    private const string SurplusBackground = "Brush.TileBackgroundAlternate";
-    private const string SurplusTextBrush = "Brush.Positive.Text";
+    internal const string HeadingStyle = "LedgerBookTextBlockHeading";
+    internal const string ImportantNumberStyle = "LedgerBookTextBlockImportantNumber";
+    internal const string LessButtonStyle = "Button.Round.Minus";
+    internal const string LightBorderBrush = "Brush.ControlBorder";
+    internal const string MainBackground = "Brush.MainBackground";
+    internal const string MoreButtonStyle = "Button.Round.Add";
+    internal const string NormalHighlightBackground = "Brush.TileBackground";
+    internal const string NormalStyle = "LedgerBookTextBlockOther";
+    internal const string NumberStyle = "LedgerBookTextBlockNumber";
+    internal const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
+    internal const string SurplusBackground = "Brush.TileBackgroundAlternate";
+    internal const string SurplusTextBrush = "Brush.Positive.Text";
+    internal const string WarningImageTemplate = "WarningImage";
     private readonly ILogger logger;
     private readonly ICommand showBankBalancesCommand;
     private readonly ICommand showHidePeriodsCommand;
@@ -465,7 +466,7 @@ public class LedgerBookGridBuilderV2 : ILedgerBookGridBuilder
         {
             var warningImage = new ContentControl
             {
-                Template = (ControlTemplate)FindResource("WarningImage"),
+                Template = (ControlTemplate)FindResource(WarningImageTemplate),
                 Width = 20,
                 Height = 20,
                 Margin = new Thickness(5),
