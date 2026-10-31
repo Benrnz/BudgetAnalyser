@@ -46,10 +46,10 @@
                                 <RowDefinition Height="3" />
                             </Grid.RowDefinitions>
                             <materialDesign:Ripple Grid.Row="0"
-                                                    Focusable="False"
-                                                    Feedback="{DynamicResource PrimaryHueMidBrush}"
-                                                    HorizontalContentAlignment="Center"
-                                                    VerticalContentAlignment="Center">
+                                                   Focusable="False"
+                                                   Feedback="{DynamicResource PrimaryHueMidBrush}"
+                                                   HorizontalContentAlignment="Center"
+                                                   VerticalContentAlignment="Center">
                                 <ContentPresenter Margin="{TemplateBinding Padding}"
                                                   HorizontalAlignment="Center"
                                                   VerticalAlignment="Center" />
@@ -85,14 +85,15 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.Effect>
             <DropShadowEffect BlurRadius="6"
-                               Color="Black"
-                               Direction="270"
-                               Opacity="0.5"
-                               ShadowDepth="2" />
+                              Color="Black"
+                              Direction="270"
+                              Opacity="0.5"
+                              ShadowDepth="2" />
         </Grid.Effect>
 
         <ToggleButton Grid.Column="0"
@@ -129,6 +130,13 @@
                       Command="{Binding ShowReportsCommand}"
                       Style="{StaticResource TabButtonStyle}">
             <TextBlock Text="Reports" />
+        </ToggleButton>
+
+        <ToggleButton Grid.Column="5"
+                      IsChecked="{Binding SettingsToggle}"
+                      Command="{Binding ShowSettingsCommand}"
+                      Style="{StaticResource TabButtonStyle}">
+            <TextBlock Text="Settings" />
         </ToggleButton>
     </Grid>
 </UserControl>

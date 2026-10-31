@@ -34,9 +34,9 @@
 
         <!-- Main Content Area -->
         <materialDesign:Card Margin="8"
-                              Padding="0"
-                              materialDesign:ElevationAssist.Elevation="Dp2"
-                              UniformCornerRadius="4">
+                             Padding="0"
+                             materialDesign:ElevationAssist.Elevation="Dp2"
+                             UniformCornerRadius="4">
             <Grid>
                 <Grid Visibility="{Binding TopTransactionsController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                     <ContentPresenter Content="{Binding TopTransactionsController}" />
@@ -65,6 +65,11 @@
                     <ContentPresenter Content="{Binding TopReportsCatalogController}"
                                       VerticalAlignment="Stretch" />
                     <shellDialog:ShellDialogView DataContext="{Binding ReportsTabDialog}" />
+                </Grid>
+
+                <Grid Visibility="{Binding TopSettingsController.Shown, Converter={StaticResource Converter.BoolToVis}}">
+                    <ContentPresenter Content="{Binding TopSettingsController}"
+                                      VerticalAlignment="Stretch" />
                 </Grid>
             </Grid>
         </materialDesign:Card>
