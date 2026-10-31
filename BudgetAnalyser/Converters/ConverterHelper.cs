@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Media;
 
@@ -6,17 +6,17 @@ namespace BudgetAnalyser.Converters;
 
 public static class ConverterHelper
 {
-    private const string AccumulatedBucket = "Brush.BudgetBucket.Accumulated";
-    private const string CreditBackground1 = "Brush.CreditBackground1";
-    private const string PositiveText = "Brush.Positive.Text";
-    private const string DebitBackground1 = "Brush.DebitBackground1";
-    private const string NegativeText = "Brush.Negative.Text";
-    private const string IncomeBucket = "Brush.BudgetBucket.Income";
-    private const string NeutralNumberBackground = "Brush.NeutralNumberBackground";
-    private const string NotSoBadDebit = "Brush.NotSoBadDebit";
-    private const string SpentMonthlyBucket = "Brush.BudgetBucket.SpentMonthly";
-    private const string TileBackground = "Brush.TileBackground";
-    private const string TileBackgroundAlternate = "Brush.TileBackgroundAlternate";
+    internal const string AccumulatedBucket = "Brush.BudgetBucket.Accumulated";
+    internal const string CreditBackground1 = "Brush.CreditBackground1";
+    internal const string PositiveText = "Brush.Positive.Text";
+    internal const string DebitBackground1 = "Brush.DebitBackground1";
+    internal const string NegativeText = "Brush.Negative.Text";
+    internal const string IncomeBucket = "Brush.BudgetBucket.Income";
+    internal const string NeutralNumberBackground = "Brush.NeutralNumberBackground";
+    internal const string NotSoBadDebit = "Brush.NotSoBadDebit";
+    internal const string SpentMonthlyBucket = "Brush.BudgetBucket.SpentMonthly";
+    internal const string TileBackground = "Brush.TileBackground";
+    internal const string TileBackgroundAlternate = "Brush.TileBackgroundAlternate";
 
     [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
     public static readonly Brush? AccumulatedBucketBrush = Application.Current.Resources[AccumulatedBucket] as Brush;
