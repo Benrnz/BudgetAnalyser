@@ -92,10 +92,10 @@
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource TextBlock.PageTitle}"
                            Text="{Binding ViewModel.TransactionListModelName}"
-                           Visibility="{Binding ViewModel.TransactionsList, Converter={StaticResource Converter.NotNullToVis}}" />
+                           Visibility="{Binding ViewModel.TransactionsList, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Collapsed}" />
                 <TextBlock Style="{StaticResource TextBlock.PageTitle}"
                            ToolTip="Click to rename"
-                           Visibility="{Binding ViewModel.TransactionsList, Converter={StaticResource Converter.NullToVis}}">
+                           Visibility="{Binding ViewModel.TransactionsList, Converter={StaticResource Converter.NullToVis}, ConverterParameter=Collapsed}">
                     <Hyperlink Command="{Binding EditTransactionsListNameCommand}">
                         <Run Text="{Binding ViewModel.TransactionListModelName, Mode=OneWay}" />
                     </Hyperlink>
