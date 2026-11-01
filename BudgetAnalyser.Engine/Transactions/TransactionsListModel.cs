@@ -216,7 +216,7 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
             throw new ArgumentNullException(nameof(additionalModel));
         }
 
-        var combinedModel = new TransactionsListModel(this.logger) { LastImport = additionalModel.LastImport, StorageKey = StorageKey };
+        var combinedModel = new TransactionsListModel(this.logger) { LastImport = additionalModel.LastImport, Name = Name, StorageKey = StorageKey };
 
         var mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
         combinedModel.LoadTransactions(mergedTransactions);
