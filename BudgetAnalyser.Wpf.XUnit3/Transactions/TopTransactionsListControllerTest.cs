@@ -64,6 +64,32 @@ public class TopTransactionsListControllerTest
     }
 
     [Fact]
+    public void EditTransactionsListNameCommand_ShouldNotRename_GivenTheUserCancels()
+    {
+        var context = CreateContext();
+        context.Subject.ViewModel.TransactionsList = new TransactionsListModel(Substitute.For<ILogger>());
+        context.InputBox.Show(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(string.Empty);
+
+        context.Subject.EditTransactionsListNameCommand.Execute(null);
+
+        context.TransactionService.DidNotReceive().RenameTransactionsList(Arg.Any<string>());
+        context.Subject.ViewModel.Dirty.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void EditTransactionsListNameCommand_ShouldRenameAndMarkDirty_GivenANewName()
+    {
+        var context = CreateContext();
+        context.Subject.ViewModel.TransactionsList = new TransactionsListModel(Substitute.For<ILogger>());
+        context.InputBox.Show(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns("New Name");
+
+        context.Subject.EditTransactionsListNameCommand.Execute(null);
+
+        context.TransactionService.Received(1).RenameTransactionsList("New Name");
+        context.Subject.ViewModel.Dirty.ShouldBeTrue();
+    }
+
+    [Fact]
     public void FilterAppliedMessage_ShouldRefreshTransactions_WhenSentByAnotherController()
     {
         var context = CreateContext();
@@ -199,6 +225,7 @@ public class TopTransactionsListControllerTest
         var subject = new TopTransactionsListController(
             messenger,
             new FakeLogger(),
+            userPrompts,
             appliedRulesController,
             editRulesController,
             editingTransactionController,
@@ -206,7 +233,7 @@ public class TopTransactionsListControllerTest
             fileOperations,
             transactionService);
 
-        return new TestContext(subject, messenger, transactionService);
+        return new TestContext(subject, messenger, transactionService, inputBox);
     }
 
     private static List<Transaction> CreateTransactions(int count)
@@ -222,5 +249,6 @@ public class TopTransactionsListControllerTest
     internal sealed record TestContext(
         TopTransactionsListController Subject,
         IMessenger Messenger,
-        ITransactionManagerService TransactionService);
+        ITransactionManagerService TransactionService,
+        IUserInputBox InputBox);
 }

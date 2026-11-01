@@ -65,6 +65,11 @@ public class ApplicationDatabase
     private string StoragePath => Path.GetDirectoryName(FileName) ?? ".\\";
 
     /// <summary>
+    ///     Gets the user-defined display name of the <see cref="TransactionsListModel" />. Empty if the user has never named it.
+    /// </summary>
+    public string TransactionsListModelName { get; internal set; } = string.Empty;
+
+    /// <summary>
     ///     Gets the Transactions List Model storage key. This is used to locate and load the <see cref="TransactionsListModel" />.
     /// </summary>
     public string TransactionsListModelStorageKey { get; internal set; } = string.Empty;
@@ -86,6 +91,7 @@ public class ApplicationDatabase
         MatchingRulesCollectionStorageKey = string.Empty;
         MatchingRulesCollectionStorageKey = string.Empty;
         TransactionsListModelStorageKey = string.Empty;
+        TransactionsListModelName = string.Empty;
         LedgerReconciliationToDoCollection = new ToDoCollection();
     }
 

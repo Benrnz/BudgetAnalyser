@@ -84,6 +84,12 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     void RemoveTransaction(Transaction transactionToRemove);
 
     /// <summary>
+    ///     Renames the currently loaded <see cref="TransactionsListModel" />.
+    /// </summary>
+    /// <param name="newName">The new name.</param>
+    void RenameTransactionsList(string newName);
+
+    /// <summary>
     ///     Splits the provided transaction into two. The provided transaction is removed, and two new transactions are created. Both transactions must add up to the original transaction amount.
     /// </summary>
     /// <param name="originalTransaction">The original transaction.</param>

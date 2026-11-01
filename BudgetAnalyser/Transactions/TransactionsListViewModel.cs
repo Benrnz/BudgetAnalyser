@@ -33,7 +33,12 @@ public partial class TransactionsListViewModel(IApplicationDatabaseFacade applic
     public decimal TotalDebits => this.transactionService.TotalDebits;
     public decimal TotalDifference => TotalCredits + TotalDebits;
 
-    public string TransactionListModelName => TransactionsList is not null ? Path.GetFileNameWithoutExtension(TransactionsList.StorageKey) : "[No Transactions Loaded]";
+    public string TransactionListModelName =>
+        TransactionsList is null
+            ? "[No Transactions Loaded]"
+            : TransactionsList.Name.IsNothing()
+                ? Path.GetFileNameWithoutExtension(TransactionsList.StorageKey)
+                : TransactionsList.Name;
 
     [ObservableProperty]
     public partial List<Transaction> Transactions { get; internal set; } = new();
@@ -49,6 +54,11 @@ public partial class TransactionsListViewModel(IApplicationDatabaseFacade applic
     public void TriggerRefreshBucketFilterList()
     {
         OnPropertyChanged(nameof(FilterBudgetBuckets));
+    }
+
+    public void TriggerRefreshName()
+    {
+        OnPropertyChanged(nameof(TransactionListModelName));
     }
 
     public void TriggerRefreshTotalsRow()

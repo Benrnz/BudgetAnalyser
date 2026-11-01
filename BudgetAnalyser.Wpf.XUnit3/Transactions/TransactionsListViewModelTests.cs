@@ -52,6 +52,14 @@ public class TransactionsListViewModelTest
     }
 
     [Fact]
+    public void GivenTestData1WithANameTransactionListModelNameShouldBeTheName()
+    {
+        var subject = Arrange();
+        subject.TransactionsList!.Name = "My Transactions";
+        subject.TransactionListModelName.ShouldBe("My Transactions");
+    }
+
+    [Fact]
     public void TriggerRefreshTotalsRowShouldRaise7Events()
     {
         var subject = Arrange();

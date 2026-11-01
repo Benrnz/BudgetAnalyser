@@ -55,4 +55,29 @@ public class DtoToApplicationDatabaseMapperTest
     {
         this.result.TransactionsListModelStorageKey.ShouldBe("Transactions.xml");
     }
+
+    [Fact]
+    public void ShouldMapTransactionsListModelName()
+    {
+        var dto = new BudgetAnalyserStorageRoot2
+        {
+            BudgetCollectionRootDto = "Budget.xml",
+            LedgerBookRootDto = "Ledger.xml",
+            MatchingRulesCollectionRootDto = "Rules.xml",
+            TransactionsCollectionRootDto = "Transactions.xml",
+            TransactionsListModelName = "My Transactions",
+            WidgetCollectionRootDto = "Widgets.xml",
+            Filter = new GlobalFilterDto()
+        };
+
+        var model = new MapperApplicationDatabaseToStorageRoot3().ToModel(dto);
+
+        model.TransactionsListModelName.ShouldBe("My Transactions");
+    }
+
+    [Fact]
+    public void ShouldMapTransactionsListModelNameToEmpty_GivenAnOlderFileWithNoName()
+    {
+        this.result.TransactionsListModelName.ShouldBeEmpty();
+    }
 }

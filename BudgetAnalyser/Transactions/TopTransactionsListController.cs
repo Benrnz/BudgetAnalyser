@@ -10,18 +10,21 @@ using BudgetAnalyser.Matching;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
+using Rees.Wpf.Contracts;
 
 namespace BudgetAnalyser.Transactions;
 
 [AutoRegisterWithIoC(SingleInstance = true)]
 public partial class TopTransactionsListController : ControllerBase, IShowableController
 {
+    private readonly IUserInputBox inputBox;
     private readonly ILogger logger;
     private readonly ITransactionManagerService transactionService;
 
     public TopTransactionsListController(
         IMessenger messenger,
         ILogger logger,
+        UserPrompts userPrompts,
         AppliedRulesController appliedRulesController,
         EditRulesController editRulesController,
         EditingTransactionController editingTransactionController,
@@ -31,6 +34,7 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
         : base(messenger)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.inputBox = userPrompts.InputBox ?? throw new ArgumentNullException(nameof(userPrompts.InputBox));
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
         AppliedRulesController = appliedRulesController ?? throw new ArgumentNullException(nameof(appliedRulesController));
         EditRulesController = editRulesController ?? throw new ArgumentNullException(nameof(editRulesController));
@@ -40,6 +44,7 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
 
         ClearSearchCommand = new RelayCommand(ClearSearch);
+        EditTransactionsListNameCommand = new RelayCommand(OnEditTransactionsListName);
         EditTransactionCommand = new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
         MergeBankExtractCommand = new AsyncRelayCommand(OnMergeExtractCommandExecute);
         NavigateNextPageCommand = new RelayCommand(NavigateNextPage, () => CanNavigateNext);
@@ -88,6 +93,10 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
     public EditingTransactionController EditingTransactionController { get; }
     public EditRulesController EditRulesController { get; }
     public IRelayCommand EditTransactionCommand { get; }
+
+    [UsedImplicitly]
+    public IRelayCommand EditTransactionsListNameCommand { get; }
+
     public ITransactionsControllerFileOperations FileOperations { get; }
 
     public IRelayCommand MergeBankExtractCommand { get; }
@@ -223,6 +232,24 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
         }
 
         EditingTransactionController.ShowDialog(ViewModel.SelectedRow);
+    }
+
+    private void OnEditTransactionsListName()
+    {
+        if (ViewModel.TransactionsList is null)
+        {
+            return;
+        }
+
+        var result = this.inputBox.Show("Edit Transactions Name", "Enter a new name", ViewModel.TransactionListModelName);
+        if (string.IsNullOrWhiteSpace(result))
+        {
+            return;
+        }
+
+        this.transactionService.RenameTransactionsList(result);
+        ViewModel.TriggerRefreshName();
+        ViewModel.Dirty = true;
     }
 
     private void OnGlobalDateFilterApplied(TopTransactionsListController recipient, FilterAppliedMessage message)

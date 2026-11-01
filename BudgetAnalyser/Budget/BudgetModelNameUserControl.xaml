@@ -1,23 +1,33 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Budget.BudgetModelNameUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             MouseDoubleClick="OnMouseDoubleClick"
+             xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
              Background="{StaticResource Brush.MainBackground}">
 
-    <!-- DataContext must be BudgetCurrencyContext -->
+    <!-- DataContext must be BudgetCurrencyContext. The name is only a rename link when RenameCommand is set. Without a
+         command the TextBlock is not hit-testable, so the link never shows hover, the hand cursor or the tooltip. -->
     <StackPanel Orientation="Horizontal">
-        <Grid>
-            <TextBlock x:Name="budgetNameTextBlock"
-                       Style="{StaticResource TextBlock.PageTitle}"
-                       Text="{Binding Model.Name}"
-                       ToolTip="Double click to rename this budget." />
-            <TextBox x:Name="budgetNameTextBox"
-                     Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}"
-                     HorizontalAlignment="Stretch"
-                     KeyUp="OnKeyUp"
-                     TextWrapping="NoWrap"
-                     Visibility="Hidden" />
-        </Grid>
+        <TextBlock>
+            <TextBlock.Style>
+                <Style TargetType="TextBlock"
+                       BasedOn="{StaticResource TextBlock.PageTitle}">
+                    <Setter Property="ToolTip"
+                            Value="Click to rename" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RenameCommand, RelativeSource={RelativeSource AncestorType=budget:BudgetModelNameUserControl}}"
+                                     Value="{x:Null}">
+                            <Setter Property="IsHitTestVisible"
+                                    Value="False" />
+                            <Setter Property="ToolTip"
+                                    Value="{x:Null}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+            <Hyperlink Command="{Binding RenameCommand, RelativeSource={RelativeSource AncestorType=budget:BudgetModelNameUserControl}}">
+                <Run Text="{Binding Model.Name, Mode=OneWay}" />
+            </Hyperlink>
+        </TextBlock>
 
         <!-- Status chips are informational, so they use the outlined chip style (see the UX guide) -->
         <Border Margin="16,0,8,0"

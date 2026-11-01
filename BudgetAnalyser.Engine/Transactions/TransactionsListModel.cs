@@ -16,6 +16,7 @@ namespace BudgetAnalyser.Engine.Transactions;
 public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetection, IDisposable
 {
     private readonly ILogger logger;
+    private List<Transaction> allTransactions = new();
 
     /// <summary>
     ///     A hash to show when critical state of the transactions list model has changed. Includes child objects ie Transactions. The hash does not persist between Application Loads.
@@ -26,7 +27,6 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
 
     // Track whether Dispose has been called.
     private bool disposed;
-    private List<Transaction> allTransactions = new();
     private IEnumerable<IGrouping<int, Transaction>>? duplicates;
     private int fullDuration;
 
@@ -84,6 +84,11 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
     ///     Gets the last imported date and time.
     /// </summary>
     public DateTime LastImport { get; internal init; }
+
+    /// <summary>
+    ///     Gets the display name of this transactions list model. This is stored in the Application Database, not with the transactions.
+    /// </summary>
+    public string Name { get; internal set; } = string.Empty;
 
     /// <summary>
     ///     Gets or sets the storage key.  This could be the filename for the transactions list model's persistence, or a database unique id.

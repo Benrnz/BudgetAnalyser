@@ -91,7 +91,15 @@
             <StackPanel Margin="6,0,0,0"
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource TextBlock.PageTitle}"
-                           Text="{Binding ViewModel.TransactionListModelName}" />
+                           Text="{Binding ViewModel.TransactionListModelName}"
+                           Visibility="{Binding ViewModel.TransactionsList, Converter={StaticResource Converter.NotNullToVis}}" />
+                <TextBlock Style="{StaticResource TextBlock.PageTitle}"
+                           ToolTip="Click to rename"
+                           Visibility="{Binding ViewModel.TransactionsList, Converter={StaticResource Converter.NullToVis}}">
+                    <Hyperlink Command="{Binding EditTransactionsListNameCommand}">
+                        <Run Text="{Binding ViewModel.TransactionListModelName, Mode=OneWay}" />
+                    </Hyperlink>
+                </TextBlock>
                 <TextBlock Style="{StaticResource TextBlock.PageTitle}"
                            Margin="2"
                            Text="*"

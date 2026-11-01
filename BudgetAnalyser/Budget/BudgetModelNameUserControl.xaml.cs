@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -10,39 +9,23 @@ namespace BudgetAnalyser.Budget;
 /// </summary>
 public partial class BudgetModelNameUserControl : UserControl
 {
+    /// <summary>
+    ///     The command to rename the budget. When set, the budget name is shown as a hyperlink that executes this command, otherwise the name is read only.
+    /// </summary>
+    public static readonly DependencyProperty RenameCommandProperty = DependencyProperty.Register(
+        nameof(RenameCommand),
+        typeof(ICommand),
+        typeof(BudgetModelNameUserControl),
+        new PropertyMetadata(null));
+
     public BudgetModelNameUserControl()
     {
         InitializeComponent();
     }
 
-    /// <summary>
-    ///     Finalise editing of the Budget Name.
-    /// </summary>
-    private void OnKeyUp(object? sender, KeyEventArgs e)
+    public ICommand? RenameCommand
     {
-        if (e.Key != Key.Enter)
-        {
-            return;
-        }
-
-        this.budgetNameTextBox.Visibility = Visibility.Hidden;
-        Debug.Assert(this.budgetNameTextBlock is not null);
-        this.budgetNameTextBlock.Visibility = Visibility.Visible;
-    }
-
-    /// <summary>
-    ///     Enable editing of the Budget Name
-    /// </summary>
-    private void OnMouseDoubleClick(object? sender, MouseButtonEventArgs e)
-    {
-        var control = e.OriginalSource as TextBlock;
-        if (!Equals(control, this.budgetNameTextBlock))
-        {
-            return;
-        }
-
-        this.budgetNameTextBox.Visibility = Visibility.Visible;
-        Debug.Assert(this.budgetNameTextBlock is not null);
-        this.budgetNameTextBlock.Visibility = Visibility.Hidden;
+        get => (ICommand?)GetValue(RenameCommandProperty);
+        set => SetValue(RenameCommandProperty, value);
     }
 }

@@ -19,6 +19,7 @@ public partial class TopBudgetController : ControllerBase, IShowableController
     private const string CloseBudgetMenuName = "Close _Budget";
     private const string EditBudgetMenuName = "Edit Current _Budget";
     private readonly IApplicationDatabaseFacade applicationDatabaseService;
+    private readonly IUserInputBox inputBox;
     private readonly IBudgetMaintenanceService maintenanceService;
     private readonly IUserMessageBox messageBox;
     private readonly IUserQuestionBoxYesNo questionBox;
@@ -38,11 +39,13 @@ public partial class TopBudgetController : ControllerBase, IShowableController
         this.applicationDatabaseService = applicationDatabaseService ?? throw new ArgumentNullException(nameof(applicationDatabaseService));
         this.questionBox = userPrompts.YesNoBox ?? throw new ArgumentNullException(nameof(userPrompts.YesNoBox));
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
+        this.inputBox = userPrompts.InputBox ?? throw new ArgumentNullException(nameof(userPrompts.InputBox));
         NewBudgetController = newBudgetController ?? throw new ArgumentNullException(nameof(newBudgetController));
         AddNewExpenseCommand = new RelayCommand<ExpenseBucket?>(OnAddNewExpenseExecute);
         AddNewIncomeCommand = new RelayCommand(OnAddNewIncomeExecute);
         DeleteBudgetItemCommand = new RelayCommand<object?>(OnDeleteBudgetItemCommandExecute);
         DetailsCommand = new RelayCommand(OnDetailsCommandExecute);
+        EditBudgetNameCommand = new RelayCommand(OnEditBudgetName);
         NewBudgetCommand = new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget is not null);
         ShowAllCommand = new RelayCommand(OnShowAllCommandExecuted);
         Shown = false;
@@ -112,6 +115,9 @@ public partial class TopBudgetController : ControllerBase, IShowableController
     // ReSharper disable once MemberCanBePrivate.Global
     [ObservableProperty]
     public partial bool Dirty { get; private set; }
+
+    [UsedImplicitly]
+    public IRelayCommand EditBudgetNameCommand { get; }
 
     public BindingList<Expense> Expenses { get; private set; } = new();
 
@@ -293,6 +299,23 @@ public partial class TopBudgetController : ControllerBase, IShowableController
             CurrentBudget.Model.LastModified = DateTime.Now;
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Budget);
         }
+    }
+
+    private void OnEditBudgetName()
+    {
+        if (CurrentBudget is null)
+        {
+            return;
+        }
+
+        var result = this.inputBox.Show("Edit Budget Name", "Enter a new name", CurrentBudget.Model.Name);
+        if (string.IsNullOrWhiteSpace(result))
+        {
+            return;
+        }
+
+        // Dirty is set by BudgetModelOnPropertyChanged.
+        CurrentBudget.Model.Name = result;
     }
 
     private void OnExpenseAmountPropertyChanged(object? sender, EventArgs propertyChangedEventArgs)

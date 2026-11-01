@@ -286,6 +286,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <views:BudgetModelNameUserControl DataContext="{Binding CurrentBudget}"
+                                              RenameCommand="{Binding DataContext.EditBudgetNameCommand, RelativeSource={RelativeSource AncestorType=views:TopBudgetMaintenance}}"
                                               Visibility="{Binding DataContext.NoBudgetLoaded, RelativeSource={RelativeSource AncestorType=Grid}, Converter={StaticResource Converter.NotBoolToVis}}" />
             <TextBlock Style="{StaticResource TextBlock.PageTitle}"
                        Text="[No Budget Loaded]"
