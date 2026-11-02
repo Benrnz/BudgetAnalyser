@@ -18,6 +18,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     private readonly ILogger logger;
     private readonly IMonitorableDependencies monitorableDependencies;
     private readonly ITransactionsListModelRepository transactionsListModelRepository;
+    private ApplicationDatabase? applicationDatabase;
     private BudgetCollection? budgetCollection;
     private int budgetHash;
     private List<Transaction> transactions = new();
@@ -68,6 +69,7 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         this.transactions = [];
         TransactionsListModel?.Dispose();
         TransactionsListModel = null;
+        this.applicationDatabase = null;
         this.budgetCollection = null;
         this.budgetHash = 0;
         var handler = Closed;
@@ -104,6 +106,11 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         {
             throw new DataFormatException("The Transactions List Model data is corrupt and has been tampered with. Unable to load.", ex);
         }
+
+        this.applicationDatabase = applicationDatabase;
+        TransactionsListModel.Name = applicationDatabase.TransactionsListModelName.IsNothing()
+            ? Path.GetFileNameWithoutExtension(applicationDatabase.TransactionsListModelStorageKey)
+            : applicationDatabase.TransactionsListModelName;
 
         NewDataAvailable();
     }
@@ -300,6 +307,24 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         }
 
         TransactionsListModel.RemoveTransaction(transactionToRemove);
+    }
+
+    /// <inheritdoc />
+    public void RenameTransactionsList(string newName)
+    {
+        if (TransactionsListModel is null || this.applicationDatabase is null)
+        {
+            throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+        }
+
+        if (newName is null)
+        {
+            throw new ArgumentNullException(nameof(newName));
+        }
+
+        // The name is persisted in the Application Database, which is saved whenever any data is dirty.
+        this.applicationDatabase.TransactionsListModelName = newName;
+        TransactionsListModel.Name = newName;
     }
 
     /// <inheritdoc />

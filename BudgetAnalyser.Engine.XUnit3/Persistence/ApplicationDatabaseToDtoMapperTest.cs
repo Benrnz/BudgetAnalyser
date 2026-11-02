@@ -19,6 +19,7 @@ public class ApplicationDatabaseToDtoMapperTest
         PrivateAccessor.SetProperty(this.testData, "LedgerBookStorageKey", "Ledger.xml");
         PrivateAccessor.SetProperty(this.testData, "MatchingRulesCollectionStorageKey", "Rules.xml");
         PrivateAccessor.SetProperty(this.testData, "TransactionsListModelStorageKey", "Transactions.xml");
+        PrivateAccessor.SetProperty(this.testData, "TransactionsListModelName", "My Transactions");
         PrivateAccessor.SetProperty(this.testData, "LedgerReconciliationToDoCollection", todoCollection);
 
         var subject = new MapperApplicationDatabaseToStorageRoot3();
@@ -47,6 +48,12 @@ public class ApplicationDatabaseToDtoMapperTest
     public void ShouldMapMatchingRulesCollectionRootDto()
     {
         this.result.MatchingRulesCollectionRootDto.ShouldBe("Rules.xml");
+    }
+
+    [Fact]
+    public void ShouldMapTransactionsListModelName()
+    {
+        this.result.TransactionsListModelName.ShouldBe("My Transactions");
     }
 
     [Fact]

@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Ledger.Data;
+﻿using System.Text.Json.Serialization;
+using BudgetAnalyser.Engine.Ledger.Data;
 
 namespace BudgetAnalyser.Engine.Persistence;
 
@@ -45,6 +46,12 @@ public class
     ///     Gets or sets the Transactions Model root dto.
     /// </summary>
     public required string TransactionsCollectionRootDto { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the user-defined display name of the Transactions Model. Optional, files saved before this was added will not have it.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? TransactionsListModelName { get; init; }
 
     /// <summary>
     ///     Gets or sets the Widget Collection root dto.

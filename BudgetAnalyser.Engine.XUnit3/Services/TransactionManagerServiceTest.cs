@@ -255,6 +255,24 @@ public class TransactionManagerServiceTest
     }
 
     [Fact]
+    public async Task LoadAsync_ShouldNameTheModelFromTheAppDb_GivenASavedName()
+    {
+        PrivateAccessor.SetProperty(this.testAppDb, "TransactionsListModelName", "My Transactions");
+
+        await this.subject.LoadAsync(this.testAppDb);
+
+        this.subject.TransactionsListModel!.Name.ShouldBe("My Transactions");
+    }
+
+    [Fact]
+    public async Task LoadAsync_ShouldNameTheModelFromTheFileName_GivenNoSavedName()
+    {
+        await this.subject.LoadAsync(this.testAppDb);
+
+        this.subject.TransactionsListModel!.Name.ShouldBe("Foo");
+    }
+
+    [Fact]
     public async Task LoadAsync_ShouldReturnATransactionsModel_GivenValidStorageKey()
     {
         TransactionsListModel testTransactionsList = new TransactionsListModelTestHarness();
@@ -290,6 +308,24 @@ public class TransactionManagerServiceTest
     public void RemoveTransaction_ShouldThrow_GivenNullTransaction()
     {
         Should.Throw<ArgumentNullException>(() => this.subject.RemoveTransaction(null!));
+    }
+
+    [Fact]
+    public void RenameTransactionsList_ShouldThrow_GivenNothingLoaded()
+    {
+        this.subject = CreateSubject();
+        Should.Throw<InvalidOperationException>(() => this.subject.RenameTransactionsList("Renamed"));
+    }
+
+    [Fact]
+    public async Task RenameTransactionsList_ShouldUpdateTheModelAndAppDb_GivenANewName()
+    {
+        await this.subject.LoadAsync(this.testAppDb);
+
+        this.subject.RenameTransactionsList("Renamed");
+
+        this.subject.TransactionsListModel!.Name.ShouldBe("Renamed");
+        this.testAppDb.TransactionsListModelName.ShouldBe("Renamed");
     }
 
     [Fact]

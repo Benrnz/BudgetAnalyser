@@ -54,6 +54,17 @@ public class TransactionsListModelTest
     };
 
     [Fact]
+    public void MergeShouldKeepTheName()
+    {
+        var subject = new TransactionsListModel(new FakeLogger()) { Name = "My Transactions" }.LoadTransactions([Transaction1, Transaction2]);
+        var additionalModel = new TransactionsListModel(new FakeLogger()).LoadTransactions([Transaction3]);
+
+        var result = subject.Merge(additionalModel);
+
+        result.Name.ShouldBe("My Transactions");
+    }
+
+    [Fact]
     public void PerformanceOfValidateTest()
     {
         var subject = TransactionsListModelTestData.TestData1();
