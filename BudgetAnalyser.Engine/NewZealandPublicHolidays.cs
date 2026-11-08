@@ -9,6 +9,46 @@ namespace BudgetAnalyser.Engine;
 [AutoRegisterWithIoC]
 public static class NewZealandPublicHolidays
 {
+    /// <summary>
+    ///     Matariki observance dates, as set out in Te Kāhui o Matariki Public Holiday Act 2022, Schedule 1.
+    ///     Later years can only be added by regulation, so add them here when they are published.
+    ///     This must be declared before <see cref="HolidayTemplates" /> because static fields are initialised in declaration order.
+    /// </summary>
+    private static readonly Dictionary<int, DateOnly> MatarikiDates = new()
+    {
+        { 2022, new DateOnly(2022, 6, 24) },
+        { 2023, new DateOnly(2023, 7, 14) },
+        { 2024, new DateOnly(2024, 6, 28) },
+        { 2025, new DateOnly(2025, 6, 20) },
+        { 2026, new DateOnly(2026, 7, 10) },
+        { 2027, new DateOnly(2027, 6, 25) },
+        { 2028, new DateOnly(2028, 7, 14) },
+        { 2029, new DateOnly(2029, 7, 6) },
+        { 2030, new DateOnly(2030, 6, 21) },
+        { 2031, new DateOnly(2031, 7, 11) },
+        { 2032, new DateOnly(2032, 7, 2) },
+        { 2033, new DateOnly(2033, 6, 24) },
+        { 2034, new DateOnly(2034, 7, 7) },
+        { 2035, new DateOnly(2035, 6, 29) },
+        { 2036, new DateOnly(2036, 7, 18) },
+        { 2037, new DateOnly(2037, 7, 10) },
+        { 2038, new DateOnly(2038, 6, 25) },
+        { 2039, new DateOnly(2039, 7, 15) },
+        { 2040, new DateOnly(2040, 7, 6) },
+        { 2041, new DateOnly(2041, 7, 19) },
+        { 2042, new DateOnly(2042, 7, 11) },
+        { 2043, new DateOnly(2043, 7, 3) },
+        { 2044, new DateOnly(2044, 6, 24) },
+        { 2045, new DateOnly(2045, 7, 7) },
+        { 2046, new DateOnly(2046, 6, 29) },
+        { 2047, new DateOnly(2047, 7, 19) },
+        { 2048, new DateOnly(2048, 7, 3) },
+        { 2049, new DateOnly(2049, 6, 25) },
+        { 2050, new DateOnly(2050, 7, 15) },
+        { 2051, new DateOnly(2051, 6, 30) },
+        { 2052, new DateOnly(2052, 6, 21) }
+    };
+
     private static readonly List<Holiday> HolidayTemplates =
     [
         new FixedDateHoliday { Name = "New Years Day", Day = 1, Month = 1, MondayiseIfOnWeekend = true },
@@ -19,7 +59,8 @@ public static class NewZealandPublicHolidays
         new FixedDateHoliday { Name = "ANZAC Day", Day = 25, Month = 4, MondayiseIfOnWeekend = true },
         new FixedDateHoliday { Name = "Christmas Day", Day = 25, Month = 12, MondayiseIfOnWeekend = true },
         new FixedDateHoliday { Name = "Boxing Day", Day = 26, Month = 12, MondayiseIfOnWeekend = true },
-        new IndexDayHoliday { Name = "Queen's Birthday", Day = DayOfWeek.Monday, Month = 6, Index = 0 },
+        new IndexDayHoliday { Name = "King's Birthday", Day = DayOfWeek.Monday, Month = 6, Index = 0 },
+        new LookupTableHoliday { Name = "Matariki", Dates = MatarikiDates },
         new IndexDayHoliday { Name = "Labor Day", Day = DayOfWeek.Monday, Month = 10, Index = 3 },
         new DayClosestMondayToHoliday { Name = "Auckland Anniversary", Month = 1, CloseToDate = 29 }
     ];
@@ -210,6 +251,28 @@ public static class NewZealandPublicHolidays
                 ? throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
                     "Cannot find a suitable date between {0} and {1}", start, end))
                 : proposed;
+        }
+    }
+
+    /// <summary>
+    ///     A holiday whose date is set by legislation for each year, and cannot be calculated. For example: Matariki.
+    /// </summary>
+    private class LookupTableHoliday : Holiday
+    {
+        public required IReadOnlyDictionary<int, DateOnly> Dates { get; init; }
+
+        public override DateOnly CalculateDate(DateOnly start, DateOnly end)
+        {
+            for (var year = start.Year; year <= end.Year; year++)
+            {
+                if (Dates.TryGetValue(year, out var proposed) && proposed >= start && proposed <= end)
+                {
+                    return proposed;
+                }
+            }
+
+            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                "Cannot find a suitable date between {0} and {1}", start, end));
         }
     }
 
