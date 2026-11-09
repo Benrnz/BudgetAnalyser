@@ -1,0 +1,74 @@
+{
+  "success": true,
+  "items": [
+    {
+      "_id": "acc_test00000000000000000001",
+      "_authorisation": "auth_test0000000000000000001",
+      "connection": {
+        "_id": "conn_test000000000000000001",
+        "name": "Test Bank A",
+        "logo": "https://logo.example.com/test-bank-a.png",
+        "connection_type": "classic"
+      },
+      "name": "Everyday Test Account",
+      "status": "ACTIVE",
+      "type": "CHECKING",
+      "attributes": ["TRANSACTIONS", "TRANSFER_TO", "TRANSFER_FROM"],
+      "formatted_account": "99-9999-0000001-00",
+      "balance": {
+        "currency": "NZD",
+        "current": 1523.47,
+        "available": 1523.47,
+        "overdrawn": false
+      },
+      "refreshed": {
+        "balance": "2026-11-12T18:02:11.000Z",
+        "meta": "2026-11-12T18:02:11.000Z",
+        "transactions": "2026-11-12T18:02:15.000Z"
+      }
+    },
+    {
+      "_id": "acc_test00000000000000000002",
+      "_authorisation": "auth_test0000000000000000002",
+      "connection": {
+        "_id": "conn_test000000000000000002",
+        "name": "Test Bank B",
+        "logo": "https://logo.example.com/test-bank-b.png",
+        "connection_type": "official"
+      },
+      "name": "Test Credit Card",
+      "status": "ACTIVE",
+      "type": "CREDITCARD",
+      "attributes": ["TRANSACTIONS"],
+      "formatted_account": "0000-****-****-0001",
+      "balance": {
+        "currency": "NZD",
+        "current": -842.10,
+        "available": 9157.90,
+        "limit": 10000
+      },
+      "refreshed": {
+        "balance": "2026-11-12T17:45:03.000Z",
+        "meta": "2026-11-12T17:45:03.000Z",
+        "transactions": "2026-11-12T17:45:09.000Z"
+      }
+    },
+    {
+      "_id": "acc_test00000000000000000003",
+      "_authorisation": "auth_test0000000000000000003",
+      "connection": {
+        "_id": "conn_test000000000000000003",
+        "name": "Test Fund C",
+        "logo": "https://logo.example.com/test-fund-c.png",
+        "connection_type": "classic"
+      },
+      "name": "Test Investment Without Transactions",
+      "status": "INACTIVE",
+      "type": "INVESTMENT",
+      "attributes": [],
+      "refreshed": {
+        "balance": "2026-11-12T17:45:03.000Z"
+      }
+    }
+  ]
+}
