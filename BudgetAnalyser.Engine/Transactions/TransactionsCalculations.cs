@@ -61,17 +61,9 @@ public static class TransactionsCalculations
     {
         ArgumentNullException.ThrowIfNull(existingTransactions);
 
-        DateOnly? start = null;
-        foreach (var transaction in existingTransactions)
-        {
-            var nextDay = transaction.Date.AddDays(1);
-            if (start is null || nextDay > start.Value)
-            {
-                start = nextDay;
-            }
-        }
-
-        return new ImportDateRange(start, PreviousBusinessDay(today));
+        // The nullable selector makes Max return null for an empty list instead of throwing, so there is no suggested start when there are no transactions.
+        var lastTransactionDate = existingTransactions.Max(t => (DateOnly?)t.Date);
+        return new ImportDateRange(lastTransactionDate?.AddDays(1), PreviousBusinessDay(today));
     }
 
     /// <summary>
