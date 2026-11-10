@@ -120,7 +120,7 @@ internal sealed class AkahuApiClient : IDisposable
     {
         ArgumentNullException.ThrowIfNull(credentials);
 
-        for (var retryNumber = 0;; retryNumber++)
+        for (var retryNumber = 0; ; retryNumber++)
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, relativeUri);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", credentials.UserAccessToken);
