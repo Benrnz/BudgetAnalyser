@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
@@ -17,6 +18,7 @@ namespace BudgetAnalyser.Transactions;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public partial class TopTransactionsListController : ControllerBase, IShowableController
 {
+    private readonly IBankFeedConfigurationService bankFeedConfiguration;
     private readonly IUserInputBox inputBox;
     private readonly ILogger logger;
     private readonly ITransactionManagerService transactionService;
@@ -30,9 +32,11 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
         EditingTransactionController editingTransactionController,
         SplitTransactionController splitTransactionController,
         ITransactionsControllerFileOperations fileOperations,
-        ITransactionManagerService transactionService)
+        ITransactionManagerService transactionService,
+        IBankFeedConfigurationService bankFeedConfiguration)
         : base(messenger)
     {
+        this.bankFeedConfiguration = bankFeedConfiguration ?? throw new ArgumentNullException(nameof(bankFeedConfiguration));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.inputBox = userPrompts.InputBox ?? throw new ArgumentNullException(nameof(userPrompts.InputBox));
         FileOperations = fileOperations ?? throw new ArgumentNullException(nameof(fileOperations));
@@ -44,6 +48,7 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
         this.transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
 
         ClearSearchCommand = new RelayCommand(ClearSearch);
+        DownloadBankFeedCommand = new AsyncRelayCommand(OnDownloadBankFeedExecute, CanDownloadBankFeed);
         EditTransactionsListNameCommand = new RelayCommand(OnEditTransactionsListName);
         EditTransactionCommand = new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
         MergeBankExtractCommand = new AsyncRelayCommand(OnMergeExtractCommandExecute);
@@ -60,6 +65,7 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
         this.transactionService.Closed += OnClosedNotificationReceived;
         this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
         this.transactionService.Saved += OnSavedNotificationReceived;
+        this.bankFeedConfiguration.ConfigurationChanged += OnBankFeedConfigurationChanged;
     }
 
     public AppliedRulesController AppliedRulesController { get; }
@@ -89,6 +95,15 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
             OnPropertyChanged();
         }
     } = 1;
+
+    /// <summary>
+    ///     Downloads new transactions from the bank feed. Only enabled once the bank feed is fully set up on the Settings tab and a transactions list is loaded.
+    /// </summary>
+    public IAsyncRelayCommand DownloadBankFeedCommand { get; }
+
+    public string DownloadBankFeedToolTip => this.bankFeedConfiguration.IsConfigured
+        ? "Download new transactions from the bank feed. This will also save any unsaved changes first."
+        : "Set up the bank feed on the Settings tab";
 
     public EditingTransactionController EditingTransactionController { get; }
     public EditRulesController EditRulesController { get; }
@@ -185,6 +200,11 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
         Messenger.Register(recipient, handler);
     }
 
+    private bool CanDownloadBankFeed()
+    {
+        return this.bankFeedConfiguration.IsConfigured && ViewModel.TransactionsList is not null;
+    }
+
     private async Task CheckBudgetContainsAllUsedBucketsFromTransactions(BudgetCollection? budgets = null)
     {
         if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
@@ -194,6 +214,12 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
             this.logger.LogError(_ =>
                 "WARNING! By loading a different budget with a Transactions List Model loaded, data loss may occur. There may be budget buckets used in the transactions that do not exist in the new loaded Budget. This will result in those transactions being declassified. Check for unclassified transactions.");
         }
+    }
+
+    private void OnBankFeedConfigurationChanged(object? sender, EventArgs e)
+    {
+        DownloadBankFeedCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(DownloadBankFeedToolTip));
     }
 
     partial void OnBucketFilterChanged(string? value)
@@ -222,6 +248,15 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
     private void OnClosedNotificationReceived(object? sender, EventArgs e)
     {
         FileOperations.Close();
+    }
+
+    private async Task OnDownloadBankFeedExecute()
+    {
+        TextFilter = null;
+        BucketFilter = null;
+        CurrentPage = 1;
+        await FileOperations.MergeInBankFeedTransactions();
+        UpdatePagedTransactions();
     }
 
     private void OnEditTransactionCommandExecute()
@@ -314,11 +349,16 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
             EditingTransactionController.Transaction = ViewModel.SelectedRow;
             UpdateCommandCanExecute();
         }
+        else if (e.PropertyName == nameof(TransactionsListViewModel.TransactionsList))
+        {
+            DownloadBankFeedCommand.NotifyCanExecuteChanged();
+        }
     }
 
     private void UpdateCommandCanExecute()
     {
         EditingTransactionController.DeleteTransactionCommand.NotifyCanExecuteChanged();
+        DownloadBankFeedCommand.NotifyCanExecuteChanged();
         EditTransactionCommand.NotifyCanExecuteChanged();
         SplitTransactionCommand.NotifyCanExecuteChanged();
         NavigateNextPageCommand.NotifyCanExecuteChanged();

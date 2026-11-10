@@ -1,5 +1,6 @@
 ﻿using System.Windows.Threading;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Filtering;
@@ -12,6 +13,7 @@ namespace BudgetAnalyser.Transactions;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public partial class TransactionsControllerFileOperations : ControllerBase, ITransactionsControllerFileOperations
 {
+    private readonly BankFeedImportController bankFeedImportController;
     private readonly LoadFileController loadFileController;
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionManagerService transactionService;
@@ -21,7 +23,8 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         UserPrompts userPrompts,
         LoadFileController loadFileController,
         IApplicationDatabaseFacade applicationDatabaseService,
-        ITransactionManagerService transactionManagerService)
+        ITransactionManagerService transactionManagerService,
+        BankFeedImportController bankFeedImportController)
         : base(messenger)
     {
         if (applicationDatabaseService is null)
@@ -32,6 +35,7 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
         this.transactionService = transactionManagerService ?? throw new ArgumentNullException(nameof(transactionManagerService));
+        this.bankFeedImportController = bankFeedImportController ?? throw new ArgumentNullException(nameof(bankFeedImportController));
         ViewModel = new TransactionsListViewModel(applicationDatabaseService, this.transactionService);
     }
 
@@ -82,6 +86,47 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         NotifyOfReset();
         ViewModel.TriggerRefreshTotalsRow();
         Messenger.Send(new TransactionsListModelReadyMessage(null));
+    }
+
+    public async Task MergeInBankFeedTransactions()
+    {
+        await PersistenceOperationCommands.SaveDatabaseCommand.ExecuteAsync(this);
+
+        var transactions = ViewModel.TransactionsList ?? throw new InvalidOperationException("Transactions Model is null, uninitialised or not loaded.");
+        var request = await this.bankFeedImportController.RequestUserInputAsync(transactions, DateOnlyExt.Today());
+        if (request is null)
+        {
+            // User cancelled
+            return;
+        }
+
+        LoadingData = true;
+        try
+        {
+            var result = await this.transactionService.ImportAndMergeBankFeedTransactionsAsync(request.Range, request.Mappings, CancellationToken.None);
+            if (result.TotalImported > 0)
+            {
+                await SyncWithServiceAsync();
+                Messenger.Send(new TransactionsChangedMessage());
+                OnPropertyChanged(nameof(ViewModel));
+                NotifyOfEdit();
+                ViewModel.TriggerRefreshTotalsRow();
+                Messenger.Send(new TransactionsListModelReadyMessage(ViewModel.TransactionsList));
+            }
+
+            LoadingData = false;
+            this.messageBox.Show(BankFeedImportSummary.Describe(result), "Download from bank feed");
+        }
+        catch (BankFeedAuthenticationException)
+        {
+            LoadingData = false;
+            this.messageBox.Show("Your bank feed credentials were rejected. Update them on the Settings tab. Nothing was imported.", "Download from bank feed");
+        }
+        catch (BankFeedException ex)
+        {
+            LoadingData = false;
+            this.messageBox.Show($"Download failed: {ex.Message}. Nothing was imported.", "Download from bank feed");
+        }
     }
 
     public async Task MergeInNewTransactions()
