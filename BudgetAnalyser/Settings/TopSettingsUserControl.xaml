@@ -10,7 +10,7 @@
              Background="{StaticResource Brush.MainBackground}">
 
     <UserControl.Resources>
-        <!-- One card per group of settings in BudgetAnalyserAppState.json -->
+        <!-- One card per group of settings. Each card shows settings from exactly one storage location, and its caption says where they are stored and when they are saved. -->
         <Style x:Key="Card.SettingsGroup"
                TargetType="{x:Type materialDesign:Card}">
             <Setter Property="Margin"
@@ -44,7 +44,16 @@
             <Setter Property="Margin"
                     Value="2,0,2,8" />
         </Style>
-    </UserControl.Resources>
+        <Style x:Key="TextBlock.SettingsColumnHeader"
+               TargetType="TextBlock"
+               BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontWeight"
+                    Value="Medium" />
+            <Setter Property="Foreground"
+                    Value="{StaticResource Brush.Text.Label}" />
+            <Setter Property="Margin"
+                    Value="0,0,8,4" />
+        </Style>    </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <!-- Cards stretch to a shared column so they are all the same width; capped so wide windows don't over-stretch them -->
@@ -60,7 +69,7 @@
                            Text="Settings" />
                 <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
                            Margin="2,0,2,16"
-                           Text="Settings are saved when Budget Analyser exits and read back at start-up." />
+                           Text="Each card says where its settings are stored and when they are saved." />
 
                 <!-- Top level settings in the json file -->
                 <materialDesign:Card Style="{StaticResource Card.SettingsGroup}">
@@ -74,9 +83,12 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.ColumnSpan="2"
-                                   Style="{StaticResource TextBlock.SettingsGroupHeading}"
-                                   Text="General" />
+                        <StackPanel Grid.ColumnSpan="2">
+                            <TextBlock Style="{StaticResource TextBlock.SettingsGroupHeading}"
+                                       Text="General" />
+                            <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                       Text="Saved automatically when Budget Analyser exits." />
+                        </StackPanel>
 
                         <TextBlock Grid.Row="1"
                                    Style="{StaticResource TextBlock.LabelStyle}"
@@ -104,9 +116,12 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.ColumnSpan="2"
-                                   Style="{StaticResource TextBlock.SettingsGroupHeading}"
-                                   Text="Transactions" />
+                        <StackPanel Grid.ColumnSpan="2">
+                            <TextBlock Style="{StaticResource TextBlock.SettingsGroupHeading}"
+                                       Text="Transactions" />
+                            <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                       Text="Saved automatically when Budget Analyser exits." />
+                        </StackPanel>
 
                         <TextBlock Grid.Row="1"
                                    Style="{StaticResource TextBlock.LabelStyle}"
@@ -121,6 +136,272 @@
                                    Style="{StaticResource TextBlock.SettingDescription}"
                                    Text="The number of rows shown per page in paginated lists, such as the Transactions list." />
                     </Grid>
+                </materialDesign:Card>
+
+                <!-- Bank feed credentials. Stored DPAPI-encrypted for this Windows user, never in the budget file. Rows come from the provider, so no vendor is named here. -->
+                <materialDesign:Card Style="{StaticResource Card.SettingsGroup}"
+                                     DataContext="{Binding BankFeedSettings}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TextBlock.SettingsGroupHeading}"
+                                   Text="Bank feed connection" />
+                        <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                   Text="Stored encrypted for this Windows user. Saved immediately when you press Save." />
+                        <TextBlock Style="{StaticResource TextBlock.SettingDescription}">
+                            <Run Text="Provider:" />
+                            <Run Text="{Binding ProviderDisplayName, Mode=OneWay}" />
+                        </TextBlock>
+
+                        <ItemsControl ItemsSource="{Binding CredentialRows}"
+                                      Focusable="False">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type settings:BankFeedCredentialRowViewModel}">
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200" />
+                                            <ColumnDefinition Width="320" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                                                   Text="{Binding Label}" />
+                                        <PasswordBox Grid.Column="1"
+                                                     PasswordChanged="OnBankFeedSecretChanged"
+                                                     Visibility="{Binding IsSecret, Converter={StaticResource Converter.BoolToVis}}" />
+                                        <TextBox Grid.Column="1"
+                                                 Text="{Binding NewValue, UpdateSourceTrigger=PropertyChanged}"
+                                                 Visibility="{Binding IsSecret, Converter={StaticResource Converter.NotBoolToVis}}" />
+                                        <TextBlock Grid.Column="2"
+                                                   Style="{StaticResource TextBlock.SettingDescription}"
+                                                   Margin="8,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding StoredValueText}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,8,0,4">
+                            <Button Content="Save"
+                                    Style="{StaticResource Button.Dialog.Primary}"
+                                    Command="{Binding SaveCredentialsCommand}" />
+                            <Button Content="Test connection"
+                                    Style="{StaticResource Button.Dialog.Secondary}"
+                                    Command="{Binding TestConnectionCommand}" />
+                            <Button Content="Clear"
+                                    Style="{StaticResource Button.Dialog.Secondary}"
+                                    Command="{Binding ClearCredentialsCommand}" />
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                   Text="{Binding ConnectionStatus}" />
+                        <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                   Text="The bank feed is set up. Download from bank feed is available on the Transactions tab."
+                                   Visibility="{Binding IsConfigured, Converter={StaticResource Converter.BoolToVis}}" />
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Bank feed account mappings. Stored in the open budget file (not encrypted), so only opaque ids, account keys and field names are kept. -->
+                <materialDesign:Card Style="{StaticResource Card.SettingsGroup}"
+                                     DataContext="{Binding BankFeedSettings}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TextBlock.SettingsGroupHeading}"
+                                   Text="Bank feed accounts" />
+                        <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                   Text="Saved with your budget file. Press Apply, then save your budget file." />
+                        <TextBlock Style="{StaticResource TextBlock.ValidationError}"
+                                   Text="Open a budget file to map accounts."
+                                   Visibility="{Binding IsBudgetFileOpen, Converter={StaticResource Converter.NotBoolToVis}}" />
+
+                        <StackPanel IsEnabled="{Binding IsBudgetFileOpen}">
+                            <Button Content="Refresh accounts"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource Button.Dialog.Secondary}"
+                                    Command="{Binding RefreshAccountsCommand}" />
+
+                            <ItemsControl ItemsSource="{Binding AccountRows}"
+                                          Focusable="False"
+                                          Margin="0,8,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type settings:BankFeedAccountRowViewModel}">
+                                        <Border BorderBrush="{StaticResource Brush.ControlBorder}"
+                                                BorderThickness="0,0,0,1"
+                                                Padding="0,6">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="160" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel>
+                                                        <TextBlock FontWeight="Medium"
+                                                                   Text="{Binding Title}" />
+                                                        <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                                                   Margin="0">
+                                                            <Run Text="{Binding AccountNumber, Mode=OneWay}" />
+                                                            <Run Text="  " />
+                                                            <Run Text="{Binding DataAsOfText, Mode=OneWay}" />
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="1"
+                                                               Style="{StaticResource TextBlock.LabelStyle}"
+                                                               VerticalAlignment="Center"
+                                                               Text="Import into" />
+                                                    <ComboBox Grid.Column="2"
+                                                              VerticalAlignment="Center"
+                                                              ItemsSource="{Binding AccountChoices}"
+                                                              DisplayMemberPath="DisplayName"
+                                                              SelectedItem="{Binding SelectedAccount}" />
+                                                </Grid>
+
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Style="{StaticResource TextBlock.ValidationError}"
+                                                               VerticalAlignment="Center"
+                                                               Text="{Binding StatusText}" />
+                                                    <Button Content="Remove"
+                                                            Margin="8,0,0,0"
+                                                            Style="{StaticResource Button.Dialog.Secondary}"
+                                                            Command="{Binding DataContext.RemoveMappingCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                            CommandParameter="{Binding}"
+                                                            Visibility="{Binding IsNotFoundInFeed, Converter={StaticResource Converter.BoolToVis}}" />
+                                                </StackPanel>
+
+                                                <Expander Header="Field mapping and preview"
+                                                          Margin="0,4,0,0"
+                                                          Visibility="{Binding IsMapped, Converter={StaticResource Converter.BoolToVis}}">
+                                                    <StackPanel Margin="8">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="160" />
+                                                                <ColumnDefinition Width="200" />
+                                                                <ColumnDefinition Width="200" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                            </Grid.RowDefinitions>
+                                                            <TextBlock Grid.Column="1"
+                                                                       Style="{StaticResource TextBlock.SettingsColumnHeader}"
+                                                                       Text="From bank feed field" />
+                                                            <TextBlock Grid.Column="2"
+                                                                       Style="{StaticResource TextBlock.SettingsColumnHeader}"
+                                                                       Text="Otherwise" />
+
+                                                            <TextBlock Grid.Row="1"
+                                                                       Style="{StaticResource TextBlock.LabelStyle}"
+                                                                       Text="Description" />
+                                                            <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding DescriptionSource}" />
+                                                            <ComboBox Grid.Row="1" Grid.Column="2" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding DescriptionFallback}" />
+
+                                                            <TextBlock Grid.Row="2"
+                                                                       Style="{StaticResource TextBlock.LabelStyle}"
+                                                                       Text="Reference 1" />
+                                                            <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Reference1Source}" />
+                                                            <ComboBox Grid.Row="2" Grid.Column="2" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Reference1Fallback}" />
+
+                                                            <TextBlock Grid.Row="3"
+                                                                       Style="{StaticResource TextBlock.LabelStyle}"
+                                                                       Text="Reference 2" />
+                                                            <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Reference2Source}" />
+                                                            <ComboBox Grid.Row="3" Grid.Column="2" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Reference2Fallback}" />
+
+                                                            <TextBlock Grid.Row="4"
+                                                                       Style="{StaticResource TextBlock.LabelStyle}"
+                                                                       Text="Reference 3" />
+                                                            <ComboBox Grid.Row="4" Grid.Column="1" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Reference3Source}" />
+                                                            <ComboBox Grid.Row="4" Grid.Column="2" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Reference3Fallback}" />
+
+                                                            <TextBlock Grid.Row="5"
+                                                                       Style="{StaticResource TextBlock.LabelStyle}"
+                                                                       Text="Transaction type" />
+                                                            <ComboBox Grid.Row="5" Grid.Column="1" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding TypeSource}" />
+                                                            <ComboBox Grid.Row="5" Grid.Column="2" Margin="0,2,8,2" ItemsSource="{Binding SourceFields}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding TypeFallback}" />
+                                                        </Grid>
+
+                                                        <TextBlock Style="{StaticResource TextBlock.SettingsColumnHeader}"
+                                                                   Margin="0,12,0,0"
+                                                                   Text="Transaction type names" />
+                                                        <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                                                   Text="Rename bank feed types so existing matching rules keep matching. Types not listed are used unchanged." />
+                                                        <ItemsControl ItemsSource="{Binding TypeNames}"
+                                                                      Focusable="False">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate DataType="{x:Type settings:BankFeedTypeNameRowViewModel}">
+                                                                    <StackPanel Orientation="Horizontal"
+                                                                                Margin="0,2">
+                                                                        <TextBox Width="200"
+                                                                                 materialDesign:HintAssist.Hint="Bank feed type"
+                                                                                 Text="{Binding FeedType, UpdateSourceTrigger=PropertyChanged}" />
+                                                                        <TextBlock Margin="8,0"
+                                                                                   VerticalAlignment="Center"
+                                                                                   Text="→" />
+                                                                        <TextBox Width="200"
+                                                                                 materialDesign:HintAssist.Hint="Import as"
+                                                                                 Text="{Binding ImportAs, UpdateSourceTrigger=PropertyChanged}" />
+                                                                        <Button Content="Remove"
+                                                                                Margin="8,0,0,0"
+                                                                                Style="{StaticResource Button.Dialog.Secondary}"
+                                                                                Command="{Binding DataContext.RemoveTypeNameCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                                CommandParameter="{Binding}" />
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                        <Button Content="Add type name"
+                                                                HorizontalAlignment="Left"
+                                                                Style="{StaticResource Button.Dialog.Secondary}"
+                                                                Command="{Binding AddTypeNameCommand}" />
+
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    Margin="0,12,0,4">
+                                                            <Button Content="Preview"
+                                                                    Style="{StaticResource Button.Dialog.Secondary}"
+                                                                    Command="{Binding DataContext.PreviewCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                    CommandParameter="{Binding}" />
+                                                            <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                                                       Margin="8,0,0,0"
+                                                                       VerticalAlignment="Center"
+                                                                       Text="{Binding PreviewMessage}" />
+                                                        </StackPanel>
+                                                        <DataGrid ItemsSource="{Binding PreviewTransactions}"
+                                                                  AutoGenerateColumns="False"
+                                                                  IsReadOnly="True"
+                                                                  HeadersVisibility="Column"
+                                                                  Visibility="{Binding HasPreviewTransactions, Converter={StaticResource Converter.BoolToVis}}">
+                                                            <DataGrid.Columns>
+                                                                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" />
+                                                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+                                                                <DataGridTextColumn Header="Reference 1" Binding="{Binding Reference1}" />
+                                                                <DataGridTextColumn Header="Reference 2" Binding="{Binding Reference2}" />
+                                                                <DataGridTextColumn Header="Reference 3" Binding="{Binding Reference3}" />
+                                                                <DataGridTextColumn Header="Type" Binding="{Binding TransactionType.Name}" />
+                                                                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=N2}" />
+                                                            </DataGrid.Columns>
+                                                        </DataGrid>
+                                                    </StackPanel>
+                                                </Expander>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,8,0,4">
+                                <Button Content="Apply"
+                                        Style="{StaticResource Button.Dialog.Primary}"
+                                        Command="{Binding ApplyMappingsCommand}" />
+                                <Button Content="Revert"
+                                        Style="{StaticResource Button.Dialog.Secondary}"
+                                        Command="{Binding RevertMappingsCommand}" />
+                            </StackPanel>
+                            <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                       Text="{Binding MappingStatus}" />
+                        </StackPanel>
+                    </StackPanel>
                 </materialDesign:Card>
             </StackPanel>
         </Grid>
