@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.BankFeed.Data;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Transactions;
@@ -20,6 +21,12 @@ public class ApplicationDatabase
         LedgerReconciliationToDoCollection = new ToDoCollection();
         GlobalFilter = new GlobalFilterCriteria();
     }
+
+    /// <summary>
+    ///     Gets the bank feed account mappings, stored inside the main Budget Analyser file. Each holds only an opaque provider account identifier, a Budget Analyser account key and the
+    ///     field mapping, never anything sensitive, because this file is not encrypted. The accounts are resolved by the bank feed configuration service.
+    /// </summary>
+    public IReadOnlyList<BankFeedAccountMappingDto> BankFeedAccountMappings { get; internal set; } = [];
 
     /// <summary>
     ///     Gets the budget collection storage key. This is used to locate and load the <see cref="BudgetCollection" />.
@@ -84,6 +91,7 @@ public class ApplicationDatabase
     /// </summary>
     public void Close()
     {
+        BankFeedAccountMappings = [];
         BudgetCollectionStorageKey = string.Empty;
         GlobalFilter = new GlobalFilterCriteria();
         FileName = null;
