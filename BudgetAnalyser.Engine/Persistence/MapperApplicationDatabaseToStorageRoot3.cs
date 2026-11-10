@@ -13,6 +13,7 @@ public class MapperApplicationDatabaseToStorageRoot3 : IDtoMapper<BudgetAnalyser
     {
         var dto = new BudgetAnalyserStorageRoot2
         {
+            BankFeedAccountMappings = model.BankFeedAccountMappings.Count == 0 ? null : model.BankFeedAccountMappings.ToList(),
             BudgetCollectionRootDto = model.BudgetCollectionStorageKey,
             LedgerBookRootDto = model.LedgerBookStorageKey,
             TransactionsCollectionRootDto = model.TransactionsListModelStorageKey,
@@ -30,6 +31,7 @@ public class MapperApplicationDatabaseToStorageRoot3 : IDtoMapper<BudgetAnalyser
     {
         var baxModel = new ApplicationDatabase
         {
+            BankFeedAccountMappings = dto.BankFeedAccountMappings?.ToList() ?? [],
             BudgetCollectionStorageKey = dto.BudgetCollectionRootDto,
             LedgerBookStorageKey = dto.LedgerBookRootDto,
             TransactionsListModelStorageKey = dto.TransactionsCollectionRootDto,

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using BudgetAnalyser.Engine.BankFeed.Data;
 using BudgetAnalyser.Engine.Ledger.Data;
 
 namespace BudgetAnalyser.Engine.Persistence;
@@ -9,6 +10,13 @@ namespace BudgetAnalyser.Engine.Persistence;
 public class
     BudgetAnalyserStorageRoot2
 {
+    /// <summary>
+    ///     Gets or sets the bank feed account mappings. Optional: null when there are none, so files without mappings are unchanged, and files saved before this was added still load.
+    ///     This file is not encrypted, so these must never hold sensitive data.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<BankFeedAccountMappingDto>? BankFeedAccountMappings { get; init; }
+
     /// <summary>
     ///     Gets or sets the budget collection root dto.
     /// </summary>
