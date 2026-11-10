@@ -171,6 +171,16 @@
                 <Button Command="{Binding MergeBankExtractCommand}"
                         Style="{StaticResource Button.Round.Add}"
                         ToolTip="Merge in new Transactions. This will also save any unsaved changes before merging new transactions." />
+                <!-- Tooltip is shown while disabled too, so the user knows to finish setting up the bank feed on the Settings tab. -->
+                <Button Command="{Binding DownloadBankFeedCommand}"
+                        Style="{StaticResource Button.Round.Base}"
+                        ToolTip="{Binding DownloadBankFeedToolTip}"
+                        ToolTipService.ShowOnDisabled="True">
+                    <materialDesign:PackIcon Kind="CloudDownload"
+                                             Width="22"
+                                             Height="22"
+                                             Foreground="{StaticResource Brush.Button.Glyph}" />
+                </Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1"
