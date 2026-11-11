@@ -160,6 +160,27 @@ public class BankFeedImportControllerTest
     }
 
     [Fact]
+    public async Task RequestUserInput_ShouldReturnNullWithoutWaiting_GivenCancelWhileBankFeedHasNotAnswered()
+    {
+        // The bank feed never answers, and ignores cancellation.
+        var neverAnswers = new TaskCompletionSource<IReadOnlyList<BankFeedAccount>>();
+        CancellationToken tokenUsed = default;
+        this.configuration.GetFeedAccountsAsync(Arg.Do<CancellationToken>(token => tokenUsed = token)).Returns(neverAnswers.Task);
+        ShellDialogRequestMessage? dialog = null;
+        var recipient = new object();
+        this.messenger.Register<object, ShellDialogRequestMessage>(recipient, (_, m) => dialog = m);
+
+        var resultTask = this.subject.RequestUserInputAsync(CreateTransactions(new DateOnly(2026, 11, 12)), Today);
+        this.subject.IsLoading.ShouldBeTrue();
+        this.messenger.Send(new ShellDialogResponseMessage(this.subject, ShellDialogButton.Cancel) { CorrelationId = dialog!.CorrelationId });
+
+        (await resultTask.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken)).ShouldBeNull();
+        tokenUsed.IsCancellationRequested.ShouldBeTrue();
+        this.subject.IsLoading.ShouldBeFalse();
+        this.subject.LoadError.ShouldBeEmpty();
+    }
+
+    [Fact]
     public async Task RequestUserInput_ShouldShowRejectedMessage_GivenCredentialsRejected()
     {
         this.configuration.GetFeedAccountsAsync(Arg.Any<CancellationToken>()).ThrowsAsync(new BankFeedAuthenticationException("Rejected"));

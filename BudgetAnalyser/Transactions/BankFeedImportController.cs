@@ -21,6 +21,7 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
     private readonly ILogger logger;
     private Guid dialogCorrelationId;
     private IReadOnlyList<Transaction> existingTransactions = [];
+    private CancellationTokenSource? feedDetailsCancellation;
     private DateOnly? historyAvailableFrom;
     private TaskCompletionSource<BankFeedImportRequest?>? pendingRequest;
     private ImportDateRange suggestedRange;
@@ -89,8 +90,19 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         });
 
         var pending = this.pendingRequest.Task;
-        await LoadFeedDetailsAsync();
-        return await pending;
+
+        // The bank feed check is cancelled as soon as the user responds, so pressing Cancel never waits for a slow or unreachable bank feed.
+        using var loadCancellation = new CancellationTokenSource();
+        this.feedDetailsCancellation = loadCancellation;
+        try
+        {
+            await LoadFeedDetailsAsync(loadCancellation.Token);
+            return await pending;
+        }
+        finally
+        {
+            this.feedDetailsCancellation = null;
+        }
     }
 
     /// <summary>
@@ -162,17 +174,23 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         CanExecuteOkButton = !IsLoading && LoadError.Length == 0 && ValidationMessage.Length == 0;
     }
 
-    private async Task LoadFeedDetailsAsync()
+    private async Task LoadFeedDetailsAsync(CancellationToken cancellationToken)
     {
         IsLoading = true;
         Revalidate();
         try
         {
-            var accountsTask = this.configurationService.GetFeedAccountsAsync(CancellationToken.None);
+            var accountsTask = this.configurationService.GetFeedAccountsAsync(cancellationToken);
             // Only the history limit is needed here. This does not record a connection test, so opening the dialog never rewrites the credentials file or disturbs the Settings tab.
-            var statusTask = this.configurationService.GetConnectionStatusAsync(CancellationToken.None);
-            await Task.WhenAll(accountsTask, statusTask);
+            var statusTask = this.configurationService.GetConnectionStatusAsync(cancellationToken);
+
+            // WaitAsync stops waiting immediately on cancellation, even if a request is slow to notice it has been cancelled.
+            await Task.WhenAll(accountsTask, statusTask).WaitAsync(cancellationToken);
             ApplyFeedDetails(accountsTask.Result, statusTask.Result);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // The user closed the dialog before the bank feed answered. There is nothing to show.
         }
         catch (BankFeedAuthenticationException)
         {
@@ -218,6 +236,9 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         var request = message.Response == ShellDialogButton.Cancel ? null : CreateRequest();
         var pending = this.pendingRequest;
         this.pendingRequest = null;
+
+        // Cancel the bank feed check before completing the request, it is no longer needed once the user has responded.
+        this.feedDetailsCancellation?.Cancel();
         pending.TrySetResult(request);
     }
 
