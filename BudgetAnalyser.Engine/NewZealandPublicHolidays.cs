@@ -89,6 +89,12 @@ public static class NewZealandPublicHolidays
         var holidays = new Dictionary<DateOnly, string>();
         foreach (var holidayTemplate in HolidayTemplates)
         {
+            if (!holidayTemplate.IsObserved(end))
+            {
+                // The holiday did not exist yet. This is expected, not an error.
+                continue;
+            }
+
             try
             {
                 var proposedDate = holidayTemplate.CalculateDate(start, end);
@@ -261,6 +267,10 @@ public static class NewZealandPublicHolidays
     {
         public required IReadOnlyDictionary<int, DateOnly> Dates { get; init; }
 
+        /// <summary>
+        ///     Finds the holiday's date in the given range. A range that is entirely before the first date in the table never gets here, see <see cref="IsObserved" />.
+        ///     A range after the last date in the table throws, to draw attention to the table needing more years added.
+        /// </summary>
         public override DateOnly CalculateDate(DateOnly start, DateOnly end)
         {
             for (var year = start.Year; year <= end.Year; year++)
@@ -274,12 +284,29 @@ public static class NewZealandPublicHolidays
             throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
                 "Cannot find a suitable date between {0} and {1}", start, end));
         }
+
+        /// <summary>
+        ///     The holiday did not exist before the first date in the table.
+        /// </summary>
+        public override bool IsObserved(DateOnly end)
+        {
+            return end >= Dates.Values.Min();
+        }
     }
 
     private abstract class Holiday
     {
         public required string Name { get; init; }
         public abstract DateOnly CalculateDate(DateOnly start, DateOnly end);
+
+        /// <summary>
+        ///     Returns false if the holiday did not exist yet in a range of dates ending on <paramref name="end" />, in which case <see cref="CalculateDate" /> must not be called.
+        ///     Most holidays have always existed.
+        /// </summary>
+        public virtual bool IsObserved(DateOnly end)
+        {
+            return true;
+        }
     }
 
     /// <summary>
