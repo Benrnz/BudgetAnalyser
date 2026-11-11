@@ -100,6 +100,7 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
             return;
         }
 
+        string outcome;
         LoadingData = true;
         try
         {
@@ -114,20 +115,25 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
                 Messenger.Send(new TransactionsListModelReadyMessage(ViewModel.TransactionsList));
             }
 
-            LoadingData = false;
-            this.messageBox.Show(BankFeedImportSummary.Describe(result), "Download from bank feed");
+            outcome = BankFeedImportSummary.Describe(result);
         }
         catch (BankFeedAuthenticationException)
         {
-            LoadingData = false;
-            this.messageBox.Show("Your bank feed credentials were rejected. Update them on the Settings tab. Nothing was imported.", "Download from bank feed");
+            outcome = "Your bank feed credentials were rejected. Update them on the Settings tab. Nothing was imported.";
         }
         catch (BankFeedException ex)
         {
-            LoadingData = false;
             // Most bank feed messages already end with a full stop, some (for example an error passed on from the feed) do not.
-            this.messageBox.Show($"Download failed: {ex.Message.TrimEnd().TrimEnd('.')}. Nothing was imported.", "Download from bank feed");
+            outcome = $"Download failed: {ex.Message.TrimEnd().TrimEnd('.')}. Nothing was imported.";
         }
+        finally
+        {
+            // Always cleared, including when an unexpected exception is thrown, so the view is never left showing as busy.
+            LoadingData = false;
+        }
+
+        // Shown after the busy indicator has been cleared.
+        this.messageBox.Show(outcome, "Download from bank feed");
     }
 
     public async Task MergeInNewTransactions()
