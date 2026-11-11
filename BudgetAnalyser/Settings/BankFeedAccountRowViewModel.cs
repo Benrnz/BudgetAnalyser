@@ -88,9 +88,9 @@ public partial class BankFeedAccountRowViewModel : ObservableObject
 
     public string ExternalAccountId { get; }
 
-    public BankFeedAccount? FeedAccount { get; }
+    public BankFeedAccount? FeedAccount { get; private set; }
 
-    public bool? FoundInFeed { get; }
+    public bool? FoundInFeed { get; private set; }
 
     public bool HasPreviewTransactions => PreviewTransactions.Count > 0;
 
@@ -154,6 +154,21 @@ public partial class BankFeedAccountRowViewModel : ObservableObject
     public void AddTypeName()
     {
         AddTypeNameRow(new BankFeedTypeNameRowViewModel());
+    }
+
+    /// <summary>
+    ///     Forgets everything that was loaded from the bank feed for this account: its details and any preview. Used when the credentials are changed or removed, because
+    ///     the details may belong to a different bank feed login. The user's unapplied edits are kept, and this does not count as an edit.
+    /// </summary>
+    public void ClearFeedDetails()
+    {
+        FeedAccount = null;
+        FoundInFeed = null;
+        PreviewTransactions.Clear();
+        PreviewMessage = string.Empty;
+
+        // An empty property name tells the view every property may have changed: Title, AccountNumber, DataAsOfText, StatusText, IsInactive and IsNotFoundInFeed all depend on the details.
+        OnPropertyChanged(string.Empty);
     }
 
     [RelayCommand]

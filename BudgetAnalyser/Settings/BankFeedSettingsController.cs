@@ -161,7 +161,29 @@ public partial class BankFeedSettingsController : ControllerBase
         }
 
         this.configurationService.ClearCredentials();
+        ForgetFeedAccounts();
         ConnectionStatus = "Credentials removed.";
+    }
+
+    /// <summary>
+    ///     Forgets the account details loaded from the bank feed, because the credentials they were loaded with have been changed or removed. Accounts that are not mapped are
+    ///     removed from the list, as they are only known from the feed. Mapped accounts stay, without their feed details, so unapplied edits are never discarded.
+    /// </summary>
+    private void ForgetFeedAccounts()
+    {
+        this.feedAccounts = null;
+        foreach (var row in AccountRows.Where(r => !r.IsMapped).ToList())
+        {
+            row.Edited -= OnRowEdited;
+            AccountRows.Remove(row);
+        }
+
+        foreach (var row in AccountRows)
+        {
+            row.ClearFeedDetails();
+        }
+
+        NotifyCommands();
     }
 
     private void OnConfigurationChanged(object? sender, EventArgs e)
@@ -269,6 +291,7 @@ public partial class BankFeedSettingsController : ControllerBase
         var values = CredentialRows.ToDictionary(r => r.Key, r => r.NewValue.Trim());
         // Raises ConfigurationChanged, which rebuilds the credential rows so the typed values are discarded.
         this.configurationService.SaveCredentials(values);
+        ForgetFeedAccounts();
         ConnectionStatus = "Credentials saved. Press Test connection to check them.";
     }
 
