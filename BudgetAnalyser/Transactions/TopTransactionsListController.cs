@@ -102,8 +102,8 @@ public partial class TopTransactionsListController : ControllerBase, IShowableCo
     public IAsyncRelayCommand DownloadBankFeedCommand { get; }
 
     public string DownloadBankFeedToolTip => this.bankFeedConfiguration.IsConfigured
-        ? "Download new transactions from the bank feed. This will also save any unsaved changes first."
-        : "Set up the bank feed on the Settings tab";
+        ? "Download and merge in new transactions from the bank feed API. This will also save any unsaved changes first."
+        : "Set up the bank feed API on the Settings tab";
 
     public EditingTransactionController EditingTransactionController { get; }
     public EditRulesController EditRulesController { get; }

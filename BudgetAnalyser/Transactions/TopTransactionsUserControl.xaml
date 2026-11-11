@@ -170,7 +170,7 @@
                         ToolTip="Save Transactions (Ctrl+S)" />
                 <Button Command="{Binding MergeBankExtractCommand}"
                         Style="{StaticResource Button.Round.Add}"
-                        ToolTip="Merge in new Transactions. This will also save any unsaved changes before merging new transactions." />
+                        ToolTip="Merge in new Transactions from a bank extract CSV file. This will also save any unsaved changes before merging new transactions." />
                 <!-- Tooltip is shown while disabled too, so the user knows to finish setting up the bank feed on the Settings tab. -->
                 <Button Command="{Binding DownloadBankFeedCommand}"
                         Style="{StaticResource Button.Round.Base}"
