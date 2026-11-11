@@ -31,7 +31,7 @@ public class TopTransactionsListControllerBankFeedTest
         context.Subject.ViewModel.TransactionsList = new TransactionsListModel(Substitute.For<ILogger>());
 
         context.Subject.DownloadBankFeedCommand.CanExecute(null).ShouldBeFalse();
-        context.Subject.DownloadBankFeedToolTip.ShouldBe("Set up the bank feed on the Settings tab");
+        context.Subject.DownloadBankFeedToolTip.ShouldBe("Set up the bank feed API on the Settings tab");
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class TopTransactionsListControllerBankFeedTest
         context.Subject.ViewModel.TransactionsList = new TransactionsListModel(Substitute.For<ILogger>());
 
         context.Subject.DownloadBankFeedCommand.CanExecute(null).ShouldBeTrue();
-        context.Subject.DownloadBankFeedToolTip.ShouldStartWith("Download new transactions");
+        context.Subject.DownloadBankFeedToolTip.ShouldStartWith("Download and merge in new transactions from the bank feed API. This will also save any unsaved changes first.");
     }
 
     [Fact]
