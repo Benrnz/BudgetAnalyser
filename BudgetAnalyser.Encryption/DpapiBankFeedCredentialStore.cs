@@ -153,19 +153,29 @@ internal sealed class DpapiBankFeedCredentialStore : IBankFeedCredentialStore
 
     private void Write(Dictionary<string, StoredProvider> data)
     {
-        var folder = Path.GetDirectoryName(this.filePath);
-        if (!string.IsNullOrEmpty(folder))
+        try
         {
-            Directory.CreateDirectory(folder);
+            var folder = Path.GetDirectoryName(this.filePath);
+            if (!string.IsNullOrEmpty(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            var encrypted = Protect(JsonSerializer.SerializeToUtf8Bytes(data));
+
+            // Write to a temporary file first so a failure part way through never leaves a corrupt credentials file.
+            var tempFile = this.filePath + ".tmp";
+            File.WriteAllBytes(tempFile, encrypted);
+            File.Move(tempFile, this.filePath, true);
+            this.cache = data;
         }
-
-        var encrypted = Protect(JsonSerializer.SerializeToUtf8Bytes(data));
-
-        // Write to a temporary file first so a failure part way through never leaves a corrupt credentials file.
-        var tempFile = this.filePath + ".tmp";
-        File.WriteAllBytes(tempFile, encrypted);
-        File.Move(tempFile, this.filePath, true);
-        this.cache = data;
+        catch
+        {
+            // The callers change the cached data before writing it. If the write fails the cache no longer matches the file, so it is discarded and read from the file again
+            // the next time it is needed.
+            this.cache = null;
+            throw;
+        }
     }
 
     private sealed class StoredProvider
