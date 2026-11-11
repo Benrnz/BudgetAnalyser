@@ -7,7 +7,8 @@ namespace BudgetAnalyser.Encryption;
 
 /// <summary>
 ///     Stores bank feed credentials in a file encrypted with Windows DPAPI (current user scope). Only the same Windows user on the same computer can decrypt it.
-///     The file is stored in the user's roaming application data folder, outside of the repository and outside of the budget data files. Values are never logged.
+///     The file is stored in the user's local (not roaming) application data folder, outside of the repository and outside of the budget data files. It is not roamed
+///     because it cannot be decrypted on another computer. Values are never logged.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal sealed class DpapiBankFeedCredentialStore : IBankFeedCredentialStore
@@ -20,7 +21,7 @@ internal sealed class DpapiBankFeedCredentialStore : IBankFeedCredentialStore
     private Dictionary<string, StoredProvider>? cache;
 
     public DpapiBankFeedCredentialStore(ILogger logger)
-        : this(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "BudgetAnalyser", FileName), logger)
+        : this(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "BudgetAnalyser", FileName), logger)
     {
     }
 
