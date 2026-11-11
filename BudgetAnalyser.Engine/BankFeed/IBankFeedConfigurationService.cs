@@ -53,6 +53,15 @@ public interface IBankFeedConfigurationService
     void ClearCredentials();
 
     /// <summary>
+    ///     Gets the current connection status from the bank feed without recording anything, for example to find how much history is available. Unlike
+    ///     <see cref="TestConnectionAsync" /> a success does not change the stored connection verified time and does not raise <see cref="ConfigurationChanged" />.
+    ///     If the credentials are rejected the connection is marked as no longer verified.
+    /// </summary>
+    /// <exception cref="BankFeedAuthenticationException">Thrown when the stored credentials are missing or rejected.</exception>
+    /// <exception cref="BankFeedException">Thrown when the bank feed cannot be reached or returns an error.</exception>
+    Task<BankFeedConnectionStatus> GetConnectionStatusAsync(CancellationToken cancellationToken);
+
+    /// <summary>
     ///     Gets the accounts available in the bank feed. If the credentials are rejected the connection is marked as no longer verified.
     /// </summary>
     /// <exception cref="BankFeedAuthenticationException">Thrown when the stored credentials are missing or rejected.</exception>

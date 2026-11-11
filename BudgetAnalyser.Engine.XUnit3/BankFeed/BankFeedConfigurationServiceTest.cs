@@ -57,6 +57,32 @@ public class BankFeedConfigurationServiceTest
     }
 
     [Fact]
+    public async Task GetConnectionStatusAsync_ShouldNotRecordVerifiedOrRaiseChanged_GivenSuccess()
+    {
+        await LoadDatabaseWithOneMapping();
+        SaveBothCredentials();
+        this.changedCount = 0;
+
+        var status = await this.subject.GetConnectionStatusAsync(CancellationToken.None);
+
+        status.HistoryAvailableFrom.ShouldBe(new DateOnly(2024, 11, 10));
+        this.credentialStore.GetConnectionVerified(ProviderKey).ShouldBeNull();
+        this.subject.IsConfigured.ShouldBeFalse();
+        this.changedCount.ShouldBe(0);
+    }
+
+    [Fact]
+    public async Task GetConnectionStatusAsync_ShouldResetVerified_GivenCredentialsRejected()
+    {
+        await ArrangeFullyConfigured();
+        this.provider.TestConnectionAsync(Arg.Any<CancellationToken>()).ThrowsAsync(new BankFeedAuthenticationException("Rejected"));
+
+        await Should.ThrowAsync<BankFeedAuthenticationException>(() => this.subject.GetConnectionStatusAsync(CancellationToken.None));
+
+        this.subject.IsConfigured.ShouldBeFalse();
+    }
+
+    [Fact]
     public async Task GetFeedAccountsAsync_ShouldResetVerified_GivenCredentialsRejected()
     {
         await ArrangeFullyConfigured();

@@ -34,7 +34,7 @@ public class BankFeedImportControllerTest
             new BankFeedAccountMapping("acc_test_2", Visa, BankFeedFieldMapping.Default)
         ]);
         this.configuration.GetFeedAccountsAsync(Arg.Any<CancellationToken>()).Returns([FeedCheque, FeedVisa]);
-        this.configuration.TestConnectionAsync(Arg.Any<CancellationToken>()).Returns(Connected);
+        this.configuration.GetConnectionStatusAsync(Arg.Any<CancellationToken>()).Returns(Connected);
         this.subject = new BankFeedImportController(this.messenger, this.configuration, new FakeLogger());
     }
 

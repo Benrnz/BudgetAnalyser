@@ -63,6 +63,19 @@ internal class BankFeedConfigurationService : IBankFeedConfigurationService, ISu
         OnConfigurationChanged();
     }
 
+    public async Task<BankFeedConnectionStatus> GetConnectionStatusAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await this.provider.TestConnectionAsync(cancellationToken);
+        }
+        catch (BankFeedAuthenticationException)
+        {
+            NotifyCredentialsRejected();
+            throw;
+        }
+    }
+
     public async Task<IReadOnlyList<BankFeedAccount>> GetFeedAccountsAsync(CancellationToken cancellationToken)
     {
         try
@@ -123,17 +136,7 @@ internal class BankFeedConfigurationService : IBankFeedConfigurationService, ISu
 
     public async Task<BankFeedConnectionStatus> TestConnectionAsync(CancellationToken cancellationToken)
     {
-        BankFeedConnectionStatus status;
-        try
-        {
-            status = await this.provider.TestConnectionAsync(cancellationToken);
-        }
-        catch (BankFeedAuthenticationException)
-        {
-            NotifyCredentialsRejected();
-            throw;
-        }
-
+        var status = await GetConnectionStatusAsync(cancellationToken);
         this.credentialStore.SetConnectionVerified(this.provider.ProviderKey, status.IsConnected ? DateTimeOffset.UtcNow : null);
         OnConfigurationChanged();
         return status;

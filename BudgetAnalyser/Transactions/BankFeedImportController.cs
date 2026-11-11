@@ -169,7 +169,8 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         try
         {
             var accountsTask = this.configurationService.GetFeedAccountsAsync(CancellationToken.None);
-            var statusTask = this.configurationService.TestConnectionAsync(CancellationToken.None);
+            // Only the history limit is needed here. This does not record a connection test, so opening the dialog never rewrites the credentials file or disturbs the Settings tab.
+            var statusTask = this.configurationService.GetConnectionStatusAsync(CancellationToken.None);
             await Task.WhenAll(accountsTask, statusTask);
             ApplyFeedDetails(accountsTask.Result, statusTask.Result);
         }
