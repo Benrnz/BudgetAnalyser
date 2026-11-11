@@ -48,7 +48,7 @@ internal sealed class AkahuBankFeedProvider : IBankFeedProvider, IDisposable
         new(UserAccessTokenField, "User Access Token", true)
     ];
 
-    public string DisplayName => "Akahu";
+    public string DisplayName => "Akahu (for more information and New Zealand setup instructions, see https://akahu.com/personal-app)";
 
     public string ProviderKey => Key;
 
