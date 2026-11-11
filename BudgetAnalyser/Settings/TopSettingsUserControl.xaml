@@ -150,6 +150,16 @@
                             <Run Text="Provider:" />
                             <Run Text="{Binding ProviderDisplayName, Mode=OneWay}" />
                         </TextBlock>
+                        <!-- The provider's setup instructions link. Hidden when the provider has none. Opened in the default browser by the code-behind. -->
+                        <TextBlock Style="{StaticResource TextBlock.SettingDescription}"
+                                   Visibility="{Binding ProviderSetupInstructionsUrl, Converter={StaticResource Converter.NullToVis}, ConverterParameter=Collapsed}">
+                            <Run Text="{Binding ProviderSetupInstructionsText, Mode=OneWay}" />
+                            <Hyperlink NavigateUri="{Binding ProviderSetupInstructionsUrl, Mode=OneWay}"
+                                       TextDecorations="Underline"
+                                       RequestNavigate="OnBankFeedSetupInstructionsRequestNavigate">
+                                <Run Text="{Binding ProviderSetupInstructionsUrl, Mode=OneWay}" />
+                            </Hyperlink>
+                        </TextBlock>
 
                         <ItemsControl ItemsSource="{Binding CredentialRows}"
                                       Focusable="False">

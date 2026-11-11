@@ -38,6 +38,16 @@ public interface IBankFeedConfigurationService
     string ProviderDisplayName { get; }
 
     /// <summary>
+    ///     Gets a short sentence that introduces <see cref="ProviderSetupInstructionsUrl" />. Empty if the provider has no setup instructions.
+    /// </summary>
+    string ProviderSetupInstructionsText { get; }
+
+    /// <summary>
+    ///     Gets the web address of the provider's setup instructions, or null if it has none.
+    /// </summary>
+    Uri? ProviderSetupInstructionsUrl { get; }
+
+    /// <summary>
     ///     Removes the stored credentials.
     /// </summary>
     void ClearCredentials();

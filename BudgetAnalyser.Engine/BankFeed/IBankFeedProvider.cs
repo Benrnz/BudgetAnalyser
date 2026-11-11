@@ -24,6 +24,16 @@ public interface IBankFeedProvider
     string ProviderKey { get; }
 
     /// <summary>
+    ///     Gets a short sentence that introduces <see cref="SetupInstructionsUrl" />, for example "For setup instructions, see". Empty if the provider has no setup instructions.
+    /// </summary>
+    string SetupInstructionsText { get; }
+
+    /// <summary>
+    ///     Gets the web address of the provider's setup instructions, or null if it has none. Shown to the user as a link on the Settings tab.
+    /// </summary>
+    Uri? SetupInstructionsUrl { get; }
+
+    /// <summary>
     ///     Gets the accounts available through the bank feed that can supply transactions.
     /// </summary>
     /// <exception cref="BankFeedAuthenticationException">Thrown when the stored credentials are missing or rejected.</exception>

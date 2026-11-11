@@ -49,6 +49,10 @@ internal class BankFeedConfigurationService : IBankFeedConfigurationService, ISu
 
     public string ProviderDisplayName => this.provider.DisplayName;
 
+    public string ProviderSetupInstructionsText => this.provider.SetupInstructionsText;
+
+    public Uri? ProviderSetupInstructionsUrl => this.provider.SetupInstructionsUrl;
+
     public ApplicationDataType DataType => ApplicationDataType.BankFeed;
 
     public int LoadSequence => 50;

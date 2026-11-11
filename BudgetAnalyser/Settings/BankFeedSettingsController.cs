@@ -88,6 +88,10 @@ public partial class BankFeedSettingsController : ControllerBase
 
     public string ProviderDisplayName => this.configurationService.ProviderDisplayName;
 
+    public string ProviderSetupInstructionsText => this.configurationService.ProviderSetupInstructionsText;
+
+    public Uri? ProviderSetupInstructionsUrl => this.configurationService.ProviderSetupInstructionsUrl;
+
     public IAsyncRelayCommand RefreshAccountsCommand { get; }
 
     public IRelayCommand<BankFeedAccountRowViewModel> RemoveMappingCommand { get; }
