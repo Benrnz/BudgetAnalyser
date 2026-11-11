@@ -125,7 +125,8 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         catch (BankFeedException ex)
         {
             LoadingData = false;
-            this.messageBox.Show($"Download failed: {ex.Message}. Nothing was imported.", "Download from bank feed");
+            // Most bank feed messages already end with a full stop, some (for example an error passed on from the feed) do not.
+            this.messageBox.Show($"Download failed: {ex.Message.TrimEnd().TrimEnd('.')}. Nothing was imported.", "Download from bank feed");
         }
     }
 

@@ -92,7 +92,7 @@ internal sealed class AkahuApiClient : IDisposable
             }
         }
 
-        throw new BankFeedException($"The bank feed returned more than {MaxPages} pages of transactions. Try a shorter date range. Nothing was imported.");
+        throw new BankFeedException($"The bank feed returned more than {MaxPages} pages of transactions. Try a shorter date range.");
     }
 
     /// <summary>
