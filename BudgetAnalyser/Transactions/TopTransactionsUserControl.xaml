@@ -204,6 +204,15 @@
                     <TextBlock FontSize="14"
                                Foreground="{StaticResource Brush.Text.Label}"
                                Text="Loading data..." />
+                    <!-- Only shown while a bank feed download is in progress. Cancelling imports nothing. -->
+                    <Button Content="Cancel"
+                            Style="{StaticResource Button.Dialog.Secondary}"
+                            Height="24"
+                            Padding="8,0"
+                            VerticalAlignment="Center"
+                            Command="{Binding FileOperations.CancelBankFeedDownloadCommand}"
+                            ToolTip="Cancel the download from the bank feed. Nothing will be imported."
+                            Visibility="{Binding FileOperations.IsDownloadingFromBankFeed, Converter={StaticResource Converter.BoolToVis}}" />
                 </StackPanel>
                 <Border Style="{StaticResource Border.SummaryChip.Info}"
                         ToolTip="Total Credits currently displayed.">

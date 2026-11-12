@@ -1,7 +1,19 @@
-﻿namespace BudgetAnalyser.Transactions;
+﻿using CommunityToolkit.Mvvm.Input;
+
+namespace BudgetAnalyser.Transactions;
 
 public interface ITransactionsControllerFileOperations
 {
+    /// <summary>
+    ///     Cancels the bank feed download that is in progress. Nothing is imported. Only enabled while <see cref="IsDownloadingFromBankFeed" /> is true.
+    /// </summary>
+    IRelayCommand CancelBankFeedDownloadCommand { get; }
+
+    /// <summary>
+    ///     True while transactions are being downloaded from the bank feed, and the download can still be cancelled.
+    /// </summary>
+    bool IsDownloadingFromBankFeed { get; }
+
     bool LoadingData { get; }
 
     TransactionsListViewModel ViewModel { get; }

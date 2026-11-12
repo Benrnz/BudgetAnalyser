@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Filtering;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
@@ -17,6 +18,7 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
     private readonly LoadFileController loadFileController;
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionManagerService transactionService;
+    private CancellationTokenSource? bankFeedDownloadCancellation;
 
     public TransactionsControllerFileOperations(
         IMessenger messenger,
@@ -37,9 +39,15 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         this.transactionService = transactionManagerService ?? throw new ArgumentNullException(nameof(transactionManagerService));
         this.bankFeedImportController = bankFeedImportController ?? throw new ArgumentNullException(nameof(bankFeedImportController));
         ViewModel = new TransactionsListViewModel(applicationDatabaseService, this.transactionService);
+        CancelBankFeedDownloadCommand = new RelayCommand(OnCancelBankFeedDownload, () => IsDownloadingFromBankFeed);
     }
 
+    public IRelayCommand CancelBankFeedDownloadCommand { get; }
+
     public TransactionsListViewModel ViewModel { get; }
+
+    [ObservableProperty]
+    public partial bool IsDownloadingFromBankFeed { get; private set; }
 
     [ObservableProperty]
     public partial bool LoadingData { get; private set; }
@@ -101,10 +109,16 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         }
 
         string outcome;
+        using var cancellation = new CancellationTokenSource();
+        this.bankFeedDownloadCancellation = cancellation;
         LoadingData = true;
+        IsDownloadingFromBankFeed = true;
         try
         {
-            var result = await this.transactionService.ImportAndMergeBankFeedTransactionsAsync(request.Range, request.Mappings, CancellationToken.None);
+            var result = await this.transactionService.ImportAndMergeBankFeedTransactionsAsync(request.Range, request.Mappings, cancellation.Token);
+
+            // The download has been merged into the transactions list, so it is too late to cancel.
+            IsDownloadingFromBankFeed = false;
             if (result.TotalImported > 0)
             {
                 await SyncWithServiceAsync();
@@ -116,6 +130,11 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
             }
 
             outcome = BankFeedImportSummary.Describe(result);
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+            // Nothing is merged until every account has been downloaded, so cancelling part way through leaves the transactions list unchanged.
+            outcome = "Download cancelled. Nothing was imported.";
         }
         catch (BankFeedAuthenticationException)
         {
@@ -129,6 +148,8 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         finally
         {
             // Always cleared, including when an unexpected exception is thrown, so the view is never left showing as busy.
+            this.bankFeedDownloadCancellation = null;
+            IsDownloadingFromBankFeed = false;
             LoadingData = false;
         }
 
@@ -175,6 +196,16 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         {
             this.loadFileController.Reset();
         }
+    }
+
+    private void OnCancelBankFeedDownload()
+    {
+        this.bankFeedDownloadCancellation?.Cancel();
+    }
+
+    partial void OnIsDownloadingFromBankFeedChanged(bool value)
+    {
+        CancelBankFeedDownloadCommand.NotifyCanExecuteChanged();
     }
 
     private void FileCannotBeLoaded(Exception ex)
