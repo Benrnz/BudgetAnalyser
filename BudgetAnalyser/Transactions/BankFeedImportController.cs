@@ -31,6 +31,7 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
     private DateOnly? historyAvailableFrom;
     private TaskCompletionSource<BankFeedImportRequest?>? pendingRequest;
     private ImportDateRange suggestedRange;
+    private int suggestedStartOverlapDays;
 
     public BankFeedImportController(IMessenger messenger, IBankFeedConfigurationService configurationService, ILogger logger) : base(messenger)
     {
@@ -141,10 +142,12 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
     {
         this.existingTransactions = transactions.AllTransactions.ToList();
         this.historyAvailableFrom = null;
-        this.suggestedRange = TransactionsCalculations.CalculateSuggestedImportDateRange(this.existingTransactions, today);
-        SuggestionText = this.suggestedRange.Start is null
-            ? "There are no transactions yet, so choose a From date. To is the last business day before today."
-            : string.Format(CultureInfo.CurrentCulture, "Suggested from your last transaction ({0:d}) to the last business day before today.", this.suggestedRange.Start.Value.AddDays(-1));
+
+        // The usual suggestion starts the day after the latest transaction. Some bank feeds ask for the most recent day(s) to be downloaded again, to pick up late arrivals.
+        this.suggestedStartOverlapDays = Math.Max(0, this.configurationService.ProviderSuggestedStartOverlapDays);
+        var usualRange = TransactionsCalculations.CalculateSuggestedImportDateRange(this.existingTransactions, today);
+        this.suggestedRange = usualRange with { Start = usualRange.Start?.AddDays(-this.suggestedStartOverlapDays) };
+        SuggestionText = CreateSuggestionText(usualRange.Start?.AddDays(-1));
         LoadError = string.Empty;
         RefreshStatus = string.Empty;
 
@@ -208,6 +211,22 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         }
 
         Revalidate();
+    }
+
+    private string CreateSuggestionText(DateOnly? lastTransactionDate)
+    {
+        if (lastTransactionDate is null)
+        {
+            return "There are no transactions yet, so choose a From date. To is the last business day before today.";
+        }
+
+        var suggestion = string.Format(CultureInfo.CurrentCulture, "Suggested from your last transaction ({0:d}) to the last business day before today.", lastTransactionDate.Value);
+        return this.suggestedStartOverlapDays switch
+        {
+            0 => suggestion,
+            1 => suggestion + " That day is downloaded again in case the bank feed has added to it. Transactions you already have from the bank feed are skipped.",
+            _ => suggestion + $" The last {this.suggestedStartOverlapDays} days are downloaded again in case the bank feed has added to them. Transactions you already have from the bank feed are skipped."
+        };
     }
 
     private bool CanRefresh()
@@ -375,7 +394,8 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
     {
         var selected = AccountRows.Where(r => r.IsSelected && r.IsAvailable).ToList();
 
-        var overlapping = FromDate is null
+        // The suggested start may already overlap the latest day(s) on purpose, so the warning is only for a From date earlier than the suggestion.
+        var overlapping = FromDate is null || (this.suggestedRange.Start is { } suggestedStart && FromDate.Value >= suggestedStart)
             ? []
             : selected
                 .Where(r => this.existingTransactions.Any(t => t.Account.Name == r.AccountName && t.Date >= FromDate.Value))
@@ -414,7 +434,7 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         if (FromDate.Value > ToDate.Value)
         {
             return this.suggestedRange.IsEmpty && FromDate == this.suggestedRange.Start && ToDate == this.suggestedRange.End
-                ? string.Format(CultureInfo.CurrentCulture, "You're up to date. The next download is available after {0:d}.", this.suggestedRange.Start)
+                ? string.Format(CultureInfo.CurrentCulture, "You're up to date. The next download is available after {0:d}.", this.suggestedRange.Start?.AddDays(this.suggestedStartOverlapDays))
                 : "From must be on or before To.";
         }
 

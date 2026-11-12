@@ -58,6 +58,7 @@ public class AkahuBankFeedProviderTest
         subject.CredentialFields.Select(f => f.Key).ShouldBe([AkahuBankFeedProvider.AppIdTokenField, AkahuBankFeedProvider.UserAccessTokenField]);
         subject.CredentialFields.ShouldAllBe(f => f.IsSecret);
         subject.ProviderKey.ShouldBe("rees.budgetanalyser.akahu");
+        subject.SuggestedStartOverlapDays.ShouldBe(1);
     }
 
     [Fact]

@@ -110,6 +110,54 @@ public class BankFeedImportControllerTest
     }
 
     [Fact]
+    public void Prepare_ShouldStartOnTheLastTransactionDateWithoutAnOverlapWarning_GivenProviderOverlapOfOneDay()
+    {
+        this.configuration.ProviderSuggestedStartOverlapDays.Returns(1);
+
+        PrepareWithLastTransaction(new DateOnly(2026, 11, 12));
+
+        this.subject.FromDate.ShouldBe(new DateOnly(2026, 11, 12));
+        this.subject.ToDate.ShouldBe(new DateOnly(2026, 11, 19));
+        this.subject.SuggestionText.ShouldContain("That day is downloaded again");
+        this.subject.OverlapWarning.ShouldBeEmpty();
+        this.subject.CanExecuteOkButton.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void Prepare_ShouldAllowDownloadingTheLastDayAgain_GivenProviderOverlapAndLastTransactionOnTheLastBusinessDay()
+    {
+        this.configuration.ProviderSuggestedStartOverlapDays.Returns(1);
+
+        PrepareWithLastTransaction(new DateOnly(2026, 11, 19));
+
+        this.subject.FromDate.ShouldBe(new DateOnly(2026, 11, 19));
+        this.subject.ToDate.ShouldBe(new DateOnly(2026, 11, 19));
+        this.subject.ValidationMessage.ShouldBeEmpty();
+        this.subject.CanExecuteOkButton.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void OverlapWarning_ShouldNameAccount_GivenProviderOverlapAndFromBeforeTheSuggestedStart()
+    {
+        this.configuration.ProviderSuggestedStartOverlapDays.Returns(1);
+        PrepareWithLastTransaction(new DateOnly(2026, 11, 12));
+
+        this.subject.FromDate = new DateOnly(2026, 11, 11);
+
+        this.subject.OverlapWarning.ShouldContain(AccountTypeRepositoryConstants.Cheque);
+    }
+
+    [Fact]
+    public void Prepare_ShouldLeaveFromBlank_GivenProviderOverlapAndNoTransactions()
+    {
+        this.configuration.ProviderSuggestedStartOverlapDays.Returns(1);
+
+        this.subject.Prepare(new TransactionsListModel(new FakeLogger()).LoadTransactions([]), Today);
+
+        this.subject.FromDate.ShouldBeNull();
+    }
+
+    [Fact]
     public void Prepare_ShouldSuggestRangeAndTickAllAccounts()
     {
         PrepareWithLastTransaction(new DateOnly(2026, 11, 12));

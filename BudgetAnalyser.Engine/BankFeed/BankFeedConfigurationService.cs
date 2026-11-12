@@ -53,6 +53,8 @@ internal class BankFeedConfigurationService : IBankFeedConfigurationService, ISu
 
     public Uri? ProviderSetupInstructionsUrl => this.provider.SetupInstructionsUrl;
 
+    public int ProviderSuggestedStartOverlapDays => this.provider.SuggestedStartOverlapDays;
+
     public ApplicationDataType DataType => ApplicationDataType.BankFeed;
 
     public int LoadSequence => 50;

@@ -48,6 +48,12 @@ public interface IBankFeedConfigurationService
     Uri? ProviderSetupInstructionsUrl { get; }
 
     /// <summary>
+    ///     Gets how many of the most recent days already held the provider wants downloaded again when a date range is suggested. Zero means the suggestion starts the day after
+    ///     the latest existing transaction.
+    /// </summary>
+    int ProviderSuggestedStartOverlapDays { get; }
+
+    /// <summary>
     ///     Removes the stored credentials.
     /// </summary>
     void ClearCredentials();

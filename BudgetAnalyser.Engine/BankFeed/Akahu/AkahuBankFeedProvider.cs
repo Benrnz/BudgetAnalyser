@@ -56,6 +56,12 @@ internal sealed class AkahuBankFeedProvider : IBankFeedProvider, IDisposable
 
     public Uri SetupInstructionsUrl { get; } = new("https://akahu.com/personal-app");
 
+    /// <summary>
+    ///     Akahu refreshes from the banks periodically, so the latest day downloaded can be missing transactions that arrived after its last refresh. That day is downloaded
+    ///     again next time to pick them up.
+    /// </summary>
+    public int SuggestedStartOverlapDays => 1;
+
     public void Dispose()
     {
         this.apiClient.Dispose();

@@ -34,6 +34,13 @@ public interface IBankFeedProvider
     Uri? SetupInstructionsUrl { get; }
 
     /// <summary>
+    ///     Gets how many of the most recent days already held should be downloaded again when a date range is suggested. Zero means the suggestion starts the day after the
+    ///     latest existing transaction. A provider whose data for the latest day can still be incomplete when it is downloaded returns one or more, so transactions that arrive
+    ///     late are picked up next time. Transactions already downloaded from the feed are recognised and skipped, so downloading a day again is safe.
+    /// </summary>
+    int SuggestedStartOverlapDays { get; }
+
+    /// <summary>
     ///     Gets the accounts available through the bank feed that can supply transactions.
     /// </summary>
     /// <exception cref="BankFeedAuthenticationException">Thrown when the stored credentials are missing or rejected.</exception>
