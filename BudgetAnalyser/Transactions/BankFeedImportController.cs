@@ -416,7 +416,8 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         var stale = selected.Where(r => r.IsStale).Select(r => r.FeedAccount!.Institution).Distinct().ToList();
         StaleWarning = stale.Count == 0
             ? string.Empty
-            : $"{string.Join(", ", stale)} data was last refreshed before the end of your To date. Recent transactions may be missing; press Refresh, or consider an earlier To date.";
+            : $"{string.Join(", ", stale)} data was last refreshed before the end of your To date. Recent transactions may be missing; press Refresh, or consider an earlier To date. Try clicking " +
+            $"the Refresh button.";
     }
 
     private string Validate()
