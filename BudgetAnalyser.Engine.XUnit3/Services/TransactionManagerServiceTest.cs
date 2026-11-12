@@ -1,4 +1,5 @@
 using BudgetAnalyser.Engine.BankAccount;
+using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
@@ -14,6 +15,7 @@ namespace BudgetAnalyser.Engine.XUnit.Services;
 
 public class TransactionManagerServiceTest
 {
+    private readonly BankFeedTransactionsImporter bankFeedImporter = new(Substitute.For<IBankFeedProvider>(), Substitute.For<IBankFeedConfigurationService>(), new InMemoryTransactionTypeRepository(), new FakeLogger());
     private readonly IBudgetBucketRepository mockBudgetBucketRepo;
     private readonly ITransactionsListModelRepository mockTransactionsRepo;
     private readonly ApplicationDatabase testAppDb = new();
@@ -42,21 +44,21 @@ public class TransactionManagerServiceTest
     public void Ctor_ShouldThrow_GivenNullBucketRepo()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new TransactionManagerService(null!, this.mockTransactionsRepo, new FakeLogger(), new FakeMonitorableDependencies()));
+            new TransactionManagerService(null!, this.mockTransactionsRepo, new FakeLogger(), new FakeMonitorableDependencies(), this.bankFeedImporter));
     }
 
     [Fact]
     public void Ctor_ShouldThrow_GivenNullLogger()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new TransactionManagerService(this.mockBudgetBucketRepo, this.mockTransactionsRepo, null!, new FakeMonitorableDependencies()));
+            new TransactionManagerService(this.mockBudgetBucketRepo, this.mockTransactionsRepo, null!, new FakeMonitorableDependencies(), this.bankFeedImporter));
     }
 
     [Fact]
     public void Ctor_ShouldThrow_GivenNullTransactionsRepo()
     {
         Should.Throw<ArgumentNullException>(() =>
-            new TransactionManagerService(this.mockBudgetBucketRepo, null!, new FakeLogger(), new FakeMonitorableDependencies()));
+            new TransactionManagerService(this.mockBudgetBucketRepo, null!, new FakeLogger(), new FakeMonitorableDependencies(), this.bankFeedImporter));
     }
 
     [Fact]
@@ -395,6 +397,6 @@ public class TransactionManagerServiceTest
 
     private TransactionManagerService CreateSubject()
     {
-        return new TransactionManagerService(this.budgetBucketRepo, this.mockTransactionsRepo, new FakeLogger(), new FakeMonitorableDependencies());
+        return new TransactionManagerService(this.budgetBucketRepo, this.mockTransactionsRepo, new FakeLogger(), new FakeMonitorableDependencies(), this.bankFeedImporter);
     }
 }

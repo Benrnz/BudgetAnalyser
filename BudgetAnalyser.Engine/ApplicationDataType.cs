@@ -38,5 +38,10 @@ public enum ApplicationDataType
     /// <summary>
     ///     Identifies a category of data within the application as the filter.
     /// </summary>
-    Filter
+    Filter,
+
+    /// <summary>
+    ///     Identifies a category of data within the application as the bank feed account mappings. These are stored inside the main Budget Analyser file.
+    /// </summary>
+    BankFeed
 }

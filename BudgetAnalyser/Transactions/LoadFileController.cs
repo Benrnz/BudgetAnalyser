@@ -109,31 +109,11 @@ public partial class LoadFileController : ControllerBase, IShellDialogInteractiv
 
     private void CalculateSuggestedDateRange(TransactionsListModel currentTransactionsList)
     {
-        var lastTransactionDate = currentTransactionsList.AllTransactions.Max(t => t.Date).AddDays(1);
-        var maxDate = DateTime.Today;
-        if (maxDate.DayOfWeek == DayOfWeek.Monday)
-        {
-            // Monday is not an ideal day to end a date range as some banks may back date weekend transactions after Monday night processing.
-            maxDate = maxDate.AddDays(-3); // Set to Friday.
-        }
-        else if (maxDate.DayOfWeek == DayOfWeek.Saturday)
-        {
-            // Weekends may have back dated transactions after Monday processing.
-            maxDate = maxDate.AddDays(-1); // Set to Friday.
-        }
-        else if (maxDate.DayOfWeek == DayOfWeek.Sunday)
-        {
-            // Weekends may have back dated transactions after Monday processing.
-            maxDate = maxDate.AddDays(-2);
-        }
-        else
-        {
-            // Any other day of the week just import up to yesterday.
-            // Never import up to today. Sometimes today's transactions don't appear until tomorrow.
-            maxDate = maxDate.AddDays(-1);
-        }
-
-        SuggestedDateRange = string.Format(CultureInfo.CurrentCulture, "{0:d} to {1:d}", lastTransactionDate, maxDate);
+        // The calculation (business days and NZ public holidays) lives in the Engine so it can be shared with other import features.
+        var range = TransactionsCalculations.CalculateSuggestedImportDateRange(currentTransactionsList.AllTransactions, DateOnlyExt.Today());
+        SuggestedDateRange = range.Start is null
+            ? string.Format(CultureInfo.CurrentCulture, "up to {0:d}", range.End)
+            : string.Format(CultureInfo.CurrentCulture, "{0:d} to {1:d}", range.Start.Value, range.End);
     }
 
     private void CheckAccountName()

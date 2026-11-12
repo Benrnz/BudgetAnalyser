@@ -1,8 +1,10 @@
 ﻿using System.Windows.Threading;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.Filtering;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 using Rees.Wpf.Contracts;
@@ -12,16 +14,19 @@ namespace BudgetAnalyser.Transactions;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public partial class TransactionsControllerFileOperations : ControllerBase, ITransactionsControllerFileOperations
 {
+    private readonly BankFeedImportController bankFeedImportController;
     private readonly LoadFileController loadFileController;
     private readonly IUserMessageBox messageBox;
     private readonly ITransactionManagerService transactionService;
+    private CancellationTokenSource? bankFeedDownloadCancellation;
 
     public TransactionsControllerFileOperations(
         IMessenger messenger,
         UserPrompts userPrompts,
         LoadFileController loadFileController,
         IApplicationDatabaseFacade applicationDatabaseService,
-        ITransactionManagerService transactionManagerService)
+        ITransactionManagerService transactionManagerService,
+        BankFeedImportController bankFeedImportController)
         : base(messenger)
     {
         if (applicationDatabaseService is null)
@@ -32,10 +37,17 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         this.messageBox = userPrompts.MessageBox ?? throw new ArgumentNullException(nameof(userPrompts.MessageBox));
         this.loadFileController = loadFileController ?? throw new ArgumentNullException(nameof(loadFileController));
         this.transactionService = transactionManagerService ?? throw new ArgumentNullException(nameof(transactionManagerService));
+        this.bankFeedImportController = bankFeedImportController ?? throw new ArgumentNullException(nameof(bankFeedImportController));
         ViewModel = new TransactionsListViewModel(applicationDatabaseService, this.transactionService);
+        CancelBankFeedDownloadCommand = new RelayCommand(OnCancelBankFeedDownload, () => IsDownloadingFromBankFeed);
     }
 
+    public IRelayCommand CancelBankFeedDownloadCommand { get; }
+
     public TransactionsListViewModel ViewModel { get; }
+
+    [ObservableProperty]
+    public partial bool IsDownloadingFromBankFeed { get; private set; }
 
     [ObservableProperty]
     public partial bool LoadingData { get; private set; }
@@ -84,6 +96,67 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         Messenger.Send(new TransactionsListModelReadyMessage(null));
     }
 
+    public async Task MergeInBankFeedTransactions()
+    {
+        await PersistenceOperationCommands.SaveDatabaseCommand.ExecuteAsync(this);
+
+        var transactions = ViewModel.TransactionsList ?? throw new InvalidOperationException("Transactions Model is null, uninitialised or not loaded.");
+        var request = await this.bankFeedImportController.RequestUserInputAsync(transactions, DateOnlyExt.Today());
+        if (request is null)
+        {
+            // User cancelled
+            return;
+        }
+
+        string outcome;
+        using var cancellation = new CancellationTokenSource();
+        this.bankFeedDownloadCancellation = cancellation;
+        LoadingData = true;
+        IsDownloadingFromBankFeed = true;
+        try
+        {
+            var result = await this.transactionService.ImportAndMergeBankFeedTransactionsAsync(request.Range, request.Mappings, cancellation.Token);
+
+            // The download has been merged into the transactions list, so it is too late to cancel.
+            IsDownloadingFromBankFeed = false;
+            if (result.TotalImported > 0)
+            {
+                await SyncWithServiceAsync();
+                Messenger.Send(new TransactionsChangedMessage());
+                OnPropertyChanged(nameof(ViewModel));
+                NotifyOfEdit();
+                ViewModel.TriggerRefreshTotalsRow();
+                Messenger.Send(new TransactionsListModelReadyMessage(ViewModel.TransactionsList));
+            }
+
+            outcome = BankFeedImportSummary.Describe(result);
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+            // Nothing is merged until every account has been downloaded, so cancelling part way through leaves the transactions list unchanged.
+            outcome = "Download cancelled. Nothing was imported.";
+        }
+        catch (BankFeedAuthenticationException)
+        {
+            outcome = "Your bank feed credentials were rejected. Update them on the Settings tab. Nothing was imported.";
+        }
+        catch (BankFeedException ex)
+        {
+            // Most bank feed messages already end with a full stop, some (for example an error passed on from the feed) do not.
+            outcome = $"Download failed: {ex.Message.TrimEnd().TrimEnd('.')}. Nothing was imported.";
+        }
+        finally
+        {
+            // Always cleared, including when an unexpected exception is thrown, so the view is never left showing as busy.
+            this.bankFeedDownloadCancellation = null;
+            IsDownloadingFromBankFeed = false;
+            LoadingData = false;
+        }
+
+        // Shown after the busy indicator has been cleared.
+        this.messageBox.Show(outcome, "Download from bank feed");
+    }
+
     public async Task MergeInNewTransactions()
     {
         await PersistenceOperationCommands.SaveDatabaseCommand.ExecuteAsync(this);
@@ -123,6 +196,16 @@ public partial class TransactionsControllerFileOperations : ControllerBase, ITra
         {
             this.loadFileController.Reset();
         }
+    }
+
+    private void OnCancelBankFeedDownload()
+    {
+        this.bankFeedDownloadCancellation?.Cancel();
+    }
+
+    partial void OnIsDownloadingFromBankFeedChanged(bool value)
+    {
+        CancelBankFeedDownloadCommand.NotifyCanExecuteChanged();
     }
 
     private void FileCannotBeLoaded(Exception ex)

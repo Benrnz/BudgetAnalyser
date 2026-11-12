@@ -55,6 +55,21 @@
         <EmbeddedResource Include="..\TestData\DemoMatchingRules.json">
             <Link>TestData\DemoMatchingRules.json</Link>
         </EmbeddedResource>
+        <EmbeddedResource Include="..\TestData\AkahuAccountsListResponse.json">
+            <Link>TestData\AkahuAccountsListResponse.json</Link>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\TestData\AkahuTransactionsFirstPageResponse.json">
+            <Link>TestData\AkahuTransactionsFirstPageResponse.json</Link>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\TestData\AkahuTransactionsLastPageResponse.json">
+            <Link>TestData\AkahuTransactionsLastPageResponse.json</Link>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\TestData\AkahuUnauthorisedErrorResponse.json">
+            <Link>TestData\AkahuUnauthorisedErrorResponse.json</Link>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\TestData\AkahuUserDetailsResponse.json">
+            <Link>TestData\AkahuUserDetailsResponse.json</Link>
+        </EmbeddedResource>
         <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
     </ItemGroup>
 

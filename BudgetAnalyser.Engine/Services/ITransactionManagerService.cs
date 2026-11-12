@@ -1,4 +1,5 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
+using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Transactions;
 
@@ -77,6 +78,19 @@ public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFo
     /// <exception cref="TransactionsAlreadyImportedException">Will be thrown if the supplied file has already been imported.</exception>
     Task ImportAndMergeTransactionsExtractAsync(string storageKey, Account account);
 
+    /// <summary>
+    ///     Downloads transactions from the bank feed for the selected account mappings and merges them with the currently loaded <see cref="TransactionsListModel" />.
+    ///     Every selected account is downloaded before anything is merged; if any download fails an exception is thrown and the transactions list is unchanged.
+    ///     Transactions that were already imported from the bank feed are skipped. Downloading nothing new is not an error.
+    ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
+    /// </summary>
+    /// <param name="range">The inclusive date range to download. <see cref="ImportDateRange.Start" /> must not be null.</param>
+    /// <param name="selectedMappings">The account mappings to download. At least one is required.</param>
+    /// <param name="cancellationToken">Cancels the download.</param>
+    /// <returns>What was downloaded and imported for each account.</returns>
+    /// <exception cref="BankFeedAuthenticationException">Thrown when the bank feed rejects the stored credentials.</exception>
+    /// <exception cref="BankFeedException">Thrown when any account cannot be downloaded.</exception>
+    Task<BankFeedImportResult> ImportAndMergeBankFeedTransactionsAsync(ImportDateRange range, IEnumerable<BankFeedAccountMapping> selectedMappings, CancellationToken cancellationToken);
     /// <summary>
     ///     Removes the provided transaction from the currently loaded Budget Analyser transactions model.
     /// </summary>
