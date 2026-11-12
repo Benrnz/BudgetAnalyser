@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Transactions;
 using BudgetAnalyser.ShellDialog;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Rees.Wpf;
 
@@ -17,6 +18,11 @@ namespace BudgetAnalyser.Transactions;
 [AutoRegisterWithIoC(SingleInstance = true)]
 public partial class BankFeedImportController : ControllerBase, IShellDialogInteractivity
 {
+    /// <summary>
+    ///     How many times the bank feed is checked for new data after a refresh is requested, before giving up waiting.
+    /// </summary>
+    internal const int MaxRefreshChecks = 20;
+
     private readonly IBankFeedConfigurationService configurationService;
     private readonly ILogger logger;
     private Guid dialogCorrelationId;
@@ -31,6 +37,7 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         this.configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         Messenger.Register<BankFeedImportController, ShellDialogResponseMessage>(this, static (r, m) => r.OnShellDialogResponseReceived(m));
+        RefreshCommand = new AsyncRelayCommand(RefreshAsync, CanRefresh);
     }
 
     public ObservableCollection<BankFeedImportAccountRowViewModel> AccountRows { get; } = new();
@@ -49,6 +56,12 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
     public partial bool IsLoading { get; private set; }
 
     /// <summary>
+    ///     True while the bank feed is refreshing its data from the banks at the user's request. Download is disabled until it finishes.
+    /// </summary>
+    [ObservableProperty]
+    public partial bool IsRefreshing { get; private set; }
+
+    /// <summary>
     ///     A problem that stops the download from starting at all, for example the credentials were rejected.
     /// </summary>
     [ObservableProperty]
@@ -56,6 +69,22 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
 
     [ObservableProperty]
     public partial string OverlapWarning { get; private set; } = string.Empty;
+
+    /// <summary>
+    ///     Asks the bank feed to refresh its data from the banks, then waits for the accounts' "data as of" times to move forward.
+    /// </summary>
+    public IAsyncRelayCommand RefreshCommand { get; }
+
+    /// <summary>
+    ///     How long to wait between checks for new data after a refresh is requested.
+    /// </summary>
+    internal TimeSpan RefreshCheckInterval { get; set; } = TimeSpan.FromSeconds(3);
+
+    /// <summary>
+    ///     The progress or outcome of the last refresh, or empty if none has been requested.
+    /// </summary>
+    [ObservableProperty]
+    public partial string RefreshStatus { get; private set; } = string.Empty;
 
     [ObservableProperty]
     public partial string StaleWarning { get; private set; } = string.Empty;
@@ -117,6 +146,7 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
             ? "There are no transactions yet, so choose a From date. To is the last business day before today."
             : string.Format(CultureInfo.CurrentCulture, "Suggested from your last transaction ({0:d}) to the last business day before today.", this.suggestedRange.Start.Value.AddDays(-1));
         LoadError = string.Empty;
+        RefreshStatus = string.Empty;
 
         foreach (var row in AccountRows)
         {
@@ -146,6 +176,19 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
     internal void ApplyFeedDetails(IReadOnlyList<BankFeedAccount> feedAccounts, BankFeedConnectionStatus status)
     {
         this.historyAvailableFrom = status.HistoryAvailableFrom;
+        ApplyFeedAccounts(feedAccounts);
+    }
+
+    internal void Revalidate()
+    {
+        UpdateWarnings();
+        ValidationMessage = Validate();
+        CanExecuteOkButton = !IsLoading && !IsRefreshing && LoadError.Length == 0 && ValidationMessage.Length == 0;
+        RefreshCommand.NotifyCanExecuteChanged();
+    }
+
+    private void ApplyFeedAccounts(IReadOnlyList<BankFeedAccount> feedAccounts)
+    {
         foreach (var row in AccountRows)
         {
             var feedAccount = feedAccounts.FirstOrDefault(a => a.ExternalId == row.Mapping.ExternalAccountId);
@@ -167,11 +210,20 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         Revalidate();
     }
 
-    internal void Revalidate()
+    private bool CanRefresh()
     {
-        UpdateWarnings();
-        ValidationMessage = Validate();
-        CanExecuteOkButton = !IsLoading && LoadError.Length == 0 && ValidationMessage.Length == 0;
+        // There is nothing to refresh until the bank feed has answered with at least one of the mapped accounts.
+        return !IsLoading && !IsRefreshing && AccountRows.Any(r => r.FeedAccount is not null);
+    }
+
+    /// <summary>
+    ///     True if the account's data is newer than it was before the refresh was requested. An account that is no longer in the feed, or not connected, is not waited for.
+    /// </summary>
+    private static bool HasRefreshed(DateTimeOffset? dataAsOfBefore, BankFeedAccount? accountNow)
+    {
+        return accountNow is null
+               || !accountNow.IsActive
+               || (accountNow.DataAsOf is { } asOf && (dataAsOfBefore is null || asOf > dataAsOfBefore.Value));
     }
 
     private async Task LoadFeedDetailsAsync(CancellationToken cancellationToken)
@@ -247,6 +299,66 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         Revalidate();
     }
 
+    private async Task RefreshAsync()
+    {
+        // Closing the dialog cancels the wait.
+        var cancellationToken = this.feedDetailsCancellation?.Token ?? CancellationToken.None;
+        var dataAsOfBefore = AccountRows
+            .Where(r => r.FeedAccount is { IsActive: true })
+            .ToDictionary(r => r.Mapping.ExternalAccountId, r => r.FeedAccount!.DataAsOf);
+
+        IsRefreshing = true;
+        RefreshStatus = "Asking the bank feed to refresh...";
+        Revalidate();
+        try
+        {
+            if (!await this.configurationService.RequestFeedRefreshAsync(cancellationToken))
+            {
+                // An earlier refresh may have finished since the dialog opened, so show the latest times.
+                ApplyFeedAccounts(await this.configurationService.GetFeedAccountsAsync(cancellationToken));
+                RefreshStatus = "The bank feed was asked to refresh only a few minutes ago, so it has not started another. The times shown are its latest.";
+                return;
+            }
+
+            // The bank feed refreshes in the background, the only sign it has finished is each account's "data as of" time moving forward.
+            RefreshStatus = "Waiting for the bank feed to refresh from your bank. This can take a minute...";
+            for (var check = 1; check <= MaxRefreshChecks; check++)
+            {
+                await Task.Delay(RefreshCheckInterval, cancellationToken);
+                var feedAccounts = await this.configurationService.GetFeedAccountsAsync(cancellationToken);
+                ApplyFeedAccounts(feedAccounts);
+                if (dataAsOfBefore.All(before => HasRefreshed(before.Value, feedAccounts.FirstOrDefault(a => a.ExternalId == before.Key))))
+                {
+                    RefreshStatus = "The bank feed has refreshed.";
+                    return;
+                }
+            }
+
+            RefreshStatus = "The bank feed has not reported new data yet. It may still be refreshing, or it may have skipped the refresh because its data was refreshed recently. "
+                            + "Press Refresh again in a few minutes to check.";
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // The user closed the dialog while waiting. There is nothing to show.
+            RefreshStatus = string.Empty;
+        }
+        catch (BankFeedAuthenticationException)
+        {
+            RefreshStatus = string.Empty;
+            LoadError = "Your bank feed credentials were rejected. Update them on the Settings tab.";
+        }
+        catch (BankFeedException ex)
+        {
+            this.logger.LogWarning(_ => $"Unable to refresh the bank feed: {ex.Message}");
+            RefreshStatus = $"Unable to refresh the bank feed: {ex.Message}";
+        }
+        finally
+        {
+            IsRefreshing = false;
+            Revalidate();
+        }
+    }
+
     internal BankFeedImportRequest? CreateRequest()
     {
         if (!CanExecuteOkButton || FromDate is null || ToDate is null)
@@ -284,7 +396,7 @@ public partial class BankFeedImportController : ControllerBase, IShellDialogInte
         var stale = selected.Where(r => r.IsStale).Select(r => r.FeedAccount!.Institution).Distinct().ToList();
         StaleWarning = stale.Count == 0
             ? string.Empty
-            : $"{string.Join(", ", stale)} data was last refreshed before the end of your To date. Recent transactions may be missing; consider an earlier To date.";
+            : $"{string.Join(", ", stale)} data was last refreshed before the end of your To date. Recent transactions may be missing; press Refresh, or consider an earlier To date.";
     }
 
     private string Validate()

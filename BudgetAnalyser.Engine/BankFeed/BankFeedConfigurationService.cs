@@ -100,6 +100,19 @@ internal class BankFeedConfigurationService : IBankFeedConfigurationService, ISu
         OnConfigurationChanged();
     }
 
+    public async Task<bool> RequestFeedRefreshAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await this.provider.RequestRefreshAsync(cancellationToken);
+        }
+        catch (BankFeedAuthenticationException)
+        {
+            NotifyCredentialsRejected();
+            throw;
+        }
+    }
+
     public void SaveCredentials(IReadOnlyDictionary<string, string> values)
     {
         ArgumentNullException.ThrowIfNull(values);

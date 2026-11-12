@@ -184,6 +184,42 @@ public class AkahuBankFeedProviderTest
     }
 
     [Fact]
+    public async Task RequestRefreshAsync_ShouldPostToRefreshAndReturnTrue_GivenAccepted()
+    {
+        var handler = new FakeHttpMessageHandler(_ => FakeHttpMessageHandler.Json("""{"success":true}"""));
+
+        var result = await CreateSubject(handler).RequestRefreshAsync(CancellationToken.None);
+
+        result.ShouldBeTrue();
+        var request = handler.Requests.Single();
+        request.Method.ShouldBe(HttpMethod.Post);
+        request.Uri.ShouldBe(new Uri("https://api.akahu.io/v1/refresh"));
+        request.AuthorizationParameter.ShouldBe(FakeUserAccessToken);
+        request.AppIdHeader.ShouldBe(FakeAppIdToken);
+    }
+
+    [Fact]
+    public async Task RequestRefreshAsync_ShouldReturnFalseWithoutRetrying_GivenRateLimited()
+    {
+        var handler = new FakeHttpMessageHandler(_ => FakeHttpMessageHandler.Json("""{"success":false,"message":"Refresh initiated within last 5 minutes"}""", HttpStatusCode.TooManyRequests));
+
+        var result = await CreateSubject(handler).RequestRefreshAsync(CancellationToken.None);
+
+        result.ShouldBeFalse();
+        handler.Requests.Count.ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task RequestRefreshAsync_ShouldThrowWithTheFeedsMessage_GivenForbidden()
+    {
+        var handler = new FakeHttpMessageHandler(_ => FakeHttpMessageHandler.Json("""{"success":false,"message":"Test forbidden"}""", HttpStatusCode.Forbidden));
+
+        var ex = await Should.ThrowAsync<BankFeedException>(() => CreateSubject(handler).RequestRefreshAsync(CancellationToken.None));
+
+        ex.Message.ShouldContain("Test forbidden");
+    }
+
+    [Fact]
     public async Task Request_ShouldRetry_GivenRateLimitedThenSuccess()
     {
         var calls = 0;

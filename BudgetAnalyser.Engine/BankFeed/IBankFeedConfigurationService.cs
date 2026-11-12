@@ -79,6 +79,16 @@ public interface IBankFeedConfigurationService
     void NotifyCredentialsRejected();
 
     /// <summary>
+    ///     Asks the bank feed to refresh its data for every account from the banks. The refresh happens afterwards and can take a while; call
+    ///     <see cref="GetFeedAccountsAsync" /> to see when <see cref="BankFeedAccount.DataAsOf" /> has moved forward. If the credentials are rejected the connection is marked as
+    ///     no longer verified.
+    /// </summary>
+    /// <returns>True if the request was accepted. False if the bank feed declined it because a refresh was requested only a few minutes ago.</returns>
+    /// <exception cref="BankFeedAuthenticationException">Thrown when the stored credentials are missing or rejected.</exception>
+    /// <exception cref="BankFeedException">Thrown when the bank feed cannot be reached or returns an error.</exception>
+    Task<bool> RequestFeedRefreshAsync(CancellationToken cancellationToken);
+
+    /// <summary>
     ///     Replaces the stored credentials. The connection must be tested again afterwards.
     /// </summary>
     void SaveCredentials(IReadOnlyDictionary<string, string> values);

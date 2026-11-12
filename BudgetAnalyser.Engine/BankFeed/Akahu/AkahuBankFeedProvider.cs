@@ -95,6 +95,11 @@ internal sealed class AkahuBankFeedProvider : IBankFeedProvider, IDisposable
         return transactions.Select(t => this.transactionMapper.ToModel(t, institution)).ToList();
     }
 
+    public Task<bool> RequestRefreshAsync(CancellationToken cancellationToken)
+    {
+        return this.apiClient.RequestRefreshAsync(GetCredentials(), cancellationToken);
+    }
+
     public async Task<BankFeedConnectionStatus> TestConnectionAsync(CancellationToken cancellationToken)
     {
         var me = await this.apiClient.GetMeAsync(GetCredentials(), cancellationToken);

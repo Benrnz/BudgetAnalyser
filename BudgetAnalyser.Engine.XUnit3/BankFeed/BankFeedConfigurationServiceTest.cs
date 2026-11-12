@@ -94,6 +94,26 @@ public class BankFeedConfigurationServiceTest
     }
 
     [Fact]
+    public async Task RequestFeedRefreshAsync_ShouldResetVerified_GivenCredentialsRejected()
+    {
+        await ArrangeFullyConfigured();
+        this.provider.RequestRefreshAsync(Arg.Any<CancellationToken>()).ThrowsAsync(new BankFeedAuthenticationException("Rejected"));
+
+        await Should.ThrowAsync<BankFeedAuthenticationException>(() => this.subject.RequestFeedRefreshAsync(CancellationToken.None));
+
+        this.subject.IsConfigured.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task RequestFeedRefreshAsync_ShouldReturnTheProvidersAnswer()
+    {
+        this.provider.RequestRefreshAsync(Arg.Any<CancellationToken>()).Returns(true, false);
+
+        (await this.subject.RequestFeedRefreshAsync(CancellationToken.None)).ShouldBeTrue();
+        (await this.subject.RequestFeedRefreshAsync(CancellationToken.None)).ShouldBeFalse();
+    }
+
+    [Fact]
     public void HasStoredValue_ShouldNeverExposeTheValue()
     {
         this.subject.SaveCredentials(new Dictionary<string, string> { ["Token1"] = "secret-test-value" });

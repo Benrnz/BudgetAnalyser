@@ -145,7 +145,7 @@
                               ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
                               ItemsSource="{Binding ViewModel.FilterBudgetBuckets}"
                               Margin="8,0,0,0"
-                              MinWidth="37"
+                                 MinWidth="37"
                               SelectedItem="{Binding BucketFilter}"
                               ToolTip="Budget Bucket Filter"
                               Width="37" />

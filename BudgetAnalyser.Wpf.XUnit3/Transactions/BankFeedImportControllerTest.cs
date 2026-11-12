@@ -121,6 +121,117 @@ public class BankFeedImportControllerTest
     }
 
     [Fact]
+    public async Task Refresh_ShouldBeDisabled_UntilTheBankFeedHasAnswered()
+    {
+        PrepareWithLastTransaction(new DateOnly(2026, 11, 12));
+
+        this.subject.RefreshCommand.CanExecute(null).ShouldBeFalse();
+        this.subject.ApplyFeedDetails([FeedCheque, FeedVisa], Connected);
+
+        this.subject.RefreshCommand.CanExecute(null).ShouldBeTrue();
+        await this.configuration.DidNotReceive().RequestFeedRefreshAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldDisableDownloadAndWait_UntilEveryAccountHasNewerData()
+    {
+        ArrangeFeedDetailsApplied();
+        var refreshed = DateTimeOffset.Parse("2026-11-20T01:00:00Z");
+        var chequeOnly = new TaskCompletionSource<IReadOnlyList<BankFeedAccount>>();
+        this.configuration.RequestFeedRefreshAsync(Arg.Any<CancellationToken>()).Returns(true);
+        this.configuration.GetFeedAccountsAsync(Arg.Any<CancellationToken>()).Returns(
+            _ => chequeOnly.Task,
+            _ => Task.FromResult<IReadOnlyList<BankFeedAccount>>([FeedCheque with { DataAsOf = refreshed }, FeedVisa with { DataAsOf = refreshed }]));
+
+        var refreshTask = this.subject.RefreshCommand.ExecuteAsync(null);
+        this.subject.IsRefreshing.ShouldBeTrue();
+        this.subject.CanExecuteOkButton.ShouldBeFalse();
+        this.subject.RefreshCommand.CanExecute(null).ShouldBeFalse();
+        chequeOnly.SetResult([FeedCheque with { DataAsOf = refreshed }, FeedVisa]);
+        await refreshTask;
+
+        await this.configuration.Received(2).GetFeedAccountsAsync(Arg.Any<CancellationToken>());
+        this.subject.RefreshStatus.ShouldBe("The bank feed has refreshed.");
+        this.subject.AccountRows.ShouldAllBe(r => r.FeedAccount!.DataAsOf == refreshed);
+        this.subject.IsRefreshing.ShouldBeFalse();
+        this.subject.CanExecuteOkButton.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldStopWaiting_GivenNoNewDataAfterTheMaximumChecks()
+    {
+        ArrangeFeedDetailsApplied();
+        this.configuration.RequestFeedRefreshAsync(Arg.Any<CancellationToken>()).Returns(true);
+
+        await this.subject.RefreshCommand.ExecuteAsync(null);
+
+        await this.configuration.Received(BankFeedImportController.MaxRefreshChecks).GetFeedAccountsAsync(Arg.Any<CancellationToken>());
+        this.subject.RefreshStatus.ShouldStartWith("The bank feed has not reported new data yet.");
+        this.subject.CanExecuteOkButton.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldShowLatestTimesWithoutWaiting_GivenTheBankFeedDeclines()
+    {
+        ArrangeFeedDetailsApplied();
+        var refreshed = DateTimeOffset.Parse("2026-11-20T01:00:00Z");
+        this.configuration.RequestFeedRefreshAsync(Arg.Any<CancellationToken>()).Returns(false);
+        this.configuration.GetFeedAccountsAsync(Arg.Any<CancellationToken>()).Returns([FeedCheque with { DataAsOf = refreshed }, FeedVisa]);
+
+        await this.subject.RefreshCommand.ExecuteAsync(null);
+
+        await this.configuration.Received(1).GetFeedAccountsAsync(Arg.Any<CancellationToken>());
+        this.subject.RefreshStatus.ShouldStartWith("The bank feed was asked to refresh only a few minutes ago");
+        this.subject.AccountRows[0].FeedAccount!.DataAsOf.ShouldBe(refreshed);
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldShowTheProblemAndAllowDownload_GivenTheBankFeedFails()
+    {
+        ArrangeFeedDetailsApplied();
+        this.configuration.RequestFeedRefreshAsync(Arg.Any<CancellationToken>()).ThrowsAsync(new BankFeedException("Test failure."));
+
+        await this.subject.RefreshCommand.ExecuteAsync(null);
+
+        this.subject.RefreshStatus.ShouldBe("Unable to refresh the bank feed: Test failure.");
+        this.subject.LoadError.ShouldBeEmpty();
+        this.subject.CanExecuteOkButton.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldBlockDownload_GivenCredentialsRejected()
+    {
+        ArrangeFeedDetailsApplied();
+        this.configuration.RequestFeedRefreshAsync(Arg.Any<CancellationToken>()).ThrowsAsync(new BankFeedAuthenticationException("Rejected"));
+
+        await this.subject.RefreshCommand.ExecuteAsync(null);
+
+        this.subject.LoadError.ShouldBe("Your bank feed credentials were rejected. Update them on the Settings tab.");
+        this.subject.CanExecuteOkButton.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldStopWaiting_GivenTheDialogIsClosed()
+    {
+        this.subject.RefreshCheckInterval = TimeSpan.FromMinutes(5);
+        this.configuration.RequestFeedRefreshAsync(Arg.Any<CancellationToken>()).Returns(true);
+        ShellDialogRequestMessage? dialog = null;
+        var recipient = new object();
+        this.messenger.Register<object, ShellDialogRequestMessage>(recipient, (_, m) => dialog = m);
+        var resultTask = this.subject.RequestUserInputAsync(CreateTransactions(new DateOnly(2026, 11, 12)), Today);
+        await WaitUntil(() => !this.subject.IsLoading);
+
+        var refreshTask = this.subject.RefreshCommand.ExecuteAsync(null);
+        this.subject.IsRefreshing.ShouldBeTrue();
+        this.messenger.Send(new ShellDialogResponseMessage(this.subject, ShellDialogButton.Cancel) { CorrelationId = dialog!.CorrelationId });
+
+        await refreshTask.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+        (await resultTask).ShouldBeNull();
+        this.subject.IsRefreshing.ShouldBeFalse();
+        this.subject.RefreshStatus.ShouldBeEmpty();
+    }
+
+    [Fact]
     public async Task RequestUserInput_ShouldDisableOkUntilFeedChecked_ThenReturnChoice()
     {
         var transactions = CreateTransactions(new DateOnly(2026, 11, 12));
@@ -288,6 +399,16 @@ public class BankFeedImportControllerTest
         }
 
         condition().ShouldBeTrue();
+    }
+
+    /// <summary>
+    ///     The dialog is ready to download, and refresh checks do not wait between attempts.
+    /// </summary>
+    private void ArrangeFeedDetailsApplied()
+    {
+        PrepareWithLastTransaction(new DateOnly(2026, 11, 12));
+        this.subject.ApplyFeedDetails([FeedCheque, FeedVisa], Connected);
+        this.subject.RefreshCheckInterval = TimeSpan.Zero;
     }
 
     private void PrepareWithLastTransaction(DateOnly lastTransactionDate)

@@ -52,6 +52,15 @@ public interface IBankFeedProvider
     Task<IReadOnlyList<BankFeedTransaction>> GetTransactionsAsync(string externalAccountId, ImportDateRange range, CancellationToken cancellationToken);
 
     /// <summary>
+    ///     Asks the bank feed to refresh its data for every account from the banks. The refresh happens afterwards and can take a while; this returns as soon as the request is
+    ///     accepted. <see cref="BankFeedAccount.DataAsOf" /> moves forward once an account has been refreshed.
+    /// </summary>
+    /// <returns>True if the request was accepted. False if the bank feed declined it because a refresh was requested only a few minutes ago.</returns>
+    /// <exception cref="BankFeedAuthenticationException">Thrown when the stored credentials are missing or rejected.</exception>
+    /// <exception cref="BankFeedException">Thrown when the bank feed cannot be reached or returns an error.</exception>
+    Task<bool> RequestRefreshAsync(CancellationToken cancellationToken);
+
+    /// <summary>
     ///     Tests that the stored credentials are accepted by the bank feed.
     /// </summary>
     /// <exception cref="BankFeedAuthenticationException">Thrown when the stored credentials are missing or rejected.</exception>

@@ -27,9 +27,26 @@
                    TextWrapping="Wrap"
                    Text="{Binding SuggestionText}" />
 
-        <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
-                   Margin="0,12,0,4"
-                   Text="Accounts" />
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,12,0,4">
+            <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                       VerticalAlignment="Center"
+                       Text="Accounts" />
+            <Button Content="Refresh"
+                    Style="{StaticResource Button.Dialog.Secondary}"
+                    Height="24"
+                    Padding="8,0"
+                    Margin="16,0,0,0"
+                    ToolTip="Ask the bank feed to fetch the latest transactions from your bank before you download."
+                    Command="{Binding RefreshCommand}" />
+            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                         IsIndeterminate="True"
+                         Width="16"
+                         Height="16"
+                         Margin="8,0,0,0"
+                         VerticalAlignment="Center"
+                         Visibility="{Binding IsRefreshing, Converter={StaticResource Converter.BoolToVis}}" />
+        </StackPanel>
         <StackPanel Orientation="Horizontal"
                     Visibility="{Binding IsLoading, Converter={StaticResource Converter.BoolToVis}}">
             <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
@@ -74,6 +91,11 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
+        <TextBlock Style="{StaticResource TextBlock.Paragraph}"
+                   Margin="0,8,0,0"
+                   TextWrapping="Wrap"
+                   Text="{Binding RefreshStatus}"
+                   Visibility="{Binding RefreshStatus, Converter={StaticResource Converter.NullToVis}, ConverterParameter=Collapsed}" />
         <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                    Margin="0,8,0,0"
                    TextWrapping="Wrap"

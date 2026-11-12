@@ -104,6 +104,24 @@ internal sealed class AkahuApiClient : IDisposable
         return response.Item ?? throw new BankFeedException("The bank feed did not return the user details.");
     }
 
+    /// <summary>
+    ///     POST /v1/refresh. Asks Akahu to refresh every connected account from the banks. The refresh itself happens afterwards; this returns as soon as Akahu accepts the request.
+    /// </summary>
+    /// <returns>True if Akahu accepted the request. False if Akahu declined it because a refresh was requested only a few minutes ago.</returns>
+    public async Task<bool> RequestRefreshAsync(AkahuCredentials credentials, CancellationToken cancellationToken)
+    {
+        try
+        {
+            // A rate limited response is Akahu's answer here, not a temporary fault, so it is not retried.
+            await SendAsync<AkahuRefreshResponseDto>(HttpMethod.Post, "refresh", credentials, false, cancellationToken);
+            return true;
+        }
+        catch (RateLimitedException)
+        {
+            return false;
+        }
+    }
+
     private static bool IsRetryable(HttpStatusCode statusCode)
     {
         return statusCode == HttpStatusCode.TooManyRequests || (int)statusCode >= 500;
@@ -116,13 +134,19 @@ internal sealed class AkahuApiClient : IDisposable
         return TimeSpan.FromMilliseconds(RetryBackoffBase.TotalMilliseconds * Math.Pow(2, retryNumber) * jitter);
     }
 
-    private async Task<T> GetAsync<T>(string relativeUri, AkahuCredentials credentials, CancellationToken cancellationToken) where T : AkahuResponseDto
+    private Task<T> GetAsync<T>(string relativeUri, AkahuCredentials credentials, CancellationToken cancellationToken) where T : AkahuResponseDto
+    {
+        return SendAsync<T>(HttpMethod.Get, relativeUri, credentials, true, cancellationToken);
+    }
+
+    private async Task<T> SendAsync<T>(HttpMethod method, string relativeUri, AkahuCredentials credentials, bool retryWhenRateLimited, CancellationToken cancellationToken)
+        where T : AkahuResponseDto
     {
         ArgumentNullException.ThrowIfNull(credentials);
 
         for (var retryNumber = 0; ; retryNumber++)
         {
-            using var request = new HttpRequestMessage(HttpMethod.Get, relativeUri);
+            using var request = new HttpRequestMessage(method, relativeUri);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", credentials.UserAccessToken);
             request.Headers.Add(AppIdHeader, credentials.AppIdToken);
 
@@ -142,6 +166,11 @@ internal sealed class AkahuApiClient : IDisposable
 
             using (response)
             {
+                if (response.StatusCode == HttpStatusCode.TooManyRequests && !retryWhenRateLimited)
+                {
+                    throw new RateLimitedException();
+                }
+
                 if (IsRetryable(response.StatusCode) && retryNumber < MaxRetries)
                 {
                     var delay = RetryDelay(retryNumber);
@@ -186,4 +215,9 @@ internal sealed class AkahuApiClient : IDisposable
             throw new BankFeedException("The bank feed returned data in an unexpected format.", ex);
         }
     }
+
+    /// <summary>
+    ///     Akahu answered with HTTP 429 to a request that must not be retried.
+    /// </summary>
+    private sealed class RateLimitedException() : BankFeedException("The bank feed is limiting requests. Try again in a few minutes.");
 }
