@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
+using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Transactions;
@@ -14,6 +15,7 @@ namespace BudgetAnalyser.Engine.Services;
 [AutoRegisterWithIoC(SingleInstance = true)]
 internal class TransactionManagerService : ITransactionManagerService, ISupportsModelPersistence
 {
+    private readonly BankFeedTransactionsImporter bankFeedImporter;
     private readonly IBudgetBucketRepository bucketRepository;
     private readonly ILogger logger;
     private readonly IMonitorableDependencies monitorableDependencies;
@@ -30,16 +32,19 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
     /// <param name="transactionsListModelRepository">The transactions model repository.</param>
     /// <param name="logger">The logger.</param>
     /// <param name="monitorableDependencies">The dependency monitor manager</param>
+    /// <param name="bankFeedImporter">Downloads transactions from the bank feed.</param>
     /// <exception cref="System.ArgumentNullException"></exception>
     public TransactionManagerService(IBudgetBucketRepository bucketRepository,
         ITransactionsListModelRepository transactionsListModelRepository,
         ILogger logger,
-        IMonitorableDependencies monitorableDependencies)
+        IMonitorableDependencies monitorableDependencies,
+        BankFeedTransactionsImporter bankFeedImporter)
     {
         this.bucketRepository = bucketRepository ?? throw new ArgumentNullException(nameof(bucketRepository));
         this.transactionsListModelRepository = transactionsListModelRepository ?? throw new ArgumentNullException(nameof(transactionsListModelRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.monitorableDependencies = monitorableDependencies ?? throw new ArgumentNullException(nameof(monitorableDependencies));
+        this.bankFeedImporter = bankFeedImporter ?? throw new ArgumentNullException(nameof(bankFeedImporter));
     }
 
     /// <inheritdoc />
@@ -288,9 +293,50 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
             throw new TransactionsAlreadyImportedException();
         }
 
-        TransactionsListModel.Dispose();
-        TransactionsListModel = combinedModel;
-        NewDataAvailable();
+        ReplaceTransactionsListModel(combinedModel);
+    }
+
+    /// <inheritdoc />
+    public async Task<BankFeedImportResult> ImportAndMergeBankFeedTransactionsAsync(ImportDateRange range, IEnumerable<BankFeedAccountMapping> selectedMappings, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(selectedMappings);
+        if (TransactionsListModel is null)
+        {
+            throw new InvalidOperationException("There is no TransactionsListModel loaded, you must first load an existing file or create a new one.");
+        }
+
+        var mappings = selectedMappings.ToList();
+        if (mappings.None())
+        {
+            throw new ArgumentException("At least one bank feed account must be selected.", nameof(selectedMappings));
+        }
+
+        // Every account is fully downloaded before anything is merged. Any failure throws and leaves the transactions list unchanged.
+        var downloads = await this.bankFeedImporter.DownloadAsync(range, mappings, cancellationToken);
+
+        // A transaction whose Id is already present has definitely been imported before. It must be skipped, never added, because Ids must stay unique.
+        var knownIds = TransactionsListModel.AllTransactions.Select(t => t.Id).ToHashSet();
+        var newTransactions = new List<Transaction>();
+        var accountResults = new List<BankFeedAccountImportResult>();
+        foreach (var download in downloads)
+        {
+            var fresh = download.Transactions.Where(t => knownIds.Add(t.Id)).ToList();
+            newTransactions.AddRange(fresh);
+            accountResults.Add(new BankFeedAccountImportResult(download.Mapping.Account, download.Transactions.Count, fresh.Count, download.Transactions.Count - fresh.Count));
+        }
+
+        if (newTransactions.None())
+        {
+            return new BankFeedImportResult(range, accountResults, 0);
+        }
+
+        var additionalModel = new TransactionsListModel(this.logger) { LastImport = DateTime.Now }.LoadTransactions(newTransactions);
+        var combinedModel = TransactionsListModel.Merge(additionalModel);
+        var minDate = newTransactions.Min(t => t.Date);
+        var maxDate = newTransactions.Max(t => t.Date);
+        var suspectedDuplicates = combinedModel.ValidateAgainstDuplicates(minDate, maxDate).Sum(group => group.Count());
+        ReplaceTransactionsListModel(combinedModel);
+        return new BankFeedImportResult(range, accountResults, suspectedDuplicates);
     }
 
     /// <inheritdoc />
@@ -447,6 +493,13 @@ internal class TransactionManagerService : ITransactionManagerService, ISupports
         ResetTransactionsCollection();
         this.monitorableDependencies.NotifyOfDependencyChange(TransactionsListModel);
         NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ReplaceTransactionsListModel(TransactionsListModel combinedModel)
+    {
+        TransactionsListModel?.Dispose();
+        TransactionsListModel = combinedModel;
+        NewDataAvailable();
     }
 
     private void ResetTransactionsCollection()

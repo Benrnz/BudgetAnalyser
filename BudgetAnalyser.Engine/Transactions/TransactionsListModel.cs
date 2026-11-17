@@ -279,7 +279,9 @@ public class TransactionsListModel : INotifyPropertyChanged, IDataChangeDetectio
             throw new ArgumentNullException(nameof(splinterBucket2));
         }
 
-        var splinterTransaction1 = originalTransaction.Clone();
+        // The first splinter keeps the original's Id, so a transaction downloaded from a bank feed is still recognised as already imported after it has been split.
+        // The original is removed below before the splinters are added, so Ids stay unique.
+        var splinterTransaction1 = originalTransaction.Clone(originalTransaction.Id);
         var splinterTransaction2 = originalTransaction.Clone();
 
         splinterTransaction1.Amount = splinterAmount1;

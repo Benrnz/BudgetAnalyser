@@ -66,7 +66,7 @@ public class TopSettingsControllerTest
     private static (TopSettingsController Subject, IMessenger Messenger, TopTransactionsListController Transactions) CreateSubject()
     {
         var context = TopTransactionsListControllerTest.CreateContext();
-        var subject = new TopSettingsController(context.Messenger, context.Subject);
+        var subject = new TopSettingsController(context.Messenger, context.Subject, BankFeedSettingsControllerTest.CreateContext().Subject);
         return (subject, context.Messenger, context.Subject);
     }
 }

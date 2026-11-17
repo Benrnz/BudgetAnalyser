@@ -46,6 +46,9 @@
     <DataTemplate DataType="{x:Type transactions:LoadFileController}">
         <transactions:LoadFileView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type transactions:BankFeedImportController}">
+        <transactions:BankFeedImportView />
+    </DataTemplate>
 
     <DataTemplate DataType="{x:Type transactions:TopTransactionsListController}">
         <transactions:TopTransactionsUserControl />

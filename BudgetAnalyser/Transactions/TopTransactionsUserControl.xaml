@@ -145,7 +145,7 @@
                               ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
                               ItemsSource="{Binding ViewModel.FilterBudgetBuckets}"
                               Margin="8,0,0,0"
-                              MinWidth="37"
+                                 MinWidth="37"
                               SelectedItem="{Binding BucketFilter}"
                               ToolTip="Budget Bucket Filter"
                               Width="37" />
@@ -170,7 +170,17 @@
                         ToolTip="Save Transactions (Ctrl+S)" />
                 <Button Command="{Binding MergeBankExtractCommand}"
                         Style="{StaticResource Button.Round.Add}"
-                        ToolTip="Merge in new Transactions. This will also save any unsaved changes before merging new transactions." />
+                        ToolTip="Merge in new Transactions from a bank extract CSV file. This will also save any unsaved changes before merging new transactions." />
+                <!-- Tooltip is shown while disabled too, so the user knows to finish setting up the bank feed on the Settings tab. -->
+                <Button Command="{Binding DownloadBankFeedCommand}"
+                        Style="{StaticResource Button.Round.Base}"
+                        ToolTip="{Binding DownloadBankFeedToolTip}"
+                        ToolTipService.ShowOnDisabled="True">
+                    <materialDesign:PackIcon Kind="CloudDownload"
+                                             Width="22"
+                                             Height="22"
+                                             Foreground="{StaticResource Brush.Button.Glyph}" />
+                </Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1"
@@ -194,6 +204,15 @@
                     <TextBlock FontSize="14"
                                Foreground="{StaticResource Brush.Text.Label}"
                                Text="Loading data..." />
+                    <!-- Only shown while a bank feed download is in progress. Cancelling imports nothing. -->
+                    <Button Content="Cancel"
+                            Style="{StaticResource Button.Dialog.Secondary}"
+                            Height="24"
+                            Padding="8,0"
+                            VerticalAlignment="Center"
+                            Command="{Binding FileOperations.CancelBankFeedDownloadCommand}"
+                            ToolTip="Cancel the download from the bank feed. Nothing will be imported."
+                            Visibility="{Binding FileOperations.IsDownloadingFromBankFeed, Converter={StaticResource Converter.BoolToVis}}" />
                 </StackPanel>
                 <Border Style="{StaticResource Border.SummaryChip.Info}"
                         ToolTip="Total Credits currently displayed.">

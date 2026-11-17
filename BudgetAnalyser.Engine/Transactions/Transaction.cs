@@ -175,12 +175,22 @@ public class Transaction : INotifyPropertyChanged, IComparable, ICloneable<Trans
     } = NamedTransaction.Empty;
 
     /// <summary>
-    ///     Clones this transaction into a new instance.
+    ///     Clones this transaction into a new instance. The clone is given a new <see cref="Id" />.
     /// </summary>
     public Transaction Clone()
     {
+        return Clone(Guid.NewGuid());
+    }
+
+    /// <summary>
+    ///     Clones this transaction into a new instance with the given <see cref="Id" />. Use this to keep the identity of a transaction that is being replaced, for example
+    ///     when it is split, so a transaction downloaded from a bank feed is still recognised as already imported. The caller must ensure Ids stay unique.
+    /// </summary>
+    public Transaction Clone(Guid id)
+    {
         return new Transaction
         {
+            Id = id,
             Account = Account,
             Amount = Amount,
             BudgetBucket = BudgetBucket,

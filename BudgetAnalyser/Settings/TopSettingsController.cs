@@ -7,20 +7,28 @@ using Rees.Wpf;
 namespace BudgetAnalyser.Settings;
 
 /// <summary>
-///     Presents the user preference settings stored in the application state file (BudgetAnalyserAppState.json). Settings are grouped in the view to match their grouping in
-///     the file. Window size and position are deliberately not shown, they are captured automatically when the application exits.
+///     Presents the Settings tab. Each card in the view shows settings from exactly one storage location, and says where:
+///     the General and Transactions cards mirror the application state file (BudgetAnalyserAppState.json) and are saved when the application exits;
+///     the bank feed cards are driven by <see cref="BankFeedSettings" />, with credentials stored encrypted for this Windows user and account mappings stored in the
+///     open budget file. Window size and position are deliberately not shown, they are captured automatically when the application exits.
 /// </summary>
 [AutoRegisterWithIoC(SingleInstance = true)]
 public partial class TopSettingsController : ControllerBase, IShowableController
 {
     private readonly TopTransactionsListController transactionsController;
 
-    public TopSettingsController(IMessenger messenger, TopTransactionsListController transactionsController) : base(messenger)
+    public TopSettingsController(IMessenger messenger, TopTransactionsListController transactionsController, BankFeedSettingsController bankFeedSettings) : base(messenger)
     {
+        BankFeedSettings = bankFeedSettings ?? throw new ArgumentNullException(nameof(bankFeedSettings));
         this.transactionsController = transactionsController ?? throw new ArgumentNullException(nameof(transactionsController));
 
         Messenger.Register<TopSettingsController, ApplicationStateLoadedMessage>(this, static (r, m) => r.OnApplicationStateLoaded(m));
     }
+
+    /// <summary>
+    ///     The bank feed connection and account mapping settings.
+    /// </summary>
+    public BankFeedSettingsController BankFeedSettings { get; }
 
     /// <summary>
     ///     The Budget Analyser file that was automatically opened at start-up. This is read-only, it is updated to the currently open file when the application exits.

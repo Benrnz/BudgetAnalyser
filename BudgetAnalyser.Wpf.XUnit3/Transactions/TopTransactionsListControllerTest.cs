@@ -1,5 +1,6 @@
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
+using BudgetAnalyser.Engine.BankFeed;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Transactions;
@@ -219,7 +220,8 @@ public class TopTransactionsListControllerTest
             userPrompts,
             loadFileController,
             applicationDatabaseFacade,
-            transactionService);
+            transactionService,
+            new BankFeedImportController(messenger, Substitute.For<IBankFeedConfigurationService>(), new FakeLogger()));
         var splitTransactionController = new SplitTransactionController(messenger, bucketRepository, new FakeLogger(), transactionService, fileOperations);
         var editingTransactionController = new EditingTransactionController(messenger, bucketRepository, userPrompts, transactionService, fileOperations, new FakeLogger());
         var subject = new TopTransactionsListController(
@@ -231,7 +233,8 @@ public class TopTransactionsListControllerTest
             editingTransactionController,
             splitTransactionController,
             fileOperations,
-            transactionService);
+            transactionService,
+            Substitute.For<IBankFeedConfigurationService>());
 
         return new TestContext(subject, messenger, transactionService, inputBox);
     }

@@ -1,0 +1,8 @@
+{
+  "success": true,
+  "item": {
+    "_id": "user_test00000000000000000001",
+    "access_granted_at": "2026-11-10T03:15:42.120Z",
+    "email": "test.user@example.com"
+  }
+}
